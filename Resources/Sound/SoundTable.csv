@@ -1,0 +1,5 @@
+Key,Filename,Group,Volume
+TestWav_01,Sound/Wav/test1.wav,SFX,1.0
+TestWav_02,Sound/Wav/test2.wav,SFX,1.0
+TestOgg_01,Sound/Ogg/mouseclick1.ogg,BGM,1.0
+TestOgg_02,Sound/Ogg/hope_it_will.ogg,BGM,1.0

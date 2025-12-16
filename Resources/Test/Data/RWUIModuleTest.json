@@ -1,0 +1,143 @@
+{
+    "Children": [
+        {
+            "Type": "Panel",
+            "Name": "Main",
+            "Layout": {
+                "Size": {
+                    "x": 800,
+                    "y": 600
+                },
+                "Origin": "LeftTop"
+            },
+            "Transform": {
+                "Ratio": {
+                    "x": 0.0,
+                    "y": 0.0
+                },
+                "RelativePosition": {
+                    "x": 0,
+                    "y": 0
+                }
+            },
+            "Region": "",
+            "StateFlag": 15,
+            "RenderSearch": 0,
+            "Children": [
+                {
+                    "Type": "PatchTextureStd1",
+                    "Name": "NoMatchComponentType",
+                    "Layout": {
+                        "Size": {
+                            "x": 64,
+                            "y": 64
+                        },
+                        "Origin": "LeftTop"
+                    },
+                    "Transform": {
+                        "Ratio": {
+                            "x": 0.5,
+                            "y": 0.5
+                        },
+                        "RelativePosition": {
+                            "x": 400,
+                            "y": 300
+                        }
+                    },
+                    "Region": "",
+                    "StateFlag": 15,
+                    "RenderSearch": 0,
+                    "Children": null,
+                    "BindKey": "BackImage1",
+                    "SourceIndex": 0
+                },
+                {
+                    "Type": "PatchTextureStd1",
+                    "Name": "PatchTextureStd1_2",
+                    "Layout": {
+                        "Size": {
+                            "x": 64,
+                            "y": 64
+                        },
+                        "Origin": "LeftTop"
+                    },
+                    "Transform": {
+                        "Ratio": {
+                            "x": 0.5,
+                            "y": 0.5
+                        },
+                        "RelativePosition": {
+                            "x": 400,
+                            "y": 300
+                        }
+                    },
+                    "Region": "",
+                    "StateFlag": 15,
+                    "RenderSearch": 0,
+                    "Children": null,
+                    "BindKey": "BackImage1",
+                    "SourceIndex": 0
+                },
+                {
+                    "Type": "PatchTextureStd1",
+                    "Name": "PatchTextureStd1",
+                    "Layout": {
+                        "Size": {
+                            "x": 64,
+                            "y": 64
+                        },
+                        "Origin": "LeftTop"
+                    },
+                    "Transform": {
+                        "Ratio": {
+                            "x": 0.5,
+                            "y": 0.5
+                        },
+                        "RelativePosition": {
+                            "x": 400,
+                            "y": 300
+                        }
+                    },
+                    "Region": "",
+                    "StateFlag": 15,
+                    "RenderSearch": 0,
+                    "Children": null,
+                    "BindKey": "BackImage1",
+                    "SourceIndex": 0
+                }
+            ]
+        }
+    ],
+    "UINameGenerator": {
+        "RegionGens": {
+            "": {
+                "Namers": 1,
+                "Recycled": [],
+                "Deletable": false
+            }
+        },
+        "RegionNames": {
+            "": {
+                "Namers": {
+                    "PatchTextureStd1": {
+                        "Namers": 3,
+                        "Recycled": [
+                            1
+                        ],
+                        "Deletable": false
+                    },
+                    "Main": {
+                        "Namers": 1,
+                        "Recycled": [],
+                        "Deletable": false
+                    },
+                    "NoMatchComponentType": {
+                        "Namers": 1,
+                        "Recycled": [],
+                        "Deletable": false
+                    }
+                }
+            }
+        }
+    }
+}

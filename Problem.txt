@@ -1,0 +1,387 @@
+﻿CreateWICTextureFromFile안에 GetWIC함수가 InitOnceExecuteOnce로 Factory를 생성하는데 싱글톤 패턴
+을 쓰기 때문에 Test가 독립적으로 작동하지 못한다. 예를들면 1번 테스트에서 static 변수에 2를 넣고 2번
+테스트에서 그 값을 읽으면 초기화가 안 되어서 기대한 값이 아니라 2라는 값이 나오는 것처럼 static 변수
+를 초기화 해야 하는 일이 생겼다. 그래서 WICTextureLoader.h와 cpp를 수정해서 static 변수를 초기화 하는
+WICOnceInitialize함수를 추가했다.
+로딩할때 한번 로딩 하고 나면 싱글톤 함수가 같은 값을 반환하기 때문에 다른 파일을 읽을려고 하면 에러가
+나는 현상이 발생했다. 그래서 로딩할때 WICOnceInitialize함수를 한번 더 호출해 주어서 새롭게 초기화 된
+Factory를 사용하게끔 한다.
+
+google test(gmock)에서 pch를 사용하는 방법.
+NuGet에서 gmock 패키지를 받아서 설치 했을때 .cc파일이 프로젝트에 합류됨으로써 컴파일을 하면 .pch
+파일을 include 하라고 나오는데 google test가 ms 전용이 아니기 때문에 pch(pre compile header)를 적
+용시킬수는 없기 때문이다. cmake를 사용하면 gmock과 gtest프로젝트등 여러개가 만들어지는데 이렇게
+하면 아마 pch를 사용할 수 있을 것이다. 내가 한 방법은 깃허브에서 코드를 다운 받은후 빈 프로젝트를 
+만들어서 .cc 파일 (gmock-all, gtest-all 두개만 컴파일 하면 된다. 왜냐면 다른 .cc파일을 all 파일이 다 인
+클루드 하기 때문이다)을 추가한후, 빌드한다. 이 프로젝트는 GoogleTestLib로 만들었으며, 컴파일 하고
+나면 lib가 만들어진다. 그리고 만들어진 프로젝트(lib)를 Test 프로젝트(ToyTest)에서 참조했다. Test 프로
+젝트는 만들때 google test 프로젝트로 만든후 NuGet에서 설치돼 있는 gtest를 삭제한다. 왜냐면 google 
+mock이 포함되어 있지 않아서이다. 그리고 main을 작성해 준다.
+--------------요약--------------
+1. 빈 프로젝트 GoogletTestLib 만들기
+2. google test GitHub에서 다운받아서 cc파일 두개 추가
+3. include 폴더 디렉토리 설정하기
+4. 컴파일 되는지 확인 <-- 여기까지는 lib 만들기.
+5. 새프로젝트 만들기 해서 google test 프로젝트로 프로젝트 만들기
+6. NuGet에서 설치되어 있는 기본 gtest를 삭제
+6. GoogletTestLib을 참조로 연결(#pragma comment(lib, "GoogleTestLib_Debug.lib") 지금은 이렇게 붙였다.)
+7. main함수 작성
+
+google test 프로젝트로 만들면 config 파일이 자동적으로 생기는데 Nuget에서 google test를 지우면 config
+파일이 삭제된다. 임의로 지울 경우 Nuget 패키지에서 찾을수 없어 google test를 지울 수 없으니까 조심.
+지우는 이유는 mock이 없기 때문에 mock 버전으로 다시 쓰기 위해서이다.
+invoke_main이 없다고 나오면, main을 넣어주어야 할 것이다. google main을 새로 작성해서 넣는 방법을 추천
+한다.
+
+message에서 PostQuitMessage 메세지가 남아있어서 다음 테스트에 영향을 미치는듯 하다.
+Destroy함수가 불리면 WM_DESTROY를 부르고 거기서 WM_QUIT메세지가 큐에 담긴다. 이 메세지는 다
+음 테스트에 작동되면서 테스트 종료를 일으킨다. 끝낼때에는 Message Queue의 내용을 지워서 테스트
+가 독립적이게 만들어야 한다. 
+
+Microsoft::WRL::Wrappers::RoInitializeWrapper initialize(RO_INIT_MULTITHREADED);
+이 함수를 리팩토링으로 다른 함수로 옮겼더니 멀티쓰레드 적용이 되지 않았다.  RAII를 사용하기 때문에
+함수가 끝나면 사라진다. 사라지기 전에 com을 생성해야 하기 때문이다.
+
+한 클래스에 unique_ptr 변수가 2개 있으면 선언 순서의 역순으로 소멸자가 호출된다.
+
+1>D:\ProgrammingStudy\ToyBox\Toy\Button3.cpp(36,43): warning C4100: 'iter': 참조되지 않은 정식 매개 변수입니다.
+1>(소스 파일 '/Button3.cpp'을(를) 컴파일하는 중)
+1>    D:\ProgrammingStudy\ToyBox\Toy\Button3.cpp(36,43):
+1>    템플릿 인스턴스화 컨텍스트(가장 오래된 인스턴스화 컨텍스트)가
+1>        D:\ProgrammingStudy\ToyBox\Toy\Button3.cpp(36,15):
+1>        클래스 템플릿 멤버 함수 'std::ranges::in_fun_result<conditional<std::ranges::borrowed_range<_Rng>,unknown-type,std::ranges::dangling>::type,_Fn> std::ranges::_For_each_fn::operator ()(_Rng &&,_Fn,_Pj) const'을(를) 컴파일하는 중입니다.
+1>        C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.41.34120\include\algorithm(488,13):
+1>        'indirectly_unary_invocable<`Button3::LoadResources'::`2'::<lambda_1>,std::_Projected_impl<std::_Tree_iterator<std::_Tree_val<std::_Tree_simple_types<std::pair<enum Button3::ButtonState const ,ButtonImage> > > >,std::identity>::_Type>' 개념을 평가하는 동안
+1>        C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.41.34120\include\xutility(964,60):
+1>        'invocable<`Button3::LoadResources'::`2'::<lambda_1> &,std::pair<enum Button3::ButtonState const ,ButtonImage> &>' 개념을 평가하는 동안
+1>        C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.41.34120\include\concepts(262,10):
+1>        컴파일되는 함수 템플릿 인스턴스화 'unknown-type std::invoke(_Callable &&,_Ty1 &&,_Types2 ...) noexcept(<expr>)'에 대한 참조를 확인하세요.
+1>        C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.41.34120\include\type_traits(1711,45):
+1>        클래스 템플릿 멤버 함수 'unknown-type std::_Invoker_functor::_Call(_Callable &&,_Types ...) noexcept(<expr>)'을(를) 컴파일하는 중입니다.
+1>        C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.41.34120\include\type_traits(1610,46):
+1>        컴파일되는 함수 템플릿 인스턴스화 'void Button3::LoadResources::<lambda_1>::operator ()<std::pair<const Button3::ButtonState,ButtonImage>>(_T2 &) const'에 대한 참조를 확인하세요.
+1>        with
+1>        [
+1>            _T2=std::pair<const Button3::ButtonState,ButtonImage>
+1>        ]
+빌드창에 이렇게 떳길래 보니까 '오류'가 아니라 '경고'였다. w4에서 w3로 경고 수준을 낮추면 사라진다.
+map에 const auto& 변수로 iterator를 사용하는데 그 iterator 변수를 사용하지 않아서 나오는 경고치고는 너무 살벌하다.
+
+렌더링 할 객체들의 데이터를 확인하려면 렌더러를 인자로 넣어야 한다.
+그런데 렌더러를 인자로 넣지 못하는 경우가 생긴다. barrier같은것이 있을경우 콜백으로 받아서 처리해야 하기
+때문이다. 그래서 콜백 함수와 랜더러를 인자로 하는 함수 2개를 만들어서 테스트 할 수 있게끔 한다.
+
+unique_ptr은 pImpl을 쓰고 싶게(전방선언을 하고싶게) 만드는데 여기서 문제점은
+unique_ptr은 raw포인터와 같아서 delete방식을 알고 있어야 한다. 즉 소멸자가 정의되지 않으면
+오류 C2027 정의되지 않은 형식 '클래스명'을(를) 사용했습니다. 라고 나온다.
+그러면 소멸자를 cpp에서 정의해 주면 되긴한데 문제는 생성자가 template인 경우는 이게 또 말썽이다
+그래서 template 생성자를 cpp에 명시적으로 선언해 주거나 아니면 중요한 게 아닐 경우는 생성자에 
+template를 안 쓰는게 좋은 것 같다.  그리고 에러 메세지가 꼭 저렇게 안나오고 애매하게 나오는 경우도
+있으니 주의를 요함
+생성자 소멸자 둘다 cpp에 정의한다. h에 = default 해도 소용없음 
+*변수를 h에 선언할때 초기화 할수 있는데 초기화를 하면 cpp에 정의해도 필요없게 됨. 선언과 동시에 초기화를
+하지 않아야 함.ex) std::unique_ptr<Material> m_materials{ nullptr }; <-- m_materials{ nullptr } 중괄호 없애야함.
+그 클래스를 부르는 상위 클래스에도 생성자, 소멸자를 cpp에서 = default 같은 걸로 정의해 주어야 한다.
+ex) unique_ptr<abc> m_abc; 일때 이 변수를 소유한 클래스가 xyz라면 xyz도 생성자 소멸자를 cpp에서 해 줘야 한다.
+
+Google Test에서 SEH 예외가 발생한다는 것은 테스트 실행 중에 시스템 오류(예: 잘못된 메모리 접근, NULL 포인
+터 참조 등)가 발생했음을 의미함. 코드중에 어떤 포인터가 잘못됐는지를 잘 찾아보자. 예를들면 unique_ptr로
+만들고 나서 scope가 지나서 자동으로 사라진지 모르고 거기다가 셋팅한다던지 등등.
+
+ttf폰트에서 spritefont로 바꿀때 한글 및 기호, 영어를 넣어서 뽑는 옵션
+MakeSpriteFont "맑은 고딕" MaleunGothicS16.spritefont /FontSize:16 /CharacterRegion:0xAC00-0xD7A3 /CharacterRegion:0x0020-0x007E
+ /FastPack
+ /CharacterRegion:0xAC00-0xD7A3 한글 추가 옵션
+ /CharacterRegion:0x0020-0x007E 영어 및 기호 옵션
+ 그냥 옵션 없이 실행하면 한글 폰트임에도 영어와 기호 옵션만 나온다.
+ /FastPack을 안하면 실행이 끝날때까지 4시간 정도 걸린다.
+
+ 한글 spritefont 만들어서 한글 출력하기
+한글 입력 하는 방법 찾고 있었음. 깃헙에서 검색해서 괜찮은거 붙일예정
+https://github.com/search?q=hangul+ime&type=repositories
+MakeSpriteFont "굴림 보통" hangle.spritefont /FontSize:32 /CharacterRegion:0xAC00-0xD7A3
+MakeSpriteFont.exe MyFont.ttf MyFont.spritefont /CharacterRegion:0xAC00-0xD7A3 /CharacterRegion:0x0020-0x007E
+MakeSpriteFont "맑은 고딕" MaleunGothicS16.spritefont /FontSize:16 /CharacterRegion:0xAC00-0xD7A3 /CharacterRegion:0x0020-0x007E
+ /FastPack
+
+ DirectXTK12와 imgui를 붙일때 주의점은 example에서 보면 ImGui_ImplDX12_Init 이 함수를 호출할때 
+ DXGI_FORMAT_R8G8B8A8_UNORM 으로 호출하는데 기본 DirectXTK12설정은 DXGI_FORMAT_B8G8R8A8_UNORM
+ 로 되어 있다. 설정을 자신의 백버퍼에 맞게 맞추어 줘야 한다. 버퍼가 2개인데 3개로 설정해도 돌아가긴 한다.
+
+ imgui를 랜더링 할 때에는 제일 마지막에 렌더링을 해 주어 다른 것들이 충돌이 나지 않게 한다.
+ PreRender()
+ 일반적 렌더링
+ ...
+ imgui 렌더링	<- 제일 마지막
+ Present()
+
+ imgui의 window에 클라이언트 화면을 띄우기 위해서는 Render Texture View를 써서 텍스춰를 생성한 후 그 텍스
+ 춰의 아이디 값을 imgui에 넘겨주어야 하는데 이때 텍스춰의 이미지가 힙에 저장되어 있는데 imgui의 힙과 다른
+ 텍스춰의 DescriptorHeap이 다를 경우 찾지 못해서 이미지가 안 띄워진다. 그래서 이미지를 찾아서 띄우기 위해서
+ 는 같은 힙상에서 처리를 해야할 필요가 있다. 
+ window에 클라이언트 화면을 띄우는 이유는 클라이언트 화면 뿐만 아니라 이미지 편집, 캐릭터 움직임, UI 편집,
+ 등등을 할 수 있게 하기 위함이다. 화면이 하나 밖에 없다면 UI툴, 캐릭터 툴, 이미지 툴 등등 여러가지 툴이 나오기
+ 때문에 더 번거로울 수 있다.
+
+ TMP할때 함수가 정의 되어 있지 않다고 한다면, 그 부분을 다른 함수로 만들어서 cpp로 넘기면 가능해진다.
+
+ Json에서 get<T>()를 사용해서 변환할때 from_json 함수가 있어야 하고, '기본 생성자'가 정의 돼 있어야 한다.
+
+ CoInitializeEx(nullptr, COINITBASE_MULTITHREADED); 이 함수를 사용하면 반드시 CoUninitialize(); 를 호출 해야
+ 하는데 RAII를 적용한 버전이 Microsoft::WRL::Wrappers::RoInitializeWrapper initialize(RO_INIT_MULTITHREADED);
+ 이다. 이건 나중에 해제코드를 할 필요가 없다. #include <wrl/wrappers/corewrappers.h> 헤더를 include 해 준다.
+ 
+ 예외 발생(0x00007FFE59CDFB4C, Tool.exe): Microsoft C++ 예외: wil::ResultException, 메모리 위치 0x000000C381D3AB50.
+예외 발생(0x00007FFE59CDFB4C, Tool.exe): Microsoft C++ 예외: [rethrow], 메모리 위치 0x0000000000000000.
+CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE); 
+CoUninitialize(); 
+이렇게 쌍으로 호출했음에도 무언가 이상동작을 한다. 예외발생이라고 나오며, 한번만 초기화 해주는게 맞지만,
+깔끔하게 처리한다면 RAII로 하는게 나을것 같다.
+
+1>C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\um\commdlg.h(674,20): error C3646: 'lpLogFont': 알 수 없는 재정의 지정자입니다.
+파일 열기 다이얼로그를 띄웠을때 충돌되는 메세지이다. 이것을 해결하려면 include 순서를 바꿔야 하는데 
+DirectXTK와 선언순서가 충돌되는 듯 하다.
+
+ImGui 창에서 버튼이나 이런 widget을 붙이면 widget만큼 y값이 내려가 보인다. 실제로 좌표상은 동일하며 화면
+에 표시할때 버튼 부분의 높이 값만큼 밑으로 내려서 랜더링 하는 듯 하다.
+
+clone을 만들때 복사 생성자를 사용하게 되는데 public으로 만들었을 경우 vector 같은 컨테이너가 이 복사 생성
+자를 써서 복사하면서 값을 넣는 경우가 있으므로 오작동의 원인이 된다. 애초에 clone을 만들 때에는 복사가 임
+의로 생성하지 않게끔 명시적으로 만들려는 의도인데 복사 생성자가 은근슬쩍 해 버리면 문제가 생기게 된다. 
+이번에는 emplace_back 할때 복사 생성자가 호출되어 값이 슬라이스 되는 문제가 발생했다. 이런 문제는 디버깅
+하기 어려운 문제로 연결 될 수 있기 때문에 복사 생성자를 protected로 만들고 호출 할때에는 make_unique로
+만들지 않고 unique_ptr<xxx>(new xxx(*this)); 로 해서 내부에서 protected로 만들었음에도 호출 하게끔 하게 한
+다. 복사 생성자는 protected이므로 컨테이너에서는 복사 하지 못한다고 오류가 나올 것이다. 그때 clone으로 대
+체하자.
+
+C2665 make_unique에서 생성 못했을때의 에러코드가 너무 길어서 어디 줄인지 모를때가 많다.
+다음의 문장이 보이면 그 밑에 해당 코드줄이 있다.
+예시)
+템플릿 인스턴스화 컨텍스트(가장 오래된 인스턴스화 컨텍스트)가
+D:\ProgrammingStudy\ToyBox\Toy\GameMainLoop.cpp(39,19):
+컴파일되는 함수 템플릿 인스턴스화 'std::unique_ptr<Panel,std::default_delete<Panel>> 
+std::make_unique<Panel,const char(&)[5],DirectX::SimpleMath::Rectangle,0>
+(const char (&)[5],DirectX::SimpleMath::Rectangle &&)'에 대한 참조를 확인하세요.
+
+msvc는 특별한 설정을 하지 않으면 /std:c++가 설정돼있든 말든 __cplusplus 값이 199711L로 predefine 돼 있음.
+XMINT2를 == 할려고 하는데 안되어서 자세히 보니 __cplusplus 값이 1997년 11월 짜리로 돼 있음. c++20으로 
+바꾸어도 바뀌지 않음. __cplusplus의 값을 바꾸려면 컴파일러 옵션에 /Zc:__cplusplus를 추가하고
+/std:c++ 설정(14든 17이든 20이든)을 해 줘야 함. 
+
+이 문제의 발단은 UITransform안에 UIComponent를 넣었던 것이 문제다. vector가 
+UITransform에 걸리면 loop를 돌릴때 깔끔하게 안 돌아간다. Component용, Transform용 
+loop를 2개 만들면 되는 차원을 넘어서서 재귀코드 자체가 성립하지 않게 된다. 왜냐하면 Transform에서는
+Component를 알수 있지만 반대는 되지 않는다. 따라서 재귀함수 호출이 Transform으로 해야 하는데 
+그러면 Component에서 해야 할 일이 잘 안될 수도 있고, Transform 클래스와 Component 클래스는 
+서로가 friend 로 엮여야 하기 때문이다. 이것은 리팩토링이 되지 않는 클래스가 될 것이다.
+Composite패턴은 결국 Iterator패턴을 쓸수 밖에 없다. 그렇지 않으면 리팩토링이 되지 않는다.
+
+컴포지트 패턴은 클래스가 단일 책임과 다중책임이라는 2가지의 책임을 동시에 가지고 있는 부분이라 
+속성 하나를 만들면 Component에서 속성을 가져오는 함수와 Component 집단에서 가지고오는 함수가 필연적
+으로 2개가 생기게 된다. 그래서 속성이 몇개 안 생기더라도 함수는 엄청 많이 생기고 서로서로가 꼬여서 알수
+없게 되는게 문제였다. 즉. 단일책임과 다중책임을 분리시키는게 문제인데, 이것을 분리시키는 방법으로는 
+딱히 불리는 패턴은 없는데 확장 클래스를 만들어서 Component를 생성자 인자로 넣고 확장 클래스를 friend
+로 만들어 이쪽에서 다중적인 일을 처리하는 클래스를 만들면 될 것 같다. 기존의 Component는 단일책임만
+맡게 만들어서 둘을 분리하면 어떨까.
+
+RenderTexture 할때 깜빡거리는 문제가 있었다. 크기를 크게 하면 잘 나오고 작게 하면 작게 할수록 점점 깜빡이
+면서 사라진다. 꼭 z fighting 같은 느낌이었다. 이것저것 해본결과 RenderTexture 할때 텍스쳐를 일단 Render,
+즉 캔버스에 그릴때에는 '그린다'라고 지정하고, 끝나면 '이 그림을 쓸꺼다' 라고 지정을 해 주어야 한다. 프로그램
+적으로는 백버퍼에 그리듯이 텍스쳐를 한장 깔아놓고 거기다가 '그린다' 그다음에 이 그린 그림은 다음에 실제
+렌더링 할때에는 텍스쳐가 되어서 그릴 곳에다가 붙여야 하기 때문에 이때는 '읽는다'라는 속성으로 바꾸어 준다
+그걸 해야 하는데 하면서 다른 애들이 방해를 못하게끔 'barrier'를 쳐서 바꾼다. barrier를 쓰는 이유는 gpu는 내부
+적으로 비동기적으로 처리되기 때문에 commandList에 적어준 순서대로 하는게 아니라 최적화 시켜서 실행시키
+기 때문에 barrier를 해 줘서 순서를 맞춰 줄 필요가 있다. rtv는 백버퍼, 렌더타겟 각각 필요하며, dsv는 2d일 경우
+z가 필요 없기 때문에 안쓰며, srv는 읽을때 필요하기 때문에 만든다. 
+
+ReturnIfFalse를 ForEachImageGrid1 이 함수(람다를 인자로 하는 함수) 에 걸었더니 뒤에 람다 부분이 디버깅 안되
+는 현상이 발생했다. 추후 이런 일이 있을 경우에는 ReturnIfFalse 를 안쓰고 직접 리턴 해야 하겠다.
+
+프로그램을 켜서 프로그램에 몰입하는데 시간이 오래 걸린다. 그 오래 걸리는 이유를 찾고 싶다. 빨리 접근하는 방
+법이 있을 것이다.
+
+tracy를 깃헙에서 받아와서 tracy폴더에 넣어준 뒤 tracyClient.cpp, tracy.hpp를 include 하고 구성->C/C++->
+전처리기->전처리기 정의 에서 TRACY_ENABLE을 넣어준 뒤 컴파일 했더니 링크에러가 뜨지 않았다. h파일에
+#define TRACY_ENABLE 라고 하니 링크에러가 떳다. 아마도 이 define이 컴파일 하는 부분까지 들어가야 하는 것
+같다. 코드에 적절히 어느 함수에 측정을 할지 적어준다음, tracy profiler를 실행시키고 waiting 시킨다. 그리고 
+프로그램을 실행하면 어느 함수에서 오래 걸리는지 그래프로 보여준다.
+win32 폴더에서 cmd로 들어가서 cmake .. -G "Visual Studio 17 2022" 를 실행하면 profiler 폴더에 있는 CMakeLists.txt
+파일이 있고 이것이 실행되면서 win32에 솔루션 파일이 생기는데 이걸 빌드하면 tracy profiler.exe를 만들 수 있다.
+빌드시에 파이선이 없으면 에러가 뜨는데 파이선을 다운 받아서 설치해야 한다.
+컴파일해서 profiler를 띄우고 거기에 tcp로 연결하면 되는데 여기에 방화벽이 문제인지 자꾸 연결이 되지 않는다. 
+그래서 윈도우 방화벽에 들어가서 인바운드, 아웃바운드 규칙을 만들어서 8086 포트를 활성화 시켰다. 그리고 
+컴퓨터를 재부팅한뒤 연결했다.
+내가 사용한 방법.
+1. tracy를 클론하거나 다운해서 받아온뒤 적당한 폴더(tracy같은)에 생성해서 넣는다.
+2. tracyClient.cpp, tracy.hpp파일을 include 하고 TRACY_ENABLE을 전처리기 정의에 써 준다.
+3. 테스트할 코드를 작성한다.(ZoneScoped, FrameMark 이런것들)
+4. tracy/profiler/win32 폴더로 이동한 후 cmake .. -G "Visual Studio 17 2022" 실행
+(win32에 visual studio 프로젝트가 안 보일 경우 파이선이 내 컴퓨터에 설치 돼 있는지 확인하자)
+5. 솔루션 Release빌드해서 tracy profiler.exe를 생성
+6. 생성된 profiler를 실행한후 waiting 시킴.
+7. 테스트 코드를 컴파일 및 실행 한다.
+(포트가 연결안될 경우 인바운드 아웃바운드 규칙 만들어서 8086포트를 사용가능하게 만들고 재부팅)
+8. 127.0.0.1 tcp로 연결되어서 현재 실행되는 프로그램의 상태가 profiler에 자동으로 보여진다.
+9. visual studio에서 도구->외부도구를 하면 exe를 외부도구로 등록할 수 있어서 메뉴 항목에 profiler가 보임
+
+Tracy 폴더에 CMakeLists.txt 파일이 있어서 Tracy/build 폴더로 이동후 cmake .. -G "Visual Studio 17 2022" 
+하면 TracyClient 프로젝트가 나오는데 이것을 빌드해서 붙이면 작동한다. 그런데 기본 옵션이 너무 많은 
+정보를 보여주고 있어서 어느정도 옵션을 꺼야 하는데 아직 그 부분을 모르겠다. 옵션을 끄는 방법은 txt파일
+에서 ON, OFF를 해 준후 build 폴더에 CMakeCache.txt 파일을 지운후 F7을 누르면 자동으로 캐쉬 파일과 
+프로젝트 파일을 만들어주는데 전부 리로딩 후 리빌드를 하면 옵션이 적용된 프로젝트가 된다. 옵션은 자주
+바꿀 일이 없기 때문에 이런식으로 해도 괜찮다. profiler를 돌리면 여러가지가 나오는데 Ghost는 우리가 지정
+해 주지 않은 부분을 측정하는 것이기 때문에 profiler의 옵션에서 안보이게끔 체크박스를 해제하자.
+1. Tracy/build 폴더로 이동후 cmake .. -G "Visual Studio 17 2022" 
+2. TracyClient 프로젝트 적용
+3. CMakeLists.txt 파일안에 옵션 조정후 build 폴더에 CMakeCache.txt 파일을 지운후 F7
+4. 리로딩 및 리빌드
+5. 옵션이 적용된 프로젝트가 됨. 
+
+Tracy Profiler를 했을때 너무 느리게 종료 되어서 문제를 확인 해 봤더니 2가지가 있었다. 첫번째는 프로파일을
+수집할 시점이 처음부터 마지막까지여서 필요없는 부분도 수집되는 것이 있었고, 두번째는 수집이 끝난후 그
+부분에 맞는 코드를 찾아서 복사해 주는 부분이 있는데 그 전송량이 많아서 느리게 종료가 되었다. tdd가 아니고
+일반적인 app라면 처음부터 마지막까지의 약간의 딜레이는 참을만하고, 끝나고 나서 코드를 보내주는 부분이
+없기 때문에 빨리 종료가 된다. 하지만 TDD는 종료할때 강제로 종료할수는 없기 때문에 끝나는 시점에 코드를
+계속 서버로 보내주는 부분이 문제가 되었다. 그래서 첫번째 프로파일 수집할 시점을 지정하는 것과 두번째 코
+드를 복사하지 않는 옵션이 존재했다. 
+첫번째(둘다 ON 해야 한다)
+set_option(TRACY_DELAYED_INIT "Enable delayed initialization of the library (init on first call)" ON)
+set_option(TRACY_MANUAL_LIFETIME "Enable the manual lifetime management of the profile" ON)
+두번째
+set_option(TRACY_NO_CODE_TRANSFER "Disable collection of source code" ON)
+이렇게 한 후 코드에 
+tracy::StartupProfiler();
+...
+tracy::ShutdownProfiler();
+를 해 주면 된다. StartupProfiler함수가 보이지 않을 때가 있는데 그건 TRACY_DELAYED_INIT, TRACY_MANUAL_LIFETIME
+디파인이 선언되지 않았기 때문이다.
+
+ Attach 할때 자동 생성되는 이름이 유니크여야 한다. 그렇지 않으면 다른 컴포넌트와 충돌이 일어나기 때문인데, 이것
+ 을 Attach할때 노드들을 돌면서 이름이 있는지 실시간으로 체크해서 이름을 부여하는 방식으로 했었는데 같은 이름이
+ 많아지면 많아질수록 attach 하는 시간이 기하급수적으로 올라갔다. 그래서 이름을 생성되는 클래스를 만들어 이름을
+ 부여하는 식으로 만들고 따로 이름이 동일한지는 체크하지 않는 식으로 만들고 나니 attach 하는 시간이 거의 사라졌다.
+ 추후에 좀 더 개선사항이 있겠지만, 결국 이 이름 클래스와 같은 composite 패턴이 다른 클래스와 묶여 하나의 클래스
+ 가 되어야 하는 것은 시간문제였고, 이번의 해결책은 adapter 패턴을 써서 composite를 가진 매니저 클래스를 다시 
+ composite패턴으로 바꾸는 방식으로 문제해결을 하였다.
+
+ intellisense가 안되는 경우가 발생했다. 가끔씩 안될때도 있는데, 시간이 지나면 돌아오기도 하기 때문에 별 신경을 쓰
+ 지 않았는데 계속 돌아오지 않아서 원인이 무엇인지 봤는데 여러가지 원인이 있었는데 이번에 문제는 cpp를 많이 열
+ 어 놓으면 intellisense가 안되는 듯 하다. 그래서 다음번에 이런일이 발생하면 cpp를 닫고 프로그램을 종료후 다시 로
+ 딩 하는 방법을 사용해야 겠다. .vs 폴더를 삭제하면 열어놓았던 cpp가 다 사라지기 때문에 귀찮기 때문에 cpp를 대충
+ 닫고 재실행 하는 방법으로 해 봐야 겠다. 일단은 .vs를 지우고 다시 켰더니 intellisense가 돌아왔다.
+
+ intellisense가 안되는 경우가 다시 발생했다. 아마도 여러군데 많이 열어서도 문제가 발생하겠지만, hpp를 새로 만들고
+ 나서 이런일이 벌어졌기 때문에 이것 때문일 확률이 높아보인다. intellisense는 컴파일시 문법을 검사했는데 이때는 
+ 문제가 발생해서 intellisense가 안되는 것인데, 실제로 컴파일 돌려보면 템플릿일 경우에는 헤더파일이 다른데서 include
+ 했기 때문에 오류 없이 넘어가는 경우가 있는데, 근본적인 문제는 intellisense와 코드를 컴파일 할때 컴파일이 서로 
+ 다르기 때문에 일어나는 현상이다. 이게 일어났다면 최근에 추가된 hpp가 있는지 의심하는게 합당할 것이다. 그리고
+ 그 hpp안에 필요한 헤더 파일이 있다면 pch에서 include 하고 있겠지만 다시 hpp 안에서 include 해야한다.
+ 그래서 chatgpt를 돌려서 필요한 include가 뭐가 있는지 조사한 다음 헤더에 붙여놨더니 전혀 이 파일과 관련없던 
+ cpp 파일의 intellisense가 작동했다. 
+
+ tdd 프로젝트에서 struct data와 class data가 둘이 존재하면 원래는 먼저 정의한게 있다면서 컴파일할때 지적해 주는데
+ tdd 프로젝트에서는 이런 지적 없이 heap corruption detected 창이 뜨면서 그냥 프로그램이 죽어 버린다. 메모리 충돌
+ 이니까 이쪽으로 한참 찾았는데 문제는 data가 두개 존재해서 충돌나는건데 이걸 못잡아주기 때문이었다.
+
+ 가끔씩 pdb warning이 날때가 있는데 lib를 뽑을때 pdb의 위치를 저장하는 듯 하다. 그래서 lib를 생성하고 카피하면
+ warning이 날때가 있는데 프로젝트 속성에서 lib가 출력될 output폴더를 맞춰주고 lib와 pdb를 뽑으면 warning이 
+ 없어진다. 
+
+ lib 프로젝트는 링크에러가 안나고 exe나 dll 프로젝트인 경우에는 링크 에러가 나는데 lib는 여기에 있을 것이다 마킹만
+ 해 놓고 넘어가서 에러가 안나지만 exe 프로젝트는 실제로 있는지 확인하는데 이때 없으면 에러가 난다. 그래서 참조한
+ 프로젝트에 lib를 올려놓았어도 exe 프로젝트에 다시 lib를 올려 놔야 한다.
+
+ 테스트 프로젝트에서 테스트가 등록이 안될때가 있다. 내 경우는 h로 만들어서 파일을 만들고 그걸 다시 cpp로 확장자만
+ 바꾸었더니 C/C++ 헤더 라고 돼 있어서 인식을 못하는 것 같다. C/C++ 헤더를 C/C++ 컴파일러로 바꾸고 나니 인식이
+ 되었다. 아마도 테스트 프로젝트에서는 헤더는 거의 사용하지 않기 때문에 찾을때 파일을 뒤져서 찾는것 같다. 그때  h
+ 는 건너띄는 그런게 있는 것 같다.
+
+ 테스트 탐색기에서 버벅거리는 현상이 나타났다. exe를 돌면서 테스트가 있는지 확인 하는 것인데, 폴더에 exe
+ 파일이 많으면 많을수록 시간이 오래 걸리는 현상이 일어난다. 그래서 테스트 프로젝트 exe는 다른 폴더에 출력
+ 하게끔 해서 속도 향상이 되도록 했다. 자세히는 모르겠지만, 예전에는 가끔씩 버벅거렸는데 지금은 버벅거리는
+ 것이 많이 준 것 같다. SolutionFolder/GoogleTest/Test1 이렇게 GoogleTest 라는 폴더를 만들어서 여기 /x64폴더에 
+ exe를 나오게끔 수정했다.
+
+ 테스트 프로젝트가 번번히 실행되는게 싫어서 false를 넘겨주면 강제로 끝내게 해서 컴파일은 되지만 테스트 탐색기
+ 에서는 보이지 않도록 조정했다. 추후에 테스트 탐색기에 이런 기능을 넣어주었으면 좋겠다.
+
+ EXPECT_CALL(*child, OnHover()).Times(1); 
+ 여기서 element_type* _Ptr{nullptr}; 여기서 nullptr이라면서 죽었다. 방금전까지만 해도 잘 돌아가는 것이었기 
+ 때문에 의아했다. 그런데 계속해서 nullptr이라고 자꾸 죽어서 리빌드를 했더니 고쳐졌다..
+
+ cpp에 이름이 같은 class를 만들 경우 어떤 클래스가 선택이 될지는 미정이다. 특히 상속을 받은 경우에 상속이
+ 정상동작 안하는 경우가 있는데, 이것은 ODR 위반이다. tdd에서 주로 mock할때 클래스 이름을 똑같이 사용하는
+ 경우가 빈번한데, 이때 발생하기 쉽다. 따라서 tdd에서도 mock 클래스를 만들때 이름이 겹치지 않도록 주의가
+ 요구된다.
+
+ 깃헙에서 최신 SDL3을 다운받는다. verify 된걸로 받는다. 추후에 stable 버전이 나오면 그것을 받아야 한다.
+최신 SDL3를 받아서 cmake로 솔루션 파일을 만든다. 릴리즈로 빌드 시키고 그걸 가지고 install 해야 한다. mixer가 아직 정식이 아니기 때문에 install 하지 않으면 연결이 안되는 듯 하다.
+cmake -S . -B build -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX="D:/ProgrammingStudy/ToyBox/ThirdParty/SDL3"
+cmake --build build --config Release
+cmake --install build
+깃헙에서 최신 SDL3_mixer를 다운받는다. verify 된걸로 받는다. 추후에 stable 버전이 나오면 그것을 받아야 한다.
+/external 폴더로 들어가서 download.sh를 실행시켜서 ogg 및 관련 파일을 다운로드 한다.
+cmake -S . -B build -DCMAKE_PREFIX_PATH="D:/ProgrammingStudy/ToyBox/ThirdParty/SDL3" -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Release -DSDLMIXER_VENDORED=ON
+-DSDLMIXER_VENDORED=ON 이 옵션은 ogg 같은 것을 쓴다면 on 기존에 ogg가 프로젝트에 붙어 있다면 OFF를 해서 기존의 것과 연결해야 한다.
+-DBUILD_SHARED_LIBS=OFF SDL3가 lib만 쓴다면 이 옵션을 걸어주어야 한다.
+프로젝트가 생성되면 Release로 빌드한다.
+include 폴더에 SDL_mixer.h 를 카피해 준다.
+lib폴더에 빌드하고 나온 SDL3_mixer-static.lib를 카피해 준다.
+순서
+1. 깃헙에서든 어디든 SDL3를 다운받는다.
+2. cmake -S . -B build -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX="D:/ProgrammingStudy/ToyBox/ThirdParty/SDL3"
+3. cmake --build build --config Release
+4. cmake --install build
+5. 깃헙에서든 어디든 SDL3_mixer를 다운받는다.
+6. /external 폴더로 들어가서 download.sh를 실행(ogg 및 관련 파일을 다운로드 한다)
+7. cmake -S . -B build -DCMAKE_PREFIX_PATH="D:/ProgrammingStudy/ToyBox/ThirdParty/SDL3" -DBUILD_SHARED_LIBS=OFF -DCMAKE_BUILD_TYPE=Release -DSDLMIXER_VENDORED=ON
+8. .sin 을 열어서 Release 빌드.
+9. install 하고 생긴 폴더인 SDL3/include 폴더에 SDL_mixer.h 를 카피.
+10. lib폴더에 빌드하고 나온 SDL3_mixer-static.lib를 카피.
+
+1>------ 빌드 시작: 프로젝트: ToyExpr, 구성: Debug x64 ------ 
+1>LINK : warning LNK4098: 'MSVCRT' defaultlib가 다른 라이브러리와 충돌합니다. /NODEFAULTLIB:library를 사용하십시오.
+라는 빌드 waring이 떴다. 이것은 추후에
+실제로 생기는 문제들
+- new/delete 서로 다른 힙 사용
+- FILE*, std::string, std::vector 경계 넘어갈 때 크래시
+- 테스트는 통과하는데 릴리즈에서만 터짐
+- 메모리 릭 탐지 불가 / 이중 해제
+이런 문제들이 발생하게 된다. 그래서 warning이지만 빨리 없애주는게 좋을듯 하다.
+사용하고 있는 모든 프로젝트를 MT나 MD로 맞추어 주어야 한다. Debug와 Release도 구분하기 때문에
+MTd, MDd도 맞추어 주어야 한다.
+MD로 하면 마소에 dll 깔아야 한다고 나오는게 이것이다.
+MT로 하면 그런게 다 사라지긴 한데, 기본이 MD로 맞추어져 있기 때문에 다른 외부 lib를 넣을때 MT로 빌드해서
+넣어야 한다. 그리고 dll을 사용하는 프로젝트가 생기면 꼬일 염려가 있다. 결국 MD로 가기 때문에 MD로 하는게
+나을지도 모른다.
+
+어떤게 MT를 썼는지 아니면 MDd 가 아닌 MD를 썻는지 찾아내는건 정말 귀찮다. 때때로 프로젝트에서는 
+MDd로 돼 있지만, 전체 빌드하면 중간에 CMake가 가로채서 빌드를 대신 해 주는 경우도 있기 때문에 최종적으로
+나오는 것은 MDd가 아니라 MD가 나올수도 있기 때문이다. 그래서 확인하는 방법은
+시작 메뉴
+- Developer Command Prompt for VS 2022 검색
+하면 cmd가 나오고 여기서는 dumpbin 프로그램이 돌아간다.
+이걸 이용해서 lib를 검사해 보면 MT인지 MD인지 MDd인지 알수 있다.
+나온 내용을 분석하기 귀찮다면 챗지피티에게 던져보자.
+
+그래서 잘못된 lib를 찾았다면 MDd 셋팅이 맞는지 확인하고 돌려보자. 전체빌드하면 안될 수 있기 때문에
+그 프로젝트를 콕 찝어 돌려보자. 그리고 Debug용 Release용을 따로 만들어서 적용하게 한다.
+새로운 lib가 붙을때 생길 수 있는데, 이때 빨리 처리하지 않으면 나중에 귀찮게 되니 새로운 lib를 붙일때에는
+잘 보고 붙이자. 
+lib프로젝트에서는 warning이 안뜨고 exe에서만 뜨는 것 같기 때문에 더욱 귀찮다. 내 프로젝트가 아닌데도
+경고가 나기 때문에 뜨게 되면 바로 찾아서 없애야 한다.
+
+MockAudioManager.obj : /GL로 컴파일한 MSIL .netmodule 또는 모듈이 있습니다. 
+/LTCG를 지정하여 링크를 다시 시작하십시오. /LTCG를 링크 명령줄에 추가하면 링커 성능이 향상됩니다.
+이런 게 나올 수 있는데 이것은 /GL로 만들어진 게 있는데 /LTCG를 왜 안하느냐 라고 묻는 것.
+간단하게 말해서 빨리 실행하게끔 재료(/GL)를 만들었는데 요리(/LTCG)를 안하는가 라는것. 반대로 /GL을
+하지 않았는데 /LTCG를 하거나 /GL했는데 /LTCG를 안하면 이런걸 띄워준다.
+Google 기본 프로젝트로 생성하면 Release 일때 /GL과 /LTCG가 체크가 안돼 있기 때문에 생기는 것인데,
+체크를 해 주자.
+
+기본으로 /LTCG:incremental을 쓰는데 /LTCG로 바꿨다. 이유는 안된다고 LTCG로 할께 라는 메세지가 계속
+나오니까 그냥 처음부터 /LTCG로 빌드하는 것으로 바꿨다.
+지금 프로젝트는 interface 클래스가 많기 때문에 Release 모드에서 /GL과 /LTCG 가 필수다. 왜냐하면 추상
+클래스 호출을 링크 타임에서 없애주기 때문이다.
+Debug 모드에서는 사용할 필요가 없기 때문에 이 두 옵션이 켜져 있으면 꺼야 한다. 켜놓으면 디버깅 할때
+추상클래스가 보이지 않아서 디버깅이 짜증난다.

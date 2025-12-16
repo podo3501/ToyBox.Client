@@ -1,0 +1,36 @@
+{
+    "BindingFontTable": {
+        "1": "../Resources/UI/Font/HangleS16.spritefont",
+        "2": "../Resources/UI/Font/MaleunGothicS16.spritefont"
+    },
+    "BindingTexTable": {
+        "2": {
+            "Filename": "UI/SampleTexture/Sample_0.png",
+            "ImagePart": 0,
+            "Sources": [
+                {
+                    "0": {
+                        "x": 62,
+                        "y": 82,
+                        "width": 48,
+                        "height": 48
+                    }
+                }
+            ]
+        },
+        "1": {
+            "Filename": "UI/SampleTexture/Sample_0.png",
+            "ImagePart": 0,
+            "Sources": [
+                {
+                    "0": {
+                        "x": 10,
+                        "y": 10,
+                        "width": 64,
+                        "height": 64
+                    }
+                }
+            ]
+        }
+    }
+}

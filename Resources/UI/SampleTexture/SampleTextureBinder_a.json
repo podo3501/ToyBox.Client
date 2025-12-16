@@ -1,0 +1,724 @@
+{
+    "BindingFontTable": {
+        "English": {
+            "Filename": "UI/Font/CourierNewBoldS18.spritefont"
+        },
+        "Hangle": {
+            "Filename": "UI/Font/MaleunGothicS16.spritefont"
+        }
+    },
+    "BindingTexTable": {
+        "ListBackground1_Normal": {
+            "Filename": "UI/SampleTexture/Sample_0.png",
+            "ImagePart": 0,
+            "Sources": [
+                {
+                    "0": {
+                        "x": 118,
+                        "y": 138,
+                        "width": 32,
+                        "height": 32
+                    }
+                }
+            ]
+        },
+        "ExitButton1_Normal": {
+            "Filename": "UI/SampleTexture/Sample_0.png",
+            "ImagePart": 0,
+            "Sources": [
+                {
+                    "0": {
+                        "x": 10,
+                        "y": 138,
+                        "width": 32,
+                        "height": 32
+                    }
+                }
+            ]
+        },
+        "BackImage9": {
+            "Filename": "UI/SampleTexture/Sample_0.png",
+            "ImagePart": 3,
+            "Sources": [
+                {
+                    "0": {
+                        "x": 10,
+                        "y": 10,
+                        "width": 30,
+                        "height": 36
+                    }
+                },
+                {
+                    "1": {
+                        "x": 40,
+                        "y": 10,
+                        "width": 4,
+                        "height": 36
+                    }
+                },
+                {
+                    "2": {
+                        "x": 44,
+                        "y": 10,
+                        "width": 30,
+                        "height": 36
+                    }
+                },
+                {
+                    "3": {
+                        "x": 10,
+                        "y": 46,
+                        "width": 30,
+                        "height": 2
+                    }
+                },
+                {
+                    "4": {
+                        "x": 40,
+                        "y": 46,
+                        "width": 4,
+                        "height": 2
+                    }
+                },
+                {
+                    "5": {
+                        "x": 44,
+                        "y": 46,
+                        "width": 30,
+                        "height": 2
+                    }
+                },
+                {
+                    "6": {
+                        "x": 10,
+                        "y": 48,
+                        "width": 30,
+                        "height": 26
+                    }
+                },
+                {
+                    "7": {
+                        "x": 40,
+                        "y": 48,
+                        "width": 4,
+                        "height": 26
+                    }
+                },
+                {
+                    "8": {
+                        "x": 44,
+                        "y": 48,
+                        "width": 30,
+                        "height": 26
+                    }
+                }
+            ]
+        },
+        "BackImage1": {
+            "Filename": "UI/SampleTexture/Sample_0.png",
+            "ImagePart": 0,
+            "Sources": [
+                {
+                    "0": {
+                        "x": 10,
+                        "y": 10,
+                        "width": 64,
+                        "height": 64
+                    }
+                }
+            ]
+        },
+        "ListBackground1_Hovered": {
+            "Filename": "UI/SampleTexture/Sample_0.png",
+            "ImagePart": 0,
+            "Sources": [
+                {
+                    "0": {
+                        "x": 154,
+                        "y": 138,
+                        "width": 32,
+                        "height": 32
+                    }
+                }
+            ]
+        },
+        "ExitButton1_Hovered": {
+            "Filename": "UI/SampleTexture/Sample_0.png",
+            "ImagePart": 0,
+            "Sources": [
+                {
+                    "0": {
+                        "x": 46,
+                        "y": 138,
+                        "width": 32,
+                        "height": 32
+                    }
+                }
+            ]
+        },
+        "ExitButton1_Pressed": {
+            "Filename": "UI/SampleTexture/Sample_0.png",
+            "ImagePart": 0,
+            "Sources": [
+                {
+                    "0": {
+                        "x": 82,
+                        "y": 138,
+                        "width": 32,
+                        "height": 32
+                    }
+                }
+            ]
+        },
+        "ListBackImage1": {
+            "Filename": "UI/SampleTexture/Sample_0.png",
+            "ImagePart": 0,
+            "Sources": [
+                {
+                    "0": {
+                        "x": 10,
+                        "y": 178,
+                        "width": 48,
+                        "height": 48
+                    }
+                }
+            ]
+        },
+        "ListBackground1_Pressed": {
+            "Filename": "UI/SampleTexture/Sample_0.png",
+            "ImagePart": 0,
+            "Sources": [
+                {
+                    "0": {
+                        "x": 190,
+                        "y": 138,
+                        "width": 32,
+                        "height": 32
+                    }
+                }
+            ]
+        },
+        "OptionImage9": {
+            "Filename": "UI/SampleTexture/Option.png",
+            "ImagePart": 3,
+            "Sources": [
+                {
+                    "0": {
+                        "x": 10,
+                        "y": 162,
+                        "width": 20,
+                        "height": 30
+                    }
+                },
+                {
+                    "1": {
+                        "x": 30,
+                        "y": 162,
+                        "width": 115,
+                        "height": 30
+                    }
+                },
+                {
+                    "2": {
+                        "x": 145,
+                        "y": 162,
+                        "width": 20,
+                        "height": 30
+                    }
+                },
+                {
+                    "3": {
+                        "x": 10,
+                        "y": 192,
+                        "width": 20,
+                        "height": 72
+                    }
+                },
+                {
+                    "4": {
+                        "x": 30,
+                        "y": 192,
+                        "width": 115,
+                        "height": 72
+                    }
+                },
+                {
+                    "5": {
+                        "x": 145,
+                        "y": 192,
+                        "width": 20,
+                        "height": 72
+                    }
+                },
+                {
+                    "6": {
+                        "x": 10,
+                        "y": 264,
+                        "width": 20,
+                        "height": 19
+                    }
+                },
+                {
+                    "7": {
+                        "x": 30,
+                        "y": 264,
+                        "width": 115,
+                        "height": 19
+                    }
+                },
+                {
+                    "8": {
+                        "x": 145,
+                        "y": 264,
+                        "width": 20,
+                        "height": 19
+                    }
+                }
+            ]
+        },
+        "ScrollButton3_H_Hovered": {
+            "Filename": "UI/SampleTexture/Sample_0.png",
+            "ImagePart": 1,
+            "Sources": [
+                {
+                    "0": {
+                        "x": 62,
+                        "y": 82,
+                        "width": 22,
+                        "height": 48
+                    }
+                },
+                {
+                    "1": {
+                        "x": 84,
+                        "y": 82,
+                        "width": 4,
+                        "height": 48
+                    }
+                },
+                {
+                    "2": {
+                        "x": 88,
+                        "y": 82,
+                        "width": 22,
+                        "height": 48
+                    }
+                }
+            ]
+        },
+        "ScrollButton3_H_Normal": {
+            "Filename": "UI/SampleTexture/Sample_0.png",
+            "ImagePart": 1,
+            "Sources": [
+                {
+                    "0": {
+                        "x": 10,
+                        "y": 82,
+                        "width": 22,
+                        "height": 48
+                    }
+                },
+                {
+                    "1": {
+                        "x": 32,
+                        "y": 82,
+                        "width": 4,
+                        "height": 48
+                    }
+                },
+                {
+                    "2": {
+                        "x": 36,
+                        "y": 82,
+                        "width": 22,
+                        "height": 48
+                    }
+                }
+            ]
+        },
+        "ScrollButton3_H_Pressed": {
+            "Filename": "UI/SampleTexture/Sample_0.png",
+            "ImagePart": 1,
+            "Sources": [
+                {
+                    "0": {
+                        "x": 114,
+                        "y": 82,
+                        "width": 22,
+                        "height": 48
+                    }
+                },
+                {
+                    "1": {
+                        "x": 136,
+                        "y": 82,
+                        "width": 4,
+                        "height": 48
+                    }
+                },
+                {
+                    "2": {
+                        "x": 140,
+                        "y": 82,
+                        "width": 22,
+                        "height": 48
+                    }
+                }
+            ]
+        },
+        "ScrollButton3_V_Hovered": {
+            "Filename": "UI/SampleTexture/Sample_0.png",
+            "ImagePart": 2,
+            "Sources": [
+                {
+                    "0": {
+                        "x": 154,
+                        "y": 178,
+                        "width": 16,
+                        "height": 7
+                    }
+                },
+                {
+                    "1": {
+                        "x": 154,
+                        "y": 185,
+                        "width": 16,
+                        "height": 2
+                    }
+                },
+                {
+                    "2": {
+                        "x": 154,
+                        "y": 187,
+                        "width": 16,
+                        "height": 7
+                    }
+                }
+            ]
+        },
+        "ScrollButton3_V_Normal": {
+            "Filename": "UI/SampleTexture/Sample_0.png",
+            "ImagePart": 2,
+            "Sources": [
+                {
+                    "0": {
+                        "x": 134,
+                        "y": 178,
+                        "width": 16,
+                        "height": 7
+                    }
+                },
+                {
+                    "1": {
+                        "x": 134,
+                        "y": 185,
+                        "width": 16,
+                        "height": 2
+                    }
+                },
+                {
+                    "2": {
+                        "x": 134,
+                        "y": 187,
+                        "width": 16,
+                        "height": 7
+                    }
+                }
+            ]
+        },
+        "ScrollButton3_V_Pressed": {
+            "Filename": "UI/SampleTexture/Sample_0.png",
+            "ImagePart": 2,
+            "Sources": [
+                {
+                    "0": {
+                        "x": 174,
+                        "y": 178,
+                        "width": 16,
+                        "height": 7
+                    }
+                },
+                {
+                    "1": {
+                        "x": 174,
+                        "y": 185,
+                        "width": 16,
+                        "height": 2
+                    }
+                },
+                {
+                    "2": {
+                        "x": 174,
+                        "y": 187,
+                        "width": 16,
+                        "height": 7
+                    }
+                }
+            ]
+        },
+        "ScrollTrack3_V": {
+            "Filename": "UI/SampleTexture/Sample_0.png",
+            "ImagePart": 2,
+            "Sources": [
+                {
+                    "0": {
+                        "x": 114,
+                        "y": 178,
+                        "width": 16,
+                        "height": 10
+                    }
+                },
+                {
+                    "1": {
+                        "x": 114,
+                        "y": 188,
+                        "width": 16,
+                        "height": 28
+                    }
+                },
+                {
+                    "2": {
+                        "x": 114,
+                        "y": 216,
+                        "width": 16,
+                        "height": 10
+                    }
+                }
+            ]
+        },
+        "ListBackground9_Normal": {
+            "Filename": "UI/SampleTexture/Sample_0.png",
+            "ImagePart": 3,
+            "Sources": [
+                {
+                    "0": {
+                        "x": 118,
+                        "y": 138,
+                        "width": 10,
+                        "height": 10
+                    }
+                },
+                {
+                    "1": {
+                        "x": 128,
+                        "y": 138,
+                        "width": 12,
+                        "height": 10
+                    }
+                },
+                {
+                    "2": {
+                        "x": 140,
+                        "y": 138,
+                        "width": 10,
+                        "height": 10
+                    }
+                },
+                {
+                    "3": {
+                        "x": 118,
+                        "y": 148,
+                        "width": 10,
+                        "height": 12
+                    }
+                },
+                {
+                    "4": {
+                        "x": 128,
+                        "y": 148,
+                        "width": 12,
+                        "height": 12
+                    }
+                },
+                {
+                    "5": {
+                        "x": 140,
+                        "y": 148,
+                        "width": 10,
+                        "height": 12
+                    }
+                },
+                {
+                    "6": {
+                        "x": 118,
+                        "y": 160,
+                        "width": 10,
+                        "height": 10
+                    }
+                },
+                {
+                    "7": {
+                        "x": 128,
+                        "y": 160,
+                        "width": 12,
+                        "height": 10
+                    }
+                },
+                {
+                    "8": {
+                        "x": 140,
+                        "y": 160,
+                        "width": 10,
+                        "height": 10
+                    }
+                }
+            ]
+        },
+        "ListBackground9_Hovered": {
+            "Filename": "UI/SampleTexture/Sample_0.png",
+            "ImagePart": 3,
+            "Sources": [
+                {
+                    "0": {
+                        "x": 154,
+                        "y": 138,
+                        "width": 10,
+                        "height": 10
+                    }
+                },
+                {
+                    "1": {
+                        "x": 164,
+                        "y": 138,
+                        "width": 12,
+                        "height": 10
+                    }
+                },
+                {
+                    "2": {
+                        "x": 176,
+                        "y": 138,
+                        "width": 10,
+                        "height": 10
+                    }
+                },
+                {
+                    "3": {
+                        "x": 154,
+                        "y": 148,
+                        "width": 10,
+                        "height": 12
+                    }
+                },
+                {
+                    "4": {
+                        "x": 164,
+                        "y": 148,
+                        "width": 12,
+                        "height": 12
+                    }
+                },
+                {
+                    "5": {
+                        "x": 176,
+                        "y": 148,
+                        "width": 10,
+                        "height": 12
+                    }
+                },
+                {
+                    "6": {
+                        "x": 154,
+                        "y": 160,
+                        "width": 10,
+                        "height": 10
+                    }
+                },
+                {
+                    "7": {
+                        "x": 164,
+                        "y": 160,
+                        "width": 12,
+                        "height": 10
+                    }
+                },
+                {
+                    "8": {
+                        "x": 176,
+                        "y": 160,
+                        "width": 10,
+                        "height": 10
+                    }
+                }
+            ]
+        },
+        "ListBackground9_Pressed": {
+            "Filename": "UI/SampleTexture/Sample_0.png",
+            "ImagePart": 3,
+            "Sources": [
+                {
+                    "0": {
+                        "x": 190,
+                        "y": 138,
+                        "width": 10,
+                        "height": 10
+                    }
+                },
+                {
+                    "1": {
+                        "x": 200,
+                        "y": 138,
+                        "width": 12,
+                        "height": 10
+                    }
+                },
+                {
+                    "2": {
+                        "x": 212,
+                        "y": 138,
+                        "width": 10,
+                        "height": 10
+                    }
+                },
+                {
+                    "3": {
+                        "x": 190,
+                        "y": 148,
+                        "width": 10,
+                        "height": 12
+                    }
+                },
+                {
+                    "4": {
+                        "x": 200,
+                        "y": 148,
+                        "width": 12,
+                        "height": 12
+                    }
+                },
+                {
+                    "5": {
+                        "x": 212,
+                        "y": 148,
+                        "width": 10,
+                        "height": 12
+                    }
+                },
+                {
+                    "6": {
+                        "x": 190,
+                        "y": 160,
+                        "width": 10,
+                        "height": 10
+                    }
+                },
+                {
+                    "7": {
+                        "x": 200,
+                        "y": 160,
+                        "width": 12,
+                        "height": 10
+                    }
+                },
+                {
+                    "8": {
+                        "x": 212,
+                        "y": 160,
+                        "width": 10,
+                        "height": 10
+                    }
+                }
+            ]
+        }
+    }
+}

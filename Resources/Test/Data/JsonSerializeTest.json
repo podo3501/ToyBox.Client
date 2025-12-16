@@ -1,0 +1,41 @@
+{
+    "Data": [
+        {
+            "Position": {
+                "x": 0.1,
+                "y": 0.1
+            }
+        }
+    ],
+    "UPtrData": [
+        {
+            "Position": {
+                "x": 0.3,
+                "y": 0.3
+            }
+        }
+    ],
+    "MapData": {
+        "1": {
+            "Position": {
+                "x": 0.4,
+                "y": 0.4
+            }
+        }
+    },
+    "SVMapData": {
+        "2": {
+            "Position": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        }
+    },
+    "Layout": {
+        "Size": {
+            "x": 50,
+            "y": 100
+        },
+        "Origin": "Center"
+    }
+}

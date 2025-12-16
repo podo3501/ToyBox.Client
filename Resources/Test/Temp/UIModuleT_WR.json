@@ -1,0 +1,46 @@
+{
+    "MainPanel": {
+        "Name": "Main",
+        "Layout": {
+            "Size": {
+                "x": 800,
+                "y": 600
+            },
+            "Origin": "LeftTop"
+        },
+        "Transform": {
+            "Ratio": {
+                "x": 0.0,
+                "y": 0.0
+            },
+            "RelativePosition": {
+                "x": 0,
+                "y": 0
+            }
+        },
+        "Region": "",
+        "StateFlag": 15,
+        "RenderSearch": 0,
+        "Children": null
+    },
+    "UINameGenerator": {
+        "RegionGens": {
+            "": {
+                "Namers": 1,
+                "Recycled": [],
+                "Deletable": false
+            }
+        },
+        "RegionNames": {
+            "": {
+                "Namers": {
+                    "Main": {
+                        "Namers": 1,
+                        "Recycled": [],
+                        "Deletable": false
+                    }
+                }
+            }
+        }
+    }
+}

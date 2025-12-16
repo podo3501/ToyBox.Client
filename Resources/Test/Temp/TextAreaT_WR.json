@@ -1,0 +1,29 @@
+{
+    "Name": "",
+    "Layout": {
+        "Size": {
+            "x": 0,
+            "y": 0
+        },
+        "Origin": "LeftTop"
+    },
+    "Transform": {
+        "Ratio": {
+            "x": 0.0,
+            "y": 0.0
+        },
+        "RelativePosition": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    "Region": "",
+    "StateFlag": 15,
+    "RenderSearch": 0,
+    "Children": null,
+    "BindKeys": [
+        "Hangle",
+        "English"
+    ],
+    "Text": "<Hangle>테스트<Red>빨강색</Red></Hangle><br><English>Test<Blue>Blue</Blue></English>"
+}

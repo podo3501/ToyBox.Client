@@ -1,0 +1,460 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="UserInterface">
+      <UniqueIdentifier>{7d2930d3-03cc-4bfc-956f-bf8ef99a4472}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UserInterface\UIComponent">
+      <UniqueIdentifier>{699c8739-a17a-426b-919d-a41c2a0720e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UserInterface\UIComponent\Components">
+      <UniqueIdentifier>{38daeccc-4d6c-4764-af27-14352fe2742c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UserInterface\TextureResourceBinder">
+      <UniqueIdentifier>{ad970e99-99e5-45d5-9313-ad0034f6e4dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UserInterface\UIComponent\Components\PatchTexture">
+      <UniqueIdentifier>{a66eb273-6dfc-452e-9c11-241024693edb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UserInterface\UIComponent\Components\PatchTexture\PatchTextureLite">
+      <UniqueIdentifier>{0c3579d6-674e-4e2f-978a-56d8bc3de56e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UserInterface\UIComponent\Components\PatchTexture\PatchTextureStd">
+      <UniqueIdentifier>{7a3c1d34-9d41-408e-8ecf-951fb5069abf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UserInterface\UINameGenerator">
+      <UniqueIdentifier>{f4569c6f-77f4-4758-a897-59e37b1e9875}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UserInterface\SerializerIO">
+      <UniqueIdentifier>{e8893605-b286-4553-a291-e0537d05b55a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UserInterface\CommandHistory">
+      <UniqueIdentifier>{fdac42c1-45de-4313-8c6a-afa030454313}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UserInterface\CommandHistory\TextureResource">
+      <UniqueIdentifier>{8a404295-d53a-4966-922b-8037564743a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UserInterface\CommandHistory\UserInterface">
+      <UniqueIdentifier>{fcc3e183-7060-4c68-b4b8-eb0b5d40bbff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scenes">
+      <UniqueIdentifier>{cf7fad67-ed75-46c8-b3c5-155e5fd82d28}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System">
+      <UniqueIdentifier>{52b8b38f-bbdb-42d2-8db8-87740983e705}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scenes\Test">
+      <UniqueIdentifier>{49e93b6a-2698-4a0d-8ef0-9a2f44274533}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Locator">
+      <UniqueIdentifier>{c5a95ad5-e274-42af-9830-e977bf2336f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UserInterface\Input">
+      <UniqueIdentifier>{c6ee3cc2-17fc-4d24-9b62-30e36841a068}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UserInterface\UIComponent\Traverser">
+      <UniqueIdentifier>{5d9b9ca9-a246-48e6-9753-0501ad139a02}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="GameLoop.h" />
+    <ClInclude Include="UserInterface\UIComponent\Components\Button.h">
+      <Filter>UserInterface\UIComponent\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface\UIComponent\Components\Container.h">
+      <Filter>UserInterface\UIComponent\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface\UIComponent\Components\Dialog.h">
+      <Filter>UserInterface\UIComponent\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface\UIComponent\Components\TextureSwitcher.h">
+      <Filter>UserInterface\UIComponent\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface\UIComponent\Components\ListArea.h">
+      <Filter>UserInterface\UIComponent\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface\UIComponent\Components\Panel.h">
+      <Filter>UserInterface\UIComponent\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface\UIComponent\Components\RenderTexture.h">
+      <Filter>UserInterface\UIComponent\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface\UIComponent\Components\SampleComponent.h">
+      <Filter>UserInterface\UIComponent\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface\UIComponent\Components\ScrollBar.h">
+      <Filter>UserInterface\UIComponent\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface\UIComponent\Components\TextArea.h">
+      <Filter>UserInterface\UIComponent\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface\UIComponent\UIComponent.h">
+      <Filter>UserInterface\UIComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface\UIComponent\UIComponentFactory.h">
+      <Filter>UserInterface\UIComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface\UIComponent\UIHelperClass.h">
+      <Filter>UserInterface\UIComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface\UIComponent\UILayout.h">
+      <Filter>UserInterface\UIComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface\UIComponent\UITransform.h">
+      <Filter>UserInterface\UIComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface\UIComponent\UIType.h">
+      <Filter>UserInterface\UIComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface\UIComponent\UIUtility.h">
+      <Filter>UserInterface\UIComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface\TextureResourceBinder\TextureBinderHelper.h">
+      <Filter>UserInterface\TextureResourceBinder</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface\TextureResourceBinder\TextureFontInfo.h">
+      <Filter>UserInterface\TextureResourceBinder</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface\TextureResourceBinder\TextureInfo.h">
+      <Filter>UserInterface\TextureResourceBinder</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface\TextureResourceBinder\TextureLoadBinder.h">
+      <Filter>UserInterface\TextureResourceBinder</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface\TextureResourceBinder\TextureResourceBinder.h">
+      <Filter>UserInterface\TextureResourceBinder</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface\TextureResourceBinder\TextureSourceInfo.h">
+      <Filter>UserInterface\TextureResourceBinder</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface\UIComponent\Components\PatchTexture\PatchTexture.h">
+      <Filter>UserInterface\UIComponent\Components\PatchTexture</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface\UIComponent\Components\PatchTexture\PatchTextureCoord.h">
+      <Filter>UserInterface\UIComponent\Components\PatchTexture</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface\UIComponent\Components\PatchTexture\PatchTextureLite\PatchTextureLite.h">
+      <Filter>UserInterface\UIComponent\Components\PatchTexture\PatchTextureLite</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface\UIComponent\Components\PatchTexture\PatchTextureLite\PatchTextureLite1.h">
+      <Filter>UserInterface\UIComponent\Components\PatchTexture\PatchTextureLite</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface\UIComponent\Components\PatchTexture\PatchTextureLite\PatchTextureLite3.h">
+      <Filter>UserInterface\UIComponent\Components\PatchTexture\PatchTextureLite</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface\UIComponent\Components\PatchTexture\PatchTextureLite\PatchTextureLite9.h">
+      <Filter>UserInterface\UIComponent\Components\PatchTexture\PatchTextureLite</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface\UIComponent\Components\PatchTexture\PatchTextureStd\PatchTextureStd1.h">
+      <Filter>UserInterface\UIComponent\Components\PatchTexture\PatchTextureStd</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface\UIComponent\Components\PatchTexture\PatchTextureStd\PatchTextureStd3.h">
+      <Filter>UserInterface\UIComponent\Components\PatchTexture\PatchTextureStd</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface\UIComponent\Components\PatchTexture\PatchTextureStd\PatchTextureStd9.h">
+      <Filter>UserInterface\UIComponent\Components\PatchTexture\PatchTextureStd</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface\UIComponent\Components\PatchTexture\PatchTextureStd\PatchTextureStd.h">
+      <Filter>UserInterface\UIComponent\Components\PatchTexture\PatchTextureStd</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface\UIComponent\Components\UIModuleAsComponent.h">
+      <Filter>UserInterface\UIComponent\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface\UINameGenerator\AutoNamer.h">
+      <Filter>UserInterface\UINameGenerator</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface\UINameGenerator\ComponentNameGenerator.h">
+      <Filter>UserInterface\UINameGenerator</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface\UINameGenerator\UINameGenerator.h">
+      <Filter>UserInterface\UINameGenerator</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface\SerializerIO\ClassSerializeIO.h">
+      <Filter>UserInterface\SerializerIO</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface\SerializerIO\KeyConverter.h">
+      <Filter>UserInterface\SerializerIO</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface\SerializerIO\Traits.h">
+      <Filter>UserInterface\SerializerIO</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface\CommandHistory\Command.h">
+      <Filter>UserInterface\CommandHistory</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface\CommandHistory\CommandHistory.h">
+      <Filter>UserInterface\CommandHistory</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface\CommandHistory\CommandType.h">
+      <Filter>UserInterface\CommandHistory</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface\CommandHistory\TextureResource\TexResCommandHistory.h">
+      <Filter>UserInterface\CommandHistory\TextureResource</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface\CommandHistory\TextureResource\TexResCommandRegistry.h">
+      <Filter>UserInterface\CommandHistory\TextureResource</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface\CommandHistory\UserInterface\UICommandHistory.h">
+      <Filter>UserInterface\CommandHistory\UserInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface\CommandHistory\UserInterface\UICommandRegistry.h">
+      <Filter>UserInterface\CommandHistory\UserInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\Scene.h">
+      <Filter>Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="System\SceneManager.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\SceneType.h">
+      <Filter>Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\Test\ComponentTestScene.h">
+      <Filter>Scenes\Test</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\Test\TestScene1.h">
+      <Filter>Scenes\Test</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\Test\TestScene2.h">
+      <Filter>Scenes\Test</Filter>
+    </ClInclude>
+    <ClInclude Include="Locator\SceneLocator.h">
+      <Filter>Locator</Filter>
+    </ClInclude>
+    <ClInclude Include="Locator\InputLocator.h">
+      <Filter>Locator</Filter>
+    </ClInclude>
+    <ClInclude Include="Locator\AudioLocator.h">
+      <Filter>Locator</Filter>
+    </ClInclude>
+    <ClInclude Include="System\EventDispatcherManager.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="Locator\EventDispatcherLocator.h">
+      <Filter>Locator</Filter>
+    </ClInclude>
+    <ClInclude Include="System\IEventDispatcherManager.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="System\ISceneManager.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface\Input\IMouseEventReceiver.h">
+      <Filter>UserInterface\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface\UIComponentManager.h">
+      <Filter>UserInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface\UIComponentLocator.h">
+      <Filter>UserInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface\UIComponent\Traverser\NameTraverser.h">
+      <Filter>UserInterface\UIComponent\Traverser</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface\UIComponent\Traverser\HierarchyTraverser.h">
+      <Filter>UserInterface\UIComponent\Traverser</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface\UIComponent\Traverser\BaseTraverser.h">
+      <Filter>UserInterface\UIComponent\Traverser</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface\UIComponent\Traverser\UITraverser.h">
+      <Filter>UserInterface\UIComponent\Traverser</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface\UIModule.h">
+      <Filter>UserInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface\UIComponent\Traverser\DerivedTraverser.h">
+      <Filter>UserInterface\UIComponent\Traverser</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface\UIComponent\UIComponent.hpp">
+      <Filter>UserInterface\UIComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface\MouseEventRouter.h">
+      <Filter>UserInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface\UIComponent\Traverser\UIDetailTraverser.h">
+      <Filter>UserInterface\UIComponent\Traverser</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="pch.cpp" />
+    <ClCompile Include="GameLoop.cpp" />
+    <ClCompile Include="UserInterface\UIComponent\Components\Button.cpp">
+      <Filter>UserInterface\UIComponent\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInterface\UIComponent\Components\Container.cpp">
+      <Filter>UserInterface\UIComponent\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInterface\UIComponent\Components\Dialog.cpp">
+      <Filter>UserInterface\UIComponent\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInterface\UIComponent\Components\TextureSwitcher.cpp">
+      <Filter>UserInterface\UIComponent\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInterface\UIComponent\Components\ListArea.cpp">
+      <Filter>UserInterface\UIComponent\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInterface\UIComponent\Components\Panel.cpp">
+      <Filter>UserInterface\UIComponent\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInterface\UIComponent\Components\RenderTexture.cpp">
+      <Filter>UserInterface\UIComponent\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInterface\UIComponent\Components\SampleComponent.cpp">
+      <Filter>UserInterface\UIComponent\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInterface\UIComponent\Components\ScrollBar.cpp">
+      <Filter>UserInterface\UIComponent\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInterface\UIComponent\Components\TextArea.cpp">
+      <Filter>UserInterface\UIComponent\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInterface\UIComponent\UIComponent.cpp">
+      <Filter>UserInterface\UIComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInterface\UIComponent\UIComponentFactory.cpp">
+      <Filter>UserInterface\UIComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInterface\UIComponent\UIHelperClass.cpp">
+      <Filter>UserInterface\UIComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInterface\UIComponent\UILayout.cpp">
+      <Filter>UserInterface\UIComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInterface\UIComponent\UITransform.cpp">
+      <Filter>UserInterface\UIComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInterface\UIComponent\UIType.cpp">
+      <Filter>UserInterface\UIComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInterface\UIComponent\UIUtility.cpp">
+      <Filter>UserInterface\UIComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInterface\TextureResourceBinder\TextureBinderHelper.cpp">
+      <Filter>UserInterface\TextureResourceBinder</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInterface\TextureResourceBinder\TextureFontInfo.cpp">
+      <Filter>UserInterface\TextureResourceBinder</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInterface\TextureResourceBinder\TextureInfo.cpp">
+      <Filter>UserInterface\TextureResourceBinder</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInterface\TextureResourceBinder\TextureLoadBinder.cpp">
+      <Filter>UserInterface\TextureResourceBinder</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInterface\TextureResourceBinder\TextureResourceBinder.cpp">
+      <Filter>UserInterface\TextureResourceBinder</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInterface\TextureResourceBinder\TextureSourceInfo.cpp">
+      <Filter>UserInterface\TextureResourceBinder</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInterface\UIComponent\Components\PatchTexture\PatchTexture.cpp">
+      <Filter>UserInterface\UIComponent\Components\PatchTexture</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInterface\UIComponent\Components\PatchTexture\PatchTextureCoord.cpp">
+      <Filter>UserInterface\UIComponent\Components\PatchTexture</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInterface\UIComponent\Components\PatchTexture\PatchTextureLite\PatchTextureLite.cpp">
+      <Filter>UserInterface\UIComponent\Components\PatchTexture\PatchTextureLite</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInterface\UIComponent\Components\PatchTexture\PatchTextureLite\PatchTextureLite1.cpp">
+      <Filter>UserInterface\UIComponent\Components\PatchTexture\PatchTextureLite</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInterface\UIComponent\Components\PatchTexture\PatchTextureLite\PatchTextureLite3.cpp">
+      <Filter>UserInterface\UIComponent\Components\PatchTexture\PatchTextureLite</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInterface\UIComponent\Components\PatchTexture\PatchTextureLite\PatchTextureLite9.cpp">
+      <Filter>UserInterface\UIComponent\Components\PatchTexture\PatchTextureLite</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInterface\UIComponent\Components\PatchTexture\PatchTextureStd\PatchTextureStd1.cpp">
+      <Filter>UserInterface\UIComponent\Components\PatchTexture\PatchTextureStd</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInterface\UIComponent\Components\PatchTexture\PatchTextureStd\PatchTextureStd3.cpp">
+      <Filter>UserInterface\UIComponent\Components\PatchTexture\PatchTextureStd</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInterface\UIComponent\Components\PatchTexture\PatchTextureStd\PatchTextureStd9.cpp">
+      <Filter>UserInterface\UIComponent\Components\PatchTexture\PatchTextureStd</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInterface\UIComponent\Components\PatchTexture\PatchTextureStd\PatchTextureStd.cpp">
+      <Filter>UserInterface\UIComponent\Components\PatchTexture\PatchTextureStd</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInterface\UIComponent\Components\UIModuleAsComponent.cpp">
+      <Filter>UserInterface\UIComponent\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInterface\UINameGenerator\AutoNamer.cpp">
+      <Filter>UserInterface\UINameGenerator</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInterface\UINameGenerator\ComponentNameGenerator.cpp">
+      <Filter>UserInterface\UINameGenerator</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInterface\UINameGenerator\UINameGenerator.cpp">
+      <Filter>UserInterface\UINameGenerator</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInterface\SerializerIO\ClassSerializeIO.cpp">
+      <Filter>UserInterface\SerializerIO</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInterface\SerializerIO\KeyConverter.cpp">
+      <Filter>UserInterface\SerializerIO</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInterface\SerializerIO\Traits.cpp">
+      <Filter>UserInterface\SerializerIO</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInterface\CommandHistory\TextureResource\TexResCommandHistory.cpp">
+      <Filter>UserInterface\CommandHistory\TextureResource</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInterface\CommandHistory\TextureResource\TexResCommandRegistry.cpp">
+      <Filter>UserInterface\CommandHistory\TextureResource</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInterface\CommandHistory\UserInterface\UICommandHistory.cpp">
+      <Filter>UserInterface\CommandHistory\UserInterface</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInterface\CommandHistory\UserInterface\UICommandRegistry.cpp">
+      <Filter>UserInterface\CommandHistory\UserInterface</Filter>
+    </ClCompile>
+    <ClCompile Include="System\SceneManager.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\Test\ComponentTestScene.cpp">
+      <Filter>Scenes\Test</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\Test\TestScene1.cpp">
+      <Filter>Scenes\Test</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\Test\TestScene2.cpp">
+      <Filter>Scenes\Test</Filter>
+    </ClCompile>
+    <ClCompile Include="System\EventDispatcherManager.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInterface\UIComponentManager.cpp">
+      <Filter>UserInterface</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInterface\UIComponent\Traverser\NameTraverser.cpp">
+      <Filter>UserInterface\UIComponent\Traverser</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInterface\UIComponent\Traverser\HierarchyTraverser.cpp">
+      <Filter>UserInterface\UIComponent\Traverser</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInterface\UIComponent\Traverser\BaseTraverser.cpp">
+      <Filter>UserInterface\UIComponent\Traverser</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInterface\UIComponent\Traverser\UITraverser.cpp">
+      <Filter>UserInterface\UIComponent\Traverser</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInterface\UIModule.cpp">
+      <Filter>UserInterface</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInterface\UIComponent\Traverser\DerivedTraverser.cpp">
+      <Filter>UserInterface\UIComponent\Traverser</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInterface\MouseEventRouter.cpp">
+      <Filter>UserInterface</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInterface\UIComponent\Traverser\UIDetailTraverser.cpp">
+      <Filter>UserInterface\UIComponent\Traverser</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInterface\UIComponentLocator.cpp">
+      <Filter>UserInterface</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

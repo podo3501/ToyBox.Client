@@ -1,0 +1,5 @@
+﻿Imgui 설명서
+
+ImGui::GetFrameHeight();	//윈도우 높이 값을 가져온다 19.f
+ImGui::SetWindowSize(size);	//윈도우 사이즈 값을 지정한다. 기본 호출이 update이기 때문에 한번만 호출하게 해야 한다.
+슬라이드 바의 넓이는 16.f 이다.

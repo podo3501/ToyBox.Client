@@ -1,0 +1,24 @@
+{
+    "Name": "",
+    "Layout": {
+        "Size": {
+            "x": 20,
+            "y": 20
+        },
+        "Origin": "LeftTop"
+    },
+    "Transform": {
+        "Ratio": {
+            "x": 0.0,
+            "y": 0.0
+        },
+        "RelativePosition": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    "Region": "",
+    "StateFlag": 55,
+    "RenderSearch": 2,
+    "Children": null
+}

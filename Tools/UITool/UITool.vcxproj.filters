@@ -1,0 +1,233 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Window">
+      <UniqueIdentifier>{419e6e03-0bf2-487a-81c1-eda52ac91cb4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Window\Menu">
+      <UniqueIdentifier>{5e9bd6b3-6646-41cc-bb90-78eafbd66727}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Window\TextureResourceBinder">
+      <UniqueIdentifier>{a54ce822-26c4-4984-9fb2-0dbc587fdd0c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Window\UserInterface">
+      <UniqueIdentifier>{80bfb81a-7cc2-4e68-a9a3-0027dbcbd1bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Window\UserInterface\SelectedComponent">
+      <UniqueIdentifier>{304b7e42-d24b-4545-82c3-caab2f2e21ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Window\UserInterface\SelectedComponent\ComponentEdit">
+      <UniqueIdentifier>{a671dcb6-c25f-491d-b8e3-a5462c9434f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Window\UserInterface\SelectedComponent\ComponentEdit\EditPatchTexture">
+      <UniqueIdentifier>{8ca022db-0610-4318-965a-4bc752ff5c3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Window\Config">
+      <UniqueIdentifier>{82a4c6da-8724-475c-96ce-a34c67cdb18f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Window\Utils">
+      <UniqueIdentifier>{a9609f1b-d301-47b9-bf19-9b9d759ea254}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="pch.cpp" />
+    <ClCompile Include="ToolLoop.cpp" />
+    <ClCompile Include="Window\Menu\FileTab.cpp">
+      <Filter>Window\Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="Window\Menu\MenuBar.cpp">
+      <Filter>Window\Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="Window\Menu\MenuHelper.cpp">
+      <Filter>Window\Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="Window\Menu\RecentFiles.cpp">
+      <Filter>Window\Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="Window\TextureResourceBinder\EditFontTexture.cpp">
+      <Filter>Window\TextureResourceBinder</Filter>
+    </ClCompile>
+    <ClCompile Include="Window\TextureResourceBinder\EditSourceTexture.cpp">
+      <Filter>Window\TextureResourceBinder</Filter>
+    </ClCompile>
+    <ClCompile Include="Window\TextureResourceBinder\ImageSelector.cpp">
+      <Filter>Window\TextureResourceBinder</Filter>
+    </ClCompile>
+    <ClCompile Include="Window\TextureResourceBinder\TextureResBinderWindow.cpp">
+      <Filter>Window\TextureResourceBinder</Filter>
+    </ClCompile>
+    <ClCompile Include="Window\UserInterface\ComponentController.cpp">
+      <Filter>Window\UserInterface</Filter>
+    </ClCompile>
+    <ClCompile Include="Window\UserInterface\ComponentSelector.cpp">
+      <Filter>Window\UserInterface</Filter>
+    </ClCompile>
+    <ClCompile Include="Window\UserInterface\FloatingComponent.cpp">
+      <Filter>Window\UserInterface</Filter>
+    </ClCompile>
+    <ClCompile Include="Window\UserInterface\UserInterfaceWindow.cpp">
+      <Filter>Window\UserInterface</Filter>
+    </ClCompile>
+    <ClCompile Include="Window\UserInterface\SelectedComponent\ComponentTooltip.cpp">
+      <Filter>Window\UserInterface\SelectedComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="Window\UserInterface\SelectedComponent\EditWindowFactory.cpp">
+      <Filter>Window\UserInterface\SelectedComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="Window\UserInterface\SelectedComponent\ComponentEdit\EditButton.cpp">
+      <Filter>Window\UserInterface\SelectedComponent\ComponentEdit</Filter>
+    </ClCompile>
+    <ClCompile Include="Window\UserInterface\SelectedComponent\ComponentEdit\EditContainer.cpp">
+      <Filter>Window\UserInterface\SelectedComponent\ComponentEdit</Filter>
+    </ClCompile>
+    <ClCompile Include="Window\UserInterface\SelectedComponent\ComponentEdit\EditListArea.cpp">
+      <Filter>Window\UserInterface\SelectedComponent\ComponentEdit</Filter>
+    </ClCompile>
+    <ClCompile Include="Window\UserInterface\SelectedComponent\ComponentEdit\EditRenderTexture.cpp">
+      <Filter>Window\UserInterface\SelectedComponent\ComponentEdit</Filter>
+    </ClCompile>
+    <ClCompile Include="Window\UserInterface\SelectedComponent\ComponentEdit\EditScrollBar.cpp">
+      <Filter>Window\UserInterface\SelectedComponent\ComponentEdit</Filter>
+    </ClCompile>
+    <ClCompile Include="Window\UserInterface\SelectedComponent\ComponentEdit\EditTextArea.cpp">
+      <Filter>Window\UserInterface\SelectedComponent\ComponentEdit</Filter>
+    </ClCompile>
+    <ClCompile Include="Window\UserInterface\SelectedComponent\ComponentEdit\EditTextureSwitcher.cpp">
+      <Filter>Window\UserInterface\SelectedComponent\ComponentEdit</Filter>
+    </ClCompile>
+    <ClCompile Include="Window\UserInterface\SelectedComponent\ComponentEdit\EditWindow.cpp">
+      <Filter>Window\UserInterface\SelectedComponent\ComponentEdit</Filter>
+    </ClCompile>
+    <ClCompile Include="Window\UserInterface\SelectedComponent\ComponentEdit\EditPatchTexture\EditPatchTexture.cpp">
+      <Filter>Window\UserInterface\SelectedComponent\ComponentEdit\EditPatchTexture</Filter>
+    </ClCompile>
+    <ClCompile Include="Window\UserInterface\SelectedComponent\ComponentEdit\EditPatchTexture\EditPatchTextureLite.cpp">
+      <Filter>Window\UserInterface\SelectedComponent\ComponentEdit\EditPatchTexture</Filter>
+    </ClCompile>
+    <ClCompile Include="Window\UserInterface\SelectedComponent\ComponentEdit\EditPatchTexture\EditPatchTextureStd.cpp">
+      <Filter>Window\UserInterface\SelectedComponent\ComponentEdit\EditPatchTexture</Filter>
+    </ClCompile>
+    <ClCompile Include="Window\InnerWindow.cpp">
+      <Filter>Window</Filter>
+    </ClCompile>
+    <ClCompile Include="Window\Dialog.cpp">
+      <Filter>Window</Filter>
+    </ClCompile>
+    <ClCompile Include="Window\HelperClass.cpp">
+      <Filter>Window</Filter>
+    </ClCompile>
+    <ClCompile Include="Config\Config.cpp">
+      <Filter>Window\Config</Filter>
+    </ClCompile>
+    <ClCompile Include="Window\Utils\EditClass.cpp">
+      <Filter>Window\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Window\Utils\EditUtility.cpp">
+      <Filter>Window\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Window\Utils\Common.cpp">
+      <Filter>Window\Utils</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="ToolLoop.h" />
+    <ClInclude Include="Window\Menu\FileTab.h">
+      <Filter>Window\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Window\Menu\MenuBar.h">
+      <Filter>Window\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Window\Menu\MenuHelper.h">
+      <Filter>Window\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Window\Menu\RecentFiles.h">
+      <Filter>Window\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Window\TextureResourceBinder\EditFontTexture.h">
+      <Filter>Window\TextureResourceBinder</Filter>
+    </ClInclude>
+    <ClInclude Include="Window\TextureResourceBinder\EditSourceTexture.h">
+      <Filter>Window\TextureResourceBinder</Filter>
+    </ClInclude>
+    <ClInclude Include="Window\TextureResourceBinder\ImageSelector.h">
+      <Filter>Window\TextureResourceBinder</Filter>
+    </ClInclude>
+    <ClInclude Include="Window\TextureResourceBinder\TextureResBinderWindow.h">
+      <Filter>Window\TextureResourceBinder</Filter>
+    </ClInclude>
+    <ClInclude Include="Window\UserInterface\ComponentController.h">
+      <Filter>Window\UserInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="Window\UserInterface\ComponentSelector.h">
+      <Filter>Window\UserInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="Window\UserInterface\FloatingComponent.h">
+      <Filter>Window\UserInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="Window\UserInterface\UserInterfaceWindow.h">
+      <Filter>Window\UserInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="Window\UserInterface\SelectedComponent\ComponentTooltip.h">
+      <Filter>Window\UserInterface\SelectedComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="Window\UserInterface\SelectedComponent\EditWindowFactory.h">
+      <Filter>Window\UserInterface\SelectedComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="Window\UserInterface\SelectedComponent\ComponentEdit\EditButton.h">
+      <Filter>Window\UserInterface\SelectedComponent\ComponentEdit</Filter>
+    </ClInclude>
+    <ClInclude Include="Window\UserInterface\SelectedComponent\ComponentEdit\EditContainer.h">
+      <Filter>Window\UserInterface\SelectedComponent\ComponentEdit</Filter>
+    </ClInclude>
+    <ClInclude Include="Window\UserInterface\SelectedComponent\ComponentEdit\EditListArea.h">
+      <Filter>Window\UserInterface\SelectedComponent\ComponentEdit</Filter>
+    </ClInclude>
+    <ClInclude Include="Window\UserInterface\SelectedComponent\ComponentEdit\EditRenderTexture.h">
+      <Filter>Window\UserInterface\SelectedComponent\ComponentEdit</Filter>
+    </ClInclude>
+    <ClInclude Include="Window\UserInterface\SelectedComponent\ComponentEdit\EditScrollBar.h">
+      <Filter>Window\UserInterface\SelectedComponent\ComponentEdit</Filter>
+    </ClInclude>
+    <ClInclude Include="Window\UserInterface\SelectedComponent\ComponentEdit\EditTextArea.h">
+      <Filter>Window\UserInterface\SelectedComponent\ComponentEdit</Filter>
+    </ClInclude>
+    <ClInclude Include="Window\UserInterface\SelectedComponent\ComponentEdit\EditTextureSwitcher.h">
+      <Filter>Window\UserInterface\SelectedComponent\ComponentEdit</Filter>
+    </ClInclude>
+    <ClInclude Include="Window\UserInterface\SelectedComponent\ComponentEdit\EditWindow.h">
+      <Filter>Window\UserInterface\SelectedComponent\ComponentEdit</Filter>
+    </ClInclude>
+    <ClInclude Include="Window\UserInterface\SelectedComponent\ComponentEdit\EditPatchTexture\EditPatchTexture.h">
+      <Filter>Window\UserInterface\SelectedComponent\ComponentEdit\EditPatchTexture</Filter>
+    </ClInclude>
+    <ClInclude Include="Window\UserInterface\SelectedComponent\ComponentEdit\EditPatchTexture\EditPatchTextureLite.h">
+      <Filter>Window\UserInterface\SelectedComponent\ComponentEdit\EditPatchTexture</Filter>
+    </ClInclude>
+    <ClInclude Include="Window\UserInterface\SelectedComponent\ComponentEdit\EditPatchTexture\EditPatchTextureStd.h">
+      <Filter>Window\UserInterface\SelectedComponent\ComponentEdit\EditPatchTexture</Filter>
+    </ClInclude>
+    <ClInclude Include="Window\InnerWindow.h">
+      <Filter>Window</Filter>
+    </ClInclude>
+    <ClInclude Include="Window\Dialog.h">
+      <Filter>Window</Filter>
+    </ClInclude>
+    <ClInclude Include="Window\HelperClass.h">
+      <Filter>Window</Filter>
+    </ClInclude>
+    <ClInclude Include="Config\Config.h">
+      <Filter>Window\Config</Filter>
+    </ClInclude>
+    <ClInclude Include="Window\Utils\EditClass.h">
+      <Filter>Window\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Window\Utils\EditUtility.h">
+      <Filter>Window\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Window\Utils\Common.h">
+      <Filter>Window\Utils</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

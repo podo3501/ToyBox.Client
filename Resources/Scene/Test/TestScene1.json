@@ -1,0 +1,363 @@
+{
+    "MainPanel": {
+        "Name": "Main",
+        "Layout": {
+            "Size": {
+                "x": 800,
+                "y": 600
+            },
+            "Origin": "LeftTop"
+        },
+        "Transform": {
+            "Ratio": {
+                "x": 0.0,
+                "y": 0.0
+            },
+            "RelativePosition": {
+                "x": 0,
+                "y": 0
+            }
+        },
+        "Region": "",
+        "StateFlag": 15,
+        "RenderSearch": 0,
+        "Children": [
+            {
+                "Type": "TextArea",
+                "Name": "TextArea",
+                "Layout": {
+                    "Size": {
+                        "x": 130,
+                        "y": 30
+                    },
+                    "Origin": "LeftTop"
+                },
+                "Transform": {
+                    "Ratio": {
+                        "x": 0.09125,
+                        "y": 0.15
+                    },
+                    "RelativePosition": {
+                        "x": 73,
+                        "y": 90
+                    }
+                },
+                "Region": "",
+                "StateFlag": 15,
+                "RenderSearch": 0,
+                "Children": null,
+                "BindKeys": [
+                    "Hangle",
+                    "English"
+                ],
+                "Text": "<English><White>Scene 1</White></English>"
+            },
+            {
+                "Type": "TextureSwitcher",
+                "Name": "TextureSwitcher",
+                "Layout": {
+                    "Size": {
+                        "x": 100,
+                        "y": 48
+                    },
+                    "Origin": "LeftTop"
+                },
+                "Transform": {
+                    "Ratio": {
+                        "x": 0.75,
+                        "y": 0.666667
+                    },
+                    "RelativePosition": {
+                        "x": 600,
+                        "y": 400
+                    }
+                },
+                "Region": "",
+                "StateFlag": 15,
+                "RenderSearch": 0,
+                "Children": [
+                    {
+                        "Type": "PatchTextureLite3",
+                        "Name": "PatchTextureLite3",
+                        "Layout": {
+                            "Size": {
+                                "x": 100,
+                                "y": 48
+                            },
+                            "Origin": "LeftTop"
+                        },
+                        "Transform": {
+                            "Ratio": {
+                                "x": 0.0,
+                                "y": 0.0
+                            },
+                            "RelativePosition": {
+                                "x": 0,
+                                "y": 0
+                            }
+                        },
+                        "Region": "",
+                        "StateFlag": 3,
+                        "RenderSearch": 0,
+                        "Children": [
+                            {
+                                "Type": "PatchTextureLite1",
+                                "Name": "PatchTextureLite1",
+                                "Layout": {
+                                    "Size": {
+                                        "x": 22,
+                                        "y": 48
+                                    },
+                                    "Origin": "LeftTop"
+                                },
+                                "Transform": {
+                                    "Ratio": {
+                                        "x": 0.0,
+                                        "y": 0.0
+                                    },
+                                    "RelativePosition": {
+                                        "x": 0,
+                                        "y": 0
+                                    }
+                                },
+                                "Region": "",
+                                "StateFlag": 31,
+                                "RenderSearch": 0,
+                                "Children": null
+                            },
+                            {
+                                "Type": "PatchTextureLite1",
+                                "Name": "PatchTextureLite1_1",
+                                "Layout": {
+                                    "Size": {
+                                        "x": 56,
+                                        "y": 48
+                                    },
+                                    "Origin": "LeftTop"
+                                },
+                                "Transform": {
+                                    "Ratio": {
+                                        "x": 0.22,
+                                        "y": 0.0
+                                    },
+                                    "RelativePosition": {
+                                        "x": 22,
+                                        "y": 0
+                                    }
+                                },
+                                "Region": "",
+                                "StateFlag": 15,
+                                "RenderSearch": 0,
+                                "Children": null
+                            },
+                            {
+                                "Type": "PatchTextureLite1",
+                                "Name": "PatchTextureLite1_2",
+                                "Layout": {
+                                    "Size": {
+                                        "x": 22,
+                                        "y": 48
+                                    },
+                                    "Origin": "LeftTop"
+                                },
+                                "Transform": {
+                                    "Ratio": {
+                                        "x": 0.78,
+                                        "y": 0.0
+                                    },
+                                    "RelativePosition": {
+                                        "x": 78,
+                                        "y": 0
+                                    }
+                                },
+                                "Region": "",
+                                "StateFlag": 31,
+                                "RenderSearch": 0,
+                                "Children": null
+                            }
+                        ],
+                        "DirectionType": 0
+                    }
+                ],
+                "StateKey": {
+                    "Normal": "ScrollButton3_H_Normal",
+                    "Hovered": "ScrollButton3_H_Hovered",
+                    "Pressed": "ScrollButton3_H_Pressed"
+                }
+            },
+            {
+                "Type": "TextureSwitcher",
+                "Name": "TextureSwitcher_1",
+                "Layout": {
+                    "Size": {
+                        "x": 100,
+                        "y": 48
+                    },
+                    "Origin": "LeftTop"
+                },
+                "Transform": {
+                    "Ratio": {
+                        "x": 0.75,
+                        "y": 0.761667
+                    },
+                    "RelativePosition": {
+                        "x": 600,
+                        "y": 457
+                    }
+                },
+                "Region": "",
+                "StateFlag": 15,
+                "RenderSearch": 0,
+                "Children": [
+                    {
+                        "Type": "PatchTextureLite3",
+                        "Name": "PatchTextureLite3_1",
+                        "Layout": {
+                            "Size": {
+                                "x": 100,
+                                "y": 48
+                            },
+                            "Origin": "LeftTop"
+                        },
+                        "Transform": {
+                            "Ratio": {
+                                "x": 0.0,
+                                "y": 0.0
+                            },
+                            "RelativePosition": {
+                                "x": 0,
+                                "y": 0
+                            }
+                        },
+                        "Region": "",
+                        "StateFlag": 3,
+                        "RenderSearch": 0,
+                        "Children": [
+                            {
+                                "Type": "PatchTextureLite1",
+                                "Name": "PatchTextureLite1_3",
+                                "Layout": {
+                                    "Size": {
+                                        "x": 22,
+                                        "y": 48
+                                    },
+                                    "Origin": "LeftTop"
+                                },
+                                "Transform": {
+                                    "Ratio": {
+                                        "x": 0.0,
+                                        "y": 0.0
+                                    },
+                                    "RelativePosition": {
+                                        "x": 0,
+                                        "y": 0
+                                    }
+                                },
+                                "Region": "",
+                                "StateFlag": 31,
+                                "RenderSearch": 0,
+                                "Children": null
+                            },
+                            {
+                                "Type": "PatchTextureLite1",
+                                "Name": "PatchTextureLite1_4",
+                                "Layout": {
+                                    "Size": {
+                                        "x": 56,
+                                        "y": 48
+                                    },
+                                    "Origin": "LeftTop"
+                                },
+                                "Transform": {
+                                    "Ratio": {
+                                        "x": 0.22,
+                                        "y": 0.0
+                                    },
+                                    "RelativePosition": {
+                                        "x": 22,
+                                        "y": 0
+                                    }
+                                },
+                                "Region": "",
+                                "StateFlag": 15,
+                                "RenderSearch": 0,
+                                "Children": null
+                            },
+                            {
+                                "Type": "PatchTextureLite1",
+                                "Name": "PatchTextureLite1_5",
+                                "Layout": {
+                                    "Size": {
+                                        "x": 22,
+                                        "y": 48
+                                    },
+                                    "Origin": "LeftTop"
+                                },
+                                "Transform": {
+                                    "Ratio": {
+                                        "x": 0.78,
+                                        "y": 0.0
+                                    },
+                                    "RelativePosition": {
+                                        "x": 78,
+                                        "y": 0
+                                    }
+                                },
+                                "Region": "",
+                                "StateFlag": 31,
+                                "RenderSearch": 0,
+                                "Children": null
+                            }
+                        ],
+                        "DirectionType": 0
+                    }
+                ],
+                "StateKey": {
+                    "Normal": "ScrollButton3_H_Normal",
+                    "Hovered": "ScrollButton3_H_Hovered",
+                    "Pressed": "ScrollButton3_H_Pressed"
+                }
+            }
+        ]
+    },
+    "UINameGenerator": {
+        "RegionGens": {
+            "": {
+                "Namers": 1,
+                "Recycled": [],
+                "Deletable": false
+            }
+        },
+        "RegionNames": {
+            "": {
+                "Namers": {
+                    "Main": {
+                        "Namers": 1,
+                        "Recycled": [],
+                        "Deletable": false
+                    },
+                    "TextArea": {
+                        "Namers": 1,
+                        "Recycled": [],
+                        "Deletable": false
+                    },
+                    "PatchTextureLite1": {
+                        "Namers": 6,
+                        "Recycled": [],
+                        "Deletable": false
+                    },
+                    "TextureSwitcher": {
+                        "Namers": 2,
+                        "Recycled": [],
+                        "Deletable": false
+                    },
+                    "PatchTextureLite3": {
+                        "Namers": 2,
+                        "Recycled": [],
+                        "Deletable": false
+                    }
+                }
+            }
+        }
+    }
+}

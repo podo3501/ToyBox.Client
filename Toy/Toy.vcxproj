@@ -1,0 +1,383 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <RootNamespace>Toy</RootNamespace>
+    <ProjectGuid>{ce88cfb8-f480-4ead-b13e-d54c92e8fde8}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(ProjectDir);$(SolutionDir)Core\Public;$(SolutionDir)ThirdParty\Include;$(SolutionDir)ThirdParty\SDL3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <SmallerTypeCheck>false</SmallerTypeCheck>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>d3d12.lib;dxgi.lib;dxguid.lib;uuid.lib;kernel32.lib;user32.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;runtimeobject.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <Manifest>
+      <EnableDpiAwareness>PerMonitorHighDPIAware</EnableDpiAwareness>
+    </Manifest>
+    <FXCompile>
+      <ShaderModel>6.0</ShaderModel>
+      <EnableDebuggingInformation>true</EnableDebuggingInformation>
+      <AdditionalOptions>/Fd "$(OutDir)%(Filename).pdb" %(AdditionalOptions)</AdditionalOptions>
+    </FXCompile>
+    <Lib>
+      <AdditionalLibraryDirectories>$(SolutionDir)ThirdParty\Libs;$(SolutionDir)ThirdParty\SDL3\lib</AdditionalLibraryDirectories>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(ProjectDir);$(SolutionDir)Core\Public;$(SolutionDir)ThirdParty\Include;$(SolutionDir)ThirdParty\SDL3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <SmallerTypeCheck>false</SmallerTypeCheck>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>d3d12.lib;dxgi.lib;dxguid.lib;uuid.lib;kernel32.lib;user32.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;runtimeobject.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <Manifest>
+      <EnableDpiAwareness>PerMonitorHighDPIAware</EnableDpiAwareness>
+    </Manifest>
+    <FXCompile>
+      <ShaderModel>6.0</ShaderModel>
+      <EnableDebuggingInformation>true</EnableDebuggingInformation>
+      <AdditionalOptions>/Fd "$(OutDir)%(Filename).pdb" %(AdditionalOptions)</AdditionalOptions>
+    </FXCompile>
+    <Lib>
+      <AdditionalLibraryDirectories>$(SolutionDir)ThirdParty\Libs;$(SolutionDir)ThirdParty\SDL3\lib</AdditionalLibraryDirectories>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(ProjectDir);$(SolutionDir)Core\Public;$(SolutionDir)ThirdParty\Include;$(SolutionDir)ThirdParty\SDL3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>d3d12.lib;dxgi.lib;dxguid.lib;uuid.lib;kernel32.lib;user32.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;runtimeobject.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <Manifest>
+      <EnableDpiAwareness>PerMonitorHighDPIAware</EnableDpiAwareness>
+    </Manifest>
+    <FXCompile>
+      <ShaderModel>6.0</ShaderModel>
+      <EnableDebuggingInformation>true</EnableDebuggingInformation>
+      <AdditionalOptions>/Fd "$(OutDir)%(Filename).pdb" %(AdditionalOptions)</AdditionalOptions>
+    </FXCompile>
+    <Lib>
+      <AdditionalLibraryDirectories>$(SolutionDir)ThirdParty\Libs;$(SolutionDir)ThirdParty\SDL3\lib</AdditionalLibraryDirectories>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(ProjectDir);$(SolutionDir)Core\Public;$(SolutionDir)ThirdParty\Include;$(SolutionDir)ThirdParty\SDL3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
+      <GuardEHContMetadata>true</GuardEHContMetadata>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>d3d12.lib;dxgi.lib;dxguid.lib;uuid.lib;kernel32.lib;user32.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;runtimeobject.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <Manifest>
+      <EnableDpiAwareness>PerMonitorHighDPIAware</EnableDpiAwareness>
+    </Manifest>
+    <FXCompile>
+      <ShaderModel>6.0</ShaderModel>
+      <EnableDebuggingInformation>true</EnableDebuggingInformation>
+      <AdditionalOptions>/Fd "$(OutDir)%(Filename).pdb" %(AdditionalOptions)</AdditionalOptions>
+    </FXCompile>
+    <Lib>
+      <AdditionalLibraryDirectories>$(SolutionDir)ThirdParty\Libs;$(SolutionDir)ThirdParty\SDL3\lib</AdditionalLibraryDirectories>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="GameLoop.h" />
+    <ClInclude Include="Locator\AudioLocator.h" />
+    <ClInclude Include="Locator\EventDispatcherLocator.h" />
+    <ClInclude Include="Locator\InputLocator.h" />
+    <ClInclude Include="Locator\SceneLocator.h" />
+    <ClInclude Include="Scenes\Scene.h" />
+    <ClInclude Include="Scenes\SceneType.h" />
+    <ClInclude Include="Scenes\Test\ComponentTestScene.h" />
+    <ClInclude Include="Scenes\Test\TestScene1.h" />
+    <ClInclude Include="Scenes\Test\TestScene2.h" />
+    <ClInclude Include="System\EventDispatcherManager.h" />
+    <ClInclude Include="System\IEventDispatcherManager.h" />
+    <ClInclude Include="System\ISceneManager.h" />
+    <ClInclude Include="System\SceneManager.h" />
+    <ClInclude Include="UserInterface\CommandHistory\Command.h" />
+    <ClInclude Include="UserInterface\CommandHistory\CommandHistory.h" />
+    <ClInclude Include="UserInterface\CommandHistory\CommandType.h" />
+    <ClInclude Include="UserInterface\CommandHistory\TextureResource\TexResCommandHistory.h" />
+    <ClInclude Include="UserInterface\CommandHistory\TextureResource\TexResCommandRegistry.h" />
+    <ClInclude Include="UserInterface\CommandHistory\UserInterface\UICommandHistory.h" />
+    <ClInclude Include="UserInterface\CommandHistory\UserInterface\UICommandRegistry.h" />
+    <ClInclude Include="UserInterface\Input\IMouseEventReceiver.h" />
+    <ClInclude Include="UserInterface\MouseEventRouter.h" />
+    <ClInclude Include="UserInterface\SerializerIO\ClassSerializeIO.h" />
+    <ClInclude Include="UserInterface\SerializerIO\KeyConverter.h" />
+    <ClInclude Include="UserInterface\SerializerIO\Traits.h" />
+    <ClInclude Include="UserInterface\TextureResourceBinder\TextureBinderHelper.h" />
+    <ClInclude Include="UserInterface\TextureResourceBinder\TextureFontInfo.h" />
+    <ClInclude Include="UserInterface\TextureResourceBinder\TextureInfo.h" />
+    <ClInclude Include="UserInterface\TextureResourceBinder\TextureLoadBinder.h" />
+    <ClInclude Include="UserInterface\TextureResourceBinder\TextureResourceBinder.h" />
+    <ClInclude Include="UserInterface\TextureResourceBinder\TextureSourceInfo.h" />
+    <ClInclude Include="UserInterface\UIComponentLocator.h" />
+    <ClInclude Include="UserInterface\UIComponentManager.h" />
+    <ClInclude Include="UserInterface\UIComponent\Components\Button.h" />
+    <ClInclude Include="UserInterface\UIComponent\Components\Container.h" />
+    <ClInclude Include="UserInterface\UIComponent\Components\Dialog.h" />
+    <ClInclude Include="UserInterface\UIComponent\Components\PatchTexture\PatchTextureCoord.h" />
+    <ClInclude Include="UserInterface\UIComponent\Components\PatchTexture\PatchTextureLite\PatchTextureLite.h" />
+    <ClInclude Include="UserInterface\UIComponent\Components\PatchTexture\PatchTextureLite\PatchTextureLite1.h" />
+    <ClInclude Include="UserInterface\UIComponent\Components\PatchTexture\PatchTextureLite\PatchTextureLite3.h" />
+    <ClInclude Include="UserInterface\UIComponent\Components\PatchTexture\PatchTextureLite\PatchTextureLite9.h" />
+    <ClInclude Include="UserInterface\UIComponent\Components\PatchTexture\PatchTextureStd\PatchTextureStd1.h" />
+    <ClInclude Include="UserInterface\UIComponent\Components\PatchTexture\PatchTextureStd\PatchTextureStd3.h" />
+    <ClInclude Include="UserInterface\UIComponent\Components\PatchTexture\PatchTextureStd\PatchTextureStd9.h" />
+    <ClInclude Include="UserInterface\UIComponent\Components\PatchTexture\PatchTextureStd\PatchTextureStd.h" />
+    <ClInclude Include="UserInterface\UIComponent\Components\TextureSwitcher.h" />
+    <ClInclude Include="UserInterface\UIComponent\Components\ListArea.h" />
+    <ClInclude Include="UserInterface\UIComponent\Components\Panel.h" />
+    <ClInclude Include="UserInterface\UIComponent\Components\PatchTexture\PatchTexture.h" />
+    <ClInclude Include="UserInterface\UIComponent\Components\RenderTexture.h" />
+    <ClInclude Include="UserInterface\UIComponent\Components\SampleComponent.h" />
+    <ClInclude Include="UserInterface\UIComponent\Components\ScrollBar.h" />
+    <ClInclude Include="UserInterface\UIComponent\Components\TextArea.h" />
+    <ClInclude Include="UserInterface\UIComponent\Components\UIModuleAsComponent.h" />
+    <ClInclude Include="UserInterface\UIComponent\Traverser\BaseTraverser.h" />
+    <ClInclude Include="UserInterface\UIComponent\Traverser\DerivedTraverser.h" />
+    <ClInclude Include="UserInterface\UIComponent\Traverser\NameTraverser.h" />
+    <ClInclude Include="UserInterface\UIComponent\Traverser\HierarchyTraverser.h" />
+    <ClInclude Include="UserInterface\UIComponent\Traverser\UIDetailTraverser.h" />
+    <ClInclude Include="UserInterface\UIComponent\Traverser\UITraverser.h" />
+    <ClInclude Include="UserInterface\UIComponent\UIComponent.h" />
+    <ClInclude Include="UserInterface\UIComponent\UIComponent.hpp" />
+    <ClInclude Include="UserInterface\UIComponent\UIComponentFactory.h" />
+    <ClInclude Include="UserInterface\UIComponent\UIHelperClass.h" />
+    <ClInclude Include="UserInterface\UIComponent\UILayout.h" />
+    <ClInclude Include="UserInterface\UIComponent\UITransform.h" />
+    <ClInclude Include="UserInterface\UIComponent\UIType.h" />
+    <ClInclude Include="UserInterface\UIComponent\UIUtility.h" />
+    <ClInclude Include="UserInterface\UIModule.h" />
+    <ClInclude Include="UserInterface\UINameGenerator\AutoNamer.h" />
+    <ClInclude Include="UserInterface\UINameGenerator\ComponentNameGenerator.h" />
+    <ClInclude Include="UserInterface\UINameGenerator\UINameGenerator.h" />
+    <ClInclude Include="pch.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Scenes\Test\ComponentTestScene.cpp" />
+    <ClCompile Include="Scenes\Test\TestScene1.cpp" />
+    <ClCompile Include="Scenes\Test\TestScene2.cpp" />
+    <ClCompile Include="System\EventDispatcherManager.cpp" />
+    <ClCompile Include="System\SceneManager.cpp" />
+    <ClCompile Include="UserInterface\CommandHistory\TextureResource\TexResCommandHistory.cpp" />
+    <ClCompile Include="UserInterface\CommandHistory\TextureResource\TexResCommandRegistry.cpp" />
+    <ClCompile Include="UserInterface\CommandHistory\UserInterface\UICommandHistory.cpp" />
+    <ClCompile Include="UserInterface\CommandHistory\UserInterface\UICommandRegistry.cpp" />
+    <ClCompile Include="UserInterface\MouseEventRouter.cpp" />
+    <ClCompile Include="UserInterface\SerializerIO\ClassSerializeIO.cpp" />
+    <ClCompile Include="UserInterface\SerializerIO\KeyConverter.cpp" />
+    <ClCompile Include="UserInterface\SerializerIO\Traits.cpp" />
+    <ClCompile Include="UserInterface\TextureResourceBinder\TextureBinderHelper.cpp" />
+    <ClCompile Include="UserInterface\TextureResourceBinder\TextureFontInfo.cpp" />
+    <ClCompile Include="UserInterface\TextureResourceBinder\TextureInfo.cpp" />
+    <ClCompile Include="UserInterface\TextureResourceBinder\TextureLoadBinder.cpp" />
+    <ClCompile Include="UserInterface\TextureResourceBinder\TextureResourceBinder.cpp" />
+    <ClCompile Include="UserInterface\TextureResourceBinder\TextureSourceInfo.cpp" />
+    <ClCompile Include="UserInterface\UIComponentLocator.cpp" />
+    <ClCompile Include="UserInterface\UIComponentManager.cpp" />
+    <ClCompile Include="UserInterface\UIComponent\Components\Button.cpp" />
+    <ClCompile Include="UserInterface\UIComponent\Components\Container.cpp" />
+    <ClCompile Include="UserInterface\UIComponent\Components\Dialog.cpp" />
+    <ClCompile Include="UserInterface\UIComponent\Components\PatchTexture\PatchTextureCoord.cpp" />
+    <ClCompile Include="UserInterface\UIComponent\Components\PatchTexture\PatchTextureLite\PatchTextureLite.cpp" />
+    <ClCompile Include="UserInterface\UIComponent\Components\PatchTexture\PatchTextureLite\PatchTextureLite1.cpp" />
+    <ClCompile Include="UserInterface\UIComponent\Components\PatchTexture\PatchTextureLite\PatchTextureLite3.cpp" />
+    <ClCompile Include="UserInterface\UIComponent\Components\PatchTexture\PatchTextureLite\PatchTextureLite9.cpp" />
+    <ClCompile Include="UserInterface\UIComponent\Components\PatchTexture\PatchTextureStd\PatchTextureStd1.cpp" />
+    <ClCompile Include="UserInterface\UIComponent\Components\PatchTexture\PatchTextureStd\PatchTextureStd3.cpp" />
+    <ClCompile Include="UserInterface\UIComponent\Components\PatchTexture\PatchTextureStd\PatchTextureStd9.cpp" />
+    <ClCompile Include="UserInterface\UIComponent\Components\PatchTexture\PatchTextureStd\PatchTextureStd.cpp" />
+    <ClCompile Include="UserInterface\UIComponent\Components\TextureSwitcher.cpp" />
+    <ClCompile Include="UserInterface\UIComponent\Components\ListArea.cpp" />
+    <ClCompile Include="UserInterface\UIComponent\Components\Panel.cpp" />
+    <ClCompile Include="UserInterface\UIComponent\Components\PatchTexture\PatchTexture.cpp" />
+    <ClCompile Include="UserInterface\UIComponent\Components\RenderTexture.cpp" />
+    <ClCompile Include="UserInterface\UIComponent\Components\SampleComponent.cpp" />
+    <ClCompile Include="UserInterface\UIComponent\Components\ScrollBar.cpp" />
+    <ClCompile Include="UserInterface\UIComponent\Components\TextArea.cpp" />
+    <ClCompile Include="UserInterface\UIComponent\Components\UIModuleAsComponent.cpp" />
+    <ClCompile Include="UserInterface\UIComponent\Traverser\BaseTraverser.cpp" />
+    <ClCompile Include="UserInterface\UIComponent\Traverser\DerivedTraverser.cpp" />
+    <ClCompile Include="UserInterface\UIComponent\Traverser\NameTraverser.cpp" />
+    <ClCompile Include="UserInterface\UIComponent\Traverser\HierarchyTraverser.cpp" />
+    <ClCompile Include="UserInterface\UIComponent\Traverser\UIDetailTraverser.cpp" />
+    <ClCompile Include="UserInterface\UIComponent\Traverser\UITraverser.cpp" />
+    <ClCompile Include="UserInterface\UIComponent\UIComponent.cpp" />
+    <ClCompile Include="UserInterface\UIComponent\UIComponentFactory.cpp" />
+    <ClCompile Include="UserInterface\UIComponent\UIHelperClass.cpp" />
+    <ClCompile Include="UserInterface\UIComponent\UILayout.cpp" />
+    <ClCompile Include="UserInterface\UIComponent\UITransform.cpp" />
+    <ClCompile Include="UserInterface\UIComponent\UIType.cpp" />
+    <ClCompile Include="UserInterface\UIComponent\UIUtility.cpp" />
+    <ClCompile Include="UserInterface\UIModule.cpp" />
+    <ClCompile Include="UserInterface\UINameGenerator\AutoNamer.cpp" />
+    <ClCompile Include="UserInterface\UINameGenerator\ComponentNameGenerator.cpp" />
+    <ClCompile Include="UserInterface\UINameGenerator\UINameGenerator.cpp" />
+    <ClCompile Include="GameLoop.cpp" />
+    <ClCompile Include="pch.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Core\Core.vcxproj">
+      <Project>{60e13bba-4299-40f7-8fc1-c9e1928486f4}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\Shared\Shared.vcxproj">
+      <Project>{a9d428f9-8ced-42b2-ad67-3e2a3e8c08ff}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets" />
+</Project>

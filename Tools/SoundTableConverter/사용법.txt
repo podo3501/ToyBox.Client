@@ -1,0 +1,8 @@
+파이선 exe 만드는 법.
+PyInstaller 설치
+pip install pyinstaller
+
+EXE 만들기
+pyinstaller --onefile 파일명.py
+pyinstaller --onefile SoundTableConverter.py
+dist 폴더에 exe가 생성됨.

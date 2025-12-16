@@ -1,0 +1,266 @@
+{
+    "Name": "",
+    "Layout": {
+        "Size": {
+            "x": 20,
+            "y": 30
+        },
+        "Origin": "LeftTop"
+    },
+    "Transform": {
+        "Ratio": {
+            "x": 0.0,
+            "y": 0.0
+        },
+        "RelativePosition": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    "Region": "",
+    "StateFlag": 31,
+    "RenderSearch": 2,
+    "Children": [
+        {
+            "Type": "PatchTextureStd3",
+            "Name": "",
+            "Layout": {
+                "Size": {
+                    "x": 20,
+                    "y": 30
+                },
+                "Origin": "LeftTop"
+            },
+            "Transform": {
+                "Ratio": {
+                    "x": 0.0,
+                    "y": 0.0
+                },
+                "RelativePosition": {
+                    "x": 0,
+                    "y": 0
+                }
+            },
+            "Region": "",
+            "StateFlag": 3,
+            "RenderSearch": 0,
+            "Children": [
+                {
+                    "Type": "PatchTextureStd1",
+                    "Name": "",
+                    "Layout": {
+                        "Size": {
+                            "x": 20,
+                            "y": 5
+                        },
+                        "Origin": "LeftTop"
+                    },
+                    "Transform": {
+                        "Ratio": {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        "RelativePosition": {
+                            "x": 0,
+                            "y": 0
+                        }
+                    },
+                    "Region": "",
+                    "StateFlag": 47,
+                    "RenderSearch": 0,
+                    "Children": null,
+                    "BindKey": "Track",
+                    "SourceIndex": 0
+                },
+                {
+                    "Type": "PatchTextureStd1",
+                    "Name": "",
+                    "Layout": {
+                        "Size": {
+                            "x": 20,
+                            "y": 20
+                        },
+                        "Origin": "LeftTop"
+                    },
+                    "Transform": {
+                        "Ratio": {
+                            "x": 0.0,
+                            "y": 0.166667
+                        },
+                        "RelativePosition": {
+                            "x": 0,
+                            "y": 5
+                        }
+                    },
+                    "Region": "",
+                    "StateFlag": 15,
+                    "RenderSearch": 0,
+                    "Children": null,
+                    "BindKey": "Track",
+                    "SourceIndex": 1
+                },
+                {
+                    "Type": "PatchTextureStd1",
+                    "Name": "",
+                    "Layout": {
+                        "Size": {
+                            "x": 20,
+                            "y": 5
+                        },
+                        "Origin": "LeftTop"
+                    },
+                    "Transform": {
+                        "Ratio": {
+                            "x": 0.0,
+                            "y": 0.833333
+                        },
+                        "RelativePosition": {
+                            "x": 0,
+                            "y": 25
+                        }
+                    },
+                    "Region": "",
+                    "StateFlag": 47,
+                    "RenderSearch": 0,
+                    "Children": null,
+                    "BindKey": "Track",
+                    "SourceIndex": 2
+                }
+            ],
+            "DirectionType": 1
+        },
+        {
+            "Type": "TextureSwitcher",
+            "Name": "",
+            "Layout": {
+                "Size": {
+                    "x": 20,
+                    "y": 15
+                },
+                "Origin": "LeftTop"
+            },
+            "Transform": {
+                "Ratio": {
+                    "x": 0.0,
+                    "y": 0.0
+                },
+                "RelativePosition": {
+                    "x": 0,
+                    "y": 0
+                }
+            },
+            "Region": "",
+            "StateFlag": 15,
+            "RenderSearch": 0,
+            "Children": [
+                {
+                    "Type": "PatchTextureLite3",
+                    "Name": "",
+                    "Layout": {
+                        "Size": {
+                            "x": 20,
+                            "y": 15
+                        },
+                        "Origin": "LeftTop"
+                    },
+                    "Transform": {
+                        "Ratio": {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        "RelativePosition": {
+                            "x": 0,
+                            "y": 0
+                        }
+                    },
+                    "Region": "",
+                    "StateFlag": 3,
+                    "RenderSearch": 0,
+                    "Children": [
+                        {
+                            "Type": "PatchTextureLite1",
+                            "Name": "",
+                            "Layout": {
+                                "Size": {
+                                    "x": 20,
+                                    "y": 4
+                                },
+                                "Origin": "LeftTop"
+                            },
+                            "Transform": {
+                                "Ratio": {
+                                    "x": 0.0,
+                                    "y": 0.0
+                                },
+                                "RelativePosition": {
+                                    "x": 0,
+                                    "y": 0
+                                }
+                            },
+                            "Region": "",
+                            "StateFlag": 47,
+                            "RenderSearch": 0,
+                            "Children": null
+                        },
+                        {
+                            "Type": "PatchTextureLite1",
+                            "Name": "",
+                            "Layout": {
+                                "Size": {
+                                    "x": 20,
+                                    "y": 7
+                                },
+                                "Origin": "LeftTop"
+                            },
+                            "Transform": {
+                                "Ratio": {
+                                    "x": 0.0,
+                                    "y": 0.266667
+                                },
+                                "RelativePosition": {
+                                    "x": 0,
+                                    "y": 4
+                                }
+                            },
+                            "Region": "",
+                            "StateFlag": 15,
+                            "RenderSearch": 0,
+                            "Children": null
+                        },
+                        {
+                            "Type": "PatchTextureLite1",
+                            "Name": "",
+                            "Layout": {
+                                "Size": {
+                                    "x": 20,
+                                    "y": 4
+                                },
+                                "Origin": "LeftTop"
+                            },
+                            "Transform": {
+                                "Ratio": {
+                                    "x": 0.0,
+                                    "y": 0.733333
+                                },
+                                "RelativePosition": {
+                                    "x": 0,
+                                    "y": 11
+                                }
+                            },
+                            "Region": "",
+                            "StateFlag": 47,
+                            "RenderSearch": 0,
+                            "Children": null
+                        }
+                    ],
+                    "DirectionType": 1
+                }
+            ],
+            "StateKey": {
+                "Normal": "Button_Normal",
+                "Hovered": "Button_Hovered",
+                "Pressed": "Button_Pressed"
+            }
+        }
+    ]
+}

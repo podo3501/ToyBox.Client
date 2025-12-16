@@ -1,0 +1,55 @@
+{
+    "Name": "",
+    "Layout": {
+        "Size": {
+            "x": 30,
+            "y": 30
+        },
+        "Origin": "LeftTop"
+    },
+    "Transform": {
+        "Ratio": {
+            "x": 0.0,
+            "y": 0.0
+        },
+        "RelativePosition": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    "Region": "",
+    "StateFlag": 15,
+    "RenderSearch": 0,
+    "Children": [
+        {
+            "Type": "PatchTextureLite1",
+            "Name": "",
+            "Layout": {
+                "Size": {
+                    "x": 30,
+                    "y": 30
+                },
+                "Origin": "LeftTop"
+            },
+            "Transform": {
+                "Ratio": {
+                    "x": 0.0,
+                    "y": 0.0
+                },
+                "RelativePosition": {
+                    "x": 0,
+                    "y": 0
+                }
+            },
+            "Region": "",
+            "StateFlag": 15,
+            "RenderSearch": 0,
+            "Children": null
+        }
+    ],
+    "StateKey": {
+        "Normal": "Button32_Normal",
+        "Hovered": "Button32_Hovered",
+        "Pressed": "Button32_Pressed"
+    }
+}

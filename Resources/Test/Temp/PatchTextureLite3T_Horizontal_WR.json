@@ -1,0 +1,101 @@
+{
+    "Name": "",
+    "Layout": {
+        "Size": {
+            "x": 48,
+            "y": 48
+        },
+        "Origin": "LeftTop"
+    },
+    "Transform": {
+        "Ratio": {
+            "x": 0.0,
+            "y": 0.0
+        },
+        "RelativePosition": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    "Region": "",
+    "StateFlag": 7,
+    "RenderSearch": 2,
+    "Children": [
+        {
+            "Type": "PatchTextureLite1",
+            "Name": "",
+            "Layout": {
+                "Size": {
+                    "x": 22,
+                    "y": 48
+                },
+                "Origin": "LeftTop"
+            },
+            "Transform": {
+                "Ratio": {
+                    "x": 0.0,
+                    "y": 0.0
+                },
+                "RelativePosition": {
+                    "x": 0,
+                    "y": 0
+                }
+            },
+            "Region": "",
+            "StateFlag": 119,
+            "RenderSearch": 2,
+            "Children": null
+        },
+        {
+            "Type": "PatchTextureLite1",
+            "Name": "",
+            "Layout": {
+                "Size": {
+                    "x": 4,
+                    "y": 48
+                },
+                "Origin": "LeftTop"
+            },
+            "Transform": {
+                "Ratio": {
+                    "x": 0.458333,
+                    "y": 0.0
+                },
+                "RelativePosition": {
+                    "x": 22,
+                    "y": 0
+                }
+            },
+            "Region": "",
+            "StateFlag": 55,
+            "RenderSearch": 2,
+            "Children": null
+        },
+        {
+            "Type": "PatchTextureLite1",
+            "Name": "",
+            "Layout": {
+                "Size": {
+                    "x": 22,
+                    "y": 48
+                },
+                "Origin": "LeftTop"
+            },
+            "Transform": {
+                "Ratio": {
+                    "x": 0.541667,
+                    "y": 0.0
+                },
+                "RelativePosition": {
+                    "x": 26,
+                    "y": 0
+                }
+            },
+            "Region": "",
+            "StateFlag": 119,
+            "RenderSearch": 2,
+            "Children": null
+        }
+    ],
+    "DirectionType": 0
+}

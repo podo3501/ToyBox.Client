@@ -1,0 +1,121 @@
+{
+    "BindingTable": {
+        "2": {
+            "Filename": "UI/Texture/Option.png",
+            "Sources": [
+                {
+                    "0": {
+                        "x": 101,
+                        "y": 8,
+                        "width": 79,
+                        "height": 53
+                    }
+                }
+            ]
+        },
+        "3": {
+            "Filename": "UI/Texture/Option.png",
+            "Sources": [
+                {
+                    "0": {
+                        "x": 193,
+                        "y": 8,
+                        "width": 79,
+                        "height": 53
+                    }
+                }
+            ]
+        },
+        "4": {
+            "Filename": "UI/Texture/Option.png",
+            "Sources": [
+                {
+                    "0": {
+                        "x": 10,
+                        "y": 74,
+                        "width": 34,
+                        "height": 35
+                    }
+                }
+            ]
+        },
+        "5": {
+            "Filename": "UI/Texture/Option.png",
+            "Sources": [
+                {
+                    "0": {
+                        "x": 9,
+                        "y": 8,
+                        "width": 79,
+                        "height": 53
+                    }
+                }
+            ]
+        },
+        "9": {
+            "Filename": "UI/SampleTexture/Sample_0.png",
+            "Sources": [
+                {
+                    "0": {
+                        "x": 62,
+                        "y": 82,
+                        "width": 48,
+                        "height": 48
+                    }
+                }
+            ]
+        },
+        "1": {
+            "Filename": "UI/Texture/Option.png",
+            "Sources": [
+                {
+                    "0": {
+                        "x": 54,
+                        "y": 74,
+                        "width": 34,
+                        "height": 35
+                    }
+                }
+            ]
+        },
+        "7": {
+            "Filename": "UI/SampleTexture/Sample_0.png",
+            "Sources": [
+                {
+                    "0": {
+                        "x": 10,
+                        "y": 10,
+                        "width": 64,
+                        "height": 64
+                    }
+                }
+            ]
+        },
+        "8": {
+            "Filename": "UI/SampleTexture/Sample_0.png",
+            "Sources": [
+                {
+                    "0": {
+                        "x": 10,
+                        "y": 82,
+                        "width": 48,
+                        "height": 48
+                    }
+                }
+            ]
+        },
+        "0": {
+            "Filename": "UI/SampleTexture/Sample_0.png",
+            "Sources": [
+                {
+                    "0": {
+                        "x": 114,
+                        "y": 82,
+                        "width": 48,
+                        "height": 48
+                    }
+                }
+            ]
+        }
+    }
+}

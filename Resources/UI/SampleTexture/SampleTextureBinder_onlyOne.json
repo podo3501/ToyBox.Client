@@ -1,0 +1,17 @@
+{
+    "BindingTable": {
+        "BackImage": {
+            "Filename": "UI/SampleTexture/Sample_0.png",
+            "Sources": [
+                {
+                    "0": {
+                        "x": 10,
+                        "y": 10,
+                        "width": 64,
+                        "height": 64
+                    }
+                }
+            ]
+        }
+    }
+}

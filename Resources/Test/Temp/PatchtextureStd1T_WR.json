@@ -1,0 +1,26 @@
+{
+    "Name": "",
+    "Layout": {
+        "Size": {
+            "x": 32,
+            "y": 32
+        },
+        "Origin": "LeftTop"
+    },
+    "Transform": {
+        "Ratio": {
+            "x": 0.0,
+            "y": 0.0
+        },
+        "RelativePosition": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    "Region": "",
+    "StateFlag": 15,
+    "RenderSearch": 0,
+    "Children": null,
+    "BindKey": "One32",
+    "SourceIndex": 0
+}

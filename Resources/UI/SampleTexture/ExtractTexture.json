@@ -1,0 +1,767 @@
+{
+    "Component": {
+        "Type": "Panel",
+        "Name": "Main",
+        "Layout": {
+            "Size": {
+                "x": 1024,
+                "y": 768
+            },
+            "Origin": "LeftTop"
+        },
+        "Transform": {
+            "Ratio": {
+                "x": 0.0,
+                "y": 0.0
+            },
+            "RelativePosition": {
+                "x": 0,
+                "y": 0
+            }
+        },
+        "Region": "MainRegionEntry",
+        "StateFlag": 53,
+        "Children": [
+            {
+                "Child": {
+                    "Type": "ListArea",
+                    "Name": "ListArea_0",
+                    "Layout": {
+                        "Size": {
+                            "x": 503,
+                            "y": 359
+                        },
+                        "Origin": "LeftTop"
+                    },
+                    "Transform": {
+                        "Ratio": {
+                            "x": 0.322266,
+                            "y": 0.229167
+                        },
+                        "RelativePosition": {
+                            "x": 330,
+                            "y": 176
+                        }
+                    },
+                    "Region": "",
+                    "StateFlag": 55,
+                    "Children": [
+                        {
+                            "Child": {
+                                "Type": "RenderTexture",
+                                "Name": "RenderTexture_0",
+                                "Layout": {
+                                    "Size": {
+                                        "x": 503,
+                                        "y": 359
+                                    },
+                                    "Origin": "LeftTop"
+                                },
+                                "Transform": {
+                                    "Ratio": {
+                                        "x": 0.0,
+                                        "y": 0.0
+                                    },
+                                    "RelativePosition": {
+                                        "x": 0,
+                                        "y": 0
+                                    }
+                                },
+                                "Region": "",
+                                "StateFlag": 63,
+                                "Children": [
+                                    {
+                                        "Child": {
+                                            "Type": "PatchTextureStd1",
+                                            "Name": "Background Image",
+                                            "Layout": {
+                                                "Size": {
+                                                    "x": 503,
+                                                    "y": 359
+                                                },
+                                                "Origin": "LeftTop"
+                                            },
+                                            "Transform": {
+                                                "Ratio": {
+                                                    "x": 0.0,
+                                                    "y": 0.0
+                                                },
+                                                "RelativePosition": {
+                                                    "x": 0,
+                                                    "y": 0
+                                                }
+                                            },
+                                            "Region": "",
+                                            "StateFlag": 55,
+                                            "Children": [],
+                                            "BindKey": "ListBackImage1",
+                                            "SourceIndex": 0
+                                        }
+                                    }
+                                ],
+                                "MouseEvents": true
+                            }
+                        },
+                        {
+                            "Child": {
+                                "Type": "TextureSwitcher",
+                                "Name": "Prototype Container",
+                                "Layout": {
+                                    "Size": {
+                                        "x": 503,
+                                        "y": 32
+                                    },
+                                    "Origin": "LeftTop"
+                                },
+                                "Transform": {
+                                    "Ratio": {
+                                        "x": 0.0,
+                                        "y": 0.0
+                                    },
+                                    "RelativePosition": {
+                                        "x": 0,
+                                        "y": 0
+                                    }
+                                },
+                                "Region": "",
+                                "StateFlag": 53,
+                                "Children": [
+                                    {
+                                        "Child": {
+                                            "Type": "PatchTextureLite9",
+                                            "Name": "PatchTextureLite9_0",
+                                            "Layout": {
+                                                "Size": {
+                                                    "x": 503,
+                                                    "y": 32
+                                                },
+                                                "Origin": "LeftTop"
+                                            },
+                                            "Transform": {
+                                                "Ratio": {
+                                                    "x": 0.0,
+                                                    "y": 0.0
+                                                },
+                                                "RelativePosition": {
+                                                    "x": 0,
+                                                    "y": 0
+                                                }
+                                            },
+                                            "Region": "",
+                                            "StateFlag": 7,
+                                            "Children": [
+                                                {
+                                                    "Child": {
+                                                        "Type": "PatchTextureLite3",
+                                                        "Name": "PatchTextureLite3_0",
+                                                        "Layout": {
+                                                            "Size": {
+                                                                "x": 503,
+                                                                "y": 10
+                                                            },
+                                                            "Origin": "LeftTop"
+                                                        },
+                                                        "Transform": {
+                                                            "Ratio": {
+                                                                "x": 0.0,
+                                                                "y": 0.0
+                                                            },
+                                                            "RelativePosition": {
+                                                                "x": 0,
+                                                                "y": 0
+                                                            }
+                                                        },
+                                                        "Region": "",
+                                                        "StateFlag": 135,
+                                                        "Children": [
+                                                            {
+                                                                "Child": {
+                                                                    "Type": "PatchTextureLite1",
+                                                                    "Name": "PatchTextureLite1_0",
+                                                                    "Layout": {
+                                                                        "Size": {
+                                                                            "x": 10,
+                                                                            "y": 10
+                                                                        },
+                                                                        "Origin": "LeftTop"
+                                                                    },
+                                                                    "Transform": {
+                                                                        "Ratio": {
+                                                                            "x": 0.0,
+                                                                            "y": 0.0
+                                                                        },
+                                                                        "RelativePosition": {
+                                                                            "x": 0,
+                                                                            "y": 0
+                                                                        }
+                                                                    },
+                                                                    "Region": "",
+                                                                    "StateFlag": 119,
+                                                                    "Children": []
+                                                                }
+                                                            },
+                                                            {
+                                                                "Child": {
+                                                                    "Type": "PatchTextureLite1",
+                                                                    "Name": "PatchTextureLite1_1",
+                                                                    "Layout": {
+                                                                        "Size": {
+                                                                            "x": 483,
+                                                                            "y": 10
+                                                                        },
+                                                                        "Origin": "LeftTop"
+                                                                    },
+                                                                    "Transform": {
+                                                                        "Ratio": {
+                                                                            "x": 0.019881,
+                                                                            "y": 0.0
+                                                                        },
+                                                                        "RelativePosition": {
+                                                                            "x": 10,
+                                                                            "y": 0
+                                                                        }
+                                                                    },
+                                                                    "Region": "",
+                                                                    "StateFlag": 55,
+                                                                    "Children": []
+                                                                }
+                                                            },
+                                                            {
+                                                                "Child": {
+                                                                    "Type": "PatchTextureLite1",
+                                                                    "Name": "PatchTextureLite1_2",
+                                                                    "Layout": {
+                                                                        "Size": {
+                                                                            "x": 10,
+                                                                            "y": 10
+                                                                        },
+                                                                        "Origin": "LeftTop"
+                                                                    },
+                                                                    "Transform": {
+                                                                        "Ratio": {
+                                                                            "x": 0.980119,
+                                                                            "y": 0.0
+                                                                        },
+                                                                        "RelativePosition": {
+                                                                            "x": 493,
+                                                                            "y": 0
+                                                                        }
+                                                                    },
+                                                                    "Region": "",
+                                                                    "StateFlag": 119,
+                                                                    "Children": []
+                                                                }
+                                                            }
+                                                        ],
+                                                        "DirectionType": 0
+                                                    }
+                                                },
+                                                {
+                                                    "Child": {
+                                                        "Type": "PatchTextureLite3",
+                                                        "Name": "PatchTextureLite3_1",
+                                                        "Layout": {
+                                                            "Size": {
+                                                                "x": 503,
+                                                                "y": 12
+                                                            },
+                                                            "Origin": "LeftTop"
+                                                        },
+                                                        "Transform": {
+                                                            "Ratio": {
+                                                                "x": 0.0,
+                                                                "y": 0.3125
+                                                            },
+                                                            "RelativePosition": {
+                                                                "x": 0,
+                                                                "y": 10
+                                                            }
+                                                        },
+                                                        "Region": "",
+                                                        "StateFlag": 7,
+                                                        "Children": [
+                                                            {
+                                                                "Child": {
+                                                                    "Type": "PatchTextureLite1",
+                                                                    "Name": "PatchTextureLite1_3",
+                                                                    "Layout": {
+                                                                        "Size": {
+                                                                            "x": 10,
+                                                                            "y": 12
+                                                                        },
+                                                                        "Origin": "LeftTop"
+                                                                    },
+                                                                    "Transform": {
+                                                                        "Ratio": {
+                                                                            "x": 0.0,
+                                                                            "y": 0.0
+                                                                        },
+                                                                        "RelativePosition": {
+                                                                            "x": 0,
+                                                                            "y": 0
+                                                                        }
+                                                                    },
+                                                                    "Region": "",
+                                                                    "StateFlag": 119,
+                                                                    "Children": []
+                                                                }
+                                                            },
+                                                            {
+                                                                "Child": {
+                                                                    "Type": "PatchTextureLite1",
+                                                                    "Name": "PatchTextureLite1_4",
+                                                                    "Layout": {
+                                                                        "Size": {
+                                                                            "x": 483,
+                                                                            "y": 12
+                                                                        },
+                                                                        "Origin": "LeftTop"
+                                                                    },
+                                                                    "Transform": {
+                                                                        "Ratio": {
+                                                                            "x": 0.019881,
+                                                                            "y": 0.0
+                                                                        },
+                                                                        "RelativePosition": {
+                                                                            "x": 10,
+                                                                            "y": 0
+                                                                        }
+                                                                    },
+                                                                    "Region": "",
+                                                                    "StateFlag": 55,
+                                                                    "Children": []
+                                                                }
+                                                            },
+                                                            {
+                                                                "Child": {
+                                                                    "Type": "PatchTextureLite1",
+                                                                    "Name": "PatchTextureLite1_5",
+                                                                    "Layout": {
+                                                                        "Size": {
+                                                                            "x": 10,
+                                                                            "y": 12
+                                                                        },
+                                                                        "Origin": "LeftTop"
+                                                                    },
+                                                                    "Transform": {
+                                                                        "Ratio": {
+                                                                            "x": 0.980119,
+                                                                            "y": 0.0
+                                                                        },
+                                                                        "RelativePosition": {
+                                                                            "x": 493,
+                                                                            "y": 0
+                                                                        }
+                                                                    },
+                                                                    "Region": "",
+                                                                    "StateFlag": 119,
+                                                                    "Children": []
+                                                                }
+                                                            }
+                                                        ],
+                                                        "DirectionType": 0
+                                                    }
+                                                },
+                                                {
+                                                    "Child": {
+                                                        "Type": "PatchTextureLite3",
+                                                        "Name": "PatchTextureLite3_2",
+                                                        "Layout": {
+                                                            "Size": {
+                                                                "x": 503,
+                                                                "y": 10
+                                                            },
+                                                            "Origin": "LeftTop"
+                                                        },
+                                                        "Transform": {
+                                                            "Ratio": {
+                                                                "x": 0.0,
+                                                                "y": 0.6875
+                                                            },
+                                                            "RelativePosition": {
+                                                                "x": 0,
+                                                                "y": 22
+                                                            }
+                                                        },
+                                                        "Region": "",
+                                                        "StateFlag": 135,
+                                                        "Children": [
+                                                            {
+                                                                "Child": {
+                                                                    "Type": "PatchTextureLite1",
+                                                                    "Name": "PatchTextureLite1_6",
+                                                                    "Layout": {
+                                                                        "Size": {
+                                                                            "x": 10,
+                                                                            "y": 10
+                                                                        },
+                                                                        "Origin": "LeftTop"
+                                                                    },
+                                                                    "Transform": {
+                                                                        "Ratio": {
+                                                                            "x": 0.0,
+                                                                            "y": 0.0
+                                                                        },
+                                                                        "RelativePosition": {
+                                                                            "x": 0,
+                                                                            "y": 0
+                                                                        }
+                                                                    },
+                                                                    "Region": "",
+                                                                    "StateFlag": 119,
+                                                                    "Children": []
+                                                                }
+                                                            },
+                                                            {
+                                                                "Child": {
+                                                                    "Type": "PatchTextureLite1",
+                                                                    "Name": "PatchTextureLite1_7",
+                                                                    "Layout": {
+                                                                        "Size": {
+                                                                            "x": 483,
+                                                                            "y": 10
+                                                                        },
+                                                                        "Origin": "LeftTop"
+                                                                    },
+                                                                    "Transform": {
+                                                                        "Ratio": {
+                                                                            "x": 0.019881,
+                                                                            "y": 0.0
+                                                                        },
+                                                                        "RelativePosition": {
+                                                                            "x": 10,
+                                                                            "y": 0
+                                                                        }
+                                                                    },
+                                                                    "Region": "",
+                                                                    "StateFlag": 55,
+                                                                    "Children": []
+                                                                }
+                                                            },
+                                                            {
+                                                                "Child": {
+                                                                    "Type": "PatchTextureLite1",
+                                                                    "Name": "PatchTextureLite1_8",
+                                                                    "Layout": {
+                                                                        "Size": {
+                                                                            "x": 10,
+                                                                            "y": 10
+                                                                        },
+                                                                        "Origin": "LeftTop"
+                                                                    },
+                                                                    "Transform": {
+                                                                        "Ratio": {
+                                                                            "x": 0.980119,
+                                                                            "y": 0.0
+                                                                        },
+                                                                        "RelativePosition": {
+                                                                            "x": 493,
+                                                                            "y": 0
+                                                                        }
+                                                                    },
+                                                                    "Region": "",
+                                                                    "StateFlag": 119,
+                                                                    "Children": []
+                                                                }
+                                                            }
+                                                        ],
+                                                        "DirectionType": 0
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    }
+                                ],
+                                "StateKey": {
+                                    "Normal": "ListBackground9_Normal",
+                                    "Hovered": "ListBackground9_Hovered",
+                                    "Pressed": "ListBackground9_Pressed"
+                                },
+                                "BehaviorMode": 0
+                            }
+                        },
+                        {
+                            "Child": {
+                                "Type": "ScrollBar",
+                                "Name": "ScrollBar_0",
+                                "Layout": {
+                                    "Size": {
+                                        "x": 16,
+                                        "y": 355
+                                    },
+                                    "Origin": "RightTop"
+                                },
+                                "Transform": {
+                                    "Ratio": {
+                                        "x": 0.996024,
+                                        "y": 0.005587
+                                    },
+                                    "RelativePosition": {
+                                        "x": 501,
+                                        "y": 2
+                                    }
+                                },
+                                "Region": "",
+                                "StateFlag": 119,
+                                "Children": [
+                                    {
+                                        "Child": {
+                                            "Type": "PatchTextureStd3",
+                                            "Name": "PatchTextureStd3_0",
+                                            "Layout": {
+                                                "Size": {
+                                                    "x": 16,
+                                                    "y": 355
+                                                },
+                                                "Origin": "LeftTop"
+                                            },
+                                            "Transform": {
+                                                "Ratio": {
+                                                    "x": 0.0,
+                                                    "y": 0.0
+                                                },
+                                                "RelativePosition": {
+                                                    "x": 0,
+                                                    "y": 0
+                                                }
+                                            },
+                                            "Region": "",
+                                            "StateFlag": 7,
+                                            "Children": [
+                                                {
+                                                    "Child": {
+                                                        "Type": "PatchTextureStd1",
+                                                        "Name": "PatchTextureStd1_0",
+                                                        "Layout": {
+                                                            "Size": {
+                                                                "x": 16,
+                                                                "y": 10
+                                                            },
+                                                            "Origin": "LeftTop"
+                                                        },
+                                                        "Transform": {
+                                                            "Ratio": {
+                                                                "x": 0.0,
+                                                                "y": 0.0
+                                                            },
+                                                            "RelativePosition": {
+                                                                "x": 0,
+                                                                "y": 0
+                                                            }
+                                                        },
+                                                        "Region": "",
+                                                        "StateFlag": 183,
+                                                        "Children": [],
+                                                        "BindKey": "ScrollTrack3_V",
+                                                        "SourceIndex": 0
+                                                    }
+                                                },
+                                                {
+                                                    "Child": {
+                                                        "Type": "PatchTextureStd1",
+                                                        "Name": "PatchTextureStd1_1",
+                                                        "Layout": {
+                                                            "Size": {
+                                                                "x": 16,
+                                                                "y": 335
+                                                            },
+                                                            "Origin": "LeftTop"
+                                                        },
+                                                        "Transform": {
+                                                            "Ratio": {
+                                                                "x": 0.0,
+                                                                "y": 0.028169
+                                                            },
+                                                            "RelativePosition": {
+                                                                "x": 0,
+                                                                "y": 10
+                                                            }
+                                                        },
+                                                        "Region": "",
+                                                        "StateFlag": 55,
+                                                        "Children": [],
+                                                        "BindKey": "ScrollTrack3_V",
+                                                        "SourceIndex": 1
+                                                    }
+                                                },
+                                                {
+                                                    "Child": {
+                                                        "Type": "PatchTextureStd1",
+                                                        "Name": "PatchTextureStd1_2",
+                                                        "Layout": {
+                                                            "Size": {
+                                                                "x": 16,
+                                                                "y": 10
+                                                            },
+                                                            "Origin": "LeftTop"
+                                                        },
+                                                        "Transform": {
+                                                            "Ratio": {
+                                                                "x": 0.0,
+                                                                "y": 0.971831
+                                                            },
+                                                            "RelativePosition": {
+                                                                "x": 0,
+                                                                "y": 345
+                                                            }
+                                                        },
+                                                        "Region": "",
+                                                        "StateFlag": 183,
+                                                        "Children": [],
+                                                        "BindKey": "ScrollTrack3_V",
+                                                        "SourceIndex": 2
+                                                    }
+                                                }
+                                            ],
+                                            "DirectionType": 1
+                                        }
+                                    },
+                                    {
+                                        "Child": {
+                                            "Type": "TextureSwitcher",
+                                            "Name": "TextureSwitcher_0",
+                                            "Layout": {
+                                                "Size": {
+                                                    "x": 16,
+                                                    "y": 177
+                                                },
+                                                "Origin": "LeftTop"
+                                            },
+                                            "Transform": {
+                                                "Ratio": {
+                                                    "x": 0.0,
+                                                    "y": 0.0
+                                                },
+                                                "RelativePosition": {
+                                                    "x": 0,
+                                                    "y": 0
+                                                }
+                                            },
+                                            "Region": "",
+                                            "StateFlag": 55,
+                                            "Children": [
+                                                {
+                                                    "Child": {
+                                                        "Type": "PatchTextureLite3",
+                                                        "Name": "PatchTextureLite3_3",
+                                                        "Layout": {
+                                                            "Size": {
+                                                                "x": 16,
+                                                                "y": 177
+                                                            },
+                                                            "Origin": "LeftTop"
+                                                        },
+                                                        "Transform": {
+                                                            "Ratio": {
+                                                                "x": 0.0,
+                                                                "y": 0.0
+                                                            },
+                                                            "RelativePosition": {
+                                                                "x": 0,
+                                                                "y": 0
+                                                            }
+                                                        },
+                                                        "Region": "",
+                                                        "StateFlag": 7,
+                                                        "Children": [
+                                                            {
+                                                                "Child": {
+                                                                    "Type": "PatchTextureLite1",
+                                                                    "Name": "PatchTextureLite1_9",
+                                                                    "Layout": {
+                                                                        "Size": {
+                                                                            "x": 16,
+                                                                            "y": 7
+                                                                        },
+                                                                        "Origin": "LeftTop"
+                                                                    },
+                                                                    "Transform": {
+                                                                        "Ratio": {
+                                                                            "x": 0.0,
+                                                                            "y": 0.0
+                                                                        },
+                                                                        "RelativePosition": {
+                                                                            "x": 0,
+                                                                            "y": 0
+                                                                        }
+                                                                    },
+                                                                    "Region": "",
+                                                                    "StateFlag": 183,
+                                                                    "Children": []
+                                                                }
+                                                            },
+                                                            {
+                                                                "Child": {
+                                                                    "Type": "PatchTextureLite1",
+                                                                    "Name": "PatchTextureLite1_10",
+                                                                    "Layout": {
+                                                                        "Size": {
+                                                                            "x": 16,
+                                                                            "y": 163
+                                                                        },
+                                                                        "Origin": "LeftTop"
+                                                                    },
+                                                                    "Transform": {
+                                                                        "Ratio": {
+                                                                            "x": 0.0,
+                                                                            "y": 0.039548
+                                                                        },
+                                                                        "RelativePosition": {
+                                                                            "x": 0,
+                                                                            "y": 7
+                                                                        }
+                                                                    },
+                                                                    "Region": "",
+                                                                    "StateFlag": 55,
+                                                                    "Children": []
+                                                                }
+                                                            },
+                                                            {
+                                                                "Child": {
+                                                                    "Type": "PatchTextureLite1",
+                                                                    "Name": "PatchTextureLite1_11",
+                                                                    "Layout": {
+                                                                        "Size": {
+                                                                            "x": 16,
+                                                                            "y": 7
+                                                                        },
+                                                                        "Origin": "LeftTop"
+                                                                    },
+                                                                    "Transform": {
+                                                                        "Ratio": {
+                                                                            "x": 0.0,
+                                                                            "y": 0.960452
+                                                                        },
+                                                                        "RelativePosition": {
+                                                                            "x": 0,
+                                                                            "y": 170
+                                                                        }
+                                                                    },
+                                                                    "Region": "",
+                                                                    "StateFlag": 183,
+                                                                    "Children": []
+                                                                }
+                                                            }
+                                                        ],
+                                                        "DirectionType": 1
+                                                    }
+                                                }
+                                            ],
+                                            "StateKey": {
+                                                "Normal": "ScrollButton3_V_Normal",
+                                                "Hovered": "ScrollButton3_V_Hovered",
+                                                "Pressed": "ScrollButton3_V_Pressed"
+                                            },
+                                            "BehaviorMode": 1
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ],
+                    "ScrollPadding": 2
+                }
+            }
+        ]
+    }
+}

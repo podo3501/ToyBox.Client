@@ -1,0 +1,104 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="TextureRepository">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Public">
+      <UniqueIdentifier>{a1f8cd62-f503-4c43-84fd-b0f7a5ae35c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{d30f20d5-a210-4101-bd73-fac6421dc1db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="External">
+      <UniqueIdentifier>{d897fc28-4cea-4eaa-8dab-66249307a858}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Config">
+      <UniqueIdentifier>{76079a37-302f-4e27-8acf-e83b9d4e9da1}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="pch.cpp" />
+    <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="TextureRepository\Font.cpp">
+      <Filter>TextureRepository</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureRepository\TextureRenderTarget.cpp">
+      <Filter>TextureRepository</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureRepository\Texture.cpp">
+      <Filter>TextureRepository</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureRepository\TextureRepository.cpp">
+      <Filter>TextureRepository</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureRepository\TextureResource.cpp">
+      <Filter>TextureRepository</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureRepository\TextureHelper.cpp">
+      <Filter>TextureRepository</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\Common.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="External\DeviceResources.cpp">
+      <Filter>External</Filter>
+    </ClCompile>
+    <ClCompile Include="External\Imgui.cpp">
+      <Filter>External</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\DxLeakCheck.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="Renderer.h" />
+    <ClInclude Include="TextureRepository\Font.h">
+      <Filter>TextureRepository</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureRepository\TextureRenderTarget.h">
+      <Filter>TextureRepository</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureRepository\Texture.h">
+      <Filter>TextureRepository</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureRepository\TextureRepository.h">
+      <Filter>TextureRepository</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureRepository\TextureResource.h">
+      <Filter>TextureRepository</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureRepository\TextureHelper.h">
+      <Filter>TextureRepository</Filter>
+    </ClInclude>
+    <ClInclude Include="Public\d3dx12.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="Public\IRenderer.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="Public\ITextureBinder.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\Common.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="External\DeviceResources.h">
+      <Filter>External</Filter>
+    </ClInclude>
+    <ClInclude Include="External\IDeviceNotify.h">
+      <Filter>External</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Imgui.h">
+      <Filter>External</Filter>
+    </ClInclude>
+    <ClInclude Include="Config\Setting.h">
+      <Filter>Config</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\DxLeakCheck.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

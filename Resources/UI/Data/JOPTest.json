@@ -1,0 +1,58 @@
+{
+    "Component": {
+        "Type": "Panel",
+        "Name": "Main",
+        "Layout": {
+            "Size": {
+                "x": 800,
+                "y": 600
+            },
+            "Origin": "LeftTop"
+        },
+        "Transform": {
+            "RelativePosition": {
+                "x": 0,
+                "y": 0
+            },
+            "Ratio": {
+                "x": 0.0,
+                "y": 0.0
+            }
+        },
+        "Enable": true,
+        "AttachmentState": 0,
+        "Children": [
+            {
+                "Child": {
+                    "Type": "TextArea",
+                    "FontFileList": {
+                        "English": "UI/Font/CourierNewBoldS18.spritefont",
+                        "Hangle": "UI/Font/MaleunGothicS16.spritefont"
+                    },
+                    "Text": "<Hangle><Red>테스<br>트, 테스트2</Red>!@#$% </Hangle><English>Test. ^<Blue>&*</Blue>() End</English>",
+                    "Name": "TextArea_0",
+                    "Layout": {
+                        "Size": {
+                            "x": 320,
+                            "y": 120
+                        },
+                        "Origin": "Center"
+                    },
+                    "Transform": {
+                        "RelativePosition": {
+                            "x": 400,
+                            "y": 300
+                        },
+                        "Ratio": {
+                            "x": 0.5,
+                            "y": 0.5
+                        }
+                    },
+                    "Enable": true,
+                    "AttachmentState": 0,
+                    "Children": []
+                }
+            }
+        ]
+    }
+}

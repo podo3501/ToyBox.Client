@@ -1,0 +1,264 @@
+﻿--여러번 실행했을때 Initialize 안되는 부분 수정하기(텍스춰를 올릴때 문제가 생기는듯)
+--리소스 디렉토리 맞추기
+--google test에서 pch를 사용하는 방법을 찾아내자.
+--message에서 PostQuitMessage 메세지가 남아있어서 다음 테스트에 영향을 미치는듯 하다.
+--wndProcListener 만들기
+--mouse 클래스 연결
+--WndProc정리
+--마우스가 이미지에 올라갔을때 이미지를 바꾼다.
+--간단한 버튼 클래스 만들기
+--클릭했을때 버튼 이미지변경
+--button, texture 클래스 리팩토링 
+--button을 랜더링 개체로 해서 처리
+--button, mouse를 mainloop로 올린다.
+--stepTimer를 mainloop로 올린다.
+--button 유닛 테스트 할 수 있게 수정
+--DirectX 메모리 새는거 수정 및 유닛 테스트에 D3D12 메모리 체크 달기
+--Button테스트에서 SW_HIDE 했을때 initialize에서 오류
+--game을 render 클래스로 변경
+--Core 프로젝트와 Renderer인터페이스를 만들어 코어 부분을 분리시킴
+--OnDeviceLost, OnDeviceRestored 잘 되는지 확인(재현을 어떻게 시켜야 하는지 모르겠음)
+--UI의 좌표를 0과1로 만드는 정규화를 통해서 다양한 해상도에 대응할 수 있게 한다.
+--버튼을 3개의 이미지로 만든다.
+--버튼에서 데이터 값과 Render를 분리
+--버튼 테스트 코드 작성 및 좌표값 버그 수정
+--버튼 중간 이미지를 x축으로 늘리기
+--늘리는 이미지와 고정 이미지 만들기
+--텍스춰 인덱스를 내부에서 관리 하도록 수정
+--texture 클래스 texture indexing 클래스로 리팩토링
+--하나의 텍스춰에 작은 부분만 보여주고 싶을때
+--코어 테스트 코드 작성
+--그려주는 부분에서 부분을 크게 그리는 식으로 호출 하게끔 변경
+--button 클래스에서 마우스 클릭 하는 부분 리팩토링
+--텍스춰의 어느 부분을 사용할지 영역 지정
+--마우스 tracker 추가
+--버튼을 [state][part]로 작업
+--1, 3, 9 이미지(텍스춰를 관리하는 방식) 관리를 위한 기반작업
+--3, 9 이미지 늘리는 코드 같이 쓰게끔 수정
+--간단 다이얼로그를 만든다.
+--이미지 1개짜리 x버튼 만들기
+--실시간으로 이미지 늘리게
+--글자 찍을때 인덱스를 관리해줄 클래스를 만들어야 한다.
+--글자가 줄을 넘어가면 개행
+--글을 HTML 형식처럼 인자 바꾸기
+--폰트를 섞어서 출력할 수 있게 수정
+--화면 줄일때 글자 사라짐 단위의 문제 uint말고 float로 교체
+--개행 처리
+--툴 만들기 위해서 MainLoop를 GameMainLoop와 ToolMainLoop로 템플릿 메소드 패턴을 사용해서 분리
+--툴 프로젝트 만들기
+--imgui 연동
+--툴과 app에서 사용 가능하게 imgui를 core로 이동후 리팩토링
+--코어테스트에서 DirectX12 리소스 누출 확인
+--imgui용 DescriptorHeap을 생성해서 연결
+--imgui를 이용해서 툴 기반 만들기
+--다이얼로그에 버튼 붙이기
+--패널 개념 넣기
+--UI 데이터를 저장할 JSON 붙이기
+--버튼에 이미지를 올린다.
+--Grid1에 이미지와 source 좌표를 변경가능하게.
+--자료를 작게 만들고 이미지를 흰색이 아니라 투명으로 바꿈.
+--툴에서 image grid 9 설정할 수 있게.
+--Press Release 하는 함수 인자 하나 추가하고 하나로 합치기.
+--컴포넌트 폴더 만들어서 정리
+--툴에서 마우스 끌기 기능 추가.
+--툴에서 컴포넌트끼리 연결하게.
+--UIComponent에서 이름으로 찾는 것을 지양하는 방향으로 코딩
+--Clone 툴에서 구현
+--컴포넌트가 2개 있을때 둘다 움직이면 버그 발생. 이름으로 찾아서 해야 할 듯?
+--이름이 유니크하게 만들어지는 부분 버그 수정
+--MarkDirty UIComponent에서 정리
+--툴에서 undo 구현
+--툴에서 버튼 구현
+--인풋매니저가 어쩔수없는 싱글톤이라면 함수인자에서 빼버리는게 낫지 않은가
+--Container에서 keepPressed 구현
+--Scroll Bar 만들기
+--세로 ImageGrid3만들기
+--	ListArea연결
+--ScrollBar에 SetViewContent 함수 만드는중
+--컨테이너 리사이즈 함수 만드는중
+--클론 한다음에 release 하면 texture reference count가 오류. 클론할때에는 reference count도 늘려야 할 것.
+--RenderTexture 테스트 하다보면 안지워지는게 있음 texture resource
+--ListArea에서 m_bounded 클래스를 ScrollBar로 이동 리팩토링 할려고 함.
+--ListArea 부분 하드 코딩 없이 작업하게끔
+--컨테이너에 그림을 올려서 테스트 할려고 하는 순간, 버튼에 이미지를 올렸을 경우 hovered가 되면 
+    자식 컨테이너는 보이지 않게 된다. 컴포넌트가 normal, hover, pressed가 다 따로 있기 때문인데 하나로 만들고
+    이미지만 교체 하는 식으로 바꿔야 함. 그래서 ImageChanger 컴포넌트를 만들예정
+--TextureWindow를 main처럼 창 상단에서 열게 해서 source를 이름과 매칭시키는 클래스(TextureResourceBinder) 작성
+    툴작업
+    json으로 로드 세이브 되는지 확인
+    1차 마무리 했다면 tdd코드에서 좌표 확인 하는 부분 수정
+--extureSourceBinder에서 source 위치를 옮긴후 저장할때 버그.
+    그 이미지가 선택되었다 라고 해서 이미지에서 수정하는 식으로 코드를 짜는 것을 추천
+    버그 수정후에 파일을 저장하고 테스트 코드를 한단계씩 바꿔간다. ImageGrid3 할 차례
+    현재는 TDD가 작동하지 않는다 TextureResourceBinder 읽을때 안에 파일 형식이 달라서 오류생김
+    이름을 먼저 정하면 선택할 수 있게 되고 선택이 가능하면 source 관련 수치가 바뀔 수 있도록 수정
+    insert와 modify로 나누면 될꺼 같기도 하고.
+--TextureResourceBinder Vertical작업
+--TextureResourceBinder에 저장되어있는 구역들 툴에서 볼수 있게끔 작업
+--툴에서 TextureResourceBinder 키로 저장하게끔 수정
+--툴에서 editwindow쪽 수정 필요
+--3이미지 9이미지 늘릴때 안늘어나는 이미지 가로 세로 lock 걸고 이미지 조정하는 걸로 수정
+--TextureResourceBinder도 TDD 작성 및 리팩토링
+--m_index를 컴포넌트들이 가지고 있는데 이것을 TextureResourceBinder가 가지는 방식도 고려
+--기존의 TDD에 좌표로 하드코딩 돼 있는 부분 TextrueSourceBinder로 수정
+    바꾸는 중에 m_index도 셋팅 하게끔 바꾸는데 그러다 보니 bind부분과 post부분이 겹치게 되어서 
+    한꺼번에 바꿔야 해서 img1 했고, 이전에는 반쪽만 했는데 switcher부터는 다 해야한다.
+--리팩토링 및 TDD 수정
+    기존의 Image컴포넌트들도 TextureResourceBinder 사용하게 수정
+    ImageGrid1이 텍스쳐 파일을 로딩하기도 하는데, 이 부분을 Binder로 옮기고 Component는 직접적으로 로딩 하는 부분을 없애자.
+--TextureResourceBinder 함수 정리
+    ImageSwitcher 저장 로드시 버그 수정
+--Image9, 3에 divider 삭제
+--TextureWindow 및 SourceExtractor 삭제
+--UI 파일들 폴더에 넣고 정리
+--TextureMainWindow리팩토링 및 이름 수정
+--Binder Undo 만들기
+--Binder에서 현재 텍스쳐에서 등록돼 있는 키들을 전부 표시해주는 거. 
+--툴에서 Undo 할수 있게끔 추가 
+--리팩토링 미흡한게 있는지 확인    
+--imgui list도 utility class 작업
+--TDD쪽 imageSwitcher 리팩토링
+--FitToTextureSource 함수 만들기
+--invocable(predicate)을 uicomponent의 loop 에도 적용
+--EditPatchTexture 작성중. editPathTexture작성할때 상속을 해서 윗단에 만들어 놓는게 한번만 만들고 좋기 때문에.
+--TextureSwitcher 툴 작업
+--컨테이너는 Patch9로
+--EXPECT_TRUE(m_panel->BindTextureSourceInfo(m_resBinder.get(), nullptr)); 9Tex에서 왜 이거 2번 쓰는지. 1번만 써도 되게끔 수정할 수 있는지
+--patchTextureLite를 만들어서 bindKey가 없는 버전 만들기. 다른 로직 때문에 생각하는게 복잡해져서 따로 구현해야겠다.
+--이미지 좌표에 고유 이름 시스템(binder)
+--Image를 Texture로 바꿔야 하지 않을까?
+--Divider가 안 바뀌어 있다. Divider도 기본값으로 바꿔야 한다.
+--키를 바꾸었을때 사이즈의 최소값으로 기본셋팅한다. 그렇지 않으면 undo에서 에러나고 사이즈 조절이 되지 않는다.
+--ImplementChangeSize 이 함수에 강제로 업데이트 하는 변수 추가
+--새로운 layout size 만 지정하고 origin 빼기
+--ScrollSlider를 ScrollBar로 변경
+--Padding을 리스트에 넣는다. 
+--스크롤 바가 툴 모드에서 보이게 하거나 더미 데이터를 넣는 처리는 client에서 하는게 아니라 툴에서 리스트에 보이게끔 명령을
+   내리게끔 한다. 
+--리스트 데이터를 테스트용으로 넣어서 active 화면에서 볼 수 있게
+--렌더텍스쳐가 TextureSwitcher 사이에 있는데 이 부분 수정
+--스크롤 바가 없을때 휠 돌리면 컨테이너 사라지는 버그
+--리스트 세이브 버그
+--사이즈를 늘렸을때 active 화면에서 간격이 생기는 버그(아마도 위치ratio 문제일듯)
+--리스트가 컴포넌트 안에 있을때 사이즈 변경시 RenderTexture 위치가 이상해지는 문제(ratio와 관련해서 core쪽에 위치 문제일듯)
+--스크롤 바에서 순서이상한 부분 확인해보기
+--Tracy 측정도구 클라이언트에 붙이기
+--tdd 코드가 tracy가 늦게 돌아가는데 이유는 코드 전송때문이었다. 그 코드 전송을 끄는 옵션을 사용하자.
+--Tracy가 다른 프로젝트와 연동시 문제가 없도록 수정
+--UINameGenerator에 SerializeIO 완성하기
+--UIModule에 Read 함수 만들기
+--Adapter 클래스를 만들어서 RenderTexture에 UIModule을 연결시키자.
+--Region이 같은 이름일때 attach를 하게 되면 이름이 바뀌는데 이게 새로 만든 Generator에서 하는건지 확인이 필요하다.
+--return UIComponent::ImplementChangeSize(size); 이 부분을 상단으로 올려서 호출했을때 문제가 생길수 있는지 확인해야 한다.
+--Json에서 Helper 및 Read 부분 정리
+--Tracy로 측정한 결과 5개 원소를 추가하는데 총 20ms 걸렸다. 개선해야함. 대부분은 GenerateUniqueNames 함수가 원인
+    이름을 비교하는게 아니라 생성할때 이름을 정하고 비교 없이 붙임. 그리고 이름생성 클래스는 따로 만들어서 다음에 어떤 이름
+    이 생성될지 저장해야 함. 
+--바꾼후 Tracy를 통해서 얼만큼 속도 향상이 있는지 체크. (결과: attach하는데 시간을 거의 소비하지 않게 수정됨)
+--Tracy 때문에 성능측정을 하지 않는데도 테스트가 느려진다. 
+--Traits 패턴을 이용해서 TMP 쪽 코드 정리. 컨셉이 많아지면 복잡해져서 traits로 가야하긴 한다. traits.hpp 하는중
+--기존의 툴이나 TDD에서 UIComponent를 쓴 부분을 UIModule로 바꾸기
+--JsonHelper 클래스 지우기
+--UIModule 을 찾아내서 내부적으로 attach하는 부분을 UIModule을 통해서 attach 하도록 수정.
+--Tracy의 build 폴더 github에 추가
+--ListArea에서 더미가 늦게 추가되는거 확인(아마 컴포넌트에 Region name이 없어서 그럴꺼 같은데)
+--region 이름이 같을때 생성 부분을 nameGenerator에서 할 수 있도록 구현
+--region Generator 관련 리팩토링
+--UIEx쪽 리팩토링
+--region을 1로 해 놓고 그걸 다시 그 노드에 붙였을때 region은 1_1 이 아니라 1로 붙음.
+--Tracy 깃헙에 올리기
+--sdl과 tracy output 맞추기 및 srcs로 옮기기.
+--Tracy 및 ThirdParty 프로젝트 떼어내고 lib로 연결하게끔 수정
+--ToyExpr에서 Core돌리는 Fixture 만들어 연결해서 Tracy 돌리기
+--Imgui를 ThirdParty로 옮기면서 툴에서 Imvec쓰는 확장 Helper 만들기
+--공통부분 Shared 프로젝트로 옮기기
+--pch 정리. unit 프로젝트에는 대부분 떼어내고 필요한 것만 넣어놓을 예정    
+--깃헙에서 다운 받아서 동작하는지 확인
+--클라이언트 Utility를 Shared로 옮기기
+--window를 Shared로 옮기기
+--깃헙에서 readme에 프로젝트 내용 기술 및 실행 방법 기술
+--InputManager를 Shared/System/Input으로 바꿈
+--Config을 Environment와 config 두개로 분리하고 Environment는 app이 기동할때 최소한의 정보를 넣는다.
+--Shared/Framework를 만들고 AppLoop를 여기에 두고 exe 프로젝트가 상속받아서 loop돌리게끔 수정
+--Json을 UI말고도 다른데서 활용할 수 있도록 UI쪽 데이터와 분리해서 공통부분은 Shared에 올리기.
+--Command부분을 알기쉽게 이름 리팩토링 CommandHistory같은.
+--Window 폴더를 만들어서 정리.
+--Utility 폴더를 만들어서 정리
+--Config 폴더 만들기
+--void ReportLiveObjects() 함수 Core로 올리기
+--Core 프로젝트 root 정리
+--툴 root 정리
+--Test 프로젝트 root 정리
+--CreateAppLoop 리팩토링
+--App용 테스트 씬 만들기
+--점진적으로 IInput으로 바꿀 예정
+--TextureResourceBinder를 DI로 바꾸기(DI로 바꾸는 목적이 빈 클래스 만드는건데 기본인자를 L""을 넣어서 빈 클래스 생성하게끔 수정)
+--environment 이거 locator로 바꿔야 하지 않을까?
+--툴에서 RenderTexture->AsComponent->Module->Panel로 넘어가야 하는데 Module을 거치지 않고 넘어가고 있다.
+--마우스 위치값이 다르다. 처음에 시작 마우스 위치값을 셋팅해야 한다.
+--툴에서 마우스를 Null Locator로 바꾸면 툴 관련 마우스도 작동안하기 때문에, IToolInputLocator를 만들어야함.
+--마우스 생성부분을 Shared에서 Loop로 이동하고 처리해야겠다.
+--툴에서 이 부분이 먼저 되어야 컴포넌트를 하나씩 띄워봤을때 문제가 있는지 통합테스트를 할 수 있다.
+--마우스 휠이 자기 포커스가 벗어날때 휠 값을 들고 있어서 버그가 나는듯 하다. 이거 체크해서 없애주는 거 처리.
+--FindRenderComponents 이거 지워야한다.
+--ScrollBar에서 버튼을 움직이는 것을 ScrollBar가 전부 제어하는 식으로 바꾼다. 즉 콜백을 없앤다.
+--마우스 처리 부분을 Update에서 함수 호출로 하나씩 수정하면서 이전의 테스트 코드가 false가 나는 것을 확인해서 옮기거나 삭제한다.
+--Component에서 마우스 이벤트 받는 부분을 UIModule에서 한번만 하고 컴포넌트에 전파하는 방식으로 개선
+--각 컴포넌트에서 마우스 이벤트 부분을 event 함수에서 처리하는 것으로 변경
+--ImplementUpdate를 밖에서 호출하게 한다. 툴에서는 편집모드면 업데이트를 호출하지 않게 하면 될것 같다.
+--ImplementUpdate가 마우스 이벤트인 부분이 많기 때문에 마우스 이벤트 함수가 추가되면 아마 많이 가벼워질것 같다.
+--Update 함수에 if를 지울 수 있을것 같다.
+--UIComponent에 option중에서 active? 인가 이거 삭제 할수 있지 않을까?
+--툴에서 위치값 갱신 안되는 버그 수정
+--UIModule에서 panel에 name과 region이 버그가 있다. 이거 수정하고 tdd 쪽 수정하자.
+--UIModule로 바꾸고 나서 생긴 버그들 수정
+--UINameGenerator에서 ComponentID가 인자로 들어가는거 있는데 그거 수정.
+--껏다 킬때 툴에서 마우스 때문에 뻑나는거 수정
+--새로운 tdd작성법으로 바꾸면서 처음에 만들었던 부분 다시 리뷰 및 수정
+--UIModule을 Locator로 바꾸고 내부는 전역에 사용하는 부분과 노드에 사용하는 부분으로 분리
+--코어에서 UIComponentManager로 render를 날라면 이 매니져는 UIModule 리스트를 가지고 있으니까 
+   각자 render를 날려주면 내부에서 Traverser가 랜더링을 하는 식으로 수정.
+--UIComponent 리팩토링
+--Include 정리
+--tdd에서 traverser에 uimodule을 안쓰고 테스트 하는걸로 수정.
+--HierarchyTraverser 함수들 보기 좋게 다듬기.
+--UIComponent에 RecursiveUpdate를 수정. RecursivePositionUpdate와 합칠수 있으면 좋다. 
+--알아먹기 쉽도록 테스트 코드 재작성
+    테스트 코드를 딱 봤을때 코드를 분석하고 있으면 안된다. 그만큼 심플하고 간단하게. 20줄이 안넘도록
+    컴포넌트T 이름으로 파일명을 정하고, 이것들은 큰 흐름만 테스트 한다.
+--ITextureController가 Component에 있는데 이를 찾아서 Setup할때 넣는 걸로 한다.
+--RenderTexture를 클론했을때 RenderTexture 안에 사용되는 텍스쳐는 새로 만들어야 한다.
+--tdd warning 찾아서 없애기
+--Json을 tdd에서 파일로 쓰는 부분을 DI로 수정하고 메모리에 쓰게끔 수정해서 tdd 속도 및 의존성 줄이기
+--wstring filename = L"Test/Data/RWSourceBinderTest.json"; 이것처럼 tdd에서 세이브 되는 데이터는 한곳으로 모으자.
+
+@ComponentT가 UIModuleT를 상속받아서 테스트 하도록 수정.
+    Compare와 CompareDerived를 하나로 합치는 거 생각.
+@audio manager 만들기
+@툴에서 작업환경을 멀티로 할지 단일로 할지 생각해봐야 겠다.
+@Component에서 이벤트 받아서 사운드 출력되게끔.
+@IME로 한글 입력되게
+@인트로 화면 만들기
+@게임 화면 만들기
+@씬 전환시 메모리 잘 내려가는지 확인
+
+@프로젝트 정리   
+    SDL 사운드를 Shared/System/Audio로 할 예정.   
+
+@툴에서 리스트 할 수 있게끔
+    컨테이너 간격 셋팅 
+
+@콤보박스 컴포넌트 만들기
+@툴에서 콤보박스 할 수 있게끔
+@UI에서 리로딩하게 되면 Undo 히스토리가 삭제 된다고 경고메세지 출력
+@이미지가 커지면 마지막 줄은 알파값이 늘어나서 밑에 그림이랑 블랜딩돼서 1pixel 이상하게 보이는거 수정(그래픽을 수정하든지 1픽셀 작게 잡든지)
+@sprite->Draw 할때 Rect 값을 lefttop이 아니라 rightTop으로 주고 사이즈를 bottomLeft로 하면 어떻게 출력될까?
+
+콤보 Component 구현
+툴 위젯 쓰기 편하게 바꾸기.
+해상도 변화가 잘 되는지 확인
+Detach를 눌렀을때 마우스위치에서 Detach 되도록 수정
+키보드 이벤트를 연결한다.
+총 실행되는 시간을 저장해서 표로 만들 방법을 생각한다.
+
+?!?는 고쳐야 하거나 이상하거나 등등

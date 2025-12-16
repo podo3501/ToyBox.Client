@@ -1,0 +1,251 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="Utils\Common.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\Profiler.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\GeometryExt.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\StlTypeExt.hpp">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\StlExt.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\StlExtTraitsConcepts.hpp">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\StringExt.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Window\Window.h">
+      <Filter>Window</Filter>
+    </ClInclude>
+    <ClInclude Include="Window\WindowProcedure.h">
+      <Filter>Window</Filter>
+    </ClInclude>
+    <ClInclude Include="System\StepTimer.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="Framework\AppLoop.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Framework\Environment.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="SerializerIO\ClassSerializeIO.hpp">
+      <Filter>SerializerIO</Filter>
+    </ClInclude>
+    <ClInclude Include="SerializerIO\Concepts.h">
+      <Filter>SerializerIO</Filter>
+    </ClInclude>
+    <ClInclude Include="SerializerIO\SerializerIO.h">
+      <Filter>SerializerIO</Filter>
+    </ClInclude>
+    <ClInclude Include="SerializerIO\SerializerIO.hpp">
+      <Filter>SerializerIO</Filter>
+    </ClInclude>
+    <ClInclude Include="SerializerIO\KeyConverter\KeyConverter.hpp">
+      <Filter>SerializerIO\KeyConverter</Filter>
+    </ClInclude>
+    <ClInclude Include="SerializerIO\Traits\Traits.h">
+      <Filter>SerializerIO\Traits</Filter>
+    </ClInclude>
+    <ClInclude Include="SerializerIO\Traits\TraitsHelper.hpp">
+      <Filter>SerializerIO\Traits</Filter>
+    </ClInclude>
+    <ClInclude Include="Framework\Initializer\Application.h">
+      <Filter>Framework\Initializer</Filter>
+    </ClInclude>
+    <ClInclude Include="Framework\Initializer\GoogleTest.h">
+      <Filter>Framework\Initializer</Filter>
+    </ClInclude>
+    <ClInclude Include="Framework\Locator.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\Memory.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Audio\SDLAudioManager.h">
+      <Filter>System\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Public\IAudioManager.h">
+      <Filter>System\Public</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Input\InputManager.h">
+      <Filter>System\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Public\IInputManager.h">
+      <Filter>System\Public</Filter>
+    </ClInclude>
+    <ClInclude Include="Framework\EnvironmentLocator.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="SerializerIO\Storage\IJsonStorage.h">
+      <Filter>SerializerIO\Storage</Filter>
+    </ClInclude>
+    <ClInclude Include="SerializerIO\Storage\JsonStorageLocator.h">
+      <Filter>SerializerIO\Storage</Filter>
+    </ClInclude>
+    <ClInclude Include="SerializerIO\Storage\FileStorage.h">
+      <Filter>SerializerIO\Storage</Filter>
+    </ClInclude>
+    <ClInclude Include="SerializerIO\Storage\MemoryStorage.h">
+      <Filter>SerializerIO\Storage</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Audio\EffectSoundBuffer.h">
+      <Filter>System\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Audio\EffectSound.h">
+      <Filter>System\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Audio\NormalSound.h">
+      <Filter>System\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Audio\NormalSoundBuffer.h">
+      <Filter>System\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Public\AudioTypes.h">
+      <Filter>System\Public</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\EnumHelpers.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Audio\SoundTableReader.h">
+      <Filter>System\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Audio\SoundTraits.h">
+      <Filter>System\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Audio\AudioTypeHelpers.h">
+      <Filter>System\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Audio\ISoundTableReader.h">
+      <Filter>System\Audio</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="pch.cpp" />
+    <ClCompile Include="Utils\Profiler.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\GeometryExt.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\StlExt.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\StringExt.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Window\Window.cpp">
+      <Filter>Window</Filter>
+    </ClCompile>
+    <ClCompile Include="Window\WindowProcedure.cpp">
+      <Filter>Window</Filter>
+    </ClCompile>
+    <ClCompile Include="Framework\AppLoop.cpp">
+      <Filter>Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="Framework\AppLoopWndProc.cpp">
+      <Filter>Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="Framework\Environment.cpp">
+      <Filter>Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="SerializerIO\SerializerIO.cpp">
+      <Filter>SerializerIO</Filter>
+    </ClCompile>
+    <ClCompile Include="SerializerIO\KeyConverter\KeyConverter.cpp">
+      <Filter>SerializerIO\KeyConverter</Filter>
+    </ClCompile>
+    <ClCompile Include="SerializerIO\Traits\Traits.cpp">
+      <Filter>SerializerIO\Traits</Filter>
+    </ClCompile>
+    <ClCompile Include="Framework\Initializer\Application.cpp">
+      <Filter>Framework\Initializer</Filter>
+    </ClCompile>
+    <ClCompile Include="Framework\Initializer\GoogleTest.cpp">
+      <Filter>Framework\Initializer</Filter>
+    </ClCompile>
+    <ClCompile Include="System\Audio\SDLAudioManager.cpp">
+      <Filter>System\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="System\Input\InputManager.cpp">
+      <Filter>System\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="SerializerIO\Storage\FileStorage.cpp">
+      <Filter>SerializerIO\Storage</Filter>
+    </ClCompile>
+    <ClCompile Include="SerializerIO\Storage\MemoryStorage.cpp">
+      <Filter>SerializerIO\Storage</Filter>
+    </ClCompile>
+    <ClCompile Include="System\Audio\EffectSoundBuffer.cpp">
+      <Filter>System\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="System\Audio\EffectSound.cpp">
+      <Filter>System\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="System\Audio\NormalSound.cpp">
+      <Filter>System\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="System\Audio\NormalSoundBuffer.cpp">
+      <Filter>System\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\EnumHelpers.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="System\Audio\SoundTableReader.cpp">
+      <Filter>System\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="System\Audio\SoundTraits.cpp">
+      <Filter>System\Audio</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{afeeacd9-29a4-467b-a9b5-02e9f5c511d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Window">
+      <UniqueIdentifier>{7ce5a08c-2bc0-4572-9fcc-40c1356c1caa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System">
+      <UniqueIdentifier>{542fe64b-3dd4-4d25-b7ec-219e29079105}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework">
+      <UniqueIdentifier>{70d3aad2-e44a-404e-8f32-76e91bc2e76f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SerializerIO">
+      <UniqueIdentifier>{a297c79b-d98f-4b24-94f6-f4d9edce9b9b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SerializerIO\KeyConverter">
+      <UniqueIdentifier>{7f717356-9e2f-4394-9927-95ee27997740}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SerializerIO\Traits">
+      <UniqueIdentifier>{6d2e918d-00e6-4641-b670-00c0ac0dcc32}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework\Initializer">
+      <UniqueIdentifier>{53758de4-1b63-40d8-8388-5c346338bf23}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System\Audio">
+      <UniqueIdentifier>{d9d7f270-abe4-445f-889a-23f415f65653}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System\Public">
+      <UniqueIdentifier>{345623cb-0546-404b-ad64-ba49bf4967d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System\Input">
+      <UniqueIdentifier>{94771c7d-10b2-4979-b871-e3940786ece1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SerializerIO\Storage">
+      <UniqueIdentifier>{c64a7941-9810-432c-8f04-eef733ba5b29}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script">
+      <UniqueIdentifier>{f9805421-23e1-48e8-b12f-166e780eef9e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

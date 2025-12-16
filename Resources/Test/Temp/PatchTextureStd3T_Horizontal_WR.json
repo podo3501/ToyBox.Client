@@ -1,0 +1,107 @@
+{
+    "Name": "",
+    "Layout": {
+        "Size": {
+            "x": 48,
+            "y": 48
+        },
+        "Origin": "LeftTop"
+    },
+    "Transform": {
+        "Ratio": {
+            "x": 0.0,
+            "y": 0.0
+        },
+        "RelativePosition": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    "Region": "",
+    "StateFlag": 3,
+    "RenderSearch": 0,
+    "Children": [
+        {
+            "Type": "PatchTextureStd1",
+            "Name": "",
+            "Layout": {
+                "Size": {
+                    "x": 22,
+                    "y": 48
+                },
+                "Origin": "LeftTop"
+            },
+            "Transform": {
+                "Ratio": {
+                    "x": 0.0,
+                    "y": 0.0
+                },
+                "RelativePosition": {
+                    "x": 0,
+                    "y": 0
+                }
+            },
+            "Region": "",
+            "StateFlag": 31,
+            "RenderSearch": 0,
+            "Children": null,
+            "BindKey": "ThreeH48",
+            "SourceIndex": 0
+        },
+        {
+            "Type": "PatchTextureStd1",
+            "Name": "",
+            "Layout": {
+                "Size": {
+                    "x": 4,
+                    "y": 48
+                },
+                "Origin": "LeftTop"
+            },
+            "Transform": {
+                "Ratio": {
+                    "x": 0.458333,
+                    "y": 0.0
+                },
+                "RelativePosition": {
+                    "x": 22,
+                    "y": 0
+                }
+            },
+            "Region": "",
+            "StateFlag": 15,
+            "RenderSearch": 0,
+            "Children": null,
+            "BindKey": "ThreeH48",
+            "SourceIndex": 1
+        },
+        {
+            "Type": "PatchTextureStd1",
+            "Name": "",
+            "Layout": {
+                "Size": {
+                    "x": 22,
+                    "y": 48
+                },
+                "Origin": "LeftTop"
+            },
+            "Transform": {
+                "Ratio": {
+                    "x": 0.541667,
+                    "y": 0.0
+                },
+                "RelativePosition": {
+                    "x": 26,
+                    "y": 0
+                }
+            },
+            "Region": "",
+            "StateFlag": 31,
+            "RenderSearch": 0,
+            "Children": null,
+            "BindKey": "ThreeH48",
+            "SourceIndex": 2
+        }
+    ],
+    "DirectionType": 0
+}
