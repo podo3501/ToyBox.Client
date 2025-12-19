@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Renderer.h"
 #include "Public/ITextureBinder.h"
+#include "Public/IImguiRegistry.h"
 #include "TextureRepository/TextureRepository.h"
 #include "TextureRepository/TextureRenderTarget.h"
 #include "External/DeviceResources.h"
@@ -10,24 +11,21 @@
 
 using namespace DirectX;
 
-unique_ptr<IRenderer> CreateRenderer(HWND hwnd, int width, int height, bool bUseImgui)
+unique_ptr<IRenderer> CreateRenderer(HWND hwnd, int width, int height, IImguiRegistry* imguiRegistry)
 {
-    unique_ptr<IImgui> imgui{ nullptr };
-    if (bUseImgui)
-        imgui = make_unique<Imgui>(hwnd);
-    else
-        imgui = make_unique<NullImgui>();
+    IImguiObject* imguiObject = imguiRegistry;
+    IImguiRenderer* imguiRenderer = static_cast<IImguiRenderer*>(imguiObject);
 
-    unique_ptr<Renderer> renderer = make_unique<Renderer>(hwnd, width, height, move(imgui));
+    unique_ptr<Renderer> renderer = make_unique<Renderer>(hwnd, width, height, imguiRenderer);
     auto result = renderer->Initialize();
     if (!result)
         return nullptr;
 
-    return move(renderer);
+    return renderer;
 }
 
-Renderer::Renderer(HWND hwnd, int width, int height, unique_ptr<IImgui>&& imgui) noexcept(false) :
-    m_imgui{ move(imgui) }
+Renderer::Renderer(HWND hwnd, int width, int height, IImguiRenderer* imguiRenderer) noexcept(false) :
+    m_imguiRenderer{ imguiRenderer }
 {
     //WICOnceInitialize();
 
@@ -84,7 +82,7 @@ bool Renderer::Initialize()
     auto device = m_deviceResources->GetD3DDevice();
     auto format = m_deviceResources->GetBackBufferFormat();
 
-    ReturnIfFalse(m_imgui->Initialize(device, m_srvDescriptors.get(), format, Ev(SrvOffset::Imgui)));
+    ReturnIfFalse(m_imguiRenderer->Initialize(device, m_srvDescriptors.get(), format, Ev(SrvOffset::Imgui)));
     m_batch = make_unique<ResourceUploadBatch>(device);
     m_texRepository = make_unique<TextureRepository>(
         m_deviceResources.get(), m_srvDescriptors.get(), m_batch.get(), m_spriteBatch.get());
@@ -141,7 +139,7 @@ void Renderer::CreateWindowSizeDependentResources()
 void Renderer::OnDeviceLost()
 {
     // TODO: Add Direct3D resource cleanup here.
-    m_imgui->Reset();
+    m_imguiRenderer->Reset();
     m_texRepository->Reset();
 
     m_srvDescriptors.reset();
@@ -218,8 +216,8 @@ void Renderer::Draw()
     m_spriteBatch->End();
 
     //imgui들을 렌더링 한다.
-    m_imgui->PrepareRender();
-    m_imgui->Render(commandList);
+    m_imguiRenderer->PrepareRender();
+    m_imguiRenderer->Render(commandList);
 
     PIXEndEvent(commandList);
 
@@ -307,6 +305,3 @@ void Renderer::SetComponentRenderer(function<void(ITextureRender*)> rendererFn) 
 {
     m_componentRenderer = rendererFn;
 }
-
-void Renderer::AddImguiComponent(IImguiComponent* comp) { m_imgui->AddComponent(comp); }
-void Renderer::RemoveImguiComponent(IImguiComponent* comp) noexcept { m_imgui->RemoveComponent(comp); }

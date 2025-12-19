@@ -5,6 +5,7 @@
 #include "Window/TextureResourceBinder/TextureResBinderWindow.h"
 #include "Window/Menu/MenuBar.h"
 #include "Window/Dialog.h"
+#include "Core/Public/IImguiRegistry.h"
 #include "Shared/Window/Window.h"
 #include "Toy/Locator/EventDispatcherLocator.h"
 #include "Toy/Locator/InputLocator.h"
@@ -27,13 +28,14 @@ extern "C"
 #endif
 
 ToolLoop::~ToolLoop() = default;
-ToolLoop::ToolLoop(unique_ptr<Window> window, unique_ptr<IRenderer> renderer,
+ToolLoop::ToolLoop(unique_ptr<Window> window, unique_ptr<IRenderer> renderer, unique_ptr<IImguiRegistry> imguiRegistry,
     const wstring& resourcePath, const Vector2& windowSize) :
-    ::AppLoop(move(window), move(renderer), resourcePath, windowSize),
-    m_renderer{ AppLoop::GetRenderer() }
+    ::AppLoop(move(window), move(renderer), move(imguiRegistry), resourcePath, windowSize),
+    m_renderer{ AppLoop::GetRenderer() },
+    m_imguiRegistry{ AppLoop::GetImguiRegistry() }
 {
     m_menuBar = make_unique<MenuBar>(this);
-    m_renderer->AddImguiComponent(this);
+    m_imguiRegistry->AddComponent(this);
 }
 
 bool ToolLoop::InitializeDerived()

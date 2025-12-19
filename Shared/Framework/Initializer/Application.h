@@ -1,10 +1,9 @@
 #pragma once
 #include "../AppLoop.h"
 #include "Core/Public/IRenderer.h"
+#include "Core/Public/IImguiRegistry.h"
 #include "Shared/Window/WindowProcedure.h"
 #include "Shared/Window/Window.h"
-
-unique_ptr<IRenderer> CreateRendererInstance(Window* window, bool bImgui);
 
 template<typename LoopType>
 unique_ptr<AppLoop> CreateAppLoop(HINSTANCE hInstance, int nShowCmd,
@@ -17,14 +16,26 @@ unique_ptr<AppLoop> CreateAppLoop(HINSTANCE hInstance, int nShowCmd,
 	if (!window)
 		return nullptr;
 
-	auto renderer = CreateRendererInstance(window.get(), bImgui);
+	auto hwnd = window->GetHandle();
+	auto imgui = CreateImgui(hwnd, resourcePath, bImgui);
+	if (!imgui)
+		return nullptr;
+
+	const auto& size = window->GetOutputSize();
+	auto renderer = CreateRenderer(hwnd, static_cast<int>(size.x), static_cast<int>(size.y), imgui.get());
 	if (!renderer)
 		return nullptr;
 
+	if (bImgui)
+		window->AddWndProcListener([](HWND wnd, UINT msg, WPARAM wp, LPARAM lp) -> LRESULT {
+		return ImguiWndProc(wnd, msg, wp, lp);
+			});
+
 	Vector2 windowSize = window->GetOutputSize();
-	auto appLoop = CreateAppLoop<LoopType>(move(window), move(renderer), windowSize, resourcePath);
+	auto appLoop = CreateAppLoop<LoopType>(move(window), move(renderer), move(imgui), windowSize, resourcePath);
 	if (!appLoop)
 		return nullptr;
 
 	return appLoop;
 }
+

@@ -2,6 +2,7 @@
 #include "../InnerWindow.h"
 
 struct IRenderer;
+struct IImguiRegistry;
 struct IToolInputManager;
 class RenderTexture;
 class PatchTextureStd1;
@@ -15,7 +16,7 @@ class TextureResBinderWindow : public InnerWindow
 {
 public:
     ~TextureResBinderWindow();
-    TextureResBinderWindow(IRenderer* renderer);
+    TextureResBinderWindow(IRenderer* renderer, IImguiRegistry* imguiRegistry);
     virtual void Render(ImGuiIO* io) override;
     virtual bool SaveScene(const wstring& filename) override;
     virtual wstring GetSaveFilename() const noexcept override;
@@ -33,7 +34,8 @@ private:
     ImVec2 GetWindowSize() const noexcept;
     void RenderResourceWindow();
 
-    IRenderer* m_renderer;
+    IRenderer* m_renderer{ nullptr };
+    IImguiRegistry* m_imguiRegistry{ nullptr };
     ImGuiWindow* m_window{ nullptr };
     unique_ptr<TextureResourceBinder> m_resBinder;
     unique_ptr<TexResCommandHistory> m_cmdHistory;

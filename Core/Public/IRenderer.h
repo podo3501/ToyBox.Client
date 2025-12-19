@@ -2,6 +2,7 @@
 
 struct IComponent;
 struct ITextureBinder;
+struct IImguiRegistry;
 //로딩할때 사용하는 인터페이스
 
 struct ITextureLoad
@@ -61,11 +62,7 @@ public:
     virtual ~IRenderer() {};
 
     virtual bool Initialize() = 0;
-
     virtual void SetComponentRenderer(function<void(ITextureRender*)> rendererFn) noexcept = 0;
-    virtual void AddImguiComponent(IImguiComponent* item) = 0;
-    virtual void RemoveImguiComponent(IImguiComponent* comp) noexcept = 0;
-
     virtual bool LoadTextureBinder(ITextureBinder* textureBinder) = 0;
 
     virtual void Draw() = 0;
@@ -80,4 +77,4 @@ public:
     virtual void OnWindowSizeChanged(int width, int height) = 0;
 };
 
-std::unique_ptr<IRenderer> CreateRenderer(HWND hwnd, int width, int height, bool bUseImgui);
+std::unique_ptr<IRenderer> CreateRenderer(HWND hwnd, int width, int height, IImguiRegistry* imguiRegistry);

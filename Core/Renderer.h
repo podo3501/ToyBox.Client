@@ -1,13 +1,10 @@
-//
-// Game.h
-//
-
 #pragma once
 
 #include "Public/IRenderer.h"
 #include "External/IDeviceNotify.h"
 
 struct IImgui;
+struct IImguiRenderer;
 struct IComponent;
 class TextureRepository;
 class TextureRenderTarget;
@@ -31,7 +28,7 @@ class Renderer final : public DX::IDeviceNotify, public IRenderer
 
 public:
 
-    Renderer(HWND hwnd, int width, int height, unique_ptr<IImgui>&& imgui) noexcept(false);
+    Renderer(HWND hwnd, int width, int height, IImguiRenderer* imguiRenderer) noexcept(false);
     ~Renderer();
 
     Renderer(Renderer&&) = default;
@@ -46,11 +43,7 @@ public:
 
     // Initialization and management
     virtual bool Initialize() override;
-
     virtual void SetComponentRenderer(function<void(ITextureRender*)> rendererFn) noexcept override;
-    virtual void AddImguiComponent(IImguiComponent* item) override;
-    virtual void RemoveImguiComponent(IImguiComponent* comp) noexcept override;
-
     virtual bool LoadTextureBinder(ITextureBinder* textureBinder) override;
 
     virtual void Draw() override;
@@ -77,7 +70,7 @@ private:
     unique_ptr<DescriptorHeap> m_srvDescriptors;
     unique_ptr<ResourceUploadBatch> m_batch;
 
-    unique_ptr<IImgui> m_imgui;
+    IImguiRenderer* m_imguiRenderer{ nullptr };
     unique_ptr<SpriteBatch> m_spriteBatch;
     unique_ptr<TextureRepository> m_texRepository;
 

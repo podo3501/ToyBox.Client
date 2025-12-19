@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "GameLoop.h"
 #include "IRenderer.h"
+#include "IImguiRegistry.h"
 #include "Shared/Window/Window.h"
 #include "Shared/System/Public/IInputManager.h"
 #include "Locator/SceneLocator.h"
@@ -27,10 +28,11 @@ extern "C"
 #endif
 
 GameLoop::~GameLoop() = default;
-GameLoop::GameLoop(unique_ptr<Window> window, unique_ptr<IRenderer> renderer,
+GameLoop::GameLoop(unique_ptr<Window> window, unique_ptr<IRenderer> renderer, unique_ptr<IImguiRegistry> imguiRegistry,
     const wstring& resourcePath, const Vector2& windowSize) :
-    ::AppLoop(move(window), move(renderer), resourcePath, windowSize),
-    m_renderer{ AppLoop::GetRenderer() }
+    ::AppLoop(move(window), move(renderer), move(imguiRegistry), resourcePath, windowSize),
+    m_renderer{ AppLoop::GetRenderer() },
+    m_imguiRegistry{ AppLoop::GetImguiRegistry() }
 {}
 
 bool GameLoop::InitializeDerived()

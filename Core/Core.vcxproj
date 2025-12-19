@@ -186,6 +186,7 @@
     <ClInclude Include="External\Imgui.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Public\d3dx12.h" />
+    <ClInclude Include="Public\IImguiRegistry.h" />
     <ClInclude Include="Public\IRenderer.h" />
     <ClInclude Include="Public\ITextureBinder.h" />
     <ClInclude Include="Renderer.h" />

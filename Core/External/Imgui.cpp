@@ -111,3 +111,16 @@ void Imgui::Reset()
     //imgui 리셋에 대해서 처리해야할 것이 있을 수 있다.
 }
 
+////////////////////////////////////////////////////////
+
+unique_ptr<IImguiRegistry> CreateImgui(HWND hwnd, const std::wstring& resourcePath, bool bUsing)
+{
+    resourcePath;
+    unique_ptr<IImguiRegistry> imguiRegistry{ nullptr };
+    if (bUsing) 
+        imguiRegistry = make_unique<Imgui>(hwnd);
+    else
+        imguiRegistry = make_unique<NullImgui>();
+    return imguiRegistry;
+}
+

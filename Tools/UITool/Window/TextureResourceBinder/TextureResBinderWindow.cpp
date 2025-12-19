@@ -3,6 +3,7 @@
 #include "EditFontTexture.h"
 #include "EditSourceTexture.h"
 #include "Window/Utils/Common.h"
+#include "Core/Public/IImguiRegistry.h"
 #include "Shared/Utils/StringExt.h"
 #include "Toy/Locator/InputLocator.h"
 #include "Toy/UserInterface/UIComponent/Components/RenderTexture.h"
@@ -12,17 +13,18 @@
 
 TextureResBinderWindow::~TextureResBinderWindow()
 {
-    m_renderer->RemoveImguiComponent(this);
+    m_imguiRegistry->RemoveComponent(this);
 }
 
-TextureResBinderWindow::TextureResBinderWindow(IRenderer* renderer) :
+TextureResBinderWindow::TextureResBinderWindow(IRenderer* renderer, IImguiRegistry* imguiRegistry) :
     InnerWindow{ "empty" },
     m_renderer{ renderer },
+    m_imguiRegistry{ imguiRegistry },
     m_sourceTexture{ nullptr },
     m_editFontTexture{ make_unique<EditFontTexture>() },
     m_editSourceTexture{ make_unique<EditSourceTexture>(renderer, this) }
 {
-    m_renderer->AddImguiComponent(this);
+    m_imguiRegistry->AddComponent(this);
 }
 
 void TextureResBinderWindow::SetTexture(PatchTextureStd1* pTex1) noexcept

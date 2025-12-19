@@ -21,7 +21,7 @@ class ToolLoop final : public AppLoop, public IImguiComponent
 {
 public:
 	ToolLoop() = delete;
-	ToolLoop(unique_ptr<Window> window, unique_ptr<IRenderer> renderer,
+	ToolLoop(unique_ptr<Window> window, unique_ptr<IRenderer> renderer, unique_ptr<IImguiRegistry> imguiRegistry, 
 		const wstring& resourcePath, const Vector2& windowSize);
 	virtual ~ToolLoop();
 	virtual void Render(ImGuiIO* io) override;
@@ -31,13 +31,15 @@ public:
 	void SetUIWindow(unique_ptr<UserInterfaceWindow> uiWindow) noexcept;
 	void SetTextureWindow(unique_ptr<TextureResBinderWindow> textureWindow) noexcept;
 	IRenderer* GetRenderer() const noexcept { return m_renderer; }
+	IImguiRegistry* GetImguiRegistry() const noexcept { return m_imguiRegistry; }
 
 protected:
 	virtual bool InitializeDerived() override;
 	virtual void Update(const DX::StepTimer& timer) override;
 
 private:
-	IRenderer* m_renderer;
+	IRenderer* m_renderer{ nullptr };
+	IImguiRegistry* m_imguiRegistry{ nullptr };
 	unique_ptr<Tool::Config> m_config;
 	unique_ptr<MenuBar> m_menuBar;
 	ImTextureID m_textureID{};

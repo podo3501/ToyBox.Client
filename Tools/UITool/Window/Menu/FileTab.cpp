@@ -95,7 +95,7 @@ bool FileTab::Excute()
 
 bool FileTab::CreateNewUIFile() noexcept
 {
-    auto uiWindow = make_unique<UserInterfaceWindow>(m_toolLoop->GetRenderer());
+    auto uiWindow = make_unique<UserInterfaceWindow>(m_toolLoop->GetRenderer(), m_toolLoop->GetImguiRegistry());
     const XMUINT2& resolution = Config::GetResolutionInCoordinate();
     ReturnIfFalse(uiWindow->CreateScene(resolution));
 
@@ -106,7 +106,7 @@ bool FileTab::CreateNewUIFile() noexcept
 
 bool FileTab::CreateTextureResBinderWindow(const wstring& filename)
 {
-    auto textureWindow = make_unique<TextureResBinderWindow>(m_toolLoop->GetRenderer());
+    auto textureWindow = make_unique<TextureResBinderWindow>(m_toolLoop->GetRenderer(), m_toolLoop->GetImguiRegistry());
     if (!textureWindow->Create(filename))
     {
         Tool::Dialog::ShowInfoDialog(DialogType::Error, "Failed to create Texture Resource Binder Widnow");
@@ -120,7 +120,7 @@ bool FileTab::CreateTextureResBinderWindow(const wstring& filename)
 
 bool FileTab::CreateUIWindowFromFile(const wstring& filename)
 {
-    auto uiWindow = make_unique<UserInterfaceWindow>(m_toolLoop->GetRenderer());
+    auto uiWindow = make_unique<UserInterfaceWindow>(m_toolLoop->GetRenderer(), m_toolLoop->GetImguiRegistry());
     if (!uiWindow->CreateScene(filename))
     {
         Tool::Dialog::ShowInfoDialog(DialogType::Error, "Failed to open the UI file. Please check the file path.");

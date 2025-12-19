@@ -11,6 +11,7 @@
 #include "Toy/UserInterface/UIComponent/Components/Panel.h"
 #include "Toy/UserInterface/TextureResourceBinder/TextureResourceBinder.h"
 #include "Toy/UserInterface/UIModule.h"
+#include "Core/Public/IImguiRegistry.h"
 #include "Shared/System/StepTimer.h"
 
 using namespace UITraverser;
@@ -21,12 +22,13 @@ UserInterfaceWindow::~UserInterfaceWindow()
 {
 	InputLocator::Provide(m_inputManager); //null input으로 종료되면 다음에 창을 열때 문제가 된다.
 	ReleaseUIModule(GetName());
-	m_renderer->RemoveImguiComponent(this);
+	m_imguiRegistry->RemoveComponent(this);
 }
 
-UserInterfaceWindow::UserInterfaceWindow(IRenderer* renderer) :
+UserInterfaceWindow::UserInterfaceWindow(IRenderer* renderer, IImguiRegistry* imguiRegistry) :
 	InnerWindow{ "UserInterface Window " + to_string(m_uiWindowIndex++) },
-	m_renderer{ renderer }
+	m_renderer{ renderer },
+	m_imguiRegistry{ imguiRegistry }
 {
 	//inputManager를 nullInputManager로 대체해서 마우스가 client 코드만 반응하지 않도록 한다.
 	//툴의 마우스는 ToolInputManager를 통해서 반응하게 된다. 
@@ -34,7 +36,7 @@ UserInterfaceWindow::UserInterfaceWindow(IRenderer* renderer) :
 	m_nullInputManager = CreateNullInputManager();
 	InputLocator::Provide(m_nullInputManager.get());
 
-	m_renderer->AddImguiComponent(this);
+	m_imguiRegistry->AddComponent(this);
 }
 
 ImVec2 UserInterfaceWindow::GetPanelSize() const noexcept

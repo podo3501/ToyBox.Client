@@ -8,6 +8,7 @@ namespace DX
 
 struct IToolInputManager;
 struct IInputManager;
+struct IImguiRegistry;
 class Panel;
 class MouseTracker;
 class RenderTexture;
@@ -18,7 +19,7 @@ class UIModule;
 class UserInterfaceWindow : public InnerWindow
 {
 public:
-    UserInterfaceWindow(IRenderer* renderer);
+    UserInterfaceWindow(IRenderer* renderer, IImguiRegistry* imguiRegistry);
     ~UserInterfaceWindow();
 
     virtual void Render(ImGuiIO* io) override;
@@ -47,7 +48,8 @@ private:
     void ShowStatusBar() const;
     void HandleMouseEvents();
 
-    IRenderer* m_renderer;
+    IRenderer* m_renderer{ nullptr };
+    IImguiRegistry* m_imguiRegistry{ nullptr };
     ImGuiWindow* m_window{ nullptr };
     unique_ptr<IInputManager> m_nullInputManager;
     IInputManager* m_inputManager{ nullptr };

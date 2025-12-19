@@ -2,6 +2,7 @@
 #include "Shared/System/StepTimer.h"
 
 struct IRenderer;
+struct IImguiRegistry;
 struct IImguiItem;
 struct ITextureController;
 struct IJsonStorage;
@@ -13,7 +14,8 @@ class AppLoop
 {
 public:
     AppLoop() = delete;
-    AppLoop(unique_ptr<Window> window, unique_ptr<IRenderer> renderer, const wstring& resPath, const Vector2& resolution);
+    AppLoop(unique_ptr<Window> window, unique_ptr<IRenderer> renderer, unique_ptr<IImguiRegistry> imguiRegistry,
+        const wstring& resPath, const Vector2& resolution);
     virtual ~AppLoop();
 
     bool Initialize();
@@ -24,6 +26,7 @@ protected:
     virtual bool DoPrepare() { return true; }
     virtual void Update(const DX::StepTimer& timer) = 0;
     IRenderer* GetRenderer() const noexcept;
+    IImguiRegistry* GetImguiRegistry() const noexcept;
     HWND GetWindowHandle() const noexcept;
 
 private:
@@ -40,6 +43,7 @@ private:
     
     unique_ptr<Window> m_window;
     unique_ptr<IRenderer> m_renderer;
+    unique_ptr<IImguiRegistry> m_imguiRegistry;
     unique_ptr<Environment> m_environment;
     unique_ptr<IJsonStorage> m_jsonStorage;
     DX::StepTimer m_timer;
@@ -47,9 +51,9 @@ private:
 
 template<typename LoopType>
 unique_ptr<AppLoop> CreateAppLoop(unique_ptr<Window> window, unique_ptr<IRenderer> renderer,
-    const Vector2& windowSize, const wstring& resourcePath)
+    unique_ptr<IImguiRegistry> imguiRegistry, const Vector2& windowSize, const wstring& resourcePath)
 {
-    auto loop = make_unique<LoopType>(move(window), move(renderer), resourcePath, windowSize);
+    auto loop = make_unique<LoopType>(move(window), move(renderer), move(imguiRegistry), resourcePath, windowSize);
     if (!loop->Initialize())
         return nullptr;
 

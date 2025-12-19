@@ -100,5 +100,8 @@
     <ClInclude Include="Utils\DxLeakCheck.h">
       <Filter>Utils</Filter>
     </ClInclude>
+    <ClInclude Include="Public\IImguiRegistry.h">
+      <Filter>Public</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
