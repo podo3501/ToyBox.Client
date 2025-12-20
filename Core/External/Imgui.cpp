@@ -8,8 +8,9 @@
 
 constexpr int NUM_FRAMES_IN_FLIGHT = 2;
 
-Imgui::Imgui(HWND hwnd) :
+Imgui::Imgui(HWND hwnd, const string& resourcePath) :
     m_hwnd{ hwnd },
+    m_resourcePath{ resourcePath },
     m_io{ nullptr }
 {}
 
@@ -55,7 +56,8 @@ bool Imgui::Initialize(ID3D12Device* device, DescriptorHeap* descHeap, DXGI_FORM
 
     //임시로 폰트 위치를 넣어준다.
     //폰트 설정(제일 위에 있는 폰트가 index 0를 가지며 default 폰트이다.
-    string ttfFilename = + "../../ThirdParty/Srcs/Imgui/misc/fonts/DroidSans.ttf";
+    
+    string ttfFilename = m_resourcePath + "Fonts/DroidSans.ttf";
     auto font = m_io->Fonts;
     ImFont* font15 = font->AddFontFromFileTTF(ttfFilename.c_str(), 15.0f);
     if (font15 == NULL) return false;
@@ -113,14 +115,15 @@ void Imgui::Reset()
 
 ////////////////////////////////////////////////////////
 
-unique_ptr<IImguiRegistry> CreateImgui(HWND hwnd, const std::wstring& resourcePath, bool bUsing)
+IImguiRegistry* CreateImgui(HWND hwnd, IRenderer* renderer, const std::string& resourcePath, bool bUsing)
 {
-    resourcePath;
-    unique_ptr<IImguiRegistry> imguiRegistry{ nullptr };
-    if (bUsing) 
-        imguiRegistry = make_unique<Imgui>(hwnd);
-    else
-        imguiRegistry = make_unique<NullImgui>();
-    return imguiRegistry;
+    Renderer* curRenderer = static_cast<Renderer*>(renderer);
+    if (!bUsing)
+        return static_cast<IImguiRegistry*>(curRenderer->GetImguiRenderer());
+
+    bool result = curRenderer->Initialize(make_unique<Imgui>(hwnd, resourcePath));
+    if (!result) return nullptr;
+
+    return curRenderer->GetImguiRenderer();
 }
 

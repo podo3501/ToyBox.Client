@@ -1,16 +1,13 @@
 #pragma once
 #include <memory>
 
+struct IRenderer;
 struct IImguiComponent;
-struct IImguiObject
+struct IImguiRegistry
 {
-    virtual ~IImguiObject() {};
-};
-
-struct IImguiRegistry : public IImguiObject
-{
+    virtual ~IImguiRegistry() {};
     virtual void AddComponent(IImguiComponent* comp) = 0;
     virtual void RemoveComponent(IImguiComponent* comp) noexcept = 0;
 };
 
-std::unique_ptr<IImguiRegistry> CreateImgui(HWND hwnd, const std::wstring& resourcePath, bool bUsing);
+IImguiRegistry* CreateImgui(HWND hwnd, IRenderer* renderer, const std::string& resourcePath, bool bUsing);

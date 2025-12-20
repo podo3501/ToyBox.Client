@@ -14,7 +14,7 @@ class AppLoop
 {
 public:
     AppLoop() = delete;
-    AppLoop(unique_ptr<Window> window, unique_ptr<IRenderer> renderer, unique_ptr<IImguiRegistry> imguiRegistry,
+    AppLoop(unique_ptr<Window> window, unique_ptr<IRenderer> renderer, IImguiRegistry* imguiRegistry,
         const wstring& resPath, const Vector2& resolution);
     virtual ~AppLoop();
 
@@ -43,7 +43,7 @@ private:
     
     unique_ptr<Window> m_window;
     unique_ptr<IRenderer> m_renderer;
-    unique_ptr<IImguiRegistry> m_imguiRegistry;
+    IImguiRegistry* m_imguiRegistry{ nullptr };
     unique_ptr<Environment> m_environment;
     unique_ptr<IJsonStorage> m_jsonStorage;
     DX::StepTimer m_timer;
@@ -51,9 +51,9 @@ private:
 
 template<typename LoopType>
 unique_ptr<AppLoop> CreateAppLoop(unique_ptr<Window> window, unique_ptr<IRenderer> renderer,
-    unique_ptr<IImguiRegistry> imguiRegistry, const Vector2& windowSize, const wstring& resourcePath)
+    IImguiRegistry* imguiRegistry, const Vector2& windowSize, const wstring& resourcePath)
 {
-    auto loop = make_unique<LoopType>(move(window), move(renderer), move(imguiRegistry), resourcePath, windowSize);
+    auto loop = make_unique<LoopType>(move(window), move(renderer), imguiRegistry, resourcePath, windowSize);
     if (!loop->Initialize())
         return nullptr;
 

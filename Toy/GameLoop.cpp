@@ -28,9 +28,9 @@ extern "C"
 #endif
 
 GameLoop::~GameLoop() = default;
-GameLoop::GameLoop(unique_ptr<Window> window, unique_ptr<IRenderer> renderer, unique_ptr<IImguiRegistry> imguiRegistry,
+GameLoop::GameLoop(unique_ptr<Window> window, unique_ptr<IRenderer> renderer, IImguiRegistry* imguiRegistry,
     const wstring& resourcePath, const Vector2& windowSize) :
-    ::AppLoop(move(window), move(renderer), move(imguiRegistry), resourcePath, windowSize),
+    ::AppLoop(move(window), move(renderer), imguiRegistry, resourcePath, windowSize),
     m_renderer{ AppLoop::GetRenderer() },
     m_imguiRegistry{ AppLoop::GetImguiRegistry() }
 {}

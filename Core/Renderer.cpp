@@ -11,12 +11,9 @@
 
 using namespace DirectX;
 
-unique_ptr<IRenderer> CreateRenderer(HWND hwnd, int width, int height, IImguiRegistry* imguiRegistry)
+std::unique_ptr<IRenderer> CreateRenderer(HWND hwnd, int width, int height)
 {
-    IImguiObject* imguiObject = imguiRegistry;
-    IImguiRenderer* imguiRenderer = static_cast<IImguiRenderer*>(imguiObject);
-
-    unique_ptr<Renderer> renderer = make_unique<Renderer>(hwnd, width, height, imguiRenderer);
+    unique_ptr<Renderer> renderer = make_unique<Renderer>(hwnd, width, height);
     auto result = renderer->Initialize();
     if (!result)
         return nullptr;
@@ -24,8 +21,8 @@ unique_ptr<IRenderer> CreateRenderer(HWND hwnd, int width, int height, IImguiReg
     return renderer;
 }
 
-Renderer::Renderer(HWND hwnd, int width, int height, IImguiRenderer* imguiRenderer) noexcept(false) :
-    m_imguiRenderer{ imguiRenderer }
+Renderer::Renderer(HWND hwnd, int width, int height) noexcept(false) : 
+    m_imguiRenderer{ make_unique<NullImgui>() }
 {
     //WICOnceInitialize();
 
@@ -80,13 +77,20 @@ bool Renderer::Initialize()
     }
 
     auto device = m_deviceResources->GetD3DDevice();
-    auto format = m_deviceResources->GetBackBufferFormat();
-
-    ReturnIfFalse(m_imguiRenderer->Initialize(device, m_srvDescriptors.get(), format, Ev(SrvOffset::Imgui)));
     m_batch = make_unique<ResourceUploadBatch>(device);
     m_texRepository = make_unique<TextureRepository>(
         m_deviceResources.get(), m_srvDescriptors.get(), m_batch.get(), m_spriteBatch.get());
 
+    return true;
+}
+
+bool Renderer::Initialize(unique_ptr<IImguiRenderer>&& imguiRenderer)
+{
+    auto device = m_deviceResources->GetD3DDevice();
+    auto format = m_deviceResources->GetBackBufferFormat();
+    ReturnIfFalse(imguiRenderer->Initialize(device, m_srvDescriptors.get(), format, Ev(SrvOffset::Imgui)));
+
+    m_imguiRenderer = move(imguiRenderer);
     return true;
 }
 
@@ -300,6 +304,7 @@ void Renderer::OnWindowSizeChanged(int width, int height)
 #pragma endregion
 
 ITextureController* Renderer::GetTextureController() const noexcept { return m_texRepository.get(); }
+IImguiRenderer* Renderer::GetImguiRenderer() const noexcept { return m_imguiRenderer.get(); }
 
 void Renderer::SetComponentRenderer(function<void(ITextureRender*)> rendererFn) noexcept
 {

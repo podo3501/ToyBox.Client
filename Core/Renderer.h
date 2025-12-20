@@ -27,8 +27,7 @@ class Renderer final : public DX::IDeviceNotify, public IRenderer
     using DeviceLostListener = function<void()>;
 
 public:
-
-    Renderer(HWND hwnd, int width, int height, IImguiRenderer* imguiRenderer) noexcept(false);
+    Renderer(HWND hwnd, int width, int height) noexcept(false);
     ~Renderer();
 
     Renderer(Renderer&&) = default;
@@ -58,6 +57,9 @@ public:
     virtual void OnDisplayChange() override;
     virtual void OnWindowSizeChanged(int width, int height) override;
 
+    bool Initialize(unique_ptr<IImguiRenderer>&& imguiRenderer);
+    IImguiRenderer* GetImguiRenderer() const noexcept;
+
 private:
     void Clear();
 
@@ -69,8 +71,8 @@ private:
     unique_ptr<GraphicsMemory> m_graphicsMemory;
     unique_ptr<DescriptorHeap> m_srvDescriptors;
     unique_ptr<ResourceUploadBatch> m_batch;
+    unique_ptr<IImguiRenderer> m_imguiRenderer;
 
-    IImguiRenderer* m_imguiRenderer{ nullptr };
     unique_ptr<SpriteBatch> m_spriteBatch;
     unique_ptr<TextureRepository> m_texRepository;
 

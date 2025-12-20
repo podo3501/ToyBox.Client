@@ -77,4 +77,4 @@ public:
     virtual void OnWindowSizeChanged(int width, int height) = 0;
 };
 
-std::unique_ptr<IRenderer> CreateRenderer(HWND hwnd, int width, int height, IImguiRegistry* imguiRegistry);
+std::unique_ptr<IRenderer> CreateRenderer(HWND hwnd, int width, int height);

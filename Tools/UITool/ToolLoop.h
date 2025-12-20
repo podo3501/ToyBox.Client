@@ -21,7 +21,7 @@ class ToolLoop final : public AppLoop, public IImguiComponent
 {
 public:
 	ToolLoop() = delete;
-	ToolLoop(unique_ptr<Window> window, unique_ptr<IRenderer> renderer, unique_ptr<IImguiRegistry> imguiRegistry, 
+	ToolLoop(unique_ptr<Window> window, unique_ptr<IRenderer> renderer, IImguiRegistry* imguiRegistry, 
 		const wstring& resourcePath, const Vector2& windowSize);
 	virtual ~ToolLoop();
 	virtual void Render(ImGuiIO* io) override;

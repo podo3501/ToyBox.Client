@@ -13,11 +13,11 @@ AppLoop::~AppLoop()
     TracyShutdownProfiler();
 }
 
-AppLoop::AppLoop(unique_ptr<Window> window, unique_ptr<IRenderer> renderer, unique_ptr<IImguiRegistry> imguiRegistry,
+AppLoop::AppLoop(unique_ptr<Window> window, unique_ptr<IRenderer> renderer, IImguiRegistry* imguiRegistry,
     const wstring& resPath, const Vector2& resolution) :
     m_window{ move(window) },
     m_renderer{ move(renderer) },
-    m_imguiRegistry{ move(imguiRegistry) }
+    m_imguiRegistry{ imguiRegistry }
 {
     TracyStartupProfiler();
 
@@ -98,5 +98,5 @@ void AppLoop::OnResuming()
 }
 
 IRenderer* AppLoop::GetRenderer() const noexcept { return m_renderer.get(); }
-IImguiRegistry* AppLoop::GetImguiRegistry() const noexcept { return m_imguiRegistry.get(); }
+IImguiRegistry* AppLoop::GetImguiRegistry() const noexcept { return m_imguiRegistry; }
 HWND AppLoop::GetWindowHandle() const noexcept { return m_window->GetHandle(); }
