@@ -2,6 +2,7 @@
 #include "IRenderer.h"
 #include "Toy/GameLoop.h"
 #include "Shared/Framework/Initializer/Application.h"
+#include "Shared/Utils/PathUtils.h"
 #include "Core/Utils/DxLeakCheck.h"
 
 int WINAPI wWinMain(_In_ HINSTANCE hInstance,
@@ -21,7 +22,8 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance,
 	int nResult = { 0 };
 	{
 		RECT windowRect = { 0, 0, 800, 600 };
-		std::wstring resourcePath = L"../Resources/";
+		auto root = FindRootByMarker(L"root.mark");
+		auto resourcePath = root + L"Resources/";
 		auto appLoop = CreateAppLoop<GameLoop>(hInstance, nShowCmd, windowRect, resourcePath, false);
 		if (!appLoop)
 			return 1;

@@ -156,6 +156,9 @@
     <ProjectReference Include="..\Core\Core.vcxproj">
       <Project>{60e13bba-4299-40f7-8fc1-c9e1928486f4}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\Shared\Shared.vcxproj">
+      <Project>{a9d428f9-8ced-42b2-ad67-3e2a3e8c08ff}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\Toy\Toy.vcxproj">
       <Project>{ce88cfb8-f480-4ead-b13e-d54c92e8fde8}</Project>
     </ProjectReference>

@@ -58,6 +58,9 @@ bool Imgui::Initialize(ID3D12Device* device, DescriptorHeap* descHeap, DXGI_FORM
     //폰트 설정(제일 위에 있는 폰트가 index 0를 가지며 default 폰트이다.
     
     string ttfFilename = m_resourcePath + "Fonts/DroidSans.ttf";
+    if (!filesystem::exists(ttfFilename))
+        return false;
+
     auto font = m_io->Fonts;
     ImFont* font15 = font->AddFontFromFileTTF(ttfFilename.c_str(), 15.0f);
     if (font15 == NULL) return false;

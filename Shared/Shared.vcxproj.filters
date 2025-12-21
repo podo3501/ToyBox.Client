@@ -128,6 +128,9 @@
     <ClInclude Include="System\Audio\ISoundTableReader.h">
       <Filter>System\Audio</Filter>
     </ClInclude>
+    <ClInclude Include="Utils\PathUtils.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -205,6 +208,9 @@
     </ClCompile>
     <ClCompile Include="System\Audio\SoundTraits.cpp">
       <Filter>System\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\PathUtils.cpp">
+      <Filter>Utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

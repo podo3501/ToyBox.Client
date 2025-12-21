@@ -55,6 +55,7 @@
     <ClInclude Include="Utils\EnumHelpers.h" />
     <ClInclude Include="Utils\GeometryExt.h" />
     <ClInclude Include="Utils\Memory.h" />
+    <ClInclude Include="Utils\PathUtils.h" />
     <ClInclude Include="Utils\Profiler.h" />
     <ClInclude Include="Utils\StlExt.h" />
     <ClInclude Include="Utils\StlExtTraitsConcepts.hpp" />
@@ -90,6 +91,7 @@
     <ClCompile Include="System\Input\InputManager.cpp" />
     <ClCompile Include="Utils\EnumHelpers.cpp" />
     <ClCompile Include="Utils\GeometryExt.cpp" />
+    <ClCompile Include="Utils\PathUtils.cpp" />
     <ClCompile Include="Utils\Profiler.cpp" />
     <ClCompile Include="Utils\StlExt.cpp" />
     <ClCompile Include="Utils\StringExt.cpp" />
