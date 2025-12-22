@@ -22,8 +22,7 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance,
 	int nResult = { 0 };
 	{
 		RECT windowRect = { 0, 0, 800, 600 };
-		auto root = FindRootByMarker(L"root.mark");
-		auto resourcePath = root + L"Resources/";
+		auto resourcePath = FindRootByMarker(L"root.mark") + L"Resources/";
 		auto appLoop = CreateAppLoop<GameLoop>(hInstance, nShowCmd, windowRect, resourcePath, false);
 		if (!appLoop)
 			return 1;

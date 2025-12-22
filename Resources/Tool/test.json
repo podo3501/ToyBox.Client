@@ -1,358 +1,251 @@
 {
-    "Component": {
-        "Type": "class Panel",
+    "MainPanel": {
         "Name": "Main",
         "Layout": {
-            "Area": {
-                "x": 0,
-                "y": 0,
-                "width": 1024,
-                "height": 768
+            "Size": {
+                "x": 800,
+                "y": 600
             },
             "Origin": "LeftTop"
         },
-        "Enable": true,
-        "Components": [
+        "Transform": {
+            "Ratio": {
+                "x": 0.0,
+                "y": 0.0
+            },
+            "RelativePosition": {
+                "x": 0,
+                "y": 0
+            }
+        },
+        "Region": "",
+        "StateFlag": 15,
+        "RenderSearch": 0,
+        "Children": [
             {
-                "Position": {
-                    "x": 0.325195,
-                    "y": 0.257813
-                },
-                "Component": {
-                    "Type": "class ImageGrid9",
-                    "Name": "untitled_imageGrid9",
-                    "Layout": {
-                        "Area": {
-                            "x": 0,
-                            "y": 0,
-                            "width": 170,
-                            "height": 120
-                        },
-                        "Origin": "LeftTop"
+                "Type": "TextureSwitcher",
+                "Name": "TextureSwitcher",
+                "Layout": {
+                    "Size": {
+                        "x": 32,
+                        "y": 32
                     },
-                    "Enable": true,
-                    "Components": [
-                        {
-                            "Position": {
+                    "Origin": "LeftTop"
+                },
+                "Transform": {
+                    "Ratio": {
+                        "x": 0.21875,
+                        "y": 0.308333
+                    },
+                    "RelativePosition": {
+                        "x": 175,
+                        "y": 185
+                    }
+                },
+                "Region": "",
+                "StateFlag": 15,
+                "RenderSearch": 0,
+                "Children": [
+                    {
+                        "Type": "PatchTextureLite1",
+                        "Name": "PatchTextureLite1",
+                        "Layout": {
+                            "Size": {
+                                "x": 32,
+                                "y": 32
+                            },
+                            "Origin": "LeftTop"
+                        },
+                        "Transform": {
+                            "Ratio": {
                                 "x": 0.0,
                                 "y": 0.0
                             },
-                            "Component": {
-                                "Type": "class ImageGrid3",
-                                "Name": "untitled_imageGrid9_0",
-                                "Layout": {
-                                    "Area": {
-                                        "x": 0,
-                                        "y": 0,
-                                        "width": 170,
-                                        "height": 36
-                                    },
-                                    "Origin": "LeftTop"
-                                },
-                                "Enable": true,
-                                "Components": [
-                                    {
-                                        "Position": {
-                                            "x": 0.0,
-                                            "y": 0.0
-                                        },
-                                        "Component": {
-                                            "Type": "class ImageGrid1",
-                                            "Name": "untitled_imageGrid9_0_0",
-                                            "Layout": {
-                                                "Area": {
-                                                    "x": 0,
-                                                    "y": 0,
-                                                    "width": 30,
-                                                    "height": 36
-                                                },
-                                                "Origin": "LeftTop"
-                                            },
-                                            "Enable": true,
-                                            "Index": 0,
-                                            "Filename": "UI/Blue/button_square_header_large_square_screws.png",
-                                            "Source": {
-                                                "x": 0,
-                                                "y": 0,
-                                                "width": 30,
-                                                "height": 36
-                                            }
-                                        }
-                                    },
-                                    {
-                                        "Position": {
-                                            "x": 0.176471,
-                                            "y": 0.0
-                                        },
-                                        "Component": {
-                                            "Type": "class ImageGrid1",
-                                            "Name": "untitled_imageGrid9_0_1",
-                                            "Layout": {
-                                                "Area": {
-                                                    "x": 0,
-                                                    "y": 0,
-                                                    "width": 110,
-                                                    "height": 36
-                                                },
-                                                "Origin": "LeftTop"
-                                            },
-                                            "Enable": true,
-                                            "Index": 0,
-                                            "Filename": "UI/Blue/button_square_header_large_square_screws.png",
-                                            "Source": {
-                                                "x": 30,
-                                                "y": 0,
-                                                "width": 4,
-                                                "height": 36
-                                            }
-                                        }
-                                    },
-                                    {
-                                        "Position": {
-                                            "x": 0.823529,
-                                            "y": 0.0
-                                        },
-                                        "Component": {
-                                            "Type": "class ImageGrid1",
-                                            "Name": "untitled_imageGrid9_0_2",
-                                            "Layout": {
-                                                "Area": {
-                                                    "x": 0,
-                                                    "y": 0,
-                                                    "width": 30,
-                                                    "height": 36
-                                                },
-                                                "Origin": "LeftTop"
-                                            },
-                                            "Enable": true,
-                                            "Index": 0,
-                                            "Filename": "UI/Blue/button_square_header_large_square_screws.png",
-                                            "Source": {
-                                                "x": 34,
-                                                "y": 0,
-                                                "width": 30,
-                                                "height": 36
-                                            }
-                                        }
-                                    }
-                                ]
+                            "RelativePosition": {
+                                "x": 0,
+                                "y": 0
                             }
                         },
-                        {
-                            "Position": {
-                                "x": 0.0,
-                                "y": 0.3
+                        "Region": "",
+                        "StateFlag": 15,
+                        "RenderSearch": 0,
+                        "Children": null
+                    }
+                ],
+                "StateKey": {
+                    "Normal": "ExitButton1_Normal",
+                    "Hovered": "ExitButton1_Hovered",
+                    "Pressed": "ExitButton1_Pressed"
+                }
+            },
+            {
+                "Type": "TextureSwitcher",
+                "Name": "TextureSwitcher_1",
+                "Layout": {
+                    "Size": {
+                        "x": 100,
+                        "y": 48
+                    },
+                    "Origin": "LeftTop"
+                },
+                "Transform": {
+                    "Ratio": {
+                        "x": 0.3325,
+                        "y": 0.345
+                    },
+                    "RelativePosition": {
+                        "x": 266,
+                        "y": 207
+                    }
+                },
+                "Region": "",
+                "StateFlag": 15,
+                "RenderSearch": 0,
+                "Children": [
+                    {
+                        "Type": "PatchTextureLite3",
+                        "Name": "PatchTextureLite3",
+                        "Layout": {
+                            "Size": {
+                                "x": 100,
+                                "y": 48
                             },
-                            "Component": {
-                                "Type": "class ImageGrid3",
-                                "Name": "untitled_imageGrid9_1",
-                                "Layout": {
-                                    "Area": {
-                                        "x": 0,
-                                        "y": 0,
-                                        "width": 170,
-                                        "height": 58
-                                    },
-                                    "Origin": "LeftTop"
-                                },
-                                "Enable": true,
-                                "Components": [
-                                    {
-                                        "Position": {
-                                            "x": 0.0,
-                                            "y": 0.0
-                                        },
-                                        "Component": {
-                                            "Type": "class ImageGrid1",
-                                            "Name": "untitled_imageGrid9_1_0",
-                                            "Layout": {
-                                                "Area": {
-                                                    "x": 0,
-                                                    "y": 0,
-                                                    "width": 30,
-                                                    "height": 58
-                                                },
-                                                "Origin": "LeftTop"
-                                            },
-                                            "Enable": true,
-                                            "Index": 0,
-                                            "Filename": "UI/Blue/button_square_header_large_square_screws.png",
-                                            "Source": {
-                                                "x": 0,
-                                                "y": 36,
-                                                "width": 30,
-                                                "height": 2
-                                            }
-                                        }
-                                    },
-                                    {
-                                        "Position": {
-                                            "x": 0.176471,
-                                            "y": 0.0
-                                        },
-                                        "Component": {
-                                            "Type": "class ImageGrid1",
-                                            "Name": "untitled_imageGrid9_1_1",
-                                            "Layout": {
-                                                "Area": {
-                                                    "x": 0,
-                                                    "y": 0,
-                                                    "width": 110,
-                                                    "height": 58
-                                                },
-                                                "Origin": "LeftTop"
-                                            },
-                                            "Enable": true,
-                                            "Index": 0,
-                                            "Filename": "UI/Blue/button_square_header_large_square_screws.png",
-                                            "Source": {
-                                                "x": 30,
-                                                "y": 36,
-                                                "width": 4,
-                                                "height": 2
-                                            }
-                                        }
-                                    },
-                                    {
-                                        "Position": {
-                                            "x": 0.823529,
-                                            "y": 0.0
-                                        },
-                                        "Component": {
-                                            "Type": "class ImageGrid1",
-                                            "Name": "untitled_imageGrid9_1_2",
-                                            "Layout": {
-                                                "Area": {
-                                                    "x": 0,
-                                                    "y": 0,
-                                                    "width": 30,
-                                                    "height": 58
-                                                },
-                                                "Origin": "LeftTop"
-                                            },
-                                            "Enable": true,
-                                            "Index": 0,
-                                            "Filename": "UI/Blue/button_square_header_large_square_screws.png",
-                                            "Source": {
-                                                "x": 34,
-                                                "y": 36,
-                                                "width": 30,
-                                                "height": 2
-                                            }
-                                        }
-                                    }
-                                ]
+                            "Origin": "LeftTop"
+                        },
+                        "Transform": {
+                            "Ratio": {
+                                "x": 0.0,
+                                "y": 0.0
+                            },
+                            "RelativePosition": {
+                                "x": 0,
+                                "y": 0
                             }
                         },
-                        {
-                            "Position": {
-                                "x": 0.0,
-                                "y": 0.783333
-                            },
-                            "Component": {
-                                "Type": "class ImageGrid3",
-                                "Name": "untitled_imageGrid9_2",
+                        "Region": "",
+                        "StateFlag": 3,
+                        "RenderSearch": 0,
+                        "Children": [
+                            {
+                                "Type": "PatchTextureLite1",
+                                "Name": "PatchTextureLite1_1",
                                 "Layout": {
-                                    "Area": {
-                                        "x": 0,
-                                        "y": 0,
-                                        "width": 170,
-                                        "height": 26
+                                    "Size": {
+                                        "x": 22,
+                                        "y": 48
                                     },
                                     "Origin": "LeftTop"
                                 },
-                                "Enable": true,
-                                "Components": [
-                                    {
-                                        "Position": {
-                                            "x": 0.0,
-                                            "y": 0.0
-                                        },
-                                        "Component": {
-                                            "Type": "class ImageGrid1",
-                                            "Name": "untitled_imageGrid9_2_0",
-                                            "Layout": {
-                                                "Area": {
-                                                    "x": 0,
-                                                    "y": 0,
-                                                    "width": 30,
-                                                    "height": 26
-                                                },
-                                                "Origin": "LeftTop"
-                                            },
-                                            "Enable": true,
-                                            "Index": 0,
-                                            "Filename": "UI/Blue/button_square_header_large_square_screws.png",
-                                            "Source": {
-                                                "x": 0,
-                                                "y": 38,
-                                                "width": 30,
-                                                "height": 26
-                                            }
-                                        }
+                                "Transform": {
+                                    "Ratio": {
+                                        "x": 0.0,
+                                        "y": 0.0
                                     },
-                                    {
-                                        "Position": {
-                                            "x": 0.176471,
-                                            "y": 0.0
-                                        },
-                                        "Component": {
-                                            "Type": "class ImageGrid1",
-                                            "Name": "untitled_imageGrid9_2_1",
-                                            "Layout": {
-                                                "Area": {
-                                                    "x": 0,
-                                                    "y": 0,
-                                                    "width": 110,
-                                                    "height": 26
-                                                },
-                                                "Origin": "LeftTop"
-                                            },
-                                            "Enable": true,
-                                            "Index": 0,
-                                            "Filename": "UI/Blue/button_square_header_large_square_screws.png",
-                                            "Source": {
-                                                "x": 30,
-                                                "y": 38,
-                                                "width": 4,
-                                                "height": 26
-                                            }
-                                        }
-                                    },
-                                    {
-                                        "Position": {
-                                            "x": 0.823529,
-                                            "y": 0.0
-                                        },
-                                        "Component": {
-                                            "Type": "class ImageGrid1",
-                                            "Name": "untitled_imageGrid9_2_2",
-                                            "Layout": {
-                                                "Area": {
-                                                    "x": 0,
-                                                    "y": 0,
-                                                    "width": 30,
-                                                    "height": 26
-                                                },
-                                                "Origin": "LeftTop"
-                                            },
-                                            "Enable": true,
-                                            "Index": 0,
-                                            "Filename": "UI/Blue/button_square_header_large_square_screws.png",
-                                            "Source": {
-                                                "x": 34,
-                                                "y": 38,
-                                                "width": 30,
-                                                "height": 26
-                                            }
-                                        }
+                                    "RelativePosition": {
+                                        "x": 0,
+                                        "y": 0
                                     }
-                                ]
+                                },
+                                "Region": "",
+                                "StateFlag": 31,
+                                "RenderSearch": 0,
+                                "Children": null
+                            },
+                            {
+                                "Type": "PatchTextureLite1",
+                                "Name": "PatchTextureLite1_2",
+                                "Layout": {
+                                    "Size": {
+                                        "x": 56,
+                                        "y": 48
+                                    },
+                                    "Origin": "LeftTop"
+                                },
+                                "Transform": {
+                                    "Ratio": {
+                                        "x": 0.22,
+                                        "y": 0.0
+                                    },
+                                    "RelativePosition": {
+                                        "x": 22,
+                                        "y": 0
+                                    }
+                                },
+                                "Region": "",
+                                "StateFlag": 15,
+                                "RenderSearch": 0,
+                                "Children": null
+                            },
+                            {
+                                "Type": "PatchTextureLite1",
+                                "Name": "PatchTextureLite1_3",
+                                "Layout": {
+                                    "Size": {
+                                        "x": 22,
+                                        "y": 48
+                                    },
+                                    "Origin": "LeftTop"
+                                },
+                                "Transform": {
+                                    "Ratio": {
+                                        "x": 0.78,
+                                        "y": 0.0
+                                    },
+                                    "RelativePosition": {
+                                        "x": 78,
+                                        "y": 0
+                                    }
+                                },
+                                "Region": "",
+                                "StateFlag": 31,
+                                "RenderSearch": 0,
+                                "Children": null
                             }
-                        }
-                    ]
+                        ],
+                        "DirectionType": 0
+                    }
+                ],
+                "StateKey": {
+                    "Normal": "ScrollButton3_H_Normal",
+                    "Hovered": "ScrollButton3_H_Hovered",
+                    "Pressed": "ScrollButton3_H_Pressed"
                 }
             }
         ]
+    },
+    "UINameGenerator": {
+        "RegionGens": {
+            "": {
+                "Namers": 1,
+                "Recycled": [],
+                "Deletable": false
+            }
+        },
+        "RegionNames": {
+            "": {
+                "Namers": {
+                    "Main": {
+                        "Namers": 1,
+                        "Recycled": [],
+                        "Deletable": false
+                    },
+                    "PatchTextureLite1": {
+                        "Namers": 4,
+                        "Recycled": [],
+                        "Deletable": false
+                    },
+                    "TextureSwitcher": {
+                        "Namers": 2,
+                        "Recycled": [],
+                        "Deletable": false
+                    },
+                    "PatchTextureLite3": {
+                        "Namers": 1,
+                        "Recycled": [],
+                        "Deletable": false
+                    }
+                }
+            }
+        }
     }
 }

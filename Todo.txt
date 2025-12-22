@@ -231,10 +231,9 @@
 --tdd warning 찾아서 없애기
 --Json을 tdd에서 파일로 쓰는 부분을 DI로 수정하고 메모리에 쓰게끔 수정해서 tdd 속도 및 의존성 줄이기
 --wstring filename = L"Test/Data/RWSourceBinderTest.json"; 이것처럼 tdd에서 세이브 되는 데이터는 한곳으로 모으자.
+--ComponentT가 UIModuleT를 상속받아서 테스트 하도록 수정.
+--audio manager 만들기
 
-@ComponentT가 UIModuleT를 상속받아서 테스트 하도록 수정.
-    Compare와 CompareDerived를 하나로 합치는 거 생각.
-@audio manager 만들기
 @툴에서 작업환경을 멀티로 할지 단일로 할지 생각해봐야 겠다.
 @Component에서 이벤트 받아서 사운드 출력되게끔.
 @IME로 한글 입력되게

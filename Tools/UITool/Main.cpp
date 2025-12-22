@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "ToolLoop.h"
 #include "Shared/Framework/Initializer/Application.h"
+#include "Shared/Utils/PathUtils.h"
 #include "Core/Utils/DxLeakCheck.h"
 
 int WINAPI wWinMain(_In_ HINSTANCE hInstance,
@@ -20,7 +21,7 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance,
 	int nResult = { 0 };
 	{
 		RECT windowRect = { 0, 0, 1280, 960 };
-		std::wstring resourcePath = L"../../Resources/";
+		auto resourcePath = FindRootByMarker(L"root.mark") + L"Resources/";
 		auto toolLoop = CreateAppLoop<ToolLoop>(hInstance, nShowCmd, windowRect, resourcePath, true);
 		if (!toolLoop)
 			return 1;
