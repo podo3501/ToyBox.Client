@@ -49,11 +49,11 @@
     <Filter Include="Locator">
       <UniqueIdentifier>{c5a95ad5-e274-42af-9830-e977bf2336f4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="UserInterface\Input">
-      <UniqueIdentifier>{c6ee3cc2-17fc-4d24-9b62-30e36841a068}</UniqueIdentifier>
-    </Filter>
     <Filter Include="UserInterface\UIComponent\Traverser">
       <UniqueIdentifier>{5d9b9ca9-a246-48e6-9753-0501ad139a02}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UserInterface\InputEvent">
+      <UniqueIdentifier>{b2a754fd-6514-4a12-9ff6-4cad9a4024b5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -239,9 +239,6 @@
     <ClInclude Include="System\ISceneManager.h">
       <Filter>System</Filter>
     </ClInclude>
-    <ClInclude Include="UserInterface\Input\IMouseEventReceiver.h">
-      <Filter>UserInterface\Input</Filter>
-    </ClInclude>
     <ClInclude Include="UserInterface\UIComponentManager.h">
       <Filter>UserInterface</Filter>
     </ClInclude>
@@ -269,11 +266,23 @@
     <ClInclude Include="UserInterface\UIComponent\UIComponent.hpp">
       <Filter>UserInterface\UIComponent</Filter>
     </ClInclude>
-    <ClInclude Include="UserInterface\MouseEventRouter.h">
-      <Filter>UserInterface</Filter>
-    </ClInclude>
     <ClInclude Include="UserInterface\UIComponent\Traverser\UIDetailTraverser.h">
       <Filter>UserInterface\UIComponent\Traverser</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface\InputEvent\EventProcessor.h">
+      <Filter>UserInterface\InputEvent</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface\InputEvent\MouseEventReceiver.h">
+      <Filter>UserInterface\InputEvent</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface\InputEvent\MouseEventRouter.h">
+      <Filter>UserInterface\InputEvent</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface\InputEvent\MouseEventType.h">
+      <Filter>UserInterface\InputEvent</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface\InputEvent\SoundTheme.h">
+      <Filter>UserInterface\InputEvent</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -447,14 +456,23 @@
     <ClCompile Include="UserInterface\UIComponent\Traverser\DerivedTraverser.cpp">
       <Filter>UserInterface\UIComponent\Traverser</Filter>
     </ClCompile>
-    <ClCompile Include="UserInterface\MouseEventRouter.cpp">
-      <Filter>UserInterface</Filter>
-    </ClCompile>
     <ClCompile Include="UserInterface\UIComponent\Traverser\UIDetailTraverser.cpp">
       <Filter>UserInterface\UIComponent\Traverser</Filter>
     </ClCompile>
     <ClCompile Include="UserInterface\UIComponentLocator.cpp">
       <Filter>UserInterface</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInterface\InputEvent\EventProcessor.cpp">
+      <Filter>UserInterface\InputEvent</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInterface\InputEvent\MouseEventReceiver.cpp">
+      <Filter>UserInterface\InputEvent</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInterface\InputEvent\MouseEventRouter.cpp">
+      <Filter>UserInterface\InputEvent</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInterface\InputEvent\SoundTheme.cpp">
+      <Filter>UserInterface\InputEvent</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

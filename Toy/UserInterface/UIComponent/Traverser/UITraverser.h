@@ -1,7 +1,7 @@
 #pragma once
 
-struct IMouseEventReceiver;
 class UIComponent;
+class MouseEventReceiver;
 class BaseTraverser;
 class DerivedTraverser;
 class NameTraverser;
@@ -16,7 +16,7 @@ namespace UITraverser
 
 	XMUINT2 GetChildrenBoundsSize(UIComponent* c) noexcept;
 	vector<UIComponent*> PickComponents(UIComponent* c, const XMINT2& pos) noexcept;
-	vector<IMouseEventReceiver*> PickMouseReceivers(UIComponent* c, const XMINT2& pos) noexcept;
+	vector<MouseEventReceiver*> PickMouseReceivers(UIComponent* c, const XMINT2& pos) noexcept;
 
 	////////////////////////////////////////////////////////////////
 	// DerivedTraverser

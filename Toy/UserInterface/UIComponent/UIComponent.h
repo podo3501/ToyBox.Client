@@ -4,11 +4,11 @@
 #include "UITransform.h"
 #include "UIType.h"
 
-struct IMouseEventReceiver;
 struct ITextureController;
 struct ITextureRender;
 class SerializerIO;
 class TextureResourceBinder;
+class MouseEventReceiver;
 namespace DX { class StepTimer; }
 
 class UIComponent
@@ -43,7 +43,7 @@ public:
 public: //이 클래스의 public 함수는 왠만하면 늘리지 않도록 하자.
 	static ComponentID GetTypeStatic() { return ComponentID::Unknown; }
 	virtual ComponentID GetTypeID() const noexcept = 0;
-	virtual IMouseEventReceiver* AsMouseEventReceiver() noexcept { return nullptr; }
+	virtual MouseEventReceiver* AsMouseEventReceiver() noexcept { return nullptr; }
 	virtual bool operator==(const UIComponent& other) const noexcept;
 	virtual void ProcessIO(SerializerIO& serializer);
 	

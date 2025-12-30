@@ -1,20 +1,20 @@
 #pragma once
 #include "../UIComponent.h"
 #include "../UIHelperClass.h"
-#include "Toy/UserInterface/Input/IMouseEventReceiver.h"
+#include "Toy/UserInterface/InputEvent/MouseEventReceiver.h"
 
 enum class InputState;
 class PatchTextureStd3;
 class TextureSwitcher;
 
-class ScrollBar : public UIComponent, public IMouseEventReceiver
+class ScrollBar : public UIComponent, public MouseEventReceiver
 {
 public:
 	ScrollBar();
 	~ScrollBar();
 	static ComponentID GetTypeStatic() { return ComponentID::ScrollBar; }
 	virtual ComponentID GetTypeID() const noexcept override { return GetTypeStatic(); }
-	virtual IMouseEventReceiver* AsMouseEventReceiver() noexcept override { return this; }
+	virtual MouseEventReceiver* AsMouseEventReceiver() noexcept override { return this; }
 	virtual bool operator==(const UIComponent& o) const noexcept override;
 	//IMouseEventReceiver
 	virtual InputResult OnPress(const XMINT2& position) noexcept;

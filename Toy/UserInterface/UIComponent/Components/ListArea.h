@@ -1,6 +1,6 @@
 #pragma once
 #include "../UIComponent.h"
-#include "Toy/UserInterface/Input/IMouseEventReceiver.h"
+#include "Toy/UserInterface/InputEvent/MouseEventReceiver.h"
 
 class RenderTexture;
 class TextureSwitcher;
@@ -9,7 +9,7 @@ namespace DX { class StepTimer; }
 
 //RenderTexture와 Prototype TextureSwitcher, ScrollBar를 조합해서 만들어지는 컴포넌트
 //각 컴포넌트에서 필요한 것을 들고와서 여기서 조합한다. 각 컴포넌트는 독립적으로 작동한다.
-class ListArea : public UIComponent, public IMouseEventReceiver
+class ListArea : public UIComponent, public MouseEventReceiver
 {
 public:
 	~ListArea();
@@ -17,7 +17,7 @@ public:
 
 	static ComponentID GetTypeStatic() { return ComponentID::ListArea; }
 	virtual ComponentID GetTypeID() const noexcept override { return GetTypeStatic(); }
-	virtual IMouseEventReceiver* AsMouseEventReceiver() noexcept override { return this; }
+	virtual MouseEventReceiver* AsMouseEventReceiver() noexcept override { return this; }
 	virtual bool operator==(const UIComponent& o) const noexcept override;
 	virtual void ProcessIO(SerializerIO& serializer) override;
 	//IMouseEventReceiver

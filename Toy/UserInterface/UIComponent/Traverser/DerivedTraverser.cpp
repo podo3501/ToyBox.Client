@@ -52,6 +52,12 @@ bool DerivedTraverser::BindTextureSourceInfo(UIComponent* c, TextureResourceBind
 	return true;
 }
 
+bool DerivedTraverser::BindResource(UIComponent* c, TextureResourceBinder* resBinder, IAudioManager* audioManager) noexcept
+{
+	c; resBinder; audioManager;
+	return true;
+}
+
 bool DerivedTraverser::Update(UIComponent* c, const DX::StepTimer& timer) noexcept
 {
 	return RecursiveUpdate(c, timer);

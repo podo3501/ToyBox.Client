@@ -1,8 +1,8 @@
 #include "pch.h"
 #include "MouseEventRouter.h"
 #include "Locator/InputLocator.h"
-#include "UserInterface/Input/IMouseEventReceiver.h"
-#include "UIComponent/Traverser/UITraverser.h"
+#include "MouseEventReceiver.h"
+#include "../UIComponent/Traverser/UITraverser.h"
 
 using namespace UITraverser;
 void MouseEventRouter::UpdateMouseState() noexcept
@@ -18,9 +18,9 @@ void MouseEventRouter::UpdateMouseState() noexcept
 	ProcessMouseWheel(input->GetMouseWheelValue());
 }
 
-void MouseEventRouter::UpdateHoverState(vector<IMouseEventReceiver*> receivers, const XMINT2& pos) noexcept
+void MouseEventRouter::UpdateHoverState(vector<MouseEventReceiver*> receivers, const XMINT2& pos) noexcept
 {
-	vector<IMouseEventReceiver*> hoveredReceivers;
+	vector<MouseEventReceiver*> hoveredReceivers;
 	for (auto& receiver : receivers)
 	{
 		hoveredReceivers.push_back(receiver);

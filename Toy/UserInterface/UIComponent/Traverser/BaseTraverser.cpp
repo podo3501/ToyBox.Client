@@ -32,9 +32,9 @@ vector<UIComponent*> BaseTraverser::PickComponents(UIComponent* c, const XMINT2&
 	return findList;
 }
 
-vector<IMouseEventReceiver*> BaseTraverser::PickMouseReceivers(UIComponent* c, const XMINT2& pos) noexcept
+vector<MouseEventReceiver*> BaseTraverser::PickMouseReceivers(UIComponent* c, const XMINT2& pos) noexcept
 {
-	vector<IMouseEventReceiver*> findList;
+	vector<MouseEventReceiver*> findList;
 	ForEachChildToRender(c, [&findList, &pos](UIComponent* comp) {
 		if (comp->GetTypeID() == ComponentID::RenderTexture && !Contains(comp->GetArea(), pos))
 			return TraverseResult::ChildrenSkip; // RenderTexture 영역 밖이면 자식 탐색 중단

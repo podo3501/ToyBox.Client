@@ -55,4 +55,9 @@ using namespace DirectX::SimpleMath;
 #pragma comment(lib, "SDL3_mixer-static_Release.lib")
 #endif
 
+#pragma comment(lib, "Winmm.lib")
+#pragma comment(lib, "Setupapi.lib")
+#pragma comment(lib, "Version.lib")
+#pragma comment(lib, "imm32.lib")
+
 

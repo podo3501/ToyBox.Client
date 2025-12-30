@@ -248,8 +248,11 @@
     <ClInclude Include="UserInterface\CommandHistory\TextureResource\TexResCommandRegistry.h" />
     <ClInclude Include="UserInterface\CommandHistory\UserInterface\UICommandHistory.h" />
     <ClInclude Include="UserInterface\CommandHistory\UserInterface\UICommandRegistry.h" />
-    <ClInclude Include="UserInterface\Input\IMouseEventReceiver.h" />
-    <ClInclude Include="UserInterface\MouseEventRouter.h" />
+    <ClInclude Include="UserInterface\InputEvent\EventProcessor.h" />
+    <ClInclude Include="UserInterface\InputEvent\MouseEventReceiver.h" />
+    <ClInclude Include="UserInterface\InputEvent\MouseEventRouter.h" />
+    <ClInclude Include="UserInterface\InputEvent\MouseEventType.h" />
+    <ClInclude Include="UserInterface\InputEvent\SoundTheme.h" />
     <ClInclude Include="UserInterface\SerializerIO\ClassSerializeIO.h" />
     <ClInclude Include="UserInterface\SerializerIO\KeyConverter.h" />
     <ClInclude Include="UserInterface\SerializerIO\Traits.h" />
@@ -312,7 +315,10 @@
     <ClCompile Include="UserInterface\CommandHistory\TextureResource\TexResCommandRegistry.cpp" />
     <ClCompile Include="UserInterface\CommandHistory\UserInterface\UICommandHistory.cpp" />
     <ClCompile Include="UserInterface\CommandHistory\UserInterface\UICommandRegistry.cpp" />
-    <ClCompile Include="UserInterface\MouseEventRouter.cpp" />
+    <ClCompile Include="UserInterface\InputEvent\EventProcessor.cpp" />
+    <ClCompile Include="UserInterface\InputEvent\MouseEventReceiver.cpp" />
+    <ClCompile Include="UserInterface\InputEvent\MouseEventRouter.cpp" />
+    <ClCompile Include="UserInterface\InputEvent\SoundTheme.cpp" />
     <ClCompile Include="UserInterface\SerializerIO\ClassSerializeIO.cpp" />
     <ClCompile Include="UserInterface\SerializerIO\KeyConverter.cpp" />
     <ClCompile Include="UserInterface\SerializerIO\Traits.cpp" />

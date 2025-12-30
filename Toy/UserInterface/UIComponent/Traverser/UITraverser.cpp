@@ -18,7 +18,7 @@ namespace UITraverser
 		return g_baseTraverser.GetChildrenBoundsSize(c); }
 	vector<UIComponent*> PickComponents(UIComponent* c, const XMINT2& pos) noexcept { 
 		return g_baseTraverser.PickComponents(c, pos); }
-	vector<IMouseEventReceiver*> PickMouseReceivers(UIComponent* c, const XMINT2& pos) noexcept { 
+	vector<MouseEventReceiver*> PickMouseReceivers(UIComponent* c, const XMINT2& pos) noexcept { 
 		return g_baseTraverser.PickMouseReceivers(c, pos); }
 
 	////////////////////////////////////////////////////////////////
