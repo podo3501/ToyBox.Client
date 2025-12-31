@@ -43,7 +43,7 @@ bool GameLoop::InitializeDerived()
     Locator<UIComponentManager>::Provide(m_uiManager.get());
     m_sceneManager = CreateSceneManager();
     SceneLocator::Provide(m_sceneManager.get());
-    m_eventDispatcherManager = CreateEventDispatcherManager();
+    m_eventDispatcherManager = EventDispatcherManager::Create();
     EventDispatcherLocator::Provide(m_eventDispatcherManager.get());
 
     return true;

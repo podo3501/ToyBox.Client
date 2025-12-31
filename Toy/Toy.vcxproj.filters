@@ -233,9 +233,6 @@
     <ClInclude Include="Locator\EventDispatcherLocator.h">
       <Filter>Locator</Filter>
     </ClInclude>
-    <ClInclude Include="System\IEventDispatcherManager.h">
-      <Filter>System</Filter>
-    </ClInclude>
     <ClInclude Include="System\ISceneManager.h">
       <Filter>System</Filter>
     </ClInclude>

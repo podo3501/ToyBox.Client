@@ -51,7 +51,7 @@ bool ToolLoop::InitializeDerived()
     m_uiManager = make_unique<UIComponentManager>(m_renderer, true);
     UIComponentLocator::Provide(m_uiManager.get());
 
-    m_nullEventDispatcher = CreateNullEventDispatcherManager();
+    m_nullEventDispatcher = EventDispatcherManager::CreateNull();
     EventDispatcherLocator::Provide(m_nullEventDispatcher.get());
 
     return true;

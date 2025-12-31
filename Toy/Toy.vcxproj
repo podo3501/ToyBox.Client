@@ -238,7 +238,6 @@
     <ClInclude Include="Scenes\Test\TestScene1.h" />
     <ClInclude Include="Scenes\Test\TestScene2.h" />
     <ClInclude Include="System\EventDispatcherManager.h" />
-    <ClInclude Include="System\IEventDispatcherManager.h" />
     <ClInclude Include="System\ISceneManager.h" />
     <ClInclude Include="System\SceneManager.h" />
     <ClInclude Include="UserInterface\CommandHistory\Command.h" />

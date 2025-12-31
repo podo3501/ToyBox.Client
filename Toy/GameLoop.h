@@ -3,10 +3,10 @@
 
 struct IInputManager;
 struct ISceneManager;
-struct IEventDispatcherManager;
 struct IImguiRegistry;
 class UIComponentManager;
 class UIComponent;
+class EventDispatcherManager;
 class GameLoop final : public AppLoop
 {
 public:
@@ -28,5 +28,5 @@ private:
 	unique_ptr<IInputManager> m_inputManager;
 	unique_ptr<UIComponentManager> m_uiManager;
 	unique_ptr<ISceneManager> m_sceneManager;
-	unique_ptr<IEventDispatcherManager> m_eventDispatcherManager;
+	unique_ptr<EventDispatcherManager> m_eventDispatcherManager;
 };

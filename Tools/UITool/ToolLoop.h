@@ -5,9 +5,9 @@
 struct IRenderer;
 struct IToolInputManager;
 struct IInputManager;
-struct IEventDispatcherManager;
 class Window;
 class UIComponentManager;
+class EventDispatcherManager;
 class UserInterfaceWindow;
 class TextureResBinderWindow;
 class MenuBar;
@@ -47,7 +47,7 @@ private:
 	unique_ptr<IToolInputManager> m_toolInputManager;
 	unique_ptr<IInputManager> m_inputManager;
 	unique_ptr<UIComponentManager> m_uiManager;
-	unique_ptr<IEventDispatcherManager> m_nullEventDispatcher;
+	unique_ptr<EventDispatcherManager> m_nullEventDispatcher;
 	vector<unique_ptr<UserInterfaceWindow>> m_uiWindows;
 	vector<unique_ptr<TextureResBinderWindow>> m_textureWindows;
 };
