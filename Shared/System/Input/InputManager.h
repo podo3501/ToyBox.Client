@@ -1,14 +1,14 @@
 #pragma once
 #include "../Public/IInputManager.h"
+#include "Foundation/ManagerBase.h"
 #include "DirectXTK12/Keyboard.h"
 #include "DirectXTK12/Mouse.h"
 
 //IInputManager는 게임내에서 사용, IToolInputManager는 툴에서 사용한다. 
 //IInputManager를 상속받았기 때문에 IInputManager도 사용할 수있다.
-class InputManager : public IToolInputManager 
+class InputManager : public IToolInputManager, private ManagerBase
 {
 public:
-    ~InputManager();
     InputManager();
     void Initialize(HWND hwnd);
 
@@ -35,10 +35,9 @@ private:
     int m_lastMouseWheelValue{ 0 };
 };
 
-class NullInputManager : public IInputManager
+class NullInputManager : public IInputManager, private ManagerBase
 {
 public:
-    ~NullInputManager() override = default;
     NullInputManager() = default;
 
     virtual void SetMouseStartOffset(const DirectX::XMINT2& offset) noexcept override {};

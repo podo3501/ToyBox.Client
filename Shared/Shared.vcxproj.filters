@@ -131,6 +131,15 @@
     <ClInclude Include="Utils\PathUtils.h">
       <Filter>Utils</Filter>
     </ClInclude>
+    <ClInclude Include="Foundation\NonCopyable.h">
+      <Filter>Foundation</Filter>
+    </ClInclude>
+    <ClInclude Include="Foundation\NonMovable.h">
+      <Filter>Foundation</Filter>
+    </ClInclude>
+    <ClInclude Include="Foundation\ManagerBase.h">
+      <Filter>Foundation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -252,6 +261,9 @@
     </Filter>
     <Filter Include="Script">
       <UniqueIdentifier>{f9805421-23e1-48e8-b12f-166e780eef9e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Foundation">
+      <UniqueIdentifier>{1bf06ca8-e6c1-4235-883f-30ae673f9127}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

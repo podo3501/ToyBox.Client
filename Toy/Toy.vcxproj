@@ -232,13 +232,13 @@
     <ClInclude Include="Locator\EventDispatcherLocator.h" />
     <ClInclude Include="Locator\InputLocator.h" />
     <ClInclude Include="Locator\SceneLocator.h" />
+    <ClInclude Include="Locator\UIComponentLocator.h" />
     <ClInclude Include="Scenes\Scene.h" />
     <ClInclude Include="Scenes\SceneType.h" />
     <ClInclude Include="Scenes\Test\ComponentTestScene.h" />
     <ClInclude Include="Scenes\Test\TestScene1.h" />
     <ClInclude Include="Scenes\Test\TestScene2.h" />
     <ClInclude Include="System\EventDispatcherManager.h" />
-    <ClInclude Include="System\ISceneManager.h" />
     <ClInclude Include="System\SceneManager.h" />
     <ClInclude Include="UserInterface\CommandHistory\Command.h" />
     <ClInclude Include="UserInterface\CommandHistory\CommandHistory.h" />
@@ -261,7 +261,6 @@
     <ClInclude Include="UserInterface\TextureResourceBinder\TextureLoadBinder.h" />
     <ClInclude Include="UserInterface\TextureResourceBinder\TextureResourceBinder.h" />
     <ClInclude Include="UserInterface\TextureResourceBinder\TextureSourceInfo.h" />
-    <ClInclude Include="UserInterface\UIComponentLocator.h" />
     <ClInclude Include="UserInterface\UIComponentManager.h" />
     <ClInclude Include="UserInterface\UIComponent\Components\Button.h" />
     <ClInclude Include="UserInterface\UIComponent\Components\Container.h" />
@@ -327,7 +326,6 @@
     <ClCompile Include="UserInterface\TextureResourceBinder\TextureLoadBinder.cpp" />
     <ClCompile Include="UserInterface\TextureResourceBinder\TextureResourceBinder.cpp" />
     <ClCompile Include="UserInterface\TextureResourceBinder\TextureSourceInfo.cpp" />
-    <ClCompile Include="UserInterface\UIComponentLocator.cpp" />
     <ClCompile Include="UserInterface\UIComponentManager.cpp" />
     <ClCompile Include="UserInterface\UIComponent\Components\Button.cpp" />
     <ClCompile Include="UserInterface\UIComponent\Components\Container.cpp" />

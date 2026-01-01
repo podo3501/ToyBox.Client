@@ -2,8 +2,8 @@
 #include "RenderTexture.h"
 #include "IRenderer.h"
 #include "Locator/InputLocator.h"
+#include "Locator/UIComponentLocator.h"
 #include "../../UIComponent/Traverser/UITraverser.h"
-#include "../../UIComponentLocator.h"
 #include "Shared/Utils/GeometryExt.h"
 #include "Shared/SerializerIO/SerializerIO.h"
 

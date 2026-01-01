@@ -1,4 +1,5 @@
 #pragma once
+#include "Shared/Foundation/ManagerBase.h"
 
 enum class UIEvent : int
 {
@@ -6,11 +7,10 @@ enum class UIEvent : int
 	Unknown,
 };
 
-class EventDispatcherManager
+class EventDispatcherManager : private ManagerBase
 {
 public:
 	using Callback = function<void(UIEvent)>;
-	virtual ~EventDispatcherManager() = default;
 	virtual void Subscribe(const string& region, const string& name, Callback cb) noexcept;
 	virtual void Dispatch(const string& region, const string& name, UIEvent event) noexcept;
 	virtual void Clear() noexcept;

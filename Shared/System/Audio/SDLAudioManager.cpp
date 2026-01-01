@@ -126,5 +126,8 @@ void SDLAudioManager::Update() noexcept
 
 unique_ptr<IAudioManager> CreateAudioManager(unique_ptr<ISoundTableReader> soundReader)
 {
-	return make_unique<SDLAudioManager>(move(soundReader));
+	auto audioManager = make_unique<SDLAudioManager>(move(soundReader));
+	if(!audioManager->Initialize()) return nullptr;
+
+	return audioManager;
 }

@@ -19,6 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Foundation\ManagerBase.h" />
+    <ClInclude Include="Foundation\NonCopyable.h" />
+    <ClInclude Include="Foundation\NonMovable.h" />
     <ClInclude Include="Framework\AppLoop.h" />
     <ClInclude Include="Framework\Environment.h" />
     <ClInclude Include="Framework\EnvironmentLocator.h" />

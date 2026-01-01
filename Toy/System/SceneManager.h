@@ -1,17 +1,18 @@
 #pragma once
-#include "ISceneManager.h"
+#include "Shared/Foundation/ManagerBase.h"
 
 class Scene;
-class SceneManager : public ISceneManager
+namespace DX { class StepTimer; }
+class SceneManager : private ManagerBase
 {
 public:
-	~SceneManager();
-	SceneManager();
-	SceneManager(const SceneManager&) = delete;
-	SceneManager& operator=(SceneManager const&) = delete;
+	void Transition(unique_ptr<Scene> newScene);
+	void Update(const DX::StepTimer& timer);
 
-	virtual void Transition(unique_ptr<Scene> newScene) override;
-	virtual void Update(const DX::StepTimer& timer) override;
+	static unique_ptr<SceneManager> Create();
+
+protected:
+	SceneManager();
 
 private:
 	void DoTransition();

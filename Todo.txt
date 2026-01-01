@@ -236,6 +236,7 @@
 --struct IMouseEventReceiver를 없애고 class MouseEventReceiver로 대체한다.
 
 @SoundID 같이 저장장치에 접근하는 것들은 인터페이스 클래스를 가지는데 이 인터페이스 클래스를 하나로 묶는 작업
+@NonCopyable, NonMovable을 상속 받아서 클래스들을 정리한다.
 @사운드에서 스트림으로 재생한다면 로딩하지 않고 재생할수 있도록 해야 한다.
 @툴에서 작업환경을 멀티로 할지 단일로 할지 생각해봐야 겠다.
 @Component에서 이벤트 받아서 사운드 출력되게끔.

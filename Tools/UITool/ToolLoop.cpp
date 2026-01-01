@@ -7,9 +7,9 @@
 #include "Window/Dialog.h"
 #include "Core/Public/IImguiRegistry.h"
 #include "Shared/Window/Window.h"
+#include "Toy/Locator/UIComponentLocator.h"
 #include "Toy/Locator/EventDispatcherLocator.h"
 #include "Toy/Locator/InputLocator.h"
-#include "Toy/UserInterface/UIComponentLocator.h"
 
 #ifdef __clang__
 #pragma clang diagnostic ignored "-Wcovered-switch-default"
@@ -48,7 +48,7 @@ bool ToolLoop::InitializeDerived()
     m_inputManager = CreateInputManager(hWnd);
     InputLocator::Provide(m_inputManager.get());
 
-    m_uiManager = make_unique<UIComponentManager>(m_renderer, true);
+    m_uiManager = UIComponentManager::Create(m_renderer, true);
     UIComponentLocator::Provide(m_uiManager.get());
 
     m_nullEventDispatcher = EventDispatcherManager::CreateNull();

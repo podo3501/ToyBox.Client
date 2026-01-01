@@ -1,10 +1,10 @@
 #include "pch.h"
 #include "TestScene2.h"
 #include "IRenderer.h"
+#include "Locator/UIComponentLocator.h"
 #include "Locator/SceneLocator.h"
 #include "Locator/EventDispatcherLocator.h"
 #include "UserInterface/UIModule.h"
-#include "UserInterface/UIComponentLocator.h"
 #include "UserInterface/TextureResourceBinder/TextureResourceBinder.h"
 #include "TestScene1.h"
 

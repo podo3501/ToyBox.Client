@@ -1,17 +1,18 @@
 #pragma once
 #include "../Public/IAudioManager.h"
+#include "Foundation/ManagerBase.h"
 
 struct ISoundTableReader;
 struct AudioGroup;
 class EffectSound;
 class NormalSound;
-class SDLAudioManager : public IAudioManager
+class SDLAudioManager : public IAudioManager, private ManagerBase
 {
 public:
 	~SDLAudioManager();
 	SDLAudioManager() = delete;
 	SDLAudioManager(unique_ptr<ISoundTableReader> soundReader);
-	virtual bool Initialize() override;
+	bool Initialize();
 	virtual bool LoadSound(const string& index) override;
 	virtual bool Unload(const string& index) noexcept override;
 	virtual void SetVolume(AudioGroupID groupID, float volume) noexcept override;

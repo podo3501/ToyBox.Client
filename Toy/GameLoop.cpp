@@ -3,10 +3,10 @@
 #include "IRenderer.h"
 #include "IImguiRegistry.h"
 #include "Shared/Window/Window.h"
-#include "Shared/System/Public/IInputManager.h"
+#include "Locator/InputLocator.h"
+#include "Locator/UIComponentLocator.h"
 #include "Locator/SceneLocator.h"
 #include "Locator/EventDispatcherLocator.h"
-#include "UserInterface/UIComponentLocator.h"
 #include "Scenes/Test/ComponentTestScene.h"
 #include "Scenes/Test/TestScene1.h"
 #include "Scenes/Test/TestScene2.h"
@@ -38,10 +38,10 @@ GameLoop::GameLoop(unique_ptr<Window> window, unique_ptr<IRenderer> renderer, II
 bool GameLoop::InitializeDerived()
 {
     m_inputManager = CreateInputManager(GetWindowHandle());
-    Locator<IInputManager>::Provide(m_inputManager.get());
-    m_uiManager = make_unique<UIComponentManager>(m_renderer);
-    Locator<UIComponentManager>::Provide(m_uiManager.get());
-    m_sceneManager = CreateSceneManager();
+    InputLocator::Provide(m_inputManager.get());
+    m_uiManager = UIComponentManager::Create(m_renderer);
+    UIComponentLocator::Provide(m_uiManager.get());
+    m_sceneManager = SceneManager::Create();
     SceneLocator::Provide(m_sceneManager.get());
     m_eventDispatcherManager = EventDispatcherManager::Create();
     EventDispatcherLocator::Provide(m_eventDispatcherManager.get());

@@ -2,7 +2,6 @@
 #include "SceneManager.h"
 #include "Scenes/Scene.h"
 
-SceneManager::~SceneManager() = default;
 SceneManager::SceneManager() :
 	m_currentScene{ nullptr }
 {}
@@ -38,7 +37,7 @@ void SceneManager::DoTransition()
 
 /////////////////////////////////////////////////////////////////////////////
 
-unique_ptr<ISceneManager> CreateSceneManager()
+unique_ptr<SceneManager> SceneManager::Create()
 {
-	return make_unique<SceneManager>();
+	return unique_ptr<SceneManager>(new SceneManager());
 }

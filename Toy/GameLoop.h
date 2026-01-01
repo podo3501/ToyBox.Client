@@ -2,10 +2,10 @@
 #include "Shared/Framework/AppLoop.h"
 
 struct IInputManager;
-struct ISceneManager;
 struct IImguiRegistry;
 class UIComponentManager;
 class UIComponent;
+class SceneManager;
 class EventDispatcherManager;
 class GameLoop final : public AppLoop
 {
@@ -27,6 +27,6 @@ private:
 	IImguiRegistry* m_imguiRegistry{ nullptr };
 	unique_ptr<IInputManager> m_inputManager;
 	unique_ptr<UIComponentManager> m_uiManager;
-	unique_ptr<ISceneManager> m_sceneManager;
+	unique_ptr<SceneManager> m_sceneManager;
 	unique_ptr<EventDispatcherManager> m_eventDispatcherManager;
 };

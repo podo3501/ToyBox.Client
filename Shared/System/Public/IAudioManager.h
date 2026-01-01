@@ -6,7 +6,6 @@
 struct IAudioManager
 {
 	virtual ~IAudioManager() = default;
-	virtual bool Initialize() = 0;
 	virtual bool LoadSound(const std::string& index) = 0;
 	virtual bool Unload(const std::string& index) noexcept = 0;
 	virtual void SetVolume(AudioGroupID groupID, float volume) noexcept = 0;

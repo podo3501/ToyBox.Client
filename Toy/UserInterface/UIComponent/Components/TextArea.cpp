@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "TextArea.h"
+#include "Locator/UIComponentLocator.h"
 #include "../../TextureResourceBinder/TextureResourceBinder.h"
-#include "../../UIComponentLocator.h"
 #include "../UIUtility.h"
 #include "IRenderer.h"
 #include "Shared/Utils/GeometryExt.h"
