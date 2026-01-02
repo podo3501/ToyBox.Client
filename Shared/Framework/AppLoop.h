@@ -1,5 +1,6 @@
 #pragma once
 #include "Shared/System/StepTimer.h"
+#include "Shared/Foundation/NoCopyNoMove.h"
 
 struct IRenderer;
 struct IImguiRegistry;
@@ -10,7 +11,7 @@ class Window;
 class MouseTracker;
 class Environment;
 
-class AppLoop
+class AppLoop : private NoCopyNoMove
 {
 public:
     AppLoop() = delete;

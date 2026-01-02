@@ -2,6 +2,7 @@
 #include "SceneManager.h"
 #include "Scenes/Scene.h"
 
+SceneManager::~SceneManager() = default;
 SceneManager::SceneManager() :
 	m_currentScene{ nullptr }
 {}

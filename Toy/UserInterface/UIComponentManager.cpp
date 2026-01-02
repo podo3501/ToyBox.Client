@@ -7,6 +7,7 @@
 #include "UIComponent/Traverser/UIDetailTraverser.h"
 #include "Shared/Utils/StlExt.h"
 
+UIComponentManager::~UIComponentManager() = default;
 UIComponentManager::UIComponentManager(IRenderer* renderer, bool isTool) :
 	m_renderer{ renderer },
 	m_texController{ renderer->GetTextureController() }

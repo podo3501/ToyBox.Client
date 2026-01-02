@@ -1,5 +1,5 @@
 #pragma once
-#include "Shared/Foundation/ManagerBase.h"
+#include "Shared/Foundation/NoCopyNoMove.h"
 
 enum class UIEvent : int
 {
@@ -7,9 +7,10 @@ enum class UIEvent : int
 	Unknown,
 };
 
-class EventDispatcherManager : private ManagerBase
+class EventDispatcherManager : private NoCopyNoMove
 {
 public:
+	~EventDispatcherManager();
 	using Callback = function<void(UIEvent)>;
 	virtual void Subscribe(const string& region, const string& name, Callback cb) noexcept;
 	virtual void Dispatch(const string& region, const string& name, UIEvent event) noexcept;
@@ -19,7 +20,7 @@ public:
 	static unique_ptr<EventDispatcherManager> CreateNull();
 
 protected:
-	EventDispatcherManager() = default;
+	EventDispatcherManager();
 
 private:
 	string MakeKey(const string& region, const string& name);

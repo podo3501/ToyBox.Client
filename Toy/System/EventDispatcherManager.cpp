@@ -1,6 +1,9 @@
 #include "pch.h"
 #include "EventDispatcherManager.h"
 
+EventDispatcherManager::~EventDispatcherManager() = default;
+EventDispatcherManager::EventDispatcherManager() = default;
+
 void EventDispatcherManager::Subscribe(const string& region, const string& name, Callback cb) noexcept
 {
 	auto key = MakeKey(region, name);

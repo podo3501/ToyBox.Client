@@ -1,11 +1,12 @@
 #pragma once
 #include "Shared/Utils/StlTypeExt.hpp"
+#include "Shared/Foundation/NoCopyNoMove.h"
 
 class SerializerIO;
 class AutoNamer;
 class ComponentNameGenerator;
 enum class ComponentID;
-class UINameGenerator
+class UINameGenerator : private NoCopyNoMove
 {
 protected:
     UINameGenerator(const UINameGenerator& other);

@@ -140,6 +140,9 @@
     <ClInclude Include="Foundation\ManagerBase.h">
       <Filter>Foundation</Filter>
     </ClInclude>
+    <ClInclude Include="Foundation\NoCopyNoMove.h">
+      <Filter>Foundation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />

@@ -1,7 +1,8 @@
 #pragma once
+#include "Shared/Foundation/NoCopyNoMove.h"
 
 template <typename TID, typename TargetType>
-class Command
+class Command : private NoCopyNoMove
 {
 public:
     virtual ~Command() = default;

@@ -1,11 +1,12 @@
 #pragma once
+#include "Shared/Foundation/NoCopyNoMove.h"
 
 struct IAudioManager;
 class SoundTheme;
 class MouseEventReceiver;
 enum class InputResult;
 enum class InteractState;
-class EventProcessor
+class EventProcessor : private NoCopyNoMove
 {
 public:
 	~EventProcessor();

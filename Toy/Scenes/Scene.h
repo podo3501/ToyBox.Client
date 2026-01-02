@@ -1,11 +1,12 @@
 #pragma once
 #include <string>
 #include "Shared/System/StepTimer.h"
+#include "Shared/Foundation/NoCopyNoMove.h"
 #include "SceneType.h"
 
 struct IRenderer;
 class UIModule;
-class Scene
+class Scene : private NoCopyNoMove
 {
 public:
 	virtual ~Scene() = default;

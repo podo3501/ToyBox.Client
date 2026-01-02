@@ -1,12 +1,12 @@
 #pragma once
+#include "Shared/Foundation/NoCopyNoMove.h"
 
 template<typename CommandType>
-class CommandHistory
+class CommandHistory : private NoCopyNoMove
 {
 public:
-	~CommandHistory() = default;
+	virtual ~CommandHistory() = default;
 	CommandHistory() = default;
-
 	bool Undo() noexcept;
 	bool Redo() noexcept;
 

@@ -1,12 +1,12 @@
 #pragma once
 #include "../Public/IAudioManager.h"
-#include "Foundation/ManagerBase.h"
+#include "Foundation/NoCopyNoMove.h"
 
 struct ISoundTableReader;
 struct AudioGroup;
 class EffectSound;
 class NormalSound;
-class SDLAudioManager : public IAudioManager, private ManagerBase
+class SDLAudioManager : public IAudioManager, private NoCopyNoMove
 {
 public:
 	~SDLAudioManager();

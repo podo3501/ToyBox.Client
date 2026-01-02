@@ -1,8 +1,9 @@
 #pragma once
 #include "../UIType.h"
+#include "Shared/Foundation/NoCopyNoMove.h"
 
 class UIComponent;
-class HierarchyTraverser
+class HierarchyTraverser : private NoCopyNoMove
 {
 public:
 	void ForEachChild(UIComponent* c, const function<void(UIComponent*)>& Func) noexcept; //±âº» foreach

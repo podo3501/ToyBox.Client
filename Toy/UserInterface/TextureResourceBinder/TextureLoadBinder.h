@@ -1,10 +1,11 @@
 #pragma once
 #include "ITextureBinder.h"
 #include "TextureSourceInfo.h"
+#include "Shared/Foundation/NoCopyNoMove.h"
 
 struct IRenderer;
 struct ITextureLoad;
-class TextureLoadBinder : public ITextureBinder
+class TextureLoadBinder : public ITextureBinder, private NoCopyNoMove
 {
 public:
 	virtual bool LoadResources(ITextureLoad* load) override;

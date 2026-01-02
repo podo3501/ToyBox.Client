@@ -3,12 +3,13 @@
 #include "TextureSourceInfo.h"
 #include "TextureFontInfo.h"
 #include "TextureBinderHelper.h"
+#include "Shared/Foundation/NoCopyNoMove.h"
 
 struct IRenderer;
 enum class TextureSlice : int;
 struct ITextureLoad;
 class SerializerIO;
-class TextureResourceBinder : public ITextureBinder
+class TextureResourceBinder : public ITextureBinder, private NoCopyNoMove
 {
 public:
 	~TextureResourceBinder();

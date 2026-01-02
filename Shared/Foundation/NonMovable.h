@@ -3,7 +3,7 @@
 class NonMovable
 {
 public:
-    virtual ~NonMovable() = default;
+    ~NonMovable() = default;
     NonMovable() = default;
 
     NonMovable(NonMovable&&) = delete;

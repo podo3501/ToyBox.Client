@@ -1,11 +1,12 @@
 #pragma once
-#include "Shared/Foundation/ManagerBase.h"
+#include "Shared/Foundation/NoCopyNoMove.h"
 
 class Scene;
 namespace DX { class StepTimer; }
-class SceneManager : private ManagerBase
+class SceneManager : private NoCopyNoMove
 {
 public:
+	~SceneManager();
 	void Transition(unique_ptr<Scene> newScene);
 	void Update(const DX::StepTimer& timer);
 

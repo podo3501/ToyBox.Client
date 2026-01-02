@@ -3,7 +3,7 @@
 class NonCopyable
 {
 public:
-    virtual ~NonCopyable() = default;
+    ~NonCopyable() = default;
     NonCopyable() = default;
 
     NonCopyable(const NonCopyable&) = delete;

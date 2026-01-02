@@ -53,6 +53,7 @@ static bool IsMouseButtonState(
 DirectX::Keyboard g_keyboard;
 DirectX::Mouse g_mouse;
 
+InputManager::~InputManager() = default;
 InputManager::InputManager() = default;
 void InputManager::Initialize(HWND hwnd)
 {

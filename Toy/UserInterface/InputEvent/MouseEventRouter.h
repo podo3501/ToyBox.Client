@@ -1,9 +1,10 @@
 #pragma once
+#include "Shared/Foundation/NoCopyNoMove.h"
 
 struct MouseState;
 class UIComponent;
 class MouseEventReceiver;
-class MouseEventRouter
+class MouseEventRouter : private NoCopyNoMove
 {
 public:
 	inline void SetComponent(UIComponent* component) noexcept { m_component = component; }
