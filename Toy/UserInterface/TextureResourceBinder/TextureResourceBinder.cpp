@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "TextureResourceBinder.h"
 #include "IRenderer.h"
-#include "Shared/SerializerIO/SerializerIO.h"
+#include "Shared/Serializer/SerializerIO.h"
 #include "../UIComponent/UIUtility.h"
 
 TextureResourceBinder::~TextureResourceBinder() = default;

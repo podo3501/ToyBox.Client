@@ -1,8 +1,8 @@
 ﻿#include "pch.h"
 #include "UIComponent.h"
 #include "Shared/Utils/StlExt.h"
-#include "Shared/SerializerIO/SerializerIO.h"
-#include "../SerializerIO/ClassSerializeIO.h"
+#include "Shared/Serializer/SerializerIO.h"
+#include "../Serializer/ClassSerializeIO.h"
 
 UIComponent::~UIComponent() = default;
 UIComponent::UIComponent() :

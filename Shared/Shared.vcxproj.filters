@@ -38,27 +38,6 @@
     <ClInclude Include="Framework\Environment.h">
       <Filter>Framework</Filter>
     </ClInclude>
-    <ClInclude Include="SerializerIO\ClassSerializeIO.hpp">
-      <Filter>SerializerIO</Filter>
-    </ClInclude>
-    <ClInclude Include="SerializerIO\Concepts.h">
-      <Filter>SerializerIO</Filter>
-    </ClInclude>
-    <ClInclude Include="SerializerIO\SerializerIO.h">
-      <Filter>SerializerIO</Filter>
-    </ClInclude>
-    <ClInclude Include="SerializerIO\SerializerIO.hpp">
-      <Filter>SerializerIO</Filter>
-    </ClInclude>
-    <ClInclude Include="SerializerIO\KeyConverter\KeyConverter.hpp">
-      <Filter>SerializerIO\KeyConverter</Filter>
-    </ClInclude>
-    <ClInclude Include="SerializerIO\Traits\Traits.h">
-      <Filter>SerializerIO\Traits</Filter>
-    </ClInclude>
-    <ClInclude Include="SerializerIO\Traits\TraitsHelper.hpp">
-      <Filter>SerializerIO\Traits</Filter>
-    </ClInclude>
     <ClInclude Include="Framework\Initializer\Application.h">
       <Filter>Framework\Initializer</Filter>
     </ClInclude>
@@ -85,18 +64,6 @@
     </ClInclude>
     <ClInclude Include="Framework\EnvironmentLocator.h">
       <Filter>Framework</Filter>
-    </ClInclude>
-    <ClInclude Include="SerializerIO\Storage\IJsonStorage.h">
-      <Filter>SerializerIO\Storage</Filter>
-    </ClInclude>
-    <ClInclude Include="SerializerIO\Storage\JsonStorageLocator.h">
-      <Filter>SerializerIO\Storage</Filter>
-    </ClInclude>
-    <ClInclude Include="SerializerIO\Storage\FileStorage.h">
-      <Filter>SerializerIO\Storage</Filter>
-    </ClInclude>
-    <ClInclude Include="SerializerIO\Storage\MemoryStorage.h">
-      <Filter>SerializerIO\Storage</Filter>
     </ClInclude>
     <ClInclude Include="System\Audio\EffectSoundBuffer.h">
       <Filter>System\Audio</Filter>
@@ -137,11 +104,41 @@
     <ClInclude Include="Foundation\NonMovable.h">
       <Filter>Foundation</Filter>
     </ClInclude>
-    <ClInclude Include="Foundation\ManagerBase.h">
-      <Filter>Foundation</Filter>
-    </ClInclude>
     <ClInclude Include="Foundation\NoCopyNoMove.h">
       <Filter>Foundation</Filter>
+    </ClInclude>
+    <ClInclude Include="Serializer\KeyConverter\KeyConverter.hpp">
+      <Filter>Serializer\KeyConverter</Filter>
+    </ClInclude>
+    <ClInclude Include="Serializer\Traits\Traits.h">
+      <Filter>Serializer\Traits</Filter>
+    </ClInclude>
+    <ClInclude Include="Serializer\Traits\TraitsHelper.hpp">
+      <Filter>Serializer\Traits</Filter>
+    </ClInclude>
+    <ClInclude Include="Serializer\Storage\FileStorage.h">
+      <Filter>Serializer\Storage</Filter>
+    </ClInclude>
+    <ClInclude Include="Serializer\Storage\IJsonStorage.h">
+      <Filter>Serializer\Storage</Filter>
+    </ClInclude>
+    <ClInclude Include="Serializer\Storage\JsonStorageLocator.h">
+      <Filter>Serializer\Storage</Filter>
+    </ClInclude>
+    <ClInclude Include="Serializer\Storage\MemoryStorage.h">
+      <Filter>Serializer\Storage</Filter>
+    </ClInclude>
+    <ClInclude Include="Serializer\ClassSerializeIO.hpp">
+      <Filter>Serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="Serializer\Concepts.h">
+      <Filter>Serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="Serializer\SerializerIO.h">
+      <Filter>Serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="Serializer\SerializerIO.hpp">
+      <Filter>Serializer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -173,15 +170,6 @@
     <ClCompile Include="Framework\Environment.cpp">
       <Filter>Framework</Filter>
     </ClCompile>
-    <ClCompile Include="SerializerIO\SerializerIO.cpp">
-      <Filter>SerializerIO</Filter>
-    </ClCompile>
-    <ClCompile Include="SerializerIO\KeyConverter\KeyConverter.cpp">
-      <Filter>SerializerIO\KeyConverter</Filter>
-    </ClCompile>
-    <ClCompile Include="SerializerIO\Traits\Traits.cpp">
-      <Filter>SerializerIO\Traits</Filter>
-    </ClCompile>
     <ClCompile Include="Framework\Initializer\Application.cpp">
       <Filter>Framework\Initializer</Filter>
     </ClCompile>
@@ -193,12 +181,6 @@
     </ClCompile>
     <ClCompile Include="System\Input\InputManager.cpp">
       <Filter>System\Input</Filter>
-    </ClCompile>
-    <ClCompile Include="SerializerIO\Storage\FileStorage.cpp">
-      <Filter>SerializerIO\Storage</Filter>
-    </ClCompile>
-    <ClCompile Include="SerializerIO\Storage\MemoryStorage.cpp">
-      <Filter>SerializerIO\Storage</Filter>
     </ClCompile>
     <ClCompile Include="System\Audio\EffectSoundBuffer.cpp">
       <Filter>System\Audio</Filter>
@@ -224,6 +206,21 @@
     <ClCompile Include="Utils\PathUtils.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
+    <ClCompile Include="Serializer\KeyConverter\KeyConverter.cpp">
+      <Filter>Serializer\KeyConverter</Filter>
+    </ClCompile>
+    <ClCompile Include="Serializer\Traits\Traits.cpp">
+      <Filter>Serializer\Traits</Filter>
+    </ClCompile>
+    <ClCompile Include="Serializer\Storage\FileStorage.cpp">
+      <Filter>Serializer\Storage</Filter>
+    </ClCompile>
+    <ClCompile Include="Serializer\Storage\MemoryStorage.cpp">
+      <Filter>Serializer\Storage</Filter>
+    </ClCompile>
+    <ClCompile Include="Serializer\SerializerIO.cpp">
+      <Filter>Serializer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Utils">
@@ -238,15 +235,6 @@
     <Filter Include="Framework">
       <UniqueIdentifier>{70d3aad2-e44a-404e-8f32-76e91bc2e76f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="SerializerIO">
-      <UniqueIdentifier>{a297c79b-d98f-4b24-94f6-f4d9edce9b9b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="SerializerIO\KeyConverter">
-      <UniqueIdentifier>{7f717356-9e2f-4394-9927-95ee27997740}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="SerializerIO\Traits">
-      <UniqueIdentifier>{6d2e918d-00e6-4641-b670-00c0ac0dcc32}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Framework\Initializer">
       <UniqueIdentifier>{53758de4-1b63-40d8-8388-5c346338bf23}</UniqueIdentifier>
     </Filter>
@@ -259,14 +247,23 @@
     <Filter Include="System\Input">
       <UniqueIdentifier>{94771c7d-10b2-4979-b871-e3940786ece1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="SerializerIO\Storage">
-      <UniqueIdentifier>{c64a7941-9810-432c-8f04-eef733ba5b29}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Script">
       <UniqueIdentifier>{f9805421-23e1-48e8-b12f-166e780eef9e}</UniqueIdentifier>
     </Filter>
     <Filter Include="Foundation">
       <UniqueIdentifier>{1bf06ca8-e6c1-4235-883f-30ae673f9127}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Serializer">
+      <UniqueIdentifier>{ef36f2e1-19f8-47bb-aae9-eca0a75fa168}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Serializer\KeyConverter">
+      <UniqueIdentifier>{8f53a19d-0015-4557-913d-b280d430d68c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Serializer\Storage">
+      <UniqueIdentifier>{9b759130-a126-4cf1-930f-58dbef43f1a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Serializer\Traits">
+      <UniqueIdentifier>{a56fb890-67c6-49a1-9022-74574af602d0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

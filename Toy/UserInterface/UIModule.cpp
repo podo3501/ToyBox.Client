@@ -6,7 +6,7 @@
 #include "UIComponent/Traverser/UITraverser.h"
 #include "UINameGenerator/UINameGenerator.h"
 #include "UIComponent/Components/Panel.h"
-#include "Shared/SerializerIO/SerializerIO.h"
+#include "Shared/Serializer/SerializerIO.h"
 #include "Shared/Utils/StlExt.h"
 
 using namespace UITraverser;

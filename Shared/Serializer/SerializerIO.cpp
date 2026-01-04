@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "SerializerIO.h"
-#include "Shared/SerializerIO/Storage/JsonStorageLocator.h"
+#include "Shared/Serializer/Storage/JsonStorageLocator.h"
 
 SerializerIO::~SerializerIO() = default;
 SerializerIO::SerializerIO() noexcept :

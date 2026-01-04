@@ -25,9 +25,6 @@
     <Filter Include="UserInterface\UINameGenerator">
       <UniqueIdentifier>{f4569c6f-77f4-4758-a897-59e37b1e9875}</UniqueIdentifier>
     </Filter>
-    <Filter Include="UserInterface\SerializerIO">
-      <UniqueIdentifier>{e8893605-b286-4553-a291-e0537d05b55a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="UserInterface\CommandHistory">
       <UniqueIdentifier>{fdac42c1-45de-4313-8c6a-afa030454313}</UniqueIdentifier>
     </Filter>
@@ -54,6 +51,9 @@
     </Filter>
     <Filter Include="UserInterface\InputEvent">
       <UniqueIdentifier>{b2a754fd-6514-4a12-9ff6-4cad9a4024b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UserInterface\Serializer">
+      <UniqueIdentifier>{8bf33769-5859-4c05-9e5a-303b172cafd2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -170,15 +170,6 @@
     <ClInclude Include="UserInterface\UINameGenerator\UINameGenerator.h">
       <Filter>UserInterface\UINameGenerator</Filter>
     </ClInclude>
-    <ClInclude Include="UserInterface\SerializerIO\ClassSerializeIO.h">
-      <Filter>UserInterface\SerializerIO</Filter>
-    </ClInclude>
-    <ClInclude Include="UserInterface\SerializerIO\KeyConverter.h">
-      <Filter>UserInterface\SerializerIO</Filter>
-    </ClInclude>
-    <ClInclude Include="UserInterface\SerializerIO\Traits.h">
-      <Filter>UserInterface\SerializerIO</Filter>
-    </ClInclude>
     <ClInclude Include="UserInterface\CommandHistory\Command.h">
       <Filter>UserInterface\CommandHistory</Filter>
     </ClInclude>
@@ -277,6 +268,15 @@
     </ClInclude>
     <ClInclude Include="Locator\UIComponentLocator.h">
       <Filter>Locator</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface\Serializer\ClassSerializeIO.h">
+      <Filter>UserInterface\Serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface\Serializer\KeyConverter.h">
+      <Filter>UserInterface\Serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface\Serializer\Traits.h">
+      <Filter>UserInterface\Serializer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -393,15 +393,6 @@
     <ClCompile Include="UserInterface\UINameGenerator\UINameGenerator.cpp">
       <Filter>UserInterface\UINameGenerator</Filter>
     </ClCompile>
-    <ClCompile Include="UserInterface\SerializerIO\ClassSerializeIO.cpp">
-      <Filter>UserInterface\SerializerIO</Filter>
-    </ClCompile>
-    <ClCompile Include="UserInterface\SerializerIO\KeyConverter.cpp">
-      <Filter>UserInterface\SerializerIO</Filter>
-    </ClCompile>
-    <ClCompile Include="UserInterface\SerializerIO\Traits.cpp">
-      <Filter>UserInterface\SerializerIO</Filter>
-    </ClCompile>
     <ClCompile Include="UserInterface\CommandHistory\TextureResource\TexResCommandHistory.cpp">
       <Filter>UserInterface\CommandHistory\TextureResource</Filter>
     </ClCompile>
@@ -464,6 +455,15 @@
     </ClCompile>
     <ClCompile Include="UserInterface\InputEvent\SoundTheme.cpp">
       <Filter>UserInterface\InputEvent</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInterface\Serializer\ClassSerializeIO.cpp">
+      <Filter>UserInterface\Serializer</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInterface\Serializer\KeyConverter.cpp">
+      <Filter>UserInterface\Serializer</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInterface\Serializer\Traits.cpp">
+      <Filter>UserInterface\Serializer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

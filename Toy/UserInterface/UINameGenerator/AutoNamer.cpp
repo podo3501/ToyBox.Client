@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "AutoNamer.h"
 #include "Shared/Utils/StlExt.h"
-#include "Shared/SerializerIO/SerializerIO.h"
+#include "Shared/Serializer/SerializerIO.h"
 
 AutoNamer::~AutoNamer() = default;
 AutoNamer::AutoNamer() = default;

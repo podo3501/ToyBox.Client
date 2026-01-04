@@ -2,7 +2,7 @@
 #include "RecentFiles.h"
 #include "FileTab.h"
 #include "Shared/Utils/StringExt.h"
-#include "Shared/SerializerIO/SerializerIO.h"
+#include "Shared/Serializer/SerializerIO.h"
 
 RecentFiles::RecentFiles()
 {

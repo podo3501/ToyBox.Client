@@ -19,7 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Foundation\ManagerBase.h" />
     <ClInclude Include="Foundation\NoCopyNoMove.h" />
     <ClInclude Include="Foundation\NonCopyable.h" />
     <ClInclude Include="Foundation\NonMovable.h" />
@@ -30,17 +29,17 @@
     <ClInclude Include="Framework\Initializer\GoogleTest.h" />
     <ClInclude Include="Framework\Locator.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="SerializerIO\ClassSerializeIO.hpp" />
-    <ClInclude Include="SerializerIO\Concepts.h" />
-    <ClInclude Include="SerializerIO\KeyConverter\KeyConverter.hpp" />
-    <ClInclude Include="SerializerIO\SerializerIO.h" />
-    <ClInclude Include="SerializerIO\SerializerIO.hpp" />
-    <ClInclude Include="SerializerIO\Storage\FileStorage.h" />
-    <ClInclude Include="SerializerIO\Storage\IJsonStorage.h" />
-    <ClInclude Include="SerializerIO\Storage\JsonStorageLocator.h" />
-    <ClInclude Include="SerializerIO\Storage\MemoryStorage.h" />
-    <ClInclude Include="SerializerIO\Traits\Traits.h" />
-    <ClInclude Include="SerializerIO\Traits\TraitsHelper.hpp" />
+    <ClInclude Include="Serializer\ClassSerializeIO.hpp" />
+    <ClInclude Include="Serializer\Concepts.h" />
+    <ClInclude Include="Serializer\KeyConverter\KeyConverter.hpp" />
+    <ClInclude Include="Serializer\SerializerIO.h" />
+    <ClInclude Include="Serializer\SerializerIO.hpp" />
+    <ClInclude Include="Serializer\Storage\FileStorage.h" />
+    <ClInclude Include="Serializer\Storage\IJsonStorage.h" />
+    <ClInclude Include="Serializer\Storage\JsonStorageLocator.h" />
+    <ClInclude Include="Serializer\Storage\MemoryStorage.h" />
+    <ClInclude Include="Serializer\Traits\Traits.h" />
+    <ClInclude Include="Serializer\Traits\TraitsHelper.hpp" />
     <ClInclude Include="System\Audio\AudioTypeHelpers.h" />
     <ClInclude Include="System\Audio\EffectSoundBuffer.h" />
     <ClInclude Include="System\Audio\EffectSound.h" />
@@ -80,11 +79,11 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="SerializerIO\KeyConverter\KeyConverter.cpp" />
-    <ClCompile Include="SerializerIO\SerializerIO.cpp" />
-    <ClCompile Include="SerializerIO\Storage\FileStorage.cpp" />
-    <ClCompile Include="SerializerIO\Storage\MemoryStorage.cpp" />
-    <ClCompile Include="SerializerIO\Traits\Traits.cpp" />
+    <ClCompile Include="Serializer\KeyConverter\KeyConverter.cpp" />
+    <ClCompile Include="Serializer\SerializerIO.cpp" />
+    <ClCompile Include="Serializer\Storage\FileStorage.cpp" />
+    <ClCompile Include="Serializer\Storage\MemoryStorage.cpp" />
+    <ClCompile Include="Serializer\Traits\Traits.cpp" />
     <ClCompile Include="System\Audio\EffectSoundBuffer.cpp" />
     <ClCompile Include="System\Audio\EffectSound.cpp" />
     <ClCompile Include="System\Audio\NormalSound.cpp" />

@@ -3,7 +3,7 @@
 #include "SoundTraits.h"
 #include "AudioTypeHelpers.h"
 #include "Shared/Framework/EnvironmentLocator.h"
-#include "Shared/SerializerIO/SerializerIO.h"
+#include "Shared/Serializer/SerializerIO.h"
 
 struct SoundInfoImpl : public SoundInfo
 {

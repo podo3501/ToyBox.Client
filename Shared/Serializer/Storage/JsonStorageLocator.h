@@ -1,9 +1,9 @@
 #pragma once
 #include <memory>
 #include "Shared/Framework/Locator.h"
-#include "Shared/SerializerIO/Storage/IJsonStorage.h"
-#include "Shared/SerializerIO/Storage/FileStorage.h"
-#include "Shared/SerializerIO/Storage/MemoryStorage.h"
+#include "Shared/Serializer/Storage/IJsonStorage.h"
+#include "Shared/Serializer/Storage/FileStorage.h"
+#include "Shared/Serializer/Storage/MemoryStorage.h"
 
 using JsonStorageLocator = Locator<IJsonStorage>;
 enum class StorageType { File, Memory };
