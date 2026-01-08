@@ -6,7 +6,6 @@ struct IRenderer;
 struct IImguiRegistry;
 struct IImguiItem;
 struct ITextureController;
-struct IJsonStorage;
 class Window;
 class MouseTracker;
 class Environment;
@@ -46,7 +45,6 @@ private:
     unique_ptr<IRenderer> m_renderer;
     IImguiRegistry* m_imguiRegistry{ nullptr };
     unique_ptr<Environment> m_environment;
-    unique_ptr<IJsonStorage> m_jsonStorage;
     DX::StepTimer m_timer;
 };
 

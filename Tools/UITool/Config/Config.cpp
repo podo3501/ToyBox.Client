@@ -1,17 +1,19 @@
 #include "pch.h"
 #include "Config.h"
-#include "Shared/Serializer/SerializerIO.h"
+#include "Shared/Serializer/JsonObjectIO.h"
 
 using namespace Tool;
 
 static constexpr const wchar_t* ResolutionFilename = L"Tool/Config.json";
+unique_ptr<IJsonStorage> Config::m_storage = nullptr;
 ResolutionType Config::m_resolutionType = ResolutionType::R800x600;
 Config* Config::m_Instance = nullptr;
 
 Config::Config()
 {
 	m_Instance = this;
-	SerializerIO::ReadJsonFromFile(ResolutionFilename, *this);
+	m_storage = CreateJsonStorage(StorageType::File);
+	JsonObjectIO::Load(*this, m_storage.get(), ResolutionFilename);
 }
 
 Config::~Config()
@@ -23,7 +25,7 @@ void Config::SetResolution(ResolutionType type) noexcept
 		return;
 
 	m_resolutionType = type;
-	SerializerIO::WriteJsonToFile(*m_Instance, ResolutionFilename);
+	JsonObjectIO::Save(*m_Instance, m_storage.get(), ResolutionFilename);
 }
 
 ResolutionType Config::GetResolution() noexcept

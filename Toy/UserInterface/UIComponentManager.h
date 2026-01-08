@@ -2,6 +2,7 @@
 #include "Shared/Foundation/NoCopyNoMove.h"
 
 struct IRenderer;
+struct IJsonStorage;
 struct ITextureController;
 struct ITextureRender;
 class UILayout;
@@ -14,8 +15,10 @@ public:
 	~UIComponentManager();
 	UIComponentManager() = delete;
 	//?!? UI를 로딩하고 Release 해야 두번 로딩이 일어나지 않는다 그러기 위해서는 레퍼런스 카운터를 달아서 몇번 로딩되었는지 체크해서 지워야 한다.
-	UIModule* CreateUIModule(const string& moduleName, const UILayout& layout, const string& mainUIName, unique_ptr<TextureResourceBinder> resBinder);
-	UIModule* CreateUIModule(const string& moduleName, const wstring& filename, unique_ptr<TextureResourceBinder> resBinder);	
+	UIModule* CreateUIModule(const string& moduleName, const UILayout& layout, const string& mainUIName, 
+		unique_ptr<IJsonStorage> storage, unique_ptr<TextureResourceBinder> resBinder);
+	UIModule* CreateUIModule(const string& moduleName, const wstring& filename, 
+		unique_ptr<IJsonStorage> storage, unique_ptr<TextureResourceBinder> resBinder);
 	bool ReleaseUIModule(const string& moduleName) noexcept;
 	bool CreateRenderTexture(UIComponent* c, const Rectangle& targetRect, size_t& outIndex, UINT64* outGfxMemOffset);
 	bool ReleaseRenderTexture(size_t index) noexcept;

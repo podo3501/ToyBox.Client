@@ -13,18 +13,12 @@ public:
 
 	template<typename T>
 	void Process(const string& key, T& data) noexcept;
-	template<HasProcessIO T>
-	static bool WriteJsonToFile(T& obj, const wstring& filename);
-	template<HasProcessIO T>
-	static bool ReadJsonFromFile(const wstring& filename, T& obj);
 
 private:
 	template <typename WriteFunc, typename ReadFunc>
 	void ProcessImpl(const string& key, WriteFunc&& writeFunc, ReadFunc&& readFunc) noexcept;
 	inline nlohmann::ordered_json& GetWrite() noexcept { return *m_wCurrent; }
 	inline nlohmann::json& GetRead() const noexcept { return *m_rCurrent; }
-	bool Write(const wstring& filename);
-	bool Read(const wstring& filename);
 
 	nlohmann::ordered_json m_write{};
 	nlohmann::json m_read{};

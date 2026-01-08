@@ -8,12 +8,14 @@
 struct IRenderer;
 enum class TextureSlice : int;
 struct ITextureLoad;
+struct IJsonStorage;
 class SerializerIO;
 class TextureResourceBinder : public ITextureBinder, private NoCopyNoMove
 {
 public:
 	~TextureResourceBinder();
-	TextureResourceBinder();
+	TextureResourceBinder() = delete;
+	explicit TextureResourceBinder(IJsonStorage* storage);
 	bool operator==(const TextureResourceBinder& o) const noexcept;
 
 	virtual bool LoadResources(ITextureLoad* load) override;
@@ -46,9 +48,11 @@ public:
 	void ProcessIO(SerializerIO& serializer);
 
 private:
+	IJsonStorage* m_storage{ nullptr };
 	wstring m_jsonFilename;
 	unordered_map<wstring, TextureFontInfo> m_bindingFontTable;
 	unordered_map<string, TextureSourceInfo> m_bindingTexTable;
 };
 //renderer가 nullptr 이면 텍스쳐를 메모리에 올리지 않는다.
-unique_ptr<TextureResourceBinder> CreateTextureResourceBinder(const wstring& jsonFilename = L"", IRenderer* renderer = nullptr);
+unique_ptr<TextureResourceBinder> CreateTextureResourceBinder(IJsonStorage* storage,
+	const wstring& jsonFilename = L"", IRenderer* renderer = nullptr);

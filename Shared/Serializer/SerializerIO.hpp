@@ -44,24 +44,3 @@ void SerializerIO::ProcessImpl(const string& key, WriteFunc&& writeFunc, ReadFun
 	else 
 		ProcessReadKey(*m_rCurrent, key, readFunc);
 }
-
-template<HasProcessIO T>
-bool SerializerIO::WriteJsonToFile(T& obj, const wstring& filename)
-{
-	nlohmann::ordered_json writeJ;
-	SerializeClassIO(obj, writeJ);
-	SerializerIO serializer{ writeJ };
-	if (!serializer.Write(filename)) return false;
-
-	return true;
-}
-
-template<HasProcessIO T>
-bool SerializerIO::ReadJsonFromFile(const wstring& filename, T& obj)
-{
-	SerializerIO serializer;
-	if (!serializer.Read(filename)) return false;
-	DeserializeClassIO(serializer.GetRead(), obj);
-
-	return true;
-}

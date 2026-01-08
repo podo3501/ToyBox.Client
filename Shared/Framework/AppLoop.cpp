@@ -4,7 +4,6 @@
 #include "Core/Public/IImguiRegistry.h"
 #include "Utils/Profiler.h"
 #include "EnvironmentLocator.h"
-#include "../Serializer/Storage/JsonStorageLocator.h"
 #include "Window/Window.h"
 #include "Window/WindowProcedure.h"
 
@@ -22,7 +21,6 @@ AppLoop::AppLoop(unique_ptr<Window> window, unique_ptr<IRenderer> renderer, IImg
     TracyStartupProfiler();
 
     m_environment = InitializeEnvironment(resPath, resolution);
-    m_jsonStorage = InitializeJsonStorage(StorageType::File);
 }
 
 bool AppLoop::Initialize()

@@ -1,6 +1,7 @@
 #pragma once
 
 struct IRenderer;
+struct IJsonStorage;
 struct ITextureRender;
 class TextureResourceBinder;
 class UINameGenerator;
@@ -13,7 +14,8 @@ class UIModule
 {
 public:
 	~UIModule();
-	UIModule();
+	UIModule() = delete;
+	explicit UIModule(unique_ptr<IJsonStorage> storage);
 	bool operator==(const UIModule& other) const noexcept;
 
 	bool SetupMainComponent(const UILayout& layout, const string& name, unique_ptr<TextureResourceBinder> resBinder);
@@ -34,6 +36,7 @@ private:
 	void ReloadDatas() noexcept;
 	bool Read(const wstring& filename = L"") noexcept;
 
+	unique_ptr<IJsonStorage> m_storage;
 	unique_ptr<TextureResourceBinder> m_resBinder;
 	unique_ptr<UINameGenerator> m_nameGen;
 	unique_ptr<Panel> m_mainPanel;

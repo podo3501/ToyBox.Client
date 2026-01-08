@@ -6,4 +6,8 @@ class FileStorage : public IJsonStorage
 public:
 	virtual unique_ptr<ostream> OpenWrite(const wstring& filename) override;
 	virtual unique_ptr<istream> OpenRead(const wstring& filename) override;
+
+	virtual unique_ptr<IJsonStorage> Clone() const override;
+	virtual bool Write(const wstring& filename, const nlohmann::ordered_json& data) override;
+	virtual bool Read(const wstring& filename, nlohmann::json& outData) override;
 };

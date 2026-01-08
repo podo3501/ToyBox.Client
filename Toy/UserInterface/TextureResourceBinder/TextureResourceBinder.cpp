@@ -1,11 +1,12 @@
 #include "pch.h"
 #include "TextureResourceBinder.h"
 #include "IRenderer.h"
-#include "Shared/Serializer/SerializerIO.h"
+#include "Shared/Serializer/JsonObjectIO.h"
 #include "../UIComponent/UIUtility.h"
 
 TextureResourceBinder::~TextureResourceBinder() = default;
-TextureResourceBinder::TextureResourceBinder()
+TextureResourceBinder::TextureResourceBinder(IJsonStorage* storage) :
+    m_storage{ storage }
 {}
 
 bool TextureResourceBinder::operator==(const TextureResourceBinder& o) const noexcept
@@ -30,7 +31,7 @@ bool TextureResourceBinder::LoadResources(ITextureLoad* load)
 
 bool TextureResourceBinder::Load(const wstring& jsonFilename)
 {
-    ReturnIfFalse(SerializerIO::ReadJsonFromFile(jsonFilename, *this));
+    ReturnIfFalse(JsonObjectIO::Load(*this, m_storage, jsonFilename));
     m_jsonFilename = jsonFilename;
 
     return true;
@@ -38,7 +39,7 @@ bool TextureResourceBinder::Load(const wstring& jsonFilename)
 
 bool TextureResourceBinder::Save(const wstring& jsonFilename)
 {
-    ReturnIfFalse(SerializerIO::WriteJsonToFile(*this, jsonFilename));
+    ReturnIfFalse(JsonObjectIO::Save(*this, m_storage, jsonFilename));
     m_jsonFilename = jsonFilename;
 
     return true;
@@ -219,9 +220,9 @@ void TextureResourceBinder::ProcessIO(SerializerIO& serializer)
 
 /////////////////////////////////////////////////////////////////////////
 
-unique_ptr<TextureResourceBinder> CreateTextureResourceBinder(const wstring& jsonFilename, IRenderer* renderer)
+unique_ptr<TextureResourceBinder> CreateTextureResourceBinder(IJsonStorage* storage, const wstring& jsonFilename, IRenderer* renderer)
 {
-    auto resBinder = make_unique<TextureResourceBinder>();
+    auto resBinder = make_unique<TextureResourceBinder>(storage);
     if (jsonFilename.empty()) return resBinder;
 
     if (!resBinder->Load(jsonFilename)) 

@@ -55,6 +55,9 @@
     <Filter Include="UserInterface\Serializer">
       <UniqueIdentifier>{8bf33769-5859-4c05-9e5a-303b172cafd2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UserInterface\Serializer\Format">
+      <UniqueIdentifier>{d3507ed3-7feb-4083-a3dc-c2e3ac25177b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -272,11 +275,11 @@
     <ClInclude Include="UserInterface\Serializer\ClassSerializeIO.h">
       <Filter>UserInterface\Serializer</Filter>
     </ClInclude>
-    <ClInclude Include="UserInterface\Serializer\KeyConverter.h">
-      <Filter>UserInterface\Serializer</Filter>
+    <ClInclude Include="UserInterface\Serializer\Format\KeyConverter.h">
+      <Filter>UserInterface\Serializer\Format</Filter>
     </ClInclude>
-    <ClInclude Include="UserInterface\Serializer\Traits.h">
-      <Filter>UserInterface\Serializer</Filter>
+    <ClInclude Include="UserInterface\Serializer\Format\Traits.h">
+      <Filter>UserInterface\Serializer\Format</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -459,11 +462,11 @@
     <ClCompile Include="UserInterface\Serializer\ClassSerializeIO.cpp">
       <Filter>UserInterface\Serializer</Filter>
     </ClCompile>
-    <ClCompile Include="UserInterface\Serializer\KeyConverter.cpp">
-      <Filter>UserInterface\Serializer</Filter>
+    <ClCompile Include="UserInterface\Serializer\Format\KeyConverter.cpp">
+      <Filter>UserInterface\Serializer\Format</Filter>
     </ClCompile>
-    <ClCompile Include="UserInterface\Serializer\Traits.cpp">
-      <Filter>UserInterface\Serializer</Filter>
+    <ClCompile Include="UserInterface\Serializer\Format\Traits.cpp">
+      <Filter>UserInterface\Serializer\Format</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

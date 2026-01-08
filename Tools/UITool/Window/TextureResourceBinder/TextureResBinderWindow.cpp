@@ -4,6 +4,7 @@
 #include "EditSourceTexture.h"
 #include "Window/Utils/Common.h"
 #include "Core/Public/IImguiRegistry.h"
+#include "Shared/Serializer/Storage/IJsonStorage.h"
 #include "Shared/Utils/StringExt.h"
 #include "Toy/Locator/InputLocator.h"
 #include "Toy/UserInterface/UIComponent/Components/RenderTexture.h"
@@ -20,6 +21,7 @@ TextureResBinderWindow::TextureResBinderWindow(IRenderer* renderer, IImguiRegist
     InnerWindow{ "empty" },
     m_renderer{ renderer },
     m_imguiRegistry{ imguiRegistry },
+    m_storage{ CreateJsonStorage(StorageType::File) },
     m_sourceTexture{ nullptr },
     m_editFontTexture{ make_unique<EditFontTexture>() },
     m_editSourceTexture{ make_unique<EditSourceTexture>(renderer, this) }
@@ -35,7 +37,7 @@ void TextureResBinderWindow::SetTexture(PatchTextureStd1* pTex1) noexcept
 
 bool TextureResBinderWindow::Create(const wstring& filename)
 {
-    m_resBinder = CreateTextureResourceBinder(filename);
+    m_resBinder = CreateTextureResourceBinder(m_storage.get(), filename);
     ReturnIfFalse(m_resBinder);
     m_cmdHistory = make_unique<TexResCommandHistory>(m_resBinder.get());
 

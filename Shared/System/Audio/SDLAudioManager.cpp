@@ -1,10 +1,10 @@
 #include "pch.h"
 #include "SDLAudioManager.h"
-#include "ISoundTableReader.h"
 #include "EffectSound.h"
 #include "NormalSound.h"
 #include "SDL3/SDL_init.h"
 #include "Shared/Framework/EnvironmentLocator.h"
+#include "Shared/System/Audio/SoundTableReader.h"
 
 struct AudioGroup
 {
@@ -19,7 +19,7 @@ SDLAudioManager::~SDLAudioManager()
 	SDL_Quit();
 }
 
-SDLAudioManager::SDLAudioManager(unique_ptr<ISoundTableReader> soundReader) :
+SDLAudioManager::SDLAudioManager(unique_ptr<SoundTableReader> soundReader) :
 	m_reader{ move(soundReader) },
 	m_effectSound{ make_unique<EffectSound>() },
 	m_normalSound{ make_unique<NormalSound>() }
@@ -124,7 +124,7 @@ void SDLAudioManager::Update() noexcept
 	m_effectSound->Update();
 }
 
-unique_ptr<IAudioManager> CreateAudioManager(unique_ptr<ISoundTableReader> soundReader)
+unique_ptr<IAudioManager> CreateAudioManager(unique_ptr<SoundTableReader> soundReader)
 {
 	auto audioManager = make_unique<SDLAudioManager>(move(soundReader));
 	if(!audioManager->Initialize()) return nullptr;

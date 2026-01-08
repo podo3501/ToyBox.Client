@@ -1,5 +1,6 @@
 #pragma once
 
+struct IJsonStorage;
 class SerializerIO;
 
 namespace Tool
@@ -27,6 +28,7 @@ namespace Tool
 		void ProcessIO(SerializerIO& serializer);
 
 	private:
+		static unique_ptr<IJsonStorage> m_storage;
 		static ResolutionType m_resolutionType;
 		static Config* m_Instance;
 	};

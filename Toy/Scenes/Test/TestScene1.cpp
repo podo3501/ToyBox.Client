@@ -7,6 +7,7 @@
 #include "UserInterface/UIModule.h"
 #include "UserInterface/TextureResourceBinder/TextureResourceBinder.h"
 #include "TestScene2.h"
+#include "Shared/Serializer/Storage/IJsonStorage.h"
 
 TestScene1::~TestScene1() = default;
 TestScene1::TestScene1(IRenderer* renderer) :
@@ -15,8 +16,9 @@ TestScene1::TestScene1(IRenderer* renderer) :
 
 bool TestScene1::Enter()
 {
-	auto texResBinder = CreateTextureResourceBinder(L"UI/SampleTexture/SampleTextureBinder.json", GetRenderer());
-	m_uiModule = CreateUIModule("Test1", L"/Scene/Test/TestScene1.json", move(texResBinder));
+	auto storage = CreateJsonStorage(StorageType::File);
+	auto texResBinder = CreateTextureResourceBinder(storage.get(), L"UI/SampleTexture/SampleTextureBinder.json", GetRenderer());
+	m_uiModule = CreateUIModule("Test1", L"/Scene/Test/TestScene1.json", move(storage), move(texResBinder));
 
 	//씬이 시작될때 등록하고 씬이 나갈때 해제한다.
 	//여기서 하면 씬 이름까지 넣어줘야 한다.

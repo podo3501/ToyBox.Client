@@ -1,6 +1,7 @@
 #pragma once
 #include "../Scene.h"
 
+struct IJsonStorage;
 class UIComponent;
 class UIModule;
 class ComponentTestScene : public Scene
@@ -18,6 +19,5 @@ private:
 	bool LoadResources();
 	bool AttachComponentToPanel(unique_ptr<UIComponent> component, const XMINT2& position) const noexcept;
 
-	//unique_ptr<UIModule> m_uiModule;
 	UIModule* m_uiModule{ nullptr };
 };

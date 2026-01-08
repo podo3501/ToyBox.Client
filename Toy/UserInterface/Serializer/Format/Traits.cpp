@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Traits.h"
-#include "../UIComponent/UIType.h"
-#include "Shared/Serializer/Traits/TraitsHelper.hpp"
+#include "../../UIComponent/UIType.h"
+#include "Shared/Serializer/Format/TraitsHelper.hpp"
 
 nlohmann::ordered_json JsonTraitsBase<Origin>::SerializeToJson(const Origin& data) { return EnumToString(data); }
 Origin JsonTraitsBase<Origin>::DeserializeFromJson(const nlohmann::json& dataJ)

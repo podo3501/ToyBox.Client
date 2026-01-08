@@ -1,5 +1,6 @@
 #pragma once
 
+struct IJsonStorage;
 class FileTab;
 class SerializerIO;
 
@@ -10,6 +11,7 @@ class RecentFiles
     static constexpr const wchar_t* RecentFilename = L"Tool/OpenRecentFiles.json";
 
 public:
+    ~RecentFiles();
     RecentFiles();
 
     void AddFile(const wstring& filename);
@@ -20,6 +22,7 @@ public:
 private:
     void ShowMoreMenu();
 
-    deque<wstring> m_recentFiles{};
-    wstring m_file{};
+    unique_ptr<IJsonStorage> m_storage;
+    deque<wstring> m_recentFiles;
+    wstring m_file;
 };

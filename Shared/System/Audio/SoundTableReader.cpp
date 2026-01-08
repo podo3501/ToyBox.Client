@@ -3,27 +3,25 @@
 #include "SoundTraits.h"
 #include "AudioTypeHelpers.h"
 #include "Shared/Framework/EnvironmentLocator.h"
-#include "Shared/Serializer/SerializerIO.h"
+#include "Shared/Serializer/JsonObjectIO.h"
 
-struct SoundInfoImpl : public SoundInfo
+void SoundInfo::ProcessIO(SerializerIO& serializer)
 {
-	void ProcessIO(SerializerIO& serializer)
-	{
-		serializer.Process("Filename", filename);
-		serializer.Process("Group", groupID);
-		serializer.Process("Volume", volume);
-	}
-};
+	serializer.Process("Filename", filename);
+	serializer.Process("Group", groupID);
+	serializer.Process("Volume", volume);
+}
 
 /////////////////////////////////////////////////////
 
 SoundTableReader::~SoundTableReader() = default;
-SoundTableReader::SoundTableReader() = default;
+SoundTableReader::SoundTableReader(unique_ptr<IJsonStorage> storage) :
+	m_storage{ move(storage) }
+{}
 
 bool SoundTableReader::Read(const wstring& filename)
 {
-	auto fullFilename = GetResourceFullFilenameW(filename);
-	return SerializerIO::ReadJsonFromFile(fullFilename, *this);
+	return JsonObjectIO::Load(*this, m_storage.get(), filename);
 }
 
 SoundInfo* SoundTableReader::GetInfo(const string& index) noexcept
@@ -37,9 +35,4 @@ SoundInfo* SoundTableReader::GetInfo(const string& index) noexcept
 void SoundTableReader::ProcessIO(SerializerIO& serializer)
 {
 	serializer.Process("Infos", m_infos);
-}
-
-unique_ptr<ISoundTableReader> CreateSoundTableReader()
-{
-	return make_unique<SoundTableReader>();
 }

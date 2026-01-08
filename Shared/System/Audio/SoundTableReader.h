@@ -1,20 +1,30 @@
 #pragma once
-#include "ISoundTableReader.h"
+#include "Shared/System/Public/AudioTypes.h"
 
-struct SoundInfoImpl;
+struct IJsonStorage;
 class SerializerIO;
 enum class AudioGroupID;
-class SoundTableReader : public ISoundTableReader
+
+struct SoundInfo
+{
+	void ProcessIO(SerializerIO& serializer);
+
+	string filename{};
+	AudioGroupID groupID{ AudioGroupID::None };
+	float volume{ 0.f };
+};
+
+class SoundTableReader
 {
 public:
 	~SoundTableReader();
-	SoundTableReader();
-	virtual bool Read(const wstring& filename) override;
-	virtual SoundInfo* GetInfo(const string& index) noexcept override;
-	virtual void ProcessIO(SerializerIO& serializer) override;
+	SoundTableReader() = delete;
+	explicit SoundTableReader(unique_ptr<IJsonStorage> storage);
+	bool Read(const wstring& filename);
+	SoundInfo* GetInfo(const string& index) noexcept;
+	void ProcessIO(SerializerIO& serializer);
 
 private:
-	unordered_map<string, SoundInfoImpl> m_infos;
+	unique_ptr<IJsonStorage> m_storage;
+	unordered_map<string, SoundInfo> m_infos;
 };
-
-

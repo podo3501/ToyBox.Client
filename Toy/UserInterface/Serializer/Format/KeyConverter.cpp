@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "KeyConverter.h"
-#include "../UIComponent/UIType.h"
+#include "../../UIComponent/UIType.h"
 
 string KeyConverter<InteractState>::ToKey(const InteractState& state) { return EnumToString(state); }
 InteractState KeyConverter<InteractState>::FromKey(const string& key) { return *StringToEnum<InteractState>(key); }

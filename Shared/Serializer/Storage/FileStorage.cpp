@@ -20,3 +20,29 @@ unique_ptr<istream> FileStorage::OpenRead(const wstring& filename)
         return nullptr;
     return file;
 }
+
+unique_ptr<IJsonStorage> FileStorage::Clone() const
+{
+    return unique_ptr<FileStorage>(new FileStorage(*this));
+}
+
+inline static bool IsJsonFile(const wstring& filename) { return filesystem::path(filename).extension() == ".json"; }
+bool FileStorage::Write(const wstring& filename, const nlohmann::ordered_json& data)
+{
+    ReturnIfFalse(IsJsonFile(filename));
+    auto file = OpenWrite(filename);
+    if (!file) return false;
+
+    (*file) << data.dump(4);
+    return true;
+}
+
+bool FileStorage::Read(const std::wstring& filename, nlohmann::json& outData)
+{
+    ReturnIfFalse(IsJsonFile(filename));
+    auto file = OpenRead(filename);
+    if (!file) return false;
+
+    outData = nlohmann::json::parse(*file);
+    return true;
+}

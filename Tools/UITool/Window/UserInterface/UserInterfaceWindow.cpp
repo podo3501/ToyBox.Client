@@ -12,6 +12,7 @@
 #include "Toy/UserInterface/TextureResourceBinder/TextureResourceBinder.h"
 #include "Toy/UserInterface/UIModule.h"
 #include "Core/Public/IImguiRegistry.h"
+#include "Shared/Serializer/Storage/IJsonStorage.h"
 #include "Shared/System/StepTimer.h"
 
 using namespace UITraverser;
@@ -62,15 +63,17 @@ bool UserInterfaceWindow::SetupProperty(UIModule* uiModule)
 
 bool UserInterfaceWindow::CreateScene(const XMUINT2& size)
 {
-	auto texResBinder = CreateTextureResourceBinder(L"UI/SampleTexture/SampleTextureBinder.json", m_renderer);
-	UIModule* module = CreateUIModule(GetName(), UILayout(size, Origin::LeftTop), "Main", move(texResBinder));
+	auto storage = CreateJsonStorage(StorageType::File);
+	auto texResBinder = CreateTextureResourceBinder(storage.get(), L"UI/SampleTexture/SampleTextureBinder.json", m_renderer);
+	UIModule* module = CreateUIModule(GetName(), UILayout(size, Origin::LeftTop), "Main", move(storage), move(texResBinder));
 	return SetupProperty(module);
 }
 
 bool UserInterfaceWindow::CreateScene(const wstring& filename)
 {
-	auto texResBinder = CreateTextureResourceBinder(L"UI/SampleTexture/SampleTextureBinder.json", m_renderer);
-	UIModule* module = CreateUIModule(GetName(), filename, move(texResBinder));
+	auto storage = CreateJsonStorage(StorageType::File);
+	auto texResBinder = CreateTextureResourceBinder(storage.get(), L"UI/SampleTexture/SampleTextureBinder.json", m_renderer);
+	UIModule* module = CreateUIModule(GetName(), filename, move(storage), move(texResBinder));
 	return SetupProperty(module);
 }
 

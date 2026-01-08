@@ -15,5 +15,5 @@ struct IAudioManager
 	//normal sound에 효과(반복, 페이드인 같은)를 주기 위한 함수를 만들어야 하는데, 현재는 필요 없어서 추후에 만들기로 한다.
 };
 
-struct ISoundTableReader;
-std::unique_ptr<IAudioManager> CreateAudioManager(unique_ptr<ISoundTableReader> soundReader);
+class SoundTableReader;
+std::unique_ptr<IAudioManager> CreateAudioManager(unique_ptr<SoundTableReader> soundReader);

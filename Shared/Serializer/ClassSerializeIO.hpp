@@ -1,6 +1,6 @@
 #pragma once
-#include "Traits/Traits.h"
-#include "KeyConverter/KeyConverter.hpp"
+#include "Format/Traits.h"
+#include "Format/KeyConverter.hpp"
 #include "Concepts.h"
 
 //새로운 ProcessIO를 사용하는 클래스를 만들면 여기서 Extension을 만들어서 사용한다.

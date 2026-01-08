@@ -6,14 +6,15 @@
 #include "UIComponent/Traverser/UITraverser.h"
 #include "UINameGenerator/UINameGenerator.h"
 #include "UIComponent/Components/Panel.h"
-#include "Shared/Serializer/SerializerIO.h"
+#include "Shared/Serializer/JsonObjectIO.h"
 #include "Shared/Utils/StlExt.h"
 
 using namespace UITraverser;
 using namespace UIDetailTraverser;
 
 UIModule::~UIModule() = default;
-UIModule::UIModule() :
+UIModule::UIModule(unique_ptr<IJsonStorage> storage) :
+	m_storage{ move(storage) },
 	m_nameGen{ make_unique<UINameGenerator>() },
 	m_mouseEventRouter{ make_unique<MouseEventRouter>() }
 {}
@@ -80,7 +81,7 @@ void UIModule::ProcessIO(SerializerIO& serializer)
 bool UIModule::Write(const wstring& filename) noexcept
 {
 	const wstring& curFilename = !filename.empty() ? filename : m_filename;
-	SerializerIO::WriteJsonToFile(*this, curFilename);
+	JsonObjectIO::Save(*this, m_storage.get(), curFilename);
 	m_filename = curFilename;
 
 	return true;
@@ -89,7 +90,7 @@ bool UIModule::Write(const wstring& filename) noexcept
 bool UIModule::Read(const wstring& filename) noexcept
 {
 	const wstring& curFilename = !filename.empty() ? filename : m_filename;
-	SerializerIO::ReadJsonFromFile(curFilename, *this);
+	JsonObjectIO::Load(*this, m_storage.get(), curFilename);
 	PropagateRoot(m_mainPanel.get()); //모든 컴포넌트들에 root를 지정.
 	m_mouseEventRouter->SetComponent(m_mainPanel.get());
 	m_filename = curFilename;

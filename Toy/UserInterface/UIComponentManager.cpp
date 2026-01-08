@@ -5,6 +5,7 @@
 #include "TextureResourceBinder/TextureResourceBinder.h"
 #include "UIComponent/UIComponent.h"
 #include "UIComponent/Traverser/UIDetailTraverser.h"
+#include "Shared/Serializer/Storage/IJsonStorage.h"
 #include "Shared/Utils/StlExt.h"
 
 UIComponentManager::~UIComponentManager() = default;
@@ -18,24 +19,24 @@ UIComponentManager::UIComponentManager(IRenderer* renderer, bool isTool) :
 		this->RenderTextureComponent(index, r); });
 }
 
-UIModule* UIComponentManager::CreateUIModule(const string& moduleName, const UILayout& layout,
-	const string& mainUIName, unique_ptr<TextureResourceBinder> resBinder)
+UIModule* UIComponentManager::CreateUIModule(const string& moduleName, const UILayout& layout, const string& mainUIName, 
+	unique_ptr<IJsonStorage> storage, unique_ptr<TextureResourceBinder> resBinder)
 {
 	if (m_uiModules.find(moduleName) != m_uiModules.end()) return nullptr;
 
-	auto [owner, module] = GetPtrs(make_unique<UIModule>());
+	auto [owner, module] = GetPtrs(make_unique<UIModule>(move(storage)));
 	if (!owner->SetupMainComponent(layout, mainUIName, move(resBinder))) return nullptr;
 	m_uiModules.insert({ moduleName, move(owner) });
 
 	return module;
 }
 
-UIModule* UIComponentManager::CreateUIModule(const string& moduleName,
-	const wstring& filename, unique_ptr<TextureResourceBinder> resBinder)
+UIModule* UIComponentManager::CreateUIModule(const string& moduleName, const wstring& filename, 
+	unique_ptr<IJsonStorage> storage, unique_ptr<TextureResourceBinder> resBinder)
 {
 	if (m_uiModules.find(moduleName) != m_uiModules.end()) return nullptr;
 
-	auto [owner, module] = GetPtrs(make_unique<UIModule>());
+	auto [owner, module] = GetPtrs(make_unique<UIModule>(move(storage)));
 	if (!owner->SetupMainComponent(filename, move(resBinder))) return nullptr;
 	m_uiModules.insert({ moduleName, move(owner) });
 

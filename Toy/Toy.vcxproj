@@ -253,8 +253,8 @@
     <ClInclude Include="UserInterface\InputEvent\MouseEventType.h" />
     <ClInclude Include="UserInterface\InputEvent\SoundTheme.h" />
     <ClInclude Include="UserInterface\Serializer\ClassSerializeIO.h" />
-    <ClInclude Include="UserInterface\Serializer\KeyConverter.h" />
-    <ClInclude Include="UserInterface\Serializer\Traits.h" />
+    <ClInclude Include="UserInterface\Serializer\Format\KeyConverter.h" />
+    <ClInclude Include="UserInterface\Serializer\Format\Traits.h" />
     <ClInclude Include="UserInterface\TextureResourceBinder\TextureBinderHelper.h" />
     <ClInclude Include="UserInterface\TextureResourceBinder\TextureFontInfo.h" />
     <ClInclude Include="UserInterface\TextureResourceBinder\TextureInfo.h" />
@@ -318,8 +318,8 @@
     <ClCompile Include="UserInterface\InputEvent\MouseEventRouter.cpp" />
     <ClCompile Include="UserInterface\InputEvent\SoundTheme.cpp" />
     <ClCompile Include="UserInterface\Serializer\ClassSerializeIO.cpp" />
-    <ClCompile Include="UserInterface\Serializer\KeyConverter.cpp" />
-    <ClCompile Include="UserInterface\Serializer\Traits.cpp" />
+    <ClCompile Include="UserInterface\Serializer\Format\KeyConverter.cpp" />
+    <ClCompile Include="UserInterface\Serializer\Format\Traits.cpp" />
     <ClCompile Include="UserInterface\TextureResourceBinder\TextureBinderHelper.cpp" />
     <ClCompile Include="UserInterface\TextureResourceBinder\TextureFontInfo.cpp" />
     <ClCompile Include="UserInterface\TextureResourceBinder\TextureInfo.cpp" />

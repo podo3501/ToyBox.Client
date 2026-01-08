@@ -3,6 +3,7 @@
 #include "IRenderer.h"
 #include "Shared/Utils/GeometryExt.h"
 #include "Shared/Framework/EnvironmentLocator.h"
+#include "Shared/Serializer/Storage/IJsonStorage.h"
 #include "Locator/UIComponentLocator.h"
 #include "UserInterface/UIModule.h"
 #include "UserInterface/UIComponent/Traverser/UITraverser.h"
@@ -27,8 +28,9 @@ bool ComponentTestScene::Enter()
     IRenderer* renderer = GetRenderer();
     UILayout layout{ GetSizeFromRectangle(GetRectResolution()) };
 
-    auto texResBinder = CreateTextureResourceBinder(L"UI/SampleTexture/SampleTextureBinder.json", renderer);
-    m_uiModule = CreateUIModule("ComponentTest", layout, "Main", move(texResBinder));
+    auto storage = CreateJsonStorage(StorageType::File);
+    auto texResBinder = CreateTextureResourceBinder(storage.get(), L"UI/SampleTexture/SampleTextureBinder.json", renderer);
+    m_uiModule = CreateUIModule("ComponentTest", layout, "Main", move(storage), move(texResBinder));
     return LoadResources();
 }
 
