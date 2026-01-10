@@ -1,7 +1,7 @@
 #pragma once
 
 struct IJsonStorage;
-class SerializerIO;
+class Serializer;
 
 namespace Tool
 {
@@ -25,7 +25,7 @@ namespace Tool
 		static ResolutionType GetResolution() noexcept;
 		static XMUINT2 GetResolutionInCoordinate() noexcept;
 
-		void ProcessIO(SerializerIO& serializer);
+		void ProcessIO(Serializer& serializer);
 
 	private:
 		static unique_ptr<IJsonStorage> m_storage;

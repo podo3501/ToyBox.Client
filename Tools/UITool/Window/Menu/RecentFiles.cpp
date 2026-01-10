@@ -2,7 +2,7 @@
 #include "RecentFiles.h"
 #include "FileTab.h"
 #include "Shared/Utils/StringExt.h"
-#include "Shared/Serializer/JsonObjectIO.h"
+#include "Shared/SerializerIO/JsonObjectIO.h"
 
 RecentFiles::~RecentFiles() = default;
 RecentFiles::RecentFiles() :
@@ -34,7 +34,7 @@ bool RecentFiles::OpenFile(FileTab& menuBar)
     return result;
 }
 
-void RecentFiles::ProcessIO(SerializerIO& serializer)
+void RecentFiles::ProcessIO(Serializer& serializer)
 {
     serializer.Process("RecentFiles", m_recentFiles);
 }

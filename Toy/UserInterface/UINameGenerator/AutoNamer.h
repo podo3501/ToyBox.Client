@@ -1,6 +1,6 @@
 #pragma once
 
-class SerializerIO;
+class Serializer;
 
 class AutoNamer //이름은 base, base_1... 즉, base_0 이라는 자동 이름은 없다.
 {
@@ -13,7 +13,7 @@ public:
     [[nodiscard]] pair<bool, bool> Recycle(int id) noexcept;
     inline bool IsDeletable() noexcept { return (m_nextID <= m_recycled.size()); }
     bool IsUsed(int id) const noexcept;
-    void ProcessIO(SerializerIO& serializer);
+    void ProcessIO(Serializer& serializer);
 
 private:
     inline bool HasBeenGenerated(int id) const noexcept { return id >= 0 && id < m_nextID; }

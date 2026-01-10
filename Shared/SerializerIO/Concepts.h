@@ -5,13 +5,13 @@
 #include <string>
 
 // SerializeIO 지원 여부 확인
-class SerializerIO;
+class Serializer;
 template<typename T>
 concept HasProcessIO =
-	requires(T t, SerializerIO& serializer) {
+	requires(T t, Serializer& serializer) {
 		{ t->ProcessIO(serializer) };   // 스마트 포인터용
 	} ||
-	requires(T t, SerializerIO& serializer) {
+	requires(T t, Serializer& serializer) {
 		{ t.ProcessIO(serializer) };    // 일반 객체용
 	};
 

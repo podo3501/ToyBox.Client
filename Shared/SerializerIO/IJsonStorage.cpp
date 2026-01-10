@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "IJsonStorage.h"
-#include "FileStorage.h"
-#include "MemoryStorage.h"
+#include "Storage/FileStorage.h"
+#include "Storage/MemoryStorage.h"
 
 unique_ptr<IJsonStorage> CreateJsonStorage(StorageType storageType)
 {

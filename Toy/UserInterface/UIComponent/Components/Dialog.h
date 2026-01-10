@@ -1,7 +1,7 @@
 #pragma once
 #include "../UIComponent.h"
 
-class SerializerIO;
+class Serializer;
 
 class Dialog : public UIComponent
 {

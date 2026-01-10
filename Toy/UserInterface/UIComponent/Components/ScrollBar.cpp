@@ -3,7 +3,7 @@
 #include "UserInterface/UIComponent/Traverser/UITraverser.h"
 #include "PatchTexture/PatchTextureStd/PatchTextureStd3.h"
 #include "TextureSwitcher.h"
-#include "Shared/Serializer/SerializerIO.h"
+#include "Shared/SerializerIO/Serializer.h"
 #include "Shared/Utils/GeometryExt.h"
 
 using namespace UITraverser;
@@ -145,7 +145,7 @@ bool ScrollBar::Update(const DX::StepTimer& timer) noexcept
 	return true;
 }
 
-void ScrollBar::ProcessIO(SerializerIO& serializer)
+void ScrollBar::ProcessIO(Serializer& serializer)
 {
 	UIComponent::ProcessIO(serializer);
 

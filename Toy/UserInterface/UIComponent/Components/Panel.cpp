@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Panel.h"
 #include "IRenderer.h"
-#include "Shared/Serializer/SerializerIO.h"
+#include "Shared/SerializerIO/Serializer.h"
 
 Panel::~Panel() = default;
 Panel::Panel()
@@ -26,7 +26,7 @@ bool Panel::Setup(const UILayout& layout)
     return true;
 }
 
-void Panel::ProcessIO(SerializerIO& serializer)
+void Panel::ProcessIO(Serializer& serializer)
 {
     UIComponent::ProcessIO(serializer);
 }

@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
-#include "SerializerIO.h"
-#include "Shared/Serializer/Storage/IJsonStorage.h"
+#include "Serializer.h"
+#include "Shared/SerializerIO/IJsonStorage.h"
 
 struct JsonObjectIO
 {
@@ -16,7 +16,7 @@ template<HasProcessIO T>
 bool JsonObjectIO::Save(T& obj, IJsonStorage* storage, const std::wstring& filename)
 {
 	nlohmann::ordered_json wData;
-	SerializeClassIO(obj, wData);
+	SerializeClass(obj, wData);
 	return storage->Write(filename, wData);
 }
 
@@ -25,7 +25,7 @@ bool JsonObjectIO::Load(T& obj, IJsonStorage* storage, const std::wstring& filen
 {
 	nlohmann::json rData;
 	ReturnIfFalse(storage->Read(filename, rData));
-	DeserializeClassIO(rData, obj);
+	DeserializeClass(rData, obj);
 
 	return true;
 }

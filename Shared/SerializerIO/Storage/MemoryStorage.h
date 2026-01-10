@@ -1,12 +1,9 @@
 #pragma once
-#include "IJsonStorage.h"
+#include "../IJsonStorage.h"
 
 class MemoryStorage : public IJsonStorage
 {
 public:
-	virtual unique_ptr<ostream> OpenWrite(const wstring& filename) override;
-	virtual unique_ptr<istream> OpenRead(const wstring& filename) override;
-
 	MemoryStorage() = default;
 	virtual unique_ptr<IJsonStorage> Clone() const override;
 	virtual bool Write(const wstring& filename, const nlohmann::ordered_json& data) override;
@@ -16,5 +13,8 @@ protected:
 	MemoryStorage(const MemoryStorage& o);
 
 private:
+	unique_ptr<ostream> OpenWrite(const wstring& filename);
+	unique_ptr<istream> OpenRead(const wstring& filename);
+
 	unordered_map<wstring, string> m_files;
 };

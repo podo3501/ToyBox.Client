@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "Config.h"
-#include "Shared/Serializer/JsonObjectIO.h"
+#include "Shared/SerializerIO/JsonObjectIO.h"
 
 using namespace Tool;
 
@@ -48,7 +48,7 @@ XMUINT2 Config::GetResolutionInCoordinate() noexcept
 	return XMUINT2{ 800, 600 };
 }
 
-void Config::ProcessIO(SerializerIO& serializer)
+void Config::ProcessIO(Serializer& serializer)
 {
 	serializer.Process("Resolution", m_resolutionType);
 }

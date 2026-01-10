@@ -2,7 +2,7 @@
 #include <memory>
 #include <string>
 #include "Shared/Framework/Locator.h"
-#include "Shared/Serializer/Storage/IJsonStorage.h"
+#include "Shared/SerializerIO/IJsonStorage.h"
 #include "Toy/UserInterface/UIComponentManager.h"
 #include "Toy/UserInterface/TextureResourceBinder/TextureResourceBinder.h"
 

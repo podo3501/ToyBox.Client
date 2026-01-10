@@ -2,13 +2,13 @@
 #include "nlohmann/json.hpp"
 #include "Concepts.h"
 
-class SerializerIO
+class Serializer
 {
 public:
-	virtual ~SerializerIO();
-	SerializerIO() noexcept;
-	explicit SerializerIO(nlohmann::ordered_json& write) noexcept;
-	explicit SerializerIO(const nlohmann::json& read) noexcept;
+	virtual ~Serializer();
+	Serializer() noexcept;
+	explicit Serializer(nlohmann::ordered_json& write) noexcept;
+	explicit Serializer(const nlohmann::json& read) noexcept;
 	bool IsWrite();
 
 	template<typename T>
@@ -26,5 +26,5 @@ private:
 	nlohmann::json* m_rCurrent{ nullptr }; //만들때  생성자에 readJ를 넣어주면 m_read는 안쓰고 내부적으로 readJ로 돌아간다.
 };
 
-#include "SerializerIO.hpp"
+#include "Serializer.hpp"
 

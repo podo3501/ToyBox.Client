@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "AutoNamer.h"
 #include "Shared/Utils/StlExt.h"
-#include "Shared/Serializer/SerializerIO.h"
+#include "Shared/SerializerIO/Serializer.h"
 
 AutoNamer::~AutoNamer() = default;
 AutoNamer::AutoNamer() = default;
@@ -43,7 +43,7 @@ bool AutoNamer::IsUsed(int id) const noexcept
     return generated && notRecycled;
 }
 
-void AutoNamer::ProcessIO(SerializerIO& serializer)
+void AutoNamer::ProcessIO(Serializer& serializer)
 {
     serializer.Process("Namers", m_nextID);
     serializer.Process("Recycled", m_recycled);

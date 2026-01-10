@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "TextureResourceBinder.h"
 #include "IRenderer.h"
-#include "Shared/Serializer/JsonObjectIO.h"
+#include "Shared/SerializerIO/JsonObjectIO.h"
 #include "../UIComponent/UIUtility.h"
 
 TextureResourceBinder::~TextureResourceBinder() = default;
@@ -212,7 +212,7 @@ vector<TextureSourceInfo> TextureResourceBinder::GetTotalAreas(const wstring& fi
     return filteredTextures;
 }
 
-void TextureResourceBinder::ProcessIO(SerializerIO& serializer)
+void TextureResourceBinder::ProcessIO(Serializer& serializer)
 {
     serializer.Process("BindingFontTable", m_bindingFontTable);
     serializer.Process("BindingTexTable", m_bindingTexTable);

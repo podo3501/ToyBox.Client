@@ -2,8 +2,8 @@
 #include "UILayout.h"
 #include "UIType.h"
 #include "Shared/Utils/GeometryExt.h"
-#include "Shared/Serializer/SerializerIO.h"
-#include "../Serializer/Format/Traits.h"
+#include "Shared/SerializerIO/Serializer.h"
+#include "../SerializerIO/Format/Traits.h"
 
 UILayout::~UILayout() = default;
 UILayout::UILayout() :
@@ -70,7 +70,7 @@ XMINT2 UILayout::GetPosition(const XMINT2& relativePosition) const noexcept
 	return relativePosition - m_originPoint;
 }
 
-void UILayout::ProcessIO(SerializerIO& serializer)
+void UILayout::ProcessIO(Serializer& serializer)
 {
 	serializer.Process("Size", m_size);
 	serializer.Process("Origin", m_origin);

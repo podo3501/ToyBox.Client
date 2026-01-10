@@ -7,7 +7,7 @@
 #include "UserInterface/UIModule.h"
 #include "UserInterface/TextureResourceBinder/TextureResourceBinder.h"
 #include "TestScene2.h"
-#include "Shared/Serializer/Storage/IJsonStorage.h"
+#include "Shared/SerializerIO/IJsonStorage.h"
 
 TestScene1::~TestScene1() = default;
 TestScene1::TestScene1(IRenderer* renderer) :

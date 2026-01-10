@@ -2,7 +2,7 @@
 #include "TextureFontInfo.h"
 #include "IRenderer.h"
 #include "Shared/Framework/EnvironmentLocator.h"
-#include "Shared/Serializer/SerializerIO.h"
+#include "Shared/SerializerIO/Serializer.h"
 
 TextureFontInfo::~TextureFontInfo() = default;
 TextureFontInfo::TextureFontInfo() noexcept = default;
@@ -32,7 +32,7 @@ bool TextureFontInfo::LoadResource(ITextureLoad* load)
     return true;
 }
 
-void TextureFontInfo::ProcessIO(SerializerIO& serializer)
+void TextureFontInfo::ProcessIO(Serializer& serializer)
 {
     serializer.Process("Filename", filename);
 }

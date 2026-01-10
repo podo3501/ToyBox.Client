@@ -5,7 +5,7 @@
 #include "Locator/UIComponentLocator.h"
 #include "../../UIComponent/Traverser/UITraverser.h"
 #include "Shared/Utils/GeometryExt.h"
-#include "Shared/Serializer/SerializerIO.h"
+#include "Shared/SerializerIO/Serializer.h"
 
 using namespace UITraverser;
 
@@ -108,7 +108,7 @@ void RenderTexture::Render(ITextureRender* render) const
 	return;
 }
 
-void RenderTexture::ProcessIO(SerializerIO& serializer)
+void RenderTexture::ProcessIO(Serializer& serializer)
 {
 	UIComponent::ProcessIO(serializer);
 

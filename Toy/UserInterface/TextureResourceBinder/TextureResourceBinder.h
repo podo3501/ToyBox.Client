@@ -9,7 +9,7 @@ struct IRenderer;
 enum class TextureSlice : int;
 struct ITextureLoad;
 struct IJsonStorage;
-class SerializerIO;
+class Serializer;
 class TextureResourceBinder : public ITextureBinder, private NoCopyNoMove
 {
 public:
@@ -45,7 +45,7 @@ public:
 	vector<wstring> GetTextureFiles() const noexcept;
 
 	vector<TextureSourceInfo> GetTotalAreas(const wstring& filename) const noexcept;
-	void ProcessIO(SerializerIO& serializer);
+	void ProcessIO(Serializer& serializer);
 
 private:
 	IJsonStorage* m_storage{ nullptr };

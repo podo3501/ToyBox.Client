@@ -2,7 +2,7 @@
 #include "Container.h"
 #include "Locator/InputLocator.h"
 #include "../Traverser/UITraverser.h"
-#include "Shared/Serializer/SerializerIO.h"
+#include "Shared/SerializerIO/Serializer.h"
 #include "Shared/Utils/GeometryExt.h"
 #include "Shared/Utils/StlExt.h"
 
@@ -98,7 +98,7 @@ void Container::SetState(InteractState curState) noexcept
 	m_state = curState;
 }
 
-void Container::ProcessIO(SerializerIO& serializer)
+void Container::ProcessIO(Serializer& serializer)
 {
 	UIComponent::ProcessIO(serializer);
 

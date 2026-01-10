@@ -3,7 +3,7 @@
 #include "Shared/Framework/EnvironmentLocator.h"
 #include <fstream>
 
-unique_ptr<ostream> FileStorage::OpenWrite(const wstring& filename)
+static unique_ptr<ostream> OpenWrite(const wstring& filename)
 {
     auto path = GetResourceFullFilenameW(filename);
     auto file = make_unique<ofstream>(path);
@@ -12,7 +12,7 @@ unique_ptr<ostream> FileStorage::OpenWrite(const wstring& filename)
     return file;
 }
 
-unique_ptr<istream> FileStorage::OpenRead(const wstring& filename)
+static unique_ptr<istream> OpenRead(const wstring& filename)
 {
     auto path = GetResourceFullFilenameW(filename);
     auto file = make_unique<ifstream>(path);

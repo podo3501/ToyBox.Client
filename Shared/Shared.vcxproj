@@ -29,17 +29,17 @@
     <ClInclude Include="Framework\Initializer\GoogleTest.h" />
     <ClInclude Include="Framework\Locator.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="Serializer\ClassSerializeIO.hpp" />
-    <ClInclude Include="Serializer\Concepts.h" />
-    <ClInclude Include="Serializer\Format\KeyConverter.hpp" />
-    <ClInclude Include="Serializer\Format\Traits.h" />
-    <ClInclude Include="Serializer\Format\TraitsHelper.hpp" />
-    <ClInclude Include="Serializer\JsonObjectIO.h" />
-    <ClInclude Include="Serializer\SerializerIO.h" />
-    <ClInclude Include="Serializer\SerializerIO.hpp" />
-    <ClInclude Include="Serializer\Storage\FileStorage.h" />
-    <ClInclude Include="Serializer\Storage\IJsonStorage.h" />
-    <ClInclude Include="Serializer\Storage\MemoryStorage.h" />
+    <ClInclude Include="SerializerIO\ClassSerialize.hpp" />
+    <ClInclude Include="SerializerIO\Concepts.h" />
+    <ClInclude Include="SerializerIO\Format\KeyConverter.hpp" />
+    <ClInclude Include="SerializerIO\Format\Traits.h" />
+    <ClInclude Include="SerializerIO\Format\TraitsHelper.hpp" />
+    <ClInclude Include="SerializerIO\IJsonStorage.h" />
+    <ClInclude Include="SerializerIO\JsonObjectIO.h" />
+    <ClInclude Include="SerializerIO\Serializer.h" />
+    <ClInclude Include="SerializerIO\Serializer.hpp" />
+    <ClInclude Include="SerializerIO\Storage\FileStorage.h" />
+    <ClInclude Include="SerializerIO\Storage\MemoryStorage.h" />
     <ClInclude Include="System\Audio\AudioTypeHelpers.h" />
     <ClInclude Include="System\Audio\EffectSoundBuffer.h" />
     <ClInclude Include="System\Audio\EffectSound.h" />
@@ -78,12 +78,12 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Serializer\Format\KeyConverter.cpp" />
-    <ClCompile Include="Serializer\Format\Traits.cpp" />
-    <ClCompile Include="Serializer\SerializerIO.cpp" />
-    <ClCompile Include="Serializer\Storage\FileStorage.cpp" />
-    <ClCompile Include="Serializer\Storage\IJsonStorage.cpp" />
-    <ClCompile Include="Serializer\Storage\MemoryStorage.cpp" />
+    <ClCompile Include="SerializerIO\Format\KeyConverter.cpp" />
+    <ClCompile Include="SerializerIO\Format\Traits.cpp" />
+    <ClCompile Include="SerializerIO\IJsonStorage.cpp" />
+    <ClCompile Include="SerializerIO\Serializer.cpp" />
+    <ClCompile Include="SerializerIO\Storage\FileStorage.cpp" />
+    <ClCompile Include="SerializerIO\Storage\MemoryStorage.cpp" />
     <ClCompile Include="System\Audio\EffectSoundBuffer.cpp" />
     <ClCompile Include="System\Audio\EffectSound.cpp" />
     <ClCompile Include="System\Audio\NormalSound.cpp" />

@@ -7,9 +7,9 @@
 //SerializeClassIO 및 DeserializeClassIO 함수를 각 클래스에 맞게 정의해서 파일을 만든다.
 
 template<typename T>
-inline void SerializeClassIO_GenerateJson(T& data, nlohmann::ordered_json& outWriteJ)
+inline void SerializeClass_GenerateJson(T& data, nlohmann::ordered_json& outWriteJ)
 {
-	SerializerIO serializer{ outWriteJ };
+	Serializer serializer{ outWriteJ };
 	if constexpr (RawPointerLike<T>)
 		data->ProcessIO(serializer);
 	else
@@ -17,19 +17,19 @@ inline void SerializeClassIO_GenerateJson(T& data, nlohmann::ordered_json& outWr
 }
 
 template<typename T>
-void SerializeClassIO_Internal(T& data, nlohmann::ordered_json& j) { SerializeClassIO_GenerateJson(data, j); }
+void SerializeClass_Internal(T& data, nlohmann::ordered_json& j) { SerializeClass_GenerateJson(data, j); }
 
 template<typename T>
-void SerializeClassIO(T& data, nlohmann::ordered_json& j) { SerializeClassIO_Internal(data, j); }
+void SerializeClass(T& data, nlohmann::ordered_json& j) { SerializeClass_Internal(data, j); }
 template<typename T>
-void SerializeClassIO(unique_ptr<T>& data, nlohmann::ordered_json& j) { SerializeClassIO_Internal(*data, j); }
+void SerializeClass(unique_ptr<T>& data, nlohmann::ordered_json& j) { SerializeClass_Internal(*data, j); }
 
 ///////////////////////////////////////////////////////
 
 template<typename T>
-void DeserializeClassIO_Internal(const nlohmann::json& outReadJ, T& data)
+void DeserializeClass_Internal(const nlohmann::json& outReadJ, T& data)
 {
-	SerializerIO serializer{ outReadJ };
+	Serializer serializer{ outReadJ };
 	if constexpr (RawPointerLike<T>)
 		data->ProcessIO(serializer);
 	else 
@@ -37,16 +37,16 @@ void DeserializeClassIO_Internal(const nlohmann::json& outReadJ, T& data)
 }
 
 template<typename T>
-void DeserializeClassIO(const nlohmann::json& j, T& data)
+void DeserializeClass(const nlohmann::json& j, T& data)
 {
-	DeserializeClassIO_Internal(j, data);
+	DeserializeClass_Internal(j, data);
 }
 
 template<typename T>
-void DeserializeClassIO(const nlohmann::json& j, unique_ptr<T>& data)
+void DeserializeClass(const nlohmann::json& j, unique_ptr<T>& data)
 {
 	data = make_unique<T>();
-	DeserializeClassIO_Internal(j, *data);
+	DeserializeClass_Internal(j, *data);
 }
 
 template<typename T>
@@ -55,7 +55,7 @@ nlohmann::ordered_json SerializeByType(T& v)
 	if constexpr (HasProcessIO<T>)
 	{
 		nlohmann::ordered_json j{};
-		SerializeClassIO(v, j);
+		SerializeClass(v, j);
 		return j;
 	}
 	else
@@ -68,7 +68,7 @@ T DeserializeByType(const nlohmann::json& v)
 	if constexpr (HasProcessIO<T>)
 	{
 		T data{};
-		DeserializeClassIO(v, data);
+		DeserializeClass(v, data);
 		return data;
 	}
 	else

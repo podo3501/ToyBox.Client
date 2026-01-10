@@ -1,7 +1,7 @@
 #pragma once
 #include "Shared/Utils/StlTypeExt.hpp"
 
-class SerializerIO;
+class Serializer;
 class AutoNamer;
 class ComponentNameGenerator
 {
@@ -16,7 +16,7 @@ public:
     string MakeNameFromBase(const string& name) noexcept;
     bool Remove(const string& name) noexcept;
     bool IsUnusedName(string_view name) const noexcept;
-    void ProcessIO(SerializerIO& serializer);
+    void ProcessIO(Serializer& serializer);
 
 private:
     unordered_svmap<string, unique_ptr<AutoNamer>> m_namers;

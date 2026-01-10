@@ -1,7 +1,7 @@
 #pragma once
 
 enum class Origin;
-class SerializerIO;
+class Serializer;
 
 class UILayout
 {
@@ -28,7 +28,7 @@ public:
 
 	bool IsArea(const XMINT2& pos) const noexcept;
 
-	void ProcessIO(SerializerIO& serializer);
+	void ProcessIO(Serializer& serializer);
 
 private:
 	XMINT2 GetOriginPoint(Origin origin) const noexcept;

@@ -2,7 +2,7 @@
 #include "PatchTextureLite3.h"
 #include "PatchTextureLite1.h"
 #include "UserInterface/UIComponent/UIUtility.h"
-#include "Shared/Serializer/SerializerIO.h"
+#include "Shared/SerializerIO/Serializer.h"
 
 PatchTextureLite3::~PatchTextureLite3() = default;
 PatchTextureLite3::PatchTextureLite3() noexcept :
@@ -77,7 +77,7 @@ Rectangle PatchTextureLite3::GetSource() const noexcept
 	return tex1->GetSource();
 }
 
-void PatchTextureLite3::ProcessIO(SerializerIO& serializer)
+void PatchTextureLite3::ProcessIO(Serializer& serializer)
 {
 	UIComponent::ProcessIO(serializer);
 	serializer.Process("DirectionType", m_dirType);

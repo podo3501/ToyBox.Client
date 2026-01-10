@@ -7,7 +7,7 @@
 #include "UserInterface/UIModule.h"
 #include "UserInterface/TextureResourceBinder/TextureResourceBinder.h"
 #include "TestScene1.h"
-#include "Shared/Serializer/Storage/IJsonStorage.h"
+#include "Shared/SerializerIO/IJsonStorage.h"
 
 TestScene2::TestScene2(IRenderer* renderer) :
 	Scene(renderer)

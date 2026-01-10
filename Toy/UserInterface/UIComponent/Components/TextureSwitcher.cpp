@@ -1,11 +1,11 @@
 #include "pch.h"
 #include "TextureSwitcher.h"
-#include "Shared/Serializer/SerializerIO.h"
+#include "Shared/SerializerIO/Serializer.h"
 #include "Shared/Utils/StlExt.h"
 #include "Locator/EventDispatcherLocator.h"
 #include "PatchTexture/PatchTextureLite/PatchTextureLite.h"
 #include "UserInterface/UIComponent/Traverser/UITraverser.h"
-#include "UserInterface/Serializer/Format/KeyConverter.h"
+#include "UserInterface/SerializerIO/Format/KeyConverter.h"
 #include "../../TextureResourceBinder/TextureResourceBinder.h"
 
 using enum InteractState;
@@ -191,7 +191,7 @@ void TextureSwitcher::SetState(InteractState state) noexcept
 	m_state = state;
 }
 
-void TextureSwitcher::ProcessIO(SerializerIO& serializer)
+void TextureSwitcher::ProcessIO(Serializer& serializer)
 {
 	UIComponent::ProcessIO(serializer);
 	serializer.Process("StateKey", m_stateKeys);

@@ -2,7 +2,7 @@
 #include "Shared/Utils/StlTypeExt.hpp"
 #include "Shared/Foundation/NoCopyNoMove.h"
 
-class SerializerIO;
+class Serializer;
 class AutoNamer;
 class ComponentNameGenerator;
 enum class ComponentID;
@@ -26,7 +26,7 @@ public:
     bool RemoveName(const string& region, const string& name) noexcept;
     bool IsUnusedName(string_view region, string_view name) noexcept;
 
-    void ProcessIO(SerializerIO& serializer);
+    void ProcessIO(Serializer& serializer);
 
 private:
     ComponentNameGenerator* GetComponentNameGen(string_view region) const noexcept;

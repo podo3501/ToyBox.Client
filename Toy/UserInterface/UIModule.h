@@ -8,7 +8,7 @@ class UINameGenerator;
 class Panel;
 class UILayout;
 class MouseEventRouter;
-class SerializerIO;
+class Serializer;
 namespace DX { class StepTimer; }
 class UIModule
 {
@@ -23,7 +23,7 @@ public:
 	bool BindTextureResources() noexcept;
 	bool Update(const DX::StepTimer& timer) noexcept;
 	void Render(ITextureRender* render) const;
-	void ProcessIO(SerializerIO& serializer);
+	void ProcessIO(Serializer& serializer);
 	bool Write(const wstring& filename = L"") noexcept;
 	bool EnableToolMode(bool enable) noexcept;
 

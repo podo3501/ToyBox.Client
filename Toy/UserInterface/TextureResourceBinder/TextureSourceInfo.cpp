@@ -2,7 +2,7 @@
 #include "TextureSourceInfo.h"
 #include "IRenderer.h"
 #include "Shared/Framework/EnvironmentLocator.h"
-#include "Shared/Serializer/SerializerIO.h"
+#include "Shared/SerializerIO/Serializer.h"
 #include "../UIComponent/UIType.h"
 
 TextureSourceInfo::~TextureSourceInfo() = default;
@@ -47,7 +47,7 @@ bool TextureSourceInfo::LoadResource(ITextureLoad* load)
     return true;
 }
 
-void TextureSourceInfo::ProcessIO(SerializerIO& serializer)
+void TextureSourceInfo::ProcessIO(Serializer& serializer)
 {
     serializer.Process("Filename", filename);
     serializer.Process("TextureSlice", texSlice);

@@ -3,7 +3,7 @@
 #include "PatchTextureStd1.h"
 #include "UserInterface/TextureResourceBinder/TextureResourceBinder.h"
 #include "UserInterface/UIComponent/UIUtility.h"
-#include "Shared/Serializer/SerializerIO.h"
+#include "Shared/SerializerIO/Serializer.h"
 
 PatchTextureStd3::~PatchTextureStd3() = default;
 PatchTextureStd3::PatchTextureStd3() noexcept :
@@ -61,7 +61,7 @@ Rectangle PatchTextureStd3::GetSource() const noexcept
     return tex1->GetSource();
 }
 
-void PatchTextureStd3::ProcessIO(SerializerIO& serializer)
+void PatchTextureStd3::ProcessIO(Serializer& serializer)
 {
     UIComponent::ProcessIO(serializer);
     serializer.Process("DirectionType", m_dirType);

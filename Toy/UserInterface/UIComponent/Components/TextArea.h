@@ -14,7 +14,7 @@ public:
 	static ComponentID GetTypeStatic() { return ComponentID::TextArea; }
 	virtual ComponentID GetTypeID() const noexcept override { return GetTypeStatic(); }
 	virtual bool operator==(const UIComponent& o) const noexcept override;
-	virtual void ProcessIO(SerializerIO& serializer) override;
+	virtual void ProcessIO(Serializer& serializer) override;
 
 	bool SetText(const wstring& text);
 	inline const wstring& GetText() const noexcept { return m_text; }

@@ -15,7 +15,7 @@ public:
 	static ComponentID GetTypeStatic() { return ComponentID::PatchTextureStd1; }
 	virtual ComponentID GetTypeID() const noexcept override { return GetTypeStatic(); }
 	virtual bool operator==(const UIComponent& rhs) const noexcept override;
-	virtual void ProcessIO(SerializerIO& serializer) override;
+	virtual void ProcessIO(Serializer& serializer) override;
 	//PatchTexture
 	virtual bool FitToTextureSource() noexcept override { return m_coord.FitToTextureSource(); }
 	virtual UIComponent* GetCenterComponent() noexcept override { return this; }

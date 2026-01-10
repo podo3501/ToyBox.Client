@@ -5,6 +5,7 @@
 #include "SDL3/SDL_init.h"
 #include "Shared/Framework/EnvironmentLocator.h"
 #include "Shared/System/Audio/SoundTableReader.h"
+#include "Shared/SerializerIO/IJsonStorage.h"
 
 struct AudioGroup
 {
@@ -19,14 +20,15 @@ SDLAudioManager::~SDLAudioManager()
 	SDL_Quit();
 }
 
-SDLAudioManager::SDLAudioManager(unique_ptr<SoundTableReader> soundReader) :
-	m_reader{ move(soundReader) },
+SDLAudioManager::SDLAudioManager(unique_ptr<IJsonStorage> storage) :
+	m_reader{ make_unique<SoundTableReader>(move(storage)) },
 	m_effectSound{ make_unique<EffectSound>() },
 	m_normalSound{ make_unique<NormalSound>() }
 {}
 
-bool SDLAudioManager::Initialize()
+bool SDLAudioManager::Initialize(const wstring& filename)
 {
+	ReturnIfFalse(m_reader->Read(filename));
 	bool isInit = SDL_WasInit(SDL_INIT_AUDIO) & SDL_INIT_AUDIO;
 	if (isInit) return true;
 
@@ -124,10 +126,10 @@ void SDLAudioManager::Update() noexcept
 	m_effectSound->Update();
 }
 
-unique_ptr<IAudioManager> CreateAudioManager(unique_ptr<SoundTableReader> soundReader)
+unique_ptr<IAudioManager> CreateAudioManager(unique_ptr<IJsonStorage> storage, const wstring& filename)
 {
-	auto audioManager = make_unique<SDLAudioManager>(move(soundReader));
-	if(!audioManager->Initialize()) return nullptr;
+	auto audioManager = make_unique<SDLAudioManager>(move(storage));
+	if (!audioManager->Initialize(filename)) return nullptr;
 
 	return audioManager;
 }

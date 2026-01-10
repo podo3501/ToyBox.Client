@@ -21,7 +21,7 @@ public:
 	virtual void OnHold(const XMINT2& position, bool inside) noexcept;
 	virtual void OnRelease(bool inside) noexcept;
 	virtual bool OnWheel(int wheelValue) noexcept override;
-	virtual void ProcessIO(SerializerIO& serializer) override;
+	virtual void ProcessIO(Serializer& serializer) override;
 
 	void AddScrollChangedCB(function<void(float)> callback) { m_onScrollChangedCB = callback; }
 	void RestoreDefault() noexcept;

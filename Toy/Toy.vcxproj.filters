@@ -52,11 +52,11 @@
     <Filter Include="UserInterface\InputEvent">
       <UniqueIdentifier>{b2a754fd-6514-4a12-9ff6-4cad9a4024b5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="UserInterface\Serializer">
-      <UniqueIdentifier>{8bf33769-5859-4c05-9e5a-303b172cafd2}</UniqueIdentifier>
+    <Filter Include="UserInterface\SerializerIO">
+      <UniqueIdentifier>{cbe4618d-63d2-4ac7-8cdd-5f34ba6d39db}</UniqueIdentifier>
     </Filter>
-    <Filter Include="UserInterface\Serializer\Format">
-      <UniqueIdentifier>{d3507ed3-7feb-4083-a3dc-c2e3ac25177b}</UniqueIdentifier>
+    <Filter Include="UserInterface\SerializerIO\Format">
+      <UniqueIdentifier>{342a53f9-4637-4255-b9d9-5223b630fb1c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -272,14 +272,14 @@
     <ClInclude Include="Locator\UIComponentLocator.h">
       <Filter>Locator</Filter>
     </ClInclude>
-    <ClInclude Include="UserInterface\Serializer\ClassSerializeIO.h">
-      <Filter>UserInterface\Serializer</Filter>
+    <ClInclude Include="UserInterface\SerializerIO\Format\KeyConverter.h">
+      <Filter>UserInterface\SerializerIO\Format</Filter>
     </ClInclude>
-    <ClInclude Include="UserInterface\Serializer\Format\KeyConverter.h">
-      <Filter>UserInterface\Serializer\Format</Filter>
+    <ClInclude Include="UserInterface\SerializerIO\Format\Traits.h">
+      <Filter>UserInterface\SerializerIO\Format</Filter>
     </ClInclude>
-    <ClInclude Include="UserInterface\Serializer\Format\Traits.h">
-      <Filter>UserInterface\Serializer\Format</Filter>
+    <ClInclude Include="UserInterface\SerializerIO\ClassSerialize.h">
+      <Filter>UserInterface\SerializerIO</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -459,14 +459,14 @@
     <ClCompile Include="UserInterface\InputEvent\SoundTheme.cpp">
       <Filter>UserInterface\InputEvent</Filter>
     </ClCompile>
-    <ClCompile Include="UserInterface\Serializer\ClassSerializeIO.cpp">
-      <Filter>UserInterface\Serializer</Filter>
+    <ClCompile Include="UserInterface\SerializerIO\Format\KeyConverter.cpp">
+      <Filter>UserInterface\SerializerIO\Format</Filter>
     </ClCompile>
-    <ClCompile Include="UserInterface\Serializer\Format\KeyConverter.cpp">
-      <Filter>UserInterface\Serializer\Format</Filter>
+    <ClCompile Include="UserInterface\SerializerIO\Format\Traits.cpp">
+      <Filter>UserInterface\SerializerIO\Format</Filter>
     </ClCompile>
-    <ClCompile Include="UserInterface\Serializer\Format\Traits.cpp">
-      <Filter>UserInterface\Serializer\Format</Filter>
+    <ClCompile Include="UserInterface\SerializerIO\ClassSerialize.cpp">
+      <Filter>UserInterface\SerializerIO</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

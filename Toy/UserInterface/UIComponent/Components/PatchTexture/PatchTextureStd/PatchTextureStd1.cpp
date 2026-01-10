@@ -3,7 +3,7 @@
 #include "IRenderer.h"
 #include "UserInterface/TextureResourceBinder/TextureResourceBinder.h"
 #include "UserInterface/UIComponent/UIUtility.h"
-#include "Shared/Serializer/SerializerIO.h"
+#include "Shared/SerializerIO/Serializer.h"
 
 PatchTextureStd1::~PatchTextureStd1() = default;
 PatchTextureStd1::PatchTextureStd1() : 
@@ -105,7 +105,7 @@ optional<vector<Rectangle>> PatchTextureStd1::GetTextureAreaList()
 	return nullopt;
 }
 
-void PatchTextureStd1::ProcessIO(SerializerIO& serializer)
+void PatchTextureStd1::ProcessIO(Serializer& serializer)
 {
 	UIComponent::ProcessIO(serializer);
 	serializer.Process("BindKey", m_bindKey);

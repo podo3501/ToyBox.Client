@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "UITransform.h"
 #include "UILayout.h"
-#include "Shared/Serializer/SerializerIO.h"
+#include "Shared/SerializerIO/Serializer.h"
 #include "Shared/Utils/GeometryExt.h"
 
 UITransform::UITransform() = default;
@@ -52,7 +52,7 @@ void UITransform::AdjustPosition(const XMUINT2& size, bool lockPosition) noexcep
 		m_ratio = CalcRatio(size, m_relativePosition);
 }
 
-void UITransform::ProcessIO(SerializerIO& serializer)
+void UITransform::ProcessIO(Serializer& serializer)
 {
 	serializer.Process("Ratio", m_ratio);
 	serializer.Process("RelativePosition", m_relativePosition);

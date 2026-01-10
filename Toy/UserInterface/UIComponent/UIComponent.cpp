@@ -1,8 +1,8 @@
 ﻿#include "pch.h"
 #include "UIComponent.h"
 #include "Shared/Utils/StlExt.h"
-#include "Shared/Serializer/SerializerIO.h"
-#include "../Serializer/ClassSerializeIO.h"
+#include "Shared/SerializerIO/Serializer.h"
+#include "../SerializerIO/ClassSerialize.h"
 
 UIComponent::~UIComponent() = default;
 UIComponent::UIComponent() :
@@ -134,7 +134,7 @@ bool UIComponent::ChangeRelativePosition(const XMINT2& relativePos) noexcept
 	return true;
 }
 
-void UIComponent::ProcessIO(SerializerIO& serializer)
+void UIComponent::ProcessIO(Serializer& serializer)
 {
 	serializer.Process("Name", m_name);
 	serializer.Process("Layout", m_layout);

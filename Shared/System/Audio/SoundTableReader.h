@@ -2,12 +2,12 @@
 #include "Shared/System/Public/AudioTypes.h"
 
 struct IJsonStorage;
-class SerializerIO;
+class Serializer;
 enum class AudioGroupID;
 
 struct SoundInfo
 {
-	void ProcessIO(SerializerIO& serializer);
+	void ProcessIO(Serializer& serializer);
 
 	string filename{};
 	AudioGroupID groupID{ AudioGroupID::None };
@@ -22,7 +22,7 @@ public:
 	explicit SoundTableReader(unique_ptr<IJsonStorage> storage);
 	bool Read(const wstring& filename);
 	SoundInfo* GetInfo(const string& index) noexcept;
-	void ProcessIO(SerializerIO& serializer);
+	void ProcessIO(Serializer& serializer);
 
 private:
 	unique_ptr<IJsonStorage> m_storage;

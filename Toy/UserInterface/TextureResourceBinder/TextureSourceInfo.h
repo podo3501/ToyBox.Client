@@ -3,7 +3,7 @@
 
 enum class TextureSlice : int;
 struct ITextureLoad;
-class SerializerIO;
+class Serializer;
 struct TextureSourceInfo : public TextureInfo
 {
 	~TextureSourceInfo();
@@ -16,7 +16,7 @@ struct TextureSourceInfo : public TextureInfo
 	bool operator==(const TextureSourceInfo& o) const noexcept;
 
 	bool LoadResource(ITextureLoad* load);
-	void ProcessIO(SerializerIO& serializer);
+	void ProcessIO(Serializer& serializer);
 	inline Rectangle GetSource(size_t index) const noexcept { return (sources.size() > index) ? sources.at(index) : Rectangle{}; }
 
 	using TextureInfo::GetIndex;

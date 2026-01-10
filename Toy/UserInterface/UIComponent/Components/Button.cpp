@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "Button.h"
-#include "Shared/Serializer/SerializerIO.h"
+#include "Shared/SerializerIO/Serializer.h"
 #include "../Traverser/UITraverser.h"
 
 //이 클래스는 당장에는 하는게 없다. container가 할 일을 다 가져갔다. 추후에 이 클래스가 어떻게 될지 지켜보자.
@@ -43,7 +43,7 @@ bool Button::Setup(const UILayout& layout, unique_ptr<UIComponent> container) no
 	return true;
 }
 
-void Button::ProcessIO(SerializerIO& serializer)
+void Button::ProcessIO(Serializer& serializer)
 {
 	UIComponent::ProcessIO(serializer);
 

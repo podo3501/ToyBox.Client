@@ -1,0 +1,29 @@
+{
+    "Infos": {
+        "TestOgg_01": {
+            "Filename": "Sound/Ogg/mouseclick1.ogg",
+            "Group": "BGM",
+            "Volume": 1.0
+        },
+        "TestOgg_02": {
+            "Filename": "Sound/Ogg/snare_acoustic01.ogg",
+            "Group": "BGM",
+            "Volume": 1.0
+        },
+        "TestOgg_03": {
+            "Filename": "Sound/Ogg/hope_it_will.ogg",
+            "Group": "BGM",
+            "Volume": 1.0
+        },
+        "TestWav_01": {
+            "Filename": "Sound/Wav/test1.wav",
+            "Group": "SFX",
+            "Volume": 1.0
+        },
+        "TestWav_02": {
+            "Filename": "Sound/Wav/test2.wav",
+            "Group": "SFX",
+            "Volume": 1.0
+        }
+    }
+}

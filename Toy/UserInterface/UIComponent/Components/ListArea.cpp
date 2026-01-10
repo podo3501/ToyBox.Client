@@ -3,7 +3,7 @@
 #include "RenderTexture.h"
 #include "ScrollBar.h"
 #include "TextureSwitcher.h"
-#include "Shared/Serializer/SerializerIO.h"
+#include "Shared/SerializerIO/Serializer.h"
 #include "Shared/Utils/StlExt.h"
 #include "../Traverser/UITraverser.h"
 
@@ -272,7 +272,7 @@ bool ListArea::ExitToolMode() noexcept
 	return UpdateScrollBar();
 }
 
-void ListArea::ProcessIO(SerializerIO& serializer)
+void ListArea::ProcessIO(Serializer& serializer)
 {
 	UIComponent::ProcessIO(serializer);
 	serializer.Process("ScrollPadding", m_scrollPadding);

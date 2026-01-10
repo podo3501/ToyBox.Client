@@ -3,7 +3,7 @@
 #include "ComponentNameGenerator.h"
 #include "Shared/Utils/StringExt.h"
 #include "Shared/Utils/StlExt.h"
-#include "Shared/Serializer/SerializerIO.h"
+#include "Shared/SerializerIO/Serializer.h"
 
 ComponentNameGenerator::~ComponentNameGenerator() = default;
 ComponentNameGenerator::ComponentNameGenerator() = default;
@@ -77,7 +77,7 @@ bool ComponentNameGenerator::IsUnusedName(string_view name) const noexcept
     return !find->second->IsUsed(id);
 }
 
-void ComponentNameGenerator::ProcessIO(SerializerIO& serializer)
+void ComponentNameGenerator::ProcessIO(Serializer& serializer)
 {
     serializer.Process("Namers", m_namers);
 }

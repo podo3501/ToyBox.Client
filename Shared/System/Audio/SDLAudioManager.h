@@ -3,6 +3,7 @@
 #include "Foundation/NoCopyNoMove.h"
 
 struct AudioGroup;
+struct IJsonStorage;
 class SoundTableReader;
 class EffectSound;
 class NormalSound;
@@ -11,8 +12,8 @@ class SDLAudioManager : public IAudioManager, private NoCopyNoMove
 public:
 	~SDLAudioManager();
 	SDLAudioManager() = delete;
-	SDLAudioManager(unique_ptr<SoundTableReader> soundReader);
-	bool Initialize();
+	SDLAudioManager(unique_ptr<IJsonStorage> storage);
+	bool Initialize(const wstring& filename);
 	virtual bool LoadSound(const string& index) override;
 	virtual bool Unload(const string& index) noexcept override;
 	virtual void SetVolume(AudioGroupID groupID, float volume) noexcept override;

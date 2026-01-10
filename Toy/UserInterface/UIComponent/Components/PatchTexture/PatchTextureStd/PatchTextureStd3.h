@@ -14,7 +14,7 @@ public:
 	static ComponentID GetTypeStatic() { return ComponentID::PatchTextureStd3; }
 	virtual ComponentID GetTypeID() const noexcept override { return GetTypeStatic(); }
 	virtual bool operator==(const UIComponent& rhs) const noexcept override;
-	virtual void ProcessIO(SerializerIO& serializer) override;
+	virtual void ProcessIO(Serializer& serializer) override;
 
 	bool Setup(const UILayout& layout, DirectionType dirType, const string& bindKey, size_t sourceIndex = 0) noexcept;
 	inline bool Setup(DirectionType dirType, const string& bindKey, size_t sourceIndex = 0) noexcept { return Setup({}, dirType, bindKey, sourceIndex); }

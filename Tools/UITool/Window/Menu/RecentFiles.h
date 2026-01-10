@@ -2,7 +2,7 @@
 
 struct IJsonStorage;
 class FileTab;
-class SerializerIO;
+class Serializer;
 
 class RecentFiles
 {
@@ -17,7 +17,7 @@ public:
     void AddFile(const wstring& filename);
     bool OpenFile(FileTab& menuBar);
     bool Show();
-    void ProcessIO(SerializerIO& serializer);
+    void ProcessIO(Serializer& serializer);
 
 private:
     void ShowMoreMenu();

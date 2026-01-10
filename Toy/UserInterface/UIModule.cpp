@@ -6,7 +6,7 @@
 #include "UIComponent/Traverser/UITraverser.h"
 #include "UINameGenerator/UINameGenerator.h"
 #include "UIComponent/Components/Panel.h"
-#include "Shared/Serializer/JsonObjectIO.h"
+#include "Shared/SerializerIO/JsonObjectIO.h"
 #include "Shared/Utils/StlExt.h"
 
 using namespace UITraverser;
@@ -69,7 +69,7 @@ void UIModule::ReloadDatas() noexcept
 	m_mainPanel->SetUIModule(this);
 }
 
-void UIModule::ProcessIO(SerializerIO& serializer)
+void UIModule::ProcessIO(Serializer& serializer)
 {
 	serializer.Process("MainPanel", m_mainPanel);
 	serializer.Process("UINameGenerator", m_nameGen);

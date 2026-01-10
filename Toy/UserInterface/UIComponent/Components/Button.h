@@ -9,7 +9,7 @@ public:
 
 	static ComponentID GetTypeStatic() { return ComponentID::Button; }
 	virtual ComponentID GetTypeID() const noexcept override { return GetTypeStatic(); }
-	virtual void ProcessIO(SerializerIO& serializer) override;
+	virtual void ProcessIO(Serializer& serializer) override;
 
 	bool Setup(const UILayout& layout, unique_ptr<UIComponent> container) noexcept;
 

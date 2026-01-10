@@ -12,7 +12,7 @@
 #include "Toy/UserInterface/TextureResourceBinder/TextureResourceBinder.h"
 #include "Toy/UserInterface/UIModule.h"
 #include "Core/Public/IImguiRegistry.h"
-#include "Shared/Serializer/Storage/IJsonStorage.h"
+#include "Shared/SerializerIO/IJsonStorage.h"
 #include "Shared/System/StepTimer.h"
 
 using namespace UITraverser;
