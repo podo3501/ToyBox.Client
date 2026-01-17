@@ -14,7 +14,7 @@ public:
 
     static ComponentID GetTypeStatic() { return ComponentID::Panel; }
     virtual ComponentID GetTypeID() const noexcept override { return GetTypeStatic(); }
-    virtual void ProcessIO(Serializer& serializer) override;
+    virtual void Serialize(Serializer& serializer) override;
 
     bool Setup(const UILayout& layout = {});
     void SetUIModule(UIModule* uiModule) noexcept { m_uiModule = uiModule; }

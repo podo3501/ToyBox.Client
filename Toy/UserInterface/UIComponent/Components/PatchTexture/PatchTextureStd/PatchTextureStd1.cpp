@@ -105,9 +105,9 @@ optional<vector<Rectangle>> PatchTextureStd1::GetTextureAreaList()
 	return nullopt;
 }
 
-void PatchTextureStd1::ProcessIO(Serializer& serializer)
+void PatchTextureStd1::Serialize(Serializer& serializer)
 {
-	UIComponent::ProcessIO(serializer);
+	UIComponent::Serialize(serializer);
 	serializer.Process("BindKey", m_bindKey);
 	serializer.Process("SourceIndex", m_sourceIndex);
 }

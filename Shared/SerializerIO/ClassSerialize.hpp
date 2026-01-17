@@ -3,26 +3,26 @@
 #include "Format/KeyConverter.hpp"
 #include "Concepts.h"
 
-//새로운 ProcessIO를 사용하는 클래스를 만들면 여기서 Extension을 만들어서 사용한다.
-//SerializeClassIO 및 DeserializeClassIO 함수를 각 클래스에 맞게 정의해서 파일을 만든다.
+//새로운 Serialize를 사용하는 클래스를 만들면 여기서 Extension을 만들어서 사용한다.
+//SerializeClass 및 DeserializeClass 함수를 각 클래스에 맞게 정의해서 파일을 만든다.
 
 template<typename T>
-inline void SerializeClass_GenerateJson(T& data, nlohmann::ordered_json& outWriteJ)
+inline void SerializeClass_GenerateJson(nlohmann::json& outData, T& data)
 {
-	Serializer serializer{ outWriteJ };
+	Serializer serializer{ outData };
 	if constexpr (RawPointerLike<T>)
-		data->ProcessIO(serializer);
+		data->Serialize(serializer);
 	else
-		data.ProcessIO(serializer);
+		data.Serialize(serializer);
 }
 
 template<typename T>
-void SerializeClass_Internal(T& data, nlohmann::ordered_json& j) { SerializeClass_GenerateJson(data, j); }
+void SerializeClass_Internal(nlohmann::json& j, T& data) { SerializeClass_GenerateJson(j, data); }
 
 template<typename T>
-void SerializeClass(T& data, nlohmann::ordered_json& j) { SerializeClass_Internal(data, j); }
+void SerializeClass(nlohmann::json& j, T& data) { SerializeClass_Internal(j, data); }
 template<typename T>
-void SerializeClass(unique_ptr<T>& data, nlohmann::ordered_json& j) { SerializeClass_Internal(*data, j); }
+void SerializeClass(nlohmann::json& j, unique_ptr<T>& data) { SerializeClass_Internal(j, *data); }
 
 ///////////////////////////////////////////////////////
 
@@ -31,9 +31,9 @@ void DeserializeClass_Internal(const nlohmann::json& outReadJ, T& data)
 {
 	Serializer serializer{ outReadJ };
 	if constexpr (RawPointerLike<T>)
-		data->ProcessIO(serializer);
+		data->Serialize(serializer);
 	else 
-		data.ProcessIO(serializer);
+		data.Serialize(serializer);
 }
 
 template<typename T>
@@ -50,12 +50,12 @@ void DeserializeClass(const nlohmann::json& j, unique_ptr<T>& data)
 }
 
 template<typename T>
-nlohmann::ordered_json SerializeByType(T& v)
+nlohmann::json SerializeByType(T& v)
 {
-	if constexpr (HasProcessIO<T>)
+	if constexpr (HasSerialize<T>)
 	{
-		nlohmann::ordered_json j{};
-		SerializeClass(v, j);
+		nlohmann::json j{};
+		SerializeClass(j, v);
 		return j;
 	}
 	else
@@ -65,7 +65,7 @@ nlohmann::ordered_json SerializeByType(T& v)
 template<typename T>
 T DeserializeByType(const nlohmann::json& v)
 {
-	if constexpr (HasProcessIO<T>)
+	if constexpr (HasSerialize<T>)
 	{
 		T data{};
 		DeserializeClass(v, data);
@@ -76,7 +76,7 @@ T DeserializeByType(const nlohmann::json& v)
 }
 
 template<typename MapContainer>
-void SerializeMapContainer(MapContainer& datas, nlohmann::ordered_json& j)
+void SerializeMapContainer(nlohmann::json& j, MapContainer& datas)
 {
 	using T = typename MapContainer::mapped_type;
 
@@ -101,7 +101,7 @@ void DeserializeMapContainer(const nlohmann::json& j, MapContainer& datas)
 }
 
 template<typename SeqContainer>
-void SerializeSeqContainer(SeqContainer& datas, nlohmann::ordered_json& j)
+void SerializeSeqContainer(nlohmann::json& j, SeqContainer& datas)
 {
 	for (auto& data : datas)
 		j.push_back(SerializeByType(data));

@@ -69,7 +69,7 @@ void UIModule::ReloadDatas() noexcept
 	m_mainPanel->SetUIModule(this);
 }
 
-void UIModule::ProcessIO(Serializer& serializer)
+void UIModule::Serialize(Serializer& serializer)
 {
 	serializer.Process("MainPanel", m_mainPanel);
 	serializer.Process("UINameGenerator", m_nameGen);

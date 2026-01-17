@@ -77,9 +77,9 @@ Rectangle PatchTextureLite3::GetSource() const noexcept
 	return tex1->GetSource();
 }
 
-void PatchTextureLite3::ProcessIO(Serializer& serializer)
+void PatchTextureLite3::Serialize(Serializer& serializer)
 {
-	UIComponent::ProcessIO(serializer);
+	UIComponent::Serialize(serializer);
 	serializer.Process("DirectionType", m_dirType);
 
 	if (serializer.IsWrite()) return;

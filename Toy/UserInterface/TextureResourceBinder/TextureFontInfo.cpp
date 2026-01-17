@@ -32,7 +32,7 @@ bool TextureFontInfo::LoadResource(ITextureLoad* load)
     return true;
 }
 
-void TextureFontInfo::ProcessIO(Serializer& serializer)
+void TextureFontInfo::Serialize(Serializer& serializer)
 {
     serializer.Process("Filename", filename);
 }

@@ -12,7 +12,7 @@ public:
 	static ComponentID GetTypeStatic() { return ComponentID::Container; }
 	virtual ComponentID GetTypeID() const noexcept override { return GetTypeStatic(); }
 	virtual bool operator==(const UIComponent& o) const noexcept override;
-	virtual void ProcessIO(Serializer& serializer) override;
+	virtual void Serialize(Serializer& serializer) override;
 
 	bool Setup(const UILayout& layout, 
 		map<InteractState, unique_ptr<UIComponent>> patchTexList) noexcept;

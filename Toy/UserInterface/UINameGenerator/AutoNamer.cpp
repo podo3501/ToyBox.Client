@@ -43,7 +43,7 @@ bool AutoNamer::IsUsed(int id) const noexcept
     return generated && notRecycled;
 }
 
-void AutoNamer::ProcessIO(Serializer& serializer)
+void AutoNamer::Serialize(Serializer& serializer)
 {
     serializer.Process("Namers", m_nextID);
     serializer.Process("Recycled", m_recycled);

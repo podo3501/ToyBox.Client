@@ -117,7 +117,7 @@ ComponentNameGenerator* UINameGenerator::GetComponentNameGen(string_view region)
     return find->second.get();
 }
 
-void UINameGenerator::ProcessIO(Serializer& serializer)
+void UINameGenerator::Serialize(Serializer& serializer)
 {
     serializer.Process("RegionGens", m_regionGens);
     serializer.Process("RegionNames", m_componentNameGens);

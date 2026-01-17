@@ -26,7 +26,7 @@ public:
     bool RemoveName(const string& region, const string& name) noexcept;
     bool IsUnusedName(string_view region, string_view name) noexcept;
 
-    void ProcessIO(Serializer& serializer);
+    void Serialize(Serializer& serializer);
 
 private:
     ComponentNameGenerator* GetComponentNameGen(string_view region) const noexcept;

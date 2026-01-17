@@ -13,7 +13,7 @@ public:
     [[nodiscard]] pair<bool, bool> Recycle(int id) noexcept;
     inline bool IsDeletable() noexcept { return (m_nextID <= m_recycled.size()); }
     bool IsUsed(int id) const noexcept;
-    void ProcessIO(Serializer& serializer);
+    void Serialize(Serializer& serializer);
 
 private:
     inline bool HasBeenGenerated(int id) const noexcept { return id >= 0 && id < m_nextID; }

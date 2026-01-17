@@ -23,7 +23,7 @@ public:
 	bool BindTextureResources() noexcept;
 	bool Update(const DX::StepTimer& timer) noexcept;
 	void Render(ITextureRender* render) const;
-	void ProcessIO(Serializer& serializer);
+	void Serialize(Serializer& serializer);
 	bool Write(const wstring& filename = L"") noexcept;
 	bool EnableToolMode(bool enable) noexcept;
 

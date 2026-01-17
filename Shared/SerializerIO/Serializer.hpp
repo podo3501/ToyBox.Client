@@ -6,14 +6,14 @@
 template<typename T>
 void Serializer::Process(const string& key, T& data) noexcept
 {
-	auto writeFunc = [this, &data](nlohmann::ordered_json& j) {
-		if constexpr (HasProcessIO<T>) SerializeClass(data, j); //SerializeIO 가 있는 클래스. unique_ptr도 포함해서.
-		else if constexpr (SequenceLike<T>) SerializeSeqContainer(data, j); //시퀀스 컨테이너일때 처리
-		else if constexpr (MapLike<T>) SerializeMapContainer(data, j); //Map 컨테이너일때 처리
+	auto writeFunc = [this, &data](nlohmann::json& j) {
+		if constexpr (HasSerialize<T>) SerializeClass(j, data); //SerializeIO 가 있는 클래스. unique_ptr도 포함해서.
+		else if constexpr (SequenceLike<T>) SerializeSeqContainer(j, data); //시퀀스 컨테이너일때 처리
+		else if constexpr (MapLike<T>) SerializeMapContainer(j, data); //Map 컨테이너일때 처리
 		else j = JsonTraits<T>::SerializeToJson(data); }; //일반적인 데이터 형식일때 처리
 
 	auto readFunc = [this, &data](const nlohmann::json& j) {
-		if constexpr (HasProcessIO<T>) DeserializeClass(j, data);
+		if constexpr (HasSerialize<T>) DeserializeClass(j, data);
 		else if constexpr (SequenceLike<T>) DeserializeSeqContainer(j, data);
 		else if constexpr (MapLike<T>) DeserializeMapContainer(j, data);
 		else data = JsonTraits<T>::DeserializeFromJson(j); };
@@ -22,25 +22,25 @@ void Serializer::Process(const string& key, T& data) noexcept
 }
 
 template <typename ProcessFunc>
-static void ProcessWriteKey(const string& key, ProcessFunc processFunc, nlohmann::ordered_json& curWriteJ) noexcept
+static void ProcessWriteKey(const string& key, ProcessFunc processFunc, nlohmann::json& outData) noexcept
 {
-	nlohmann::ordered_json writeJ{};
+	nlohmann::json writeJ{};
 	processFunc(writeJ);
-	curWriteJ[key] = move(writeJ);
+	outData[key] = move(writeJ);
 }
 
 template <typename ProcessFunc>
-static void ProcessReadKey(nlohmann::json& curReadJ, const string& key, ProcessFunc processFunc) noexcept
+static void ProcessReadKey(const string& key, ProcessFunc processFunc, const nlohmann::json& data) noexcept
 {
-	if (!curReadJ.contains(key)) return;
-	processFunc(curReadJ[key]);
+	if (!data.contains(key)) return;
+	processFunc(data[key]);
 }
 
 template <typename WriteFunc, typename ReadFunc>
 void Serializer::ProcessImpl(const string& key, WriteFunc&& writeFunc, ReadFunc&& readFunc) noexcept
 {
 	if (IsWrite()) 
-		ProcessWriteKey(key, writeFunc, *m_wCurrent);
+		ProcessWriteKey(key, writeFunc, *m_write);
 	else 
-		ProcessReadKey(*m_rCurrent, key, readFunc);
+		ProcessReadKey(key, readFunc, *m_read);
 }

@@ -98,9 +98,9 @@ void Container::SetState(InteractState curState) noexcept
 	m_state = curState;
 }
 
-void Container::ProcessIO(Serializer& serializer)
+void Container::Serialize(Serializer& serializer)
 {
-	UIComponent::ProcessIO(serializer);
+	UIComponent::Serialize(serializer);
 
 	if (serializer.IsWrite()) return;
 	ReloadDatas();

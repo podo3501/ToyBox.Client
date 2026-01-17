@@ -26,7 +26,7 @@ bool Panel::Setup(const UILayout& layout)
     return true;
 }
 
-void Panel::ProcessIO(Serializer& serializer)
+void Panel::Serialize(Serializer& serializer)
 {
-    UIComponent::ProcessIO(serializer);
+    UIComponent::Serialize(serializer);
 }

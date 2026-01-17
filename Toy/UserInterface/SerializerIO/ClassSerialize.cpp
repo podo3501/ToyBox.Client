@@ -4,10 +4,10 @@
 #include "../UIComponent/UIComponent.h"
 #include "../UIComponent/UIComponentFactory.h"
 
-void SerializeClass_Internal(UIComponent& data, nlohmann::ordered_json& j)
+void SerializeClass_Internal(nlohmann::json& j, UIComponent& data)
 {
 	j["Type"] = EnumToString<ComponentID>(data.GetTypeID());
-	SerializeClass_GenerateJson(data, j);
+	SerializeClass_GenerateJson(j, data);
 }
 
 void DeserializeClass(const nlohmann::json& j, unique_ptr<UIComponent>& data)

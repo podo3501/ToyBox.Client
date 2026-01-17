@@ -25,7 +25,7 @@ namespace Tool
 		static ResolutionType GetResolution() noexcept;
 		static XMUINT2 GetResolutionInCoordinate() noexcept;
 
-		void ProcessIO(Serializer& serializer);
+		void Serialize(Serializer& serializer);
 
 	private:
 		static unique_ptr<IJsonStorage> m_storage;

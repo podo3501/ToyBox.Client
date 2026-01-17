@@ -15,7 +15,7 @@ TestScene2::TestScene2(IRenderer* renderer) :
 
 bool TestScene2::Enter()
 {
-	auto storage = CreateJsonStorage(StorageType::File);
+	auto storage = CreateJsonStorage();
 	auto texResBinder = CreateTextureResourceBinder(storage.get(), L"UI/SampleTexture/SampleTextureBinder.json", GetRenderer());
 	m_uiModule = CreateUIModule("Test2", L"/Scene/Test/TestScene2.json", move(storage), move(texResBinder));
 

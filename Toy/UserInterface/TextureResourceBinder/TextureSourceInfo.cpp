@@ -47,7 +47,7 @@ bool TextureSourceInfo::LoadResource(ITextureLoad* load)
     return true;
 }
 
-void TextureSourceInfo::ProcessIO(Serializer& serializer)
+void TextureSourceInfo::Serialize(Serializer& serializer)
 {
     serializer.Process("Filename", filename);
     serializer.Process("TextureSlice", texSlice);

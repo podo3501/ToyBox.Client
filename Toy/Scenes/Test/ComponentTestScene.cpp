@@ -28,7 +28,7 @@ bool ComponentTestScene::Enter()
     IRenderer* renderer = GetRenderer();
     UILayout layout{ GetSizeFromRectangle(GetRectResolution()) };
 
-    auto storage = CreateJsonStorage(StorageType::File);
+    auto storage = CreateJsonStorage();
     auto texResBinder = CreateTextureResourceBinder(storage.get(), L"UI/SampleTexture/SampleTextureBinder.json", renderer);
     m_uiModule = CreateUIModule("ComponentTest", layout, "Main", move(storage), move(texResBinder));
     return LoadResources();

@@ -39,7 +39,6 @@
     <ClInclude Include="SerializerIO\Serializer.h" />
     <ClInclude Include="SerializerIO\Serializer.hpp" />
     <ClInclude Include="SerializerIO\Storage\FileStorage.h" />
-    <ClInclude Include="SerializerIO\Storage\MemoryStorage.h" />
     <ClInclude Include="System\Audio\AudioTypeHelpers.h" />
     <ClInclude Include="System\Audio\EffectSoundBuffer.h" />
     <ClInclude Include="System\Audio\EffectSound.h" />
@@ -80,10 +79,8 @@
     </ClCompile>
     <ClCompile Include="SerializerIO\Format\KeyConverter.cpp" />
     <ClCompile Include="SerializerIO\Format\Traits.cpp" />
-    <ClCompile Include="SerializerIO\IJsonStorage.cpp" />
     <ClCompile Include="SerializerIO\Serializer.cpp" />
     <ClCompile Include="SerializerIO\Storage\FileStorage.cpp" />
-    <ClCompile Include="SerializerIO\Storage\MemoryStorage.cpp" />
     <ClCompile Include="System\Audio\EffectSoundBuffer.cpp" />
     <ClCompile Include="System\Audio\EffectSound.cpp" />
     <ClCompile Include="System\Audio\NormalSound.cpp" />

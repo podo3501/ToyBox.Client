@@ -45,7 +45,7 @@ public: //이 클래스의 public 함수는 왠만하면 늘리지 않도록 하자.
 	virtual ComponentID GetTypeID() const noexcept = 0;
 	virtual MouseEventReceiver* AsMouseEventReceiver() noexcept { return nullptr; }
 	virtual bool operator==(const UIComponent& other) const noexcept;
-	virtual void ProcessIO(Serializer& serializer);
+	virtual void Serialize(Serializer& serializer);
 	
 	unique_ptr<UIComponent> AttachComponent(unique_ptr<UIComponent> child, const XMINT2& relativePos = {}) noexcept;
 	pair<unique_ptr<UIComponent>, UIComponent*> DetachComponent() noexcept;

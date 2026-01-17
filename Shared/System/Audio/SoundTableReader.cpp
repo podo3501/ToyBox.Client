@@ -5,7 +5,7 @@
 #include "Shared/Framework/EnvironmentLocator.h"
 #include "Shared/SerializerIO/JsonObjectIO.h"
 
-void SoundInfo::ProcessIO(Serializer& serializer)
+void SoundInfo::Serialize(Serializer& serializer)
 {
 	serializer.Process("Filename", filename);
 	serializer.Process("Group", groupID);
@@ -32,7 +32,7 @@ SoundInfo* SoundTableReader::GetInfo(const string& index) noexcept
 	return &(it->second);
 }
 
-void SoundTableReader::ProcessIO(Serializer& serializer)
+void SoundTableReader::Serialize(Serializer& serializer)
 {
 	serializer.Process("Infos", m_infos);
 }

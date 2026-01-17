@@ -7,12 +7,12 @@
 // SerializeIO 지원 여부 확인
 class Serializer;
 template<typename T>
-concept HasProcessIO =
+concept HasSerialize =
 	requires(T t, Serializer& serializer) {
-		{ t->ProcessIO(serializer) };   // 스마트 포인터용
+		{ t->Serialize(serializer) };   // 스마트 포인터용
 	} ||
 	requires(T t, Serializer& serializer) {
-		{ t.ProcessIO(serializer) };    // 일반 객체용
+		{ t.Serialize(serializer) };    // 일반 객체용
 	};
 
 template<typename T> //멤버 begin/end가 있는 경우

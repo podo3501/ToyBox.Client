@@ -17,7 +17,7 @@ public:
     void AddFile(const wstring& filename);
     bool OpenFile(FileTab& menuBar);
     bool Show();
-    void ProcessIO(Serializer& serializer);
+    void Serialize(Serializer& serializer);
 
 private:
     void ShowMoreMenu();

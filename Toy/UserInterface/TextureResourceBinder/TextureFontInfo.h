@@ -12,7 +12,7 @@ struct TextureFontInfo : public TextureInfo
 	bool operator==(const TextureFontInfo& o) const noexcept;
 
 	bool LoadResource(ITextureLoad* load);
-	void ProcessIO(Serializer& serializer);
+	void Serialize(Serializer& serializer);
 
 	using TextureInfo::GetIndex;
 

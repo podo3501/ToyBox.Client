@@ -16,7 +16,7 @@ public:
 	virtual ComponentID GetTypeID() const noexcept override { return GetTypeStatic(); }
 	virtual MouseEventReceiver* AsMouseEventReceiver() noexcept override { return this; }
 	virtual bool operator==(const UIComponent& o) const noexcept override;
-	virtual void ProcessIO(Serializer& serializer) override;
+	virtual void Serialize(Serializer& serializer) override;
 	//IMouseEventReceiver
 	virtual void OnNormal() noexcept override;
 	virtual InputResult OnHover() noexcept override;

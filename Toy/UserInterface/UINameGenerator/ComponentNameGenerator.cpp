@@ -77,7 +77,7 @@ bool ComponentNameGenerator::IsUnusedName(string_view name) const noexcept
     return !find->second->IsUsed(id);
 }
 
-void ComponentNameGenerator::ProcessIO(Serializer& serializer)
+void ComponentNameGenerator::Serialize(Serializer& serializer)
 {
     serializer.Process("Namers", m_namers);
 }

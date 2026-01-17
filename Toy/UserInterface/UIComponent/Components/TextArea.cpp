@@ -131,9 +131,9 @@ void TextArea::Render(ITextureRender* render) const
 			XMLoadFloat4(&word.color));
 }
 
-void TextArea::ProcessIO(Serializer& serializer)
+void TextArea::Serialize(Serializer& serializer)
 {
-	UIComponent::ProcessIO(serializer);
+	UIComponent::Serialize(serializer);
 
 	serializer.Process("BindKeys", m_bindKeys);
 	serializer.Process("Text", m_text);

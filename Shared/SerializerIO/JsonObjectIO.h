@@ -6,21 +6,21 @@
 struct JsonObjectIO
 {
 public:
-	template<HasProcessIO T>
+	template<HasSerialize T>
 	static bool Save(T& obj, IJsonStorage* storage, const std::wstring& filename);
-	template<HasProcessIO T>
+	template<HasSerialize T>
 	static bool Load(T& obj, IJsonStorage* storage, const std::wstring& filename);
 };
 
-template<HasProcessIO T>
+template<HasSerialize T>
 bool JsonObjectIO::Save(T& obj, IJsonStorage* storage, const std::wstring& filename)
 {
-	nlohmann::ordered_json wData;
-	SerializeClass(obj, wData);
+	nlohmann::json wData;
+	SerializeClass(wData, obj);
 	return storage->Write(filename, wData);
 }
 
-template<HasProcessIO T>
+template<HasSerialize T>
 bool JsonObjectIO::Load(T& obj, IJsonStorage* storage, const std::wstring& filename)
 {
 	nlohmann::json rData;

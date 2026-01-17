@@ -212,7 +212,7 @@ vector<TextureSourceInfo> TextureResourceBinder::GetTotalAreas(const wstring& fi
     return filteredTextures;
 }
 
-void TextureResourceBinder::ProcessIO(Serializer& serializer)
+void TextureResourceBinder::Serialize(Serializer& serializer)
 {
     serializer.Process("BindingFontTable", m_bindingFontTable);
     serializer.Process("BindingTexTable", m_bindingTexTable);

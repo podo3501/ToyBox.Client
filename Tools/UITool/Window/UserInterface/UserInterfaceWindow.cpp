@@ -63,7 +63,7 @@ bool UserInterfaceWindow::SetupProperty(UIModule* uiModule)
 
 bool UserInterfaceWindow::CreateScene(const XMUINT2& size)
 {
-	auto storage = CreateJsonStorage(StorageType::File);
+	auto storage = CreateJsonStorage();
 	auto texResBinder = CreateTextureResourceBinder(storage.get(), L"UI/SampleTexture/SampleTextureBinder.json", m_renderer);
 	UIModule* module = CreateUIModule(GetName(), UILayout(size, Origin::LeftTop), "Main", move(storage), move(texResBinder));
 	return SetupProperty(module);
@@ -71,7 +71,7 @@ bool UserInterfaceWindow::CreateScene(const XMUINT2& size)
 
 bool UserInterfaceWindow::CreateScene(const wstring& filename)
 {
-	auto storage = CreateJsonStorage(StorageType::File);
+	auto storage = CreateJsonStorage();
 	auto texResBinder = CreateTextureResourceBinder(storage.get(), L"UI/SampleTexture/SampleTextureBinder.json", m_renderer);
 	UIModule* module = CreateUIModule(GetName(), filename, move(storage), move(texResBinder));
 	return SetupProperty(module);

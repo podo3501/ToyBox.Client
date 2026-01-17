@@ -70,7 +70,7 @@ XMINT2 UILayout::GetPosition(const XMINT2& relativePosition) const noexcept
 	return relativePosition - m_originPoint;
 }
 
-void UILayout::ProcessIO(Serializer& serializer)
+void UILayout::Serialize(Serializer& serializer)
 {
 	serializer.Process("Size", m_size);
 	serializer.Process("Origin", m_origin);

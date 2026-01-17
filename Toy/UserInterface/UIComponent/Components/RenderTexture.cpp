@@ -108,9 +108,9 @@ void RenderTexture::Render(ITextureRender* render) const
 	return;
 }
 
-void RenderTexture::ProcessIO(Serializer& serializer)
+void RenderTexture::Serialize(Serializer& serializer)
 {
-	UIComponent::ProcessIO(serializer);
+	UIComponent::Serialize(serializer);
 
 	if (serializer.IsWrite()) return;
 	ReloadDatas();

@@ -7,7 +7,7 @@
 template<> \
 struct JsonTraitsBase<Type> \
 { \
-    static nlohmann::ordered_json SerializeToJson(const Type&); \
+    static nlohmann::json SerializeToJson(const Type&); \
     static Type DeserializeFromJson(const nlohmann::json&); \
 };
 #endif // DECLARE_JSON_TRAITS
@@ -15,7 +15,7 @@ struct JsonTraitsBase<Type> \
 template<typename T>
 struct JsonTraitsBase
 {
-	static nlohmann::ordered_json SerializeToJson(const T& data) { return data; }
+	static nlohmann::json SerializeToJson(const T& data) { return data; }
 	static T DeserializeFromJson(const nlohmann::json& dataJ) { return dataJ; }
 };
 

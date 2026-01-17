@@ -235,7 +235,9 @@
 --audio manager 만들기
 --struct IMouseEventReceiver를 없애고 class MouseEventReceiver로 대체한다.
 --NonCopyable, NonMovable을 상속 받아서 클래스들을 정리한다.
+--ProcessIO 함수 이름을 Serialize 로 수정
 
+@IJsonStorage에서 메모리에서 읽어들인 것과 파일에서 읽어들인 것이 같은지 확인하는 것도 필요하지 않을까?
 @TEST_F(EventProcessorT, ProcessHover) 이거 오래 걸리는데 Play 사운드 때문인거 같다.
 @SoundID 같이 저장장치에 접근하는 것들은 인터페이스 클래스를 가지는데 이 인터페이스 클래스를 하나로 묶는 작업
 @툴에서 Config 클래스 생성자 안들어오고 이상한거 같은데 확인

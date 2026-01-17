@@ -61,9 +61,9 @@ Rectangle PatchTextureStd3::GetSource() const noexcept
     return tex1->GetSource();
 }
 
-void PatchTextureStd3::ProcessIO(Serializer& serializer)
+void PatchTextureStd3::Serialize(Serializer& serializer)
 {
-    UIComponent::ProcessIO(serializer);
+    UIComponent::Serialize(serializer);
     serializer.Process("DirectionType", m_dirType);
 
     if (serializer.IsWrite()) return;

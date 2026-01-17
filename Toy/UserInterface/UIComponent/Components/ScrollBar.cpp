@@ -145,9 +145,9 @@ bool ScrollBar::Update(const DX::StepTimer& timer) noexcept
 	return true;
 }
 
-void ScrollBar::ProcessIO(Serializer& serializer)
+void ScrollBar::Serialize(Serializer& serializer)
 {
-	UIComponent::ProcessIO(serializer);
+	UIComponent::Serialize(serializer);
 
 	if (serializer.IsWrite()) return;
 	ReloadDatas();

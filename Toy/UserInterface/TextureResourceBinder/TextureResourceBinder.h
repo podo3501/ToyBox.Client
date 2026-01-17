@@ -45,7 +45,7 @@ public:
 	vector<wstring> GetTextureFiles() const noexcept;
 
 	vector<TextureSourceInfo> GetTotalAreas(const wstring& filename) const noexcept;
-	void ProcessIO(Serializer& serializer);
+	void Serialize(Serializer& serializer);
 
 private:
 	IJsonStorage* m_storage{ nullptr };

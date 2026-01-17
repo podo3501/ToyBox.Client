@@ -134,7 +134,7 @@ bool UIComponent::ChangeRelativePosition(const XMINT2& relativePos) noexcept
 	return true;
 }
 
-void UIComponent::ProcessIO(Serializer& serializer)
+void UIComponent::Serialize(Serializer& serializer)
 {
 	serializer.Process("Name", m_name);
 	serializer.Process("Layout", m_layout);

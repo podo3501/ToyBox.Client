@@ -21,7 +21,7 @@ TextureResBinderWindow::TextureResBinderWindow(IRenderer* renderer, IImguiRegist
     InnerWindow{ "empty" },
     m_renderer{ renderer },
     m_imguiRegistry{ imguiRegistry },
-    m_storage{ CreateJsonStorage(StorageType::File) },
+    m_storage{ CreateJsonStorage() },
     m_sourceTexture{ nullptr },
     m_editFontTexture{ make_unique<EditFontTexture>() },
     m_editSourceTexture{ make_unique<EditSourceTexture>(renderer, this) }

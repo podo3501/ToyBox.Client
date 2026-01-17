@@ -116,9 +116,6 @@
     <ClInclude Include="SerializerIO\Storage\FileStorage.h">
       <Filter>SerializerIO\Storage</Filter>
     </ClInclude>
-    <ClInclude Include="SerializerIO\Storage\MemoryStorage.h">
-      <Filter>SerializerIO\Storage</Filter>
-    </ClInclude>
     <ClInclude Include="SerializerIO\ClassSerialize.hpp">
       <Filter>SerializerIO</Filter>
     </ClInclude>
@@ -212,13 +209,7 @@
     <ClCompile Include="SerializerIO\Storage\FileStorage.cpp">
       <Filter>SerializerIO\Storage</Filter>
     </ClCompile>
-    <ClCompile Include="SerializerIO\Storage\MemoryStorage.cpp">
-      <Filter>SerializerIO\Storage</Filter>
-    </ClCompile>
     <ClCompile Include="SerializerIO\Serializer.cpp">
-      <Filter>SerializerIO</Filter>
-    </ClCompile>
-    <ClCompile Include="SerializerIO\IJsonStorage.cpp">
       <Filter>SerializerIO</Filter>
     </ClCompile>
   </ItemGroup>

@@ -7,7 +7,7 @@ enum class AudioGroupID;
 
 struct SoundInfo
 {
-	void ProcessIO(Serializer& serializer);
+	void Serialize(Serializer& serializer);
 
 	string filename{};
 	AudioGroupID groupID{ AudioGroupID::None };
@@ -22,7 +22,7 @@ public:
 	explicit SoundTableReader(unique_ptr<IJsonStorage> storage);
 	bool Read(const wstring& filename);
 	SoundInfo* GetInfo(const string& index) noexcept;
-	void ProcessIO(Serializer& serializer);
+	void Serialize(Serializer& serializer);
 
 private:
 	unique_ptr<IJsonStorage> m_storage;

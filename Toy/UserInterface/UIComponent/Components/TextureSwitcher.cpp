@@ -191,9 +191,9 @@ void TextureSwitcher::SetState(InteractState state) noexcept
 	m_state = state;
 }
 
-void TextureSwitcher::ProcessIO(Serializer& serializer)
+void TextureSwitcher::Serialize(Serializer& serializer)
 {
-	UIComponent::ProcessIO(serializer);
+	UIComponent::Serialize(serializer);
 	serializer.Process("StateKey", m_stateKeys);
 
 	if (serializer.IsWrite()) return;

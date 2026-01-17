@@ -3,5 +3,5 @@
 
 class UIComponent;
 
-void SerializeClass_Internal(UIComponent& data, nlohmann::ordered_json& j);
+void SerializeClass_Internal(nlohmann::json& j, UIComponent& data);
 void DeserializeClass(const nlohmann::json& j, unique_ptr<UIComponent>& data);

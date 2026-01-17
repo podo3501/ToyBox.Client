@@ -16,7 +16,7 @@ struct TextureSourceInfo : public TextureInfo
 	bool operator==(const TextureSourceInfo& o) const noexcept;
 
 	bool LoadResource(ITextureLoad* load);
-	void ProcessIO(Serializer& serializer);
+	void Serialize(Serializer& serializer);
 	inline Rectangle GetSource(size_t index) const noexcept { return (sources.size() > index) ? sources.at(index) : Rectangle{}; }
 
 	using TextureInfo::GetIndex;

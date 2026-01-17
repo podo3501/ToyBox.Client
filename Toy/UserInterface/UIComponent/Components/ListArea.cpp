@@ -272,9 +272,9 @@ bool ListArea::ExitToolMode() noexcept
 	return UpdateScrollBar();
 }
 
-void ListArea::ProcessIO(Serializer& serializer)
+void ListArea::Serialize(Serializer& serializer)
 {
-	UIComponent::ProcessIO(serializer);
+	UIComponent::Serialize(serializer);
 	serializer.Process("ScrollPadding", m_scrollPadding);
 
 	if (serializer.IsWrite()) return;

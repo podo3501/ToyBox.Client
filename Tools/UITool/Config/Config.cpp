@@ -12,7 +12,7 @@ Config* Config::m_Instance = nullptr;
 Config::Config()
 {
 	m_Instance = this;
-	m_storage = CreateJsonStorage(StorageType::File);
+	m_storage = CreateJsonStorage();
 	JsonObjectIO::Load(*this, m_storage.get(), ResolutionFilename);
 }
 
@@ -48,7 +48,7 @@ XMUINT2 Config::GetResolutionInCoordinate() noexcept
 	return XMUINT2{ 800, 600 };
 }
 
-void Config::ProcessIO(Serializer& serializer)
+void Config::Serialize(Serializer& serializer)
 {
 	serializer.Process("Resolution", m_resolutionType);
 }

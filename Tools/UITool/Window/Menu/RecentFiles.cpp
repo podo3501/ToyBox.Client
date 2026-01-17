@@ -6,7 +6,7 @@
 
 RecentFiles::~RecentFiles() = default;
 RecentFiles::RecentFiles() :
-    m_storage{ CreateJsonStorage(StorageType::File) }
+    m_storage{ CreateJsonStorage() }
 {
     JsonObjectIO::Load(*this, m_storage.get(), RecentFilename);
 }
@@ -34,7 +34,7 @@ bool RecentFiles::OpenFile(FileTab& menuBar)
     return result;
 }
 
-void RecentFiles::ProcessIO(Serializer& serializer)
+void RecentFiles::Serialize(Serializer& serializer)
 {
     serializer.Process("RecentFiles", m_recentFiles);
 }

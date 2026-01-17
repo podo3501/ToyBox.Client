@@ -43,9 +43,9 @@ bool Button::Setup(const UILayout& layout, unique_ptr<UIComponent> container) no
 	return true;
 }
 
-void Button::ProcessIO(Serializer& serializer)
+void Button::Serialize(Serializer& serializer)
 {
-	UIComponent::ProcessIO(serializer);
+	UIComponent::Serialize(serializer);
 
 	if (serializer.IsWrite()) return;
 	ReloadDatas();

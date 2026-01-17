@@ -8,9 +8,9 @@ static void SafeRead(T& out, const J& value)
 }
 // x, y 공통 처리 헬퍼
 template<typename T>
-nlohmann::ordered_json SerializeXY(const T& data)
+nlohmann::json SerializeXY(const T& data)
 {
-	nlohmann::ordered_json j;
+	nlohmann::json j;
 	j["x"] = data.x;
 	j["y"] = data.y;
 	return j;
@@ -32,7 +32,7 @@ T CreateAndFill(Func&& func)
 }
 
 // Rectangle 전용 추가 필드 처리 헬퍼
-inline nlohmann::ordered_json SerializeRectExtra(const Rectangle& data, nlohmann::ordered_json j)
+inline nlohmann::json SerializeRectExtra(const Rectangle& data, nlohmann::json j)
 {
 	j["width"] = data.width;
 	j["height"] = data.height;

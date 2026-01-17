@@ -28,7 +28,7 @@ public:
 
 	bool IsArea(const XMINT2& pos) const noexcept;
 
-	void ProcessIO(Serializer& serializer);
+	void Serialize(Serializer& serializer);
 
 private:
 	XMINT2 GetOriginPoint(Origin origin) const noexcept;

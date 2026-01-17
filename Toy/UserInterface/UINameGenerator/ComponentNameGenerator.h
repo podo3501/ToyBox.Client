@@ -16,7 +16,7 @@ public:
     string MakeNameFromBase(const string& name) noexcept;
     bool Remove(const string& name) noexcept;
     bool IsUnusedName(string_view name) const noexcept;
-    void ProcessIO(Serializer& serializer);
+    void Serialize(Serializer& serializer);
 
 private:
     unordered_svmap<string, unique_ptr<AutoNamer>> m_namers;
