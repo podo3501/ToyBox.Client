@@ -2,7 +2,7 @@
 #include "UILayout.h"
 #include "UIType.h"
 #include "Shared/Utils/GeometryExt.h"
-#include "Shared/SerializerIO/Serializer.h"
+#include "Shared/Data/Serializer/Serializer.h"
 #include "../SerializerIO/Format/Traits.h"
 
 UILayout::~UILayout() = default;

@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "TextureSwitcher.h"
-#include "Shared/SerializerIO/Serializer.h"
+#include "Shared/Data/Serializer/Serializer.h"
 #include "Shared/Utils/StlExt.h"
 #include "Locator/EventDispatcherLocator.h"
 #include "PatchTexture/PatchTextureLite/PatchTextureLite.h"

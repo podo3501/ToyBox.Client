@@ -104,35 +104,41 @@
     <ClInclude Include="Foundation\NoCopyNoMove.h">
       <Filter>Foundation</Filter>
     </ClInclude>
-    <ClInclude Include="SerializerIO\Format\KeyConverter.hpp">
-      <Filter>SerializerIO\Format</Filter>
+    <ClInclude Include="Data\Serializer\Format\KeyConverter.hpp">
+      <Filter>Data\Serializer\Format</Filter>
     </ClInclude>
-    <ClInclude Include="SerializerIO\Format\Traits.h">
-      <Filter>SerializerIO\Format</Filter>
+    <ClInclude Include="Data\Serializer\Format\Traits.h">
+      <Filter>Data\Serializer\Format</Filter>
     </ClInclude>
-    <ClInclude Include="SerializerIO\Format\TraitsHelper.hpp">
-      <Filter>SerializerIO\Format</Filter>
+    <ClInclude Include="Data\Serializer\Format\TraitsHelper.hpp">
+      <Filter>Data\Serializer\Format</Filter>
     </ClInclude>
-    <ClInclude Include="SerializerIO\Storage\FileStorage.h">
-      <Filter>SerializerIO\Storage</Filter>
+    <ClInclude Include="Data\Serializer\ClassSerialize.hpp">
+      <Filter>Data\Serializer</Filter>
     </ClInclude>
-    <ClInclude Include="SerializerIO\ClassSerialize.hpp">
-      <Filter>SerializerIO</Filter>
+    <ClInclude Include="Data\Serializer\Concepts.h">
+      <Filter>Data\Serializer</Filter>
     </ClInclude>
-    <ClInclude Include="SerializerIO\Concepts.h">
-      <Filter>SerializerIO</Filter>
+    <ClInclude Include="Data\Serializer\Serializer.h">
+      <Filter>Data\Serializer</Filter>
     </ClInclude>
-    <ClInclude Include="SerializerIO\JsonObjectIO.h">
-      <Filter>SerializerIO</Filter>
+    <ClInclude Include="Data\Serializer\Serializer.hpp">
+      <Filter>Data\Serializer</Filter>
     </ClInclude>
-    <ClInclude Include="SerializerIO\Serializer.h">
-      <Filter>SerializerIO</Filter>
+    <ClInclude Include="Data\Storage\Json\JsonFileIO.h">
+      <Filter>Data\Storage\Json</Filter>
     </ClInclude>
-    <ClInclude Include="SerializerIO\Serializer.hpp">
-      <Filter>SerializerIO</Filter>
+    <ClInclude Include="Data\Storage\Json\JsonStorage.h">
+      <Filter>Data\Storage\Json</Filter>
     </ClInclude>
-    <ClInclude Include="SerializerIO\IJsonStorage.h">
-      <Filter>SerializerIO</Filter>
+    <ClInclude Include="Data\Storage\IJsonStorage.h">
+      <Filter>Data\Storage</Filter>
+    </ClInclude>
+    <ClInclude Include="Data\Storage\StorageKey.h">
+      <Filter>Data\Storage</Filter>
+    </ClInclude>
+    <ClInclude Include="Data\JsonObjectIO.h">
+      <Filter>Data</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -200,17 +206,20 @@
     <ClCompile Include="Utils\PathUtils.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
-    <ClCompile Include="SerializerIO\Format\KeyConverter.cpp">
-      <Filter>SerializerIO\Format</Filter>
+    <ClCompile Include="Data\Serializer\Format\KeyConverter.cpp">
+      <Filter>Data\Serializer\Format</Filter>
     </ClCompile>
-    <ClCompile Include="SerializerIO\Format\Traits.cpp">
-      <Filter>SerializerIO\Format</Filter>
+    <ClCompile Include="Data\Serializer\Format\Traits.cpp">
+      <Filter>Data\Serializer\Format</Filter>
     </ClCompile>
-    <ClCompile Include="SerializerIO\Storage\FileStorage.cpp">
-      <Filter>SerializerIO\Storage</Filter>
+    <ClCompile Include="Data\Serializer\Serializer.cpp">
+      <Filter>Data\Serializer</Filter>
     </ClCompile>
-    <ClCompile Include="SerializerIO\Serializer.cpp">
-      <Filter>SerializerIO</Filter>
+    <ClCompile Include="Data\Storage\Json\JsonFileIO.cpp">
+      <Filter>Data\Storage\Json</Filter>
+    </ClCompile>
+    <ClCompile Include="Data\Storage\Json\JsonStorage.cpp">
+      <Filter>Data\Storage\Json</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -244,14 +253,20 @@
     <Filter Include="Foundation">
       <UniqueIdentifier>{1bf06ca8-e6c1-4235-883f-30ae673f9127}</UniqueIdentifier>
     </Filter>
-    <Filter Include="SerializerIO">
-      <UniqueIdentifier>{0e488ff5-3176-4b98-a9a1-6d2d407e4ec5}</UniqueIdentifier>
+    <Filter Include="Data">
+      <UniqueIdentifier>{9dccc0b3-9dbe-435c-803f-4fa7f5452cec}</UniqueIdentifier>
     </Filter>
-    <Filter Include="SerializerIO\Format">
-      <UniqueIdentifier>{91e79ace-76e9-4eef-bfbb-d23c6454080f}</UniqueIdentifier>
+    <Filter Include="Data\Serializer">
+      <UniqueIdentifier>{20cf38a3-1879-4349-a5eb-78088aaabd1b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="SerializerIO\Storage">
-      <UniqueIdentifier>{cdb507d1-65ee-4ff3-be3b-86eca24705ba}</UniqueIdentifier>
+    <Filter Include="Data\Storage">
+      <UniqueIdentifier>{dd49a697-b1aa-4eee-a6ba-eb1195765ed1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Data\Storage\Json">
+      <UniqueIdentifier>{7a5a1cc1-0097-46dd-afc5-e7d8dd553b1d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Data\Serializer\Format">
+      <UniqueIdentifier>{a6420574-9ae7-41e6-8292-0953dabbc3fc}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

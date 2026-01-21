@@ -1,5 +1,5 @@
 #pragma once
-#include "Shared/SerializerIO/Format/KeyConverter.hpp"
+#include "Shared/Data/Serializer/Format/KeyConverter.hpp"
 
 enum class InteractState;
 enum class ComponentID;

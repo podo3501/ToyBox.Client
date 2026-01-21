@@ -19,6 +19,18 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Data\JsonObjectIO.h" />
+    <ClInclude Include="Data\Serializer\ClassSerialize.hpp" />
+    <ClInclude Include="Data\Serializer\Concepts.h" />
+    <ClInclude Include="Data\Serializer\Format\KeyConverter.hpp" />
+    <ClInclude Include="Data\Serializer\Format\Traits.h" />
+    <ClInclude Include="Data\Serializer\Format\TraitsHelper.hpp" />
+    <ClInclude Include="Data\Serializer\Serializer.h" />
+    <ClInclude Include="Data\Serializer\Serializer.hpp" />
+    <ClInclude Include="Data\Storage\IJsonStorage.h" />
+    <ClInclude Include="Data\Storage\Json\JsonFileIO.h" />
+    <ClInclude Include="Data\Storage\Json\JsonStorage.h" />
+    <ClInclude Include="Data\Storage\StorageKey.h" />
     <ClInclude Include="Foundation\NoCopyNoMove.h" />
     <ClInclude Include="Foundation\NonCopyable.h" />
     <ClInclude Include="Foundation\NonMovable.h" />
@@ -29,16 +41,6 @@
     <ClInclude Include="Framework\Initializer\GoogleTest.h" />
     <ClInclude Include="Framework\Locator.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="SerializerIO\ClassSerialize.hpp" />
-    <ClInclude Include="SerializerIO\Concepts.h" />
-    <ClInclude Include="SerializerIO\Format\KeyConverter.hpp" />
-    <ClInclude Include="SerializerIO\Format\Traits.h" />
-    <ClInclude Include="SerializerIO\Format\TraitsHelper.hpp" />
-    <ClInclude Include="SerializerIO\IJsonStorage.h" />
-    <ClInclude Include="SerializerIO\JsonObjectIO.h" />
-    <ClInclude Include="SerializerIO\Serializer.h" />
-    <ClInclude Include="SerializerIO\Serializer.hpp" />
-    <ClInclude Include="SerializerIO\Storage\FileStorage.h" />
     <ClInclude Include="System\Audio\AudioTypeHelpers.h" />
     <ClInclude Include="System\Audio\EffectSoundBuffer.h" />
     <ClInclude Include="System\Audio\EffectSound.h" />
@@ -66,6 +68,11 @@
     <ClInclude Include="Window\WindowProcedure.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Data\Serializer\Format\KeyConverter.cpp" />
+    <ClCompile Include="Data\Serializer\Format\Traits.cpp" />
+    <ClCompile Include="Data\Serializer\Serializer.cpp" />
+    <ClCompile Include="Data\Storage\Json\JsonFileIO.cpp" />
+    <ClCompile Include="Data\Storage\Json\JsonStorage.cpp" />
     <ClCompile Include="Framework\AppLoop.cpp" />
     <ClCompile Include="Framework\AppLoopWndProc.cpp" />
     <ClCompile Include="Framework\Environment.cpp" />
@@ -77,10 +84,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="SerializerIO\Format\KeyConverter.cpp" />
-    <ClCompile Include="SerializerIO\Format\Traits.cpp" />
-    <ClCompile Include="SerializerIO\Serializer.cpp" />
-    <ClCompile Include="SerializerIO\Storage\FileStorage.cpp" />
     <ClCompile Include="System\Audio\EffectSoundBuffer.cpp" />
     <ClCompile Include="System\Audio\EffectSound.cpp" />
     <ClCompile Include="System\Audio\NormalSound.cpp" />

@@ -20,9 +20,9 @@ public:
 
 	virtual bool LoadResources(ITextureLoad* load) override;
 
-	bool Load(const wstring& jsonFilename);
-	bool Save(const wstring& jsonFilename);
-	inline const wstring& GetJsonFilename() const noexcept { return m_jsonFilename; }
+	bool Load();
+	bool Save();
+	wstring GetJsonFilename() const noexcept;
 	bool AddFontKey(const wstring& bindingKey, const TextureFontInfo& fontInfo) noexcept;
 	bool AddTextureKey(const string& bindingKey, const TextureSourceInfo& sourceAreas) noexcept;
 	bool ModifyTextureSourceInfo(const string& bindKey, const TextureSourceInfo& sourceInfo) noexcept;
@@ -49,10 +49,8 @@ public:
 
 private:
 	IJsonStorage* m_storage{ nullptr };
-	wstring m_jsonFilename;
 	unordered_map<wstring, TextureFontInfo> m_bindingFontTable;
 	unordered_map<string, TextureSourceInfo> m_bindingTexTable;
 };
 //renderer가 nullptr 이면 텍스쳐를 메모리에 올리지 않는다.
-unique_ptr<TextureResourceBinder> CreateTextureResourceBinder(IJsonStorage* storage,
-	const wstring& jsonFilename = L"", IRenderer* renderer = nullptr);
+unique_ptr<TextureResourceBinder> CreateTextureResourceBinder(IJsonStorage* storage, IRenderer* renderer = nullptr);

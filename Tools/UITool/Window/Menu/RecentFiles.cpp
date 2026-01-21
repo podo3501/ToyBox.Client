@@ -2,13 +2,16 @@
 #include "RecentFiles.h"
 #include "FileTab.h"
 #include "Shared/Utils/StringExt.h"
-#include "Shared/SerializerIO/JsonObjectIO.h"
+#include "Shared/Data/JsonObjectIO.h"
 
 RecentFiles::~RecentFiles() = default;
-RecentFiles::RecentFiles() :
-    m_storage{ CreateJsonStorage() }
+RecentFiles::RecentFiles()
 {
-    JsonObjectIO::Load(*this, m_storage.get(), RecentFilename);
+    JsonStorageDesc desc;
+    desc.SetFilename<StorageKey::Resource>(RecentFilename);
+    m_storage = CreateJsonStorage(desc);
+
+    JsonObjectIO::Read<StorageKey::Resource>(*this, m_storage.get());
 }
 
 void RecentFiles::AddFile(const wstring& filename)
@@ -21,7 +24,7 @@ void RecentFiles::AddFile(const wstring& filename)
     if (m_recentFiles.size() > MaxRecentFiles)
         m_recentFiles.pop_back();
 
-    JsonObjectIO::Save(*this, m_storage.get(), RecentFilename);
+    JsonObjectIO::Write<StorageKey::Resource>(*this, m_storage.get());
 }
 
 bool RecentFiles::OpenFile(FileTab& menuBar)

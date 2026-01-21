@@ -1,5 +1,5 @@
 #pragma once
-#include "Shared/SerializerIO/Format/Traits.h"
+#include "Shared/Data/Serializer/Format/Traits.h"
 
 enum class Origin;
 

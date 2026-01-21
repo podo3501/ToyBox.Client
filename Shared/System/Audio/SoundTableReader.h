@@ -20,7 +20,7 @@ public:
 	~SoundTableReader();
 	SoundTableReader() = delete;
 	explicit SoundTableReader(unique_ptr<IJsonStorage> storage);
-	bool Read(const wstring& filename);
+	bool Read();
 	SoundInfo* GetInfo(const string& index) noexcept;
 	void Serialize(Serializer& serializer);
 

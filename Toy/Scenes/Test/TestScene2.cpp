@@ -7,7 +7,6 @@
 #include "UserInterface/UIModule.h"
 #include "UserInterface/TextureResourceBinder/TextureResourceBinder.h"
 #include "TestScene1.h"
-#include "Shared/SerializerIO/IJsonStorage.h"
 
 TestScene2::TestScene2(IRenderer* renderer) :
 	Scene(renderer)
@@ -15,9 +14,12 @@ TestScene2::TestScene2(IRenderer* renderer) :
 
 bool TestScene2::Enter()
 {
-	auto storage = CreateJsonStorage();
-	auto texResBinder = CreateTextureResourceBinder(storage.get(), L"UI/SampleTexture/SampleTextureBinder.json", GetRenderer());
-	m_uiModule = CreateUIModule("Test2", L"/Scene/Test/TestScene2.json", move(storage), move(texResBinder));
+	JsonStorageDesc storageDesc;
+	storageDesc.SetFilename<StorageKey::Definition>(L"/Scene/Test/TestScene2.json");
+	storageDesc.SetFilename<StorageKey::Resource>(L"UI/SampleTexture/SampleTextureBinder.json");
+	auto storage = CreateJsonStorage(storageDesc);
+	auto texResBinder = CreateTextureResourceBinder(storage.get(), GetRenderer());
+	m_uiModule = CreateUIModule("Test2", move(storage), move(texResBinder));
 
 	auto scene = SceneLocator::GetService();
 	auto eventDispatcher = EventDispatcherLocator::GetService();

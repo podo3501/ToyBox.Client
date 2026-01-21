@@ -2,7 +2,7 @@
 #include "Container.h"
 #include "Locator/InputLocator.h"
 #include "../Traverser/UITraverser.h"
-#include "Shared/SerializerIO/Serializer.h"
+#include "Shared/Data/Serializer/Serializer.h"
 #include "Shared/Utils/GeometryExt.h"
 #include "Shared/Utils/StlExt.h"
 

@@ -236,8 +236,12 @@
 --struct IMouseEventReceiver를 없애고 class MouseEventReceiver로 대체한다.
 --NonCopyable, NonMovable을 상속 받아서 클래스들을 정리한다.
 --ProcessIO 함수 이름을 Serialize 로 수정
+--storage에서 desc 초기값을 안넣어줘도 되는 것이 있으니까 그때 기본 초기값을 넣게 수정
+    FileIO를 클래스로 만들고 어떤 로딩을 할 것인지는 StorageDesc에 넣는걸로
+--storage 가 커져셔 SerializerIO는 Serializer로 바꾸고 Storage+FileIO 폴더를 만들어서 이쪽에 이동시켜야 할듯
 
-@IJsonStorage에서 메모리에서 읽어들인 것과 파일에서 읽어들인 것이 같은지 확인하는 것도 필요하지 않을까?
+@storage 정리가 끝나면 tdd 쪽 파일 m_storage 라고 명명된 파일명을 수정해야 한다. 
+@IJsonFileIO에서 메모리에서 읽어들인 것과 파일에서 읽어들인 것이 같은지 확인하는 것도 필요하지 않을까?
 @TEST_F(EventProcessorT, ProcessHover) 이거 오래 걸리는데 Play 사운드 때문인거 같다.
 @SoundID 같이 저장장치에 접근하는 것들은 인터페이스 클래스를 가지는데 이 인터페이스 클래스를 하나로 묶는 작업
 @툴에서 Config 클래스 생성자 안들어오고 이상한거 같은데 확인

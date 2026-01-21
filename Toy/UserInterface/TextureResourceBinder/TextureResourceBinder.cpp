@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "TextureResourceBinder.h"
 #include "IRenderer.h"
-#include "Shared/SerializerIO/JsonObjectIO.h"
+#include "Shared/Data/JsonObjectIO.h"
 #include "../UIComponent/UIUtility.h"
 
 TextureResourceBinder::~TextureResourceBinder() = default;
@@ -28,21 +28,24 @@ bool TextureResourceBinder::LoadResources(ITextureLoad* load)
 
     return (fontResult && texResult);
 }
-
-bool TextureResourceBinder::Load(const wstring& jsonFilename)
+//?!? 함수 이름을 Read, Write 로 바꾸자.
+bool TextureResourceBinder::Load()
 {
-    ReturnIfFalse(JsonObjectIO::Load(*this, m_storage, jsonFilename));
-    m_jsonFilename = jsonFilename;
-
+    ReturnIfFalse(JsonObjectIO::Read<StorageKey::Resource>(*this, m_storage));
     return true;
 }
 
-bool TextureResourceBinder::Save(const wstring& jsonFilename)
+bool TextureResourceBinder::Save()
 {
-    ReturnIfFalse(JsonObjectIO::Save(*this, m_storage, jsonFilename));
-    m_jsonFilename = jsonFilename;
-
+    ReturnIfFalse(JsonObjectIO::Write<StorageKey::Resource>(*this, m_storage));
     return true;
+}
+
+//?!? 이 GetJsonFilename 함수는 지워지는게 맞는듯.
+wstring TextureResourceBinder::GetJsonFilename() const noexcept
+{
+    auto desc = m_storage->GetDescription();
+    return desc->GetFilename<StorageKey::Resource>();
 }
 
 static bool AddBindingImpl(auto& bindingTable, const auto& bindingKey, const auto& value) noexcept
@@ -220,12 +223,10 @@ void TextureResourceBinder::Serialize(Serializer& serializer)
 
 /////////////////////////////////////////////////////////////////////////
 
-unique_ptr<TextureResourceBinder> CreateTextureResourceBinder(IJsonStorage* storage, const wstring& jsonFilename, IRenderer* renderer)
+unique_ptr<TextureResourceBinder> CreateTextureResourceBinder(IJsonStorage* storage, IRenderer* renderer)
 {
     auto resBinder = make_unique<TextureResourceBinder>(storage);
-    if (jsonFilename.empty()) return resBinder;
-
-    if (!resBinder->Load(jsonFilename)) 
+    if (!resBinder->Load()) 
         return nullptr;
 
     if (renderer && !renderer->LoadTextureBinder(resBinder.get())) 

@@ -4,7 +4,7 @@
 #include "EditSourceTexture.h"
 #include "Window/Utils/Common.h"
 #include "Core/Public/IImguiRegistry.h"
-#include "Shared/SerializerIO/IJsonStorage.h"
+#include "Shared/Data/Storage/IJsonStorage.h"
 #include "Shared/Utils/StringExt.h"
 #include "Toy/Locator/InputLocator.h"
 #include "Toy/UserInterface/UIComponent/Components/RenderTexture.h"
@@ -21,11 +21,13 @@ TextureResBinderWindow::TextureResBinderWindow(IRenderer* renderer, IImguiRegist
     InnerWindow{ "empty" },
     m_renderer{ renderer },
     m_imguiRegistry{ imguiRegistry },
-    m_storage{ CreateJsonStorage() },
     m_sourceTexture{ nullptr },
     m_editFontTexture{ make_unique<EditFontTexture>() },
     m_editSourceTexture{ make_unique<EditSourceTexture>(renderer, this) }
 {
+    JsonStorageDesc desc;
+    desc.SetFilename<StorageKey::Resource>(L"");
+    m_storage = CreateJsonStorage(desc);
     m_imguiRegistry->AddComponent(this);
 }
 
@@ -37,7 +39,9 @@ void TextureResBinderWindow::SetTexture(PatchTextureStd1* pTex1) noexcept
 
 bool TextureResBinderWindow::Create(const wstring& filename)
 {
-    m_resBinder = CreateTextureResourceBinder(m_storage.get(), filename);
+    auto desc = m_storage->GetDescription();
+    desc->SetFilename<StorageKey::Resource>(filename);
+    m_resBinder = CreateTextureResourceBinder(m_storage.get());
     ReturnIfFalse(m_resBinder);
     m_cmdHistory = make_unique<TexResCommandHistory>(m_resBinder.get());
 
@@ -139,10 +143,13 @@ void TextureResBinderWindow::RenderResourceWindow()
 
 bool TextureResBinderWindow::SaveScene(const wstring& filename)
 {
-    return m_resBinder->Save(filename);
+    auto desc = m_storage->GetDescription();
+    desc->SetFilename<StorageKey::Resource>(filename);
+    return m_resBinder->Save();
 }
 
 wstring TextureResBinderWindow::GetSaveFilename() const noexcept
 {
-    return m_resBinder->GetJsonFilename();
+    auto desc = m_storage->GetDescription();
+    return desc->GetFilename<StorageKey::Resource>();
 }

@@ -3,7 +3,7 @@
 #include "SoundTraits.h"
 #include "AudioTypeHelpers.h"
 #include "Shared/Framework/EnvironmentLocator.h"
-#include "Shared/SerializerIO/JsonObjectIO.h"
+#include "Shared/Data/JsonObjectIO.h"
 
 void SoundInfo::Serialize(Serializer& serializer)
 {
@@ -19,9 +19,9 @@ SoundTableReader::SoundTableReader(unique_ptr<IJsonStorage> storage) :
 	m_storage{ move(storage) }
 {}
 
-bool SoundTableReader::Read(const wstring& filename)
+bool SoundTableReader::Read()
 {
-	return JsonObjectIO::Load(*this, m_storage.get(), filename);
+	return JsonObjectIO::Read<StorageKey::Resource>(*this, m_storage.get());
 }
 
 SoundInfo* SoundTableReader::GetInfo(const string& index) noexcept

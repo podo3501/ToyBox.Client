@@ -5,7 +5,7 @@
 #include "TextureResourceBinder/TextureResourceBinder.h"
 #include "UIComponent/UIComponent.h"
 #include "UIComponent/Traverser/UIDetailTraverser.h"
-#include "Shared/SerializerIO/IJsonStorage.h"
+#include "Shared/Data/Storage/IJsonStorage.h"
 #include "Shared/Utils/StlExt.h"
 
 UIComponentManager::~UIComponentManager() = default;
@@ -31,13 +31,13 @@ UIModule* UIComponentManager::CreateUIModule(const string& moduleName, const UIL
 	return module;
 }
 
-UIModule* UIComponentManager::CreateUIModule(const string& moduleName, const wstring& filename, 
+UIModule* UIComponentManager::CreateUIModule(const string& moduleName,
 	unique_ptr<IJsonStorage> storage, unique_ptr<TextureResourceBinder> resBinder)
 {
 	if (m_uiModules.find(moduleName) != m_uiModules.end()) return nullptr;
 
 	auto [owner, module] = GetPtrs(make_unique<UIModule>(move(storage)));
-	if (!owner->SetupMainComponent(filename, move(resBinder))) return nullptr;
+	if (!owner->SetupMainComponent(move(resBinder))) return nullptr;
 	m_uiModules.insert({ moduleName, move(owner) });
 
 	return module;

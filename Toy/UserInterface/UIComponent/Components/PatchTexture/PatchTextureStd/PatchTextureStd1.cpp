@@ -3,7 +3,7 @@
 #include "IRenderer.h"
 #include "UserInterface/TextureResourceBinder/TextureResourceBinder.h"
 #include "UserInterface/UIComponent/UIUtility.h"
-#include "Shared/SerializerIO/Serializer.h"
+#include "Shared/Data/Serializer/Serializer.h"
 
 PatchTextureStd1::~PatchTextureStd1() = default;
 PatchTextureStd1::PatchTextureStd1() : 

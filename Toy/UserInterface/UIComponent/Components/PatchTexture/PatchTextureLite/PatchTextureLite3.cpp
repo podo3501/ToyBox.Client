@@ -2,7 +2,7 @@
 #include "PatchTextureLite3.h"
 #include "PatchTextureLite1.h"
 #include "UserInterface/UIComponent/UIUtility.h"
-#include "Shared/SerializerIO/Serializer.h"
+#include "Shared/Data/Serializer/Serializer.h"
 
 PatchTextureLite3::~PatchTextureLite3() = default;
 PatchTextureLite3::PatchTextureLite3() noexcept :

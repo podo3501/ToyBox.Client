@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "Config.h"
-#include "Shared/SerializerIO/JsonObjectIO.h"
+#include "Shared/Data/JsonObjectIO.h"
 
 using namespace Tool;
 
@@ -12,8 +12,10 @@ Config* Config::m_Instance = nullptr;
 Config::Config()
 {
 	m_Instance = this;
-	m_storage = CreateJsonStorage();
-	JsonObjectIO::Load(*this, m_storage.get(), ResolutionFilename);
+	JsonStorageDesc desc;
+	desc.SetFilename<StorageKey::Config>(ResolutionFilename);
+	m_storage = CreateJsonStorage(desc);
+	JsonObjectIO::Read<StorageKey::Config>(*this, m_storage.get());
 }
 
 Config::~Config()
@@ -25,7 +27,7 @@ void Config::SetResolution(ResolutionType type) noexcept
 		return;
 
 	m_resolutionType = type;
-	JsonObjectIO::Save(*m_Instance, m_storage.get(), ResolutionFilename);
+	JsonObjectIO::Write<StorageKey::Config>(*m_Instance, m_storage.get());
 }
 
 ResolutionType Config::GetResolution() noexcept
