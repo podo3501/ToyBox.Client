@@ -2,7 +2,7 @@
 #include "TextureFontInfo.h"
 #include "IRenderer.h"
 #include "Shared/Framework/EnvironmentLocator.h"
-#include "Shared/Data/Serializer/Serializer.h"
+#include "Shared/Serializer/Serializer.h"
 
 TextureFontInfo::~TextureFontInfo() = default;
 TextureFontInfo::TextureFontInfo() noexcept = default;

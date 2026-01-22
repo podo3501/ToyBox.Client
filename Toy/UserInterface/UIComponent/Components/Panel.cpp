@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Panel.h"
 #include "IRenderer.h"
-#include "Shared/Data/Serializer/Serializer.h"
+#include "Shared/Serializer/Serializer.h"
 
 Panel::~Panel() = default;
 Panel::Panel()

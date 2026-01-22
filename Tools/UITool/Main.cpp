@@ -2,7 +2,7 @@
 #include "ToolLoop.h"
 #include "Shared/Framework/Initializer/Application.h"
 #include "Shared/Utils/PathUtils.h"
-#include "Core/Utils/DxLeakCheck.h"
+#include "Renderer/Utils/DxLeakCheck.h"
 
 int WINAPI wWinMain(_In_ HINSTANCE hInstance,
 	_In_opt_ HINSTANCE hPrevInstance,

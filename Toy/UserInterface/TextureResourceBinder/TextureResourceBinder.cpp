@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "TextureResourceBinder.h"
 #include "IRenderer.h"
-#include "Shared/Data/JsonObjectIO.h"
+#include "Device/Storage/JsonObjectIO.h"
 #include "../UIComponent/UIUtility.h"
 
 TextureResourceBinder::~TextureResourceBinder() = default;
@@ -39,13 +39,6 @@ bool TextureResourceBinder::Save()
 {
     ReturnIfFalse(JsonObjectIO::Write<StorageKey::Resource>(*this, m_storage));
     return true;
-}
-
-//?!? 이 GetJsonFilename 함수는 지워지는게 맞는듯.
-wstring TextureResourceBinder::GetJsonFilename() const noexcept
-{
-    auto desc = m_storage->GetDescription();
-    return desc->GetFilename<StorageKey::Resource>();
 }
 
 static bool AddBindingImpl(auto& bindingTable, const auto& bindingKey, const auto& value) noexcept

@@ -1,5 +1,5 @@
 #pragma once
-#include "Shared/System/StepTimer.h"
+#include "StepTimer.h"
 #include "Shared/Foundation/NoCopyNoMove.h"
 
 struct IRenderer;

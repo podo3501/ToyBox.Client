@@ -5,7 +5,7 @@
 #include "Window/TextureResourceBinder/TextureResBinderWindow.h"
 #include "Window/Menu/MenuBar.h"
 #include "Window/Dialog.h"
-#include "Core/Public/IImguiRegistry.h"
+#include "Renderer/Public/IImguiRegistry.h"
 #include "Shared/Window/Window.h"
 #include "Toy/Locator/UIComponentLocator.h"
 #include "Toy/Locator/EventDispatcherLocator.h"

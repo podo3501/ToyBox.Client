@@ -19,18 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Data\JsonObjectIO.h" />
-    <ClInclude Include="Data\Serializer\ClassSerialize.hpp" />
-    <ClInclude Include="Data\Serializer\Concepts.h" />
-    <ClInclude Include="Data\Serializer\Format\KeyConverter.hpp" />
-    <ClInclude Include="Data\Serializer\Format\Traits.h" />
-    <ClInclude Include="Data\Serializer\Format\TraitsHelper.hpp" />
-    <ClInclude Include="Data\Serializer\Serializer.h" />
-    <ClInclude Include="Data\Serializer\Serializer.hpp" />
-    <ClInclude Include="Data\Storage\IJsonStorage.h" />
-    <ClInclude Include="Data\Storage\Json\JsonFileIO.h" />
-    <ClInclude Include="Data\Storage\Json\JsonStorage.h" />
-    <ClInclude Include="Data\Storage\StorageKey.h" />
     <ClInclude Include="Foundation\NoCopyNoMove.h" />
     <ClInclude Include="Foundation\NonCopyable.h" />
     <ClInclude Include="Foundation\NonMovable.h" />
@@ -40,20 +28,15 @@
     <ClInclude Include="Framework\Initializer\Application.h" />
     <ClInclude Include="Framework\Initializer\GoogleTest.h" />
     <ClInclude Include="Framework\Locator.h" />
+    <ClInclude Include="Framework\StepTimer.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="System\Audio\AudioTypeHelpers.h" />
-    <ClInclude Include="System\Audio\EffectSoundBuffer.h" />
-    <ClInclude Include="System\Audio\EffectSound.h" />
-    <ClInclude Include="System\Audio\NormalSound.h" />
-    <ClInclude Include="System\Audio\NormalSoundBuffer.h" />
-    <ClInclude Include="System\Audio\SDLAudioManager.h" />
-    <ClInclude Include="System\Audio\SoundTableReader.h" />
-    <ClInclude Include="System\Audio\SoundTraits.h" />
-    <ClInclude Include="System\Input\InputManager.h" />
-    <ClInclude Include="System\Public\AudioTypes.h" />
-    <ClInclude Include="System\Public\IAudioManager.h" />
-    <ClInclude Include="System\Public\IInputManager.h" />
-    <ClInclude Include="System\StepTimer.h" />
+    <ClInclude Include="Serializer\ClassSerialize.hpp" />
+    <ClInclude Include="Serializer\Concepts.h" />
+    <ClInclude Include="Serializer\Format\KeyConverter.hpp" />
+    <ClInclude Include="Serializer\Format\Traits.h" />
+    <ClInclude Include="Serializer\Format\TraitsHelper.hpp" />
+    <ClInclude Include="Serializer\Serializer.h" />
+    <ClInclude Include="Serializer\Serializer.hpp" />
     <ClInclude Include="Utils\Common.h" />
     <ClInclude Include="Utils\EnumHelpers.h" />
     <ClInclude Include="Utils\GeometryExt.h" />
@@ -68,11 +51,6 @@
     <ClInclude Include="Window\WindowProcedure.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Data\Serializer\Format\KeyConverter.cpp" />
-    <ClCompile Include="Data\Serializer\Format\Traits.cpp" />
-    <ClCompile Include="Data\Serializer\Serializer.cpp" />
-    <ClCompile Include="Data\Storage\Json\JsonFileIO.cpp" />
-    <ClCompile Include="Data\Storage\Json\JsonStorage.cpp" />
     <ClCompile Include="Framework\AppLoop.cpp" />
     <ClCompile Include="Framework\AppLoopWndProc.cpp" />
     <ClCompile Include="Framework\Environment.cpp" />
@@ -84,14 +62,9 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="System\Audio\EffectSoundBuffer.cpp" />
-    <ClCompile Include="System\Audio\EffectSound.cpp" />
-    <ClCompile Include="System\Audio\NormalSound.cpp" />
-    <ClCompile Include="System\Audio\NormalSoundBuffer.cpp" />
-    <ClCompile Include="System\Audio\SDLAudioManager.cpp" />
-    <ClCompile Include="System\Audio\SoundTableReader.cpp" />
-    <ClCompile Include="System\Audio\SoundTraits.cpp" />
-    <ClCompile Include="System\Input\InputManager.cpp" />
+    <ClCompile Include="Serializer\Format\KeyConverter.cpp" />
+    <ClCompile Include="Serializer\Format\Traits.cpp" />
+    <ClCompile Include="Serializer\Serializer.cpp" />
     <ClCompile Include="Utils\EnumHelpers.cpp" />
     <ClCompile Include="Utils\GeometryExt.cpp" />
     <ClCompile Include="Utils\PathUtils.cpp" />

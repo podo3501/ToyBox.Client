@@ -1,0 +1,116 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Storage">
+      <UniqueIdentifier>{37b176a5-f988-4eaa-806f-4228547eca3a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Storage\Json">
+      <UniqueIdentifier>{a736aea1-47e9-4bdf-86ca-94f79f6fdcc5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Input">
+      <UniqueIdentifier>{67c16c86-4c2e-4bb7-97ee-b3a65f62cd7d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Audio">
+      <UniqueIdentifier>{ae7d1d6c-edd8-418b-a724-69195d6a2294}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Audio\SDL">
+      <UniqueIdentifier>{00b23d60-3cf3-412a-8c65-4184d7cfbdf6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Input\DirectX">
+      <UniqueIdentifier>{e04d1abe-6276-4378-90a5-5de3c0cf4d57}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Storage\IJsonStorage.h">
+      <Filter>Storage</Filter>
+    </ClInclude>
+    <ClInclude Include="Storage\JsonObjectIO.h">
+      <Filter>Storage</Filter>
+    </ClInclude>
+    <ClInclude Include="Storage\JsonStorageDesc.h">
+      <Filter>Storage</Filter>
+    </ClInclude>
+    <ClInclude Include="Storage\StorageKey.h">
+      <Filter>Storage</Filter>
+    </ClInclude>
+    <ClInclude Include="Storage\Json\JsonFileIO.h">
+      <Filter>Storage\Json</Filter>
+    </ClInclude>
+    <ClInclude Include="Storage\Json\JsonStorage.h">
+      <Filter>Storage\Json</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="Input\IInputManager.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio\AudioTypeHelpers.h">
+      <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio\AudioTypes.h">
+      <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio\IAudioManager.h">
+      <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio\SDL\EffectSound.h">
+      <Filter>Audio\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio\SDL\EffectSoundBuffer.h">
+      <Filter>Audio\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio\SDL\NormalSound.h">
+      <Filter>Audio\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio\SDL\NormalSoundBuffer.h">
+      <Filter>Audio\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio\SDL\SDLAudioManager.h">
+      <Filter>Audio\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio\SDL\SoundTableReader.h">
+      <Filter>Audio\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio\SDL\SoundTraits.h">
+      <Filter>Audio\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Input\DirectX\InputManager.h">
+      <Filter>Input\DirectX</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Storage\JsonStorageDesc.cpp">
+      <Filter>Storage</Filter>
+    </ClCompile>
+    <ClCompile Include="Storage\Json\JsonFileIO.cpp">
+      <Filter>Storage\Json</Filter>
+    </ClCompile>
+    <ClCompile Include="Storage\Json\JsonStorage.cpp">
+      <Filter>Storage\Json</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp" />
+    <ClCompile Include="Audio\SDL\EffectSound.cpp">
+      <Filter>Audio\SDL</Filter>
+    </ClCompile>
+    <ClCompile Include="Audio\SDL\EffectSoundBuffer.cpp">
+      <Filter>Audio\SDL</Filter>
+    </ClCompile>
+    <ClCompile Include="Audio\SDL\NormalSound.cpp">
+      <Filter>Audio\SDL</Filter>
+    </ClCompile>
+    <ClCompile Include="Audio\SDL\NormalSoundBuffer.cpp">
+      <Filter>Audio\SDL</Filter>
+    </ClCompile>
+    <ClCompile Include="Audio\SDL\SDLAudioManager.cpp">
+      <Filter>Audio\SDL</Filter>
+    </ClCompile>
+    <ClCompile Include="Audio\SDL\SoundTableReader.cpp">
+      <Filter>Audio\SDL</Filter>
+    </ClCompile>
+    <ClCompile Include="Audio\SDL\SoundTraits.cpp">
+      <Filter>Audio\SDL</Filter>
+    </ClCompile>
+    <ClCompile Include="Input\DirectX\InputManager.cpp">
+      <Filter>Input\DirectX</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

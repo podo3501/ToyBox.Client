@@ -3,7 +3,7 @@
 #include "UserInterface/UIComponent/Traverser/UITraverser.h"
 #include "PatchTexture/PatchTextureStd/PatchTextureStd3.h"
 #include "TextureSwitcher.h"
-#include "Shared/Data/Serializer/Serializer.h"
+#include "Shared/Serializer/Serializer.h"
 #include "Shared/Utils/GeometryExt.h"
 
 using namespace UITraverser;

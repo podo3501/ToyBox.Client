@@ -22,7 +22,6 @@ public:
 
 	bool Load();
 	bool Save();
-	wstring GetJsonFilename() const noexcept;
 	bool AddFontKey(const wstring& bindingKey, const TextureFontInfo& fontInfo) noexcept;
 	bool AddTextureKey(const string& bindingKey, const TextureSourceInfo& sourceAreas) noexcept;
 	bool ModifyTextureSourceInfo(const string& bindKey, const TextureSourceInfo& sourceInfo) noexcept;

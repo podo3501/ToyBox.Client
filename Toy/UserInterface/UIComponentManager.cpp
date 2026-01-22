@@ -5,7 +5,7 @@
 #include "TextureResourceBinder/TextureResourceBinder.h"
 #include "UIComponent/UIComponent.h"
 #include "UIComponent/Traverser/UIDetailTraverser.h"
-#include "Shared/Data/Storage/IJsonStorage.h"
+#include "Device/Storage/IJsonStorage.h"
 #include "Shared/Utils/StlExt.h"
 
 UIComponentManager::~UIComponentManager() = default;

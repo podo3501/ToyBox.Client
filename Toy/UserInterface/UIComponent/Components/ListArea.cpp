@@ -3,7 +3,7 @@
 #include "RenderTexture.h"
 #include "ScrollBar.h"
 #include "TextureSwitcher.h"
-#include "Shared/Data/Serializer/Serializer.h"
+#include "Shared/Serializer/Serializer.h"
 #include "Shared/Utils/StlExt.h"
 #include "../Traverser/UITraverser.h"
 

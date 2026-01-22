@@ -1,7 +1,7 @@
 #pragma once
 #include "../AppLoop.h"
-#include "Core/Public/IRenderer.h"
-#include "Core/Public/IImguiRegistry.h"
+#include "Renderer/Public/IRenderer.h"
+#include "Renderer/Public/IImguiRegistry.h"
 #include "Shared/Window/WindowProcedure.h"
 #include "Shared/Window/Window.h"
 #include "Shared/Utils/StringExt.h"

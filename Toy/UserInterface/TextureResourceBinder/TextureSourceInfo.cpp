@@ -2,7 +2,7 @@
 #include "TextureSourceInfo.h"
 #include "IRenderer.h"
 #include "Shared/Framework/EnvironmentLocator.h"
-#include "Shared/Data/Serializer/Serializer.h"
+#include "Shared/Serializer/Serializer.h"
 #include "../UIComponent/UIType.h"
 
 TextureSourceInfo::~TextureSourceInfo() = default;

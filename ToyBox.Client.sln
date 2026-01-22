@@ -15,11 +15,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documents", "Documents", "{
 		Concept.txt = Concept.txt
 		Imgui.txt = Imgui.txt
 		Problem.txt = Problem.txt
-		TDD.txt = TDD.txt
 		Todo.txt = Todo.txt
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Core", "Core\Core.vcxproj", "{60E13BBA-4299-40F7-8FC1-C9E1928486F4}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Renderer", "Renderer\Renderer.vcxproj", "{60E13BBA-4299-40F7-8FC1-C9E1928486F4}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Resources", "Resources", "{AD3BD3D6-5998-44E9-9FBB-3036694D9022}"
 EndProject
@@ -38,6 +37,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UITool", "Tools\UITool\UITool.vcxproj", "{110567C1-5AA5-4E53-B549-F8A441A2CBBF}"
 EndProject
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "SoundTableConverter", "Tools\SoundTableConverter\SoundTableConverter.pyproj", "{21B4755D-CE45-4103-8F24-C3334F95F478}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Device", "Device\Device.vcxproj", "{42CB8F33-76BF-453D-AABB-48339FE7AE3E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -139,6 +140,22 @@ Global
 		{21B4755D-CE45-4103-8F24-C3334F95F478}.Release|ARM64.ActiveCfg = Release|Any CPU
 		{21B4755D-CE45-4103-8F24-C3334F95F478}.Release|x64.ActiveCfg = Release|Any CPU
 		{21B4755D-CE45-4103-8F24-C3334F95F478}.Release|x86.ActiveCfg = Release|Any CPU
+		{42CB8F33-76BF-453D-AABB-48339FE7AE3E}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{42CB8F33-76BF-453D-AABB-48339FE7AE3E}.Debug|Any CPU.Build.0 = Debug|x64
+		{42CB8F33-76BF-453D-AABB-48339FE7AE3E}.Debug|ARM64.ActiveCfg = Debug|x64
+		{42CB8F33-76BF-453D-AABB-48339FE7AE3E}.Debug|ARM64.Build.0 = Debug|x64
+		{42CB8F33-76BF-453D-AABB-48339FE7AE3E}.Debug|x64.ActiveCfg = Debug|x64
+		{42CB8F33-76BF-453D-AABB-48339FE7AE3E}.Debug|x64.Build.0 = Debug|x64
+		{42CB8F33-76BF-453D-AABB-48339FE7AE3E}.Debug|x86.ActiveCfg = Debug|Win32
+		{42CB8F33-76BF-453D-AABB-48339FE7AE3E}.Debug|x86.Build.0 = Debug|Win32
+		{42CB8F33-76BF-453D-AABB-48339FE7AE3E}.Release|Any CPU.ActiveCfg = Release|x64
+		{42CB8F33-76BF-453D-AABB-48339FE7AE3E}.Release|Any CPU.Build.0 = Release|x64
+		{42CB8F33-76BF-453D-AABB-48339FE7AE3E}.Release|ARM64.ActiveCfg = Release|x64
+		{42CB8F33-76BF-453D-AABB-48339FE7AE3E}.Release|ARM64.Build.0 = Release|x64
+		{42CB8F33-76BF-453D-AABB-48339FE7AE3E}.Release|x64.ActiveCfg = Release|x64
+		{42CB8F33-76BF-453D-AABB-48339FE7AE3E}.Release|x64.Build.0 = Release|x64
+		{42CB8F33-76BF-453D-AABB-48339FE7AE3E}.Release|x86.ActiveCfg = Release|Win32
+		{42CB8F33-76BF-453D-AABB-48339FE7AE3E}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

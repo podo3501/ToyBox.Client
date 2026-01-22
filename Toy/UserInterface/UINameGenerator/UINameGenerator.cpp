@@ -3,7 +3,7 @@
 #include "AutoNamer.h"
 #include "ComponentNameGenerator.h"
 #include "../UIComponent/UIType.h"
-#include "Shared/Data/Serializer/Serializer.h"
+#include "Shared/Serializer/Serializer.h"
 #include "Shared/Utils/StringExt.h"
 #include "Shared/Utils/StlExt.h"
 

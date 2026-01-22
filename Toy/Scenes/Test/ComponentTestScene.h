@@ -1,7 +1,6 @@
 #pragma once
 #include "../Scene.h"
 
-struct IJsonFileIO;
 class UIComponent;
 class UIModule;
 class ComponentTestScene : public Scene

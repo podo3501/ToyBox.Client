@@ -3,7 +3,7 @@
 #include "IRenderer.h"
 #include "Shared/Utils/GeometryExt.h"
 #include "Shared/Framework/EnvironmentLocator.h"
-#include "Shared/Data/Storage/IJsonStorage.h"
+#include "Device/Storage/IJsonStorage.h"
 #include "Locator/UIComponentLocator.h"
 #include "UserInterface/UIModule.h"
 #include "UserInterface/UIComponent/Traverser/UITraverser.h"

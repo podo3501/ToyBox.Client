@@ -2,7 +2,7 @@
 #include "EventProcessor.h"
 #include "SoundTheme.h"
 #include "MouseEventReceiver.h"
-#include "Shared/System/Public/IAudioManager.h"
+#include "Device/Audio/IAudioManager.h"
 
 EventProcessor::~EventProcessor() = default;
 EventProcessor::EventProcessor(IAudioManager* audioManager) :

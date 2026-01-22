@@ -5,7 +5,7 @@
 #include "Locator/UIComponentLocator.h"
 #include "../../UIComponent/Traverser/UITraverser.h"
 #include "Shared/Utils/GeometryExt.h"
-#include "Shared/Data/Serializer/Serializer.h"
+#include "Shared/Serializer/Serializer.h"
 
 using namespace UITraverser;
 

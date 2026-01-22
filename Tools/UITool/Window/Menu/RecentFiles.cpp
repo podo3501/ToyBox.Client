@@ -2,7 +2,7 @@
 #include "RecentFiles.h"
 #include "FileTab.h"
 #include "Shared/Utils/StringExt.h"
-#include "Shared/Data/JsonObjectIO.h"
+#include "Device/Storage/JsonObjectIO.h"
 
 RecentFiles::~RecentFiles() = default;
 RecentFiles::RecentFiles()

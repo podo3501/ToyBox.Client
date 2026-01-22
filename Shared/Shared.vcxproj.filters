@@ -29,9 +29,6 @@
     <ClInclude Include="Window\WindowProcedure.h">
       <Filter>Window</Filter>
     </ClInclude>
-    <ClInclude Include="System\StepTimer.h">
-      <Filter>System</Filter>
-    </ClInclude>
     <ClInclude Include="Framework\AppLoop.h">
       <Filter>Framework</Filter>
     </ClInclude>
@@ -50,47 +47,11 @@
     <ClInclude Include="Utils\Memory.h">
       <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="System\Audio\SDLAudioManager.h">
-      <Filter>System\Audio</Filter>
-    </ClInclude>
-    <ClInclude Include="System\Public\IAudioManager.h">
-      <Filter>System\Public</Filter>
-    </ClInclude>
-    <ClInclude Include="System\Input\InputManager.h">
-      <Filter>System\Input</Filter>
-    </ClInclude>
-    <ClInclude Include="System\Public\IInputManager.h">
-      <Filter>System\Public</Filter>
-    </ClInclude>
     <ClInclude Include="Framework\EnvironmentLocator.h">
       <Filter>Framework</Filter>
     </ClInclude>
-    <ClInclude Include="System\Audio\EffectSoundBuffer.h">
-      <Filter>System\Audio</Filter>
-    </ClInclude>
-    <ClInclude Include="System\Audio\EffectSound.h">
-      <Filter>System\Audio</Filter>
-    </ClInclude>
-    <ClInclude Include="System\Audio\NormalSound.h">
-      <Filter>System\Audio</Filter>
-    </ClInclude>
-    <ClInclude Include="System\Audio\NormalSoundBuffer.h">
-      <Filter>System\Audio</Filter>
-    </ClInclude>
-    <ClInclude Include="System\Public\AudioTypes.h">
-      <Filter>System\Public</Filter>
-    </ClInclude>
     <ClInclude Include="Utils\EnumHelpers.h">
       <Filter>Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="System\Audio\SoundTableReader.h">
-      <Filter>System\Audio</Filter>
-    </ClInclude>
-    <ClInclude Include="System\Audio\SoundTraits.h">
-      <Filter>System\Audio</Filter>
-    </ClInclude>
-    <ClInclude Include="System\Audio\AudioTypeHelpers.h">
-      <Filter>System\Audio</Filter>
     </ClInclude>
     <ClInclude Include="Utils\PathUtils.h">
       <Filter>Utils</Filter>
@@ -104,41 +65,29 @@
     <ClInclude Include="Foundation\NoCopyNoMove.h">
       <Filter>Foundation</Filter>
     </ClInclude>
-    <ClInclude Include="Data\Serializer\Format\KeyConverter.hpp">
-      <Filter>Data\Serializer\Format</Filter>
+    <ClInclude Include="Framework\StepTimer.h">
+      <Filter>Framework</Filter>
     </ClInclude>
-    <ClInclude Include="Data\Serializer\Format\Traits.h">
-      <Filter>Data\Serializer\Format</Filter>
+    <ClInclude Include="Serializer\ClassSerialize.hpp">
+      <Filter>Serializer</Filter>
     </ClInclude>
-    <ClInclude Include="Data\Serializer\Format\TraitsHelper.hpp">
-      <Filter>Data\Serializer\Format</Filter>
+    <ClInclude Include="Serializer\Concepts.h">
+      <Filter>Serializer</Filter>
     </ClInclude>
-    <ClInclude Include="Data\Serializer\ClassSerialize.hpp">
-      <Filter>Data\Serializer</Filter>
+    <ClInclude Include="Serializer\Serializer.h">
+      <Filter>Serializer</Filter>
     </ClInclude>
-    <ClInclude Include="Data\Serializer\Concepts.h">
-      <Filter>Data\Serializer</Filter>
+    <ClInclude Include="Serializer\Serializer.hpp">
+      <Filter>Serializer</Filter>
     </ClInclude>
-    <ClInclude Include="Data\Serializer\Serializer.h">
-      <Filter>Data\Serializer</Filter>
+    <ClInclude Include="Serializer\Format\KeyConverter.hpp">
+      <Filter>Serializer\Format</Filter>
     </ClInclude>
-    <ClInclude Include="Data\Serializer\Serializer.hpp">
-      <Filter>Data\Serializer</Filter>
+    <ClInclude Include="Serializer\Format\Traits.h">
+      <Filter>Serializer\Format</Filter>
     </ClInclude>
-    <ClInclude Include="Data\Storage\Json\JsonFileIO.h">
-      <Filter>Data\Storage\Json</Filter>
-    </ClInclude>
-    <ClInclude Include="Data\Storage\Json\JsonStorage.h">
-      <Filter>Data\Storage\Json</Filter>
-    </ClInclude>
-    <ClInclude Include="Data\Storage\IJsonStorage.h">
-      <Filter>Data\Storage</Filter>
-    </ClInclude>
-    <ClInclude Include="Data\Storage\StorageKey.h">
-      <Filter>Data\Storage</Filter>
-    </ClInclude>
-    <ClInclude Include="Data\JsonObjectIO.h">
-      <Filter>Data</Filter>
+    <ClInclude Include="Serializer\Format\TraitsHelper.hpp">
+      <Filter>Serializer\Format</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -176,50 +125,20 @@
     <ClCompile Include="Framework\Initializer\GoogleTest.cpp">
       <Filter>Framework\Initializer</Filter>
     </ClCompile>
-    <ClCompile Include="System\Audio\SDLAudioManager.cpp">
-      <Filter>System\Audio</Filter>
-    </ClCompile>
-    <ClCompile Include="System\Input\InputManager.cpp">
-      <Filter>System\Input</Filter>
-    </ClCompile>
-    <ClCompile Include="System\Audio\EffectSoundBuffer.cpp">
-      <Filter>System\Audio</Filter>
-    </ClCompile>
-    <ClCompile Include="System\Audio\EffectSound.cpp">
-      <Filter>System\Audio</Filter>
-    </ClCompile>
-    <ClCompile Include="System\Audio\NormalSound.cpp">
-      <Filter>System\Audio</Filter>
-    </ClCompile>
-    <ClCompile Include="System\Audio\NormalSoundBuffer.cpp">
-      <Filter>System\Audio</Filter>
-    </ClCompile>
     <ClCompile Include="Utils\EnumHelpers.cpp">
       <Filter>Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="System\Audio\SoundTableReader.cpp">
-      <Filter>System\Audio</Filter>
-    </ClCompile>
-    <ClCompile Include="System\Audio\SoundTraits.cpp">
-      <Filter>System\Audio</Filter>
     </ClCompile>
     <ClCompile Include="Utils\PathUtils.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
-    <ClCompile Include="Data\Serializer\Format\KeyConverter.cpp">
-      <Filter>Data\Serializer\Format</Filter>
+    <ClCompile Include="Serializer\Serializer.cpp">
+      <Filter>Serializer</Filter>
     </ClCompile>
-    <ClCompile Include="Data\Serializer\Format\Traits.cpp">
-      <Filter>Data\Serializer\Format</Filter>
+    <ClCompile Include="Serializer\Format\KeyConverter.cpp">
+      <Filter>Serializer\Format</Filter>
     </ClCompile>
-    <ClCompile Include="Data\Serializer\Serializer.cpp">
-      <Filter>Data\Serializer</Filter>
-    </ClCompile>
-    <ClCompile Include="Data\Storage\Json\JsonFileIO.cpp">
-      <Filter>Data\Storage\Json</Filter>
-    </ClCompile>
-    <ClCompile Include="Data\Storage\Json\JsonStorage.cpp">
-      <Filter>Data\Storage\Json</Filter>
+    <ClCompile Include="Serializer\Format\Traits.cpp">
+      <Filter>Serializer\Format</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -229,44 +148,20 @@
     <Filter Include="Window">
       <UniqueIdentifier>{7ce5a08c-2bc0-4572-9fcc-40c1356c1caa}</UniqueIdentifier>
     </Filter>
-    <Filter Include="System">
-      <UniqueIdentifier>{542fe64b-3dd4-4d25-b7ec-219e29079105}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Framework">
       <UniqueIdentifier>{70d3aad2-e44a-404e-8f32-76e91bc2e76f}</UniqueIdentifier>
     </Filter>
     <Filter Include="Framework\Initializer">
       <UniqueIdentifier>{53758de4-1b63-40d8-8388-5c346338bf23}</UniqueIdentifier>
     </Filter>
-    <Filter Include="System\Audio">
-      <UniqueIdentifier>{d9d7f270-abe4-445f-889a-23f415f65653}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="System\Public">
-      <UniqueIdentifier>{345623cb-0546-404b-ad64-ba49bf4967d4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="System\Input">
-      <UniqueIdentifier>{94771c7d-10b2-4979-b871-e3940786ece1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Script">
-      <UniqueIdentifier>{f9805421-23e1-48e8-b12f-166e780eef9e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Foundation">
       <UniqueIdentifier>{1bf06ca8-e6c1-4235-883f-30ae673f9127}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Data">
-      <UniqueIdentifier>{9dccc0b3-9dbe-435c-803f-4fa7f5452cec}</UniqueIdentifier>
+    <Filter Include="Serializer">
+      <UniqueIdentifier>{d473851c-eef0-40b9-9ca9-d87b42ae50e1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Data\Serializer">
-      <UniqueIdentifier>{20cf38a3-1879-4349-a5eb-78088aaabd1b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Data\Storage">
-      <UniqueIdentifier>{dd49a697-b1aa-4eee-a6ba-eb1195765ed1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Data\Storage\Json">
-      <UniqueIdentifier>{7a5a1cc1-0097-46dd-afc5-e7d8dd553b1d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Data\Serializer\Format">
-      <UniqueIdentifier>{a6420574-9ae7-41e6-8292-0953dabbc3fc}</UniqueIdentifier>
+    <Filter Include="Serializer\Format">
+      <UniqueIdentifier>{c6969dca-6309-49e7-9255-740b6106c222}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

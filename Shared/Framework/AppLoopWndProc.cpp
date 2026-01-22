@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "AppLoop.h"
-#include "Core/Public/IRenderer.h"
+#include "Renderer/Public/IRenderer.h"
 #include "Window/Window.h"
 
 LRESULT AppLoop::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)

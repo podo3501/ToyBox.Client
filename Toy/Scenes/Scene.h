@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include "Shared/System/StepTimer.h"
+#include "Shared/Framework/StepTimer.h"
 #include "Shared/Foundation/NoCopyNoMove.h"
 #include "SceneType.h"
 

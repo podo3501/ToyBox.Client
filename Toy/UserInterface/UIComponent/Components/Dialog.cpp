@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "Dialog.h"
-#include "Shared/Data/Serializer/Serializer.h"
+#include "Shared/Serializer/Serializer.h"
 
 Dialog::~Dialog() = default;
 Dialog::Dialog()

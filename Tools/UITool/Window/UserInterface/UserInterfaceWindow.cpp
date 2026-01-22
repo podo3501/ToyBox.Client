@@ -11,9 +11,9 @@
 #include "Toy/UserInterface/UIComponent/Components/Panel.h"
 #include "Toy/UserInterface/TextureResourceBinder/TextureResourceBinder.h"
 #include "Toy/UserInterface/UIModule.h"
-#include "Core/Public/IImguiRegistry.h"
-#include "Shared/Data/Storage/IJsonStorage.h"
-#include "Shared/System/StepTimer.h"
+#include "Renderer/Public/IImguiRegistry.h"
+#include "Device/Storage/IJsonStorage.h"
+#include "Shared/Framework/StepTimer.h"
 
 using namespace UITraverser;
 using namespace UIDetailTraverser;
