@@ -241,8 +241,8 @@
 --storage 가 커져셔 SerializerIO는 Serializer로 바꾸고 Storage+FileIO 폴더를 만들어서 이쪽에 이동시켜야 할듯
 --프로젝트 이름 바꾸기 Common으로, 다른 프로젝트들도 xxTest, xxTDD 식으로 나누어서 테스트와 tdd 프로젝트를 구분하게 한다.
 --storage 정리가 끝나면 tdd 쪽 파일 m_storage 라고 명명된 파일명을 수정해야 한다. 
+--Toy.Client.sln 파일 새롭게 하나 만들기.
 
-@Toy.Client.sln 파일 새롭게 하나 만들기.
 @IJsonFileIO에서 메모리에서 읽어들인 것과 파일에서 읽어들인 것이 같은지 확인하는 것도 필요하지 않을까?
 @TEST_F(EventProcessorT, ProcessHover) 이거 오래 걸리는데 Play 사운드 때문인거 같다.
 @SoundID 같이 저장장치에 접근하는 것들은 인터페이스 클래스를 가지는데 이 인터페이스 클래스를 하나로 묶는 작업
