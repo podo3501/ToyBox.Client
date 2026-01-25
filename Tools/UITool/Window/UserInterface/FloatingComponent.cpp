@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "FloatingComponent.h"
-#include "IRenderer.h"
+#include "Renderer/Public/IRenderer.h"
 #include "Toy/UserInterface/UIComponent/UIUtility.h"
 #include "Toy/UserInterface/UIComponent/Traverser/UITraverser.h"
 #include "Toy/UserInterface/UIComponent/Traverser/UIDetailTraverser.h"

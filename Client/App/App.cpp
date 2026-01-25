@@ -1,5 +1,6 @@
-#include "pch.h"
-#include "ToolLoop.h"
+ï»¿#include "pch.h"
+#include "Renderer/Public/IRenderer.h"
+#include "Toy/GameLoop.h"
 #include "Shared/Framework/Initializer/Application.h"
 #include "Shared/Utils/PathUtils.h"
 #include "Renderer/Utils/DxLeakCheck.h"
@@ -16,18 +17,18 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance,
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif
 
-	//°ıÈ£·Î °¨½Ñ ÀÌÀ¯´Â MainLoopÀÇ ½º¸¶Æ® Æ÷ÀÎÅÍ ¼Ò¸êÀÚ¸¦ È£ÃâÇØ ÁÖ±â À§ÇØ¼­ÀÌ¸ç,
-	//DirectX °ü·Ã ¸®¼Ò½º°¡ Àß ¼Ò¸êµÆ´ÂÁö ReportLiveObjectsÇÔ¼ö·Î È®ÀÎÇÏ±â ¶§¹®ÀÌ´Ù.
+	//ê´„í˜¸ë¡œ ê°ì‹¼ ì´ìœ ëŠ” MainLoopì˜ ìŠ¤ë§ˆíŠ¸ í¬ì¸í„° ì†Œë©¸ìë¥¼ í˜¸ì¶œí•´ ì£¼ê¸° ìœ„í•´ì„œì´ë©°,
+	//DirectX ê´€ë ¨ ë¦¬ì†ŒìŠ¤ê°€ ì˜ ì†Œë©¸ëëŠ”ì§€ ReportLiveObjectsí•¨ìˆ˜ë¡œ í™•ì¸í•˜ê¸° ë•Œë¬¸ì´ë‹¤.
 	int nResult = { 0 };
 	{
-		RECT windowRect = { 0, 0, 1280, 960 };
+		RECT windowRect = { 0, 0, 800, 600 };
 		auto resourcePath = FindResourcePath();
-		auto toolLoop = CreateAppLoop<ToolLoop>(hInstance, nShowCmd, windowRect, resourcePath, true);
-		if (!toolLoop)
+		auto appLoop = CreateAppLoop<GameLoop>(hInstance, nShowCmd, windowRect, resourcePath, false);
+		if (!appLoop)
 			return 1;
 
-		nResult = toolLoop->Run();
-		toolLoop.reset();
+		nResult = appLoop->Run();
+		appLoop.reset();
 	}
 
 #if defined(DEBUG) | defined(_DEBUG)

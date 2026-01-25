@@ -1,5 +1,5 @@
 #pragma once
-#include "IRenderer.h"
+#include "Renderer/Public/IRenderer.h"
 
 class InnerWindow : public IImguiComponent
 {
