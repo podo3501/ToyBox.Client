@@ -1,12 +1,11 @@
 #include "pch.h"
 #include "TextureSwitcher.h"
-#include "Shared/Serializer/Serializer.h"
-#include "Shared/Utils/StlExt.h"
 #include "Locator/EventDispatcherLocator.h"
 #include "PatchTexture/PatchTextureLite/PatchTextureLite.h"
+#include "UserInterface/Serializer/Serializer.h"
 #include "UserInterface/UIComponent/Traverser/UITraverser.h"
-#include "UserInterface/SerializerIO/Format/KeyConverter.h"
-#include "../../TextureResourceBinder/TextureResourceBinder.h"
+#include "UserInterface/TextureResourceBinder/TextureResourceBinder.h"
+#include "Shared/Utils/StlExt.h"
 
 using enum InteractState;
 

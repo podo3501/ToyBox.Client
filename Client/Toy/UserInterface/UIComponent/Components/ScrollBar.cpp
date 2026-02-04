@@ -1,9 +1,9 @@
 #include "pch.h"
 #include "ScrollBar.h"
+#include "UserInterface/Serializer/Serializer.h"
 #include "UserInterface/UIComponent/Traverser/UITraverser.h"
 #include "PatchTexture/PatchTextureStd/PatchTextureStd3.h"
 #include "TextureSwitcher.h"
-#include "Shared/Serializer/Serializer.h"
 #include "Shared/Utils/GeometryExt.h"
 
 using namespace UITraverser;

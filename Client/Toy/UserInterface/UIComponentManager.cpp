@@ -80,8 +80,11 @@ void UIComponentManager::RenderComponent(ITextureRender* render)
 void UIComponentManager::RenderTextureComponent(size_t index, ITextureRender* render)
 {
 	auto it = m_renderTextures.find(index);
-	if (it == m_renderTextures.end()) 
+	if (it == m_renderTextures.end())
+	{
 		Assert(false);
+		return;
+	}
 
 	auto component = it->second;
 	m_texController->ModifyRenderTexturePosition(index, component->GetLeftTop());

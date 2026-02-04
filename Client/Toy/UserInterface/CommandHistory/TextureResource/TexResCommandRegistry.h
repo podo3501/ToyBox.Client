@@ -5,8 +5,6 @@
 #include "../../TextureResourceBinder/TextureSourceInfo.h"
 
 class TextureResourceBinder;
-
-struct TextureFontInfo;
 class AddFontKeyCommand : public TexResCommand
 {
 public:

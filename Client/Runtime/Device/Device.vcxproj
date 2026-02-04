@@ -22,13 +22,15 @@
     <ClInclude Include="Audio\AudioTypeHelpers.h" />
     <ClInclude Include="Audio\AudioTypes.h" />
     <ClInclude Include="Audio\IAudioManager.h" />
-    <ClInclude Include="Audio\SDL\EffectSound.h" />
-    <ClInclude Include="Audio\SDL\EffectSoundBuffer.h" />
-    <ClInclude Include="Audio\SDL\NormalSound.h" />
-    <ClInclude Include="Audio\SDL\NormalSoundBuffer.h" />
     <ClInclude Include="Audio\SDL\SDLAudioManager.h" />
+    <ClInclude Include="Audio\SDL\Serializer\Format\Traits.h" />
+    <ClInclude Include="Audio\SDL\Serializer\Serializer.h" />
+    <ClInclude Include="Audio\SDL\SoundInfo.h" />
+    <ClInclude Include="Audio\SDL\Sounds\Effect\EffectSound.h" />
+    <ClInclude Include="Audio\SDL\Sounds\Effect\EffectSoundBuffer.h" />
+    <ClInclude Include="Audio\SDL\Sounds\Normal\NormalSound.h" />
+    <ClInclude Include="Audio\SDL\Sounds\Normal\NormalSoundBuffer.h" />
     <ClInclude Include="Audio\SDL\SoundTableReader.h" />
-    <ClInclude Include="Audio\SDL\SoundTraits.h" />
     <ClInclude Include="Input\DirectX\InputManager.h" />
     <ClInclude Include="Input\IInputManager.h" />
     <ClInclude Include="pch.h" />
@@ -40,13 +42,14 @@
     <ClInclude Include="Storage\StorageKey.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Audio\SDL\EffectSound.cpp" />
-    <ClCompile Include="Audio\SDL\EffectSoundBuffer.cpp" />
-    <ClCompile Include="Audio\SDL\NormalSound.cpp" />
-    <ClCompile Include="Audio\SDL\NormalSoundBuffer.cpp" />
     <ClCompile Include="Audio\SDL\SDLAudioManager.cpp" />
+    <ClCompile Include="Audio\SDL\Serializer\Format\Traits.cpp" />
+    <ClCompile Include="Audio\SDL\SoundInfo.cpp" />
+    <ClCompile Include="Audio\SDL\Sounds\Effect\EffectSound.cpp" />
+    <ClCompile Include="Audio\SDL\Sounds\Effect\EffectSoundBuffer.cpp" />
+    <ClCompile Include="Audio\SDL\Sounds\Normal\NormalSound.cpp" />
+    <ClCompile Include="Audio\SDL\Sounds\Normal\NormalSoundBuffer.cpp" />
     <ClCompile Include="Audio\SDL\SoundTableReader.cpp" />
-    <ClCompile Include="Audio\SDL\SoundTraits.cpp" />
     <ClCompile Include="Input\DirectX\InputManager.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

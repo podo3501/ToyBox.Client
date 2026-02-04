@@ -1,19 +1,8 @@
 #pragma once
-#include "../AudioTypes.h"
 
 struct IJsonStorage;
+struct SoundInfo;
 class Serializer;
-enum class AudioGroupID;
-
-struct SoundInfo
-{
-	void Serialize(Serializer& serializer);
-
-	string filename{};
-	AudioGroupID groupID{ AudioGroupID::None };
-	float volume{ 0.f };
-};
-
 class SoundTableReader
 {
 public:

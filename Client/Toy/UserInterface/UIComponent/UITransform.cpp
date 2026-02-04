@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "UITransform.h"
 #include "UILayout.h"
+#include "UserInterface/Serializer/Serializer.h"
 #include "Shared/Serializer/Serializer.h"
 #include "Shared/Utils/GeometryExt.h"
 

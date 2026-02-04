@@ -1,18 +1,8 @@
 #include "pch.h"
 #include "SoundTableReader.h"
-#include "SoundTraits.h"
-#include "../AudioTypeHelpers.h"
+#include "SoundInfo.h"
 #include "Shared/Framework/EnvironmentLocator.h"
 #include "Device/Storage/JsonObjectIO.h"
-
-void SoundInfo::Serialize(Serializer& serializer)
-{
-	serializer.Process("Filename", filename);
-	serializer.Process("Group", groupID);
-	serializer.Process("Volume", volume);
-}
-
-/////////////////////////////////////////////////////
 
 SoundTableReader::~SoundTableReader() = default;
 SoundTableReader::SoundTableReader(unique_ptr<IJsonStorage> storage) :

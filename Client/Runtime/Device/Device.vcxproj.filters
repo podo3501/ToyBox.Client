@@ -19,6 +19,21 @@
     <Filter Include="Input\DirectX">
       <UniqueIdentifier>{e04d1abe-6276-4378-90a5-5de3c0cf4d57}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Audio\SDL\Serializer">
+      <UniqueIdentifier>{27e0b79f-9fae-4c0a-afe0-3c895bddc645}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Audio\SDL\Serializer\Format">
+      <UniqueIdentifier>{e41a2911-1c00-4afe-9823-d076b12c217f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Audio\SDL\Sounds">
+      <UniqueIdentifier>{253845c1-4090-459a-b709-65b8d8788121}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Audio\SDL\Sounds\Effect">
+      <UniqueIdentifier>{0efd3162-8720-49ee-8912-5aa9d0836d18}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Audio\SDL\Sounds\Normal">
+      <UniqueIdentifier>{63184b9f-a282-464e-96e4-0ba789befda2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Storage\IJsonStorage.h">
@@ -52,29 +67,35 @@
     <ClInclude Include="Audio\IAudioManager.h">
       <Filter>Audio</Filter>
     </ClInclude>
-    <ClInclude Include="Audio\SDL\EffectSound.h">
-      <Filter>Audio\SDL</Filter>
-    </ClInclude>
-    <ClInclude Include="Audio\SDL\EffectSoundBuffer.h">
-      <Filter>Audio\SDL</Filter>
-    </ClInclude>
-    <ClInclude Include="Audio\SDL\NormalSound.h">
-      <Filter>Audio\SDL</Filter>
-    </ClInclude>
-    <ClInclude Include="Audio\SDL\NormalSoundBuffer.h">
-      <Filter>Audio\SDL</Filter>
-    </ClInclude>
     <ClInclude Include="Audio\SDL\SDLAudioManager.h">
       <Filter>Audio\SDL</Filter>
     </ClInclude>
     <ClInclude Include="Audio\SDL\SoundTableReader.h">
       <Filter>Audio\SDL</Filter>
     </ClInclude>
-    <ClInclude Include="Audio\SDL\SoundTraits.h">
-      <Filter>Audio\SDL</Filter>
-    </ClInclude>
     <ClInclude Include="Input\DirectX\InputManager.h">
       <Filter>Input\DirectX</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio\SDL\SoundInfo.h">
+      <Filter>Audio\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio\SDL\Serializer\Serializer.h">
+      <Filter>Audio\SDL\Serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio\SDL\Serializer\Format\Traits.h">
+      <Filter>Audio\SDL\Serializer\Format</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio\SDL\Sounds\Effect\EffectSound.h">
+      <Filter>Audio\SDL\Sounds\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio\SDL\Sounds\Effect\EffectSoundBuffer.h">
+      <Filter>Audio\SDL\Sounds\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio\SDL\Sounds\Normal\NormalSound.h">
+      <Filter>Audio\SDL\Sounds\Normal</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio\SDL\Sounds\Normal\NormalSoundBuffer.h">
+      <Filter>Audio\SDL\Sounds\Normal</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -88,29 +109,32 @@
       <Filter>Storage\Json</Filter>
     </ClCompile>
     <ClCompile Include="pch.cpp" />
-    <ClCompile Include="Audio\SDL\EffectSound.cpp">
-      <Filter>Audio\SDL</Filter>
-    </ClCompile>
-    <ClCompile Include="Audio\SDL\EffectSoundBuffer.cpp">
-      <Filter>Audio\SDL</Filter>
-    </ClCompile>
-    <ClCompile Include="Audio\SDL\NormalSound.cpp">
-      <Filter>Audio\SDL</Filter>
-    </ClCompile>
-    <ClCompile Include="Audio\SDL\NormalSoundBuffer.cpp">
-      <Filter>Audio\SDL</Filter>
-    </ClCompile>
     <ClCompile Include="Audio\SDL\SDLAudioManager.cpp">
       <Filter>Audio\SDL</Filter>
     </ClCompile>
     <ClCompile Include="Audio\SDL\SoundTableReader.cpp">
       <Filter>Audio\SDL</Filter>
     </ClCompile>
-    <ClCompile Include="Audio\SDL\SoundTraits.cpp">
-      <Filter>Audio\SDL</Filter>
-    </ClCompile>
     <ClCompile Include="Input\DirectX\InputManager.cpp">
       <Filter>Input\DirectX</Filter>
+    </ClCompile>
+    <ClCompile Include="Audio\SDL\SoundInfo.cpp">
+      <Filter>Audio\SDL</Filter>
+    </ClCompile>
+    <ClCompile Include="Audio\SDL\Serializer\Format\Traits.cpp">
+      <Filter>Audio\SDL\Serializer\Format</Filter>
+    </ClCompile>
+    <ClCompile Include="Audio\SDL\Sounds\Effect\EffectSound.cpp">
+      <Filter>Audio\SDL\Sounds\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="Audio\SDL\Sounds\Effect\EffectSoundBuffer.cpp">
+      <Filter>Audio\SDL\Sounds\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="Audio\SDL\Sounds\Normal\NormalSound.cpp">
+      <Filter>Audio\SDL\Sounds\Normal</Filter>
+    </ClCompile>
+    <ClCompile Include="Audio\SDL\Sounds\Normal\NormalSoundBuffer.cpp">
+      <Filter>Audio\SDL\Sounds\Normal</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -22,10 +22,6 @@ struct JsonTraitsBase
 template<typename T>
 struct JsonTraits : public JsonTraitsBase<T> {};
 
-DECLARE_JSON_TRAITS(XMINT2)
-DECLARE_JSON_TRAITS(XMUINT2)
-DECLARE_JSON_TRAITS(Rectangle)
-DECLARE_JSON_TRAITS(Vector2)
 DECLARE_JSON_TRAITS(string)
 DECLARE_JSON_TRAITS(wstring)
 

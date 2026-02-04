@@ -1,4 +1,6 @@
 #pragma once
+#include "Format/Traits.h"
+#include "Format/KeyConverter.h"
 #include "nlohmann/json.hpp"
 
 class UIComponent;

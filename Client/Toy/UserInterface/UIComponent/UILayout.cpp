@@ -1,9 +1,8 @@
 #include "pch.h"
 #include "UILayout.h"
 #include "UIType.h"
+#include "UserInterface/Serializer/Serializer.h"
 #include "Shared/Utils/GeometryExt.h"
-#include "Shared/Serializer/Serializer.h"
-#include "../SerializerIO/Format/Traits.h"
 
 UILayout::~UILayout() = default;
 UILayout::UILayout() :

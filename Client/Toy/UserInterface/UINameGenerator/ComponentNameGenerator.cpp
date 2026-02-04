@@ -1,9 +1,9 @@
 #include "pch.h"
 #include "AutoNamer.h"
 #include "ComponentNameGenerator.h"
+#include "UserInterface/Serializer/Serializer.h"
 #include "Shared/Utils/StringExt.h"
 #include "Shared/Utils/StlExt.h"
-#include "Shared/Serializer/Serializer.h"
 
 ComponentNameGenerator::~ComponentNameGenerator() = default;
 ComponentNameGenerator::ComponentNameGenerator() = default;

@@ -1,8 +1,8 @@
 #include "pch.h"
 #include "TextureSourceInfo.h"
+#include "UserInterface/Serializer/Serializer.h"
 #include "Renderer/Public/IRenderer.h"
 #include "Shared/Framework/EnvironmentLocator.h"
-#include "Shared/Serializer/Serializer.h"
 #include "../UIComponent/UIType.h"
 
 TextureSourceInfo::~TextureSourceInfo() = default;

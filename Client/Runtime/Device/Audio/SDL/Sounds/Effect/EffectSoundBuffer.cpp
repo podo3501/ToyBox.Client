@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "EffectSoundBuffer.h"
-#include "../AudioTypes.h"
+#include "Audio/AudioTypes.h"
 
 EffectSoundBuffer::EffectSoundBuffer() :
 	m_data{ nullptr, [](Uint8* p) { SDL_free(p); } },

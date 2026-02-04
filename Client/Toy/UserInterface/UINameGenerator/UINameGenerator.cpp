@@ -2,8 +2,8 @@
 #include "UINameGenerator.h"
 #include "AutoNamer.h"
 #include "ComponentNameGenerator.h"
-#include "../UIComponent/UIType.h"
-#include "Shared/Serializer/Serializer.h"
+#include "UserInterface/Serializer/Serializer.h"
+#include "UserInterface/UIComponent/UIType.h"
 #include "Shared/Utils/StringExt.h"
 #include "Shared/Utils/StlExt.h"
 

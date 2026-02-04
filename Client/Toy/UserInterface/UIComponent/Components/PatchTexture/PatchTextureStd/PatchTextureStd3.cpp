@@ -3,7 +3,7 @@
 #include "PatchTextureStd1.h"
 #include "UserInterface/TextureResourceBinder/TextureResourceBinder.h"
 #include "UserInterface/UIComponent/UIUtility.h"
-#include "Shared/Serializer/Serializer.h"
+#include "UserInterface/Serializer/Serializer.h"
 
 PatchTextureStd3::~PatchTextureStd3() = default;
 PatchTextureStd3::PatchTextureStd3() noexcept :

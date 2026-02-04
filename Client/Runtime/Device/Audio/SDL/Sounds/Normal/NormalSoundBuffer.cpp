@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "NormalSoundBuffer.h"
-#include "../AudioTypes.h"
+#include "Audio/AudioTypes.h"
 #include "SDL3_mixer/SDL_mixer.h"
 
 NormalSoundBuffer::~NormalSoundBuffer()

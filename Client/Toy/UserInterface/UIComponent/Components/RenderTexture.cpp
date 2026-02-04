@@ -3,9 +3,9 @@
 #include "Renderer/Public/IRenderer.h"
 #include "Locator/InputLocator.h"
 #include "Locator/UIComponentLocator.h"
-#include "../../UIComponent/Traverser/UITraverser.h"
+#include "UserInterface/Serializer/Serializer.h"
+#include "UserInterface/UIComponent/Traverser/UITraverser.h"
 #include "Shared/Utils/GeometryExt.h"
-#include "Shared/Serializer/Serializer.h"
 
 using namespace UITraverser;
 
