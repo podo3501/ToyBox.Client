@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include "Shared/Serializer/Serializer.h"
+#include "Core/Serializer/Serializer.h"
 #include "IJsonStorage.h"
 
 class JsonObjectIO

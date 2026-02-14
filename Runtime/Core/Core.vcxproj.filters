@@ -1,0 +1,119 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Foundation">
+      <UniqueIdentifier>{c2db4bb7-b0e9-4dc7-8a7d-829bdc57bded}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Serializer">
+      <UniqueIdentifier>{d5f14fee-4dbd-4be7-91b1-9a650e58f7cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Serializer\Format">
+      <UniqueIdentifier>{cf020b0d-1c93-4df6-a690-f3e0f4e6cb98}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Service">
+      <UniqueIdentifier>{d2b1f40b-798d-4476-af53-254a0537f9a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{2464969a-ccc9-47e9-a47b-fab764013851}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Foundation\NoCopyNoMove.h">
+      <Filter>Foundation</Filter>
+    </ClInclude>
+    <ClInclude Include="Foundation\NonCopyable.h">
+      <Filter>Foundation</Filter>
+    </ClInclude>
+    <ClInclude Include="Foundation\NonMovable.h">
+      <Filter>Foundation</Filter>
+    </ClInclude>
+    <ClInclude Include="Serializer\ClassSerialize.hpp">
+      <Filter>Serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="Serializer\Concepts.h">
+      <Filter>Serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="Serializer\Serializer.h">
+      <Filter>Serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="Serializer\Serializer.hpp">
+      <Filter>Serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="Serializer\Format\KeyConverter.hpp">
+      <Filter>Serializer\Format</Filter>
+    </ClInclude>
+    <ClInclude Include="Serializer\Format\Traits.h">
+      <Filter>Serializer\Format</Filter>
+    </ClInclude>
+    <ClInclude Include="Serializer\Format\TraitsHelper.hpp">
+      <Filter>Serializer\Format</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Environment.h">
+      <Filter>Service</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\EnvironmentLocator.h">
+      <Filter>Service</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Locator.h">
+      <Filter>Service</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\Common.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\EnumHelpers.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\GeometryExt.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\Memory.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\PathUtils.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\StlExt.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\StlExtTraitsConcepts.hpp">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\StlTypeExt.hpp">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\StringExt.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Serializer\Serializer.cpp">
+      <Filter>Serializer</Filter>
+    </ClCompile>
+    <ClCompile Include="Serializer\Format\KeyConverter.cpp">
+      <Filter>Serializer\Format</Filter>
+    </ClCompile>
+    <ClCompile Include="Serializer\Format\Traits.cpp">
+      <Filter>Serializer\Format</Filter>
+    </ClCompile>
+    <ClCompile Include="Service\Environment.cpp">
+      <Filter>Service</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\EnumHelpers.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\GeometryExt.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\PathUtils.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\StlExt.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\StringExt.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp" />
+  </ItemGroup>
+</Project>

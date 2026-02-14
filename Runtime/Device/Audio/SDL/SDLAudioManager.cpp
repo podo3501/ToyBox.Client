@@ -5,8 +5,8 @@
 #include "SoundTableReader.h"
 #include "SoundInfo.h"
 #include "SDL3/SDL_init.h"
-#include "Shared/Framework/EnvironmentLocator.h"
 #include "Device/Storage/IJsonStorage.h"
+#include "Core/Service/EnvironmentLocator.h"
 
 struct AudioGroup
 {

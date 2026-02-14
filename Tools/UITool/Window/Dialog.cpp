@@ -2,8 +2,8 @@
 #include "Dialog.h"
 #include <shobjidl.h>
 #include <wrl/wrappers/corewrappers.h>
-#include "Shared/Utils/EnumHelpers.h"
-#include "Shared/Framework/EnvironmentLocator.h"
+#include "Core/Utils/EnumHelpers.h"
+#include "Core/Service/EnvironmentLocator.h"
 
 template<>
 constexpr size_t EnumSize<DialogType>() { return 4; }

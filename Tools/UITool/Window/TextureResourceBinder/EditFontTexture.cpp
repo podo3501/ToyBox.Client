@@ -1,9 +1,9 @@
 #include "pch.h"
 #include "EditFontTexture.h"
-#include "Shared/Utils/StringExt.h"
-#include "Toy/UserInterface/TextureResourceBinder/TextureResourceBinder.h"
-#include "Toy/UserInterface/CommandHistory/TextureResource/TexResCommandHistory.h"
-#include "Shared/Framework/EnvironmentLocator.h"
+#include "Core/Utils/StringExt.h"
+#include "GameClient/UserInterface/TextureResourceBinder/TextureResourceBinder.h"
+#include "GameClient/UserInterface/CommandHistory/TextureResource/TexResCommandHistory.h"
+#include "Core/Service/EnvironmentLocator.h"
 #include "../HelperClass.h"
 #include "Window/Utils/EditUtility.h"
 

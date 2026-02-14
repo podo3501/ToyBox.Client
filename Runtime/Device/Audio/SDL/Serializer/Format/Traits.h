@@ -1,5 +1,5 @@
 #pragma once
-#include "Shared/Serializer/Format/Traits.h"
+#include "Core/Serializer/Format/Traits.h"
 
 enum class AudioGroupID;
 

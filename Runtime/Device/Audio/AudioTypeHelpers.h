@@ -1,6 +1,6 @@
 #pragma once
 #include "AudioTypes.h"
-#include "Shared/Utils/EnumHelpers.h"
+#include "Core/Utils/EnumHelpers.h"
 #include <array>
 
 template<>

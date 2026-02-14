@@ -1,6 +1,6 @@
 #pragma once
 #include "Renderer/Public/IRenderer.h"
-#include "Shared/Framework/AppLoop.h"
+#include "Platform/Framework/AppLoop.h"
 
 struct IRenderer;
 struct IToolInputManager;

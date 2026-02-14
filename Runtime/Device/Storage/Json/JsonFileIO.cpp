@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "JsonFileIO.h"
-#include "Shared/Framework/EnvironmentLocator.h"
 #include <fstream>
+#include "Core/Service/EnvironmentLocator.h"
 
 static bool IsJsonExtension(const wstring& filename) { return filesystem::path(filename).extension() == L".json"; }
 

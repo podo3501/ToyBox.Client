@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "MenuHelper.h"
 #include "Config/Config.h"
-#include "Shared/Utils/EnumHelpers.h"
+#include "Core/Utils/EnumHelpers.h"
 
 using namespace Tool;
 

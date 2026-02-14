@@ -1,6 +1,6 @@
 #pragma once
 #include "../IInputManager.h"
-#include "Shared/Foundation/NoCopyNoMove.h"
+#include "Core/Foundation/NoCopyNoMove.h"
 #include "DirectXTK12/Keyboard.h"
 #include "DirectXTK12/Mouse.h"
 

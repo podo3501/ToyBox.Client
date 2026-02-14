@@ -1,8 +1,8 @@
 ﻿#include "pch.h"
 #include "EditUtility.h"
 #include "../Dialog.h"
-#include "Shared/Utils/StringExt.h"
-#include "Toy/UserInterface/UIComponent/UIHelperClass.h"
+#include "Core/Utils/StringExt.h"
+#include "GameClient/UserInterface/UIComponent/UIHelperClass.h"
 
 template<typename T>
 static bool EditIntegerFields(vector<pair<const char*, T&>> fields)

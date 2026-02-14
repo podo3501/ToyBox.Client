@@ -5,12 +5,12 @@
 #include "Window/Utils/Common.h"
 #include "Renderer/Public/IImguiRegistry.h"
 #include "Device/Storage/IJsonStorage.h"
-#include "Shared/Utils/StringExt.h"
-#include "Toy/Locator/InputLocator.h"
-#include "Toy/UserInterface/UIComponent/Components/RenderTexture.h"
-#include "Toy/UserInterface/UIComponent/Components/PatchTexture/PatchTextureStd/PatchTextureStd1.h"
-#include "Toy/UserInterface/TextureResourceBinder/TextureResourceBinder.h"
-#include "Toy/UserInterface/CommandHistory/TextureResource/TexResCommandHistory.h"
+#include "Core/Utils/StringExt.h"
+#include "GameClient/Locator/InputLocator.h"
+#include "GameClient/UserInterface/UIComponent/Components/RenderTexture.h"
+#include "GameClient/UserInterface/UIComponent/Components/PatchTexture/PatchTextureStd/PatchTextureStd1.h"
+#include "GameClient/UserInterface/TextureResourceBinder/TextureResourceBinder.h"
+#include "GameClient/UserInterface/CommandHistory/TextureResource/TexResCommandHistory.h"
 
 TextureResBinderWindow::~TextureResBinderWindow()
 {

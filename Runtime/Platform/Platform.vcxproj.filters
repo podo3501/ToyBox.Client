@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="pch.cpp" />
+    <ClCompile Include="Window\Window.cpp">
+      <Filter>Window</Filter>
+    </ClCompile>
+    <ClCompile Include="Window\WindowProcedure.cpp">
+      <Filter>Window</Filter>
+    </ClCompile>
+    <ClCompile Include="Framework\AppLoop.cpp">
+      <Filter>Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="Framework\AppLoopWndProc.cpp">
+      <Filter>Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="Framework\Initializer\Application.cpp">
+      <Filter>Framework\Initializer</Filter>
+    </ClCompile>
+    <ClCompile Include="DevTools\Profiler.cpp">
+      <Filter>DevTools</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="Window\Window.h">
+      <Filter>Window</Filter>
+    </ClInclude>
+    <ClInclude Include="Window\WindowProcedure.h">
+      <Filter>Window</Filter>
+    </ClInclude>
+    <ClInclude Include="Framework\AppLoop.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Framework\StepTimer.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Framework\Initializer\Application.h">
+      <Filter>Framework\Initializer</Filter>
+    </ClInclude>
+    <ClInclude Include="DevTools\Profiler.h">
+      <Filter>DevTools</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Window">
+      <UniqueIdentifier>{ae161f0f-2040-4bdf-93e3-13235b831991}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework">
+      <UniqueIdentifier>{afcad76d-77c3-4071-911b-b40c2f51f54a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework\Initializer">
+      <UniqueIdentifier>{2f8a9520-3a84-4472-8663-f95057d7154d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DevTools">
+      <UniqueIdentifier>{656df0b6-88c9-4cb1-8084-079de0cca10b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

@@ -3,7 +3,7 @@
 #include "Imgui/imgui.h"
 #include "Imgui/imgui_impl_win32.h"
 #include "Imgui/imgui_impl_dx12.h"
-#include "Shared/Window/Window.h"
+#include "Platform/Window/Window.h"
 #include "Renderer.h"
 
 constexpr int NUM_FRAMES_IN_FLIGHT = 2;

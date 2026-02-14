@@ -4,13 +4,13 @@
 #include "Window/Utils/EditUtility.h"
 #include "Window/Utils/Common.h"
 #include "../HelperClass.h"
-#include "Toy/Locator/InputLocator.h"
-#include "Toy/UserInterface/UIComponent/Components/PatchTexture/PatchTextureStd/PatchTextureStd1.h"
-#include "Toy/UserInterface/TextureResourceBinder/TextureResourceBinder.h"
-#include "Toy/UserInterface/CommandHistory/TextureResource/TexResCommandHistory.h"
-#include "Toy/UserInterface/UIComponent/UIUtility.h"
-#include "Toy/UserInterface/UIComponent/UIHelperClass.h"
-#include "Shared/Utils/GeometryExt.h"
+#include "GameClient/Locator/InputLocator.h"
+#include "GameClient/UserInterface/UIComponent/Components/PatchTexture/PatchTextureStd/PatchTextureStd1.h"
+#include "GameClient/UserInterface/TextureResourceBinder/TextureResourceBinder.h"
+#include "GameClient/UserInterface/CommandHistory/TextureResource/TexResCommandHistory.h"
+#include "GameClient/UserInterface/UIComponent/UIUtility.h"
+#include "GameClient/UserInterface/UIComponent/UIHelperClass.h"
+#include "Core/Utils/GeometryExt.h"
 
 ImageSelector::~ImageSelector() = default;
 ImageSelector::ImageSelector(TextureResBinderWindow* textureWindow) :

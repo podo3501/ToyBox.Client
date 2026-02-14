@@ -1,5 +1,5 @@
 #pragma once
-#include "Toy/UserInterface/UIComponent/UIType.h"
+#include "GameClient/UserInterface/UIComponent/UIType.h"
 
 struct IToolInputManager;
 struct IInputManager;

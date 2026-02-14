@@ -1,10 +1,10 @@
 #include "pch.h"
 #include "EditPatchTextureStd.h"
-#include "Toy/UserInterface/UIComponent/Components/PatchTexture/PatchTextureStd/PatchTextureStd1.h"
-#include "Toy/UserInterface/UIComponent/Components/PatchTexture/PatchTextureStd/PatchTextureStd3.h"
-#include "Toy/UserInterface/UIComponent/Components/PatchTexture/PatchTextureStd/PatchTextureStd9.h"
-#include "Toy/UserInterface/TextureResourceBinder/TextureResourceBinder.h"
-#include "Toy/UserInterface/CommandHistory/UserInterface/UICommandHistory.h"
+#include "GameClient/UserInterface/UIComponent/Components/PatchTexture/PatchTextureStd/PatchTextureStd1.h"
+#include "GameClient/UserInterface/UIComponent/Components/PatchTexture/PatchTextureStd/PatchTextureStd3.h"
+#include "GameClient/UserInterface/UIComponent/Components/PatchTexture/PatchTextureStd/PatchTextureStd9.h"
+#include "GameClient/UserInterface/TextureResourceBinder/TextureResourceBinder.h"
+#include "GameClient/UserInterface/CommandHistory/UserInterface/UICommandHistory.h"
 #include "Window/Utils/EditUtility.h"
 
 EditPatchTextureStd::~EditPatchTextureStd() = default;

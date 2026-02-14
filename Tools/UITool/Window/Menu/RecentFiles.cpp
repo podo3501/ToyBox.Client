@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "RecentFiles.h"
 #include "FileTab.h"
-#include "Shared/Utils/StringExt.h"
+#include "Core/Utils/StringExt.h"
 #include "Device/Storage/JsonObjectIO.h"
 
 RecentFiles::~RecentFiles() = default;

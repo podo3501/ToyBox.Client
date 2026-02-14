@@ -1,6 +1,6 @@
 #pragma once
 #include "../IAudioManager.h"
-#include "Shared/Foundation/NoCopyNoMove.h"
+#include "Core/Foundation/NoCopyNoMove.h"
 
 struct AudioGroup;
 class SoundTableReader;

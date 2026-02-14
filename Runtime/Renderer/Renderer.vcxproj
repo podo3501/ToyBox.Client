@@ -201,8 +201,8 @@
     <ClInclude Include="Utils\DxLeakCheck.h" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Shared\Shared.vcxproj">
-      <Project>{a9d428f9-8ced-42b2-ad67-3e2a3e8c08ff}</Project>
+    <ProjectReference Include="..\Platform\Platform.vcxproj">
+      <Project>{fda4c59c-bf6a-4ccf-aef1-496052a1ff50}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

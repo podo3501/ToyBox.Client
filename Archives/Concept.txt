@@ -434,3 +434,8 @@ Storage를 만드는데 개념이 좀 헷깔리는 부분이 있었다. 처음�
 사용하는 manager가 있다고 가정하면 Create(1, 2, 3, 4, 5) 이런식으로 되어야 한다. 하지만 Storage가 다 읽고 간다면
 Create(storage) 이렇게만 하면 된다. 내부적으로 읽을때에는 약속했던 키값으로 읽는다. 이건 h에 있다. 그리고 storage가
 FileIO를 가지고 있기 때문에 이것만 교체하면 Memory도 가능하고 BinaryFileIO도 가능해진다.
+
+Runtime안에 Core는 플랫폼에 종속적이지 않게 하고, Platform에서는 window 및 dx 같은 것을 기반으로 할지 말지를 
+결정하는 곳이고 그것을 이용해서 Renderer나 Device를 만들게 된다. 그리고 GameCore는 ui 를 제외하게 해서 게임의
+로직만 돌게끔 하게 해서 테스트를 용이하게 하며, 서버에 올릴수도 있게 하며, thread safe하게 짜야할지도 모른다. 
+그래서 추후에 확장을 위해서 프로젝트를 여러개로 나누게 되었다.

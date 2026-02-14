@@ -7,8 +7,8 @@
 #include "MenuHelper.h"
 #include "RecentFiles.h"
 #include "Config/Config.h"
-#include "Shared/Window/Window.h"
-#include "Shared/Utils/StringExt.h"
+#include "Platform/Window/Window.h"
+#include "Core/Utils/StringExt.h"
 
 using namespace Tool;
 

@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "EditListArea.h"
-#include "Toy/UserInterface/UIComponent/Components/ListArea.h"
+#include "GameClient/UserInterface/UIComponent/Components/ListArea.h"
 #include "Window/Utils/EditUtility.h"
 
 static vector<string> GenerateNumberStrings(int numCount) noexcept

@@ -1,8 +1,8 @@
 #include "pch.h"
 #include "SoundTableReader.h"
 #include "SoundInfo.h"
-#include "Shared/Framework/EnvironmentLocator.h"
 #include "Device/Storage/JsonObjectIO.h"
+#include "Core/Service/EnvironmentLocator.h"
 
 SoundTableReader::~SoundTableReader() = default;
 SoundTableReader::SoundTableReader(unique_ptr<IJsonStorage> storage) :

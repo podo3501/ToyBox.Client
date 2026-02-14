@@ -1,10 +1,10 @@
 #include "pch.h"
 #include "Common.h"
 #include "Window/UserInterface/FloatingComponent.h"
-#include "Toy/Locator/InputLocator.h"
-#include "Toy/UserInterface/UIComponent/UIComponent.h"
-#include "Toy/UserInterface/CommandHistory/UserInterface/UICommandHistory.h"
-#include "Shared/Utils/GeometryExt.h"
+#include "GameClient/Locator/InputLocator.h"
+#include "GameClient/UserInterface/UIComponent/UIComponent.h"
+#include "GameClient/UserInterface/CommandHistory/UserInterface/UICommandHistory.h"
+#include "Core/Utils/GeometryExt.h"
 
 ImGuiMouseCursor_ Tool::MouseCursor::m_mouseCursor = ImGuiMouseCursor_Arrow;
 

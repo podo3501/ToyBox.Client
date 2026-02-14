@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "EditPatchTexture.h"
-#include "Toy/UserInterface/UIComponent/Components/PatchTexture/PatchTexture.h"
-#include "Toy/UserInterface/CommandHistory/UserInterface/UICommandHistory.h"
+#include "GameClient/UserInterface/UIComponent/Components/PatchTexture/PatchTexture.h"
+#include "GameClient/UserInterface/CommandHistory/UserInterface/UICommandHistory.h"
 
 EditPatchTexture::~EditPatchTexture() = default;
 EditPatchTexture::EditPatchTexture(PatchTexture* patchTex, UICommandHistory* cmdHistory) noexcept :

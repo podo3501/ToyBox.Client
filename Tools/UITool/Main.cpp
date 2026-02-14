@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "ToolLoop.h"
-#include "Shared/Framework/Initializer/Application.h"
-#include "Shared/Utils/PathUtils.h"
+#include "Platform/Framework/Initializer/Application.h"
+#include "Core/Utils/PathUtils.h"
 #include "Renderer/Utils/DxLeakCheck.h"
 
 int WINAPI wWinMain(_In_ HINSTANCE hInstance,

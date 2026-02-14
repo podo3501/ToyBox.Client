@@ -1,0 +1,20 @@
+#pragma once
+#include <memory>
+#include <string>
+#include "Core/Service/Locator.h"
+#include "Device/Storage/IJsonStorage.h"
+#include "GameClient/UserInterface/UIComponentManager.h"
+#include "GameClient/UserInterface/TextureResourceBinder/TextureResourceBinder.h"
+
+using UIComponentLocator = Locator<UIComponentManager>;
+
+inline UIModule* CreateUIModule(const std::string& moduleName, const UILayout& layout, const std::string& mainUIName, 
+	std::unique_ptr<IJsonStorage> storage, std::unique_ptr<TextureResourceBinder> resBinder) {
+	return UIComponentLocator::GetService()->CreateUIModule(moduleName, layout, mainUIName, std::move(storage), std::move(resBinder)); }
+inline UIModule* CreateUIModule(const std::string& moduleName, 
+	std::unique_ptr<IJsonStorage> storage, std::unique_ptr<TextureResourceBinder> resBinder) {
+	return UIComponentLocator::GetService()->CreateUIModule(moduleName, std::move(storage), std::move(resBinder)); }
+inline bool ReleaseUIModule(const std::string& moduleName) noexcept {
+	return UIComponentLocator::GetService()->ReleaseUIModule(moduleName);
+}
+inline ITextureController* GetTextureController() noexcept { return UIComponentLocator::GetService()->GetTextureController(); }
