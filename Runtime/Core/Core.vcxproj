@@ -23,25 +23,13 @@
     <ClInclude Include="Foundation\NonCopyable.h" />
     <ClInclude Include="Foundation\NonMovable.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="Serializer\ClassSerialize.hpp" />
-    <ClInclude Include="Serializer\Concepts.h" />
-    <ClInclude Include="Serializer\Format\KeyConverter.hpp" />
-    <ClInclude Include="Serializer\Format\Traits.h" />
-    <ClInclude Include="Serializer\Format\TraitsHelper.hpp" />
-    <ClInclude Include="Serializer\Serializer.h" />
-    <ClInclude Include="Serializer\Serializer.hpp" />
-    <ClInclude Include="Service\Environment.h" />
-    <ClInclude Include="Service\EnvironmentLocator.h" />
     <ClInclude Include="Service\Locator.h" />
     <ClInclude Include="Utils\Common.h" />
     <ClInclude Include="Utils\EnumHelpers.h" />
-    <ClInclude Include="Utils\GeometryExt.h" />
     <ClInclude Include="Utils\Memory.h" />
-    <ClInclude Include="Utils\PathUtils.h" />
     <ClInclude Include="Utils\StlExt.h" />
     <ClInclude Include="Utils\StlExtTraitsConcepts.hpp" />
     <ClInclude Include="Utils\StlTypeExt.hpp" />
-    <ClInclude Include="Utils\StringExt.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -50,15 +38,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Serializer\Format\KeyConverter.cpp" />
-    <ClCompile Include="Serializer\Format\Traits.cpp" />
-    <ClCompile Include="Serializer\Serializer.cpp" />
-    <ClCompile Include="Service\Environment.cpp" />
     <ClCompile Include="Utils\EnumHelpers.cpp" />
-    <ClCompile Include="Utils\GeometryExt.cpp" />
-    <ClCompile Include="Utils\PathUtils.cpp" />
     <ClCompile Include="Utils\StlExt.cpp" />
-    <ClCompile Include="Utils\StringExt.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
@@ -121,7 +102,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)Runtime;$(ProjectDir);$(SolutionDir)ThirdParty\Include;$(SolutionDir)ThirdParty\SDL3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)Runtime;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -129,7 +110,8 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalLibraryDirectories>$(SolutionDir)ThirdParty\Libs;$(SolutionDir)ThirdParty\SDL3\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -143,7 +125,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)Runtime;$(ProjectDir);$(SolutionDir)ThirdParty\Include;$(SolutionDir)ThirdParty\SDL3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)Runtime;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -151,7 +133,8 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalLibraryDirectories>$(SolutionDir)ThirdParty\Libs;$(SolutionDir)ThirdParty\SDL3\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -163,7 +146,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)Runtime;$(ProjectDir);$(SolutionDir)ThirdParty\Include;$(SolutionDir)ThirdParty\SDL3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)Runtime;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -171,7 +154,8 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalLibraryDirectories>$(SolutionDir)ThirdParty\Libs;$(SolutionDir)ThirdParty\SDL3\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -185,7 +169,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)Runtime;$(ProjectDir);$(SolutionDir)ThirdParty\Include;$(SolutionDir)ThirdParty\SDL3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)Runtime;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -193,7 +177,8 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalLibraryDirectories>$(SolutionDir)ThirdParty\Libs;$(SolutionDir)ThirdParty\SDL3\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

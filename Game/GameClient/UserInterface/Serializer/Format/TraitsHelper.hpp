@@ -1,5 +1,5 @@
 #pragma once
-#include "Core/Serializer/Format/TraitsHelper.hpp"
+#include "Platform/Serializer/Format/TraitsHelper.hpp"
 // Rectangle 전용 추가 필드 처리 헬퍼
 inline nlohmann::json SerializeRectExtra(const Rectangle& data, nlohmann::json j)
 {

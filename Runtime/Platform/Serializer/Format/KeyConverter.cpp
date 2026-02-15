@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "KeyConverter.hpp"
-#include "Core/Utils/StringExt.h"
+#include "Platform/Utils/StringExt.h"
 
 string KeyConverter<wstring>::ToKey(const wstring& key) { return WStringToString(key); }
 wstring KeyConverter<wstring>::FromKey(const string& key) { return StringToWString(key); }

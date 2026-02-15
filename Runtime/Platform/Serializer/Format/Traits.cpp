@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Traits.h"
 #include "TraitsHelper.hpp"
-#include "Core/Utils/StringExt.h"
+#include "Platform/Utils/StringExt.h"
 
 nlohmann::json JsonTraitsBase<string>::SerializeToJson(const string& data) { return data; }
 string JsonTraitsBase<string>::DeserializeFromJson(const nlohmann::json& dataJ) { return dataJ; }

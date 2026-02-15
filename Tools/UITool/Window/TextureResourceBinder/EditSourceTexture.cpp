@@ -2,7 +2,7 @@
 #include "EditSourceTexture.h"
 #include "TextureResBinderWindow.h"
 #include "ImageSelector.h"
-#include "Core/Utils/StringExt.h"
+#include "Platform/Utils/StringExt.h"
 #include "GameClient/UserInterface/TextureResourceBinder/TextureResourceBinder.h"
 #include "GameClient/UserInterface/TextureResourceBinder/TextureLoadBinder.h"
 #include "GameClient/UserInterface/CommandHistory/TextureResource/TexResCommandHistory.h"

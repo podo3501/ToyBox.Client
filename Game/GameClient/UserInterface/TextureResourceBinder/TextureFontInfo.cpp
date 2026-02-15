@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "TextureFontInfo.h"
 #include "Renderer/Public/IRenderer.h"
-#include "Core/Service/EnvironmentLocator.h"
+#include "Platform/Framework/EnvironmentLocator.h"
 #include "UserInterface/Serializer/Serializer.h"
 
 TextureFontInfo::~TextureFontInfo() = default;

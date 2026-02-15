@@ -2,8 +2,8 @@
 #include <memory>
 #include <string>
 #include "DirectXTK12/SimpleMath.h"
-#include "Locator.h"
 #include "Environment.h"
+#include "Core/Service/Locator.h"
 
 using EnvironmentLocator = Locator<Environment>;
 

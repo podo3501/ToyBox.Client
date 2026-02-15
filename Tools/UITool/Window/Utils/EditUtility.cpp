@@ -1,7 +1,7 @@
 ﻿#include "pch.h"
 #include "EditUtility.h"
 #include "../Dialog.h"
-#include "Core/Utils/StringExt.h"
+#include "Platform/Utils/StringExt.h"
 #include "GameClient/UserInterface/UIComponent/UIHelperClass.h"
 
 template<typename T>

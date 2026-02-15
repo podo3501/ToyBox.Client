@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "PatchTexture.h"
-#include "Core/Utils/GeometryExt.h"
+#include "Platform/Utils/GeometryExt.h"
 #include "UserInterface/UIComponent/Traverser/UITraverser.h"
 #include "UserInterface/UIComponent/UIUtility.h"
 #include "UserInterface/UIComponent/Components/PatchTexture/PatchTextureLite/PatchTextureLite1.h"

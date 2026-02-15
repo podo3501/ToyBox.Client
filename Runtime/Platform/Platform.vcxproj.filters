@@ -20,6 +20,27 @@
     <ClCompile Include="DevTools\Profiler.cpp">
       <Filter>DevTools</Filter>
     </ClCompile>
+    <ClCompile Include="Utils\GeometryExt.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Serializer\Serializer.cpp">
+      <Filter>Serializer</Filter>
+    </ClCompile>
+    <ClCompile Include="Serializer\Format\KeyConverter.cpp">
+      <Filter>Serializer\Format</Filter>
+    </ClCompile>
+    <ClCompile Include="Serializer\Format\Traits.cpp">
+      <Filter>Serializer\Format</Filter>
+    </ClCompile>
+    <ClCompile Include="Framework\Environment.cpp">
+      <Filter>Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\PathUtils.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\StringExt.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -41,6 +62,42 @@
     <ClInclude Include="DevTools\Profiler.h">
       <Filter>DevTools</Filter>
     </ClInclude>
+    <ClInclude Include="Utils\GeometryExt.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Serializer\ClassSerialize.hpp">
+      <Filter>Serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="Serializer\Concepts.h">
+      <Filter>Serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="Serializer\Serializer.h">
+      <Filter>Serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="Serializer\Serializer.hpp">
+      <Filter>Serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="Serializer\Format\KeyConverter.hpp">
+      <Filter>Serializer\Format</Filter>
+    </ClInclude>
+    <ClInclude Include="Serializer\Format\Traits.h">
+      <Filter>Serializer\Format</Filter>
+    </ClInclude>
+    <ClInclude Include="Serializer\Format\TraitsHelper.hpp">
+      <Filter>Serializer\Format</Filter>
+    </ClInclude>
+    <ClInclude Include="Framework\Environment.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Framework\EnvironmentLocator.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\PathUtils.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\StringExt.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Window">
@@ -54,6 +111,15 @@
     </Filter>
     <Filter Include="DevTools">
       <UniqueIdentifier>{656df0b6-88c9-4cb1-8084-079de0cca10b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{e0fc3eb3-9c85-48ee-a017-72a1b329f603}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Serializer">
+      <UniqueIdentifier>{1096e105-f9af-4981-9da7-cd373755c480}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Serializer\Format">
+      <UniqueIdentifier>{dd35b109-3cb8-4ad9-95b5-eeebc1db9201}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

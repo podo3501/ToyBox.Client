@@ -10,7 +10,7 @@
 #include "GameClient/UserInterface/CommandHistory/TextureResource/TexResCommandHistory.h"
 #include "GameClient/UserInterface/UIComponent/UIUtility.h"
 #include "GameClient/UserInterface/UIComponent/UIHelperClass.h"
-#include "Core/Utils/GeometryExt.h"
+#include "Platform/Utils/GeometryExt.h"
 
 ImageSelector::~ImageSelector() = default;
 ImageSelector::ImageSelector(TextureResBinderWindow* textureWindow) :

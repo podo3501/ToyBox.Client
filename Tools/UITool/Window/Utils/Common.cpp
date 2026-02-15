@@ -4,7 +4,7 @@
 #include "GameClient/Locator/InputLocator.h"
 #include "GameClient/UserInterface/UIComponent/UIComponent.h"
 #include "GameClient/UserInterface/CommandHistory/UserInterface/UICommandHistory.h"
-#include "Core/Utils/GeometryExt.h"
+#include "Platform/Utils/GeometryExt.h"
 
 ImGuiMouseCursor_ Tool::MouseCursor::m_mouseCursor = ImGuiMouseCursor_Arrow;
 

@@ -4,7 +4,7 @@
 #include "UserInterface/UIComponent/Traverser/UITraverser.h"
 #include "PatchTexture/PatchTextureStd/PatchTextureStd3.h"
 #include "TextureSwitcher.h"
-#include "Core/Utils/GeometryExt.h"
+#include "Platform/Utils/GeometryExt.h"
 
 using namespace UITraverser;
 

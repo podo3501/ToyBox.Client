@@ -2,7 +2,7 @@
 #include "PatchTextureCoord.h"
 #include "Renderer/Public/IRenderer.h"
 #include "UserInterface/UIComponent/UIComponent.h"
-#include "Core/Utils/GeometryExt.h"
+#include "Platform/Utils/GeometryExt.h"
 
 PatchTextureCoord::~PatchTextureCoord() = default;
 PatchTextureCoord::PatchTextureCoord() noexcept :

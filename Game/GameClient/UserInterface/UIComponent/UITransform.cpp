@@ -2,8 +2,8 @@
 #include "UITransform.h"
 #include "UILayout.h"
 #include "UserInterface/Serializer/Serializer.h"
-#include "Core/Serializer/Serializer.h"
-#include "Core/Utils/GeometryExt.h"
+#include "Platform/Serializer/Serializer.h"
+#include "Platform/Utils/GeometryExt.h"
 
 UITransform::UITransform() = default;
 bool UITransform::operator==(const UITransform& o) const noexcept

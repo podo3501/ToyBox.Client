@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "Environment.h"
-#include "Utils/StringExt.h"
+#include "Platform/Utils/StringExt.h"
 
 Environment::Environment(const wstring& resourcePathW, const Vector2& resolution) :
 	m_fontPath{ L"UI/Font/" },

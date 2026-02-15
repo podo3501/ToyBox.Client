@@ -5,7 +5,7 @@
 #include "Window/Utils/Common.h"
 #include "Renderer/Public/IImguiRegistry.h"
 #include "Device/Storage/IJsonStorage.h"
-#include "Core/Utils/StringExt.h"
+#include "Platform/Utils/StringExt.h"
 #include "GameClient/Locator/InputLocator.h"
 #include "GameClient/UserInterface/UIComponent/Components/RenderTexture.h"
 #include "GameClient/UserInterface/UIComponent/Components/PatchTexture/PatchTextureStd/PatchTextureStd1.h"

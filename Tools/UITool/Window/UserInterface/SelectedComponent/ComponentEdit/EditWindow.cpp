@@ -3,7 +3,7 @@
 #include "GameClient/Locator/InputLocator.h"
 #include "GameClient/UserInterface/UIComponent/Components/Panel.h"
 #include "GameClient/UserInterface/CommandHistory/UserInterface/UICommandHistory.h"
-#include "Core/Utils/GeometryExt.h"
+#include "Platform/Utils/GeometryExt.h"
 #include "Window/Utils/EditUtility.h"
 #include "Window/HelperClass.h"
 #include "Window/Utils/Common.h"

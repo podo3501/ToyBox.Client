@@ -3,7 +3,7 @@
 #include "Locator/InputLocator.h"
 #include "../Traverser/UITraverser.h"
 #include "UserInterface/Serializer/Serializer.h"
-#include "Core/Utils/GeometryExt.h"
+#include "Platform/Utils/GeometryExt.h"
 #include "Core/Utils/StlExt.h"
 
 using enum InteractState;

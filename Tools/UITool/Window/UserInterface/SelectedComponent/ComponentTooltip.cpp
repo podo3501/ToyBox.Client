@@ -2,7 +2,7 @@
 #include "ComponentTooltip.h"
 #include "GameClient/UserInterface/UIComponent/Traverser/UITraverser.h"
 #include "GameClient/UserInterface/UIComponent/Components/Panel.h"
-#include "Core/Utils/GeometryExt.h"
+#include "Platform/Utils/GeometryExt.h"
 #include "Window/Utils/Common.h"
 
 using namespace UITraverser;

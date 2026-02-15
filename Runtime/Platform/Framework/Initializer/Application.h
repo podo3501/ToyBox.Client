@@ -4,7 +4,7 @@
 #include "Renderer/Public/IImguiRegistry.h"
 #include "Platform/Window/WindowProcedure.h"
 #include "Platform/Window/Window.h"
-#include "Core/Utils/StringExt.h"
+#include "Platform/Utils/StringExt.h"
 
 template<typename LoopType>
 unique_ptr<AppLoop> CreateAppLoop(HINSTANCE hInstance, int nShowCmd,

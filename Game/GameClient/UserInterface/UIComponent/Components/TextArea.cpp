@@ -5,7 +5,7 @@
 #include "UserInterface/TextureResourceBinder/TextureResourceBinder.h"
 #include "../UIUtility.h"
 #include "Renderer/Public/IRenderer.h"
-#include "Core/Utils/GeometryExt.h"
+#include "Platform/Utils/GeometryExt.h"
 
 //한글폰트와 영문폰트는 각각 한개만 로딩하기로 한다.
 //중간에 볼드나 밑줄같은 것은 지원하지 않고 크기도 고정으로 한다.

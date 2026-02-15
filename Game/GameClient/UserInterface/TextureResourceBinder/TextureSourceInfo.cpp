@@ -3,7 +3,7 @@
 #include "../UIComponent/UIType.h"
 #include "UserInterface/Serializer/Serializer.h"
 #include "Renderer/Public/IRenderer.h"
-#include "Core/Service/EnvironmentLocator.h"
+#include "Platform/Framework/EnvironmentLocator.h"
 
 TextureSourceInfo::~TextureSourceInfo() = default;
 TextureSourceInfo::TextureSourceInfo() noexcept :

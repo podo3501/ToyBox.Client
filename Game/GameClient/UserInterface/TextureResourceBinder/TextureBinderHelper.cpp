@@ -4,7 +4,7 @@
 #include "../UIComponent/UIUtility.h"
 #include "../UIComponent/UIType.h"
 #include "../UIComponent/UIHelperClass.h"
-#include "Core/Utils/GeometryExt.h"
+#include "Platform/Utils/GeometryExt.h"
 
 optionalRef<vector<Rectangle>> GetSourcesOfBindKey(TextureResourceBinder* rb, const string& key) noexcept
 {

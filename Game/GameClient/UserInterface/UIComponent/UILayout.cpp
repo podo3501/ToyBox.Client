@@ -2,7 +2,7 @@
 #include "UILayout.h"
 #include "UIType.h"
 #include "UserInterface/Serializer/Serializer.h"
-#include "Core/Utils/GeometryExt.h"
+#include "Platform/Utils/GeometryExt.h"
 
 UILayout::~UILayout() = default;
 UILayout::UILayout() :

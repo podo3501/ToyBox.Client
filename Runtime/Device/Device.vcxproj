@@ -62,8 +62,8 @@
     <ClCompile Include="Storage\Json\JsonStorage.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Core\Core.vcxproj">
-      <Project>{e0dcdedb-6f54-4b60-b549-20de9df2ba39}</Project>
+    <ProjectReference Include="..\Platform\Platform.vcxproj">
+      <Project>{fda4c59c-bf6a-4ccf-aef1-496052a1ff50}</Project>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">

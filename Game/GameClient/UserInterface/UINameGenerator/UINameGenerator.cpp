@@ -4,7 +4,7 @@
 #include "ComponentNameGenerator.h"
 #include "UserInterface/Serializer/Serializer.h"
 #include "UserInterface/UIComponent/UIType.h"
-#include "Core/Utils/StringExt.h"
+#include "Platform/Utils/StringExt.h"
 #include "Core/Utils/StlExt.h"
 
 UINameGenerator::~UINameGenerator() = default;

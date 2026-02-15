@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "DerivedTraverser.h"
 #include "../UIComponent.h"
-#include "Core/Utils/GeometryExt.h"
+#include "Platform/Utils/GeometryExt.h"
 
 DerivedTraverser::~DerivedTraverser() = default;
 DerivedTraverser::DerivedTraverser() = default;

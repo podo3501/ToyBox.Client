@@ -9,7 +9,7 @@
 #include "ListArea.h"
 #include "ScrollBar.h"
 #include "TextureSwitcher.h"
-#include "Core/Utils/StringExt.h"
+#include "Platform/Utils/StringExt.h"
 
 static map<InteractState, unique_ptr<UIComponent>> GetComponentKeyMap(
 	const XMUINT2& size, const string& bindKey,

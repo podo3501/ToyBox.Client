@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "BaseTraverser.h"
 #include "../UIComponent.h"
-#include "Core/Utils/GeometryExt.h"
+#include "Platform/Utils/GeometryExt.h"
 
 XMUINT2 BaseTraverser::GetChildrenBoundsSize(UIComponent* c) noexcept
 {

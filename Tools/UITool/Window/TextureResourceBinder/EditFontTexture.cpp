@@ -1,9 +1,9 @@
 #include "pch.h"
 #include "EditFontTexture.h"
-#include "Core/Utils/StringExt.h"
+#include "Platform/Utils/StringExt.h"
 #include "GameClient/UserInterface/TextureResourceBinder/TextureResourceBinder.h"
 #include "GameClient/UserInterface/CommandHistory/TextureResource/TexResCommandHistory.h"
-#include "Core/Service/EnvironmentLocator.h"
+#include "Platform/Framework/EnvironmentLocator.h"
 #include "../HelperClass.h"
 #include "Window/Utils/EditUtility.h"
 

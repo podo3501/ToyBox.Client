@@ -6,7 +6,7 @@
 #include "SoundInfo.h"
 #include "SDL3/SDL_init.h"
 #include "Device/Storage/IJsonStorage.h"
-#include "Core/Service/EnvironmentLocator.h"
+#include "Platform/Framework/EnvironmentLocator.h"
 
 struct AudioGroup
 {

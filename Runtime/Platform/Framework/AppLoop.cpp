@@ -5,7 +5,7 @@
 #include "DevTools/Profiler.h"
 #include "Window/Window.h"
 #include "Window/WindowProcedure.h"
-#include "Core/Service/EnvironmentLocator.h"
+#include "Platform/Framework/EnvironmentLocator.h"
 
 AppLoop::~AppLoop()
 {

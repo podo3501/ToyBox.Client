@@ -2,7 +2,7 @@
 #include "AutoNamer.h"
 #include "ComponentNameGenerator.h"
 #include "UserInterface/Serializer/Serializer.h"
-#include "Core/Utils/StringExt.h"
+#include "Platform/Utils/StringExt.h"
 #include "Core/Utils/StlExt.h"
 
 ComponentNameGenerator::~ComponentNameGenerator() = default;

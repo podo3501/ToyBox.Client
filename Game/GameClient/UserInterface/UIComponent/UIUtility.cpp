@@ -2,7 +2,7 @@
 #include "UIUtility.h"
 #include "UIHelperClass.h"
 #include "UIComponent.h"
-#include "Core/Utils/GeometryExt.h"
+#include "Platform/Utils/GeometryExt.h"
 
 static inline bool operator==(const DirectX::XMFLOAT4& a, const DirectX::XMFLOAT4& b) noexcept
 {

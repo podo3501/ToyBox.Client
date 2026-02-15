@@ -8,7 +8,7 @@
 #include "RecentFiles.h"
 #include "Config/Config.h"
 #include "Platform/Window/Window.h"
-#include "Core/Utils/StringExt.h"
+#include "Platform/Utils/StringExt.h"
 
 using namespace Tool;
 
