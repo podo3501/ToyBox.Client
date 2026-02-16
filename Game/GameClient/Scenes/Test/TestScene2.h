@@ -1,5 +1,5 @@
 #pragma once
-#include "../Scene.h"
+#include "GameCore/Scenes/Scene.h"
 
 class UIComponent;
 class UIModule;
@@ -15,6 +15,6 @@ public:
 	virtual void Update(const DX::StepTimer& timer) override;
 
 private:
-	//unique_ptr<UIModule> m_uiModule;
+	IRenderer* m_renderer{ nullptr };
 	UIModule* m_uiModule{ nullptr };
 };

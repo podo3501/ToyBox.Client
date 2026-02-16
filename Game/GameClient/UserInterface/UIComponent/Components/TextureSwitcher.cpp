@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "TextureSwitcher.h"
-#include "Locator/EventDispatcherLocator.h"
+#include "GameCore/Locator/EventDispatcherLocator.h"
 #include "PatchTexture/PatchTextureLite/PatchTextureLite.h"
 #include "UserInterface/Serializer/Serializer.h"
 #include "UserInterface/UIComponent/Traverser/UITraverser.h"

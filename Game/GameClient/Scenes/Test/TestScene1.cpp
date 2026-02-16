@@ -1,9 +1,9 @@
 #include "pch.h"
 #include "TestScene1.h"
 #include "Renderer/Public/IRenderer.h"
+#include "GameCore/Locator/SceneLocator.h"
 #include "Locator/UIComponentLocator.h"
-#include "Locator/SceneLocator.h"
-#include "Locator/EventDispatcherLocator.h"
+#include "GameCore/Locator/EventDispatcherLocator.h"
 #include "UserInterface/UIModule.h"
 #include "UserInterface/TextureResourceBinder/TextureResourceBinder.h"
 #include "TestScene2.h"
@@ -11,7 +11,7 @@
 
 TestScene1::~TestScene1() = default;
 TestScene1::TestScene1(IRenderer* renderer) :
-	Scene(renderer)
+	m_renderer{ renderer }
 {}
 
 bool TestScene1::Enter()
@@ -20,7 +20,7 @@ bool TestScene1::Enter()
 	storageDesc.SetFilename<StorageKey::Definition>(L"/Scene/Test/TestScene1.json");
 	storageDesc.SetFilename<StorageKey::Resource>(L"UI/SampleTexture/SampleTextureBinder.json");
 	auto storage = CreateJsonStorage(storageDesc);
-	auto texResBinder = CreateTextureResourceBinder(storage.get(), GetRenderer());
+	auto texResBinder = CreateTextureResourceBinder(storage.get(), m_renderer);
 	m_uiModule = CreateUIModule("Test1", move(storage), move(texResBinder));
 
 	//씬이 시작될때 등록하고 씬이 나갈때 해제한다.
@@ -29,7 +29,7 @@ bool TestScene1::Enter()
 	auto eventDispatcher = EventDispatcherLocator::GetService();
 	eventDispatcher->Subscribe("", "TextureSwitcher", [this, scene](UIEvent event) {
 		if (event == UIEvent::Clicked)
-			scene->Transition(make_unique<TestScene2>(GetRenderer()));
+			scene->Transition(make_unique<TestScene2>(m_renderer));
 		});
 
 	return true;

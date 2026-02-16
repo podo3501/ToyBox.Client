@@ -1,6 +1,7 @@
 #pragma once
-#include "../Scene.h"
+#include "GameCore/Scenes/Scene.h"
 
+struct IRenderer;
 class UIComponent;
 class UIModule;
 class ComponentTestScene : public Scene
@@ -18,5 +19,6 @@ private:
 	bool LoadResources();
 	bool AttachComponentToPanel(unique_ptr<UIComponent> component, const XMINT2& position) const noexcept;
 
+	IRenderer* m_renderer{ nullptr };
 	UIModule* m_uiModule{ nullptr };
 };

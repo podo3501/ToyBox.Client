@@ -8,7 +8,7 @@
 #include "Renderer/Public/IImguiRegistry.h"
 #include "Platform/Window/Window.h"
 #include "GameClient/Locator/UIComponentLocator.h"
-#include "GameClient/Locator/EventDispatcherLocator.h"
+#include "GameCore/Locator/EventDispatcherLocator.h"
 #include "GameClient/Locator/InputLocator.h"
 
 #ifdef __clang__

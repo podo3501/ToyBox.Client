@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="pch.cpp" />
+    <ClCompile Include="System\SceneManager.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="System\EventDispatcherManager.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="System\SceneManager.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\Scene.h">
+      <Filter>Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\SceneType.h">
+      <Filter>Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="Locator\SceneLocator.h">
+      <Filter>Locator</Filter>
+    </ClInclude>
+    <ClInclude Include="Locator\EventDispatcherLocator.h">
+      <Filter>Locator</Filter>
+    </ClInclude>
+    <ClInclude Include="System\EventDispatcherManager.h">
+      <Filter>System</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="System">
+      <UniqueIdentifier>{404c4798-e90a-449d-90d6-742b38361796}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scenes">
+      <UniqueIdentifier>{7683c68e-04e5-412d-89a2-987756690828}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Locator">
+      <UniqueIdentifier>{e32ed532-d29b-4eaf-b3b5-c61108ca440e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

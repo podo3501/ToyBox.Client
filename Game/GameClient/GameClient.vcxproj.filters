@@ -171,12 +171,6 @@
     <ClCompile Include="UserInterface\UINameGenerator\UINameGenerator.cpp">
       <Filter>UserInterface\UINameGenerator</Filter>
     </ClCompile>
-    <ClCompile Include="System\EventDispatcherManager.cpp">
-      <Filter>System</Filter>
-    </ClCompile>
-    <ClCompile Include="System\SceneManager.cpp">
-      <Filter>System</Filter>
-    </ClCompile>
     <ClCompile Include="Scenes\Test\ComponentTestScene.cpp">
       <Filter>Scenes\Test</Filter>
     </ClCompile>
@@ -193,13 +187,7 @@
     <ClInclude Include="Locator\AudioLocator.h">
       <Filter>Locator</Filter>
     </ClInclude>
-    <ClInclude Include="Locator\EventDispatcherLocator.h">
-      <Filter>Locator</Filter>
-    </ClInclude>
     <ClInclude Include="Locator\InputLocator.h">
-      <Filter>Locator</Filter>
-    </ClInclude>
-    <ClInclude Include="Locator\SceneLocator.h">
       <Filter>Locator</Filter>
     </ClInclude>
     <ClInclude Include="Locator\UIComponentLocator.h">
@@ -394,18 +382,6 @@
     <ClInclude Include="UserInterface\UINameGenerator\UINameGenerator.h">
       <Filter>UserInterface\UINameGenerator</Filter>
     </ClInclude>
-    <ClInclude Include="System\EventDispatcherManager.h">
-      <Filter>System</Filter>
-    </ClInclude>
-    <ClInclude Include="System\SceneManager.h">
-      <Filter>System</Filter>
-    </ClInclude>
-    <ClInclude Include="Scenes\Scene.h">
-      <Filter>Scenes</Filter>
-    </ClInclude>
-    <ClInclude Include="Scenes\SceneType.h">
-      <Filter>Scenes</Filter>
-    </ClInclude>
     <ClInclude Include="Scenes\Test\ComponentTestScene.h">
       <Filter>Scenes\Test</Filter>
     </ClInclude>
@@ -422,9 +398,6 @@
     </Filter>
     <Filter Include="Scenes">
       <UniqueIdentifier>{f516aafd-2456-4be1-a44c-3aaa7302918a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="System">
-      <UniqueIdentifier>{e5a6a120-4d95-4d26-8344-72189f7e3582}</UniqueIdentifier>
     </Filter>
     <Filter Include="UserInterface">
       <UniqueIdentifier>{3f4ce434-85a6-4b09-904f-5f8e41d439e8}</UniqueIdentifier>

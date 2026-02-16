@@ -19,57 +19,34 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="DevTools\Profiler.cpp" />
-    <ClCompile Include="Framework\AppLoop.cpp" />
-    <ClCompile Include="Framework\AppLoopWndProc.cpp" />
-    <ClCompile Include="Framework\Environment.cpp" />
-    <ClCompile Include="Framework\Initializer\Application.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Serializer\Format\KeyConverter.cpp" />
-    <ClCompile Include="Serializer\Format\Traits.cpp" />
-    <ClCompile Include="Serializer\Serializer.cpp" />
-    <ClCompile Include="Utils\GeometryExt.cpp" />
-    <ClCompile Include="Utils\PathUtils.cpp" />
-    <ClCompile Include="Utils\StringExt.cpp" />
-    <ClCompile Include="Window\Window.cpp" />
-    <ClCompile Include="Window\WindowProcedure.cpp" />
+    <ClCompile Include="System\EventDispatcherManager.cpp" />
+    <ClCompile Include="System\SceneManager.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="DevTools\Profiler.h" />
-    <ClInclude Include="Framework\AppLoop.h" />
-    <ClInclude Include="Framework\Environment.h" />
-    <ClInclude Include="Framework\EnvironmentLocator.h" />
-    <ClInclude Include="Framework\Initializer\Application.h" />
-    <ClInclude Include="Framework\StepTimer.h" />
+    <ClInclude Include="Locator\EventDispatcherLocator.h" />
+    <ClInclude Include="Locator\SceneLocator.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="Serializer\ClassSerialize.hpp" />
-    <ClInclude Include="Serializer\Concepts.h" />
-    <ClInclude Include="Serializer\Format\KeyConverter.hpp" />
-    <ClInclude Include="Serializer\Format\Traits.h" />
-    <ClInclude Include="Serializer\Format\TraitsHelper.hpp" />
-    <ClInclude Include="Serializer\Serializer.h" />
-    <ClInclude Include="Serializer\Serializer.hpp" />
-    <ClInclude Include="Utils\GeometryExt.h" />
-    <ClInclude Include="Utils\PathUtils.h" />
-    <ClInclude Include="Utils\StringExt.h" />
-    <ClInclude Include="Window\Window.h" />
-    <ClInclude Include="Window\WindowProcedure.h" />
+    <ClInclude Include="Scenes\Scene.h" />
+    <ClInclude Include="Scenes\SceneType.h" />
+    <ClInclude Include="System\EventDispatcherManager.h" />
+    <ClInclude Include="System\SceneManager.h" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Core\Core.vcxproj">
-      <Project>{e0dcdedb-6f54-4b60-b549-20de9df2ba39}</Project>
+    <ProjectReference Include="..\..\Runtime\Device\Device.vcxproj">
+      <Project>{42cb8f33-76bf-453d-aabb-48339fe7ae3e}</Project>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{fda4c59c-bf6a-4ccf-aef1-496052a1ff50}</ProjectGuid>
-    <RootNamespace>Platform</RootNamespace>
+    <ProjectGuid>{51ad5607-32f1-4b44-8013-dddef3f543b4}</ProjectGuid>
+    <RootNamespace>GameCore</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -125,18 +102,14 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)Runtime;$(ProjectDir);$(SolutionDir)ThirdParty\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)Game;$(SolutionDir)Runtime;$(ProjectDir);$(SolutionDir)ThirdParty\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
       </SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
-    <Lib>
-      <AdditionalLibraryDirectories>
-      </AdditionalLibraryDirectories>
-    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -148,18 +121,14 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)Runtime;$(ProjectDir);$(SolutionDir)ThirdParty\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)Game;$(SolutionDir)Runtime;$(ProjectDir);$(SolutionDir)ThirdParty\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
       </SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
-    <Lib>
-      <AdditionalLibraryDirectories>
-      </AdditionalLibraryDirectories>
-    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -169,18 +138,14 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)Runtime;$(ProjectDir);$(SolutionDir)ThirdParty\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)Game;$(SolutionDir)Runtime;$(ProjectDir);$(SolutionDir)ThirdParty\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
       </SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
-    <Lib>
-      <AdditionalLibraryDirectories>
-      </AdditionalLibraryDirectories>
-    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -192,18 +157,14 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)Runtime;$(ProjectDir);$(SolutionDir)ThirdParty\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)Game;$(SolutionDir)Runtime;$(ProjectDir);$(SolutionDir)ThirdParty\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
       </SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
-    <Lib>
-      <AdditionalLibraryDirectories>
-      </AdditionalLibraryDirectories>
-    </Lib>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
