@@ -2,32 +2,32 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
-    <ClCompile Include="System\SceneManager.cpp">
-      <Filter>System</Filter>
-    </ClCompile>
     <ClCompile Include="System\EventDispatcherManager.cpp">
       <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\SceneManager.cpp">
+      <Filter>Scenes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
-    <ClInclude Include="System\SceneManager.h">
-      <Filter>System</Filter>
-    </ClInclude>
     <ClInclude Include="Scenes\Scene.h">
       <Filter>Scenes</Filter>
     </ClInclude>
     <ClInclude Include="Scenes\SceneType.h">
       <Filter>Scenes</Filter>
     </ClInclude>
-    <ClInclude Include="Locator\SceneLocator.h">
-      <Filter>Locator</Filter>
-    </ClInclude>
     <ClInclude Include="Locator\EventDispatcherLocator.h">
       <Filter>Locator</Filter>
     </ClInclude>
     <ClInclude Include="System\EventDispatcherManager.h">
       <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\SceneManager.h">
+      <Filter>Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\SceneLocator.h">
+      <Filter>Scenes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

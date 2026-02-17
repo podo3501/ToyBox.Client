@@ -251,9 +251,13 @@
 --core 안에 window를 Platform 프로젝트를 만든후 옮긴다.
 --tdd가 돌아가는걸 확인
 --프로젝트의 참조관계 및 pch, 디렉토리나 라이브러리 같은 것을 정리한다.
+--Game폴더를 만들고 resources를 복사. 그리고 그 밑에 /GameCore, /GameClient, /TextClient, /App 를 만든다.
+--/sandbox 및 기타 지울꺼 지우고 리팩토링 종료.
 
-@Game폴더를 만들고 resources를 복사. 그리고 그 밑에 /GameCore, /GameClient, /TextClient, /App 를 만든다.
-@/sandbox 및 기타 지울꺼 지우고 리팩토링 종료.
+@Scene 만들기
+    @State 만들기
+    @view 만들기
+        view에서 Renderer가 들어갈수도 아닐수도 있기 때문에 interface 클래스로 작업
 
 @테스트에서 setup 형식 맞추기
 @IJsonFileIO에서 메모리에서 읽어들인 것과 파일에서 읽어들인 것이 같은지 확인하는 것도 필요하지 않을까?

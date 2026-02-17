@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "TestScene1.h"
 #include "Renderer/Public/IRenderer.h"
-#include "GameCore/Locator/SceneLocator.h"
+#include "GameCore/Scenes/SceneLocator.h"
 #include "Locator/UIComponentLocator.h"
 #include "GameCore/Locator/EventDispatcherLocator.h"
 #include "UserInterface/UIModule.h"

@@ -3,7 +3,7 @@
 #include "Renderer/Public/IRenderer.h"
 #include "Renderer/Public/IImguiRegistry.h"
 #include "Platform/Window/Window.h"
-#include "GameCore/Locator/SceneLocator.h"
+#include "GameCore/Scenes/SceneLocator.h"
 #include "GameCore/Locator/EventDispatcherLocator.h"
 #include "Locator/InputLocator.h"
 #include "Locator/UIComponentLocator.h"
