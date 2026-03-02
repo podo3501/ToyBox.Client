@@ -9,6 +9,10 @@ TextureResourceBinder::TextureResourceBinder(IJsonStorage* storage) :
     m_storage{ storage }
 {}
 
+TextureResourceBinder::TextureResourceBinder(IResourceManager* resManager) :
+    m_resManager{ resManager }
+{}
+
 bool TextureResourceBinder::operator==(const TextureResourceBinder& o) const noexcept
 {
     ReturnIfFalse(tie(m_bindingFontTable, m_bindingTexTable) == tie(o.m_bindingFontTable, o.m_bindingTexTable));
@@ -39,6 +43,16 @@ bool TextureResourceBinder::Save()
 {
     ReturnIfFalse(JsonObjectIO::Write<StorageKey::Resource>(*this, m_storage));
     return true;
+}
+
+bool TextureResourceBinder::Write(const filesystem::path& filename)
+{
+    return JsonObjectIO::Write(*this, filename, m_resManager);
+}
+
+bool TextureResourceBinder::Read(const filesystem::path& filename)
+{
+    return JsonObjectIO::Read(*this, filename, m_resManager);
 }
 
 static bool AddBindingImpl(auto& bindingTable, const auto& bindingKey, const auto& value) noexcept
@@ -223,6 +237,18 @@ unique_ptr<TextureResourceBinder> CreateTextureResourceBinder(IJsonStorage* stor
         return nullptr;
 
     if (renderer && !renderer->LoadTextureBinder(resBinder.get())) 
+        return nullptr;
+
+    return resBinder;
+}
+
+unique_ptr<TextureResourceBinder> CreateTextureResourceBinder(const filesystem::path& filename, IResourceManager* resManager, IRenderer* renderer)
+{
+    auto resBinder = make_unique<TextureResourceBinder>(resManager);
+    if (!resBinder->Read(filename))
+        return nullptr;
+
+    if (renderer && !renderer->LoadTextureBinder(resBinder.get()))
         return nullptr;
 
     return resBinder;

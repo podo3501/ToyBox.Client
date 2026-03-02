@@ -13,8 +13,8 @@ using namespace UITraverser;
 using namespace UIDetailTraverser;
 
 UIModule::~UIModule() = default;
-UIModule::UIModule(unique_ptr<IJsonStorage> storage) :
-	m_storage{ move(storage) },
+UIModule::UIModule(IResourceManager* resManager) :
+	m_resManager{ resManager },
 	m_nameGen{ make_unique<UINameGenerator>() },
 	m_mouseEventRouter{ make_unique<MouseEventRouter>() }
 {}
@@ -36,10 +36,10 @@ bool UIModule::SetupMainComponent(const UILayout& layout, const string& name, un
 	return Rename(m_mainPanel.get(), name);
 }
 
-bool UIModule::SetupMainComponent(unique_ptr<TextureResourceBinder> resBinder)
+bool UIModule::SetupMainComponent(const filesystem::path& filename, unique_ptr<TextureResourceBinder> resBinder)
 {
 	m_resBinder = move(resBinder);
-	ReturnIfFalse(Read());
+	ReturnIfFalse(Read(filename));
 	ReturnIfFalse(BindTextureResources());
 
 	return true;
@@ -78,23 +78,20 @@ void UIModule::Serialize(Serializer& serializer)
 	ReloadDatas();
 }
 
-bool UIModule::Write(const wstring& filename) noexcept
+bool UIModule::Read(const filesystem::path filename) noexcept
 {
-	if (!filename.empty())
-	{
-		auto desc = m_storage->GetDescription();
-		desc->SetFilename<StorageKey::Definition>(filename);
-	}
+	JsonObjectIO::Read(*this, filename, m_resManager);
+	PropagateRoot(m_mainPanel.get()); //모든 컴포넌트들에 root를 지정.
+	m_mouseEventRouter->SetComponent(m_mainPanel.get());
+	m_filename = filename;
 
-	JsonObjectIO::Write<StorageKey::Definition>(*this, m_storage.get());
 	return true;
 }
 
-bool UIModule::Read() noexcept
+bool UIModule::Write(const filesystem::path& filename) noexcept
 {
-	JsonObjectIO::Read<StorageKey::Definition>(*this, m_storage.get());
-	PropagateRoot(m_mainPanel.get()); //모든 컴포넌트들에 root를 지정.
-	m_mouseEventRouter->SetComponent(m_mainPanel.get());
+	ReturnIfFalse(JsonObjectIO::Write(*this, filename, m_resManager));
+	m_filename = filename;
 
 	return true;
 }
@@ -106,8 +103,7 @@ bool UIModule::EnableToolMode(bool enable) noexcept
 
 wstring UIModule::GetFilename() const noexcept 
 { 
-	auto desc = m_storage->GetDescription();
-	return desc->GetFilename<StorageKey::Definition>();
+	return m_filename;
 }
 
 Panel* UIModule::GetMainPanel() const noexcept { return m_mainPanel.get(); }

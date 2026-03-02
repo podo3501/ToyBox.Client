@@ -31,7 +31,7 @@ using enum FileMenuAction;
 FileTab::~FileTab() = default;
 FileTab::FileTab(ToolLoop* toolLoop) :
     m_toolLoop{ toolLoop },
-    m_recentFiles{ make_unique<RecentFiles>() }
+    m_recentFiles{ make_unique<RecentFiles>(toolLoop->GetResourceManager()) }
 {}
 
 //Render에서 실행
@@ -95,7 +95,8 @@ bool FileTab::Excute()
 
 bool FileTab::CreateNewUIFile() noexcept
 {
-    auto uiWindow = make_unique<UserInterfaceWindow>(m_toolLoop->GetRenderer(), m_toolLoop->GetImguiRegistry());
+    auto uiWindow = make_unique<UserInterfaceWindow>(m_toolLoop->GetResourceManager(),
+        m_toolLoop->GetRenderer(), m_toolLoop->GetImguiRegistry());
     const XMUINT2& resolution = Config::GetResolutionInCoordinate();
     ReturnIfFalse(uiWindow->CreateScene(resolution));
 
@@ -106,7 +107,8 @@ bool FileTab::CreateNewUIFile() noexcept
 
 bool FileTab::CreateTextureResBinderWindow(const wstring& filename)
 {
-    auto textureWindow = make_unique<TextureResBinderWindow>(m_toolLoop->GetRenderer(), m_toolLoop->GetImguiRegistry());
+    auto textureWindow = make_unique<TextureResBinderWindow>(m_toolLoop->GetResourceManager(),
+        m_toolLoop->GetRenderer(), m_toolLoop->GetImguiRegistry());
     if (!textureWindow->Create(filename))
     {
         Tool::Dialog::ShowInfoDialog(DialogType::Error, "Failed to create Texture Resource Binder Widnow");
@@ -120,7 +122,8 @@ bool FileTab::CreateTextureResBinderWindow(const wstring& filename)
 
 bool FileTab::CreateUIWindowFromFile(const wstring& filename)
 {
-    auto uiWindow = make_unique<UserInterfaceWindow>(m_toolLoop->GetRenderer(), m_toolLoop->GetImguiRegistry());
+    auto uiWindow = make_unique<UserInterfaceWindow>(m_toolLoop->GetResourceManager(),
+        m_toolLoop->GetRenderer(), m_toolLoop->GetImguiRegistry());
     if (!uiWindow->CreateScene(filename))
     {
         Tool::Dialog::ShowInfoDialog(DialogType::Error, "Failed to open the UI file. Please check the file path.");

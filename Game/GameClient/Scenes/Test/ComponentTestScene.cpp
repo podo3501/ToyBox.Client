@@ -3,7 +3,7 @@
 #include "Renderer/Public/IRenderer.h"
 #include "Platform/Utils/GeometryExt.h"
 #include "Platform/Framework/EnvironmentLocator.h"
-#include "Device/Storage/IJsonStorage.h"
+#include "Platform/Resource/IResourceManager.h"
 #include "Locator/UIComponentLocator.h"
 #include "UserInterface/UIModule.h"
 #include "UserInterface/UIComponent/Traverser/UITraverser.h"
@@ -19,7 +19,8 @@
 
 using namespace UITraverser;
 
-ComponentTestScene::ComponentTestScene(IRenderer* renderer) :
+ComponentTestScene::ComponentTestScene(IResourceManager* resManager, IRenderer* renderer) :
+    m_resManager{ resManager },
     m_renderer{ renderer }
 {} 
 
@@ -27,11 +28,9 @@ bool ComponentTestScene::Enter()
 {
     UILayout layout{ GetSizeFromRectangle(GetRectResolution()) };
 
-    JsonStorageDesc storageDesc;
-    storageDesc.SetFilename<StorageKey::Resource>(L"UI/SampleTexture/SampleTextureBinder.json");
-    auto storage = CreateJsonStorage(storageDesc);
-    auto texResBinder = CreateTextureResourceBinder(storage.get(), m_renderer);
-    m_uiModule = CreateUIModule("ComponentTest", layout, "Main", move(storage), move(texResBinder));
+    auto texResBinder = CreateTextureResourceBinder("UI/SampleTexture/SampleTextureBinder.json", m_resManager, m_renderer);
+    m_uiModule = CreateUIModule("ComponentTest", layout, "Main", move(texResBinder), m_resManager);
+
     return LoadResources();
 }
 

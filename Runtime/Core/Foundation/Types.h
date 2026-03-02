@@ -1,44 +1,11 @@
 #pragma once
+#include <vector>
 
-#ifndef ReturnIfFalse
-#define ReturnIfFalse(x) \
-	do{ \
-		if(!(x)) return false; \
-	} while (0)
-#endif
-
-#ifndef ReturnIfFailed
-#define ReturnIfFailed(x) \
-	do{ \
-		if(FAILED(x)) \
-			return false; \
-	} while (0)
-#endif
-
-#ifndef NDEBUG
-	#ifndef AssertMsg
-	#define AssertMsg(expr, msg) \
-		do { \
-			if (!(expr)) { \
-				__debugbreak(); \
-				assert(expr && msg); \
-			} \
-		} while (0)
-	#endif
-
-	#ifndef Assert
-	#define Assert(expr) \
-		do { \
-			if (!(expr)) { \
-				__debugbreak(); \
-				assert(expr); \
-			} \
-		} while (0)
-	#endif
-#else
-	#define AssertMsg(expr, msg) ((void)0)
-	#define Assert(expr) ((void)0)
-#endif
+namespace Core
+{
+    using Byte = std::byte;
+    using ByteBuffer = std::vector<Byte>;
+}
 
 //값과 값이 없는 표현으로 nullopt가 '꼭' 존재해야 하는 부분에만 적용해야함.
 //데이터가 큰 경우 &로 보내고 싶을때 이것을 사용. const optinalRef<data>& 이렇게 사용.

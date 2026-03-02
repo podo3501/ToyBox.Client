@@ -1,5 +1,4 @@
 #pragma once
-#include "Core/Foundation/NoCopyNoMove.h"
 
 class Scene;
 namespace DX { class StepTimer; }

@@ -2,6 +2,7 @@
 #include "GameLoop.h"
 #include "Renderer/Public/IRenderer.h"
 #include "Renderer/Public/IImguiRegistry.h"
+#include "Platform/Resource/IResourceManager.h"
 #include "Platform/Window/Window.h"
 #include "GameCore/Scenes/SceneLocator.h"
 #include "GameCore/Locator/EventDispatcherLocator.h"
@@ -31,12 +32,14 @@ GameLoop::~GameLoop() = default;
 GameLoop::GameLoop(unique_ptr<Window> window, unique_ptr<IRenderer> renderer, IImguiRegistry* imguiRegistry,
     const wstring& resourcePath, const Vector2& windowSize) :
     ::AppLoop(move(window), move(renderer), imguiRegistry, resourcePath, windowSize),
+    m_resourcePath{ resourcePath },
     m_renderer{ AppLoop::GetRenderer() },
     m_imguiRegistry{ AppLoop::GetImguiRegistry() }
 {}
 
 bool GameLoop::InitializeDerived()
 {
+    m_resManager = CreateResourceManager(m_resourcePath);
     m_inputManager = CreateInputManager(GetWindowHandle());
     InputLocator::Provide(m_inputManager.get());
     m_uiManager = UIComponentManager::Create(m_renderer);
@@ -51,8 +54,8 @@ bool GameLoop::InitializeDerived()
 
 bool GameLoop::DoPrepare()
 {
-    m_sceneManager->Transition(make_unique<ComponentTestScene>(m_renderer));
-    //m_sceneManager->Transition(make_unique<TestScene1>(m_renderer));
+    m_sceneManager->Transition(make_unique<ComponentTestScene>(m_resManager.get(), m_renderer));
+    //m_sceneManager->Transition(make_unique<TestScene1>(m_resManager.get(), m_renderer));
 
     return true;
 }

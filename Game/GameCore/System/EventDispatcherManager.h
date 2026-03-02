@@ -1,5 +1,4 @@
 #pragma once
-#include "Core/Foundation/NoCopyNoMove.h"
 
 enum class UIEvent : int
 {

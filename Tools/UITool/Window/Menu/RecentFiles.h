@@ -1,9 +1,9 @@
 #pragma once
 
-struct IJsonStorage;
+struct IResourceManager;
+struct IResourceManager;
 class FileTab;
 class Serializer;
-
 class RecentFiles
 {
     static constexpr size_t MaxRecentFiles = 20;    //More ¿Í ÇÕÄ£ ÃÑ °¹¼ö
@@ -12,7 +12,7 @@ class RecentFiles
 
 public:
     ~RecentFiles();
-    RecentFiles();
+    RecentFiles(IResourceManager* resManager);
 
     void AddFile(const wstring& filename);
     bool OpenFile(FileTab& menuBar);
@@ -22,7 +22,7 @@ public:
 private:
     void ShowMoreMenu();
 
-    unique_ptr<IJsonStorage> m_storage;
+    IResourceManager* m_resManager{ nullptr };
     deque<wstring> m_recentFiles;
     wstring m_file;
 };

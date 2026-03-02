@@ -1,5 +1,4 @@
 #pragma once
-#include "Core/Foundation/NoCopyNoMove.h"
 
 template <typename TID, typename TargetType>
 class Command : private NoCopyNoMove

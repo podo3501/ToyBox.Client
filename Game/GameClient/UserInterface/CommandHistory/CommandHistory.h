@@ -1,5 +1,4 @@
 #pragma once
-#include "Core/Foundation/NoCopyNoMove.h"
 
 template<typename CommandType>
 class CommandHistory : private NoCopyNoMove

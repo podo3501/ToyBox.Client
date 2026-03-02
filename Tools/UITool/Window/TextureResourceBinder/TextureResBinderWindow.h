@@ -1,10 +1,10 @@
 #pragma once
 #include "../InnerWindow.h"
 
+struct IResourceManager;
 struct IRenderer;
 struct IImguiRegistry;
 struct IToolInputManager;
-struct IJsonStorage;
 class RenderTexture;
 class PatchTextureStd1;
 class MainSourceExtractor;
@@ -17,7 +17,7 @@ class TextureResBinderWindow : public InnerWindow
 {
 public:
     ~TextureResBinderWindow();
-    TextureResBinderWindow(IRenderer* renderer, IImguiRegistry* imguiRegistry);
+    TextureResBinderWindow(IResourceManager* resManager, IRenderer* renderer, IImguiRegistry* imguiRegistry);
     virtual void Render(ImGuiIO* io) override;
     virtual bool SaveScene(const wstring& filename) override;
     virtual wstring GetSaveFilename() const noexcept override;
@@ -35,10 +35,11 @@ private:
     ImVec2 GetWindowSize() const noexcept;
     void RenderResourceWindow();
 
+    IResourceManager* m_resManager{ nullptr };
     IRenderer* m_renderer{ nullptr };
     IImguiRegistry* m_imguiRegistry{ nullptr };
     ImGuiWindow* m_window{ nullptr };
-    unique_ptr<IJsonStorage> m_storage;
+    wstring m_saveFilename;
     unique_ptr<TextureResourceBinder> m_resBinder;
     unique_ptr<TexResCommandHistory> m_cmdHistory;
     unique_ptr<RenderTexture> m_renderTex; //InnerWindow를 그리는 텍스쳐

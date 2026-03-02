@@ -24,9 +24,6 @@
     <ClInclude Include="Service\Locator.h">
       <Filter>Service</Filter>
     </ClInclude>
-    <ClInclude Include="Utils\Common.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
     <ClInclude Include="Utils\EnumHelpers.h">
       <Filter>Utils</Filter>
     </ClInclude>
@@ -43,6 +40,18 @@
       <Filter>Utils</Filter>
     </ClInclude>
     <ClInclude Include="pch.h" />
+    <ClInclude Include="Foundation\Types.h">
+      <Filter>Foundation</Filter>
+    </ClInclude>
+    <ClInclude Include="Foundation\Foundation.h">
+      <Filter>Foundation</Filter>
+    </ClInclude>
+    <ClInclude Include="Foundation\Assert.h">
+      <Filter>Foundation</Filter>
+    </ClInclude>
+    <ClInclude Include="Foundation\Macros.h">
+      <Filter>Foundation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Utils\EnumHelpers.cpp">

@@ -35,3 +35,11 @@ wstring FindResourcePath() noexcept
 {
 	return FindRootByMarker(L"root.mark") + L"Game/Resources/";
 }
+
+filesystem::path MakeAbsolutePath(const filesystem::path& base, const filesystem::path& input) noexcept
+{
+	if (input.is_absolute())
+		return input;
+
+	return base / input;
+}

@@ -4,7 +4,6 @@
 #include "EditSourceTexture.h"
 #include "Window/Utils/Common.h"
 #include "Renderer/Public/IImguiRegistry.h"
-#include "Device/Storage/IJsonStorage.h"
 #include "Platform/Utils/StringExt.h"
 #include "GameClient/Locator/InputLocator.h"
 #include "GameClient/UserInterface/UIComponent/Components/RenderTexture.h"
@@ -17,17 +16,16 @@ TextureResBinderWindow::~TextureResBinderWindow()
     m_imguiRegistry->RemoveComponent(this);
 }
 
-TextureResBinderWindow::TextureResBinderWindow(IRenderer* renderer, IImguiRegistry* imguiRegistry) :
+TextureResBinderWindow::TextureResBinderWindow(IResourceManager* resManager, 
+    IRenderer* renderer, IImguiRegistry* imguiRegistry) :
     InnerWindow{ "empty" },
+    m_resManager{ resManager },
     m_renderer{ renderer },
     m_imguiRegistry{ imguiRegistry },
     m_sourceTexture{ nullptr },
     m_editFontTexture{ make_unique<EditFontTexture>() },
     m_editSourceTexture{ make_unique<EditSourceTexture>(renderer, this) }
 {
-    JsonStorageDesc desc;
-    desc.SetFilename<StorageKey::Resource>(L"");
-    m_storage = CreateJsonStorage(desc);
     m_imguiRegistry->AddComponent(this);
 }
 
@@ -39,9 +37,7 @@ void TextureResBinderWindow::SetTexture(PatchTextureStd1* pTex1) noexcept
 
 bool TextureResBinderWindow::Create(const wstring& filename)
 {
-    auto desc = m_storage->GetDescription();
-    desc->SetFilename<StorageKey::Resource>(filename);
-    m_resBinder = CreateTextureResourceBinder(m_storage.get());
+    m_resBinder = CreateTextureResourceBinder(filename, m_resManager);
     ReturnIfFalse(m_resBinder);
     m_cmdHistory = make_unique<TexResCommandHistory>(m_resBinder.get());
 
@@ -143,13 +139,12 @@ void TextureResBinderWindow::RenderResourceWindow()
 
 bool TextureResBinderWindow::SaveScene(const wstring& filename)
 {
-    auto desc = m_storage->GetDescription();
-    desc->SetFilename<StorageKey::Resource>(filename);
-    return m_resBinder->Save();
+    ReturnIfFalse(m_resBinder->Write(filename));
+    m_saveFilename = filename;
+    return true;
 }
 
 wstring TextureResBinderWindow::GetSaveFilename() const noexcept
 {
-    auto desc = m_storage->GetDescription();
-    return desc->GetFilename<StorageKey::Resource>();
+    return m_saveFilename;
 }

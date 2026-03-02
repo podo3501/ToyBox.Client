@@ -2,6 +2,7 @@
 #include "Renderer/Public/IRenderer.h"
 #include "Platform/Framework/AppLoop.h"
 
+struct IResourceManager;
 struct IRenderer;
 struct IToolInputManager;
 struct IInputManager;
@@ -30,6 +31,7 @@ public:
 	TextureResBinderWindow* GetFocusTextureResBinderWindow() const noexcept;
 	void SetUIWindow(unique_ptr<UserInterfaceWindow> uiWindow) noexcept;
 	void SetTextureWindow(unique_ptr<TextureResBinderWindow> textureWindow) noexcept;
+	IResourceManager* GetResourceManager() const noexcept;
 	IRenderer* GetRenderer() const noexcept { return m_renderer; }
 	IImguiRegistry* GetImguiRegistry() const noexcept { return m_imguiRegistry; }
 
@@ -38,6 +40,7 @@ protected:
 	virtual void Update(const DX::StepTimer& timer) override;
 
 private:
+	unique_ptr<IResourceManager> m_resManager;
 	IRenderer* m_renderer{ nullptr };
 	IImguiRegistry* m_imguiRegistry{ nullptr };
 	unique_ptr<Tool::Config> m_config;

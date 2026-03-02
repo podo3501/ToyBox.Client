@@ -2,10 +2,8 @@
 #include "SDLAudioManager.h"
 #include "Sounds/Effect/EffectSound.h"
 #include "Sounds/Normal/NormalSound.h"
-#include "SoundTableReader.h"
 #include "SoundInfo.h"
 #include "SDL3/SDL_init.h"
-#include "Device/Storage/IJsonStorage.h"
 #include "Platform/Framework/EnvironmentLocator.h"
 
 struct AudioGroup
@@ -17,19 +15,17 @@ SDLAudioManager::~SDLAudioManager()
 { 
 	m_normalSound.reset();
 	m_effectSound.reset();
-	m_reader.reset();
 	SDL_Quit();
 }
 
-SDLAudioManager::SDLAudioManager(unique_ptr<IJsonStorage> storage) :
-	m_reader{ make_unique<SoundTableReader>(move(storage)) },
+SDLAudioManager::SDLAudioManager(SoundTableReader reader) :
+	m_reader { move(reader) },
 	m_effectSound{ make_unique<EffectSound>() },
 	m_normalSound{ make_unique<NormalSound>() }
 {}
 
 bool SDLAudioManager::Initialize()
 {
-	ReturnIfFalse(m_reader->Read());
 	bool isInit = SDL_WasInit(SDL_INIT_AUDIO) & SDL_INIT_AUDIO;
 	if (isInit) return true;
 
@@ -46,9 +42,9 @@ void SDLAudioManager::CreateAudioGroup() noexcept
 		m_audioGroups[static_cast<AudioGroupID>(id)] = make_unique<AudioGroup>();
 }
 
-static bool IsWav(const string& filename)
+static bool IsWav(const filesystem::path& filename)
 {
-	string lower = filename;
+	string lower = filename.string();
 	ranges::transform(lower, lower.begin(), [](unsigned char c) { return tolower(c); });
 
 	return lower.ends_with(".wav");
@@ -56,7 +52,7 @@ static bool IsWav(const string& filename)
 
 bool SDLAudioManager::LoadSound(const string& index)
 {
-	auto info = m_reader->GetInfo(index);
+	auto info = m_reader.GetInfo(index);
 	if (!info) return false;
 
 	const auto& filename = GetResourceFullFilename(info->filename);
@@ -116,7 +112,7 @@ PlayState SDLAudioManager::GetPlayState(const string& index)
 
 string SDLAudioManager::GetFullFilename(const string& index) const noexcept
 {
-	auto info = m_reader->GetInfo(index);
+	auto info = m_reader.GetInfo(index);
 	if (!info) return "";
 
 	return GetResourceFullFilename(info->filename);
@@ -127,9 +123,9 @@ void SDLAudioManager::Update() noexcept
 	m_effectSound->Update();
 }
 
-unique_ptr<IAudioManager> CreateAudioManager(unique_ptr<IJsonStorage> storage)
+unique_ptr<IAudioManager> CreateAudioManager(SoundTableReader reader)
 {
-	auto audioManager = make_unique<SDLAudioManager>(move(storage));
+	auto audioManager = make_unique<SDLAudioManager>(move(reader));
 	if (!audioManager->Initialize()) return nullptr;
 
 	return audioManager;

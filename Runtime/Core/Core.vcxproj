@@ -19,12 +19,15 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Foundation\Assert.h" />
+    <ClInclude Include="Foundation\Foundation.h" />
+    <ClInclude Include="Foundation\Macros.h" />
     <ClInclude Include="Foundation\NoCopyNoMove.h" />
     <ClInclude Include="Foundation\NonCopyable.h" />
     <ClInclude Include="Foundation\NonMovable.h" />
+    <ClInclude Include="Foundation\Types.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Service\Locator.h" />
-    <ClInclude Include="Utils\Common.h" />
     <ClInclude Include="Utils\EnumHelpers.h" />
     <ClInclude Include="Utils\Memory.h" />
     <ClInclude Include="Utils\StlExt.h" />

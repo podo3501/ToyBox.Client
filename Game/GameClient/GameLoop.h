@@ -3,6 +3,7 @@
 
 struct IInputManager;
 struct IImguiRegistry;
+struct IResourceManager;
 class UIComponentManager;
 class UIComponent;
 class SceneManager;
@@ -23,8 +24,10 @@ protected:
 private:
 	bool AttachComponentToPanel(unique_ptr<UIComponent> component, const XMINT2& position) const noexcept;
 
+	filesystem::path m_resourcePath;
 	IRenderer* m_renderer{ nullptr };
 	IImguiRegistry* m_imguiRegistry{ nullptr };
+	unique_ptr<IResourceManager> m_resManager;
 	unique_ptr<IInputManager> m_inputManager;
 	unique_ptr<UIComponentManager> m_uiManager;
 	unique_ptr<SceneManager> m_sceneManager;

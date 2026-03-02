@@ -12,7 +12,6 @@
 #include "GameClient/UserInterface/TextureResourceBinder/TextureResourceBinder.h"
 #include "GameClient/UserInterface/UIModule.h"
 #include "Renderer/Public/IImguiRegistry.h"
-#include "Device/Storage/IJsonStorage.h"
 #include "Platform/Framework/StepTimer.h"
 
 using namespace UITraverser;
@@ -26,8 +25,9 @@ UserInterfaceWindow::~UserInterfaceWindow()
 	m_imguiRegistry->RemoveComponent(this);
 }
 
-UserInterfaceWindow::UserInterfaceWindow(IRenderer* renderer, IImguiRegistry* imguiRegistry) :
+UserInterfaceWindow::UserInterfaceWindow(IResourceManager* resManager, IRenderer* renderer, IImguiRegistry* imguiRegistry) :
 	InnerWindow{ "UserInterface Window " + to_string(m_uiWindowIndex++) },
+	m_resManager{ resManager },
 	m_renderer{ renderer },
 	m_imguiRegistry{ imguiRegistry }
 {
@@ -63,23 +63,18 @@ bool UserInterfaceWindow::SetupProperty(UIModule* uiModule)
 
 bool UserInterfaceWindow::CreateScene(const XMUINT2& size)
 {
-	JsonStorageDesc desc;
-	desc.SetFilename<StorageKey::Definition>(L"");
-	desc.SetFilename<StorageKey::Resource>(L"UI/SampleTexture/SampleTextureBinder.json");
-	auto storage = CreateJsonStorage(desc);
-	auto texResBinder = CreateTextureResourceBinder(storage.get(), m_renderer);
-	UIModule* module = CreateUIModule(GetName(), UILayout(size, Origin::LeftTop), "Main", move(storage), move(texResBinder));
+	auto texResBinder = CreateTextureResourceBinder("UI/SampleTexture/SampleTextureBinder.json", 
+		m_resManager, m_renderer);
+	UIModule* module = CreateUIModule(GetName(), UILayout(size, Origin::LeftTop), "Main",
+		move(texResBinder), m_resManager);
 	return SetupProperty(module);
 }
 
 bool UserInterfaceWindow::CreateScene(const wstring& filename)
 {
-	JsonStorageDesc desc;
-	desc.SetFilename<StorageKey::Definition>(filename);
-	desc.SetFilename<StorageKey::Resource>(L"UI/SampleTexture/SampleTextureBinder.json");
-	auto storage = CreateJsonStorage(desc);
-	auto texResBinder = CreateTextureResourceBinder(storage.get(), m_renderer);
-	UIModule* module = CreateUIModule(GetName(), move(storage), move(texResBinder));
+	auto texResBinder = CreateTextureResourceBinder("UI/SampleTexture/SampleTextureBinder.json",
+		m_resManager, m_renderer);
+	UIModule* module = CreateUIModule(GetName(), filename, move(texResBinder), m_resManager);
 	return SetupProperty(module);
 }
 

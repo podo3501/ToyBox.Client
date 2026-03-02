@@ -7,7 +7,6 @@
 
 struct IJsonStorage
 {
-public:
 	virtual ~IJsonStorage() = default;
 	virtual bool Write(const std::string& key, const nlohmann::json& data) noexcept = 0;
 	virtual bool Read(const std::string& key, nlohmann::json& outData) const noexcept = 0;

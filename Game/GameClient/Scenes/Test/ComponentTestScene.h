@@ -1,13 +1,14 @@
 #pragma once
 #include "GameCore/Scenes/Scene.h"
 
+struct IResourceManager;
 struct IRenderer;
 class UIComponent;
 class UIModule;
 class ComponentTestScene : public Scene
 {
 public:
-	ComponentTestScene(IRenderer* renderer);
+	ComponentTestScene(IResourceManager* resManager, IRenderer* renderer);
 	static SceneID GetTypeStatic() { return SceneID::ComponentTest; }
 	virtual SceneID GetTypeID() const noexcept override { return GetTypeStatic(); }
 
@@ -19,6 +20,7 @@ private:
 	bool LoadResources();
 	bool AttachComponentToPanel(unique_ptr<UIComponent> component, const XMINT2& position) const noexcept;
 
+	IResourceManager* m_resManager{ nullptr };
 	IRenderer* m_renderer{ nullptr };
 	UIModule* m_uiModule{ nullptr };
 };

@@ -65,6 +65,8 @@
 #pragma comment(lib, "dxguid.lib")
 #endif
 
+#include "Core/Foundation/Foundation.h"
+
 using namespace std;
 using namespace DirectX;
 using namespace DirectX::SimpleMath;

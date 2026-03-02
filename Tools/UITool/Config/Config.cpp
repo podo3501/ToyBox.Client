@@ -1,21 +1,22 @@
 #include "pch.h"
 #include "Config.h"
 #include "Device/Storage/JsonObjectIO.h"
+#include "Platform/Utils/PathUtils.h"
+#include "Platform/Resource/IResourceManager.h"
 
 using namespace Tool;
 
 static constexpr const wchar_t* ResolutionFilename = L"Tool/Config.json";
-unique_ptr<IJsonStorage> Config::m_storage = nullptr;
+unique_ptr<IResourceManager> Tool::Config::m_resManager = nullptr;
 ResolutionType Config::m_resolutionType = ResolutionType::R800x600;
 Config* Config::m_Instance = nullptr;
 
 Config::Config()
 {
 	m_Instance = this;
-	JsonStorageDesc desc;
-	desc.SetFilename<StorageKey::Config>(ResolutionFilename);
-	m_storage = CreateJsonStorage(desc);
-	JsonObjectIO::Read<StorageKey::Config>(*this, m_storage.get());
+
+	m_resManager = CreateResourceManager(FindResourcePath());
+	JsonObjectIO::Read(*m_Instance, "Tool/Config.json", m_resManager.get());
 }
 
 Config::~Config()
@@ -27,7 +28,7 @@ void Config::SetResolution(ResolutionType type) noexcept
 		return;
 
 	m_resolutionType = type;
-	JsonObjectIO::Write<StorageKey::Config>(*m_Instance, m_storage.get());
+	JsonObjectIO::Write(*m_Instance, "Tool/Config.json", m_resManager.get());
 }
 
 ResolutionType Config::GetResolution() noexcept

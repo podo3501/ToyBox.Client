@@ -1,6 +1,5 @@
 #pragma once
 #include "StepTimer.h"
-#include "Core/Foundation/NoCopyNoMove.h"
 
 struct IRenderer;
 struct IImguiRegistry;
@@ -25,6 +24,7 @@ protected:
     virtual bool InitializeDerived() { return true; }
     virtual bool DoPrepare() { return true; }
     virtual void Update(const DX::StepTimer& timer) = 0;
+    const filesystem::path& GetResourcePath() const noexcept { return m_resourcePath; }
     IRenderer* GetRenderer() const noexcept;
     IImguiRegistry* GetImguiRegistry() const noexcept;
     HWND GetWindowHandle() const noexcept;
@@ -41,6 +41,7 @@ private:
     bool m_minimized{ false };
     bool m_fullscreen{ false };
     
+    filesystem::path m_resourcePath;
     unique_ptr<Window> m_window;
     unique_ptr<IRenderer> m_renderer;
     IImguiRegistry* m_imguiRegistry{ nullptr };

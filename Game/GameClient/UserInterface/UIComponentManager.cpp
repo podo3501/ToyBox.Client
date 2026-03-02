@@ -6,6 +6,7 @@
 #include "UIComponent/UIComponent.h"
 #include "UIComponent/Traverser/UIDetailTraverser.h"
 #include "Device/Storage/IJsonStorage.h"
+#include "Platform/Resource/ResourceManager.h"
 #include "Core/Utils/StlExt.h"
 
 UIComponentManager::~UIComponentManager() = default;
@@ -19,28 +20,12 @@ UIComponentManager::UIComponentManager(IRenderer* renderer, bool isTool) :
 		this->RenderTextureComponent(index, r); });
 }
 
-UIModule* UIComponentManager::CreateUIModule(const string& moduleName, const UILayout& layout, const string& mainUIName, 
-	unique_ptr<IJsonStorage> storage, unique_ptr<TextureResourceBinder> resBinder)
+bool UIComponentManager::AddUIModule(const string& moduleName, unique_ptr<UIModule> uiModule)
 {
-	if (m_uiModules.find(moduleName) != m_uiModules.end()) return nullptr;
+	if (m_uiModules.find(moduleName) != m_uiModules.end()) return false;
+	m_uiModules.insert({ moduleName, move(uiModule) });
 
-	auto [owner, module] = GetPtrs(make_unique<UIModule>(move(storage)));
-	if (!owner->SetupMainComponent(layout, mainUIName, move(resBinder))) return nullptr;
-	m_uiModules.insert({ moduleName, move(owner) });
-
-	return module;
-}
-
-UIModule* UIComponentManager::CreateUIModule(const string& moduleName,
-	unique_ptr<IJsonStorage> storage, unique_ptr<TextureResourceBinder> resBinder)
-{
-	if (m_uiModules.find(moduleName) != m_uiModules.end()) return nullptr;
-
-	auto [owner, module] = GetPtrs(make_unique<UIModule>(move(storage)));
-	if (!owner->SetupMainComponent(move(resBinder))) return nullptr;
-	m_uiModules.insert({ moduleName, move(owner) });
-
-	return module;
+	return true;
 }
 
 bool UIComponentManager::ReleaseUIModule(const string& moduleName) noexcept
@@ -59,7 +44,6 @@ bool UIComponentManager::CreateRenderTexture(UIComponent* c, const Rectangle& ta
 	auto [_, inserted] = m_renderTextures.insert({ outIndex, c });
 	return inserted;
 }
-
 
 bool UIComponentManager::ReleaseRenderTexture(size_t index) noexcept
 {

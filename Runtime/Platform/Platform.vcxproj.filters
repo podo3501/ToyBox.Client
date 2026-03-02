@@ -41,6 +41,9 @@
     <ClCompile Include="Utils\StringExt.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
+    <ClCompile Include="Resource\ResourceManager.cpp">
+      <Filter>Resource</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -98,6 +101,12 @@
     <ClInclude Include="Utils\StringExt.h">
       <Filter>Utils</Filter>
     </ClInclude>
+    <ClInclude Include="Resource\ResourceManager.h">
+      <Filter>Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\IResourceManager.h">
+      <Filter>Resource</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Window">
@@ -120,6 +129,9 @@
     </Filter>
     <Filter Include="Serializer\Format">
       <UniqueIdentifier>{dd35b109-3cb8-4ad9-95b5-eeebc1db9201}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource">
+      <UniqueIdentifier>{83fcb81e-3ede-4899-9679-01d11b7a26b9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

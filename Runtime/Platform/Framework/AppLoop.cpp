@@ -20,6 +20,7 @@ AppLoop::AppLoop(unique_ptr<Window> window, unique_ptr<IRenderer> renderer, IImg
 {
     TracyStartupProfiler();
 
+    m_resourcePath = resPath;
     m_environment = InitializeEnvironment(resPath, resolution);
 }
 

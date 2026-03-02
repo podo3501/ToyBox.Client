@@ -1,6 +1,5 @@
 #pragma once
 #include "../UIType.h"
-#include "Core/Foundation/NoCopyNoMove.h"
 
 class UIComponent;
 class HierarchyTraverser : private NoCopyNoMove

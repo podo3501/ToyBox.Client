@@ -4,7 +4,6 @@
 
 Environment::Environment(const wstring& resourcePathW, const Vector2& resolution) :
 	m_fontPath{ L"UI/Font/" },
-	m_resourcePathW{ resourcePathW },
 	m_resourcePath{ WStringToString(resourcePathW) },
 	m_resolution{ resolution }
 {}
@@ -20,8 +19,9 @@ wstring Environment::GetResourceFullFilenameW(const wstring& filename) const noe
 	if (filesystem::path(filename).is_absolute())
 		return filename;
 
-	if (filename.find(m_resourcePathW) == std::wstring::npos)
-		return m_resourcePathW + filename;
+	const wstring resPath = m_resourcePath.wstring();
+	if (filename.find(resPath) == std::wstring::npos)
+		return resPath + filename;
 
 	return filename;
 }
@@ -31,8 +31,9 @@ string Environment::GetResourceFullFilename(const string& filename) const noexce
 	if (filesystem::path(filename).is_absolute())
 		return filename;
 
-	if (filename.find(m_resourcePath) == std::string::npos)
-		return m_resourcePath + filename;
+	const string resPath = m_resourcePath.string();
+	if (filename.find(resPath) == std::string::npos)
+		return resPath + filename;
 
 	return filename;
 }
@@ -48,7 +49,7 @@ wstring Environment::GetRelativePath(const wstring& fullPath) const noexcept
 	if (fullPath.empty()) return {};
 
 	filesystem::path full = filesystem::absolute(fullPath);
-	filesystem::path base = filesystem::absolute(m_resourcePathW);
+	filesystem::path base = filesystem::absolute(m_resourcePath);
 
 	wstring relativePath = fullPath;
 	if (full.wstring().find(base.wstring()) != wstring::npos)

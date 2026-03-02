@@ -36,7 +36,7 @@ void EditFontTexture::Update() noexcept
 {
     if (m_fontFiles.empty())
     {
-        m_fontFiles = GetSpriteFontFiles(GetResourcePath() + GetResourceFontPath());
+        m_fontFiles = GetSpriteFontFiles(GetResourcePath().wstring() + GetResourceFontPath());
         m_listboxFont->SetItems(GetFontFiles(m_fontFiles));
     }
 }

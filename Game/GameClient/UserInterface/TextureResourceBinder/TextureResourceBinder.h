@@ -3,12 +3,12 @@
 #include "TextureSourceInfo.h"
 #include "TextureFontInfo.h"
 #include "TextureBinderHelper.h"
-#include "Core/Foundation/NoCopyNoMove.h"
 
 struct IRenderer;
 enum class TextureSlice : int;
 struct ITextureLoad;
 struct IJsonStorage;
+struct IResourceManager;
 class Serializer;
 class TextureResourceBinder : public ITextureBinder, private NoCopyNoMove
 {
@@ -16,12 +16,15 @@ public:
 	~TextureResourceBinder();
 	TextureResourceBinder() = delete;
 	explicit TextureResourceBinder(IJsonStorage* storage);
+	explicit TextureResourceBinder(IResourceManager* resManager);
 	bool operator==(const TextureResourceBinder& o) const noexcept;
 
 	virtual bool LoadResources(ITextureLoad* load) override;
 
 	bool Load();
 	bool Save();
+	bool Write(const filesystem::path& filename);
+	bool Read(const filesystem::path& filename);
 	bool AddFontKey(const wstring& bindingKey, const TextureFontInfo& fontInfo) noexcept;
 	bool AddTextureKey(const string& bindingKey, const TextureSourceInfo& sourceAreas) noexcept;
 	bool ModifyTextureSourceInfo(const string& bindKey, const TextureSourceInfo& sourceInfo) noexcept;
@@ -48,8 +51,10 @@ public:
 
 private:
 	IJsonStorage* m_storage{ nullptr };
+	IResourceManager* m_resManager{ nullptr };
 	unordered_map<wstring, TextureFontInfo> m_bindingFontTable;
 	unordered_map<string, TextureSourceInfo> m_bindingTexTable;
 };
 //renderer가 nullptr 이면 텍스쳐를 메모리에 올리지 않는다.
 unique_ptr<TextureResourceBinder> CreateTextureResourceBinder(IJsonStorage* storage, IRenderer* renderer = nullptr);
+unique_ptr<TextureResourceBinder> CreateTextureResourceBinder(const filesystem::path& filename, IResourceManager* resManager, IRenderer* renderer = nullptr);

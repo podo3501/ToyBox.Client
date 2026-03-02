@@ -8,24 +8,22 @@
 #include "UserInterface/TextureResourceBinder/TextureResourceBinder.h"
 #include "TestScene1.h"
 
-TestScene2::TestScene2(IRenderer* renderer) :
+TestScene2::TestScene2(IResourceManager* resManager, IRenderer* renderer) :
+	m_resManager{ resManager },
 	m_renderer{ renderer }
 {}
 
 bool TestScene2::Enter()
 {
-	JsonStorageDesc storageDesc;
-	storageDesc.SetFilename<StorageKey::Definition>(L"/Scene/Test/TestScene2.json");
-	storageDesc.SetFilename<StorageKey::Resource>(L"UI/SampleTexture/SampleTextureBinder.json");
-	auto storage = CreateJsonStorage(storageDesc);
-	auto texResBinder = CreateTextureResourceBinder(storage.get(), m_renderer);
-	m_uiModule = CreateUIModule("Test2", move(storage), move(texResBinder));
+	auto texResBinder = CreateTextureResourceBinder("UI/SampleTexture/SampleTextureBinder.json",
+		m_resManager, m_renderer);
+	m_uiModule = CreateUIModule("Test2", "Scene/Test/TestScene2.json", move(texResBinder), m_resManager);
 
 	auto scene = SceneLocator::GetService();
 	auto eventDispatcher = EventDispatcherLocator::GetService();
 	eventDispatcher->Subscribe("", "TextureSwitcher", [this, scene](UIEvent event) {
 		if (event == UIEvent::Clicked)
-			scene->Transition(make_unique<TestScene1>(m_renderer));
+			scene->Transition(make_unique<TestScene1>(m_resManager, m_renderer));
 		});
 
 	return true;

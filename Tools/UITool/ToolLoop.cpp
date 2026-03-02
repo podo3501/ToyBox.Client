@@ -6,6 +6,7 @@
 #include "Window/Menu/MenuBar.h"
 #include "Window/Dialog.h"
 #include "Renderer/Public/IImguiRegistry.h"
+#include "Platform/Resource/IResourceManager.h"
 #include "Platform/Window/Window.h"
 #include "GameClient/Locator/UIComponentLocator.h"
 #include "GameCore/Locator/EventDispatcherLocator.h"
@@ -34,6 +35,7 @@ ToolLoop::ToolLoop(unique_ptr<Window> window, unique_ptr<IRenderer> renderer, II
     m_renderer{ AppLoop::GetRenderer() },
     m_imguiRegistry{ AppLoop::GetImguiRegistry() }
 {
+    m_resManager = CreateResourceManager(resourcePath);
     m_menuBar = make_unique<MenuBar>(this);
     m_imguiRegistry->AddComponent(this);
 }
@@ -122,4 +124,9 @@ void ToolLoop::Render(ImGuiIO* io)
     m_menuBar->Render();
 
     return;
+}
+
+IResourceManager* ToolLoop::GetResourceManager() const noexcept
+{
+    return m_resManager.get();
 }

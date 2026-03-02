@@ -1,7 +1,5 @@
 #pragma once
-#include <string>
 #include "Platform/Framework/StepTimer.h"
-#include "Core/Foundation/NoCopyNoMove.h"
 #include "SceneType.h"
 
 struct IRenderer;

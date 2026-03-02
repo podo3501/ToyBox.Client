@@ -5,16 +5,8 @@
 #include "Platform/Framework/EnvironmentLocator.h"
 
 SoundTableReader::~SoundTableReader() = default;
-SoundTableReader::SoundTableReader(unique_ptr<IJsonStorage> storage) :
-	m_storage{ move(storage) }
-{}
-
-bool SoundTableReader::Read()
-{
-	return JsonObjectIO::Read<StorageKey::Resource>(*this, m_storage.get());
-}
-
-SoundInfo* SoundTableReader::GetInfo(const string& index) noexcept
+SoundTableReader::SoundTableReader() = default;
+const SoundInfo* SoundTableReader::GetInfo(const string& index) const noexcept
 {
 	auto it = m_infos.find(index);
 	if (it == m_infos.end()) return nullptr;

@@ -1,6 +1,5 @@
 #pragma once
 #include "MouseEventType.h"
-#include "Core/Foundation/NoCopyNoMove.h"
 
 class SoundTheme : private NoCopyNoMove
 {

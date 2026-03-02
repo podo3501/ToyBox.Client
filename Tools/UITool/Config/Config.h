@@ -1,8 +1,7 @@
 #pragma once
 
-struct IJsonStorage;
+struct IResourceManager;
 class Serializer;
-
 namespace Tool
 {
 	enum class ResolutionType : int
@@ -28,7 +27,7 @@ namespace Tool
 		void Serialize(Serializer& serializer);
 
 	private:
-		static unique_ptr<IJsonStorage> m_storage;
+		static unique_ptr<IResourceManager> m_resManager;
 		static ResolutionType m_resolutionType;
 		static Config* m_Instance;
 	};

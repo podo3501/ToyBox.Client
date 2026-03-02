@@ -1,6 +1,6 @@
 #pragma once
 #include "../IAudioManager.h"
-#include "Core/Foundation/NoCopyNoMove.h"
+#include "SoundTableReader.h"
 
 struct AudioGroup;
 class SoundTableReader;
@@ -11,7 +11,7 @@ class SDLAudioManager : public IAudioManager, private NoCopyNoMove
 public:
 	~SDLAudioManager();
 	SDLAudioManager() = delete;
-	SDLAudioManager(unique_ptr<IJsonStorage> storage);
+	SDLAudioManager(SoundTableReader reader);
 	bool Initialize();
 	virtual bool LoadSound(const string& index) override;
 	virtual bool Unload(const string& index) noexcept override;
@@ -25,7 +25,7 @@ private:
 	float GetVolume(AudioGroupID groupID) const noexcept;
 	string GetFullFilename(const string& index) const noexcept;
 
-	unique_ptr<SoundTableReader> m_reader;
+	SoundTableReader m_reader;
 	unique_ptr<EffectSound> m_effectSound;
 	unique_ptr<NormalSound> m_normalSound;
 	unordered_map<AudioGroupID, unique_ptr<AudioGroup>> m_audioGroups;

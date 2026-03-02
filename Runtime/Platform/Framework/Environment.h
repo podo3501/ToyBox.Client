@@ -6,7 +6,7 @@ public:
 	Environment() = delete;
 	Environment(const wstring& resourcePath, const Vector2& resolution);
 
-	const wstring& GetResourcePath() const noexcept { return m_resourcePathW; }
+	inline const filesystem::path& GetResourcePath() const noexcept { return m_resourcePath; }
 	const wstring& GetResourceFontPath() const noexcept { return m_fontPath; }
 	const Vector2& GetResolution() const noexcept { return m_resolution; }
 	Rectangle GetRectResolution() const noexcept;
@@ -16,7 +16,6 @@ public:
 
 private:
 	wstring m_fontPath;
-	wstring m_resourcePathW;
-	string m_resourcePath;
+	filesystem::path m_resourcePath;
 	Vector2 m_resolution{};
 };

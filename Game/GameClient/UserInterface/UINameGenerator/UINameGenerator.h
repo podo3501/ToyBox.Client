@@ -1,6 +1,5 @@
 #pragma once
 #include "Core/Utils/StlTypeExt.hpp"
-#include "Core/Foundation/NoCopyNoMove.h"
 
 class Serializer;
 class AutoNamer;

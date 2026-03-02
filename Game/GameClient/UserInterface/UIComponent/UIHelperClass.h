@@ -1,8 +1,6 @@
 #pragma once
-#include "Core/Foundation/NoCopyNoMove.h"
 
 namespace DX { class StepTimer; }
-
 class BoundedValue : private NoCopyNoMove
 {
 public:

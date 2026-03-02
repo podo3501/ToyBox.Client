@@ -180,6 +180,9 @@
     <ClCompile Include="Scenes\Test\TestScene2.cpp">
       <Filter>Scenes\Test</Filter>
     </ClCompile>
+    <ClCompile Include="Locator\UIComponentLocator.cpp">
+      <Filter>Locator</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameLoop.h" />

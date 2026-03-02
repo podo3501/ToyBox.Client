@@ -5,13 +5,10 @@
 #include "Device/Storage/JsonObjectIO.h"
 
 RecentFiles::~RecentFiles() = default;
-RecentFiles::RecentFiles()
+RecentFiles::RecentFiles(IResourceManager* resManager)
 {
-    JsonStorageDesc desc;
-    desc.SetFilename<StorageKey::Resource>(RecentFilename);
-    m_storage = CreateJsonStorage(desc);
-
-    JsonObjectIO::Read<StorageKey::Resource>(*this, m_storage.get());
+    m_resManager = resManager;
+    JsonObjectIO::Read(*this, RecentFilename, m_resManager);
 }
 
 void RecentFiles::AddFile(const wstring& filename)
@@ -24,7 +21,7 @@ void RecentFiles::AddFile(const wstring& filename)
     if (m_recentFiles.size() > MaxRecentFiles)
         m_recentFiles.pop_back();
 
-    JsonObjectIO::Write<StorageKey::Resource>(*this, m_storage.get());
+    JsonObjectIO::Write(*this, RecentFilename, m_resManager);
 }
 
 bool RecentFiles::OpenFile(FileTab& menuBar)

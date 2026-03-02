@@ -124,7 +124,7 @@ inline void PIXEndEvent(T*) {}
 	#endif
 #endif
 
-#include "Core/Utils/Common.h"
+#include "Core/Foundation/Foundation.h"
 #include "Core/Utils/StlTypeExt.hpp"
 
 using namespace std;

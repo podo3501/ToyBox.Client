@@ -8,6 +8,18 @@
     <ClCompile Include="Scenes\SceneManager.cpp">
       <Filter>Scenes</Filter>
     </ClCompile>
+    <ClCompile Include="Scenes\State\BattleState.cpp">
+      <Filter>Scenes\State</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\Layer\BattleLayer.cpp">
+      <Filter>Scenes\Layer</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\SceneNew.cpp">
+      <Filter>Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="Session\GameSession.cpp">
+      <Filter>Session</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -29,6 +41,24 @@
     <ClInclude Include="Scenes\SceneLocator.h">
       <Filter>Scenes</Filter>
     </ClInclude>
+    <ClInclude Include="Scenes\State\SceneState.h">
+      <Filter>Scenes\State</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\State\BattleState.h">
+      <Filter>Scenes\State</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\Layer\SceneLayer.h">
+      <Filter>Scenes\Layer</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\Layer\BattleLayer.h">
+      <Filter>Scenes\Layer</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\SceneNew.h">
+      <Filter>Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="Session\GameSession.h">
+      <Filter>Session</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="System">
@@ -39,6 +69,15 @@
     </Filter>
     <Filter Include="Locator">
       <UniqueIdentifier>{e32ed532-d29b-4eaf-b3b5-c61108ca440e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scenes\Layer">
+      <UniqueIdentifier>{eadc8a4c-6f5f-4b21-8edd-2a683586fd8e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scenes\State">
+      <UniqueIdentifier>{8b7f9446-9bda-491b-92f8-283aaa9a9dec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Session">
+      <UniqueIdentifier>{5d525835-b1a1-4694-875d-f50e1c8532ad}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

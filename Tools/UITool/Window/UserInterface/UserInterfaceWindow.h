@@ -6,6 +6,7 @@ namespace DX
     class StepTimer;
 }
 
+struct IResourceManager;
 struct IToolInputManager;
 struct IInputManager;
 struct IImguiRegistry;
@@ -19,7 +20,7 @@ class UIModule;
 class UserInterfaceWindow : public InnerWindow
 {
 public:
-    UserInterfaceWindow(IRenderer* renderer, IImguiRegistry* imguiRegistry);
+    UserInterfaceWindow(IResourceManager* resManager, IRenderer* renderer, IImguiRegistry* imguiRegistry);
     ~UserInterfaceWindow();
 
     virtual void Render(ImGuiIO* io) override;
@@ -48,6 +49,7 @@ private:
     void ShowStatusBar() const;
     void HandleMouseEvents();
 
+    IResourceManager* m_resManager{ nullptr };
     IRenderer* m_renderer{ nullptr };
     IImguiRegistry* m_imguiRegistry{ nullptr };
     ImGuiWindow* m_window{ nullptr };

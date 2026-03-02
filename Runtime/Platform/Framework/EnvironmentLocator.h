@@ -28,7 +28,7 @@ decltype(auto) EnvCall(Fn&& fn, Args&&... args) noexcept
 
 //Locator를 전역함수화 시킴. 이렇게 하는 이유는 내부적으로 Locator 패턴을 쓰는 것을 감추기 위해서.
 //런타임에 교체가 일어나지 않는 설정 부분이기 때문에 Locator를 감추는게 올바른 것 같다.
-inline const std::wstring& GetResourcePath() noexcept { return EnvCall(&Environment::GetResourcePath); }
+inline const filesystem::path& GetResourcePath() noexcept { return EnvCall(&Environment::GetResourcePath); }
 inline const std::wstring& GetResourceFontPath() noexcept { return EnvCall(&Environment::GetResourceFontPath); }
 inline const DirectX::SimpleMath::Vector2& GetResolution() noexcept { return EnvCall(&Environment::GetResolution); }
 inline DirectX::SimpleMath::Rectangle GetRectResolution() noexcept { return EnvCall(&Environment::GetRectResolution); }

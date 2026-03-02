@@ -1,7 +1,6 @@
 #pragma once
 #include "Renderer/Public/ITextureBinder.h"
 #include "TextureSourceInfo.h"
-#include "Core/Foundation/NoCopyNoMove.h"
 
 struct IRenderer;
 struct ITextureLoad;
