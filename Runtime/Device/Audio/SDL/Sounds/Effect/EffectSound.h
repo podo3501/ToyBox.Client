@@ -9,13 +9,13 @@ public:
 	~EffectSound();
 	EffectSound();
 	bool Initialize();
-	bool LoadWav(const string& filename, AudioGroupID groupID, float volume);
-	bool Unload(const string& filename) noexcept;
+	bool LoadWav(const filesystem::path& filename, AudioGroupID groupID, float volume);
+	bool Unload(const filesystem::path& filename) noexcept;
 	void SetVolume(AudioGroupID groupID, float volume) noexcept;
-	bool Play(const string& filename);
-	PlayState GetPlayState(const string& filename) const noexcept;
+	bool Play(const filesystem::path& filename);
+	PlayState GetPlayState(const filesystem::path& filename) const noexcept;
 	void Update() noexcept;
 
 private:
-	unordered_map<string, EffectSoundBuffer> m_effectSoundBuffers;
+	unordered_map<filesystem::path, EffectSoundBuffer> m_effectSoundBuffers;
 };

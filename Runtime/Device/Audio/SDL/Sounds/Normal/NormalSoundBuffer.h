@@ -11,7 +11,7 @@ public:
 	~NormalSoundBuffer();
 	NormalSoundBuffer() = delete;
 	NormalSoundBuffer(MIX_Mixer* mixer);
-	bool LoadFromFile(const string& filename, AudioGroupID groupID, float volume);
+	bool LoadFromFile(const filesystem::path& filename, AudioGroupID groupID, float volume);
 	void Play();
 	bool SetVolume(float volume);
 	bool IsPlaying() const noexcept;

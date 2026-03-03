@@ -34,12 +34,7 @@
     <ClInclude Include="Input\DirectX\InputManager.h" />
     <ClInclude Include="Input\IInputManager.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="Storage\IJsonStorage.h" />
     <ClInclude Include="Storage\JsonObjectIO.h" />
-    <ClInclude Include="Storage\JsonStorageDesc.h" />
-    <ClInclude Include="Storage\Json\JsonFileIO.h" />
-    <ClInclude Include="Storage\Json\JsonStorage.h" />
-    <ClInclude Include="Storage\StorageKey.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Audio\SDL\SDLAudioManager.cpp" />
@@ -57,9 +52,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Storage\JsonStorageDesc.cpp" />
-    <ClCompile Include="Storage\Json\JsonFileIO.cpp" />
-    <ClCompile Include="Storage\Json\JsonStorage.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Platform\Platform.vcxproj">

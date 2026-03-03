@@ -16,7 +16,7 @@ bool EffectSound::Initialize()
 	return SDL_InitSubSystem(SDL_INIT_AUDIO);
 }
 
-bool EffectSound::LoadWav(const string& filename, AudioGroupID groupID, float volume)
+bool EffectSound::LoadWav(const filesystem::path& filename, AudioGroupID groupID, float volume)
 {
 	EffectSoundBuffer buffer;
 	ReturnIfFalse(buffer.LoadFromFile(filename, groupID, volume));
@@ -25,7 +25,7 @@ bool EffectSound::LoadWav(const string& filename, AudioGroupID groupID, float vo
 	return true;
 }
 
-bool EffectSound::Unload(const string& filename) noexcept
+bool EffectSound::Unload(const filesystem::path& filename) noexcept
 {
 	auto it = m_effectSoundBuffers.find(filename);
 	if (it == m_effectSoundBuffers.end()) return false;
@@ -45,7 +45,7 @@ void EffectSound::SetVolume(AudioGroupID groupID, float volume) noexcept
 	}
 }
 
-bool EffectSound::Play(const string& filename)
+bool EffectSound::Play(const filesystem::path& filename)
 {
 	auto it = m_effectSoundBuffers.find(filename);
 	if (it == m_effectSoundBuffers.end()) return false;
@@ -54,7 +54,7 @@ bool EffectSound::Play(const string& filename)
 	return true;
 }
 
-PlayState EffectSound::GetPlayState(const string& filename) const noexcept
+PlayState EffectSound::GetPlayState(const filesystem::path& filename) const noexcept
 {
 	auto it = m_effectSoundBuffers.find(filename);
 	if (it == m_effectSoundBuffers.end()) return PlayState::NotLoaded;

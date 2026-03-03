@@ -32,18 +32,6 @@ bool TextureResourceBinder::LoadResources(ITextureLoad* load)
 
     return (fontResult && texResult);
 }
-//?!? 함수 이름을 Read, Write 로 바꾸자.
-bool TextureResourceBinder::Load()
-{
-    ReturnIfFalse(JsonObjectIO::Read<StorageKey::Resource>(*this, m_storage));
-    return true;
-}
-
-bool TextureResourceBinder::Save()
-{
-    ReturnIfFalse(JsonObjectIO::Write<StorageKey::Resource>(*this, m_storage));
-    return true;
-}
 
 bool TextureResourceBinder::Write(const filesystem::path& filename)
 {
@@ -229,18 +217,6 @@ void TextureResourceBinder::Serialize(Serializer& serializer)
 }
 
 /////////////////////////////////////////////////////////////////////////
-
-unique_ptr<TextureResourceBinder> CreateTextureResourceBinder(IJsonStorage* storage, IRenderer* renderer)
-{
-    auto resBinder = make_unique<TextureResourceBinder>(storage);
-    if (!resBinder->Load()) 
-        return nullptr;
-
-    if (renderer && !renderer->LoadTextureBinder(resBinder.get())) 
-        return nullptr;
-
-    return resBinder;
-}
 
 unique_ptr<TextureResourceBinder> CreateTextureResourceBinder(const filesystem::path& filename, IResourceManager* resManager, IRenderer* renderer)
 {

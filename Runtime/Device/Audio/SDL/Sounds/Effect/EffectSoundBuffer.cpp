@@ -7,10 +7,10 @@ EffectSoundBuffer::EffectSoundBuffer() :
 	m_groupID{ AudioGroupID::None }
 {}
 
-bool EffectSoundBuffer::LoadFromFile(const string& filename, AudioGroupID groupID, float volume)
+bool EffectSoundBuffer::LoadFromFile(const filesystem::path& filename, AudioGroupID groupID, float volume)
 {
 	Uint8* rawData = nullptr;
-	ReturnIfFalse(SDL_LoadWAV(filename.c_str(), &m_spec, &rawData, &m_length));
+	ReturnIfFalse(SDL_LoadWAV(filename.string().c_str(), &m_spec, &rawData, &m_length));
 	m_data.reset(rawData);
 
 	m_stream = SDL_OpenAudioDeviceStream(

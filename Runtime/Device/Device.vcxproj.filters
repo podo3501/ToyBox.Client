@@ -36,23 +36,8 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Storage\IJsonStorage.h">
-      <Filter>Storage</Filter>
-    </ClInclude>
     <ClInclude Include="Storage\JsonObjectIO.h">
       <Filter>Storage</Filter>
-    </ClInclude>
-    <ClInclude Include="Storage\JsonStorageDesc.h">
-      <Filter>Storage</Filter>
-    </ClInclude>
-    <ClInclude Include="Storage\StorageKey.h">
-      <Filter>Storage</Filter>
-    </ClInclude>
-    <ClInclude Include="Storage\Json\JsonFileIO.h">
-      <Filter>Storage\Json</Filter>
-    </ClInclude>
-    <ClInclude Include="Storage\Json\JsonStorage.h">
-      <Filter>Storage\Json</Filter>
     </ClInclude>
     <ClInclude Include="pch.h" />
     <ClInclude Include="Input\IInputManager.h">
@@ -99,15 +84,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Storage\JsonStorageDesc.cpp">
-      <Filter>Storage</Filter>
-    </ClCompile>
-    <ClCompile Include="Storage\Json\JsonFileIO.cpp">
-      <Filter>Storage\Json</Filter>
-    </ClCompile>
-    <ClCompile Include="Storage\Json\JsonStorage.cpp">
-      <Filter>Storage\Json</Filter>
-    </ClCompile>
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="Audio\SDL\SDLAudioManager.cpp">
       <Filter>Audio\SDL</Filter>

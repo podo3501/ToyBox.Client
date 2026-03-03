@@ -14,9 +14,9 @@ NormalSoundBuffer::NormalSoundBuffer(MIX_Mixer* mixer) :
 	m_groupID{ AudioGroupID::None }
 {}
 
-bool NormalSoundBuffer::LoadFromFile(const string& filename, AudioGroupID groupID, float volume)
+bool NormalSoundBuffer::LoadFromFile(const filesystem::path& filename, AudioGroupID groupID, float volume)
 {
-	m_audio = MIX_LoadAudio(m_mixer, filename.c_str(), true);
+	m_audio = MIX_LoadAudio(m_mixer, filename.string().c_str(), true);
 	if (!m_audio) return false;
 
 	m_track = MIX_CreateTrack(m_mixer);

@@ -36,7 +36,7 @@ void EditFontTexture::Update() noexcept
 {
     if (m_fontFiles.empty())
     {
-        m_fontFiles = GetSpriteFontFiles(GetResourcePath().wstring() + GetResourceFontPath());
+        m_fontFiles = GetSpriteFontFiles(GetResourcePath() / GetResourceFontPath());
         m_listboxFont->SetItems(GetFontFiles(m_fontFiles));
     }
 }
@@ -44,7 +44,7 @@ void EditFontTexture::Update() noexcept
 wstring EditFontTexture::GetSelectFontFile() const noexcept
 {
     if (!IsVaildFontIndex()) return L"";
-    return GetResourceFontPath() + m_fontFiles[m_fontIndex];
+    return GetResourceFontPath().wstring() + m_fontFiles[m_fontIndex];
 }
 
 //?!? 키가 있는데 폰트에서는 키를 보여주지 않기 때문에 충돌이 나거나 불필요한 키가 올라가 있을 수 있다.

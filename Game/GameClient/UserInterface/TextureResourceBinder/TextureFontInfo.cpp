@@ -25,7 +25,7 @@ bool TextureFontInfo::LoadResource(ITextureLoad* load)
     Release();
 
     size_t index{ 0 };
-    ReturnIfFalse(load->LoadFont(GetResourceFullFilenameW(filename), index));
+    ReturnIfFalse(load->LoadFont(GetResourceFullFilename(filename), index));
     SetIndex(index);
     SetTextureLoader(load);
 

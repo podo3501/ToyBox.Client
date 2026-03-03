@@ -6,7 +6,7 @@ class EffectSoundBuffer
 {
 public:
 	EffectSoundBuffer();
-	bool LoadFromFile(const string& filename, AudioGroupID groupID, float volume);
+	bool LoadFromFile(const filesystem::path& filename, AudioGroupID groupID, float volume);
 	bool SetVolume(float volume);
 	void Play();
 	bool IsPlaying() const noexcept;

@@ -60,9 +60,9 @@ bool SDLAudioManager::LoadSound(const string& index)
 	auto volume = GetVolume(groupID);
 
 	if (IsWav(filename))
-		return m_effectSound->LoadWav(filename, groupID, volume);
+		return m_effectSound->LoadWav(filename.string(), groupID, volume);
 	else
-		return m_normalSound->LoadSound(filename, groupID, volume);
+		return m_normalSound->LoadSound(filename.string(), groupID, volume);
 }
 
 bool SDLAudioManager::Unload(const string& index) noexcept
@@ -110,7 +110,7 @@ PlayState SDLAudioManager::GetPlayState(const string& index)
 	return m_normalSound->GetPlayState(filename);
 }
 
-string SDLAudioManager::GetFullFilename(const string& index) const noexcept
+filesystem::path SDLAudioManager::GetFullFilename(const string& index) const noexcept
 {
 	auto info = m_reader.GetInfo(index);
 	if (!info) return "";

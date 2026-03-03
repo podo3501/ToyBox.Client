@@ -5,7 +5,6 @@
 #include "TextureResourceBinder/TextureResourceBinder.h"
 #include "UIComponent/UIComponent.h"
 #include "UIComponent/Traverser/UIDetailTraverser.h"
-#include "Device/Storage/IJsonStorage.h"
 #include "Platform/Resource/ResourceManager.h"
 #include "Core/Utils/StlExt.h"
 

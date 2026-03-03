@@ -23,7 +23,7 @@ public:
 private:
 	void CreateAudioGroup() noexcept;
 	float GetVolume(AudioGroupID groupID) const noexcept;
-	string GetFullFilename(const string& index) const noexcept;
+	filesystem::path GetFullFilename(const string& index) const noexcept;
 
 	SoundTableReader m_reader;
 	unique_ptr<EffectSound> m_effectSound;

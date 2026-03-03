@@ -21,8 +21,6 @@ public:
 
 	virtual bool LoadResources(ITextureLoad* load) override;
 
-	bool Load();
-	bool Save();
 	bool Write(const filesystem::path& filename);
 	bool Read(const filesystem::path& filename);
 	bool AddFontKey(const wstring& bindingKey, const TextureFontInfo& fontInfo) noexcept;
@@ -56,5 +54,4 @@ private:
 	unordered_map<string, TextureSourceInfo> m_bindingTexTable;
 };
 //renderer가 nullptr 이면 텍스쳐를 메모리에 올리지 않는다.
-unique_ptr<TextureResourceBinder> CreateTextureResourceBinder(IJsonStorage* storage, IRenderer* renderer = nullptr);
 unique_ptr<TextureResourceBinder> CreateTextureResourceBinder(const filesystem::path& filename, IResourceManager* resManager, IRenderer* renderer = nullptr);

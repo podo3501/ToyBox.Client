@@ -35,7 +35,7 @@ bool TextureSourceInfo::LoadResource(ITextureLoad* load)
     size_t index{ 0 };
     XMUINT2 texSize{};
     UINT64 gfxOffset{ 0 };
-    ReturnIfFalse(load->LoadTexture(GetResourceFullFilenameW(filename), index, &texSize, &gfxOffset));
+    ReturnIfFalse(load->LoadTexture(GetResourceFullFilename(filename), index, &texSize, &gfxOffset));
 
     SetIndex(index);
     SetGfxOffset(gfxOffset);
