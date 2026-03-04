@@ -6,9 +6,12 @@
 
 // map은 c++14부터 string_view가 지원되기 때문에 굳이 이렇게 안 만들어도 바로 string_view를 넣어도 된다.
 // 지금은 unordered_map은 미지원이기 때문에 이렇게 구현해야 string_view를 사용할 수 있다.
+// 대부분은 키값을 찾을때 마지막에 string(string_view) 이렇게 강제 형변환이 더 좋다.
+// 하지만 키 값을 빠르게 찾거나 재귀 호출이거나 등등 해서 많으 연산동작이 될 것 같다면 이 svmap을 사용하는게 좋다.
 struct TransparentStringHash {
     using is_transparent = void;
     size_t operator()(std::string_view sv) const noexcept { return std::hash<std::string_view>{}(sv); }
+    size_t operator()(const std::string& s) const noexcept { return std::hash<std::string_view>{}(s); }
 };
 
 template<

@@ -2,7 +2,7 @@
 #include "SDLAudioManager.h"
 #include "Sounds/Effect/EffectSound.h"
 #include "Sounds/Normal/NormalSound.h"
-#include "SoundInfo.h"
+#include "../SoundInfo.h"
 #include "SDL3/SDL_init.h"
 #include "Platform/Framework/EnvironmentLocator.h"
 
@@ -18,8 +18,8 @@ SDLAudioManager::~SDLAudioManager()
 	SDL_Quit();
 }
 
-SDLAudioManager::SDLAudioManager(SoundTableReader reader) :
-	m_reader { move(reader) },
+SDLAudioManager::SDLAudioManager(SoundTable sndTable) :
+	m_sndTable { move(sndTable) },
 	m_effectSound{ make_unique<EffectSound>() },
 	m_normalSound{ make_unique<NormalSound>() }
 {}
@@ -52,7 +52,7 @@ static bool IsWav(const filesystem::path& filename)
 
 bool SDLAudioManager::LoadSound(const string& index)
 {
-	auto info = m_reader.GetInfo(index);
+	auto info = m_sndTable.GetInfo(index);
 	if (!info) return false;
 
 	const auto& filename = GetResourceFullFilename(info->filename);
@@ -112,7 +112,7 @@ PlayState SDLAudioManager::GetPlayState(const string& index)
 
 filesystem::path SDLAudioManager::GetFullFilename(const string& index) const noexcept
 {
-	auto info = m_reader.GetInfo(index);
+	auto info = m_sndTable.GetInfo(index);
 	if (!info) return "";
 
 	return GetResourceFullFilename(info->filename);
@@ -123,9 +123,9 @@ void SDLAudioManager::Update() noexcept
 	m_effectSound->Update();
 }
 
-unique_ptr<IAudioManager> CreateAudioManager(SoundTableReader reader)
+unique_ptr<IAudioManager> CreateAudioManager(SoundTable sndTable)
 {
-	auto audioManager = make_unique<SDLAudioManager>(move(reader));
+	auto audioManager = make_unique<SDLAudioManager>(move(sndTable));
 	if (!audioManager->Initialize()) return nullptr;
 
 	return audioManager;

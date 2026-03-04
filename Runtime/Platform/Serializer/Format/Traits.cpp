@@ -14,3 +14,11 @@ wstring JsonTraitsBase<wstring>::DeserializeFromJson(const nlohmann::json& dataJ
 	return CreateAndFill<wstring>([&dataJ](wstring& data) {
 		data = StringToWString(dataJ); });
 }
+
+/////////////////////////////////////////////////////////////////
+// filesystem::path는 utf-8로 저장하고 읽어들인다.
+nlohmann::json JsonTraitsBase<filesystem::path>::SerializeToJson(const filesystem::path& data) { return data.string(); }
+filesystem::path JsonTraitsBase<filesystem::path>::DeserializeFromJson(const nlohmann::json& dataJ) 
+{ 
+	return filesystem::path(dataJ.get<string>());
+}

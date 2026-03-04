@@ -55,14 +55,8 @@
     <ClInclude Include="Audio\SDL\SDLAudioManager.h">
       <Filter>Audio\SDL</Filter>
     </ClInclude>
-    <ClInclude Include="Audio\SDL\SoundTableReader.h">
-      <Filter>Audio\SDL</Filter>
-    </ClInclude>
     <ClInclude Include="Input\DirectX\InputManager.h">
       <Filter>Input\DirectX</Filter>
-    </ClInclude>
-    <ClInclude Include="Audio\SDL\SoundInfo.h">
-      <Filter>Audio\SDL</Filter>
     </ClInclude>
     <ClInclude Include="Audio\SDL\Serializer\Serializer.h">
       <Filter>Audio\SDL\Serializer</Filter>
@@ -82,20 +76,29 @@
     <ClInclude Include="Audio\SDL\Sounds\Normal\NormalSoundBuffer.h">
       <Filter>Audio\SDL\Sounds\Normal</Filter>
     </ClInclude>
+    <ClInclude Include="Audio\SoundInfo.h">
+      <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio\SoundTable.h">
+      <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio\AudioService.h">
+      <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio\IAudioBackend.h">
+      <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio\SDL\SDLAudioBackend.h">
+      <Filter>Audio\SDL</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="Audio\SDL\SDLAudioManager.cpp">
       <Filter>Audio\SDL</Filter>
     </ClCompile>
-    <ClCompile Include="Audio\SDL\SoundTableReader.cpp">
-      <Filter>Audio\SDL</Filter>
-    </ClCompile>
     <ClCompile Include="Input\DirectX\InputManager.cpp">
       <Filter>Input\DirectX</Filter>
-    </ClCompile>
-    <ClCompile Include="Audio\SDL\SoundInfo.cpp">
-      <Filter>Audio\SDL</Filter>
     </ClCompile>
     <ClCompile Include="Audio\SDL\Serializer\Format\Traits.cpp">
       <Filter>Audio\SDL\Serializer\Format</Filter>
@@ -111,6 +114,18 @@
     </ClCompile>
     <ClCompile Include="Audio\SDL\Sounds\Normal\NormalSoundBuffer.cpp">
       <Filter>Audio\SDL\Sounds\Normal</Filter>
+    </ClCompile>
+    <ClCompile Include="Audio\SoundInfo.cpp">
+      <Filter>Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Audio\SoundTable.cpp">
+      <Filter>Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Audio\AudioService.cpp">
+      <Filter>Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Audio\SDL\SDLAudioBackend.cpp">
+      <Filter>Audio\SDL</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -24,5 +24,6 @@ struct JsonTraits : public JsonTraitsBase<T> {};
 
 DECLARE_JSON_TRAITS(string)
 DECLARE_JSON_TRAITS(wstring)
+DECLARE_JSON_TRAITS(filesystem::path)
 
 

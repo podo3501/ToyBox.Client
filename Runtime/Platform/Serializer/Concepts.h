@@ -26,14 +26,15 @@ concept NotBasicString =
 !(std::same_as<std::remove_cvref_t<T>, std::string> ||
 	std::same_as<std::remove_cvref_t<T>, std::wstring> ||
 	std::same_as<std::remove_cvref_t<T>, std::u16string> ||
-	std::same_as<std::remove_cvref_t<T>, std::u32string>);
+	std::same_as<std::remove_cvref_t<T>, std::u32string> ||
+	std::same_as<std::remove_cvref_t<T>, std::filesystem::path>); // path 추가
 
 template<typename T>
 concept SequenceLike =
-!requires { typename T::key_type; }&&     // key_type 없어야 함 (map 방지)
+	!requires { typename T::key_type; }&&     // key_type 없어야 함 (map 방지)
 	requires { typename T::value_type; }&&    // value_type 있어야 함 (sequence 조건)
-HasMemberBeginEnd<T> &&
-NotBasicString<T>;    // 문자열 계열 제외
+	HasMemberBeginEnd<T>&&
+	NotBasicString<T>;    // 문자열 계열 제외
 
 template<typename T>
 concept MapLike = requires {
