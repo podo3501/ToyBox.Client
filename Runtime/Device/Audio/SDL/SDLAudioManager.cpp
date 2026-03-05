@@ -70,7 +70,7 @@ bool SDLAudioManager::Unload(const string& index) noexcept
 	const auto filename = GetFullFilename(index);
 	if (filename.empty()) return false;
 
-	return m_effectSound->Unload(filename) || m_normalSound->Unload(filename);
+	return m_effectSound->Unload(filename) || m_normalSound->Unload(filename.string());
 }
 
 void SDLAudioManager::SetVolume(AudioGroupID groupID, float volume) noexcept
@@ -96,7 +96,7 @@ bool SDLAudioManager::Play(const string& index)
 	const auto filename = GetFullFilename(index);
 	if (filename.empty()) return false;
 
-	return m_effectSound->Play(filename) || m_normalSound->Play(filename);
+	return m_effectSound->Play(filename) || m_normalSound->Play(filename.string());
 }
 
 PlayState SDLAudioManager::GetPlayState(const string& index)
@@ -107,7 +107,7 @@ PlayState SDLAudioManager::GetPlayState(const string& index)
 	PlayState esState = m_effectSound->GetPlayState(filename);
 	if (esState != PlayState::NotLoaded) return esState;
 
-	return m_normalSound->GetPlayState(filename);
+	return m_normalSound->GetState(filename.string());
 }
 
 filesystem::path SDLAudioManager::GetFullFilename(const string& index) const noexcept

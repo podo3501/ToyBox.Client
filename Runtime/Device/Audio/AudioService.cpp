@@ -1,6 +1,12 @@
 #include "pch.h"
 #include "AudioService.h"
 #include "IAudioBackend.h"
+#include "Platform/Resource/IResourceManager.h"
+
+struct AudioGroup
+{
+	float volume{ 1.f };
+};
 
 AudioService::~AudioService() = default;
 AudioService::AudioService(SoundTable sndTable, 
@@ -8,21 +14,47 @@ AudioService::AudioService(SoundTable sndTable,
 	: m_sndTable{ move(sndTable) },
 	m_audioBackend{ move(audioBackend) },
 	m_resManager{ resManager }
-{}
-
-bool AudioService::LoadSound(string_view index)
 {
-	auto info = m_sndTable.GetInfo(index);
+	CreateAudioGroup();
+}
+
+void AudioService::CreateAudioGroup() noexcept
+{
+	for (int id : views::iota(0, static_cast<int>(AudioGroupID::None)))
+		m_audioGroups[static_cast<AudioGroupID>(id)] = make_unique<AudioGroup>();
+}
+
+bool AudioService::Load(string_view soundID)
+{
+	auto info = m_sndTable.GetInfo(soundID);
 	if (!info) return false;
 
-	//const auto& filename = GetResourceFullFilename(info->filename);
-	//auto groupID = info->groupID;
-	//auto volume = GetVolume(groupID);
+	Core::ByteBuffer buffer;
+	ReturnIfFalse(m_resManager->Read(info->filename, buffer));
 
-	//if (IsWav(filename))
-	//	return m_effectSound->LoadWav(filename.string(), groupID, volume);
-	//else
-	//	return m_normalSound->LoadSound(filename.string(), groupID, volume);
+	return m_audioBackend->Load(soundID, move(buffer), info->groupID, GetVolume(info->groupID));
+}
 
-	return true;
+bool AudioService::Play(string_view soundID) noexcept
+{
+	return m_audioBackend->Play(soundID);
+}
+
+PlayState AudioService::GetState(string_view soundID) const noexcept
+{
+	return m_audioBackend->GetState(soundID);
+}
+
+void AudioService::Update() noexcept
+{
+	m_audioBackend->Update();
+}
+
+float AudioService::GetVolume(AudioGroupID groupID) const noexcept
+{
+	float masterVolume = m_audioGroups.at(AudioGroupID::Master)->volume;
+	float groupVolume = m_audioGroups.at(groupID)->volume;
+	float volume = masterVolume * groupVolume;
+
+	return std::clamp(volume, 0.f, 1.f);
 }

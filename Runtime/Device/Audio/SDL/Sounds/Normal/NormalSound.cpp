@@ -27,13 +27,22 @@ bool NormalSound::LoadSound(const filesystem::path& filename, AudioGroupID group
 	auto buffer = make_unique<NormalSoundBuffer>(m_mixer);
 	ReturnIfFalse(buffer->LoadFromFile(filename, groupID, volume));
 
-	m_normalSoundBuffers.insert({ filename, move(buffer) });
+	m_normalSoundBuffers.insert({ filename.string(), move(buffer)});
 	return true;
 }
 
-bool NormalSound::Unload(const filesystem::path& filename) noexcept
+bool NormalSound::LoadSound(string_view soundID, Core::ByteBuffer fileBuffer, AudioGroupID groupID, float volume)
 {
-	auto it = m_normalSoundBuffers.find(filename);
+	auto buffer = make_unique<NormalSoundBuffer>(m_mixer);
+	ReturnIfFalse(buffer->LoadFromMemory(move(fileBuffer), groupID, volume));
+
+	m_normalSoundBuffers.insert({ string(soundID), move(buffer) });
+	return true;
+}
+
+bool NormalSound::Unload(string_view soundID) noexcept
+{
+	auto it = m_normalSoundBuffers.find(string(soundID));
 	if (it == m_normalSoundBuffers.end()) return false;
 
 	m_normalSoundBuffers.erase(it);
@@ -51,18 +60,18 @@ void NormalSound::SetVolume(AudioGroupID groupID, float volume) noexcept
 	}
 }
 
-bool NormalSound::Play(const filesystem::path& filename)
+bool NormalSound::Play(string_view soundID) noexcept
 {
-	auto it = m_normalSoundBuffers.find(filename);
+	auto it = m_normalSoundBuffers.find(string(soundID));
 	if (it == m_normalSoundBuffers.end()) return false;
 
 	it->second->Play();
 	return true;
 }
 
-PlayState NormalSound::GetPlayState(const filesystem::path& filename) const noexcept
+PlayState NormalSound::GetState(string_view soundID) const noexcept
 {
-	auto it = m_normalSoundBuffers.find(filename);
+	auto it = m_normalSoundBuffers.find(string(soundID));
 	if (it == m_normalSoundBuffers.end()) return PlayState::NotLoaded;
 
 	return it->second->IsPlaying() ? PlayState::Playing : PlayState::Stopped;

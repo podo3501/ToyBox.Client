@@ -24,6 +24,7 @@
     <ClInclude Include="Audio\AudioTypes.h" />
     <ClInclude Include="Audio\IAudioBackend.h" />
     <ClInclude Include="Audio\IAudioManager.h" />
+    <ClInclude Include="Audio\SDL\AudioFormat.h" />
     <ClInclude Include="Audio\SDL\SDLAudioBackend.h" />
     <ClInclude Include="Audio\SDL\SDLAudioManager.h" />
     <ClInclude Include="Audio\SDL\Serializer\Format\Traits.h" />
@@ -41,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Audio\AudioService.cpp" />
+    <ClCompile Include="Audio\SDL\AudioFormat.cpp" />
     <ClCompile Include="Audio\SDL\SDLAudioBackend.cpp" />
     <ClCompile Include="Audio\SDL\SDLAudioManager.cpp" />
     <ClCompile Include="Audio\SDL\Serializer\Format\Traits.cpp" />

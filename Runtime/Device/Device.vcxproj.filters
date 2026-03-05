@@ -91,6 +91,9 @@
     <ClInclude Include="Audio\SDL\SDLAudioBackend.h">
       <Filter>Audio\SDL</Filter>
     </ClInclude>
+    <ClInclude Include="Audio\SDL\AudioFormat.h">
+      <Filter>Audio\SDL</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -125,6 +128,9 @@
       <Filter>Audio</Filter>
     </ClCompile>
     <ClCompile Include="Audio\SDL\SDLAudioBackend.cpp">
+      <Filter>Audio\SDL</Filter>
+    </ClCompile>
+    <ClCompile Include="Audio\SDL\AudioFormat.cpp">
       <Filter>Audio\SDL</Filter>
     </ClCompile>
   </ItemGroup>

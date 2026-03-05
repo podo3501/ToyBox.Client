@@ -30,6 +30,23 @@ bool NormalSoundBuffer::LoadFromFile(const filesystem::path& filename, AudioGrou
 	return true;
 }
 
+bool NormalSoundBuffer::LoadFromMemory(Core::ByteBuffer fileBuffer, AudioGroupID groupID, float volume)
+{
+	SDL_IOStream* io = SDL_IOFromConstMem(fileBuffer.data(), fileBuffer.size());
+	m_audio = MIX_LoadAudio_IO(m_mixer, io, true, true);
+	if (!m_audio) return false;
+
+	m_track = MIX_CreateTrack(m_mixer);
+	ReturnIfFalse(MIX_SetTrackAudio(m_track, m_audio));
+
+	m_groupID = groupID;
+	SetVolume(volume);
+
+	m_options = SDL_CreateProperties();
+	SDL_SetNumberProperty(m_options, MIX_PROP_PLAY_LOOPS_NUMBER, 0);
+	return true;
+}
+
 void NormalSoundBuffer::Play()
 {
 	MIX_PlayTrack(m_track, m_options);
