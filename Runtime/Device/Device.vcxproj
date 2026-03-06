@@ -33,6 +33,8 @@
     <ClInclude Include="Audio\SDL\Sounds\Effect\EffectSoundBuffer.h" />
     <ClInclude Include="Audio\SDL\Sounds\Normal\NormalSound.h" />
     <ClInclude Include="Audio\SDL\Sounds\Normal\NormalSoundBuffer.h" />
+    <ClInclude Include="Audio\SDL\Sounds\Stream\StreamSound.h" />
+    <ClInclude Include="Audio\SDL\Sounds\Stream\StreamSoundBuffer.h" />
     <ClInclude Include="Audio\SoundInfo.h" />
     <ClInclude Include="Audio\SoundTable.h" />
     <ClInclude Include="Input\DirectX\InputManager.h" />
@@ -50,6 +52,8 @@
     <ClCompile Include="Audio\SDL\Sounds\Effect\EffectSoundBuffer.cpp" />
     <ClCompile Include="Audio\SDL\Sounds\Normal\NormalSound.cpp" />
     <ClCompile Include="Audio\SDL\Sounds\Normal\NormalSoundBuffer.cpp" />
+    <ClCompile Include="Audio\SDL\Sounds\Stream\StreamSound.cpp" />
+    <ClCompile Include="Audio\SDL\Sounds\Stream\StreamSoundBuffer.cpp" />
     <ClCompile Include="Audio\SoundInfo.cpp" />
     <ClCompile Include="Audio\SoundTable.cpp" />
     <ClCompile Include="Input\DirectX\InputManager.cpp" />

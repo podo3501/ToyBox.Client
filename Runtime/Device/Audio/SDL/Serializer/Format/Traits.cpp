@@ -3,6 +3,13 @@
 #include "Audio/AudioTypeHelpers.h"
 #include "Platform/Serializer/Format/TraitsHelper.hpp"
 
+nlohmann::json JsonTraitsBase<SoundLoadMode>::SerializeToJson(const SoundLoadMode& data) { return EnumToString(data); }
+SoundLoadMode JsonTraitsBase<SoundLoadMode>::DeserializeFromJson(const nlohmann::json& dataJ)
+{
+	return CreateAndFill<SoundLoadMode>([&dataJ](SoundLoadMode& data) {
+		data = *StringToEnum<SoundLoadMode>(dataJ); });
+}
+
 nlohmann::json JsonTraitsBase<AudioGroupID>::SerializeToJson(const AudioGroupID& data) { return EnumToString(data); }
 AudioGroupID JsonTraitsBase<AudioGroupID>::DeserializeFromJson(const nlohmann::json& dataJ)
 {

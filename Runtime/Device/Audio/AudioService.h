@@ -14,6 +14,7 @@ public:
 		IResourceManager* resManager) noexcept;
 
 	bool Load(string_view soundID);
+	bool Unload(string_view soundID) noexcept;
 	bool Play(string_view soundID) noexcept;
 	void Update() noexcept;
 	PlayState GetState(string_view soundID) const noexcept;

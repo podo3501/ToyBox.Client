@@ -7,6 +7,7 @@ struct SoundInfo
 	void Serialize(Serializer& serializer);
 
 	filesystem::path filename{};
+	SoundLoadMode loadMode{ SoundLoadMode::None };
 	AudioGroupID groupID{ AudioGroupID::None };
 	float volume{ 0.f };
 };

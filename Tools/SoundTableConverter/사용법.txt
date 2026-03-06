@@ -6,3 +6,8 @@ EXE 만들기
 pyinstaller --onefile 파일명.py
 pyinstaller --onefile SoundTableConverter.py
 dist 폴더에 exe가 생성됨.
+
+엑셀만들기
+구글에서 계정 옆에 메뉴에 보면 스프레드시트 실행
+만들고 나서 .csv로 다운로드 받음.
+SoundTable.csv와 한 폴더에 EXE를 넣고 실행하면 SoundTable.json으로 바뀜.

@@ -12,6 +12,7 @@ public:
 	virtual bool WriteText(const filesystem::path& filename, const string& text) noexcept override;
 	virtual bool ReadText(const filesystem::path& filename, string& outText) const noexcept override;
 	virtual filesystem::path MakeResourceFilePath(const filesystem::path& filename) const noexcept override;
+	virtual unique_ptr<IResourceStream> CreateReadStream(const filesystem::path& filename) override;
 
 private:
 	filesystem::path m_path;

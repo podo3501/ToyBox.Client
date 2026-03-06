@@ -29,10 +29,36 @@ bool AudioService::Load(string_view soundID)
 	auto info = m_sndTable.GetInfo(soundID);
 	if (!info) return false;
 
-	Core::ByteBuffer buffer;
-	ReturnIfFalse(m_resManager->Read(info->filename, buffer));
+	if (info->loadMode == SoundLoadMode::Preload)
+	{
+		Core::ByteBuffer buffer;
+		ReturnIfFalse(m_resManager->Read(info->filename, buffer));
 
-	return m_audioBackend->Load(soundID, move(buffer), info->groupID, GetVolume(info->groupID));
+		return m_audioBackend->LoadPreload(
+			soundID,
+			move(buffer),
+			info->groupID,
+			GetVolume(info->groupID));
+	}
+	
+	if (info->loadMode == SoundLoadMode::Stream)
+	{
+		auto stream = m_resManager->CreateReadStream(info->filename);
+		if (!stream) return false;
+
+		return m_audioBackend->LoadStream(
+			soundID,
+			move(stream),
+			info->groupID,
+			GetVolume(info->groupID));
+	}
+
+	return false;
+}
+
+bool AudioService::Unload(string_view soundID) noexcept
+{
+	return m_audioBackend->Unload(soundID);
 }
 
 bool AudioService::Play(string_view soundID) noexcept

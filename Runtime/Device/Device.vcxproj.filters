@@ -34,6 +34,9 @@
     <Filter Include="Audio\SDL\Sounds\Normal">
       <UniqueIdentifier>{63184b9f-a282-464e-96e4-0ba789befda2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Audio\SDL\Sounds\Stream">
+      <UniqueIdentifier>{bedc0675-d4c2-40b8-afae-5306ec2242eb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Storage\JsonObjectIO.h">
@@ -94,6 +97,12 @@
     <ClInclude Include="Audio\SDL\AudioFormat.h">
       <Filter>Audio\SDL</Filter>
     </ClInclude>
+    <ClInclude Include="Audio\SDL\Sounds\Stream\StreamSound.h">
+      <Filter>Audio\SDL\Sounds\Stream</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio\SDL\Sounds\Stream\StreamSoundBuffer.h">
+      <Filter>Audio\SDL\Sounds\Stream</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -132,6 +141,12 @@
     </ClCompile>
     <ClCompile Include="Audio\SDL\AudioFormat.cpp">
       <Filter>Audio\SDL</Filter>
+    </ClCompile>
+    <ClCompile Include="Audio\SDL\Sounds\Stream\StreamSound.cpp">
+      <Filter>Audio\SDL\Sounds\Stream</Filter>
+    </ClCompile>
+    <ClCompile Include="Audio\SDL\Sounds\Stream\StreamSoundBuffer.cpp">
+      <Filter>Audio\SDL\Sounds\Stream</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -1,4 +1,5 @@
 #pragma once
+#include "IResourceStream.h"
 
 struct IResourceManager
 {
@@ -7,8 +8,8 @@ struct IResourceManager
 	virtual bool Read(const filesystem::path& filename, Core::ByteBuffer& outBuffer) const noexcept = 0;
 	virtual bool WriteText(const filesystem::path& filename, const string& text) noexcept = 0;
 	virtual bool ReadText(const filesystem::path& filename, string& outText) const noexcept = 0;
-
 	virtual filesystem::path MakeResourceFilePath(const filesystem::path& filename) const noexcept = 0;
+	virtual unique_ptr<IResourceStream> CreateReadStream(const filesystem::path& filename) = 0;
 };
 
 unique_ptr<IResourceManager> CreateResourceManager(const filesystem::path& path);

@@ -31,6 +31,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Resource\ResourceManager.cpp" />
+    <ClCompile Include="Resource\ResourceStream.cpp" />
     <ClCompile Include="Serializer\Format\KeyConverter.cpp" />
     <ClCompile Include="Serializer\Format\Traits.cpp" />
     <ClCompile Include="Serializer\Serializer.cpp" />
@@ -49,7 +50,9 @@
     <ClInclude Include="Framework\StepTimer.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Resource\IResourceManager.h" />
+    <ClInclude Include="Resource\IResourceStream.h" />
     <ClInclude Include="Resource\ResourceManager.h" />
+    <ClInclude Include="Resource\ResourceStream.h" />
     <ClInclude Include="Serializer\ClassSerialize.hpp" />
     <ClInclude Include="Serializer\Concepts.h" />
     <ClInclude Include="Serializer\Format\KeyConverter.hpp" />

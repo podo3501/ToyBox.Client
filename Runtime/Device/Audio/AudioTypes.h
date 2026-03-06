@@ -1,5 +1,12 @@
 #pragma once
 
+enum class SoundLoadMode : int
+{
+	Preload,
+	Stream,
+	None
+};
+
 enum class AudioGroupID : int
 {
 	Master,
@@ -7,7 +14,7 @@ enum class AudioGroupID : int
 	SFX,
 	UI,
 	System,
-	None,
+	None
 };
 
 enum class PlayState : int

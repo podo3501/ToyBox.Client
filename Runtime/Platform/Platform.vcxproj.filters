@@ -44,6 +44,9 @@
     <ClCompile Include="Resource\ResourceManager.cpp">
       <Filter>Resource</Filter>
     </ClCompile>
+    <ClCompile Include="Resource\ResourceStream.cpp">
+      <Filter>Resource</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -105,6 +108,12 @@
       <Filter>Resource</Filter>
     </ClInclude>
     <ClInclude Include="Resource\IResourceManager.h">
+      <Filter>Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\IResourceStream.h">
+      <Filter>Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\ResourceStream.h">
       <Filter>Resource</Filter>
     </ClInclude>
   </ItemGroup>

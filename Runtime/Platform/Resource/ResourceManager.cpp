@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "ResourceManager.h"
+#include "ResourceStream.h"
 #include "Platform/Utils/PathUtils.h"
 #include <fstream>
 
@@ -77,6 +78,17 @@ bool ResourceManager::ReadText(const filesystem::path& filename, string& outText
 filesystem::path ResourceManager::MakeResourceFilePath(const filesystem::path& filename) const noexcept
 {
 	return MakeAbsolutePath(m_path, filename);
+}
+
+unique_ptr<IResourceStream> ResourceManager::CreateReadStream(const filesystem::path& filename)
+{
+	auto absolutePath = MakeAbsolutePath(m_path, filename);
+	auto stream = make_unique<ResourceStream>(absolutePath);
+
+	if (stream->Size() == 0)
+		return nullptr;
+
+	return stream;
 }
 
 ///////////////////////////////////////////
