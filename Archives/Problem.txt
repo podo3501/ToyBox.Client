@@ -25,8 +25,8 @@ mock이 포함되어 있지 않아서이다. 그리고 main을 작성해 준다.
 5. 새프로젝트 만들기 해서 google test 프로젝트로 프로젝트 만들기
 6. NuGet에서 설치되어 있는 기본 gtest를 삭제
 6. GoogletTestLib을 참조로 연결(#pragma comment(lib, "GoogleTestLib_Debug.lib") 지금은 이렇게 붙였다.)
-7. main함수 작성
-8. /GL, /LTCG로 바꿈 (C++과 링커의 최적화 부분에 있음)
+7. Debug일때는 상관없고 Release 설정일때 /GL, /LTCG로 바꿈 (C++ 최적화 옵션과 링커의 최적화 옵션 부분에 있음)
+8. main함수 작성
 
 google test 프로젝트로 만들면 config 파일이 자동적으로 생기는데 Nuget에서 google test를 지우면 config
 파일이 삭제된다. 임의로 지울 경우 Nuget 패키지에서 찾을수 없어 google test를 지울 수 없으니까 조심.
@@ -386,3 +386,5 @@ Google 기본 프로젝트로 생성하면 Release 일때 /GL과 /LTCG가 체크
 클래스 호출을 링크 타임에서 없애주기 때문이다.
 Debug 모드에서는 사용할 필요가 없기 때문에 이 두 옵션이 켜져 있으면 꺼야 한다. 켜놓으면 디버깅 할때
 추상클래스가 보이지 않아서 디버깅이 짜증난다.
+C/C++ -> 최적화 /GL
+링커->최적화 /LTCG

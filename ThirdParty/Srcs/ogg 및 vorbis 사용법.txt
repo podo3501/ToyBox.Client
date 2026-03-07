@@ -1,0 +1,26 @@
+https://github.com/xiph/ogg
+https://github.com/xiph/vorbis
+
+다운로드 받는다. 깃헙에서 보면 홈페이지 링크가 있는데, 홈페이지에서는 스테이블 버전으로 다운 받을 수 있게 되어 있으니까 그쪽에서 받는게 더 편하다.
+
+일단 ogg를 먼저 빌드한다. ogg.lib를 이용해서 vorbis를 빌드해야 하기 때문이다.
+
+mkdir build
+cd build
+cmake ..
+cmake --build . --config Release
+
+이렇게 다운받은 폴더 밑에 (libogg-1.3.6) build 만들고 빌드.
+
+cmake -DOGG_INCLUDE_DIR=D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/include `
+      -DOGG_LIBRARY=D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/Release/ogg.lib ..
+
+이런식으로 하면 제대로 연결돼 있는지 말해준다. occured가 안났다면
+
+cmake --build . --config Release
+
+이렇게하면 lib가 완성되어서 나온다.
+
+include 폴더에 h를 넣고 lib 폴더에 ogg, vobis lib를 넣어준다.
+vorbis.lib, vorbisfile.lib 만 넣어주면 된다. 헤더도 이것에 맞게 맞춰준다. 
+vorbisenc.lib는 인코딩용이기 때문에 굳이 안넣어줘도 된다.

@@ -35,4 +35,12 @@ using namespace DirectX::SimpleMath;
 #pragma comment(lib, "SDL3_mixer-static_Release.lib")
 #endif
 
-
+#ifdef _DEBUG
+#pragma comment(lib, "ogg_Debug.lib")
+#pragma comment(lib, "vorbis_Debug.lib")
+#pragma comment(lib, "vorbisfile_Debug.lib")
+#else
+#pragma comment(lib, "ogg_Release.lib")
+#pragma comment(lib, "vorbis_Release.lib")
+#pragma comment(lib, "vorbisfile_Release.lib")
+#endif

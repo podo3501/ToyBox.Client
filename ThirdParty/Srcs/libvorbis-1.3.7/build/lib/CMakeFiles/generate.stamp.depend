@@ -1,0 +1,6 @@
+# CMake generation dependency list for this directory.
+C:/Program Files/CMake/share/cmake-3.30/Modules/BasicConfigVersion-SameMajorVersion.cmake.in
+C:/Program Files/CMake/share/cmake-3.30/Modules/CMakePackageConfigHelpers.cmake
+C:/Program Files/CMake/share/cmake-3.30/Modules/WriteBasicConfigVersionFile.cmake
+D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libvorbis-1.3.7/cmake/VorbisConfig.cmake.in
+D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libvorbis-1.3.7/lib/CMakeLists.txt

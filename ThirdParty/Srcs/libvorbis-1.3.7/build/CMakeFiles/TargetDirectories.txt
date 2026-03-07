@@ -1,0 +1,7 @@
+D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libvorbis-1.3.7/build/CMakeFiles/INSTALL.dir
+D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libvorbis-1.3.7/build/CMakeFiles/ALL_BUILD.dir
+D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libvorbis-1.3.7/build/CMakeFiles/ZERO_CHECK.dir
+D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libvorbis-1.3.7/build/lib/CMakeFiles/vorbis.dir
+D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libvorbis-1.3.7/build/lib/CMakeFiles/vorbisenc.dir
+D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libvorbis-1.3.7/build/lib/CMakeFiles/vorbisfile.dir
+D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libvorbis-1.3.7/build/lib/CMakeFiles/INSTALL.dir

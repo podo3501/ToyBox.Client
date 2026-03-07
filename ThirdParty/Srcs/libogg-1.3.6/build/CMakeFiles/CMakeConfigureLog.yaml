@@ -1,0 +1,1107 @@
+
+---
+events:
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CMakeDetermineSystem.cmake:205 (message)"
+      - "CMakeLists.txt:7 (project)"
+    message: |
+      The system is: Windows - 10.0.26200 - AMD64
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CMakeDetermineCCompiler.cmake:123 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:7 (project)"
+    message: |
+      Compiling the C compiler identification source file "CMakeCCompilerId.c" succeeded.
+      Compiler:  
+      Build flags: 
+      Id flags:  
+      
+      The output was:
+      0
+      msbuild 踰꾩쟾 17.14.40+3e7442088(.NET Framework??
+      鍮뚮뱶 ?쒖옉: 2026-03-07-???ㅽ썑 2:19:41
+      
+      1 ?몃뱶??"D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\3.30.3\\CompilerIdC\\CompilerIdC.vcxproj" ?꾨줈?앺듃(湲곕낯 ?\xc2\x80???낅땲??
+      PrepareForBuild:
+        "Debug\\" ?붾젆?곕━瑜?留뚮뱾怨??덉뒿?덈떎.
+        援ъ“??異쒕젰???ъ슜?????덉뒿?덈떎. 而댄뙆?쇰윭 吏꾨떒???쒖떇?\xc2\x80 ?ㅻ쪟 怨꾩링 援ъ“瑜?諛섏쁺?⑸땲?? ?먯꽭???댁슜?\xc2\x80 https://aka.ms/cpp/structured-output??李몄“?섏꽭??
+        "Debug\\CompilerIdC.tlog\\" ?붾젆?곕━瑜?留뚮뱾怨??덉뒿?덈떎.
+      InitializeBuildStatus:
+        "AlwaysCreate"??媛\xc2\x80) 吏\xc2\x80?뺣릺?덇린 ?뚮Ц??"Debug\\CompilerIdC.tlog\\unsuccessfulbuild"??瑜? 留뚮뱾怨??덉뒿?덈떎.
+        "Debug\\CompilerIdC.tlog\\unsuccessfulbuild"???곌껐(touching)?섍퀬 ?덉뒿?덈떎.
+      ClCompile:
+        C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\CL.exe /c /nologo /W0 /WX- /diagnostics:column /Od /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\\\" /Fd"Debug\\vc143.pdb" /external:W0 /Gd /TC /FC /errorReport:queue CMakeCCompilerId.c
+        CMakeCCompilerId.c
+      Link:
+        C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:".\\CompilerIdC.exe" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:".\\CompilerIdC.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:".\\CompilerIdC.lib" /MACHINE:X64 Debug\\CMakeCCompilerId.obj
+        CompilerIdC.vcxproj -> D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\3.30.3\\CompilerIdC\\CompilerIdC.exe
+      PostBuildEvent:
+        for %%i in (cl.exe) do @echo CMAKE_C_COMPILER=%%~$PATH:i
+        :VCEnd
+        CMAKE_C_COMPILER=C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\Hostx64\\x64\\cl.exe
+      FinalizeBuildStatus:
+        "Debug\\CompilerIdC.tlog\\unsuccessfulbuild" ?뚯씪????젣?섍퀬 ?덉뒿?덈떎.
+        "Debug\\CompilerIdC.tlog\\CompilerIdC.lastbuildstate"???곌껐(touching)?섍퀬 ?덉뒿?덈떎.
+      "D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\3.30.3\\CompilerIdC\\CompilerIdC.vcxproj" ?꾨줈?앺듃瑜?鍮뚮뱶?덉뒿?덈떎(湲곕낯 ?\xc2\x80??.
+      
+      鍮뚮뱶?덉뒿?덈떎.
+          寃쎄퀬 0媛?
+          ?ㅻ쪟 0媛?
+      
+      寃쎄낵 ?쒓컙: 00:00:00.51
+      
+      
+      Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "CompilerIdC.exe"
+      
+      Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "CompilerIdC.vcxproj"
+      
+      The C compiler identification is MSVC, found in:
+        D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/3.30.3/CompilerIdC/CompilerIdC.exe
+      
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CMakeDetermineCompilerABI.cmake:74 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:7 (project)"
+    checks:
+      - "Detecting C compiler ABI info"
+    directories:
+      source: "D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-2r76ac"
+      binary: "D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-2r76ac"
+    cmakeVariables:
+      CMAKE_C_FLAGS: "/DWIN32 /D_WINDOWS /W3"
+      CMAKE_EXE_LINKER_FLAGS: "/machine:x64"
+    buildResult:
+      variable: "CMAKE_C_ABI_COMPILED"
+      cached: true
+      stdout: |
+        Change Dir: 'D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-2r76ac'
+        
+        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_f5fe2.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+        msbuild 踰꾩쟾 17.14.40+3e7442088(.NET Framework??
+        鍮뚮뱶 ?쒖옉: 2026-03-07-???ㅽ썑 2:19:42
+        
+        1 ?몃뱶??"D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-2r76ac\\cmTC_f5fe2.vcxproj" ?꾨줈?앺듃(湲곕낯 ?\xc2\x80???낅땲??
+        PrepareForBuild:
+          "cmTC_f5fe2.dir\\Debug\\" ?붾젆?곕━瑜?留뚮뱾怨??덉뒿?덈떎.
+          援ъ“??異쒕젰???ъ슜?????덉뒿?덈떎. 而댄뙆?쇰윭 吏꾨떒???쒖떇?\xc2\x80 ?ㅻ쪟 怨꾩링 援ъ“瑜?諛섏쁺?⑸땲?? ?먯꽭???댁슜?\xc2\x80 https://aka.ms/cpp/structured-output??李몄“?섏꽭??
+          "D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-2r76ac\\Debug\\" ?붾젆?곕━瑜?留뚮뱾怨??덉뒿?덈떎.
+          "cmTC_f5fe2.dir\\Debug\\cmTC_f5fe2.tlog\\" ?붾젆?곕━瑜?留뚮뱾怨??덉뒿?덈떎.
+        InitializeBuildStatus:
+          "AlwaysCreate"??媛\xc2\x80) 吏\xc2\x80?뺣릺?덇린 ?뚮Ц??"cmTC_f5fe2.dir\\Debug\\cmTC_f5fe2.tlog\\unsuccessfulbuild"??瑜? 留뚮뱾怨??덉뒿?덈떎.
+          "cmTC_f5fe2.dir\\Debug\\cmTC_f5fe2.tlog\\unsuccessfulbuild"???곌껐(touching)?섍퀬 ?덉뒿?덈떎.
+        ClCompile:
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\CL.exe /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_f5fe2.dir\\Debug\\\\" /Fd"cmTC_f5fe2.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-3.30\\Modules\\CMakeCCompilerABI.c"
+          Microsoft (R) C/C++ 理쒖쟻??而댄뙆?쇰윭 踰꾩쟾 19.44.35223(x64)
+          Copyright (c) Microsoft Corporation. All rights reserved.
+          cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_f5fe2.dir\\Debug\\\\" /Fd"cmTC_f5fe2.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-3.30\\Modules\\CMakeCCompilerABI.c"
+          CMakeCCompilerABI.c
+        Link:
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-2r76ac\\Debug\\cmTC_f5fe2.exe" /INCREMENTAL /ILK:"cmTC_f5fe2.dir\\Debug\\cmTC_f5fe2.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-2r76ac/Debug/cmTC_f5fe2.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-2r76ac/Debug/cmTC_f5fe2.lib" /MACHINE:X64  /machine:x64 cmTC_f5fe2.dir\\Debug\\CMakeCCompilerABI.obj
+          cmTC_f5fe2.vcxproj -> D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-2r76ac\\Debug\\cmTC_f5fe2.exe
+        FinalizeBuildStatus:
+          "cmTC_f5fe2.dir\\Debug\\cmTC_f5fe2.tlog\\unsuccessfulbuild" ?뚯씪????젣?섍퀬 ?덉뒿?덈떎.
+          "cmTC_f5fe2.dir\\Debug\\cmTC_f5fe2.tlog\\cmTC_f5fe2.lastbuildstate"???곌껐(touching)?섍퀬 ?덉뒿?덈떎.
+        "D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-2r76ac\\cmTC_f5fe2.vcxproj" ?꾨줈?앺듃瑜?鍮뚮뱶?덉뒿?덈떎(湲곕낯 ?\xc2\x80??.
+        
+        鍮뚮뱶?덉뒿?덈떎.
+            寃쎄퀬 0媛?
+            ?ㅻ쪟 0媛?
+        
+        寃쎄낵 ?쒓컙: 00:00:00.49
+        
+      exitCode: 0
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CMakeDetermineCompilerABI.cmake:218 (message)"
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:7 (project)"
+    message: |
+      Parsed C implicit link information:
+        link line regex: [^( *|.*[/\\])(ld[0-9]*(\\.[a-z]+)?|link\\.exe|lld-link(\\.exe)?|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)[^/\\]*( |$)]
+        linker tool regex: [^[ 	]*(->|")?[ 	]*(([^"]*[/\\])?(ld[0-9]*(\\.[a-z]+)?|link\\.exe|lld-link(\\.exe)?))("|,| |$)]
+        linker tool for 'C': C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/bin/HostX64/x64/link.exe
+        implicit libs: []
+        implicit objs: []
+        implicit dirs: []
+        implicit fwks: []
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/Internal/CMakeDetermineLinkerId.cmake:40 (message)"
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CMakeDetermineCompilerABI.cmake:255 (cmake_determine_linker_id)"
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:7 (project)"
+    message: |
+      Running the C compiler's linker: "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/bin/HostX64/x64/link.exe" "-v"
+      Microsoft (R) Incremental Linker Version 14.44.35223.0
+      Copyright (C) Microsoft Corporation.  All rights reserved.
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CheckIncludeFiles.cmake:132 (try_compile)"
+      - "CMakeLists.txt:53 (check_include_files)"
+    checks:
+      - "Looking for include file inttypes.h"
+    directories:
+      source: "D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-iiju9y"
+      binary: "D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-iiju9y"
+    cmakeVariables:
+      CMAKE_C_FLAGS: "/DWIN32 /D_WINDOWS /W3"
+      CMAKE_EXE_LINKER_FLAGS: "/machine:x64"
+    buildResult:
+      variable: "INCLUDE_INTTYPES_H"
+      cached: true
+      stdout: |
+        Change Dir: 'D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-iiju9y'
+        
+        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_d67db.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+        msbuild 踰꾩쟾 17.14.40+3e7442088(.NET Framework??
+        鍮뚮뱶 ?쒖옉: 2026-03-07-???ㅽ썑 2:19:43
+        
+        1 ?몃뱶??"D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-iiju9y\\cmTC_d67db.vcxproj" ?꾨줈?앺듃(湲곕낯 ?\xc2\x80???낅땲??
+        PrepareForBuild:
+          "cmTC_d67db.dir\\Debug\\" ?붾젆?곕━瑜?留뚮뱾怨??덉뒿?덈떎.
+          援ъ“??異쒕젰???ъ슜?????덉뒿?덈떎. 而댄뙆?쇰윭 吏꾨떒???쒖떇?\xc2\x80 ?ㅻ쪟 怨꾩링 援ъ“瑜?諛섏쁺?⑸땲?? ?먯꽭???댁슜?\xc2\x80 https://aka.ms/cpp/structured-output??李몄“?섏꽭??
+          "D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-iiju9y\\Debug\\" ?붾젆?곕━瑜?留뚮뱾怨??덉뒿?덈떎.
+          "cmTC_d67db.dir\\Debug\\cmTC_d67db.tlog\\" ?붾젆?곕━瑜?留뚮뱾怨??덉뒿?덈떎.
+        InitializeBuildStatus:
+          "AlwaysCreate"??媛\xc2\x80) 吏\xc2\x80?뺣릺?덇린 ?뚮Ц??"cmTC_d67db.dir\\Debug\\cmTC_d67db.tlog\\unsuccessfulbuild"??瑜? 留뚮뱾怨??덉뒿?덈떎.
+          "cmTC_d67db.dir\\Debug\\cmTC_d67db.tlog\\unsuccessfulbuild"???곌껐(touching)?섍퀬 ?덉뒿?덈떎.
+        ClCompile:
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\CL.exe /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_d67db.dir\\Debug\\\\" /Fd"cmTC_d67db.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-iiju9y\\INCLUDE_INTTYPES_H.c"
+          Microsoft (R) C/C++ 理쒖쟻??而댄뙆?쇰윭 踰꾩쟾 19.44.35223(x64)
+          Copyright (c) Microsoft Corporation. All rights reserved.
+          cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_d67db.dir\\Debug\\\\" /Fd"cmTC_d67db.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-iiju9y\\INCLUDE_INTTYPES_H.c"
+          INCLUDE_INTTYPES_H.c
+        Link:
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-iiju9y\\Debug\\cmTC_d67db.exe" /INCREMENTAL /ILK:"cmTC_d67db.dir\\Debug\\cmTC_d67db.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-iiju9y/Debug/cmTC_d67db.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-iiju9y/Debug/cmTC_d67db.lib" /MACHINE:X64  /machine:x64 cmTC_d67db.dir\\Debug\\INCLUDE_INTTYPES_H.obj
+          cmTC_d67db.vcxproj -> D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-iiju9y\\Debug\\cmTC_d67db.exe
+        FinalizeBuildStatus:
+          "cmTC_d67db.dir\\Debug\\cmTC_d67db.tlog\\unsuccessfulbuild" ?뚯씪????젣?섍퀬 ?덉뒿?덈떎.
+          "cmTC_d67db.dir\\Debug\\cmTC_d67db.tlog\\cmTC_d67db.lastbuildstate"???곌껐(touching)?섍퀬 ?덉뒿?덈떎.
+        "D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-iiju9y\\cmTC_d67db.vcxproj" ?꾨줈?앺듃瑜?鍮뚮뱶?덉뒿?덈떎(湲곕낯 ?\xc2\x80??.
+        
+        鍮뚮뱶?덉뒿?덈떎.
+            寃쎄퀬 0媛?
+            ?ㅻ쪟 0媛?
+        
+        寃쎄낵 ?쒓컙: 00:00:00.49
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CheckIncludeFiles.cmake:132 (try_compile)"
+      - "CMakeLists.txt:54 (check_include_files)"
+    checks:
+      - "Looking for include file stdint.h"
+    directories:
+      source: "D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-a7jwtr"
+      binary: "D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-a7jwtr"
+    cmakeVariables:
+      CMAKE_C_FLAGS: "/DWIN32 /D_WINDOWS /W3"
+      CMAKE_EXE_LINKER_FLAGS: "/machine:x64"
+    buildResult:
+      variable: "INCLUDE_STDINT_H"
+      cached: true
+      stdout: |
+        Change Dir: 'D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-a7jwtr'
+        
+        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_f50d5.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+        msbuild 踰꾩쟾 17.14.40+3e7442088(.NET Framework??
+        鍮뚮뱶 ?쒖옉: 2026-03-07-???ㅽ썑 2:19:43
+        
+        1 ?몃뱶??"D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-a7jwtr\\cmTC_f50d5.vcxproj" ?꾨줈?앺듃(湲곕낯 ?\xc2\x80???낅땲??
+        PrepareForBuild:
+          "cmTC_f50d5.dir\\Debug\\" ?붾젆?곕━瑜?留뚮뱾怨??덉뒿?덈떎.
+          援ъ“??異쒕젰???ъ슜?????덉뒿?덈떎. 而댄뙆?쇰윭 吏꾨떒???쒖떇?\xc2\x80 ?ㅻ쪟 怨꾩링 援ъ“瑜?諛섏쁺?⑸땲?? ?먯꽭???댁슜?\xc2\x80 https://aka.ms/cpp/structured-output??李몄“?섏꽭??
+          "D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-a7jwtr\\Debug\\" ?붾젆?곕━瑜?留뚮뱾怨??덉뒿?덈떎.
+          "cmTC_f50d5.dir\\Debug\\cmTC_f50d5.tlog\\" ?붾젆?곕━瑜?留뚮뱾怨??덉뒿?덈떎.
+        InitializeBuildStatus:
+          "AlwaysCreate"??媛\xc2\x80) 吏\xc2\x80?뺣릺?덇린 ?뚮Ц??"cmTC_f50d5.dir\\Debug\\cmTC_f50d5.tlog\\unsuccessfulbuild"??瑜? 留뚮뱾怨??덉뒿?덈떎.
+          "cmTC_f50d5.dir\\Debug\\cmTC_f50d5.tlog\\unsuccessfulbuild"???곌껐(touching)?섍퀬 ?덉뒿?덈떎.
+        ClCompile:
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\CL.exe /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_f50d5.dir\\Debug\\\\" /Fd"cmTC_f50d5.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-a7jwtr\\INCLUDE_STDINT_H.c"
+          Microsoft (R) C/C++ 理쒖쟻??而댄뙆?쇰윭 踰꾩쟾 19.44.35223(x64)
+          Copyright (c) Microsoft Corporation. All rights reserved.
+          cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_f50d5.dir\\Debug\\\\" /Fd"cmTC_f50d5.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-a7jwtr\\INCLUDE_STDINT_H.c"
+          INCLUDE_STDINT_H.c
+        Link:
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-a7jwtr\\Debug\\cmTC_f50d5.exe" /INCREMENTAL /ILK:"cmTC_f50d5.dir\\Debug\\cmTC_f50d5.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-a7jwtr/Debug/cmTC_f50d5.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-a7jwtr/Debug/cmTC_f50d5.lib" /MACHINE:X64  /machine:x64 cmTC_f50d5.dir\\Debug\\INCLUDE_STDINT_H.obj
+          cmTC_f50d5.vcxproj -> D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-a7jwtr\\Debug\\cmTC_f50d5.exe
+        FinalizeBuildStatus:
+          "cmTC_f50d5.dir\\Debug\\cmTC_f50d5.tlog\\unsuccessfulbuild" ?뚯씪????젣?섍퀬 ?덉뒿?덈떎.
+          "cmTC_f50d5.dir\\Debug\\cmTC_f50d5.tlog\\cmTC_f50d5.lastbuildstate"???곌껐(touching)?섍퀬 ?덉뒿?덈떎.
+        "D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-a7jwtr\\cmTC_f50d5.vcxproj" ?꾨줈?앺듃瑜?鍮뚮뱶?덉뒿?덈떎(湲곕낯 ?\xc2\x80??.
+        
+        鍮뚮뱶?덉뒿?덈떎.
+            寃쎄퀬 0媛?
+            ?ㅻ쪟 0媛?
+        
+        寃쎄낵 ?쒓컙: 00:00:00.49
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CheckIncludeFiles.cmake:132 (try_compile)"
+      - "CMakeLists.txt:55 (check_include_files)"
+    checks:
+      - "Looking for include file sys/types.h"
+    directories:
+      source: "D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-4c6nsw"
+      binary: "D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-4c6nsw"
+    cmakeVariables:
+      CMAKE_C_FLAGS: "/DWIN32 /D_WINDOWS /W3"
+      CMAKE_EXE_LINKER_FLAGS: "/machine:x64"
+    buildResult:
+      variable: "INCLUDE_SYS_TYPES_H"
+      cached: true
+      stdout: |
+        Change Dir: 'D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-4c6nsw'
+        
+        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_2850f.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+        msbuild 踰꾩쟾 17.14.40+3e7442088(.NET Framework??
+        鍮뚮뱶 ?쒖옉: 2026-03-07-???ㅽ썑 2:19:44
+        
+        1 ?몃뱶??"D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-4c6nsw\\cmTC_2850f.vcxproj" ?꾨줈?앺듃(湲곕낯 ?\xc2\x80???낅땲??
+        PrepareForBuild:
+          "cmTC_2850f.dir\\Debug\\" ?붾젆?곕━瑜?留뚮뱾怨??덉뒿?덈떎.
+          援ъ“??異쒕젰???ъ슜?????덉뒿?덈떎. 而댄뙆?쇰윭 吏꾨떒???쒖떇?\xc2\x80 ?ㅻ쪟 怨꾩링 援ъ“瑜?諛섏쁺?⑸땲?? ?먯꽭???댁슜?\xc2\x80 https://aka.ms/cpp/structured-output??李몄“?섏꽭??
+          "D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-4c6nsw\\Debug\\" ?붾젆?곕━瑜?留뚮뱾怨??덉뒿?덈떎.
+          "cmTC_2850f.dir\\Debug\\cmTC_2850f.tlog\\" ?붾젆?곕━瑜?留뚮뱾怨??덉뒿?덈떎.
+        InitializeBuildStatus:
+          "AlwaysCreate"??媛\xc2\x80) 吏\xc2\x80?뺣릺?덇린 ?뚮Ц??"cmTC_2850f.dir\\Debug\\cmTC_2850f.tlog\\unsuccessfulbuild"??瑜? 留뚮뱾怨??덉뒿?덈떎.
+          "cmTC_2850f.dir\\Debug\\cmTC_2850f.tlog\\unsuccessfulbuild"???곌껐(touching)?섍퀬 ?덉뒿?덈떎.
+        ClCompile:
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\CL.exe /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_2850f.dir\\Debug\\\\" /Fd"cmTC_2850f.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-4c6nsw\\INCLUDE_SYS_TYPES_H.c"
+          Microsoft (R) C/C++ 理쒖쟻??而댄뙆?쇰윭 踰꾩쟾 19.44.35223(x64)
+          Copyright (c) Microsoft Corporation. All rights reserved.
+          cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_2850f.dir\\Debug\\\\" /Fd"cmTC_2850f.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-4c6nsw\\INCLUDE_SYS_TYPES_H.c"
+          INCLUDE_SYS_TYPES_H.c
+        Link:
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-4c6nsw\\Debug\\cmTC_2850f.exe" /INCREMENTAL /ILK:"cmTC_2850f.dir\\Debug\\cmTC_2850f.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-4c6nsw/Debug/cmTC_2850f.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-4c6nsw/Debug/cmTC_2850f.lib" /MACHINE:X64  /machine:x64 cmTC_2850f.dir\\Debug\\INCLUDE_SYS_TYPES_H.obj
+          cmTC_2850f.vcxproj -> D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-4c6nsw\\Debug\\cmTC_2850f.exe
+        FinalizeBuildStatus:
+          "cmTC_2850f.dir\\Debug\\cmTC_2850f.tlog\\unsuccessfulbuild" ?뚯씪????젣?섍퀬 ?덉뒿?덈떎.
+          "cmTC_2850f.dir\\Debug\\cmTC_2850f.tlog\\cmTC_2850f.lastbuildstate"???곌껐(touching)?섍퀬 ?덉뒿?덈떎.
+        "D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-4c6nsw\\cmTC_2850f.vcxproj" ?꾨줈?앺듃瑜?鍮뚮뱶?덉뒿?덈떎(湲곕낯 ?\xc2\x80??.
+        
+        鍮뚮뱶?덉뒿?덈떎.
+            寃쎄퀬 0媛?
+            ?ㅻ쪟 0媛?
+        
+        寃쎄낵 ?쒓컙: 00:00:00.49
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CheckIncludeFile.cmake:90 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CheckTypeSize.cmake:251 (check_include_file)"
+      - "cmake/CheckSizes.cmake:3 (check_type_size)"
+      - "CMakeLists.txt:65 (include)"
+    checks:
+      - "Looking for sys/types.h"
+    directories:
+      source: "D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-nii600"
+      binary: "D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-nii600"
+    cmakeVariables:
+      CMAKE_C_FLAGS: "/DWIN32 /D_WINDOWS /W3"
+      CMAKE_EXE_LINKER_FLAGS: "/machine:x64"
+      CMAKE_MODULE_PATH: "D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/cmake"
+    buildResult:
+      variable: "HAVE_SYS_TYPES_H"
+      cached: true
+      stdout: |
+        Change Dir: 'D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-nii600'
+        
+        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_354e0.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+        msbuild 踰꾩쟾 17.14.40+3e7442088(.NET Framework??
+        鍮뚮뱶 ?쒖옉: 2026-03-07-???ㅽ썑 2:19:45
+        
+        1 ?몃뱶??"D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-nii600\\cmTC_354e0.vcxproj" ?꾨줈?앺듃(湲곕낯 ?\xc2\x80???낅땲??
+        PrepareForBuild:
+          "cmTC_354e0.dir\\Debug\\" ?붾젆?곕━瑜?留뚮뱾怨??덉뒿?덈떎.
+          援ъ“??異쒕젰???ъ슜?????덉뒿?덈떎. 而댄뙆?쇰윭 吏꾨떒???쒖떇?\xc2\x80 ?ㅻ쪟 怨꾩링 援ъ“瑜?諛섏쁺?⑸땲?? ?먯꽭???댁슜?\xc2\x80 https://aka.ms/cpp/structured-output??李몄“?섏꽭??
+          "D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-nii600\\Debug\\" ?붾젆?곕━瑜?留뚮뱾怨??덉뒿?덈떎.
+          "cmTC_354e0.dir\\Debug\\cmTC_354e0.tlog\\" ?붾젆?곕━瑜?留뚮뱾怨??덉뒿?덈떎.
+        InitializeBuildStatus:
+          "AlwaysCreate"??媛\xc2\x80) 吏\xc2\x80?뺣릺?덇린 ?뚮Ц??"cmTC_354e0.dir\\Debug\\cmTC_354e0.tlog\\unsuccessfulbuild"??瑜? 留뚮뱾怨??덉뒿?덈떎.
+          "cmTC_354e0.dir\\Debug\\cmTC_354e0.tlog\\unsuccessfulbuild"???곌껐(touching)?섍퀬 ?덉뒿?덈떎.
+        ClCompile:
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\CL.exe /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_354e0.dir\\Debug\\\\" /Fd"cmTC_354e0.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-nii600\\CheckIncludeFile.c"
+          Microsoft (R) C/C++ 理쒖쟻??而댄뙆?쇰윭 踰꾩쟾 19.44.35223(x64)
+          Copyright (c) Microsoft Corporation. All rights reserved.
+          cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_354e0.dir\\Debug\\\\" /Fd"cmTC_354e0.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-nii600\\CheckIncludeFile.c"
+          CheckIncludeFile.c
+        Link:
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-nii600\\Debug\\cmTC_354e0.exe" /INCREMENTAL /ILK:"cmTC_354e0.dir\\Debug\\cmTC_354e0.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-nii600/Debug/cmTC_354e0.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-nii600/Debug/cmTC_354e0.lib" /MACHINE:X64  /machine:x64 cmTC_354e0.dir\\Debug\\CheckIncludeFile.obj
+          cmTC_354e0.vcxproj -> D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-nii600\\Debug\\cmTC_354e0.exe
+        FinalizeBuildStatus:
+          "cmTC_354e0.dir\\Debug\\cmTC_354e0.tlog\\unsuccessfulbuild" ?뚯씪????젣?섍퀬 ?덉뒿?덈떎.
+          "cmTC_354e0.dir\\Debug\\cmTC_354e0.tlog\\cmTC_354e0.lastbuildstate"???곌껐(touching)?섍퀬 ?덉뒿?덈떎.
+        "D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-nii600\\cmTC_354e0.vcxproj" ?꾨줈?앺듃瑜?鍮뚮뱶?덉뒿?덈떎(湲곕낯 ?\xc2\x80??.
+        
+        鍮뚮뱶?덉뒿?덈떎.
+            寃쎄퀬 0媛?
+            ?ㅻ쪟 0媛?
+        
+        寃쎄낵 ?쒓컙: 00:00:00.48
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CheckIncludeFile.cmake:90 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CheckTypeSize.cmake:252 (check_include_file)"
+      - "cmake/CheckSizes.cmake:3 (check_type_size)"
+      - "CMakeLists.txt:65 (include)"
+    checks:
+      - "Looking for stdint.h"
+    directories:
+      source: "D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-g58kqw"
+      binary: "D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-g58kqw"
+    cmakeVariables:
+      CMAKE_C_FLAGS: "/DWIN32 /D_WINDOWS /W3"
+      CMAKE_EXE_LINKER_FLAGS: "/machine:x64"
+      CMAKE_MODULE_PATH: "D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/cmake"
+    buildResult:
+      variable: "HAVE_STDINT_H"
+      cached: true
+      stdout: |
+        Change Dir: 'D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-g58kqw'
+        
+        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_fde22.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+        msbuild 踰꾩쟾 17.14.40+3e7442088(.NET Framework??
+        鍮뚮뱶 ?쒖옉: 2026-03-07-???ㅽ썑 2:19:45
+        
+        1 ?몃뱶??"D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-g58kqw\\cmTC_fde22.vcxproj" ?꾨줈?앺듃(湲곕낯 ?\xc2\x80???낅땲??
+        PrepareForBuild:
+          "cmTC_fde22.dir\\Debug\\" ?붾젆?곕━瑜?留뚮뱾怨??덉뒿?덈떎.
+          援ъ“??異쒕젰???ъ슜?????덉뒿?덈떎. 而댄뙆?쇰윭 吏꾨떒???쒖떇?\xc2\x80 ?ㅻ쪟 怨꾩링 援ъ“瑜?諛섏쁺?⑸땲?? ?먯꽭???댁슜?\xc2\x80 https://aka.ms/cpp/structured-output??李몄“?섏꽭??
+          "D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-g58kqw\\Debug\\" ?붾젆?곕━瑜?留뚮뱾怨??덉뒿?덈떎.
+          "cmTC_fde22.dir\\Debug\\cmTC_fde22.tlog\\" ?붾젆?곕━瑜?留뚮뱾怨??덉뒿?덈떎.
+        InitializeBuildStatus:
+          "AlwaysCreate"??媛\xc2\x80) 吏\xc2\x80?뺣릺?덇린 ?뚮Ц??"cmTC_fde22.dir\\Debug\\cmTC_fde22.tlog\\unsuccessfulbuild"??瑜? 留뚮뱾怨??덉뒿?덈떎.
+          "cmTC_fde22.dir\\Debug\\cmTC_fde22.tlog\\unsuccessfulbuild"???곌껐(touching)?섍퀬 ?덉뒿?덈떎.
+        ClCompile:
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\CL.exe /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_fde22.dir\\Debug\\\\" /Fd"cmTC_fde22.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-g58kqw\\CheckIncludeFile.c"
+          Microsoft (R) C/C++ 理쒖쟻??而댄뙆?쇰윭 踰꾩쟾 19.44.35223(x64)
+          Copyright (c) Microsoft Corporation. All rights reserved.
+          cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_fde22.dir\\Debug\\\\" /Fd"cmTC_fde22.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-g58kqw\\CheckIncludeFile.c"
+          CheckIncludeFile.c
+        Link:
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-g58kqw\\Debug\\cmTC_fde22.exe" /INCREMENTAL /ILK:"cmTC_fde22.dir\\Debug\\cmTC_fde22.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-g58kqw/Debug/cmTC_fde22.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-g58kqw/Debug/cmTC_fde22.lib" /MACHINE:X64  /machine:x64 cmTC_fde22.dir\\Debug\\CheckIncludeFile.obj
+          cmTC_fde22.vcxproj -> D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-g58kqw\\Debug\\cmTC_fde22.exe
+        FinalizeBuildStatus:
+          "cmTC_fde22.dir\\Debug\\cmTC_fde22.tlog\\unsuccessfulbuild" ?뚯씪????젣?섍퀬 ?덉뒿?덈떎.
+          "cmTC_fde22.dir\\Debug\\cmTC_fde22.tlog\\cmTC_fde22.lastbuildstate"???곌껐(touching)?섍퀬 ?덉뒿?덈떎.
+        "D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-g58kqw\\cmTC_fde22.vcxproj" ?꾨줈?앺듃瑜?鍮뚮뱶?덉뒿?덈떎(湲곕낯 ?\xc2\x80??.
+        
+        鍮뚮뱶?덉뒿?덈떎.
+            寃쎄퀬 0媛?
+            ?ㅻ쪟 0媛?
+        
+        寃쎄낵 ?쒓컙: 00:00:00.50
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CheckIncludeFile.cmake:90 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CheckTypeSize.cmake:253 (check_include_file)"
+      - "cmake/CheckSizes.cmake:3 (check_type_size)"
+      - "CMakeLists.txt:65 (include)"
+    checks:
+      - "Looking for stddef.h"
+    directories:
+      source: "D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-crnu25"
+      binary: "D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-crnu25"
+    cmakeVariables:
+      CMAKE_C_FLAGS: "/DWIN32 /D_WINDOWS /W3"
+      CMAKE_EXE_LINKER_FLAGS: "/machine:x64"
+      CMAKE_MODULE_PATH: "D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/cmake"
+    buildResult:
+      variable: "HAVE_STDDEF_H"
+      cached: true
+      stdout: |
+        Change Dir: 'D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-crnu25'
+        
+        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_d7810.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+        msbuild 踰꾩쟾 17.14.40+3e7442088(.NET Framework??
+        鍮뚮뱶 ?쒖옉: 2026-03-07-???ㅽ썑 2:19:46
+        
+        1 ?몃뱶??"D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-crnu25\\cmTC_d7810.vcxproj" ?꾨줈?앺듃(湲곕낯 ?\xc2\x80???낅땲??
+        PrepareForBuild:
+          "cmTC_d7810.dir\\Debug\\" ?붾젆?곕━瑜?留뚮뱾怨??덉뒿?덈떎.
+          援ъ“??異쒕젰???ъ슜?????덉뒿?덈떎. 而댄뙆?쇰윭 吏꾨떒???쒖떇?\xc2\x80 ?ㅻ쪟 怨꾩링 援ъ“瑜?諛섏쁺?⑸땲?? ?먯꽭???댁슜?\xc2\x80 https://aka.ms/cpp/structured-output??李몄“?섏꽭??
+          "D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-crnu25\\Debug\\" ?붾젆?곕━瑜?留뚮뱾怨??덉뒿?덈떎.
+          "cmTC_d7810.dir\\Debug\\cmTC_d7810.tlog\\" ?붾젆?곕━瑜?留뚮뱾怨??덉뒿?덈떎.
+        InitializeBuildStatus:
+          "AlwaysCreate"??媛\xc2\x80) 吏\xc2\x80?뺣릺?덇린 ?뚮Ц??"cmTC_d7810.dir\\Debug\\cmTC_d7810.tlog\\unsuccessfulbuild"??瑜? 留뚮뱾怨??덉뒿?덈떎.
+          "cmTC_d7810.dir\\Debug\\cmTC_d7810.tlog\\unsuccessfulbuild"???곌껐(touching)?섍퀬 ?덉뒿?덈떎.
+        ClCompile:
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\CL.exe /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_d7810.dir\\Debug\\\\" /Fd"cmTC_d7810.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-crnu25\\CheckIncludeFile.c"
+          Microsoft (R) C/C++ 理쒖쟻??而댄뙆?쇰윭 踰꾩쟾 19.44.35223(x64)
+          Copyright (c) Microsoft Corporation. All rights reserved.
+          cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_d7810.dir\\Debug\\\\" /Fd"cmTC_d7810.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-crnu25\\CheckIncludeFile.c"
+          CheckIncludeFile.c
+        Link:
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-crnu25\\Debug\\cmTC_d7810.exe" /INCREMENTAL /ILK:"cmTC_d7810.dir\\Debug\\cmTC_d7810.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-crnu25/Debug/cmTC_d7810.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-crnu25/Debug/cmTC_d7810.lib" /MACHINE:X64  /machine:x64 cmTC_d7810.dir\\Debug\\CheckIncludeFile.obj
+          cmTC_d7810.vcxproj -> D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-crnu25\\Debug\\cmTC_d7810.exe
+        FinalizeBuildStatus:
+          "cmTC_d7810.dir\\Debug\\cmTC_d7810.tlog\\unsuccessfulbuild" ?뚯씪????젣?섍퀬 ?덉뒿?덈떎.
+          "cmTC_d7810.dir\\Debug\\cmTC_d7810.tlog\\cmTC_d7810.lastbuildstate"???곌껐(touching)?섍퀬 ?덉뒿?덈떎.
+        "D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-crnu25\\cmTC_d7810.vcxproj" ?꾨줈?앺듃瑜?鍮뚮뱶?덉뒿?덈떎(湲곕낯 ?\xc2\x80??.
+        
+        鍮뚮뱶?덉뒿?덈떎.
+            寃쎄퀬 0媛?
+            ?ㅻ쪟 0媛?
+        
+        寃쎄낵 ?쒓컙: 00:00:00.49
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CheckTypeSize.cmake:147 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CheckTypeSize.cmake:272 (__check_type_size_impl)"
+      - "cmake/CheckSizes.cmake:3 (check_type_size)"
+      - "CMakeLists.txt:65 (include)"
+    checks:
+      - "Check size of int16_t"
+    directories:
+      source: "D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-22oc3a"
+      binary: "D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-22oc3a"
+    cmakeVariables:
+      CMAKE_C_FLAGS: "/DWIN32 /D_WINDOWS /W3"
+      CMAKE_EXE_LINKER_FLAGS: "/machine:x64"
+      CMAKE_MODULE_PATH: "D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/cmake"
+    buildResult:
+      variable: "HAVE_INT16_SIZE"
+      cached: true
+      stdout: |
+        Change Dir: 'D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-22oc3a'
+        
+        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_ba674.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+        msbuild 踰꾩쟾 17.14.40+3e7442088(.NET Framework??
+        鍮뚮뱶 ?쒖옉: 2026-03-07-???ㅽ썑 2:19:47
+        
+        1 ?몃뱶??"D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-22oc3a\\cmTC_ba674.vcxproj" ?꾨줈?앺듃(湲곕낯 ?\xc2\x80???낅땲??
+        PrepareForBuild:
+          "cmTC_ba674.dir\\Debug\\" ?붾젆?곕━瑜?留뚮뱾怨??덉뒿?덈떎.
+          援ъ“??異쒕젰???ъ슜?????덉뒿?덈떎. 而댄뙆?쇰윭 吏꾨떒???쒖떇?\xc2\x80 ?ㅻ쪟 怨꾩링 援ъ“瑜?諛섏쁺?⑸땲?? ?먯꽭???댁슜?\xc2\x80 https://aka.ms/cpp/structured-output??李몄“?섏꽭??
+          "D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-22oc3a\\Debug\\" ?붾젆?곕━瑜?留뚮뱾怨??덉뒿?덈떎.
+          "cmTC_ba674.dir\\Debug\\cmTC_ba674.tlog\\" ?붾젆?곕━瑜?留뚮뱾怨??덉뒿?덈떎.
+        InitializeBuildStatus:
+          "AlwaysCreate"??媛\xc2\x80) 吏\xc2\x80?뺣릺?덇린 ?뚮Ц??"cmTC_ba674.dir\\Debug\\cmTC_ba674.tlog\\unsuccessfulbuild"??瑜? 留뚮뱾怨??덉뒿?덈떎.
+          "cmTC_ba674.dir\\Debug\\cmTC_ba674.tlog\\unsuccessfulbuild"???곌껐(touching)?섍퀬 ?덉뒿?덈떎.
+        ClCompile:
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\CL.exe /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_ba674.dir\\Debug\\\\" /Fd"cmTC_ba674.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-22oc3a\\INT16_SIZE.c"
+          Microsoft (R) C/C++ 理쒖쟻??而댄뙆?쇰윭 踰꾩쟾 19.44.35223(x64)
+          Copyright (c) Microsoft Corporation. All rights reserved.
+          cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_ba674.dir\\Debug\\\\" /Fd"cmTC_ba674.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-22oc3a\\INT16_SIZE.c"
+          INT16_SIZE.c
+        Link:
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-22oc3a\\Debug\\cmTC_ba674.exe" /INCREMENTAL /ILK:"cmTC_ba674.dir\\Debug\\cmTC_ba674.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-22oc3a/Debug/cmTC_ba674.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-22oc3a/Debug/cmTC_ba674.lib" /MACHINE:X64  /machine:x64 cmTC_ba674.dir\\Debug\\INT16_SIZE.obj
+          cmTC_ba674.vcxproj -> D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-22oc3a\\Debug\\cmTC_ba674.exe
+        FinalizeBuildStatus:
+          "cmTC_ba674.dir\\Debug\\cmTC_ba674.tlog\\unsuccessfulbuild" ?뚯씪????젣?섍퀬 ?덉뒿?덈떎.
+          "cmTC_ba674.dir\\Debug\\cmTC_ba674.tlog\\cmTC_ba674.lastbuildstate"???곌껐(touching)?섍퀬 ?덉뒿?덈떎.
+        "D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-22oc3a\\cmTC_ba674.vcxproj" ?꾨줈?앺듃瑜?鍮뚮뱶?덉뒿?덈떎(湲곕낯 ?\xc2\x80??.
+        
+        鍮뚮뱶?덉뒿?덈떎.
+            寃쎄퀬 0媛?
+            ?ㅻ쪟 0媛?
+        
+        寃쎄낵 ?쒓컙: 00:00:00.49
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CheckTypeSize.cmake:147 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CheckTypeSize.cmake:272 (__check_type_size_impl)"
+      - "cmake/CheckSizes.cmake:4 (check_type_size)"
+      - "CMakeLists.txt:65 (include)"
+    checks:
+      - "Check size of uint16_t"
+    directories:
+      source: "D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-6z2dcv"
+      binary: "D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-6z2dcv"
+    cmakeVariables:
+      CMAKE_C_FLAGS: "/DWIN32 /D_WINDOWS /W3"
+      CMAKE_EXE_LINKER_FLAGS: "/machine:x64"
+      CMAKE_MODULE_PATH: "D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/cmake"
+    buildResult:
+      variable: "HAVE_UINT16_SIZE"
+      cached: true
+      stdout: |
+        Change Dir: 'D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-6z2dcv'
+        
+        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_ffdfa.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+        msbuild 踰꾩쟾 17.14.40+3e7442088(.NET Framework??
+        鍮뚮뱶 ?쒖옉: 2026-03-07-???ㅽ썑 2:19:47
+        
+        1 ?몃뱶??"D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-6z2dcv\\cmTC_ffdfa.vcxproj" ?꾨줈?앺듃(湲곕낯 ?\xc2\x80???낅땲??
+        PrepareForBuild:
+          "cmTC_ffdfa.dir\\Debug\\" ?붾젆?곕━瑜?留뚮뱾怨??덉뒿?덈떎.
+          援ъ“??異쒕젰???ъ슜?????덉뒿?덈떎. 而댄뙆?쇰윭 吏꾨떒???쒖떇?\xc2\x80 ?ㅻ쪟 怨꾩링 援ъ“瑜?諛섏쁺?⑸땲?? ?먯꽭???댁슜?\xc2\x80 https://aka.ms/cpp/structured-output??李몄“?섏꽭??
+          "D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-6z2dcv\\Debug\\" ?붾젆?곕━瑜?留뚮뱾怨??덉뒿?덈떎.
+          "cmTC_ffdfa.dir\\Debug\\cmTC_ffdfa.tlog\\" ?붾젆?곕━瑜?留뚮뱾怨??덉뒿?덈떎.
+        InitializeBuildStatus:
+          "AlwaysCreate"??媛\xc2\x80) 吏\xc2\x80?뺣릺?덇린 ?뚮Ц??"cmTC_ffdfa.dir\\Debug\\cmTC_ffdfa.tlog\\unsuccessfulbuild"??瑜? 留뚮뱾怨??덉뒿?덈떎.
+          "cmTC_ffdfa.dir\\Debug\\cmTC_ffdfa.tlog\\unsuccessfulbuild"???곌껐(touching)?섍퀬 ?덉뒿?덈떎.
+        ClCompile:
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\CL.exe /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_ffdfa.dir\\Debug\\\\" /Fd"cmTC_ffdfa.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-6z2dcv\\UINT16_SIZE.c"
+          Microsoft (R) C/C++ 理쒖쟻??而댄뙆?쇰윭 踰꾩쟾 19.44.35223(x64)
+          Copyright (c) Microsoft Corporation. All rights reserved.
+          cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_ffdfa.dir\\Debug\\\\" /Fd"cmTC_ffdfa.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-6z2dcv\\UINT16_SIZE.c"
+          UINT16_SIZE.c
+        Link:
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-6z2dcv\\Debug\\cmTC_ffdfa.exe" /INCREMENTAL /ILK:"cmTC_ffdfa.dir\\Debug\\cmTC_ffdfa.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-6z2dcv/Debug/cmTC_ffdfa.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-6z2dcv/Debug/cmTC_ffdfa.lib" /MACHINE:X64  /machine:x64 cmTC_ffdfa.dir\\Debug\\UINT16_SIZE.obj
+          cmTC_ffdfa.vcxproj -> D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-6z2dcv\\Debug\\cmTC_ffdfa.exe
+        FinalizeBuildStatus:
+          "cmTC_ffdfa.dir\\Debug\\cmTC_ffdfa.tlog\\unsuccessfulbuild" ?뚯씪????젣?섍퀬 ?덉뒿?덈떎.
+          "cmTC_ffdfa.dir\\Debug\\cmTC_ffdfa.tlog\\cmTC_ffdfa.lastbuildstate"???곌껐(touching)?섍퀬 ?덉뒿?덈떎.
+        "D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-6z2dcv\\cmTC_ffdfa.vcxproj" ?꾨줈?앺듃瑜?鍮뚮뱶?덉뒿?덈떎(湲곕낯 ?\xc2\x80??.
+        
+        鍮뚮뱶?덉뒿?덈떎.
+            寃쎄퀬 0媛?
+            ?ㅻ쪟 0媛?
+        
+        寃쎄낵 ?쒓컙: 00:00:00.51
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CheckTypeSize.cmake:147 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CheckTypeSize.cmake:272 (__check_type_size_impl)"
+      - "cmake/CheckSizes.cmake:5 (check_type_size)"
+      - "CMakeLists.txt:65 (include)"
+    checks:
+      - "Check size of u_int16_t"
+    directories:
+      source: "D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-zssyfc"
+      binary: "D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-zssyfc"
+    cmakeVariables:
+      CMAKE_C_FLAGS: "/DWIN32 /D_WINDOWS /W3"
+      CMAKE_EXE_LINKER_FLAGS: "/machine:x64"
+      CMAKE_MODULE_PATH: "D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/cmake"
+    buildResult:
+      variable: "HAVE_U_INT16_SIZE"
+      cached: true
+      stdout: |
+        Change Dir: 'D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-zssyfc'
+        
+        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_b8d6b.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+        msbuild 踰꾩쟾 17.14.40+3e7442088(.NET Framework??
+        鍮뚮뱶 ?쒖옉: 2026-03-07-???ㅽ썑 2:19:48
+        
+        1 ?몃뱶??"D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-zssyfc\\cmTC_b8d6b.vcxproj" ?꾨줈?앺듃(湲곕낯 ?\xc2\x80???낅땲??
+        PrepareForBuild:
+          "cmTC_b8d6b.dir\\Debug\\" ?붾젆?곕━瑜?留뚮뱾怨??덉뒿?덈떎.
+          援ъ“??異쒕젰???ъ슜?????덉뒿?덈떎. 而댄뙆?쇰윭 吏꾨떒???쒖떇?\xc2\x80 ?ㅻ쪟 怨꾩링 援ъ“瑜?諛섏쁺?⑸땲?? ?먯꽭???댁슜?\xc2\x80 https://aka.ms/cpp/structured-output??李몄“?섏꽭??
+          "D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-zssyfc\\Debug\\" ?붾젆?곕━瑜?留뚮뱾怨??덉뒿?덈떎.
+          "cmTC_b8d6b.dir\\Debug\\cmTC_b8d6b.tlog\\" ?붾젆?곕━瑜?留뚮뱾怨??덉뒿?덈떎.
+        InitializeBuildStatus:
+          "AlwaysCreate"??媛\xc2\x80) 吏\xc2\x80?뺣릺?덇린 ?뚮Ц??"cmTC_b8d6b.dir\\Debug\\cmTC_b8d6b.tlog\\unsuccessfulbuild"??瑜? 留뚮뱾怨??덉뒿?덈떎.
+          "cmTC_b8d6b.dir\\Debug\\cmTC_b8d6b.tlog\\unsuccessfulbuild"???곌껐(touching)?섍퀬 ?덉뒿?덈떎.
+        ClCompile:
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\CL.exe /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_b8d6b.dir\\Debug\\\\" /Fd"cmTC_b8d6b.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-zssyfc\\U_INT16_SIZE.c"
+          Microsoft (R) C/C++ 理쒖쟻??而댄뙆?쇰윭 踰꾩쟾 19.44.35223(x64)
+          Copyright (c) Microsoft Corporation. All rights reserved.
+          cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_b8d6b.dir\\Debug\\\\" /Fd"cmTC_b8d6b.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-zssyfc\\U_INT16_SIZE.c"
+          U_INT16_SIZE.c
+        D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-zssyfc\\U_INT16_SIZE.c(29,12): error C2065: 'u_int16_t': ?좎뼵?섏? ?딆? ?앸퀎?먯엯?덈떎. [D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-zssyfc\\cmTC_b8d6b.vcxproj]
+        D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-zssyfc\\U_INT16_SIZE.c(30,12): error C2065: 'u_int16_t': ?좎뼵?섏? ?딆? ?앸퀎?먯엯?덈떎. [D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-zssyfc\\cmTC_b8d6b.vcxproj]
+        D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-zssyfc\\U_INT16_SIZE.c(31,12): error C2065: 'u_int16_t': ?좎뼵?섏? ?딆? ?앸퀎?먯엯?덈떎. [D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-zssyfc\\cmTC_b8d6b.vcxproj]
+        D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-zssyfc\\U_INT16_SIZE.c(32,12): error C2065: 'u_int16_t': ?좎뼵?섏? ?딆? ?앸퀎?먯엯?덈떎. [D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-zssyfc\\cmTC_b8d6b.vcxproj]
+        D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-zssyfc\\U_INT16_SIZE.c(33,12): error C2065: 'u_int16_t': ?좎뼵?섏? ?딆? ?앸퀎?먯엯?덈떎. [D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-zssyfc\\cmTC_b8d6b.vcxproj]
+        "D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-zssyfc\\cmTC_b8d6b.vcxproj" ?꾨줈?앺듃瑜?鍮뚮뱶?덉뒿?덈떎(湲곕낯 ?\xc2\x80??. - ?ㅽ뙣
+        
+        鍮뚮뱶?섏? 紐삵뻽?듬땲??
+        
+        "D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-zssyfc\\cmTC_b8d6b.vcxproj"(湲곕낯 ?\xc2\x80??(1)->
+        (ClCompile ?\xc2\x80?? -> 
+          D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-zssyfc\\U_INT16_SIZE.c(29,12): error C2065: 'u_int16_t': ?좎뼵?섏? ?딆? ?앸퀎?먯엯?덈떎. [D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-zssyfc\\cmTC_b8d6b.vcxproj]
+          D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-zssyfc\\U_INT16_SIZE.c(30,12): error C2065: 'u_int16_t': ?좎뼵?섏? ?딆? ?앸퀎?먯엯?덈떎. [D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-zssyfc\\cmTC_b8d6b.vcxproj]
+          D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-zssyfc\\U_INT16_SIZE.c(31,12): error C2065: 'u_int16_t': ?좎뼵?섏? ?딆? ?앸퀎?먯엯?덈떎. [D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-zssyfc\\cmTC_b8d6b.vcxproj]
+          D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-zssyfc\\U_INT16_SIZE.c(32,12): error C2065: 'u_int16_t': ?좎뼵?섏? ?딆? ?앸퀎?먯엯?덈떎. [D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-zssyfc\\cmTC_b8d6b.vcxproj]
+          D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-zssyfc\\U_INT16_SIZE.c(33,12): error C2065: 'u_int16_t': ?좎뼵?섏? ?딆? ?앸퀎?먯엯?덈떎. [D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-zssyfc\\cmTC_b8d6b.vcxproj]
+        
+            寃쎄퀬 0媛?
+            ?ㅻ쪟 5媛?
+        
+        寃쎄낵 ?쒓컙: 00:00:00.35
+        
+      exitCode: 1
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CheckTypeSize.cmake:147 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CheckTypeSize.cmake:272 (__check_type_size_impl)"
+      - "cmake/CheckSizes.cmake:6 (check_type_size)"
+      - "CMakeLists.txt:65 (include)"
+    checks:
+      - "Check size of int32_t"
+    directories:
+      source: "D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-mt3nv0"
+      binary: "D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-mt3nv0"
+    cmakeVariables:
+      CMAKE_C_FLAGS: "/DWIN32 /D_WINDOWS /W3"
+      CMAKE_EXE_LINKER_FLAGS: "/machine:x64"
+      CMAKE_MODULE_PATH: "D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/cmake"
+    buildResult:
+      variable: "HAVE_INT32_SIZE"
+      cached: true
+      stdout: |
+        Change Dir: 'D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-mt3nv0'
+        
+        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_664ad.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+        msbuild 踰꾩쟾 17.14.40+3e7442088(.NET Framework??
+        鍮뚮뱶 ?쒖옉: 2026-03-07-???ㅽ썑 2:19:49
+        
+        1 ?몃뱶??"D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-mt3nv0\\cmTC_664ad.vcxproj" ?꾨줈?앺듃(湲곕낯 ?\xc2\x80???낅땲??
+        PrepareForBuild:
+          "cmTC_664ad.dir\\Debug\\" ?붾젆?곕━瑜?留뚮뱾怨??덉뒿?덈떎.
+          援ъ“??異쒕젰???ъ슜?????덉뒿?덈떎. 而댄뙆?쇰윭 吏꾨떒???쒖떇?\xc2\x80 ?ㅻ쪟 怨꾩링 援ъ“瑜?諛섏쁺?⑸땲?? ?먯꽭???댁슜?\xc2\x80 https://aka.ms/cpp/structured-output??李몄“?섏꽭??
+          "D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-mt3nv0\\Debug\\" ?붾젆?곕━瑜?留뚮뱾怨??덉뒿?덈떎.
+          "cmTC_664ad.dir\\Debug\\cmTC_664ad.tlog\\" ?붾젆?곕━瑜?留뚮뱾怨??덉뒿?덈떎.
+        InitializeBuildStatus:
+          "AlwaysCreate"??媛\xc2\x80) 吏\xc2\x80?뺣릺?덇린 ?뚮Ц??"cmTC_664ad.dir\\Debug\\cmTC_664ad.tlog\\unsuccessfulbuild"??瑜? 留뚮뱾怨??덉뒿?덈떎.
+          "cmTC_664ad.dir\\Debug\\cmTC_664ad.tlog\\unsuccessfulbuild"???곌껐(touching)?섍퀬 ?덉뒿?덈떎.
+        ClCompile:
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\CL.exe /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_664ad.dir\\Debug\\\\" /Fd"cmTC_664ad.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-mt3nv0\\INT32_SIZE.c"
+          Microsoft (R) C/C++ 理쒖쟻??而댄뙆?쇰윭 踰꾩쟾 19.44.35223(x64)
+          Copyright (c) Microsoft Corporation. All rights reserved.
+          cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_664ad.dir\\Debug\\\\" /Fd"cmTC_664ad.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-mt3nv0\\INT32_SIZE.c"
+          INT32_SIZE.c
+        Link:
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-mt3nv0\\Debug\\cmTC_664ad.exe" /INCREMENTAL /ILK:"cmTC_664ad.dir\\Debug\\cmTC_664ad.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-mt3nv0/Debug/cmTC_664ad.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-mt3nv0/Debug/cmTC_664ad.lib" /MACHINE:X64  /machine:x64 cmTC_664ad.dir\\Debug\\INT32_SIZE.obj
+          cmTC_664ad.vcxproj -> D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-mt3nv0\\Debug\\cmTC_664ad.exe
+        FinalizeBuildStatus:
+          "cmTC_664ad.dir\\Debug\\cmTC_664ad.tlog\\unsuccessfulbuild" ?뚯씪????젣?섍퀬 ?덉뒿?덈떎.
+          "cmTC_664ad.dir\\Debug\\cmTC_664ad.tlog\\cmTC_664ad.lastbuildstate"???곌껐(touching)?섍퀬 ?덉뒿?덈떎.
+        "D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-mt3nv0\\cmTC_664ad.vcxproj" ?꾨줈?앺듃瑜?鍮뚮뱶?덉뒿?덈떎(湲곕낯 ?\xc2\x80??.
+        
+        鍮뚮뱶?덉뒿?덈떎.
+            寃쎄퀬 0媛?
+            ?ㅻ쪟 0媛?
+        
+        寃쎄낵 ?쒓컙: 00:00:00.53
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CheckTypeSize.cmake:147 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CheckTypeSize.cmake:272 (__check_type_size_impl)"
+      - "cmake/CheckSizes.cmake:7 (check_type_size)"
+      - "CMakeLists.txt:65 (include)"
+    checks:
+      - "Check size of uint32_t"
+    directories:
+      source: "D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-ubfich"
+      binary: "D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-ubfich"
+    cmakeVariables:
+      CMAKE_C_FLAGS: "/DWIN32 /D_WINDOWS /W3"
+      CMAKE_EXE_LINKER_FLAGS: "/machine:x64"
+      CMAKE_MODULE_PATH: "D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/cmake"
+    buildResult:
+      variable: "HAVE_UINT32_SIZE"
+      cached: true
+      stdout: |
+        Change Dir: 'D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-ubfich'
+        
+        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_a5a51.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+        msbuild 踰꾩쟾 17.14.40+3e7442088(.NET Framework??
+        鍮뚮뱶 ?쒖옉: 2026-03-07-???ㅽ썑 2:19:49
+        
+        1 ?몃뱶??"D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-ubfich\\cmTC_a5a51.vcxproj" ?꾨줈?앺듃(湲곕낯 ?\xc2\x80???낅땲??
+        PrepareForBuild:
+          "cmTC_a5a51.dir\\Debug\\" ?붾젆?곕━瑜?留뚮뱾怨??덉뒿?덈떎.
+          援ъ“??異쒕젰???ъ슜?????덉뒿?덈떎. 而댄뙆?쇰윭 吏꾨떒???쒖떇?\xc2\x80 ?ㅻ쪟 怨꾩링 援ъ“瑜?諛섏쁺?⑸땲?? ?먯꽭???댁슜?\xc2\x80 https://aka.ms/cpp/structured-output??李몄“?섏꽭??
+          "D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-ubfich\\Debug\\" ?붾젆?곕━瑜?留뚮뱾怨??덉뒿?덈떎.
+          "cmTC_a5a51.dir\\Debug\\cmTC_a5a51.tlog\\" ?붾젆?곕━瑜?留뚮뱾怨??덉뒿?덈떎.
+        InitializeBuildStatus:
+          "AlwaysCreate"??媛\xc2\x80) 吏\xc2\x80?뺣릺?덇린 ?뚮Ц??"cmTC_a5a51.dir\\Debug\\cmTC_a5a51.tlog\\unsuccessfulbuild"??瑜? 留뚮뱾怨??덉뒿?덈떎.
+          "cmTC_a5a51.dir\\Debug\\cmTC_a5a51.tlog\\unsuccessfulbuild"???곌껐(touching)?섍퀬 ?덉뒿?덈떎.
+        ClCompile:
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\CL.exe /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_a5a51.dir\\Debug\\\\" /Fd"cmTC_a5a51.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-ubfich\\UINT32_SIZE.c"
+          Microsoft (R) C/C++ 理쒖쟻??而댄뙆?쇰윭 踰꾩쟾 19.44.35223(x64)
+          Copyright (c) Microsoft Corporation. All rights reserved.
+          cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_a5a51.dir\\Debug\\\\" /Fd"cmTC_a5a51.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-ubfich\\UINT32_SIZE.c"
+          UINT32_SIZE.c
+        Link:
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-ubfich\\Debug\\cmTC_a5a51.exe" /INCREMENTAL /ILK:"cmTC_a5a51.dir\\Debug\\cmTC_a5a51.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-ubfich/Debug/cmTC_a5a51.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-ubfich/Debug/cmTC_a5a51.lib" /MACHINE:X64  /machine:x64 cmTC_a5a51.dir\\Debug\\UINT32_SIZE.obj
+          cmTC_a5a51.vcxproj -> D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-ubfich\\Debug\\cmTC_a5a51.exe
+        FinalizeBuildStatus:
+          "cmTC_a5a51.dir\\Debug\\cmTC_a5a51.tlog\\unsuccessfulbuild" ?뚯씪????젣?섍퀬 ?덉뒿?덈떎.
+          "cmTC_a5a51.dir\\Debug\\cmTC_a5a51.tlog\\cmTC_a5a51.lastbuildstate"???곌껐(touching)?섍퀬 ?덉뒿?덈떎.
+        "D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-ubfich\\cmTC_a5a51.vcxproj" ?꾨줈?앺듃瑜?鍮뚮뱶?덉뒿?덈떎(湲곕낯 ?\xc2\x80??.
+        
+        鍮뚮뱶?덉뒿?덈떎.
+            寃쎄퀬 0媛?
+            ?ㅻ쪟 0媛?
+        
+        寃쎄낵 ?쒓컙: 00:00:00.53
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CheckTypeSize.cmake:147 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CheckTypeSize.cmake:272 (__check_type_size_impl)"
+      - "cmake/CheckSizes.cmake:8 (check_type_size)"
+      - "CMakeLists.txt:65 (include)"
+    checks:
+      - "Check size of u_int32_t"
+    directories:
+      source: "D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-cwuwx8"
+      binary: "D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-cwuwx8"
+    cmakeVariables:
+      CMAKE_C_FLAGS: "/DWIN32 /D_WINDOWS /W3"
+      CMAKE_EXE_LINKER_FLAGS: "/machine:x64"
+      CMAKE_MODULE_PATH: "D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/cmake"
+    buildResult:
+      variable: "HAVE_U_INT32_SIZE"
+      cached: true
+      stdout: |
+        Change Dir: 'D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-cwuwx8'
+        
+        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_bc9d3.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+        msbuild 踰꾩쟾 17.14.40+3e7442088(.NET Framework??
+        鍮뚮뱶 ?쒖옉: 2026-03-07-???ㅽ썑 2:19:50
+        
+        1 ?몃뱶??"D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-cwuwx8\\cmTC_bc9d3.vcxproj" ?꾨줈?앺듃(湲곕낯 ?\xc2\x80???낅땲??
+        PrepareForBuild:
+          "cmTC_bc9d3.dir\\Debug\\" ?붾젆?곕━瑜?留뚮뱾怨??덉뒿?덈떎.
+          援ъ“??異쒕젰???ъ슜?????덉뒿?덈떎. 而댄뙆?쇰윭 吏꾨떒???쒖떇?\xc2\x80 ?ㅻ쪟 怨꾩링 援ъ“瑜?諛섏쁺?⑸땲?? ?먯꽭???댁슜?\xc2\x80 https://aka.ms/cpp/structured-output??李몄“?섏꽭??
+          "D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-cwuwx8\\Debug\\" ?붾젆?곕━瑜?留뚮뱾怨??덉뒿?덈떎.
+          "cmTC_bc9d3.dir\\Debug\\cmTC_bc9d3.tlog\\" ?붾젆?곕━瑜?留뚮뱾怨??덉뒿?덈떎.
+        InitializeBuildStatus:
+          "AlwaysCreate"??媛\xc2\x80) 吏\xc2\x80?뺣릺?덇린 ?뚮Ц??"cmTC_bc9d3.dir\\Debug\\cmTC_bc9d3.tlog\\unsuccessfulbuild"??瑜? 留뚮뱾怨??덉뒿?덈떎.
+          "cmTC_bc9d3.dir\\Debug\\cmTC_bc9d3.tlog\\unsuccessfulbuild"???곌껐(touching)?섍퀬 ?덉뒿?덈떎.
+        ClCompile:
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\CL.exe /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_bc9d3.dir\\Debug\\\\" /Fd"cmTC_bc9d3.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-cwuwx8\\U_INT32_SIZE.c"
+          Microsoft (R) C/C++ 理쒖쟻??而댄뙆?쇰윭 踰꾩쟾 19.44.35223(x64)
+          Copyright (c) Microsoft Corporation. All rights reserved.
+          cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_bc9d3.dir\\Debug\\\\" /Fd"cmTC_bc9d3.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-cwuwx8\\U_INT32_SIZE.c"
+          U_INT32_SIZE.c
+        D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-cwuwx8\\U_INT32_SIZE.c(29,12): error C2065: 'u_int32_t': ?좎뼵?섏? ?딆? ?앸퀎?먯엯?덈떎. [D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-cwuwx8\\cmTC_bc9d3.vcxproj]
+        D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-cwuwx8\\U_INT32_SIZE.c(30,12): error C2065: 'u_int32_t': ?좎뼵?섏? ?딆? ?앸퀎?먯엯?덈떎. [D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-cwuwx8\\cmTC_bc9d3.vcxproj]
+        D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-cwuwx8\\U_INT32_SIZE.c(31,12): error C2065: 'u_int32_t': ?좎뼵?섏? ?딆? ?앸퀎?먯엯?덈떎. [D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-cwuwx8\\cmTC_bc9d3.vcxproj]
+        D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-cwuwx8\\U_INT32_SIZE.c(32,12): error C2065: 'u_int32_t': ?좎뼵?섏? ?딆? ?앸퀎?먯엯?덈떎. [D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-cwuwx8\\cmTC_bc9d3.vcxproj]
+        D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-cwuwx8\\U_INT32_SIZE.c(33,12): error C2065: 'u_int32_t': ?좎뼵?섏? ?딆? ?앸퀎?먯엯?덈떎. [D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-cwuwx8\\cmTC_bc9d3.vcxproj]
+        "D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-cwuwx8\\cmTC_bc9d3.vcxproj" ?꾨줈?앺듃瑜?鍮뚮뱶?덉뒿?덈떎(湲곕낯 ?\xc2\x80??. - ?ㅽ뙣
+        
+        鍮뚮뱶?섏? 紐삵뻽?듬땲??
+        
+        "D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-cwuwx8\\cmTC_bc9d3.vcxproj"(湲곕낯 ?\xc2\x80??(1)->
+        (ClCompile ?\xc2\x80?? -> 
+          D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-cwuwx8\\U_INT32_SIZE.c(29,12): error C2065: 'u_int32_t': ?좎뼵?섏? ?딆? ?앸퀎?먯엯?덈떎. [D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-cwuwx8\\cmTC_bc9d3.vcxproj]
+          D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-cwuwx8\\U_INT32_SIZE.c(30,12): error C2065: 'u_int32_t': ?좎뼵?섏? ?딆? ?앸퀎?먯엯?덈떎. [D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-cwuwx8\\cmTC_bc9d3.vcxproj]
+          D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-cwuwx8\\U_INT32_SIZE.c(31,12): error C2065: 'u_int32_t': ?좎뼵?섏? ?딆? ?앸퀎?먯엯?덈떎. [D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-cwuwx8\\cmTC_bc9d3.vcxproj]
+          D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-cwuwx8\\U_INT32_SIZE.c(32,12): error C2065: 'u_int32_t': ?좎뼵?섏? ?딆? ?앸퀎?먯엯?덈떎. [D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-cwuwx8\\cmTC_bc9d3.vcxproj]
+          D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-cwuwx8\\U_INT32_SIZE.c(33,12): error C2065: 'u_int32_t': ?좎뼵?섏? ?딆? ?앸퀎?먯엯?덈떎. [D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-cwuwx8\\cmTC_bc9d3.vcxproj]
+        
+            寃쎄퀬 0媛?
+            ?ㅻ쪟 5媛?
+        
+        寃쎄낵 ?쒓컙: 00:00:00.33
+        
+      exitCode: 1
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CheckTypeSize.cmake:147 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CheckTypeSize.cmake:272 (__check_type_size_impl)"
+      - "cmake/CheckSizes.cmake:9 (check_type_size)"
+      - "CMakeLists.txt:65 (include)"
+    checks:
+      - "Check size of int64_t"
+    directories:
+      source: "D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-ylsp5c"
+      binary: "D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-ylsp5c"
+    cmakeVariables:
+      CMAKE_C_FLAGS: "/DWIN32 /D_WINDOWS /W3"
+      CMAKE_EXE_LINKER_FLAGS: "/machine:x64"
+      CMAKE_MODULE_PATH: "D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/cmake"
+    buildResult:
+      variable: "HAVE_INT64_SIZE"
+      cached: true
+      stdout: |
+        Change Dir: 'D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-ylsp5c'
+        
+        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_a6fc0.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+        msbuild 踰꾩쟾 17.14.40+3e7442088(.NET Framework??
+        鍮뚮뱶 ?쒖옉: 2026-03-07-???ㅽ썑 2:19:51
+        
+        1 ?몃뱶??"D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-ylsp5c\\cmTC_a6fc0.vcxproj" ?꾨줈?앺듃(湲곕낯 ?\xc2\x80???낅땲??
+        PrepareForBuild:
+          "cmTC_a6fc0.dir\\Debug\\" ?붾젆?곕━瑜?留뚮뱾怨??덉뒿?덈떎.
+          援ъ“??異쒕젰???ъ슜?????덉뒿?덈떎. 而댄뙆?쇰윭 吏꾨떒???쒖떇?\xc2\x80 ?ㅻ쪟 怨꾩링 援ъ“瑜?諛섏쁺?⑸땲?? ?먯꽭???댁슜?\xc2\x80 https://aka.ms/cpp/structured-output??李몄“?섏꽭??
+          "D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-ylsp5c\\Debug\\" ?붾젆?곕━瑜?留뚮뱾怨??덉뒿?덈떎.
+          "cmTC_a6fc0.dir\\Debug\\cmTC_a6fc0.tlog\\" ?붾젆?곕━瑜?留뚮뱾怨??덉뒿?덈떎.
+        InitializeBuildStatus:
+          "AlwaysCreate"??媛\xc2\x80) 吏\xc2\x80?뺣릺?덇린 ?뚮Ц??"cmTC_a6fc0.dir\\Debug\\cmTC_a6fc0.tlog\\unsuccessfulbuild"??瑜? 留뚮뱾怨??덉뒿?덈떎.
+          "cmTC_a6fc0.dir\\Debug\\cmTC_a6fc0.tlog\\unsuccessfulbuild"???곌껐(touching)?섍퀬 ?덉뒿?덈떎.
+        ClCompile:
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\CL.exe /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_a6fc0.dir\\Debug\\\\" /Fd"cmTC_a6fc0.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-ylsp5c\\INT64_SIZE.c"
+          Microsoft (R) C/C++ 理쒖쟻??而댄뙆?쇰윭 踰꾩쟾 19.44.35223(x64)
+          Copyright (c) Microsoft Corporation. All rights reserved.
+          cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_a6fc0.dir\\Debug\\\\" /Fd"cmTC_a6fc0.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-ylsp5c\\INT64_SIZE.c"
+          INT64_SIZE.c
+        Link:
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-ylsp5c\\Debug\\cmTC_a6fc0.exe" /INCREMENTAL /ILK:"cmTC_a6fc0.dir\\Debug\\cmTC_a6fc0.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-ylsp5c/Debug/cmTC_a6fc0.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-ylsp5c/Debug/cmTC_a6fc0.lib" /MACHINE:X64  /machine:x64 cmTC_a6fc0.dir\\Debug\\INT64_SIZE.obj
+          cmTC_a6fc0.vcxproj -> D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-ylsp5c\\Debug\\cmTC_a6fc0.exe
+        FinalizeBuildStatus:
+          "cmTC_a6fc0.dir\\Debug\\cmTC_a6fc0.tlog\\unsuccessfulbuild" ?뚯씪????젣?섍퀬 ?덉뒿?덈떎.
+          "cmTC_a6fc0.dir\\Debug\\cmTC_a6fc0.tlog\\cmTC_a6fc0.lastbuildstate"???곌껐(touching)?섍퀬 ?덉뒿?덈떎.
+        "D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-ylsp5c\\cmTC_a6fc0.vcxproj" ?꾨줈?앺듃瑜?鍮뚮뱶?덉뒿?덈떎(湲곕낯 ?\xc2\x80??.
+        
+        鍮뚮뱶?덉뒿?덈떎.
+            寃쎄퀬 0媛?
+            ?ㅻ쪟 0媛?
+        
+        寃쎄낵 ?쒓컙: 00:00:00.50
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CheckTypeSize.cmake:147 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CheckTypeSize.cmake:272 (__check_type_size_impl)"
+      - "cmake/CheckSizes.cmake:10 (check_type_size)"
+      - "CMakeLists.txt:65 (include)"
+    checks:
+      - "Check size of short"
+    directories:
+      source: "D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-n25il5"
+      binary: "D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-n25il5"
+    cmakeVariables:
+      CMAKE_C_FLAGS: "/DWIN32 /D_WINDOWS /W3"
+      CMAKE_EXE_LINKER_FLAGS: "/machine:x64"
+      CMAKE_MODULE_PATH: "D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/cmake"
+    buildResult:
+      variable: "HAVE_SHORT_SIZE"
+      cached: true
+      stdout: |
+        Change Dir: 'D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-n25il5'
+        
+        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_f5834.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+        msbuild 踰꾩쟾 17.14.40+3e7442088(.NET Framework??
+        鍮뚮뱶 ?쒖옉: 2026-03-07-???ㅽ썑 2:19:51
+        
+        1 ?몃뱶??"D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-n25il5\\cmTC_f5834.vcxproj" ?꾨줈?앺듃(湲곕낯 ?\xc2\x80???낅땲??
+        PrepareForBuild:
+          "cmTC_f5834.dir\\Debug\\" ?붾젆?곕━瑜?留뚮뱾怨??덉뒿?덈떎.
+          援ъ“??異쒕젰???ъ슜?????덉뒿?덈떎. 而댄뙆?쇰윭 吏꾨떒???쒖떇?\xc2\x80 ?ㅻ쪟 怨꾩링 援ъ“瑜?諛섏쁺?⑸땲?? ?먯꽭???댁슜?\xc2\x80 https://aka.ms/cpp/structured-output??李몄“?섏꽭??
+          "D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-n25il5\\Debug\\" ?붾젆?곕━瑜?留뚮뱾怨??덉뒿?덈떎.
+          "cmTC_f5834.dir\\Debug\\cmTC_f5834.tlog\\" ?붾젆?곕━瑜?留뚮뱾怨??덉뒿?덈떎.
+        InitializeBuildStatus:
+          "AlwaysCreate"??媛\xc2\x80) 吏\xc2\x80?뺣릺?덇린 ?뚮Ц??"cmTC_f5834.dir\\Debug\\cmTC_f5834.tlog\\unsuccessfulbuild"??瑜? 留뚮뱾怨??덉뒿?덈떎.
+          "cmTC_f5834.dir\\Debug\\cmTC_f5834.tlog\\unsuccessfulbuild"???곌껐(touching)?섍퀬 ?덉뒿?덈떎.
+        ClCompile:
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\CL.exe /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_f5834.dir\\Debug\\\\" /Fd"cmTC_f5834.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-n25il5\\SHORT_SIZE.c"
+          Microsoft (R) C/C++ 理쒖쟻??而댄뙆?쇰윭 踰꾩쟾 19.44.35223(x64)
+          Copyright (c) Microsoft Corporation. All rights reserved.
+          cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_f5834.dir\\Debug\\\\" /Fd"cmTC_f5834.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-n25il5\\SHORT_SIZE.c"
+          SHORT_SIZE.c
+        Link:
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-n25il5\\Debug\\cmTC_f5834.exe" /INCREMENTAL /ILK:"cmTC_f5834.dir\\Debug\\cmTC_f5834.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-n25il5/Debug/cmTC_f5834.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-n25il5/Debug/cmTC_f5834.lib" /MACHINE:X64  /machine:x64 cmTC_f5834.dir\\Debug\\SHORT_SIZE.obj
+          cmTC_f5834.vcxproj -> D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-n25il5\\Debug\\cmTC_f5834.exe
+        FinalizeBuildStatus:
+          "cmTC_f5834.dir\\Debug\\cmTC_f5834.tlog\\unsuccessfulbuild" ?뚯씪????젣?섍퀬 ?덉뒿?덈떎.
+          "cmTC_f5834.dir\\Debug\\cmTC_f5834.tlog\\cmTC_f5834.lastbuildstate"???곌껐(touching)?섍퀬 ?덉뒿?덈떎.
+        "D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-n25il5\\cmTC_f5834.vcxproj" ?꾨줈?앺듃瑜?鍮뚮뱶?덉뒿?덈떎(湲곕낯 ?\xc2\x80??.
+        
+        鍮뚮뱶?덉뒿?덈떎.
+            寃쎄퀬 0媛?
+            ?ㅻ쪟 0媛?
+        
+        寃쎄낵 ?쒓컙: 00:00:00.49
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CheckTypeSize.cmake:147 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CheckTypeSize.cmake:272 (__check_type_size_impl)"
+      - "cmake/CheckSizes.cmake:11 (check_type_size)"
+      - "CMakeLists.txt:65 (include)"
+    checks:
+      - "Check size of int"
+    directories:
+      source: "D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-42tiwi"
+      binary: "D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-42tiwi"
+    cmakeVariables:
+      CMAKE_C_FLAGS: "/DWIN32 /D_WINDOWS /W3"
+      CMAKE_EXE_LINKER_FLAGS: "/machine:x64"
+      CMAKE_MODULE_PATH: "D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/cmake"
+    buildResult:
+      variable: "HAVE_INT_SIZE"
+      cached: true
+      stdout: |
+        Change Dir: 'D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-42tiwi'
+        
+        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_815a2.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+        msbuild 踰꾩쟾 17.14.40+3e7442088(.NET Framework??
+        鍮뚮뱶 ?쒖옉: 2026-03-07-???ㅽ썑 2:19:52
+        
+        1 ?몃뱶??"D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-42tiwi\\cmTC_815a2.vcxproj" ?꾨줈?앺듃(湲곕낯 ?\xc2\x80???낅땲??
+        PrepareForBuild:
+          "cmTC_815a2.dir\\Debug\\" ?붾젆?곕━瑜?留뚮뱾怨??덉뒿?덈떎.
+          援ъ“??異쒕젰???ъ슜?????덉뒿?덈떎. 而댄뙆?쇰윭 吏꾨떒???쒖떇?\xc2\x80 ?ㅻ쪟 怨꾩링 援ъ“瑜?諛섏쁺?⑸땲?? ?먯꽭???댁슜?\xc2\x80 https://aka.ms/cpp/structured-output??李몄“?섏꽭??
+          "D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-42tiwi\\Debug\\" ?붾젆?곕━瑜?留뚮뱾怨??덉뒿?덈떎.
+          "cmTC_815a2.dir\\Debug\\cmTC_815a2.tlog\\" ?붾젆?곕━瑜?留뚮뱾怨??덉뒿?덈떎.
+        InitializeBuildStatus:
+          "AlwaysCreate"??媛\xc2\x80) 吏\xc2\x80?뺣릺?덇린 ?뚮Ц??"cmTC_815a2.dir\\Debug\\cmTC_815a2.tlog\\unsuccessfulbuild"??瑜? 留뚮뱾怨??덉뒿?덈떎.
+          "cmTC_815a2.dir\\Debug\\cmTC_815a2.tlog\\unsuccessfulbuild"???곌껐(touching)?섍퀬 ?덉뒿?덈떎.
+        ClCompile:
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\CL.exe /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_815a2.dir\\Debug\\\\" /Fd"cmTC_815a2.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-42tiwi\\INT_SIZE.c"
+          Microsoft (R) C/C++ 理쒖쟻??而댄뙆?쇰윭 踰꾩쟾 19.44.35223(x64)
+          Copyright (c) Microsoft Corporation. All rights reserved.
+          cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_815a2.dir\\Debug\\\\" /Fd"cmTC_815a2.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-42tiwi\\INT_SIZE.c"
+          INT_SIZE.c
+        Link:
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-42tiwi\\Debug\\cmTC_815a2.exe" /INCREMENTAL /ILK:"cmTC_815a2.dir\\Debug\\cmTC_815a2.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-42tiwi/Debug/cmTC_815a2.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-42tiwi/Debug/cmTC_815a2.lib" /MACHINE:X64  /machine:x64 cmTC_815a2.dir\\Debug\\INT_SIZE.obj
+          cmTC_815a2.vcxproj -> D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-42tiwi\\Debug\\cmTC_815a2.exe
+        FinalizeBuildStatus:
+          "cmTC_815a2.dir\\Debug\\cmTC_815a2.tlog\\unsuccessfulbuild" ?뚯씪????젣?섍퀬 ?덉뒿?덈떎.
+          "cmTC_815a2.dir\\Debug\\cmTC_815a2.tlog\\cmTC_815a2.lastbuildstate"???곌껐(touching)?섍퀬 ?덉뒿?덈떎.
+        "D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-42tiwi\\cmTC_815a2.vcxproj" ?꾨줈?앺듃瑜?鍮뚮뱶?덉뒿?덈떎(湲곕낯 ?\xc2\x80??.
+        
+        鍮뚮뱶?덉뒿?덈떎.
+            寃쎄퀬 0媛?
+            ?ㅻ쪟 0媛?
+        
+        寃쎄낵 ?쒓컙: 00:00:00.51
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CheckTypeSize.cmake:147 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CheckTypeSize.cmake:272 (__check_type_size_impl)"
+      - "cmake/CheckSizes.cmake:12 (check_type_size)"
+      - "CMakeLists.txt:65 (include)"
+    checks:
+      - "Check size of long"
+    directories:
+      source: "D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-cbxzsc"
+      binary: "D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-cbxzsc"
+    cmakeVariables:
+      CMAKE_C_FLAGS: "/DWIN32 /D_WINDOWS /W3"
+      CMAKE_EXE_LINKER_FLAGS: "/machine:x64"
+      CMAKE_MODULE_PATH: "D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/cmake"
+    buildResult:
+      variable: "HAVE_LONG_SIZE"
+      cached: true
+      stdout: |
+        Change Dir: 'D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-cbxzsc'
+        
+        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_f6c1b.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+        msbuild 踰꾩쟾 17.14.40+3e7442088(.NET Framework??
+        鍮뚮뱶 ?쒖옉: 2026-03-07-???ㅽ썑 2:19:53
+        
+        1 ?몃뱶??"D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-cbxzsc\\cmTC_f6c1b.vcxproj" ?꾨줈?앺듃(湲곕낯 ?\xc2\x80???낅땲??
+        PrepareForBuild:
+          "cmTC_f6c1b.dir\\Debug\\" ?붾젆?곕━瑜?留뚮뱾怨??덉뒿?덈떎.
+          援ъ“??異쒕젰???ъ슜?????덉뒿?덈떎. 而댄뙆?쇰윭 吏꾨떒???쒖떇?\xc2\x80 ?ㅻ쪟 怨꾩링 援ъ“瑜?諛섏쁺?⑸땲?? ?먯꽭???댁슜?\xc2\x80 https://aka.ms/cpp/structured-output??李몄“?섏꽭??
+          "D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-cbxzsc\\Debug\\" ?붾젆?곕━瑜?留뚮뱾怨??덉뒿?덈떎.
+          "cmTC_f6c1b.dir\\Debug\\cmTC_f6c1b.tlog\\" ?붾젆?곕━瑜?留뚮뱾怨??덉뒿?덈떎.
+        InitializeBuildStatus:
+          "AlwaysCreate"??媛\xc2\x80) 吏\xc2\x80?뺣릺?덇린 ?뚮Ц??"cmTC_f6c1b.dir\\Debug\\cmTC_f6c1b.tlog\\unsuccessfulbuild"??瑜? 留뚮뱾怨??덉뒿?덈떎.
+          "cmTC_f6c1b.dir\\Debug\\cmTC_f6c1b.tlog\\unsuccessfulbuild"???곌껐(touching)?섍퀬 ?덉뒿?덈떎.
+        ClCompile:
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\CL.exe /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_f6c1b.dir\\Debug\\\\" /Fd"cmTC_f6c1b.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-cbxzsc\\LONG_SIZE.c"
+          Microsoft (R) C/C++ 理쒖쟻??而댄뙆?쇰윭 踰꾩쟾 19.44.35223(x64)
+          Copyright (c) Microsoft Corporation. All rights reserved.
+          cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_f6c1b.dir\\Debug\\\\" /Fd"cmTC_f6c1b.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-cbxzsc\\LONG_SIZE.c"
+          LONG_SIZE.c
+        Link:
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-cbxzsc\\Debug\\cmTC_f6c1b.exe" /INCREMENTAL /ILK:"cmTC_f6c1b.dir\\Debug\\cmTC_f6c1b.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-cbxzsc/Debug/cmTC_f6c1b.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-cbxzsc/Debug/cmTC_f6c1b.lib" /MACHINE:X64  /machine:x64 cmTC_f6c1b.dir\\Debug\\LONG_SIZE.obj
+          cmTC_f6c1b.vcxproj -> D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-cbxzsc\\Debug\\cmTC_f6c1b.exe
+        FinalizeBuildStatus:
+          "cmTC_f6c1b.dir\\Debug\\cmTC_f6c1b.tlog\\unsuccessfulbuild" ?뚯씪????젣?섍퀬 ?덉뒿?덈떎.
+          "cmTC_f6c1b.dir\\Debug\\cmTC_f6c1b.tlog\\cmTC_f6c1b.lastbuildstate"???곌껐(touching)?섍퀬 ?덉뒿?덈떎.
+        "D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-cbxzsc\\cmTC_f6c1b.vcxproj" ?꾨줈?앺듃瑜?鍮뚮뱶?덉뒿?덈떎(湲곕낯 ?\xc2\x80??.
+        
+        鍮뚮뱶?덉뒿?덈떎.
+            寃쎄퀬 0媛?
+            ?ㅻ쪟 0媛?
+        
+        寃쎄낵 ?쒓컙: 00:00:00.50
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CheckTypeSize.cmake:147 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CheckTypeSize.cmake:272 (__check_type_size_impl)"
+      - "cmake/CheckSizes.cmake:13 (check_type_size)"
+      - "CMakeLists.txt:65 (include)"
+    checks:
+      - "Check size of long long"
+    directories:
+      source: "D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-a5eo9a"
+      binary: "D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-a5eo9a"
+    cmakeVariables:
+      CMAKE_C_FLAGS: "/DWIN32 /D_WINDOWS /W3"
+      CMAKE_EXE_LINKER_FLAGS: "/machine:x64"
+      CMAKE_MODULE_PATH: "D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/cmake"
+    buildResult:
+      variable: "HAVE_LONG_LONG_SIZE"
+      cached: true
+      stdout: |
+        Change Dir: 'D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-a5eo9a'
+        
+        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_2ba2d.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+        msbuild 踰꾩쟾 17.14.40+3e7442088(.NET Framework??
+        鍮뚮뱶 ?쒖옉: 2026-03-07-???ㅽ썑 2:19:54
+        
+        1 ?몃뱶??"D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-a5eo9a\\cmTC_2ba2d.vcxproj" ?꾨줈?앺듃(湲곕낯 ?\xc2\x80???낅땲??
+        PrepareForBuild:
+          "cmTC_2ba2d.dir\\Debug\\" ?붾젆?곕━瑜?留뚮뱾怨??덉뒿?덈떎.
+          援ъ“??異쒕젰???ъ슜?????덉뒿?덈떎. 而댄뙆?쇰윭 吏꾨떒???쒖떇?\xc2\x80 ?ㅻ쪟 怨꾩링 援ъ“瑜?諛섏쁺?⑸땲?? ?먯꽭???댁슜?\xc2\x80 https://aka.ms/cpp/structured-output??李몄“?섏꽭??
+          "D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-a5eo9a\\Debug\\" ?붾젆?곕━瑜?留뚮뱾怨??덉뒿?덈떎.
+          "cmTC_2ba2d.dir\\Debug\\cmTC_2ba2d.tlog\\" ?붾젆?곕━瑜?留뚮뱾怨??덉뒿?덈떎.
+        InitializeBuildStatus:
+          "AlwaysCreate"??媛\xc2\x80) 吏\xc2\x80?뺣릺?덇린 ?뚮Ц??"cmTC_2ba2d.dir\\Debug\\cmTC_2ba2d.tlog\\unsuccessfulbuild"??瑜? 留뚮뱾怨??덉뒿?덈떎.
+          "cmTC_2ba2d.dir\\Debug\\cmTC_2ba2d.tlog\\unsuccessfulbuild"???곌껐(touching)?섍퀬 ?덉뒿?덈떎.
+        ClCompile:
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\CL.exe /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_2ba2d.dir\\Debug\\\\" /Fd"cmTC_2ba2d.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-a5eo9a\\LONG_LONG_SIZE.c"
+          Microsoft (R) C/C++ 理쒖쟻??而댄뙆?쇰윭 踰꾩쟾 19.44.35223(x64)
+          Copyright (c) Microsoft Corporation. All rights reserved.
+          cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_2ba2d.dir\\Debug\\\\" /Fd"cmTC_2ba2d.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-a5eo9a\\LONG_LONG_SIZE.c"
+          LONG_LONG_SIZE.c
+        Link:
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-a5eo9a\\Debug\\cmTC_2ba2d.exe" /INCREMENTAL /ILK:"cmTC_2ba2d.dir\\Debug\\cmTC_2ba2d.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-a5eo9a/Debug/cmTC_2ba2d.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:/ProgrammingStudy/ToyBox/ThirdParty/Srcs/libogg-1.3.6/build/CMakeFiles/CMakeScratch/TryCompile-a5eo9a/Debug/cmTC_2ba2d.lib" /MACHINE:X64  /machine:x64 cmTC_2ba2d.dir\\Debug\\LONG_LONG_SIZE.obj
+          cmTC_2ba2d.vcxproj -> D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-a5eo9a\\Debug\\cmTC_2ba2d.exe
+        FinalizeBuildStatus:
+          "cmTC_2ba2d.dir\\Debug\\cmTC_2ba2d.tlog\\unsuccessfulbuild" ?뚯씪????젣?섍퀬 ?덉뒿?덈떎.
+          "cmTC_2ba2d.dir\\Debug\\cmTC_2ba2d.tlog\\cmTC_2ba2d.lastbuildstate"???곌껐(touching)?섍퀬 ?덉뒿?덈떎.
+        "D:\\ProgrammingStudy\\ToyBox\\ThirdParty\\Srcs\\libogg-1.3.6\\build\\CMakeFiles\\CMakeScratch\\TryCompile-a5eo9a\\cmTC_2ba2d.vcxproj" ?꾨줈?앺듃瑜?鍮뚮뱶?덉뒿?덈떎(湲곕낯 ?\xc2\x80??.
+        
+        鍮뚮뱶?덉뒿?덈떎.
+            寃쎄퀬 0媛?
+            ?ㅻ쪟 0媛?
+        
+        寃쎄낵 ?쒓컙: 00:00:00.51
+        
+      exitCode: 0
+...
