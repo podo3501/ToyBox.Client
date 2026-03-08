@@ -72,7 +72,7 @@ bool NormalSound::Play(string_view soundID) noexcept
 PlayState NormalSound::GetState(string_view soundID) const noexcept
 {
 	auto it = m_normalSoundBuffers.find(string(soundID));
-	if (it == m_normalSoundBuffers.end()) return PlayState::NotLoaded;
+	if (it == m_normalSoundBuffers.end()) return PlayState::None;
 
 	return it->second->IsPlaying() ? PlayState::Playing : PlayState::Stopped;
 }

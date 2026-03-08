@@ -10,7 +10,7 @@ public:
 	SDLAudioBackend();
 	bool Initialize() noexcept;
 	virtual bool LoadPreload(string_view soundID, Core::ByteBuffer buffer, AudioGroupID groupID, float volume) override;
-	virtual bool LoadStream(string_view soundID, unique_ptr<IResourceStream> stream, AudioGroupID groupID, float volume) override;
+	virtual bool LoadStream(string_view soundID, unique_ptr<IResourceStream> stream, AudioGroupID groupID, float volume, bool loop) override;
 	virtual bool Unload(string_view soundID) noexcept override;
 	virtual bool Play(string_view soundID) noexcept override;
 	virtual void Update() noexcept override;

@@ -21,5 +21,6 @@ enum class PlayState : int
 {
 	NotLoaded,
 	Stopped,
-	Playing
+	Playing,
+	None
 };

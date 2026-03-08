@@ -50,7 +50,8 @@ bool AudioService::Load(string_view soundID)
 			soundID,
 			move(stream),
 			info->groupID,
-			GetVolume(info->groupID));
+			GetVolume(info->groupID),
+			false);
 	}
 
 	return false;

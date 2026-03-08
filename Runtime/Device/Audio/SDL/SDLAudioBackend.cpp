@@ -35,9 +35,9 @@ bool SDLAudioBackend::LoadPreload(string_view soundID, Core::ByteBuffer buffer, 
 	return m_normalSound->LoadSound(soundID, move(buffer), groupID, volume);
 }
 
-bool SDLAudioBackend::LoadStream(string_view soundID, unique_ptr<IResourceStream> stream, AudioGroupID groupID, float volume)
+bool SDLAudioBackend::LoadStream(string_view soundID, unique_ptr<IResourceStream> stream, AudioGroupID groupID, float volume, bool loop)
 {
-	return m_streamSound->LoadSound(soundID, move(stream), groupID, volume);
+	return m_streamSound->LoadSound(soundID, move(stream), groupID, volume, loop);
 }
 
 bool SDLAudioBackend::Unload(string_view soundID) noexcept
@@ -47,17 +47,23 @@ bool SDLAudioBackend::Unload(string_view soundID) noexcept
 
 bool SDLAudioBackend::Play(string_view soundID) noexcept
 {
-	return m_normalSound->Play(soundID);
+	if (m_normalSound->Play(soundID)) return true;
+	if (m_streamSound->Play(soundID)) return true;
+
+	return false;
 }
 
 PlayState SDLAudioBackend::GetState(string_view soundID) const noexcept
 {
-	return m_normalSound->GetState(soundID);
+	if (auto state = m_normalSound->GetState(soundID); state != PlayState::None) return state;
+	if (auto state = m_streamSound->GetState(soundID); state != PlayState::None) return state;
+
+	return PlayState::None;
 }
 
 void SDLAudioBackend::Update() noexcept
 {
-	return;
+	return m_streamSound->Update();
 }
 
 //////////////////////////////////////////////////////

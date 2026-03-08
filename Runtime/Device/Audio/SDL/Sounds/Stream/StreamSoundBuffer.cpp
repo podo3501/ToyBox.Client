@@ -2,36 +2,36 @@
 #include "StreamSoundBuffer.h"
 #include "Platform/Resource/IResourceStream.h"
 #include "Audio/AudioTypes.h"
-#include "vorbis/vorbisfile.h"
-#include "SDL3/SDL.h"
-
 
 size_t ReadFunc(void* ptr, size_t size, size_t nmemb, void* datasource)
 {
     auto* stream = static_cast<IResourceStream*>(datasource);
+    size_t bytesRequested = size * nmemb;
 
-    size_t total = size * nmemb;
-    span<std::byte> buffer(reinterpret_cast<std::byte*>(ptr), total);
+    span<std::byte> buffer(reinterpret_cast<std::byte*>(ptr), bytesRequested);
+    size_t bytesRead = stream->Read(buffer);
 
-    size_t read = stream->Read(buffer);
-
-    return read / size;
+    return bytesRead / size;
 }
 
 int SeekFunc(void* datasource, ogg_int64_t offset, int whence)
 {
     auto* stream = static_cast<IResourceStream*>(datasource);
 
-    size_t pos = 0;
-
+    int64_t pos = 0;
     switch (whence)
     {
     case SEEK_SET: pos = offset; break;
-    case SEEK_CUR: pos = stream->Tell() + offset; break;
-    case SEEK_END: pos = stream->Size() + offset; break;
+    case SEEK_CUR:
+        pos = static_cast<int64_t>(stream->Tell()) + offset; break;  case SEEK_END:
+        pos = static_cast<int64_t>(stream->Size()) + offset;
+        break;
+    default:
+        return -1;
     }
+    if (pos < 0) return -1;
 
-    return stream->Seek(pos) ? 0 : -1;
+    return stream->Seek(static_cast<size_t>(pos)) ? 0 : -1;
 }
 
 long TellFunc(void* datasource)
@@ -48,31 +48,38 @@ int CloseFunc(void*)
 SDL_AudioSpec CreateSDLAudioSpec(OggVorbis_File& vf)
 {
     SDL_AudioSpec spec{};
-
     vorbis_info* vi = ov_info(&vf, -1); // -1은 current logical bitstream
 
-    if (!vi)
+    if (auto* vi = ov_info(&vf, -1))
     {
-        // 정보 없으면 기본값
-        spec.format = SDL_AUDIO_F32; // float 샘플
-        spec.channels = 2;       // 기본 스테레오
-        spec.freq = 44100;       // 기본 샘플레이트
-        return spec;
+        spec.channels = static_cast<Uint8>(vi->channels);
+        spec.freq = static_cast<int>(vi->rate);
     }
-
-    spec.channels = vi->channels;
-    spec.freq = vi->rate;
-    spec.format = SDL_AUDIO_F32; // libvorbis는 일반적으로 16bit signed PCM으로 디코딩되지만, float로도 받을 수 있음. 여기서는 float로 설정
+    else
+    {
+        spec.channels = 2;
+        spec.freq = 44100;
+    }
+    spec.format = SDL_AUDIO_S16; // ov_read()는 항상 signed 16bit PCM을 반환
 
     return spec;
 }
 
-
-StreamSoundBuffer::~StreamSoundBuffer() = default;
-StreamSoundBuffer::StreamSoundBuffer() = default;
-bool StreamSoundBuffer::Load(unique_ptr<IResourceStream> stream, AudioGroupID groupID, float volume)
+StreamSoundBuffer::~StreamSoundBuffer()
 {
-    OggVorbis_File vf;
+    if (m_vorbisOpened)
+        ov_clear(&m_vorbisFile);
+}
+StreamSoundBuffer::StreamSoundBuffer()
+{
+    memset(&m_vorbisFile, 0, sizeof(OggVorbis_File));
+}
+
+bool StreamSoundBuffer::Load(SDL_AudioDeviceID device, 
+    unique_ptr<IResourceStream> fileStream, AudioGroupID groupID, float volume, bool loop)
+{
+    m_fileStream = move(fileStream);
+    m_loop = loop;
     
     ov_callbacks cb{};
     cb.read_func = ReadFunc;
@@ -80,21 +87,101 @@ bool StreamSoundBuffer::Load(unique_ptr<IResourceStream> stream, AudioGroupID gr
     cb.tell_func = TellFunc;
     cb.close_func = CloseFunc;
 
-    if (ov_open_callbacks(stream.get(), &vf, nullptr, 0, cb) < 0) return false;
+    int result = ov_open_callbacks(m_fileStream.get(), &m_vorbisFile, nullptr, 0, cb);
+    if (result < 0) return false;
+    m_vorbisOpened = true;
 
+    SDL_AudioSpec srcSpec = CreateSDLAudioSpec(m_vorbisFile);
 
+    SDL_AudioSpec deviceSpec{};
+    deviceSpec.freq = 48000;
+    deviceSpec.format = SDL_AUDIO_S16;
+    deviceSpec.channels = 2;
 
-    //SDL_LoadAudio_IO()
-     //int error = 0;
+    m_stream = SDL_CreateAudioStream(&srcSpec, &deviceSpec);
+    if (!m_stream) return false;
 
-    //m_vorbis = stb_vorbis_open_memory(
-    //    buffer.data(),
-    //    static_cast<int>(buffer.size()),
-    //    &error,
-    //    nullptr
-    //);
+    ReturnIfFalse(SDL_BindAudioStream(device, m_stream));
+    ReturnIfFalse(SetVolume(volume));
 
-    //if (!m_vorbis)
-    //    return false;
     return true;
+}
+
+void StreamSoundBuffer::Play()
+{
+    if (!m_stream) return;
+
+    m_finished = false;
+    constexpr int INITIAL_FILL = 4;
+    for (int i = 0; i < INITIAL_FILL; ++i)
+        if(!PushChunk()) return;
+
+    SDL_ResumeAudioStreamDevice(m_stream);
+}
+
+void StreamSoundBuffer::Stop()
+{
+    if (!m_stream)
+        return;
+
+    SDL_ClearAudioStream(m_stream);
+    m_finished = true;
+}
+
+bool StreamSoundBuffer::PushChunk()
+{
+    if (!m_stream || !m_vorbisOpened) return false;
+  
+    int bitstream = 0;
+    long bytes = ov_read(&m_vorbisFile, m_decodeBuffer.data(), static_cast<int>(m_decodeBuffer.size()),
+        0, // little endian (window에서는 리틀엔디언) 0x1234 가 34 12로 돼 있는 방식
+        2, // 샘플크기 16비트 PCM
+        1, // 0 = unsigned, 1 = signed. 16bit PCM은 일반적으로 signed를 사용
+        &bitstream);
+
+    if (bytes > 0)
+    {
+        SDL_PutAudioStreamData(m_stream, m_decodeBuffer.data(), bytes);
+        return true;
+    }
+
+    if (bytes == 0)
+    {
+        if (m_loop)
+            ov_pcm_seek(&m_vorbisFile, 0); // EOF (loop 원하면 사용)
+        else
+        {
+            m_finished = true;
+            SDL_FlushAudioStream(m_stream);
+        }
+
+        return false;
+    }
+
+    //bytes < 0 -> 디코딩 오류시 처리.
+    m_finished = true;
+    SDL_FlushAudioStream(m_stream);
+    return false;
+}
+
+bool StreamSoundBuffer::IsPlaying() const noexcept
+{
+    if (!m_stream) return false;
+    if (!m_finished) return true;
+    return SDL_GetAudioStreamQueued(m_stream) > 0;
+}
+
+bool StreamSoundBuffer::SetVolume(float volume)
+{
+    return SDL_SetAudioStreamGain(m_stream, volume);
+}
+
+void StreamSoundBuffer::Update() noexcept
+{
+    if (!m_stream || m_finished)
+        return;
+
+    constexpr int LOW_WATERMARK = 128 * 1024;
+    while (SDL_GetAudioStreamQueued(m_stream) < LOW_WATERMARK)
+        if (!PushChunk()) break;
 }
