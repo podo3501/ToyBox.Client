@@ -13,6 +13,7 @@ public:
 	virtual bool LoadStream(string_view soundID, unique_ptr<IResourceStream> stream, AudioGroupID groupID, float volume, bool loop) override;
 	virtual bool Unload(string_view soundID) noexcept override;
 	virtual bool Play(string_view soundID) noexcept override;
+	virtual bool SetVolume(string_view soundID, float volume) noexcept override;
 	virtual void Update() noexcept override;
 	virtual PlayState GetState(string_view soundID) const noexcept override;
 

@@ -1,55 +1,13 @@
 #include "pch.h"
-#include "StreamSoundBuffer.h"
+#include "StreamSoundInstance.h"
+#include "AudioDevice.h"
+#include "VorbisStreamCallbacks.h"
 #include "Platform/Resource/IResourceStream.h"
 #include "Audio/AudioTypes.h"
 
-size_t ReadFunc(void* ptr, size_t size, size_t nmemb, void* datasource)
-{
-    auto* stream = static_cast<IResourceStream*>(datasource);
-    size_t bytesRequested = size * nmemb;
-
-    span<std::byte> buffer(reinterpret_cast<std::byte*>(ptr), bytesRequested);
-    size_t bytesRead = stream->Read(buffer);
-
-    return bytesRead / size;
-}
-
-int SeekFunc(void* datasource, ogg_int64_t offset, int whence)
-{
-    auto* stream = static_cast<IResourceStream*>(datasource);
-
-    int64_t pos = 0;
-    switch (whence)
-    {
-    case SEEK_SET: pos = offset; break;
-    case SEEK_CUR:
-        pos = static_cast<int64_t>(stream->Tell()) + offset; break;  case SEEK_END:
-        pos = static_cast<int64_t>(stream->Size()) + offset;
-        break;
-    default:
-        return -1;
-    }
-    if (pos < 0) return -1;
-
-    return stream->Seek(static_cast<size_t>(pos)) ? 0 : -1;
-}
-
-long TellFunc(void* datasource)
-{
-    auto* stream = static_cast<IResourceStream*>(datasource);
-    return static_cast<long>(stream->Tell());
-}
-
-int CloseFunc(void*)
-{
-    return 0; // 스트림 소유권은 외부
-}
-
-SDL_AudioSpec CreateSDLAudioSpec(OggVorbis_File& vf)
+SDL_AudioSpec VorbisToSDLAudioSpec(OggVorbis_File& vf)
 {
     SDL_AudioSpec spec{};
-    vorbis_info* vi = ov_info(&vf, -1); // -1은 current logical bitstream
-
     if (auto* vi = ov_info(&vf, -1))
     {
         spec.channels = static_cast<Uint8>(vi->channels);
@@ -65,49 +23,40 @@ SDL_AudioSpec CreateSDLAudioSpec(OggVorbis_File& vf)
     return spec;
 }
 
-StreamSoundBuffer::~StreamSoundBuffer()
+StreamSoundInstance::~StreamSoundInstance()
 {
     if (m_vorbisOpened)
         ov_clear(&m_vorbisFile);
 }
-StreamSoundBuffer::StreamSoundBuffer()
+StreamSoundInstance::StreamSoundInstance()
+    : m_groupID{ AudioGroupID::None }
 {
     memset(&m_vorbisFile, 0, sizeof(OggVorbis_File));
 }
 
-bool StreamSoundBuffer::Load(SDL_AudioDeviceID device, 
+bool StreamSoundInstance::Load(AudioDevice* device,
     unique_ptr<IResourceStream> fileStream, AudioGroupID groupID, float volume, bool loop)
 {
     m_fileStream = move(fileStream);
     m_loop = loop;
-    
-    ov_callbacks cb{};
-    cb.read_func = ReadFunc;
-    cb.seek_func = SeekFunc;
-    cb.tell_func = TellFunc;
-    cb.close_func = CloseFunc;
+    m_groupID = groupID;
 
+    auto cb = Vorbis::CreateCallbacks();
     int result = ov_open_callbacks(m_fileStream.get(), &m_vorbisFile, nullptr, 0, cb);
     if (result < 0) return false;
     m_vorbisOpened = true;
 
-    SDL_AudioSpec srcSpec = CreateSDLAudioSpec(m_vorbisFile);
-
-    SDL_AudioSpec deviceSpec{};
-    deviceSpec.freq = 48000;
-    deviceSpec.format = SDL_AUDIO_S16;
-    deviceSpec.channels = 2;
-
-    m_stream = SDL_CreateAudioStream(&srcSpec, &deviceSpec);
+    SDL_AudioSpec srcSpec = VorbisToSDLAudioSpec(m_vorbisFile);
+    m_stream = device->CreateStream(srcSpec);
     if (!m_stream) return false;
 
-    ReturnIfFalse(SDL_BindAudioStream(device, m_stream));
+    ReturnIfFalse(SDL_BindAudioStream(device->GetDevice(), m_stream));
     ReturnIfFalse(SetVolume(volume));
 
     return true;
 }
 
-void StreamSoundBuffer::Play()
+void StreamSoundInstance::Play()
 {
     if (!m_stream) return;
 
@@ -119,7 +68,7 @@ void StreamSoundBuffer::Play()
     SDL_ResumeAudioStreamDevice(m_stream);
 }
 
-void StreamSoundBuffer::Stop()
+void StreamSoundInstance::Stop()
 {
     if (!m_stream)
         return;
@@ -128,7 +77,7 @@ void StreamSoundBuffer::Stop()
     m_finished = true;
 }
 
-bool StreamSoundBuffer::PushChunk()
+bool StreamSoundInstance::PushChunk()
 {
     if (!m_stream || !m_vorbisOpened) return false;
   
@@ -164,19 +113,19 @@ bool StreamSoundBuffer::PushChunk()
     return false;
 }
 
-bool StreamSoundBuffer::IsPlaying() const noexcept
+bool StreamSoundInstance::IsPlaying() const noexcept
 {
     if (!m_stream) return false;
     if (!m_finished) return true;
     return SDL_GetAudioStreamQueued(m_stream) > 0;
 }
 
-bool StreamSoundBuffer::SetVolume(float volume)
+bool StreamSoundInstance::SetVolume(float volume)
 {
     return SDL_SetAudioStreamGain(m_stream, volume);
 }
 
-void StreamSoundBuffer::Update() noexcept
+void StreamSoundInstance::Update() noexcept
 {
     if (!m_stream || m_finished)
         return;
@@ -185,3 +134,5 @@ void StreamSoundBuffer::Update() noexcept
     while (SDL_GetAudioStreamQueued(m_stream) < LOW_WATERMARK)
         if (!PushChunk()) break;
 }
+
+AudioGroupID StreamSoundInstance::GetGroupID() const noexcept { return m_groupID; }

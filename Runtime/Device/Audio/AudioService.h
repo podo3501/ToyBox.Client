@@ -3,7 +3,7 @@
 
 struct IAudioBackend;
 struct IResourceManager;
-struct AudioGroup;
+struct GroupInfo;
 class AudioService
 {
 public:
@@ -18,13 +18,18 @@ public:
 	bool Play(string_view soundID) noexcept;
 	void Update() noexcept;
 	PlayState GetState(string_view soundID) const noexcept;
+	inline void SetMasterVolume(float volume) noexcept { m_masterVolume = volume; }
+	inline float GetMasterVolume() const noexcept { return m_masterVolume; }
+	bool SetVolume(string_view soundID, float volume) noexcept;
 
 private:
 	void CreateAudioGroup() noexcept;
-	float GetVolume(AudioGroupID groupID) const noexcept;
+	float GetGroupVolume(AudioGroupID groupID) const noexcept;
+	AudioGroupID GetGroupID(string_view soundID);
 
 	SoundTable m_sndTable;
 	unique_ptr<IAudioBackend> m_audioBackend;
 	IResourceManager* m_resManager{ nullptr };
-	unordered_map<AudioGroupID, unique_ptr<AudioGroup>> m_audioGroups;
+	float m_masterVolume{ 1.0f };
+	unordered_map<AudioGroupID, unique_ptr<GroupInfo>> m_groupInfos;
 };

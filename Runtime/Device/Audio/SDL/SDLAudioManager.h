@@ -28,5 +28,7 @@ private:
 	SoundTable m_sndTable;
 	unique_ptr<EffectSound> m_effectSound;
 	unique_ptr<NormalSound> m_normalSound;
+
+	float m_masterVolume{ 1.0f };
 	unordered_map<AudioGroupID, unique_ptr<AudioGroup>> m_audioGroups;
 };

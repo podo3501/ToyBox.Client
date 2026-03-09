@@ -9,7 +9,6 @@ enum class SoundLoadMode : int
 
 enum class AudioGroupID : int
 {
-	Master,
 	BGM,
 	SFX,
 	UI,

@@ -42,13 +42,23 @@ bool SDLAudioBackend::LoadStream(string_view soundID, unique_ptr<IResourceStream
 
 bool SDLAudioBackend::Unload(string_view soundID) noexcept
 {
-	return m_normalSound->Unload(soundID);
+	if(m_normalSound->Unload(soundID)) return true;
+	if (m_streamSound->Unload(soundID)) return true;
+
+	return false;
 }
 
 bool SDLAudioBackend::Play(string_view soundID) noexcept
 {
 	if (m_normalSound->Play(soundID)) return true;
 	if (m_streamSound->Play(soundID)) return true;
+
+	return false;
+}
+
+bool SDLAudioBackend::SetVolume(string_view soundID, float volume) noexcept
+{
+	if (m_streamSound->SetVolume(soundID, volume)) return true;
 
 	return false;
 }

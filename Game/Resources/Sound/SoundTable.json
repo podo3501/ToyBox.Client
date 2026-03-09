@@ -23,6 +23,12 @@
             "SoundLoadMode": "Stream",
             "Group": "BGM",
             "Volume": 1.0
+        },
+        "TestOgg_03": {
+            "Filename": "Sound/Ogg/future_tribal.ogg",
+            "SoundLoadMode": "Stream",
+            "Group": "BGM",
+            "Volume": 1.0
         }
     }
 }

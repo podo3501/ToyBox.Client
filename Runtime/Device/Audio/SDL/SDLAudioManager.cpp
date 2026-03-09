@@ -84,9 +84,8 @@ void SDLAudioManager::SetVolume(AudioGroupID groupID, float volume) noexcept
 
 float SDLAudioManager::GetVolume(AudioGroupID groupID) const noexcept
 {
-	float masterVolume = m_audioGroups.at(AudioGroupID::Master)->volume;
 	float groupVolume = m_audioGroups.at(groupID)->volume;
-	float volume = masterVolume * groupVolume;
+	float volume = m_masterVolume * groupVolume;
 
 	return std::clamp(volume, 0.f, 1.f);
 }

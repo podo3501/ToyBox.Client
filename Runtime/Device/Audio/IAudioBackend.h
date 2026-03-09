@@ -10,6 +10,7 @@ struct IAudioBackend
 	virtual bool LoadStream(string_view soundID, unique_ptr<IResourceStream> stream, AudioGroupID groupID, float volume, bool loop) = 0;
 	virtual bool Unload(string_view soundID) noexcept = 0;
 	virtual bool Play(string_view soundID) noexcept = 0;
+	virtual bool SetVolume(string_view soundID, float volume) noexcept = 0;
 	virtual PlayState GetState(string_view soundID) const noexcept = 0;
 	virtual void Update() noexcept = 0;
 };

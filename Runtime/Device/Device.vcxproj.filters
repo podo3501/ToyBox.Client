@@ -100,7 +100,13 @@
     <ClInclude Include="Audio\SDL\Sounds\Stream\StreamSound.h">
       <Filter>Audio\SDL\Sounds\Stream</Filter>
     </ClInclude>
-    <ClInclude Include="Audio\SDL\Sounds\Stream\StreamSoundBuffer.h">
+    <ClInclude Include="Audio\SDL\Sounds\Stream\StreamSoundInstance.h">
+      <Filter>Audio\SDL\Sounds\Stream</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio\SDL\Sounds\Stream\VorbisStreamCallbacks.h">
+      <Filter>Audio\SDL\Sounds\Stream</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio\SDL\Sounds\Stream\AudioDevice.h">
       <Filter>Audio\SDL\Sounds\Stream</Filter>
     </ClInclude>
   </ItemGroup>
@@ -145,7 +151,13 @@
     <ClCompile Include="Audio\SDL\Sounds\Stream\StreamSound.cpp">
       <Filter>Audio\SDL\Sounds\Stream</Filter>
     </ClCompile>
-    <ClCompile Include="Audio\SDL\Sounds\Stream\StreamSoundBuffer.cpp">
+    <ClCompile Include="Audio\SDL\Sounds\Stream\StreamSoundInstance.cpp">
+      <Filter>Audio\SDL\Sounds\Stream</Filter>
+    </ClCompile>
+    <ClCompile Include="Audio\SDL\Sounds\Stream\VorbisStreamCallbacks.cpp">
+      <Filter>Audio\SDL\Sounds\Stream</Filter>
+    </ClCompile>
+    <ClCompile Include="Audio\SDL\Sounds\Stream\AudioDevice.cpp">
       <Filter>Audio\SDL\Sounds\Stream</Filter>
     </ClCompile>
   </ItemGroup>

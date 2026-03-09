@@ -1,23 +1,25 @@
 #pragma once
 
 struct IResourceStream;
-class StreamSoundBuffer;
+class AudioDevice;
+class StreamSoundInstance;
 enum class AudioGroupID;
 enum class PlayState;
 class StreamSound
 {
-	using SDL_AudioDeviceID = uint32_t;
-
 public:
 	~StreamSound();
 	StreamSound();
 	bool Initialize();
 	bool LoadSound(string_view soundID, unique_ptr<IResourceStream> stream, AudioGroupID groupID, float volume, bool loop);
+	bool Unload(string_view soundID) noexcept;
+	void SetVolume(AudioGroupID groupID, float volume) noexcept;
+	bool SetVolume(string_view soundID, float volume) noexcept;
 	bool Play(string_view soundID) noexcept;
 	PlayState GetState(string_view soundID) const noexcept;
 	void Update() noexcept;
 
 private:
-	SDL_AudioDeviceID m_device{};
-	unordered_map<string, unique_ptr<StreamSoundBuffer>> m_streamSoundBuffers;
+	unique_ptr<AudioDevice> m_device;
+	unordered_map<string, unique_ptr<StreamSoundInstance>> m_instances;
 };

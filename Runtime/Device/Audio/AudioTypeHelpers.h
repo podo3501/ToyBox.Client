@@ -16,12 +16,11 @@ constexpr auto EnumToStringMap<SoundLoadMode>() -> std::array<const char*, EnumS
 }
 
 template<>
-constexpr size_t EnumSize<AudioGroupID>() { return 6; }
+constexpr size_t EnumSize<AudioGroupID>() { return 5; }
 
 template<>
 constexpr auto EnumToStringMap<AudioGroupID>() -> std::array<const char*, EnumSize<AudioGroupID>()> {
 	return { {
-		{ "Master" },
 		{ "BGM" },
 		{ "SFX" },
 		{ "UI" },

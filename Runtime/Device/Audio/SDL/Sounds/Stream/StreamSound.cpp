@@ -1,13 +1,13 @@
 #include "pch.h"
 #include "StreamSound.h"
-#include "StreamSoundBuffer.h"
+#include "StreamSoundInstance.h"
+#include "AudioDevice.h"
 #include "Device/Audio/AudioTypes.h"
 #include "Platform/Resource/IResourceStream.h"
 
 StreamSound::~StreamSound()
 {
-	m_streamSoundBuffers.clear();
-    SDL_CloseAudioDevice(m_device);
+    m_instances.clear();
 	SDL_QuitSubSystem(SDL_INIT_AUDIO);
 }
 StreamSound::StreamSound() = default;
@@ -16,30 +16,54 @@ bool StreamSound::Initialize()
 {
 	ReturnIfFalse(SDL_InitSubSystem(SDL_INIT_AUDIO));
 
-    SDL_AudioSpec deviceSpec{};
-    deviceSpec.freq = 48000;
-    deviceSpec.format = SDL_AUDIO_S16;
-    deviceSpec.channels = 2;
-
-    m_device = SDL_OpenAudioDevice(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &deviceSpec);
-    if (!m_device) return false;
+    m_device = make_unique<AudioDevice>();
+    ReturnIfFalse(m_device->Initialize());
 
     return true;
 }
 
 bool StreamSound::LoadSound(string_view soundID, unique_ptr<IResourceStream> stream, AudioGroupID groupID, float volume, bool loop)
 {
-    auto sndBuffer = make_unique<StreamSoundBuffer>();
-	ReturnIfFalse(sndBuffer->Load(m_device, move(stream), groupID, volume, loop));
+    auto instance = make_unique<StreamSoundInstance>();
+	ReturnIfFalse(instance->Load(m_device.get(), move(stream), groupID, volume, loop));
 
-    m_streamSoundBuffers.emplace(string(soundID), move(sndBuffer));
+    m_instances.emplace(string(soundID), move(instance));
 	return true;
+}
+
+bool StreamSound::Unload(string_view soundID) noexcept
+{
+    auto it = m_instances.find(string(soundID));
+    if (it == m_instances.end()) return false;
+
+    m_instances.erase(it);
+    return true;
+}
+
+void StreamSound::SetVolume(AudioGroupID groupID, float volume) noexcept
+{
+    for (auto& instance : m_instances | views::values)
+    {
+        if (!instance->IsPlaying()) continue;
+        if (instance->GetGroupID() != groupID) continue;
+
+        instance->SetVolume(volume);
+    }
+}
+
+bool StreamSound::SetVolume(string_view soundID, float volume) noexcept
+{
+    auto it = m_instances.find(string(soundID));
+    if (it == m_instances.end()) return false;
+
+    it->second->SetVolume(volume);
+    return true;
 }
 
 bool StreamSound::Play(string_view soundID) noexcept
 {
-    auto it = m_streamSoundBuffers.find(string(soundID));
-    if (it == m_streamSoundBuffers.end()) return false;
+    auto it = m_instances.find(string(soundID));
+    if (it == m_instances.end()) return false;
 
     it->second->Play();
     return true;
@@ -47,17 +71,17 @@ bool StreamSound::Play(string_view soundID) noexcept
 
 PlayState StreamSound::GetState(string_view soundID) const noexcept
 {
-    auto it = m_streamSoundBuffers.find(string(soundID));
-    if (it == m_streamSoundBuffers.end()) return PlayState::None;
+    auto it = m_instances.find(string(soundID));
+    if (it == m_instances.end()) return PlayState::None;
 
     return it->second->IsPlaying() ? PlayState::Playing : PlayState::Stopped;
 }
 
 void StreamSound::Update() noexcept
 {
-    for (auto& buffer : m_streamSoundBuffers | views::values)
+    for (auto& instance : m_instances | views::values)
     {
-        if (!buffer->IsPlaying()) continue;
-        buffer->Update();
+        if (!instance->IsPlaying()) continue;
+        instance->Update();
     }
 }
