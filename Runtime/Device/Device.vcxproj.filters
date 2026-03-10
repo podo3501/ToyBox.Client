@@ -28,14 +28,11 @@
     <Filter Include="Audio\SDL\Sounds">
       <UniqueIdentifier>{253845c1-4090-459a-b709-65b8d8788121}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Audio\SDL\Sounds\Effect">
-      <UniqueIdentifier>{0efd3162-8720-49ee-8912-5aa9d0836d18}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Audio\SDL\Sounds\Normal">
-      <UniqueIdentifier>{63184b9f-a282-464e-96e4-0ba789befda2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Audio\SDL\Sounds\Stream">
       <UniqueIdentifier>{bedc0675-d4c2-40b8-afae-5306ec2242eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Audio\SDL\Sounds\Static">
+      <UniqueIdentifier>{14a155ce-5261-487e-8c5b-0e94873c1ad7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -52,12 +49,6 @@
     <ClInclude Include="Audio\AudioTypes.h">
       <Filter>Audio</Filter>
     </ClInclude>
-    <ClInclude Include="Audio\IAudioManager.h">
-      <Filter>Audio</Filter>
-    </ClInclude>
-    <ClInclude Include="Audio\SDL\SDLAudioManager.h">
-      <Filter>Audio\SDL</Filter>
-    </ClInclude>
     <ClInclude Include="Input\DirectX\InputManager.h">
       <Filter>Input\DirectX</Filter>
     </ClInclude>
@@ -66,18 +57,6 @@
     </ClInclude>
     <ClInclude Include="Audio\SDL\Serializer\Format\Traits.h">
       <Filter>Audio\SDL\Serializer\Format</Filter>
-    </ClInclude>
-    <ClInclude Include="Audio\SDL\Sounds\Effect\EffectSound.h">
-      <Filter>Audio\SDL\Sounds\Effect</Filter>
-    </ClInclude>
-    <ClInclude Include="Audio\SDL\Sounds\Effect\EffectSoundBuffer.h">
-      <Filter>Audio\SDL\Sounds\Effect</Filter>
-    </ClInclude>
-    <ClInclude Include="Audio\SDL\Sounds\Normal\NormalSound.h">
-      <Filter>Audio\SDL\Sounds\Normal</Filter>
-    </ClInclude>
-    <ClInclude Include="Audio\SDL\Sounds\Normal\NormalSoundBuffer.h">
-      <Filter>Audio\SDL\Sounds\Normal</Filter>
     </ClInclude>
     <ClInclude Include="Audio\SoundInfo.h">
       <Filter>Audio</Filter>
@@ -109,29 +88,20 @@
     <ClInclude Include="Audio\SDL\Sounds\Stream\AudioDevice.h">
       <Filter>Audio\SDL\Sounds\Stream</Filter>
     </ClInclude>
+    <ClInclude Include="Audio\SDL\Sounds\Static\StaticSound.h">
+      <Filter>Audio\SDL\Sounds\Static</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio\SDL\Sounds\Static\StaticSoundInstance.h">
+      <Filter>Audio\SDL\Sounds\Static</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
-    <ClCompile Include="Audio\SDL\SDLAudioManager.cpp">
-      <Filter>Audio\SDL</Filter>
-    </ClCompile>
     <ClCompile Include="Input\DirectX\InputManager.cpp">
       <Filter>Input\DirectX</Filter>
     </ClCompile>
     <ClCompile Include="Audio\SDL\Serializer\Format\Traits.cpp">
       <Filter>Audio\SDL\Serializer\Format</Filter>
-    </ClCompile>
-    <ClCompile Include="Audio\SDL\Sounds\Effect\EffectSound.cpp">
-      <Filter>Audio\SDL\Sounds\Effect</Filter>
-    </ClCompile>
-    <ClCompile Include="Audio\SDL\Sounds\Effect\EffectSoundBuffer.cpp">
-      <Filter>Audio\SDL\Sounds\Effect</Filter>
-    </ClCompile>
-    <ClCompile Include="Audio\SDL\Sounds\Normal\NormalSound.cpp">
-      <Filter>Audio\SDL\Sounds\Normal</Filter>
-    </ClCompile>
-    <ClCompile Include="Audio\SDL\Sounds\Normal\NormalSoundBuffer.cpp">
-      <Filter>Audio\SDL\Sounds\Normal</Filter>
     </ClCompile>
     <ClCompile Include="Audio\SoundInfo.cpp">
       <Filter>Audio</Filter>
@@ -159,6 +129,12 @@
     </ClCompile>
     <ClCompile Include="Audio\SDL\Sounds\Stream\AudioDevice.cpp">
       <Filter>Audio\SDL\Sounds\Stream</Filter>
+    </ClCompile>
+    <ClCompile Include="Audio\SDL\Sounds\Static\StaticSound.cpp">
+      <Filter>Audio\SDL\Sounds\Static</Filter>
+    </ClCompile>
+    <ClCompile Include="Audio\SDL\Sounds\Static\StaticSoundInstance.cpp">
+      <Filter>Audio\SDL\Sounds\Static</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

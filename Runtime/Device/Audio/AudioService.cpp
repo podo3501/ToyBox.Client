@@ -29,12 +29,12 @@ bool AudioService::Load(string_view soundID)
 	auto info = m_sndTable.GetInfo(soundID);
 	if (!info) return false;
 
-	if (info->loadMode == SoundLoadMode::Preload)
+	if (info->loadMode == SoundLoadMode::Static)
 	{
 		Core::ByteBuffer buffer;
 		ReturnIfFalse(m_resManager->Read(info->filename, buffer));
 
-		return m_audioBackend->LoadPreload(
+		return m_audioBackend->LoadStatic(
 			soundID,
 			move(buffer),
 			info->groupID,

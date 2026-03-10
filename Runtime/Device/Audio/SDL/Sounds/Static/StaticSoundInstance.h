@@ -5,13 +5,12 @@ struct MIX_Mixer;
 struct MIX_Audio;
 struct MIX_Track;
 enum class AudioGroupID;
-class NormalSoundBuffer
+class StaticSoundInstance
 {
 public:
-	~NormalSoundBuffer();
-	NormalSoundBuffer() = delete;
-	NormalSoundBuffer(MIX_Mixer* mixer);
-	bool LoadFromFile(const filesystem::path& filename, AudioGroupID groupID, float volume);
+	~StaticSoundInstance();
+	StaticSoundInstance() = delete;
+	StaticSoundInstance(MIX_Mixer* mixer);
 	bool LoadFromMemory(Core::ByteBuffer fileBuffer, AudioGroupID groupID, float volume);
 	void Play();
 	bool SetVolume(float volume);

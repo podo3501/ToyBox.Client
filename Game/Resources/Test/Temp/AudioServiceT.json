@@ -2,19 +2,19 @@
     "Infos": {
         "TestWav_01": {
             "Filename": "Sound/Wav/test1.wav",
-            "SoundLoadMode": "Preload",
+            "SoundLoadMode": "Static",
             "Group": "SFX",
             "Volume": 1.0
         },
         "TestWav_02": {
             "Filename": "Sound/Wav/test2.wav",
-            "SoundLoadMode": "Preload",
+            "SoundLoadMode": "Static",
             "Group": "SFX",
             "Volume": 1.0
         },
         "TestOgg_01": {
             "Filename": "Sound/Ogg/mouseclick1.ogg",
-            "SoundLoadMode": "Preload",
+            "SoundLoadMode": "Static",
             "Group": "BGM",
             "Volume": 1.0
         },

@@ -9,7 +9,7 @@ constexpr size_t EnumSize<SoundLoadMode>() { return 3; }
 template<>
 constexpr auto EnumToStringMap<SoundLoadMode>() -> std::array<const char*, EnumSize<SoundLoadMode>()> {
 	return { {
-		{ "Preload" },
+		{ "Static" },
 		{ "Stream" },
 		{ "None" }
 	} };

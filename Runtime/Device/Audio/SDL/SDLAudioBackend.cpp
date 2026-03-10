@@ -2,20 +2,20 @@
 #include "SDLAudioBackend.h"
 #include "SDL3/SDL_init.h"
 #include "AudioFormat.h"
-#include "Sounds/Normal/NormalSound.h"
+#include "Sounds/Static/StaticSound.h"
 #include "Sounds/Stream/StreamSound.h"
 #include "Platform/Resource/IResourceStream.h"
 
 SDLAudioBackend::~SDLAudioBackend()
 {
-	m_normalSound.reset();
+	m_staticSound.reset();
 	m_streamSound.reset();
 	SDL_Quit();
 }
 
 SDLAudioBackend::SDLAudioBackend() :
-	m_streamSound{ make_unique<StreamSound>() },
-	m_normalSound{ make_unique<NormalSound>() }
+	m_staticSound{ make_unique<StaticSound>() },
+	m_streamSound{ make_unique<StreamSound>() }
 {}
 
 bool SDLAudioBackend::Initialize() noexcept
@@ -24,15 +24,15 @@ bool SDLAudioBackend::Initialize() noexcept
 	if (isInit) return true;
 
 	ReturnIfFalse(SDL_Init(SDL_INIT_AUDIO));
-	ReturnIfFalse(m_normalSound->Initialize());
+	ReturnIfFalse(m_staticSound->Initialize());
 	ReturnIfFalse(m_streamSound->Initialize());
 
 	return true;
 }
 
-bool SDLAudioBackend::LoadPreload(string_view soundID, Core::ByteBuffer buffer, AudioGroupID groupID, float volume)
+bool SDLAudioBackend::LoadStatic(string_view soundID, Core::ByteBuffer buffer, AudioGroupID groupID, float volume)
 {
-	return m_normalSound->LoadSound(soundID, move(buffer), groupID, volume);
+	return m_staticSound->LoadSound(soundID, move(buffer), groupID, volume);
 }
 
 bool SDLAudioBackend::LoadStream(string_view soundID, unique_ptr<IResourceStream> stream, AudioGroupID groupID, float volume, bool loop)
@@ -42,7 +42,7 @@ bool SDLAudioBackend::LoadStream(string_view soundID, unique_ptr<IResourceStream
 
 bool SDLAudioBackend::Unload(string_view soundID) noexcept
 {
-	if(m_normalSound->Unload(soundID)) return true;
+	if(m_staticSound->Unload(soundID)) return true;
 	if (m_streamSound->Unload(soundID)) return true;
 
 	return false;
@@ -50,7 +50,7 @@ bool SDLAudioBackend::Unload(string_view soundID) noexcept
 
 bool SDLAudioBackend::Play(string_view soundID) noexcept
 {
-	if (m_normalSound->Play(soundID)) return true;
+	if (m_staticSound->Play(soundID)) return true;
 	if (m_streamSound->Play(soundID)) return true;
 
 	return false;
@@ -58,6 +58,7 @@ bool SDLAudioBackend::Play(string_view soundID) noexcept
 
 bool SDLAudioBackend::SetVolume(string_view soundID, float volume) noexcept
 {
+	if (m_staticSound->SetVolume(soundID, volume)) return true;
 	if (m_streamSound->SetVolume(soundID, volume)) return true;
 
 	return false;
@@ -65,7 +66,7 @@ bool SDLAudioBackend::SetVolume(string_view soundID, float volume) noexcept
 
 PlayState SDLAudioBackend::GetState(string_view soundID) const noexcept
 {
-	if (auto state = m_normalSound->GetState(soundID); state != PlayState::None) return state;
+	if (auto state = m_staticSound->GetState(soundID); state != PlayState::None) return state;
 	if (auto state = m_streamSound->GetState(soundID); state != PlayState::None) return state;
 
 	return PlayState::None;

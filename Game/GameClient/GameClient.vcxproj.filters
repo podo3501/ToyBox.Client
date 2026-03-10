@@ -187,9 +187,6 @@
   <ItemGroup>
     <ClInclude Include="GameLoop.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="Locator\AudioLocator.h">
-      <Filter>Locator</Filter>
-    </ClInclude>
     <ClInclude Include="Locator\InputLocator.h">
       <Filter>Locator</Filter>
     </ClInclude>

@@ -2,7 +2,7 @@
 
 enum class SoundLoadMode : int
 {
-	Preload,
+	Static,
 	Stream,
 	None
 };

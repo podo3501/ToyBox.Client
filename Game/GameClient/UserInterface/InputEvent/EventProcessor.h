@@ -9,12 +9,12 @@ class EventProcessor : private NoCopyNoMove
 {
 public:
 	~EventProcessor();
-	explicit EventProcessor(IAudioManager* audioManager);
+	//explicit EventProcessor(IAudioManager* audioManager);
+	EventProcessor();
 	InputResult ProcessHover(MouseEventReceiver* eventReceiver) noexcept;
 
 private:
 	bool PlaySound(InteractState interactState, MouseEventReceiver* eventReceiver);
 
-	IAudioManager* m_audioManager{ nullptr };
 	unique_ptr<SoundTheme> m_theme;
 };

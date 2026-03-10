@@ -2,11 +2,17 @@
 #include "EventProcessor.h"
 #include "SoundTheme.h"
 #include "MouseEventReceiver.h"
-#include "Device/Audio/IAudioManager.h"
+//#include "Device/Audio/IAudioManager.h"
 
 EventProcessor::~EventProcessor() = default;
-EventProcessor::EventProcessor(IAudioManager* audioManager) :
-	m_audioManager{ audioManager }
+//EventProcessor::EventProcessor(IAudioManager* audioManager) :
+//	m_audioManager{ audioManager }
+//{
+//	m_theme = make_unique<SoundTheme>();
+//	m_theme->SetSoundID(0, "UI_Hover_Default");
+//}
+
+EventProcessor::EventProcessor()
 {
 	m_theme = make_unique<SoundTheme>();
 	m_theme->SetSoundID(0, "UI_Hover_Default");
@@ -27,6 +33,6 @@ bool EventProcessor::PlaySound(InteractState interactState, MouseEventReceiver* 
 	auto soundID = m_theme->GetSoundID(it->second);
 	if (soundID.empty()) return false;
 
-	m_audioManager->Play(soundID);
+	//m_audioManager->Play(soundID);
 	return true;
 }
