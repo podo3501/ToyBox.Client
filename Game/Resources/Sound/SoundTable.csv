@@ -1,5 +1,6 @@
 Key,Filename,SoundLoadMode,Group,Volume
 TestWav_01,Sound/Wav/test1.wav,Static,SFX,1.0
+TestWav_01_Copy,Sound/Wav/test1.wav,Static,SFX,1.0
 TestWav_02,Sound/Wav/test2.wav,Static,SFX,1.0
 TestOgg_01,Sound/Ogg/mouseclick1.ogg,Static,BGM,1.0
 TestOgg_02,Sound/Ogg/hope_it_will.ogg,Stream,BGM,1.0

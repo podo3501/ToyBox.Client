@@ -6,6 +6,12 @@
             "Group": "SFX",
             "Volume": 1.0
         },
+        "TestWav_01_Copy": {
+            "Filename": "Sound/Wav/test1.wav",
+            "SoundLoadMode": "Static",
+            "Group": "SFX",
+            "Volume": 1.0
+        },
         "TestWav_02": {
             "Filename": "Sound/Wav/test2.wav",
             "SoundLoadMode": "Static",

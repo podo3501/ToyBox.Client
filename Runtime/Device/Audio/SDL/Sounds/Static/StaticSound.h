@@ -1,24 +1,41 @@
 #pragma once
+#include "StaticSoundInst.h"
 
 struct MIX_Mixer;
+class ISoundBuffer;
+class IStaticSoundBuffer;
+class StaticSoundBuffer;
 class StaticSoundInstance;
 enum class AudioGroupID;
 enum class PlayState;
+
+struct InstanceSlot
+{
+	bool active = false;
+	StaticSoundInst inst;
+};
+
 class StaticSound
 {
 public:
 	~StaticSound();
 	StaticSound();
 	bool Initialize();
-	bool LoadSound(string_view soundID, Core::ByteBuffer fileBuffer, AudioGroupID groupID, float volume);
-	bool Unload(string_view soundID) noexcept;
-	bool Play(string_view soundID) noexcept;
-	PlayState GetState(string_view soundID) const noexcept;
+	unique_ptr<IStaticSoundBuffer> CreateStaticSoundBuffer();
+	int CreateInstance(ISoundBuffer* sndBuffer, AudioGroupID groupID, float volume);
+	bool Unload(int handle) noexcept;
+	bool Play(int handle) noexcept;
+	bool Stop(int handle) noexcept;
+	PlayState GetState(int handle) const noexcept;
 	void SetVolume(AudioGroupID groupID, float volume) noexcept;
-	bool SetVolume(string_view soundID, float volume) noexcept;
+	bool SetVolume(int handle, float volume) noexcept;
 
 private:
-	unordered_map<string, unique_ptr<StaticSoundInstance>> m_instances;
-	bool m_init{ false };
+	const InstanceSlot* GetSlot(int handle) const noexcept;
+	InstanceSlot* GetSlot(int handle) noexcept;
+	const StaticSoundInst* GetInstance(int handle) const noexcept;
+	StaticSoundInst* GetInstance(int handle) noexcept;
+
+	vector<InstanceSlot> m_instances;
 	MIX_Mixer* m_mixer{ nullptr };
 };

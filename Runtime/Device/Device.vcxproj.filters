@@ -94,6 +94,15 @@
     <ClInclude Include="Audio\SDL\Sounds\Static\StaticSoundInstance.h">
       <Filter>Audio\SDL\Sounds\Static</Filter>
     </ClInclude>
+    <ClInclude Include="Audio\SDL\Sounds\Static\StaticSoundBuffer.h">
+      <Filter>Audio\SDL\Sounds\Static</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio\SDL\Sounds\Static\StaticSoundInst.h">
+      <Filter>Audio\SDL\Sounds\Static</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio\ISoundBuffer.h">
+      <Filter>Audio</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -134,6 +143,12 @@
       <Filter>Audio\SDL\Sounds\Static</Filter>
     </ClCompile>
     <ClCompile Include="Audio\SDL\Sounds\Static\StaticSoundInstance.cpp">
+      <Filter>Audio\SDL\Sounds\Static</Filter>
+    </ClCompile>
+    <ClCompile Include="Audio\SDL\Sounds\Static\StaticSoundBuffer.cpp">
+      <Filter>Audio\SDL\Sounds\Static</Filter>
+    </ClCompile>
+    <ClCompile Include="Audio\SDL\Sounds\Static\StaticSoundInst.cpp">
       <Filter>Audio\SDL\Sounds\Static</Filter>
     </ClCompile>
   </ItemGroup>

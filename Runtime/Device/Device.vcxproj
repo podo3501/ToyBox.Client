@@ -23,11 +23,14 @@
     <ClInclude Include="Audio\AudioTypeHelpers.h" />
     <ClInclude Include="Audio\AudioTypes.h" />
     <ClInclude Include="Audio\IAudioBackend.h" />
+    <ClInclude Include="Audio\ISoundBuffer.h" />
     <ClInclude Include="Audio\SDL\AudioFormat.h" />
     <ClInclude Include="Audio\SDL\SDLAudioBackend.h" />
     <ClInclude Include="Audio\SDL\Serializer\Format\Traits.h" />
     <ClInclude Include="Audio\SDL\Serializer\Serializer.h" />
     <ClInclude Include="Audio\SDL\Sounds\Static\StaticSound.h" />
+    <ClInclude Include="Audio\SDL\Sounds\Static\StaticSoundBuffer.h" />
+    <ClInclude Include="Audio\SDL\Sounds\Static\StaticSoundInst.h" />
     <ClInclude Include="Audio\SDL\Sounds\Static\StaticSoundInstance.h" />
     <ClInclude Include="Audio\SDL\Sounds\Stream\AudioDevice.h" />
     <ClInclude Include="Audio\SDL\Sounds\Stream\StreamSound.h" />
@@ -46,6 +49,8 @@
     <ClCompile Include="Audio\SDL\SDLAudioBackend.cpp" />
     <ClCompile Include="Audio\SDL\Serializer\Format\Traits.cpp" />
     <ClCompile Include="Audio\SDL\Sounds\Static\StaticSound.cpp" />
+    <ClCompile Include="Audio\SDL\Sounds\Static\StaticSoundBuffer.cpp" />
+    <ClCompile Include="Audio\SDL\Sounds\Static\StaticSoundInst.cpp" />
     <ClCompile Include="Audio\SDL\Sounds\Static\StaticSoundInstance.cpp" />
     <ClCompile Include="Audio\SDL\Sounds\Stream\AudioDevice.cpp" />
     <ClCompile Include="Audio\SDL\Sounds\Stream\StreamSound.cpp" />

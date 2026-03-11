@@ -4,6 +4,15 @@
 struct IAudioBackend;
 struct IResourceManager;
 struct GroupInfo;
+struct PlayingSound;
+class ISoundBuffer;
+
+struct LoadedSound
+{
+	const SoundInfo* info;
+	shared_ptr<ISoundBuffer> buffer;
+};
+
 class AudioService
 {
 public:
@@ -14,13 +23,19 @@ public:
 		IResourceManager* resManager) noexcept;
 
 	bool Load(string_view soundID);
+	int LoadSound(string_view soundID);
 	bool Unload(string_view soundID) noexcept;
+	bool Unload(int soundHandle) noexcept;
+	int Play(int soundHandle) noexcept;
 	bool Play(string_view soundID) noexcept;
+	//bool Play(int handle) noexcept;
 	void Update() noexcept;
 	PlayState GetState(string_view soundID) const noexcept;
+	PlayState GetState(int handle) const noexcept;
 	inline void SetMasterVolume(float volume) noexcept { m_masterVolume = volume; }
 	inline float GetMasterVolume() const noexcept { return m_masterVolume; }
 	bool SetVolume(string_view soundID, float volume) noexcept;
+	bool SetVolumE(int handle, float volume) noexcept;
 
 private:
 	void CreateAudioGroup() noexcept;
@@ -30,6 +45,10 @@ private:
 	SoundTable m_sndTable;
 	unique_ptr<IAudioBackend> m_audioBackend;
 	IResourceManager* m_resManager{ nullptr };
+	unordered_map<filesystem::path, weak_ptr<ISoundBuffer>> m_buffers;
+	unordered_map<int, LoadedSound> m_loadedSounds;
+	int m_nextSoundHandle{ 1 };
 	float m_masterVolume{ 1.0f };
 	unordered_map<AudioGroupID, unique_ptr<GroupInfo>> m_groupInfos;
+	unordered_map<int, PlayingSound> m_playingSounds;
 };
