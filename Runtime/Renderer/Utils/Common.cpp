@@ -17,36 +17,6 @@ std::wstring CException::ToString() const
     return FunctionName + L" failed in " + Filename + L"; line " + std::to_wstring(LineNumber) + L"; error: " + msg;
 }
 
-////////////////////////////////////////////////////////////////
-//CycleIterator
-
-CycleIterator::CycleIterator(int s, int e) : start(s), end(e), current(s)
-{
-    assert(s < e);
-}
-
-static int mod(int value, int range)
-{
-    return (value % range + range) % range;
-}
-
-int CycleIterator::GetCurrent() const noexcept
-{
-    return current;
-}
-
-int CycleIterator::Increase() noexcept
-{
-    current = start + mod(current + 1 - start, end - start);
-    return current;
-}
-
-int CycleIterator::Decrease() noexcept
-{
-    current = start + mod(current - 1 - start, end - start);
-    return current;
-}
-
 void MergeRectangles(vector<Rectangle>& rects) noexcept
 {
     if (rects.empty()) return;

@@ -1,20 +1,24 @@
 #pragma once
 #include "SDL3/SDL_properties.h"
+#include "Device/Audio/ISoundInstance.h"
 
 struct MIX_Mixer;
 struct MIX_Track;
 class StaticSoundBuffer;
 enum class AudioGroupID;
-class StaticSoundInst
+class StaticSoundInst : public ISoundInstance
 {
 public:
     ~StaticSoundInst();
     StaticSoundInst();
+    virtual bool Play() override;
+    virtual bool Reset(float volume) override;
+    virtual bool IsPlaying() const noexcept override;
+
     bool Setup(MIX_Mixer* mixer);
-    bool Reset(StaticSoundBuffer* buffer, AudioGroupID groupID, float volume);
-    void Play();
+    bool SetBuffer(StaticSoundBuffer* buffer);
+    bool Stop();
     bool SetVolume(float volume);
-    bool IsPlaying() const noexcept;
     AudioGroupID GetGroupID() const noexcept;
 
 private:

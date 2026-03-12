@@ -1,6 +1,6 @@
 #pragma once
 
-enum class SoundLoadMode : int
+enum class SoundType : int
 {
 	Static,
 	Stream,
@@ -18,8 +18,6 @@ enum class AudioGroupID : int
 
 enum class PlayState : int
 {
-	NotLoaded,
-	Stopped,
 	Playing,
 	None
 };

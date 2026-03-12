@@ -24,6 +24,7 @@
     <ClInclude Include="Audio\AudioTypes.h" />
     <ClInclude Include="Audio\IAudioBackend.h" />
     <ClInclude Include="Audio\ISoundBuffer.h" />
+    <ClInclude Include="Audio\ISoundInstance.h" />
     <ClInclude Include="Audio\SDL\AudioFormat.h" />
     <ClInclude Include="Audio\SDL\SDLAudioBackend.h" />
     <ClInclude Include="Audio\SDL\Serializer\Format\Traits.h" />

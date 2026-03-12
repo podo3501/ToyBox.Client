@@ -4,10 +4,10 @@
 #include <array>
 
 template<>
-constexpr size_t EnumSize<SoundLoadMode>() { return 3; }
+constexpr size_t EnumSize<SoundType>() { return 3; }
 
 template<>
-constexpr auto EnumToStringMap<SoundLoadMode>() -> std::array<const char*, EnumSize<SoundLoadMode>()> {
+constexpr auto EnumToStringMap<SoundType>() -> std::array<const char*, EnumSize<SoundType>()> {
 	return { {
 		{ "Static" },
 		{ "Stream" },

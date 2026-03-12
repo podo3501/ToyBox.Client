@@ -8,27 +8,40 @@
 
 StaticSound::~StaticSound()
 {
-	m_instances.clear();
+	m_voices.clear();
 	if (m_mixer) MIX_DestroyMixer(m_mixer);
 	MIX_Quit();
 }
 StaticSound::StaticSound() = default;
 
-bool StaticSound::Initialize()
+bool StaticSound::Initialize(int maxVoices)
 {
 	ReturnIfFalse(MIX_Init());
 	m_mixer = MIX_CreateMixerDevice(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, nullptr);
 	if (!m_mixer)
 		return false;
 
-	constexpr int MaxVoices = 64;
-	m_instances.resize(MaxVoices);
-
-	for (auto& slot : m_instances)
+	m_cycleIter.SetRange(0, maxVoices); //인덱스를 차례로 사용하게 하는 순환인덱스 생성.
+	m_voices.resize(maxVoices);
+	for (auto& voice : m_voices)
 	{
-		ReturnIfFalse(slot.inst.Setup(m_mixer));
-		slot.active = false;
+		ReturnIfFalse(voice.inst.Setup(m_mixer));
+		voice.active = false;
 	}
+
+	return true;
+}
+
+bool StaticSound::InitializE(int maxVoices)
+{
+	ReturnIfFalse(MIX_Init());
+	m_mixer = MIX_CreateMixerDevice(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, nullptr);
+	if (!m_mixer)
+		return false;
+
+	m_instances.resize(maxVoices);
+	for (auto& instance : m_instances)
+		ReturnIfFalse(instance.Setup(m_mixer));
 
 	return true;
 }
@@ -38,33 +51,45 @@ unique_ptr<IStaticSoundBuffer> StaticSound::CreateStaticSoundBuffer()
 	return make_unique<StaticSoundBuffer>(m_mixer);
 }
 
-int StaticSound::CreateInstance(ISoundBuffer* sndBuffer, AudioGroupID groupID, float volume)
+ISoundInstance* StaticSound::AcquireInstance(StaticSoundBuffer* buffer, int index) noexcept
 {
-	auto staticBuffer = static_cast<StaticSoundBuffer*>(sndBuffer);
-	for (size_t i = 0; i < m_instances.size(); ++i)
-	{
-		auto& slot = m_instances[i];
-		if (!slot.active)
-		{
-			if (!slot.inst.Reset(staticBuffer, groupID, volume))
-				return 0;
+	auto& instance = m_instances[index];
+	if(!instance.SetBuffer(buffer)) return nullptr;
 
-			slot.active = true;
-			return static_cast<int>(i + 1);
-		}
-	}
-
-	return 0; // 미리 생성했던 풀이 다 사용중이다.
+	return &instance;
 }
+
+//int StaticSound::CreateInstance(ISoundBuffer* sndBuffer, AudioGroupID groupID, float volume)
+//{
+//	auto staticBuffer = static_cast<StaticSoundBuffer*>(sndBuffer);
+//
+//	for (size_t checked : views::iota(0u, m_voices.size()))
+//	{
+//		int index = m_cycleIter.Increase();
+//		auto& voice = m_voices[index];
+//
+//		if (!voice.active)
+//		{
+//			if (!voice.inst.Reset(staticBuffer, groupID, volume))
+//				return 0;
+//
+//			voice.active = true;
+//			voice.generation++;
+//			return (index & 0xFFFF) | (voice.generation << 16); // 32비트 핸들 생성: 하위 16비트 = 슬롯 인덱스, 상위 16비트 = 세대
+//		}
+//	}
+//
+//	return 0; // 풀 전체 사용중
+//}
 
 void StaticSound::SetVolume(AudioGroupID groupID, float volume) noexcept
 {
-	for (auto& slot : m_instances)
+	for (auto& voice : m_voices)
 	{
-		if (!slot.active) continue;
-		if (slot.inst.GetGroupID() != groupID) continue;
+		if (!voice.active) continue;
+		if (voice.inst.GetGroupID() != groupID) continue;
 
-		slot.inst.SetVolume(volume);
+		voice.inst.SetVolume(volume);
 	}
 }
 
@@ -97,11 +122,11 @@ bool StaticSound::Play(int handle) noexcept
 
 bool StaticSound::Stop(int handle) noexcept
 {
-	auto slot = GetSlot(handle);
-	if (slot == nullptr) return false;
+	auto voice = GetVoice(handle);
+	if (voice == nullptr) return false;
 
-	//slot->inst.Stop();
-	slot->active = false;
+	ReturnIfFalse(voice->inst.Stop());
+	voice->active = false;
 
 	return true;
 }
@@ -111,33 +136,36 @@ PlayState StaticSound::GetState(int handle) const noexcept
 	auto instance = GetInstance(handle);
 	if (instance == nullptr) return PlayState::None;
 
-	return instance->IsPlaying() ? PlayState::Playing : PlayState::Stopped;
+	return instance->IsPlaying() ? PlayState::Playing : PlayState::None;
 }
 
-const InstanceSlot* StaticSound::GetSlot(int handle) const noexcept
+const VoicE* StaticSound::GetVoice(int handle) const noexcept
 {
 	if (handle <= 0) return nullptr;
 
-	size_t index = static_cast<size_t>(handle - 1);
-	if (index >= m_instances.size()) return nullptr;
+	// 핸들에서 슬롯 인덱스와 세대 추출
+	size_t index = static_cast<size_t>(handle & 0xFFFF);
+	uint16_t gen = static_cast<uint16_t>((handle >> 16) & 0xFFFF);
+	if (index >= m_voices.size()) return nullptr;
 
-	auto& curSlot = m_instances[index];
-	if (!curSlot.active) return nullptr;
+	const auto& voice = m_voices[index];
+	if (!voice.active || voice.generation != gen) // 슬롯이 비활성 상태거나 세대가 다르면 nullptr 반환
+		return nullptr;
 
-	return &curSlot;
+	return &voice;
 }
 
-InstanceSlot* StaticSound::GetSlot(int handle) noexcept
+VoicE* StaticSound::GetVoice(int handle) noexcept
 {
-	return const_cast<InstanceSlot*>(static_cast<const StaticSound*>(this)->GetSlot(handle));
+	return const_cast<VoicE*>(static_cast<const StaticSound*>(this)->GetVoice(handle));
 }
 
 const StaticSoundInst* StaticSound::GetInstance(int handle) const noexcept
 {
-	auto slot = GetSlot(handle);
-	if (slot == nullptr) return nullptr;
+	auto voice = GetVoice(handle);
+	if (voice == nullptr) return nullptr;
 
-	return &slot->inst;
+	return &voice->inst;
 }
 
 StaticSoundInst* StaticSound::GetInstance(int handle) noexcept

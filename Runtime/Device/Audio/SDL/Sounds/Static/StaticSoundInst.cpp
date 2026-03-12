@@ -26,21 +26,33 @@ bool StaticSoundInst::Setup(MIX_Mixer* mixer)
     return true;
 }
 
-bool StaticSoundInst::Reset(StaticSoundBuffer* buffer, AudioGroupID groupID, float volume)
+bool StaticSoundInst::SetBuffer(StaticSoundBuffer* buffer)
+{
+    return MIX_SetTrackAudio(m_track, buffer->GetAudio());
+}
+
+bool StaticSoundInst::Reset(float volume)
 {
     ReturnIfFalse(MIX_StopTrack(m_track, 0));
-    ReturnIfFalse(MIX_SetTrackAudio(m_track, buffer->GetAudio()));
     ReturnIfFalse(MIX_SetTrackPlaybackPosition(m_track, 0));
-
-    m_groupID = groupID;
-    SetVolume(volume);
+    ReturnIfFalse(SetVolume(volume));
 
     return true;
 }
 
-void StaticSoundInst::Play()
+bool StaticSoundInst::Play()
 {
-    MIX_PlayTrack(m_track, m_options);
+    return MIX_PlayTrack(m_track, m_options);
+}
+
+bool StaticSoundInst::Stop()
+{
+    if (!m_track) return false;
+
+    ReturnIfFalse(MIX_StopTrack(m_track, 0));
+    ReturnIfFalse(MIX_SetTrackPlaybackPosition(m_track, 0));
+
+    return true;
 }
 
 bool StaticSoundInst::SetVolume(float volume)

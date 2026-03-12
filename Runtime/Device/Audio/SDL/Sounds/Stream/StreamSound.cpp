@@ -74,7 +74,7 @@ PlayState StreamSound::GetState(string_view soundID) const noexcept
     auto it = m_instances.find(string(soundID));
     if (it == m_instances.end()) return PlayState::None;
 
-    return it->second->IsPlaying() ? PlayState::Playing : PlayState::Stopped;
+    return it->second->IsPlaying() ? PlayState::Playing : PlayState::None;
 }
 
 void StreamSound::Update() noexcept

@@ -5,7 +5,7 @@
 void SoundInfo::Serialize(Serializer& serializer)
 {
 	serializer.Process("Filename", filename);
-	serializer.Process("SoundLoadMode", loadMode);
+	serializer.Process("SoundType", sndType);
 	serializer.Process("Group", groupID);
 	serializer.Process("Volume", volume);
 }

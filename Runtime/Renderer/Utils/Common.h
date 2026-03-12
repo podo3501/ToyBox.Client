@@ -21,17 +21,4 @@ Ev(E enumerator) noexcept
     return static_cast<std::underlying_type_t<E>>(enumerator);
 }
 
-class CycleIterator 
-{
-public:
-    CycleIterator(int s, int e);
-
-    int Increase() noexcept;
-    int Decrease() noexcept;
-    int GetCurrent() const noexcept;
-
-private:
-    int current{}, start{}, end{};
-};
-
 void MergeRectangles(vector<Rectangle>& rects) noexcept;

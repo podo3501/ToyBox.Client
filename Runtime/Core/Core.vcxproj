@@ -28,6 +28,7 @@
     <ClInclude Include="Foundation\Types.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Service\Locator.h" />
+    <ClInclude Include="Utils\CycleIterator.h" />
     <ClInclude Include="Utils\EnumHelpers.h" />
     <ClInclude Include="Utils\Memory.h" />
     <ClInclude Include="Utils\StlExt.h" />
@@ -41,6 +42,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Utils\CycleIterator.cpp" />
     <ClCompile Include="Utils\EnumHelpers.cpp" />
     <ClCompile Include="Utils\StlExt.cpp" />
   </ItemGroup>

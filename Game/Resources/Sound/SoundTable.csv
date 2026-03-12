@@ -1,4 +1,4 @@
-Key,Filename,SoundLoadMode,Group,Volume
+Key,Filename,SoundType,Group,Volume
 TestWav_01,Sound/Wav/test1.wav,Static,SFX,1.0
 TestWav_01_Copy,Sound/Wav/test1.wav,Static,SFX,1.0
 TestWav_02,Sound/Wav/test2.wav,Static,SFX,1.0

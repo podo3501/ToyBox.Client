@@ -103,6 +103,9 @@
     <ClInclude Include="Audio\ISoundBuffer.h">
       <Filter>Audio</Filter>
     </ClInclude>
+    <ClInclude Include="Audio\ISoundInstance.h">
+      <Filter>Audio</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />

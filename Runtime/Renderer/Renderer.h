@@ -8,7 +8,6 @@ struct IImguiRenderer;
 struct IComponent;
 class TextureRepository;
 class TextureRenderTarget;
-class CycleIterator;
 
 namespace DX
 {
