@@ -10,7 +10,6 @@ public:
     StaticSoundBuffer() = delete;
     explicit StaticSoundBuffer(MIX_Mixer* mixer) noexcept;
     virtual bool LoadFromMemory(Core::ByteBuffer fileBuffer) override;
-    virtual BufferType GetType() const override { return BufferType::Static; }
     inline MIX_Audio* GetAudio() const noexcept { return m_audio; }
 
 private:

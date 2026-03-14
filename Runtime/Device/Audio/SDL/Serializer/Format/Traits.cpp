@@ -3,6 +3,8 @@
 #include "Audio/AudioTypeHelpers.h"
 #include "Platform/Serializer/Format/TraitsHelper.hpp"
 
+using namespace EnumUtil;
+
 nlohmann::json JsonTraitsBase<SoundType>::SerializeToJson(const SoundType& data) { return EnumToString(data); }
 SoundType JsonTraitsBase<SoundType>::DeserializeFromJson(const nlohmann::json& dataJ)
 {

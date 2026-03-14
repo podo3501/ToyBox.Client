@@ -1,74 +1,72 @@
 #include "pch.h"
 #include "SDLAudioBackend.h"
-#include "SDL3/SDL_init.h"
-#include "AudioFormat.h"
-#include "../ISoundBuffer.h"
-#include "../ISoundInstance.h"
-#include "Sounds/Static/StaticSound.h"
-#include "Sounds/Static/StaticSoundBuffer.h"
+#include "Static/StaticSoundBuffer.h"
 #include "Sounds/Stream/StreamSound.h"
 #include "Platform/Resource/IResourceStream.h"
+#include "SDL3_mixer/SDL_mixer.h"
 
 SDLAudioBackend::~SDLAudioBackend()
 {
-	m_staticSound.reset();
 	m_streamSound.reset();
+	if (m_mixer) MIX_DestroyMixer(m_mixer);
+	MIX_Quit();
 	SDL_Quit();
 }
 
 SDLAudioBackend::SDLAudioBackend() :
-	m_staticSound{ make_unique<StaticSound>() },
 	m_streamSound{ make_unique<StreamSound>() }
 {}
 
 bool SDLAudioBackend::Initialize(int maxVoices) noexcept
 {
-	bool isInit = SDL_WasInit(SDL_INIT_AUDIO) & SDL_INIT_AUDIO;
-	if (isInit) return true;
-
-	ReturnIfFalse(SDL_Init(SDL_INIT_AUDIO));
-	ReturnIfFalse(m_staticSound->Initialize(maxVoices));
+	ReturnIfFalse(SetupAudioDevice());
+	ReturnIfFalse(SetupStaticInstances(maxVoices));
 	ReturnIfFalse(m_streamSound->Initialize());
 
 	return true;
 }
 
-bool SDLAudioBackend::InitializE(int maxVoices) noexcept
+bool SDLAudioBackend::SetupAudioDevice() noexcept
 {
 	bool isInit = SDL_WasInit(SDL_INIT_AUDIO) & SDL_INIT_AUDIO;
 	if (isInit) return true;
 
 	ReturnIfFalse(SDL_Init(SDL_INIT_AUDIO));
-	ReturnIfFalse(m_staticSound->InitializE(maxVoices));
-	ReturnIfFalse(m_streamSound->Initialize());
+	ReturnIfFalse(MIX_Init());
+	m_mixer = MIX_CreateMixerDevice(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, nullptr);
+	if (!m_mixer) return false;
+	
+	return true;
+}
+
+bool SDLAudioBackend::SetupStaticInstances(int maxVoices) noexcept
+{
+	m_instances.resize(maxVoices);
+	for (auto& instance : m_instances)
+		ReturnIfFalse(instance.Setup(m_mixer));
 
 	return true;
 }
 
 unique_ptr<IStaticSoundBuffer> SDLAudioBackend::CreateStaticSoundBuffer()
 {
-	return m_staticSound->CreateStaticSoundBuffer();
+	return make_unique<StaticSoundBuffer>(m_mixer);
 }
 
-//int SDLAudioBackend::CreateInstance(ISoundBuffer* sndBuffer, AudioGroupID groupID, float volume)
-//{
-//	return m_staticSound->CreateInstance(sndBuffer, groupID, volume);
-//}
-//
-//ISoundInstance* SDLAudioBackend::CreateInstance(ISoundBuffer* sndBuffer, int index, float volume)
-//{
-//	if (sndBuffer->GetType() == ISoundBuffer::BufferType::Static) 
-//		return m_staticSound->CreateInstance(sndBuffer, index, volume);
-//
-//	return nullptr;
-//}
+unique_ptr<IStreamSoundBuffer> SDLAudioBackend::CreateStreamSoundBuffer()
+{
+	return m_streamSound->CreateStreamSoundBuffer();
+}
 
 ISoundInstance* SDLAudioBackend::AcquireInstance(ISoundBuffer* sndBuffer, int index)
 {
-	if (sndBuffer->GetType() == ISoundBuffer::BufferType::Static)
+	if (sndBuffer->GetType() == SoundType::Static)
 	{
 		auto staticBuffer = static_cast<StaticSoundBuffer*>(sndBuffer);
-		return m_staticSound->AcquireInstance(staticBuffer, index);
+		auto& instance = m_instances[index];
+		if (!instance.SetBuffer(staticBuffer)) return nullptr;
+
+		return &instance;
 	}
 
 	return nullptr;
@@ -77,71 +75,6 @@ ISoundInstance* SDLAudioBackend::AcquireInstance(ISoundBuffer* sndBuffer, int in
 bool SDLAudioBackend::LoadStream(string_view soundID, unique_ptr<IResourceStream> stream, AudioGroupID groupID, float volume, bool loop)
 {
 	return m_streamSound->LoadSound(soundID, move(stream), groupID, volume, loop);
-}
-
-bool SDLAudioBackend::Unload(string_view soundID) noexcept
-{
-	//if(m_staticSound->Unload(soundID)) return true;
-	if (m_streamSound->Unload(soundID)) return true;
-
-	return false;
-}
-
-bool SDLAudioBackend::Unload(int handle) noexcept
-{
-	if (m_staticSound->Unload(handle)) return true;
-
-	return false;
-}
-
-bool SDLAudioBackend::Play(string_view soundID) noexcept
-{
-	//if (m_staticSound->Play(soundID)) return true;
-	if (m_streamSound->Play(soundID)) return true;
-
-	return false;
-}
-
-bool SDLAudioBackend::Play(int handle) noexcept
-{
-	if (m_staticSound->Play(handle)) return true;
-
-	return false;
-}
-
-void SDLAudioBackend::Stop(int instanceHandle) noexcept
-{
-	if (m_staticSound->Stop(instanceHandle)) return;
-}
-
-bool SDLAudioBackend::SetVolume(string_view soundID, float volume) noexcept
-{
-	//if (m_staticSound->SetVolume(soundID, volume)) return true;
-	if (m_streamSound->SetVolume(soundID, volume)) return true;
-
-	return false;
-}
-
-bool SDLAudioBackend::SetVolume(int handle, float volume) noexcept
-{
-	if (m_staticSound->SetVolume(handle, volume)) return true;
-
-	return false;
-}
-
-PlayState SDLAudioBackend::GetState(string_view soundID) const noexcept
-{
-	//if (auto state = m_staticSound->GetState(soundID); state != PlayState::None) return state;
-	if (auto state = m_streamSound->GetState(soundID); state != PlayState::None) return state;
-
-	return PlayState::None;
-}
-
-PlayState SDLAudioBackend::GetState(int handle) const noexcept
-{
-	if (auto state = m_staticSound->GetState(handle); state != PlayState::None) return state;
-
-	return PlayState::None;
 }
 
 void SDLAudioBackend::Update() noexcept

@@ -2,6 +2,8 @@
 #include "KeyConverter.h"
 #include "../../UIComponent/UIType.h"
 
+using namespace EnumUtil;
+
 string KeyConverter<InteractState>::ToKey(const InteractState& state) { return EnumToString(state); }
 InteractState KeyConverter<InteractState>::FromKey(const string& key) { return *StringToEnum<InteractState>(key); }
 

@@ -1,20 +1,21 @@
 #pragma once
+#include "AudioTypes.h"
 
-class ISoundBuffer
+struct ISoundBuffer
 {
-public:
-    enum class BufferType
-    {
-        Static,
-        Stream
-    };
-
 	virtual ~ISoundBuffer() = default;
-    virtual BufferType GetType() const = 0;
+    virtual SoundType GetType() const = 0;
 };
 
-class IStaticSoundBuffer : public ISoundBuffer
+struct IStaticSoundBuffer : public ISoundBuffer
 {
-public:
     virtual bool LoadFromMemory(Core::ByteBuffer fileBuffer) = 0;
+    virtual SoundType GetType() const override { return SoundType::Static; }
+};
+
+struct IResourceStream;
+struct IStreamSoundBuffer : public ISoundBuffer
+{
+    virtual bool AttachStream(unique_ptr<IResourceStream> stream) = 0;
+    virtual SoundType GetType() const override { return SoundType::Stream; }
 };

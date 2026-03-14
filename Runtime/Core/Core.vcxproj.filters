@@ -55,6 +55,9 @@
     <ClInclude Include="Utils\CycleIterator.h">
       <Filter>Utils</Filter>
     </ClInclude>
+    <ClInclude Include="Utils\CommonUtils.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Utils\EnumHelpers.cpp">

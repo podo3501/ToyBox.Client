@@ -16,7 +16,7 @@ unique_ptr<UIComponent> NameTraverser::AttachComponent(UIComponent* parent,
 	{
 		bool success = ForEachChildWithRegion(child.get(), GetMyRegion(parent),
 			[nameGen](const string& region, UIComponent* component, bool isNewRegion) {
-				const string& name = component->GetName().empty() ? EnumToString<ComponentID>(component->GetTypeID()) : component->GetName();
+				const string& name = component->GetName().empty() ? EnumUtil::EnumToString<ComponentID>(component->GetTypeID()) : component->GetName();
 				auto namesOpt = nameGen->MakeNameOf(region, name, isNewRegion);
 				if (!namesOpt) return false;
 				const auto& [newRegion, newName] = *namesOpt;

@@ -3,11 +3,11 @@
 #include "../../UIComponent/UIType.h"
 #include "TraitsHelper.hpp"
 
-nlohmann::json JsonTraitsBase<Origin>::SerializeToJson(const Origin& data) { return EnumToString(data); }
+nlohmann::json JsonTraitsBase<Origin>::SerializeToJson(const Origin& data) { return EnumUtil::EnumToString(data); }
 Origin JsonTraitsBase<Origin>::DeserializeFromJson(const nlohmann::json& dataJ)
 {
 	return CreateAndFill<Origin>([&dataJ](Origin& data) {
-		data = *StringToEnum<Origin>(dataJ); });
+		data = *EnumUtil::StringToEnum<Origin>(dataJ); });
 }
 
 /////////////////////////////////////////////////////////////////

@@ -6,7 +6,7 @@
 
 void SerializeClass_Internal(nlohmann::json& j, UIComponent& data)
 {
-	j["Type"] = EnumToString<ComponentID>(data.GetTypeID());
+	j["Type"] = EnumUtil::EnumToString<ComponentID>(data.GetTypeID());
 	SerializeClass_GenerateJson(j, data);
 }
 

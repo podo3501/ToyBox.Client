@@ -4,14 +4,15 @@ struct IResourceManager;
 class Serializer;
 namespace Tool
 {
-	enum class ResolutionType : int
+	enum class ResolutionType
 	{
 		R2560x1440, 
 		R1920x1080,
 		R1600x900,
 		R1280x720,
 		R1024x768,
-		R800x600
+		R800x600,
+		Count
 	};
 
 	class Config

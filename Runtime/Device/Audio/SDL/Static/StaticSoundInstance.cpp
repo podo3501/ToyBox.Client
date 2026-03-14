@@ -1,21 +1,20 @@
 #include "pch.h"
-#include "StaticSoundInst.h"
+#include "StaticSoundInstance.h"
 #include "StaticSoundBuffer.h"
 #include "Audio/AudioTypes.h"
 #include "SDL3_mixer/SDL_mixer.h"
 
-StaticSoundInst::~StaticSoundInst()
+StaticSoundInstance::~StaticSoundInstance()
 {
     if (m_track) MIX_DestroyTrack(m_track);
 }
 
-StaticSoundInst::StaticSoundInst() :
+StaticSoundInstance::StaticSoundInstance() :
     m_buffer{ nullptr },
-    m_track{ nullptr },
-    m_groupID{ AudioGroupID::None }
+    m_track{ nullptr }
 {}
 
-bool StaticSoundInst::Setup(MIX_Mixer* mixer)
+bool StaticSoundInstance::Setup(MIX_Mixer* mixer)
 {
     m_track = MIX_CreateTrack(mixer);
     if (!m_track) return false;
@@ -26,12 +25,13 @@ bool StaticSoundInst::Setup(MIX_Mixer* mixer)
     return true;
 }
 
-bool StaticSoundInst::SetBuffer(StaticSoundBuffer* buffer)
+bool StaticSoundInstance::SetBuffer(StaticSoundBuffer* buffer)
 {
+    m_buffer = buffer;
     return MIX_SetTrackAudio(m_track, buffer->GetAudio());
 }
 
-bool StaticSoundInst::Reset(float volume)
+bool StaticSoundInstance::Reset(float volume)
 {
     ReturnIfFalse(MIX_StopTrack(m_track, 0));
     ReturnIfFalse(MIX_SetTrackPlaybackPosition(m_track, 0));
@@ -40,12 +40,17 @@ bool StaticSoundInst::Reset(float volume)
     return true;
 }
 
-bool StaticSoundInst::Play()
+bool StaticSoundInstance::Play()
 {
     return MIX_PlayTrack(m_track, m_options);
 }
 
-bool StaticSoundInst::Stop()
+bool StaticSoundInstance::Pause()
+{
+    return MIX_PauseTrack(m_track);
+}
+
+bool StaticSoundInstance::Stop()
 {
     if (!m_track) return false;
 
@@ -55,14 +60,14 @@ bool StaticSoundInst::Stop()
     return true;
 }
 
-bool StaticSoundInst::SetVolume(float volume)
+bool StaticSoundInstance::SetVolume(float volume)
 {
     return MIX_SetTrackGain(m_track, volume);
 }
 
-bool StaticSoundInst::IsPlaying() const noexcept
+bool StaticSoundInstance::IsPlaying() const noexcept
 {
     return MIX_TrackPlaying(m_track);
 }
 
-AudioGroupID StaticSoundInst::GetGroupID() const noexcept { return m_groupID; }
+ISoundBuffer* StaticSoundInstance::GetBuffer() noexcept { return m_buffer; }

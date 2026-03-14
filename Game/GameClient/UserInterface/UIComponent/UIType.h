@@ -1,7 +1,6 @@
 #pragma once
-#include "Core/Utils/EnumHelpers.h"
 
-enum class ComponentID : int
+enum class ComponentID
 {
 	Panel,
 	PatchTextureStd1,
@@ -19,63 +18,58 @@ enum class ComponentID : int
 	ScrollBar,
 	TextureSwitcher,
 	UIModuleAsComponent,
-	Unknown //부모 기본 UIComponent. 이게 문제가 되면 UICompnent가 혼자서 생성되었다는 건데, 생성자가 protected에서 public이 되었을 것이다. 아니면 enum에서 추가를 안시켰던지.
+	Unknown, //부모 기본 UIComponent. 이게 문제가 되면 UICompnent가 혼자서 생성되었다는 건데, 생성자가 protected에서 public이 되었을 것이다. 아니면 enum에서 추가를 안시켰던지.
+	Count
 };
 
 template<>
-constexpr size_t EnumSize<ComponentID>() { return 17; }
-
-template<>
-constexpr auto EnumToStringMap<ComponentID>() -> array<const char*, EnumSize<ComponentID>()> {
-	return { {
-		{ "Panel" },
-		{ "PatchTextureStd1" },
-		{ "PatchTextureStd3" },
-		{ "PatchTextureStd9" },
-		{ "PatchTextureLite1" },
-		{ "PatchTextureLite3" },
-		{ "PatchTextureLite9" },
-		{ "Button" },
-		{ "TextArea" },
-		{ "Dialog" },
-		{ "ListArea" },
-		{ "Container" },
-		{ "RenderTexture" },
-		{ "ScrollBar" },
-		{ "TextureSwitcher" },
-		{ "UIModuleAsComponent" },
-		{ "Unknown" }
-	} };
-}
+inline constexpr auto EnumUtil::EnumToStringMap<ComponentID> = std::array{
+	"Panel",
+	"PatchTextureStd1",
+	"PatchTextureStd3",
+	"PatchTextureStd9",
+	"PatchTextureLite1",
+	"PatchTextureLite3",
+	"PatchTextureLite9",
+	"Button",
+	"TextArea",
+	"Dialog",
+	"ListArea",
+	"Container",
+	"RenderTexture",
+	"ScrollBar",
+	"TextureSwitcher",
+	"UIModuleAsComponent",
+	"Unknown"
+};
+ASSERT_ENUM_COUNT(ComponentID);
 
 enum class TextureSlice : int
 {
 	One,
 	ThreeH, //Horizontal
 	ThreeV, //Vertical
-	Nine
+	Nine,
+	Count
 };
 
 ///////////////////////////////////////////////////////////////
 
-enum class Origin : int
+enum class Origin
 {
 	LeftTop,
 	RightTop,
 	Center,
+	Count
 };
 
 template<>
-constexpr size_t EnumSize<Origin>() { return 3; }
-
-template<>
-constexpr auto EnumToStringMap<Origin>() -> array<const char*, EnumSize<Origin>()> {
-	return { {
-		{ "LeftTop" },
-		{ "RightTop" },
-		{ "Center" }
-	} };
-}
+inline constexpr auto EnumUtil::EnumToStringMap<Origin > = std::array{
+	"LeftTop",
+	"RightTop",
+	"Center"
+};
+ASSERT_ENUM_COUNT(Origin);
 
 ///////////////////////////////////////////////////////////////
 
@@ -83,20 +77,17 @@ enum class InteractState : int //이미지같은 보여주는 상태 변화 InputState는 키의
 {
 	Normal,
 	Hovered,
-	Pressed
+	Pressed,
+	Count
 };
 
 template<>
-constexpr size_t EnumSize<InteractState>() { return 3; }
-
-template<>
-constexpr auto EnumToStringMap<InteractState>()->array<const char*, EnumSize<InteractState>()> {
-	return { {
-		{ "Normal" },
-		{ "Hovered" },
-		{ "Pressed" }
-	} };
-}
+inline constexpr auto EnumUtil::EnumToStringMap<InteractState> = std::array{
+	"Normal",
+	"Hovered",
+	"Pressed"
+};
+ASSERT_ENUM_COUNT(InteractState);
 
 ///////////////////////////////////////////////////////////////
 
@@ -106,6 +97,7 @@ enum class RenderTraversal
 	Inherited, //윗 노드가 사용한 방식을 따라서. 기본설정. 이 설정이면 BFS가 돌아간다.
 	BFS,
 	DFS,
+	Count
 };
 
 enum class TraverseResult : int
@@ -113,6 +105,7 @@ enum class TraverseResult : int
 	Continue, //계속 탐색한다.
 	Stop, //탐색을 중단하고 싶을때.
 	ChildrenSkip, //자식만 스킵 다른 노드들은 돌아간다.
+	Count
 };
 
 //bit enum을 템플릿화 해서 다른 bit enum들도 동일하게 함수를 사용하게끔 한다.
@@ -177,7 +170,8 @@ namespace StateFlag
 enum class DirectionType
 {
 	Horizontal,
-	Vertical
+	Vertical,
+	Count
 };
 
 TextureSlice DirTypeToTextureSlice(DirectionType dirType) noexcept;

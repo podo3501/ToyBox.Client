@@ -2,21 +2,14 @@
 #include "Dialog.h"
 #include <shobjidl.h>
 #include <wrl/wrappers/corewrappers.h>
-#include "Core/Utils/EnumHelpers.h"
 #include "Platform/Framework/EnvironmentLocator.h"
 
 template<>
-constexpr size_t EnumSize<DialogType>() { return 4; }
-
-template<>
-constexpr auto EnumToStringMap<DialogType>()->array<const char*, EnumSize<DialogType>()> {
-    return { {
-        { "Init" },
-        { "Alert" },
-        { "Message" },
-        { "Error" },
-    } };
-}
+inline constexpr auto EnumUtil::EnumToStringMap<DialogType> = std::array{
+    "Alert",
+    "Message",
+    "Error"
+};
 
 using namespace Tool;
 using Microsoft::WRL::ComPtr;
@@ -26,7 +19,7 @@ inline bool IsSuccess(HRESULT hr)
     return SUCCEEDED(hr);
 }
 
-DialogType Tool::Dialog::m_dialogType{ DialogType::Init };
+DialogType Tool::Dialog::m_dialogType{ EnumUtil::Invalid<DialogType> };
 string Tool::Dialog::m_msg{};
 
 bool Dialog::ShowFileDialog(wstring& filename, FileDialogType type)
@@ -97,12 +90,15 @@ void Dialog::ShowInfoDialog(const DialogType dialogType, const string& msg) noex
 
 void Dialog::Render() noexcept
 {
-    const string& strDiagType = EnumToString(m_dialogType);
-    if (m_dialogType != DialogType::Init)
-        ImGui::OpenPopup(strDiagType.c_str());
+    string strDialogType = "Init";
+    if (m_dialogType != EnumUtil::Invalid<DialogType>)
+    {
+        strDialogType = EnumUtil::EnumToString(m_dialogType);
+        ImGui::OpenPopup(strDialogType.c_str());
+    }
 
     // 다이얼로그 정의
-    if (!ImGui::BeginPopupModal(strDiagType.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+    if (!ImGui::BeginPopupModal(strDialogType.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
         return;
     
     ImGui::Text(m_msg.c_str());
@@ -114,7 +110,7 @@ void Dialog::Render() noexcept
 
     if (ImGui::Button("OK", buttonSize))
     {
-        m_dialogType = DialogType::Init;
+        m_dialogType = EnumUtil::Invalid<DialogType>;
         ImGui::CloseCurrentPopup();
     }
 

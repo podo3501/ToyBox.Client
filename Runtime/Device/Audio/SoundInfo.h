@@ -7,7 +7,7 @@ struct SoundInfo
 	void Serialize(Serializer& serializer);
 
 	filesystem::path filename{};
-	SoundType sndType{ SoundType::None };
-	AudioGroupID groupID{ AudioGroupID::None };
+	SoundType sndType{ EnumUtil::Invalid<SoundType> };
+	AudioGroupID groupID{ EnumUtil::Invalid<AudioGroupID> };
 	float volume{ 0.f };
 };

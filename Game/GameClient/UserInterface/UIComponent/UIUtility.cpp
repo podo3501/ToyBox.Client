@@ -290,7 +290,7 @@ bool GetSizeDividedByNine(const SourceDivider& srcDivider, vector<int>& outWidth
 map<InteractState, string> GetStateKeyMap(const string& prefix) noexcept
 {
 	return {
-		{ InteractState::Normal, prefix + "_" + EnumToString(InteractState::Normal) },
-		{ InteractState::Hovered, prefix + "_" + EnumToString(InteractState::Hovered) },
-		{ InteractState::Pressed, prefix + "_" + EnumToString(InteractState::Pressed) } };
+		{ InteractState::Normal, prefix + "_" + EnumUtil::EnumToString(InteractState::Normal) },
+		{ InteractState::Hovered, prefix + "_" + EnumUtil::EnumToString(InteractState::Hovered) },
+		{ InteractState::Pressed, prefix + "_" + EnumUtil::EnumToString(InteractState::Pressed) } };
 }

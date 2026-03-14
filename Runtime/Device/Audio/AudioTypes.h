@@ -4,7 +4,7 @@ enum class SoundType : int
 {
 	Static,
 	Stream,
-	None
+	Count
 };
 
 enum class AudioGroupID : int
@@ -13,11 +13,12 @@ enum class AudioGroupID : int
 	SFX,
 	UI,
 	System,
-	None
+	Count
 };
 
 enum class PlayState : int
 {
 	Playing,
-	None
+	Paused,
+	Count
 };

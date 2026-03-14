@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "StreamSound.h"
+#include "StreamSoundBuffer.h"
 #include "StreamSoundInstance.h"
 #include "AudioDevice.h"
 #include "Device/Audio/AudioTypes.h"
@@ -21,6 +22,12 @@ bool StreamSound::Initialize()
 
     return true;
 }
+
+unique_ptr<IStreamSoundBuffer> StreamSound::CreateStreamSoundBuffer()
+{
+    return make_unique<StreamSoundBuffer>();
+}
+
 
 bool StreamSound::LoadSound(string_view soundID, unique_ptr<IResourceStream> stream, AudioGroupID groupID, float volume, bool loop)
 {
@@ -72,9 +79,9 @@ bool StreamSound::Play(string_view soundID) noexcept
 PlayState StreamSound::GetState(string_view soundID) const noexcept
 {
     auto it = m_instances.find(string(soundID));
-    if (it == m_instances.end()) return PlayState::None;
+    if (it == m_instances.end()) return EnumUtil::Invalid<PlayState>;
 
-    return it->second->IsPlaying() ? PlayState::Playing : PlayState::None;
+    return it->second->IsPlaying() ? PlayState::Playing : EnumUtil::Invalid<PlayState>;
 }
 
 void StreamSound::Update() noexcept

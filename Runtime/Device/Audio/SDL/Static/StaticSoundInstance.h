@@ -6,24 +6,25 @@ struct MIX_Mixer;
 struct MIX_Track;
 class StaticSoundBuffer;
 enum class AudioGroupID;
-class StaticSoundInst : public ISoundInstance
+class StaticSoundInstance : public ISoundInstance
 {
 public:
-    ~StaticSoundInst();
-    StaticSoundInst();
-    virtual bool Play() override;
+    ~StaticSoundInstance();
+    StaticSoundInstance();
     virtual bool Reset(float volume) override;
+    virtual bool Play() override;
+    virtual bool Pause() override;
+    virtual bool Stop() override;
+    virtual bool SetVolume(float volume) override;
     virtual bool IsPlaying() const noexcept override;
+    virtual ISoundBuffer* GetBuffer() noexcept override;
 
     bool Setup(MIX_Mixer* mixer);
     bool SetBuffer(StaticSoundBuffer* buffer);
-    bool Stop();
-    bool SetVolume(float volume);
     AudioGroupID GetGroupID() const noexcept;
 
 private:
     StaticSoundBuffer* m_buffer;
     MIX_Track* m_track;
-    AudioGroupID m_groupID;
     SDL_PropertiesID m_options{};
 };

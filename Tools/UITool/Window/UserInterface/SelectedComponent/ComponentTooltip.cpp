@@ -35,7 +35,7 @@ void ComponentTooltip::Render(const ImGuiWindow* window)
 	for (int idx{ 0 }; UIComponent * curComponent : componentList)
 	{
 		// 툴팁 위치와 크기 계산
-		const std::string& tooltipContext = EnumToString(curComponent->GetTypeID());
+		const std::string& tooltipContext = EnumUtil::EnumToString(curComponent->GetTypeID());
 		const ImVec2& tooltipPos = ImVec2(mousePos.x + tooltipOffsetX, mousePos.y + tooltipOffsetY);
 		const ImVec2& textSize = ImGui::CalcTextSize(tooltipContext.c_str());
 		const ImVec2& tooltipSize = ImVec2(textSize.x + padding.x * 2, textSize.y + padding.y * 2);

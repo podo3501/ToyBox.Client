@@ -31,8 +31,8 @@
     <Filter Include="Audio\SDL\Sounds\Stream">
       <UniqueIdentifier>{bedc0675-d4c2-40b8-afae-5306ec2242eb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Audio\SDL\Sounds\Static">
-      <UniqueIdentifier>{14a155ce-5261-487e-8c5b-0e94873c1ad7}</UniqueIdentifier>
+    <Filter Include="Audio\SDL\Static">
+      <UniqueIdentifier>{6f98a661-4367-4c0c-af70-d71eaedf0cb1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -88,23 +88,20 @@
     <ClInclude Include="Audio\SDL\Sounds\Stream\AudioDevice.h">
       <Filter>Audio\SDL\Sounds\Stream</Filter>
     </ClInclude>
-    <ClInclude Include="Audio\SDL\Sounds\Static\StaticSound.h">
-      <Filter>Audio\SDL\Sounds\Static</Filter>
-    </ClInclude>
-    <ClInclude Include="Audio\SDL\Sounds\Static\StaticSoundInstance.h">
-      <Filter>Audio\SDL\Sounds\Static</Filter>
-    </ClInclude>
-    <ClInclude Include="Audio\SDL\Sounds\Static\StaticSoundBuffer.h">
-      <Filter>Audio\SDL\Sounds\Static</Filter>
-    </ClInclude>
-    <ClInclude Include="Audio\SDL\Sounds\Static\StaticSoundInst.h">
-      <Filter>Audio\SDL\Sounds\Static</Filter>
-    </ClInclude>
     <ClInclude Include="Audio\ISoundBuffer.h">
       <Filter>Audio</Filter>
     </ClInclude>
     <ClInclude Include="Audio\ISoundInstance.h">
       <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio\SDL\Sounds\Stream\StreamSoundBuffer.h">
+      <Filter>Audio\SDL\Sounds\Stream</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio\SDL\Static\StaticSoundBuffer.h">
+      <Filter>Audio\SDL\Static</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio\SDL\Static\StaticSoundInstance.h">
+      <Filter>Audio\SDL\Static</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -142,17 +139,14 @@
     <ClCompile Include="Audio\SDL\Sounds\Stream\AudioDevice.cpp">
       <Filter>Audio\SDL\Sounds\Stream</Filter>
     </ClCompile>
-    <ClCompile Include="Audio\SDL\Sounds\Static\StaticSound.cpp">
-      <Filter>Audio\SDL\Sounds\Static</Filter>
+    <ClCompile Include="Audio\SDL\Sounds\Stream\StreamSoundBuffer.cpp">
+      <Filter>Audio\SDL\Sounds\Stream</Filter>
     </ClCompile>
-    <ClCompile Include="Audio\SDL\Sounds\Static\StaticSoundInstance.cpp">
-      <Filter>Audio\SDL\Sounds\Static</Filter>
+    <ClCompile Include="Audio\SDL\Static\StaticSoundBuffer.cpp">
+      <Filter>Audio\SDL\Static</Filter>
     </ClCompile>
-    <ClCompile Include="Audio\SDL\Sounds\Static\StaticSoundBuffer.cpp">
-      <Filter>Audio\SDL\Sounds\Static</Filter>
-    </ClCompile>
-    <ClCompile Include="Audio\SDL\Sounds\Static\StaticSoundInst.cpp">
-      <Filter>Audio\SDL\Sounds\Static</Filter>
+    <ClCompile Include="Audio\SDL\Static\StaticSoundInstance.cpp">
+      <Filter>Audio\SDL\Static</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

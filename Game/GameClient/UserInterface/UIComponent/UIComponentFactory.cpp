@@ -18,6 +18,7 @@
 #include "Components/UIModuleAsComponent.h"
 #include <iterator>
 
+using namespace EnumUtil;
 using FactoryFunc = unique_ptr<UIComponent>(*)();   //constexpr을 쓰기 때문에 function(동적할당)을 쓸 수없다.
 constexpr FactoryFunc ComponentFactory[] = //enum의 값과 일치가 되어야 한다. 아니면 if로 해야 한다.
 {

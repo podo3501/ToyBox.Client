@@ -29,7 +29,7 @@ StreamSoundInstance::~StreamSoundInstance()
         ov_clear(&m_vorbisFile);
 }
 StreamSoundInstance::StreamSoundInstance()
-    : m_groupID{ AudioGroupID::None }
+    : m_groupID{ EnumUtil::Invalid<AudioGroupID> }
 {
     memset(&m_vorbisFile, 0, sizeof(OggVorbis_File));
 }

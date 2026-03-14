@@ -69,7 +69,7 @@ static string GetComponentName(const string& name)
     if (name.empty()) return "";
 
     auto [curName, id] = ExtractNameAndId(name);
-    if (!IsValidEnumString<ComponentID>(curName))
+    if (!EnumUtil::IsValidEnumString<ComponentID>(curName))
         return "";
     
     return curName;

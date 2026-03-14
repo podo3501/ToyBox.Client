@@ -3,15 +3,16 @@
 enum class FileDialogType
 {
 	Open,  // 파일 열기
-	Save   // 파일 저장
+	Save,   // 파일 저장
+	Count
 };
 
 enum class DialogType
 {
-	Init,
 	Alert,
 	Message,
-	Error
+	Error,
+	Count
 };
 
 namespace Tool
@@ -22,7 +23,7 @@ namespace Tool
 		static bool ShowFileDialog(wstring& filename, FileDialogType type);
 		static void ShowInfoDialog(const DialogType dialogType, const string& m_msg) noexcept;
 		static void Render() noexcept;
-		inline static bool IsOpenDialog() noexcept { return m_dialogType != DialogType::Init; }
+		inline static bool IsOpenDialog() noexcept { return m_dialogType != EnumUtil::Invalid<DialogType>; }
 
 	private:
 		static DialogType m_dialogType;

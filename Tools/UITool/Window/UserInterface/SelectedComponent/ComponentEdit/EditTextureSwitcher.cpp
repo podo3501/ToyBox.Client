@@ -5,6 +5,8 @@
 #include "GameClient/UserInterface/CommandHistory/UserInterface/UICommandHistory.h"
 #include "Window/Utils/EditUtility.h"
 
+using namespace EnumUtil;
+
 EditTextureSwitcher::~EditTextureSwitcher() = default;
 EditTextureSwitcher::EditTextureSwitcher(TextureSwitcher* texSwitcher, UICommandHistory* cmdHistory, TextureResourceBinder* resBinder) noexcept :
 	EditWindow{ texSwitcher, cmdHistory },
