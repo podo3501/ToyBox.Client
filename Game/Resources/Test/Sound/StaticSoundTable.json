@@ -2,37 +2,21 @@
     "Infos": {
         "TestWav_01": {
             "Filename": "Sound/Wav/test1.wav",
-            "SoundType": "Static",
             "Group": "SFX",
             "Volume": 1.0
         },
         "TestWav_01_Copy": {
             "Filename": "Sound/Wav/test1.wav",
-            "SoundType": "Static",
             "Group": "SFX",
             "Volume": 1.0
         },
         "TestWav_02": {
             "Filename": "Sound/Wav/test2.wav",
-            "SoundType": "Static",
             "Group": "SFX",
             "Volume": 1.0
         },
         "TestOgg_01": {
             "Filename": "Sound/Ogg/mouseclick1.ogg",
-            "SoundType": "Static",
-            "Group": "BGM",
-            "Volume": 1.0
-        },
-        "TestOgg_02": {
-            "Filename": "Sound/Ogg/hope_it_will.ogg",
-            "SoundType": "Stream",
-            "Group": "BGM",
-            "Volume": 1.0
-        },
-        "TestOgg_03": {
-            "Filename": "Sound/Ogg/future_tribal.ogg",
-            "SoundType": "Stream",
             "Group": "BGM",
             "Volume": 1.0
         }

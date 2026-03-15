@@ -1,0 +1,22 @@
+{
+    "Infos": {
+        "TestOgg_01": {
+            "Filename": "Sound/Ogg/hope_it_will.ogg",
+            "Group": "BGM",
+            "Volume": 1.0,
+            "Loop": true
+        },
+        "TestOgg_02": {
+            "Filename": "Sound/Ogg/future_tribal.ogg",
+            "Group": "BGM",
+            "Volume": 1.0,
+            "Loop": false
+        },
+        "TestOgg_03": {
+            "Filename": "Sound/Ogg/909beat01.ogg",
+            "Group": "BGM",
+            "Volume": 1.0,
+            "Loop": false
+        }
+    }
+}

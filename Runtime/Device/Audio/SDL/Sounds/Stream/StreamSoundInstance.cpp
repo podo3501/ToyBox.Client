@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "StreamSoundInstance.h"
+#include "StreamSoundBuffer.h"
 #include "AudioDevice.h"
 #include "VorbisStreamCallbacks.h"
 #include "Platform/Resource/IResourceStream.h"
@@ -28,53 +29,83 @@ StreamSoundInstance::~StreamSoundInstance()
     if (m_vorbisOpened)
         ov_clear(&m_vorbisFile);
 }
-StreamSoundInstance::StreamSoundInstance()
-    : m_groupID{ EnumUtil::Invalid<AudioGroupID> }
+StreamSoundInstance::StreamSoundInstance() = default;
+
+bool StreamSoundInstance::Setup(AudioDevice* device)
 {
+    m_device = device;
     memset(&m_vorbisFile, 0, sizeof(OggVorbis_File));
+    return true;
 }
 
-bool StreamSoundInstance::Load(AudioDevice* device,
-    unique_ptr<IResourceStream> fileStream, AudioGroupID groupID, float volume, bool loop)
+bool StreamSoundInstance::PrepareStream(StreamSoundBuffer* buffer)
 {
-    m_fileStream = move(fileStream);
-    m_loop = loop;
-    m_groupID = groupID;
-
     auto cb = Vorbis::CreateCallbacks();
-    int result = ov_open_callbacks(m_fileStream.get(), &m_vorbisFile, nullptr, 0, cb);
+    int result = ov_open_callbacks(buffer->GetStream(), &m_vorbisFile, nullptr, 0, cb);
     if (result < 0) return false;
     m_vorbisOpened = true;
 
     SDL_AudioSpec srcSpec = VorbisToSDLAudioSpec(m_vorbisFile);
-    m_stream = device->CreateStream(srcSpec);
+    m_stream = m_device->CreateStream(srcSpec);
     if (!m_stream) return false;
 
-    ReturnIfFalse(SDL_BindAudioStream(device->GetDevice(), m_stream));
-    ReturnIfFalse(SetVolume(volume));
+    return SDL_BindAudioStream(m_device->GetDevice(), m_stream);
+}
+
+bool StreamSoundInstance::Reset(const PlaybackParams& params)
+{
+    ov_pcm_seek(&m_vorbisFile, 0);
+    SDL_ClearAudioStream(m_stream);
+    ReturnIfFalse(SetVolume(params.volume));
+    m_loop = params.loop;
 
     return true;
 }
 
-void StreamSoundInstance::Play()
+bool StreamSoundInstance::Play()
 {
-    if (!m_stream) return;
+    if (!m_stream) return false;
 
     m_finished = false;
     constexpr int INITIAL_FILL = 4;
     for (int i = 0; i < INITIAL_FILL; ++i)
-        if(!PushChunk()) return;
+        if(!PushChunk()) return false;
 
-    SDL_ResumeAudioStreamDevice(m_stream);
+    return SDL_ResumeAudioStreamDevice(m_stream);
 }
 
-void StreamSoundInstance::Stop()
+bool StreamSoundInstance::Stop()
 {
     if (!m_stream)
+        return false;
+
+    ReturnIfFalse(SDL_ClearAudioStream(m_stream));
+    m_finished = true;
+
+    return true;
+}
+
+void StreamSoundInstance::Update()
+{
+    if (!m_stream || m_finished)
         return;
 
-    SDL_ClearAudioStream(m_stream);
-    m_finished = true;
+    constexpr int LOW_WATERMARK = 128 * 1024;
+    while (SDL_GetAudioStreamQueued(m_stream) < LOW_WATERMARK)
+        if (!PushChunk()) break;
+}
+
+bool StreamSoundInstance::SetVolume(float volume)
+{
+    return SDL_SetAudioStreamGain(m_stream, volume);
+}
+
+PlaybackState StreamSoundInstance::GetState() const noexcept 
+{ 
+    if (!m_stream) return EnumUtil::Invalid<PlaybackState>;
+    if (!m_finished || SDL_GetAudioStreamQueued(m_stream) > 0) return PlaybackState::Playing;
+
+    return PlaybackState::Stopped;
 }
 
 bool StreamSoundInstance::PushChunk()
@@ -112,27 +143,3 @@ bool StreamSoundInstance::PushChunk()
     SDL_FlushAudioStream(m_stream);
     return false;
 }
-
-bool StreamSoundInstance::IsPlaying() const noexcept
-{
-    if (!m_stream) return false;
-    if (!m_finished) return true;
-    return SDL_GetAudioStreamQueued(m_stream) > 0;
-}
-
-bool StreamSoundInstance::SetVolume(float volume)
-{
-    return SDL_SetAudioStreamGain(m_stream, volume);
-}
-
-void StreamSoundInstance::Update() noexcept
-{
-    if (!m_stream || m_finished)
-        return;
-
-    constexpr int LOW_WATERMARK = 128 * 1024;
-    while (SDL_GetAudioStreamQueued(m_stream) < LOW_WATERMARK)
-        if (!PushChunk()) break;
-}
-
-AudioGroupID StreamSoundInstance::GetGroupID() const noexcept { return m_groupID; }

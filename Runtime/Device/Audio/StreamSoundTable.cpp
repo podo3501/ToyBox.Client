@@ -1,8 +1,8 @@
 #include "pch.h"
-#include "SoundTable.h"
+#include "StreamSoundTable.h"
 #include "Device/Storage/JsonObjectIO.h"
 
-const SoundInfo* SoundTable::GetInfo(string_view index) const noexcept
+const StreamSoundInfo* StreamSoundTable::GetInfo(string_view index) const noexcept
 {
 	auto it = m_infos.find(string(index));
 	if (it == m_infos.end()) return nullptr;
@@ -10,7 +10,7 @@ const SoundInfo* SoundTable::GetInfo(string_view index) const noexcept
 	return &(it->second);
 }
 
-void SoundTable::Serialize(Serializer& serializer)
+void StreamSoundTable::Serialize(Serializer& serializer)
 {
 	serializer.Process("Infos", m_infos);
 }

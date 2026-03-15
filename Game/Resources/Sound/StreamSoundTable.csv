@@ -1,0 +1,4 @@
+Key,Filename,Group,Volume,Loop
+TestOgg_01,Sound/Ogg/hope_it_will.ogg,BGM,1.0,TRUE
+TestOgg_02,Sound/Ogg/future_tribal.ogg,BGM,1.0,FALSE
+TestOgg_03,Sound/Ogg/909beat01.ogg,BGM,1.0,FALSE

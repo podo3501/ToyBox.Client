@@ -16,9 +16,10 @@ enum class AudioGroupID : int
 	Count
 };
 
-enum class PlayState : int
+enum class PlaybackState : int
 {
 	Playing,
 	Paused,
+	Stopped,
 	Count
 };

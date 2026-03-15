@@ -1,18 +1,15 @@
 #include "pch.h"
 #include "StaticSoundInstance.h"
 #include "StaticSoundBuffer.h"
-#include "Audio/AudioTypes.h"
 #include "SDL3_mixer/SDL_mixer.h"
+
+using enum PlaybackState;
 
 StaticSoundInstance::~StaticSoundInstance()
 {
     if (m_track) MIX_DestroyTrack(m_track);
 }
-
-StaticSoundInstance::StaticSoundInstance() :
-    m_buffer{ nullptr },
-    m_track{ nullptr }
-{}
+StaticSoundInstance::StaticSoundInstance() = default;
 
 bool StaticSoundInstance::Setup(MIX_Mixer* mixer)
 {
@@ -27,15 +24,14 @@ bool StaticSoundInstance::Setup(MIX_Mixer* mixer)
 
 bool StaticSoundInstance::SetBuffer(StaticSoundBuffer* buffer)
 {
-    m_buffer = buffer;
     return MIX_SetTrackAudio(m_track, buffer->GetAudio());
 }
 
-bool StaticSoundInstance::Reset(float volume)
+bool StaticSoundInstance::Reset(const PlaybackParams& params)
 {
     ReturnIfFalse(MIX_StopTrack(m_track, 0));
     ReturnIfFalse(MIX_SetTrackPlaybackPosition(m_track, 0));
-    ReturnIfFalse(SetVolume(volume));
+    ReturnIfFalse(SetVolume(params.volume));
 
     return true;
 }
@@ -50,24 +46,32 @@ bool StaticSoundInstance::Pause()
     return MIX_PauseTrack(m_track);
 }
 
+bool StaticSoundInstance::Resume()
+{
+    return MIX_ResumeTrack(m_track);
+}
+
 bool StaticSoundInstance::Stop()
 {
-    if (!m_track) return false;
-
     ReturnIfFalse(MIX_StopTrack(m_track, 0));
     ReturnIfFalse(MIX_SetTrackPlaybackPosition(m_track, 0));
 
     return true;
 }
 
+void StaticSoundInstance::Update()
+{}
+
 bool StaticSoundInstance::SetVolume(float volume)
 {
     return MIX_SetTrackGain(m_track, volume);
 }
 
-bool StaticSoundInstance::IsPlaying() const noexcept
+PlaybackState StaticSoundInstance::GetState() const noexcept
 {
-    return MIX_TrackPlaying(m_track);
-}
+    if (m_track == nullptr) return EnumUtil::Invalid<PlaybackState>;
+    if (MIX_TrackPlaying(m_track)) return PlaybackState::Playing;
+    if (MIX_TrackPaused(m_track)) return PlaybackState::Paused;
 
-ISoundBuffer* StaticSoundInstance::GetBuffer() noexcept { return m_buffer; }
+    return PlaybackState::Stopped;
+}

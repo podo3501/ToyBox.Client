@@ -10,10 +10,10 @@ struct ISoundBuffer;
 struct IAudioBackend
 {
 	virtual ~IAudioBackend() = default;
-	virtual bool Initialize(int maxVoices) noexcept = 0;
+	virtual bool Initialize(int maxVoices, int maxStreams) noexcept = 0;
 	virtual unique_ptr<IStaticSoundBuffer> CreateStaticSoundBuffer() = 0;
 	virtual unique_ptr<IStreamSoundBuffer> CreateStreamSoundBuffer() = 0;
-	virtual ISoundInstance* AcquireInstance(ISoundBuffer* sndBuffer, int index) = 0;
+	virtual ISoundInstance* AcquireInstance(SoundType type, ISoundBuffer* sndBuffer, int index) = 0;
 	//virtual int LoadStatic(string_view soundID, Core::ByteBuffer buffer, AudioGroupID groupID, float volume) = 0;
 	virtual bool LoadStream(string_view soundID, unique_ptr<IResourceStream> stream, AudioGroupID groupID, float volume, bool loop) = 0;
 	//virtual bool Unload(string_view soundID) noexcept = 0;

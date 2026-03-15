@@ -38,6 +38,10 @@
     <ClInclude Include="Audio\SDL\Static\StaticSoundInstance.h" />
     <ClInclude Include="Audio\SoundInfo.h" />
     <ClInclude Include="Audio\SoundTable.h" />
+    <ClInclude Include="Audio\StaticSoundInfo.h" />
+    <ClInclude Include="Audio\StaticSoundTable.h" />
+    <ClInclude Include="Audio\StreamSoundInfo.h" />
+    <ClInclude Include="Audio\StreamSoundTable.h" />
     <ClInclude Include="Input\DirectX\InputManager.h" />
     <ClInclude Include="Input\IInputManager.h" />
     <ClInclude Include="pch.h" />
@@ -57,6 +61,10 @@
     <ClCompile Include="Audio\SDL\Static\StaticSoundInstance.cpp" />
     <ClCompile Include="Audio\SoundInfo.cpp" />
     <ClCompile Include="Audio\SoundTable.cpp" />
+    <ClCompile Include="Audio\StaticSoundInfo.cpp" />
+    <ClCompile Include="Audio\StaticSoundTable.cpp" />
+    <ClCompile Include="Audio\StreamSoundInfo.cpp" />
+    <ClCompile Include="Audio\StreamSoundTable.cpp" />
     <ClCompile Include="Input\DirectX\InputManager.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

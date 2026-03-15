@@ -1,14 +1,21 @@
 #pragma once
+#include "AudioTypes.h"
 
-struct ISoundBuffer;
+struct PlaybackParams
+{
+	float volume{ 1.f };
+	bool loop{ false };
+};
+
 struct ISoundInstance
 {
 	virtual ~ISoundInstance() = default;
-	virtual bool Reset(float volume) = 0;
+	virtual bool Reset(const PlaybackParams& params) = 0;
 	virtual bool Play() = 0;
 	virtual bool Pause() = 0;
+	virtual bool Resume() = 0;
 	virtual bool Stop() = 0;
+	virtual void Update() = 0;
 	virtual bool SetVolume(float volume) = 0;
-	virtual bool IsPlaying() const noexcept = 0;
-	virtual ISoundBuffer* GetBuffer() noexcept = 0;
+	virtual PlaybackState GetState() const noexcept = 0;
 };

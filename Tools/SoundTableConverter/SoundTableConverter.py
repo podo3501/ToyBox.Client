@@ -7,29 +7,39 @@ def csv_to_json(csv_path, json_path):
 
     with open(csv_path, "r", encoding="utf-8") as f:
         reader = csv.DictReader(f)
+
         for row in reader:
             key = row.get("Key")
             if not key:
-                continue  # Key가 없으면 스킵
+                continue
 
-            # 숫자형 필드 변환
             entry = {}
+
             for k, v in row.items():
                 if k == "Key":
-                    continue  # Key는 딕셔너리 키로 사용
-                try:
-                    if v and "." in v:
-                        entry[k] = float(v)
-                    elif v:
-                        entry[k] = int(v)
-                    else:
-                        entry[k] = v
-                except:
+                    continue
+
+                if v is None or v == "":
                     entry[k] = v
+                    continue
+
+                v_lower = v.lower()
+
+                if v_lower in ("true", "1"):
+                    entry[k] = True
+                elif v_lower in ("false", "0"):
+                    entry[k] = False
+                else:
+                    try:
+                        if "." in v:
+                            entry[k] = float(v)
+                        else:
+                            entry[k] = int(v)
+                    except ValueError:
+                        entry[k] = v
 
             sound_dict[key] = entry
 
-    # 최상위 키 "SoundInfo"로 감싸기
     final_json = {"Infos": sound_dict}
 
     with open(json_path, "w", encoding="utf-8") as f:
@@ -39,10 +49,14 @@ def csv_to_json(csv_path, json_path):
 
 
 if __name__ == "__main__":
-    csv_file = "SoundTable.csv"
-    json_file = "SoundTable.json"
 
-    if os.path.exists(csv_file):
-        csv_to_json(csv_file, json_file)
-    else:
-        print("CSV 파일이 없습니다:", csv_file)
+    tables = [
+        ("StaticSoundTable.csv", "StaticSoundTable.json"),
+        ("StreamSoundTable.csv", "StreamSoundTable.json"),
+    ]
+
+    for csv_file, json_file in tables:
+        if os.path.exists(csv_file):
+            csv_to_json(csv_file, json_file)
+        else:
+            print("CSV 파일이 없습니다:", csv_file)

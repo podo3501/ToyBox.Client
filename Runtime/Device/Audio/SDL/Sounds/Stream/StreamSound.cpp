@@ -32,7 +32,7 @@ unique_ptr<IStreamSoundBuffer> StreamSound::CreateStreamSoundBuffer()
 bool StreamSound::LoadSound(string_view soundID, unique_ptr<IResourceStream> stream, AudioGroupID groupID, float volume, bool loop)
 {
     auto instance = make_unique<StreamSoundInstance>();
-	ReturnIfFalse(instance->Load(m_device.get(), move(stream), groupID, volume, loop));
+	//ReturnIfFalse(instance->Load(m_device.get(), move(stream), groupID, volume, loop));
 
     m_instances.emplace(string(soundID), move(instance));
 	return true;
@@ -51,8 +51,8 @@ void StreamSound::SetVolume(AudioGroupID groupID, float volume) noexcept
 {
     for (auto& instance : m_instances | views::values)
     {
-        if (!instance->IsPlaying()) continue;
-        if (instance->GetGroupID() != groupID) continue;
+        //if (!instance->IsPlaying()) continue;
+        //if (instance->GetGroupID() != groupID) continue;
 
         instance->SetVolume(volume);
     }
@@ -76,19 +76,21 @@ bool StreamSound::Play(string_view soundID) noexcept
     return true;
 }
 
-PlayState StreamSound::GetState(string_view soundID) const noexcept
+PlaybackState StreamSound::GetState(string_view soundID) const noexcept
 {
-    auto it = m_instances.find(string(soundID));
-    if (it == m_instances.end()) return EnumUtil::Invalid<PlayState>;
+    /*auto it = m_instances.find(string(soundID));
+    if (it == m_instances.end()) return EnumUtil::Invalid<PlaybackState>;
 
-    return it->second->IsPlaying() ? PlayState::Playing : EnumUtil::Invalid<PlayState>;
+    return it->second->IsPlaying() ? PlaybackState::Playing : EnumUtil::Invalid<PlaybackState>;*/
+
+    return EnumUtil::Invalid<PlaybackState>;
 }
 
 void StreamSound::Update() noexcept
 {
-    for (auto& instance : m_instances | views::values)
+    /*for (auto& instance : m_instances | views::values)
     {
         if (!instance->IsPlaying()) continue;
         instance->Update();
-    }
+    }*/
 }

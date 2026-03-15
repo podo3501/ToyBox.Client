@@ -5,7 +5,7 @@ struct IStreamSoundBuffer;
 class AudioDevice;
 class StreamSoundInstance;
 enum class AudioGroupID;
-enum class PlayState;
+enum class PlaybackState;
 class StreamSound
 {
 public:
@@ -18,7 +18,7 @@ public:
 	void SetVolume(AudioGroupID groupID, float volume) noexcept;
 	bool SetVolume(string_view soundID, float volume) noexcept;
 	bool Play(string_view soundID) noexcept;
-	PlayState GetState(string_view soundID) const noexcept;
+	PlaybackState GetState(string_view soundID) const noexcept;
 	void Update() noexcept;
 
 private:
