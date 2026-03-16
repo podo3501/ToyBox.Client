@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "StreamSoundInstance.h"
 #include "StreamSoundBuffer.h"
-#include "AudioDevice.h"
+#include "../AudioDevice.h"
 #include "VorbisStreamCallbacks.h"
 #include "Platform/Resource/IResourceStream.h"
 #include "Audio/AudioTypes.h"
@@ -38,10 +38,20 @@ bool StreamSoundInstance::Setup(AudioDevice* device)
     return true;
 }
 
-bool StreamSoundInstance::PrepareStream(StreamSoundBuffer* buffer)
+bool StreamSoundInstance::SetBuffer(StreamSoundBuffer* buffer)
 {
+    if (buffer == nullptr) return false;
+    m_buffer = buffer;
+
+    return true;
+}
+
+bool StreamSoundInstance::PrepareStream()
+{
+    m_resourceStream = m_buffer->GetStream()->Clone();
+
     auto cb = Vorbis::CreateCallbacks();
-    int result = ov_open_callbacks(buffer->GetStream(), &m_vorbisFile, nullptr, 0, cb);
+    int result = ov_open_callbacks(m_resourceStream.get(), &m_vorbisFile, nullptr, 0, cb);
     if (result < 0) return false;
     m_vorbisOpened = true;
 
@@ -49,11 +59,13 @@ bool StreamSoundInstance::PrepareStream(StreamSoundBuffer* buffer)
     m_stream = m_device->CreateStream(srcSpec);
     if (!m_stream) return false;
 
-    return SDL_BindAudioStream(m_device->GetDevice(), m_stream);
+    return SDL_BindAudioStream(m_device->Get(), m_stream);
 }
 
 bool StreamSoundInstance::Reset(const PlaybackParams& params)
 {
+    ReturnIfFalse(PrepareStream());
+
     ov_pcm_seek(&m_vorbisFile, 0);
     SDL_ClearAudioStream(m_stream);
     ReturnIfFalse(SetVolume(params.volume));
@@ -70,6 +82,22 @@ bool StreamSoundInstance::Play()
     constexpr int INITIAL_FILL = 4;
     for (int i = 0; i < INITIAL_FILL; ++i)
         if(!PushChunk()) return false;
+
+    return SDL_ResumeAudioStreamDevice(m_stream);
+}
+
+bool StreamSoundInstance::Pause()
+{
+    if (!m_stream) 
+        return false;
+
+    return SDL_PauseAudioStreamDevice(m_stream);
+}
+
+bool StreamSoundInstance::Resume()
+{
+    if (!m_stream)
+        return false;
 
     return SDL_ResumeAudioStreamDevice(m_stream);
 }
@@ -103,6 +131,7 @@ bool StreamSoundInstance::SetVolume(float volume)
 PlaybackState StreamSoundInstance::GetState() const noexcept 
 { 
     if (!m_stream) return EnumUtil::Invalid<PlaybackState>;
+    if (SDL_AudioStreamDevicePaused(m_stream)) return PlaybackState::Paused;
     if (!m_finished || SDL_GetAudioStreamQueued(m_stream) > 0) return PlaybackState::Playing;
 
     return PlaybackState::Stopped;

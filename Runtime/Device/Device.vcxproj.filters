@@ -25,14 +25,11 @@
     <Filter Include="Audio\SDL\Serializer\Format">
       <UniqueIdentifier>{e41a2911-1c00-4afe-9823-d076b12c217f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Audio\SDL\Sounds">
-      <UniqueIdentifier>{253845c1-4090-459a-b709-65b8d8788121}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Audio\SDL\Sounds\Stream">
-      <UniqueIdentifier>{bedc0675-d4c2-40b8-afae-5306ec2242eb}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Audio\SDL\Static">
       <UniqueIdentifier>{6f98a661-4367-4c0c-af70-d71eaedf0cb1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Audio\SDL\Stream">
+      <UniqueIdentifier>{a238fae4-8a0d-42f9-b576-da384f094f3c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -76,26 +73,11 @@
     <ClInclude Include="Audio\SDL\AudioFormat.h">
       <Filter>Audio\SDL</Filter>
     </ClInclude>
-    <ClInclude Include="Audio\SDL\Sounds\Stream\StreamSound.h">
-      <Filter>Audio\SDL\Sounds\Stream</Filter>
-    </ClInclude>
-    <ClInclude Include="Audio\SDL\Sounds\Stream\StreamSoundInstance.h">
-      <Filter>Audio\SDL\Sounds\Stream</Filter>
-    </ClInclude>
-    <ClInclude Include="Audio\SDL\Sounds\Stream\VorbisStreamCallbacks.h">
-      <Filter>Audio\SDL\Sounds\Stream</Filter>
-    </ClInclude>
-    <ClInclude Include="Audio\SDL\Sounds\Stream\AudioDevice.h">
-      <Filter>Audio\SDL\Sounds\Stream</Filter>
-    </ClInclude>
     <ClInclude Include="Audio\ISoundBuffer.h">
       <Filter>Audio</Filter>
     </ClInclude>
     <ClInclude Include="Audio\ISoundInstance.h">
       <Filter>Audio</Filter>
-    </ClInclude>
-    <ClInclude Include="Audio\SDL\Sounds\Stream\StreamSoundBuffer.h">
-      <Filter>Audio\SDL\Sounds\Stream</Filter>
     </ClInclude>
     <ClInclude Include="Audio\SDL\Static\StaticSoundBuffer.h">
       <Filter>Audio\SDL\Static</Filter>
@@ -114,6 +96,21 @@
     </ClInclude>
     <ClInclude Include="Audio\StreamSoundInfo.h">
       <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio\SDL\Stream\StreamSoundBuffer.h">
+      <Filter>Audio\SDL\Stream</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio\SDL\Stream\StreamSoundInstance.h">
+      <Filter>Audio\SDL\Stream</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio\SDL\Stream\VorbisStreamCallbacks.h">
+      <Filter>Audio\SDL\Stream</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio\SDL\AudioDevice.h">
+      <Filter>Audio\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio\SDL\AudioMixer.h">
+      <Filter>Audio\SDL</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -139,21 +136,6 @@
     <ClCompile Include="Audio\SDL\AudioFormat.cpp">
       <Filter>Audio\SDL</Filter>
     </ClCompile>
-    <ClCompile Include="Audio\SDL\Sounds\Stream\StreamSound.cpp">
-      <Filter>Audio\SDL\Sounds\Stream</Filter>
-    </ClCompile>
-    <ClCompile Include="Audio\SDL\Sounds\Stream\StreamSoundInstance.cpp">
-      <Filter>Audio\SDL\Sounds\Stream</Filter>
-    </ClCompile>
-    <ClCompile Include="Audio\SDL\Sounds\Stream\VorbisStreamCallbacks.cpp">
-      <Filter>Audio\SDL\Sounds\Stream</Filter>
-    </ClCompile>
-    <ClCompile Include="Audio\SDL\Sounds\Stream\AudioDevice.cpp">
-      <Filter>Audio\SDL\Sounds\Stream</Filter>
-    </ClCompile>
-    <ClCompile Include="Audio\SDL\Sounds\Stream\StreamSoundBuffer.cpp">
-      <Filter>Audio\SDL\Sounds\Stream</Filter>
-    </ClCompile>
     <ClCompile Include="Audio\SDL\Static\StaticSoundBuffer.cpp">
       <Filter>Audio\SDL\Static</Filter>
     </ClCompile>
@@ -171,6 +153,21 @@
     </ClCompile>
     <ClCompile Include="Audio\StreamSoundInfo.cpp">
       <Filter>Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Audio\SDL\Stream\StreamSoundBuffer.cpp">
+      <Filter>Audio\SDL\Stream</Filter>
+    </ClCompile>
+    <ClCompile Include="Audio\SDL\Stream\StreamSoundInstance.cpp">
+      <Filter>Audio\SDL\Stream</Filter>
+    </ClCompile>
+    <ClCompile Include="Audio\SDL\Stream\VorbisStreamCallbacks.cpp">
+      <Filter>Audio\SDL\Stream</Filter>
+    </ClCompile>
+    <ClCompile Include="Audio\SDL\AudioDevice.cpp">
+      <Filter>Audio\SDL</Filter>
+    </ClCompile>
+    <ClCompile Include="Audio\SDL\AudioMixer.cpp">
+      <Filter>Audio\SDL</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

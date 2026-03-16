@@ -3,6 +3,7 @@
 struct IResourceStream
 {
 	virtual ~IResourceStream() = default;
+	virtual unique_ptr<IResourceStream> Clone() const = 0;
 	virtual size_t Read(span<std::byte> buffer) = 0;
 	virtual bool Seek(size_t pos) noexcept = 0;
 	virtual size_t Tell() const noexcept = 0;

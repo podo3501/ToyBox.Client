@@ -15,20 +15,23 @@ public:
 
 	virtual bool Reset(const PlaybackParams& params) override;
 	virtual bool Play() override;
-	virtual bool Pause() override { return true; }
-	virtual bool Resume() override { return true; }
+	virtual bool Pause() override;
+	virtual bool Resume() override;
 	virtual bool Stop() override;
 	virtual void Update() override;
 	virtual bool SetVolume(float volume) override;
 	virtual PlaybackState GetState() const noexcept override;
 
-	bool PrepareStream(StreamSoundBuffer* buffer);
+	bool SetBuffer(StreamSoundBuffer* buffer);
 	bool Setup(AudioDevice* device);
 
 private:
+	bool PrepareStream();
 	bool PushChunk();
 	
 	AudioDevice* m_device{ nullptr };
+	StreamSoundBuffer* m_buffer{ nullptr };
+	unique_ptr<IResourceStream> m_resourceStream;
 	OggVorbis_File m_vorbisFile{};
 	bool m_vorbisOpened{ false };
 

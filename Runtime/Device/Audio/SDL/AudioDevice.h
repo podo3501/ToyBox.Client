@@ -7,8 +7,8 @@ public:
     ~AudioDevice();
     AudioDevice();
     bool Initialize();
-    SDL_AudioStream* CreateStream(const SDL_AudioSpec& srcSpec);
-    SDL_AudioDeviceID GetDevice() const;
+    SDL_AudioStream* CreateStream(const SDL_AudioSpec& srcSpec) const;
+    inline SDL_AudioDeviceID Get() const noexcept { return m_device; }
 
 private:
     SDL_AudioDeviceID m_device{};

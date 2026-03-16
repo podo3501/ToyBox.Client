@@ -7,7 +7,8 @@ ResourceStream::~ResourceStream()
         fclose(m_file);
 }
 
-ResourceStream::ResourceStream(const std::filesystem::path& path)
+ResourceStream::ResourceStream(const std::filesystem::path& path) :
+    m_filePath{ path }
 {
 #ifdef _WIN32
     FILE* file = nullptr;
@@ -68,4 +69,9 @@ bool ResourceStream::IsOpen() const noexcept
 bool ResourceStream::Eof() const noexcept
 {
     return m_file ? feof(m_file) != 0 : true;
+}
+
+unique_ptr<IResourceStream> ResourceStream::Clone() const
+{
+    return make_unique<ResourceStream>(m_filePath);
 }

@@ -17,12 +17,7 @@ bool AudioDevice::Initialize()
     return SDL_GetAudioDeviceFormat(m_device, &m_spec, nullptr);
 }
 
-SDL_AudioStream* AudioDevice::CreateStream(const SDL_AudioSpec& srcSpec)
+SDL_AudioStream* AudioDevice::CreateStream(const SDL_AudioSpec& srcSpec) const
 {
     return SDL_CreateAudioStream(&srcSpec, &m_spec);
-}
-
-SDL_AudioDeviceID AudioDevice::GetDevice() const
-{
-    return m_device;
 }
