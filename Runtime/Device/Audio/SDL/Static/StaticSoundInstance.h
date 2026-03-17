@@ -1,6 +1,6 @@
 #pragma once
 #include "SDL3/SDL_properties.h"
-#include "Device/Audio/ISoundInstance.h"
+#include "GameClient/Service/Audio/ISoundInstance.h"
 
 struct MIX_Mixer;
 struct MIX_Track;

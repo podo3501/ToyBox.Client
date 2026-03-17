@@ -19,52 +19,30 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Audio\AudioService.h" />
-    <ClInclude Include="Audio\AudioTypeHelpers.h" />
-    <ClInclude Include="Audio\AudioTypes.h" />
-    <ClInclude Include="Audio\IAudioBackend.h" />
-    <ClInclude Include="Audio\ISoundBuffer.h" />
-    <ClInclude Include="Audio\ISoundInstance.h" />
     <ClInclude Include="Audio\SDL\AudioDevice.h" />
     <ClInclude Include="Audio\SDL\AudioFormat.h" />
     <ClInclude Include="Audio\SDL\AudioMixer.h" />
     <ClInclude Include="Audio\SDL\SDLAudioBackend.h" />
-    <ClInclude Include="Audio\SDL\Serializer\Format\Traits.h" />
-    <ClInclude Include="Audio\SDL\Serializer\Serializer.h" />
     <ClInclude Include="Audio\SDL\Static\StaticSoundBuffer.h" />
     <ClInclude Include="Audio\SDL\Static\StaticSoundInstance.h" />
     <ClInclude Include="Audio\SDL\Stream\StreamSoundBuffer.h" />
     <ClInclude Include="Audio\SDL\Stream\StreamSoundInstance.h" />
     <ClInclude Include="Audio\SDL\Stream\VorbisStreamCallbacks.h" />
-    <ClInclude Include="Audio\SoundInfo.h" />
-    <ClInclude Include="Audio\SoundTable.h" />
-    <ClInclude Include="Audio\StaticSoundInfo.h" />
-    <ClInclude Include="Audio\StaticSoundTable.h" />
-    <ClInclude Include="Audio\StreamSoundInfo.h" />
-    <ClInclude Include="Audio\StreamSoundTable.h" />
     <ClInclude Include="Input\DirectX\InputManager.h" />
     <ClInclude Include="Input\IInputManager.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Storage\JsonObjectIO.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Audio\AudioService.cpp" />
     <ClCompile Include="Audio\SDL\AudioDevice.cpp" />
     <ClCompile Include="Audio\SDL\AudioFormat.cpp" />
     <ClCompile Include="Audio\SDL\AudioMixer.cpp" />
     <ClCompile Include="Audio\SDL\SDLAudioBackend.cpp" />
-    <ClCompile Include="Audio\SDL\Serializer\Format\Traits.cpp" />
     <ClCompile Include="Audio\SDL\Static\StaticSoundBuffer.cpp" />
     <ClCompile Include="Audio\SDL\Static\StaticSoundInstance.cpp" />
     <ClCompile Include="Audio\SDL\Stream\StreamSoundBuffer.cpp" />
     <ClCompile Include="Audio\SDL\Stream\StreamSoundInstance.cpp" />
     <ClCompile Include="Audio\SDL\Stream\VorbisStreamCallbacks.cpp" />
-    <ClCompile Include="Audio\SoundInfo.cpp" />
-    <ClCompile Include="Audio\SoundTable.cpp" />
-    <ClCompile Include="Audio\StaticSoundInfo.cpp" />
-    <ClCompile Include="Audio\StaticSoundTable.cpp" />
-    <ClCompile Include="Audio\StreamSoundInfo.cpp" />
-    <ClCompile Include="Audio\StreamSoundTable.cpp" />
     <ClCompile Include="Input\DirectX\InputManager.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -139,7 +117,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)Runtime;$(ProjectDir);$(SolutionDir)ThirdParty\Include;$(SolutionDir)ThirdParty\SDL3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir);$(SolutionDir)Game;$(SolutionDir)Runtime;$(SolutionDir)ThirdParty\Include;$(SolutionDir)ThirdParty\SDL3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -162,7 +140,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)Runtime;$(ProjectDir);$(SolutionDir)ThirdParty\Include;$(SolutionDir)ThirdParty\SDL3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir);$(SolutionDir)Game;$(SolutionDir)Runtime;$(SolutionDir)ThirdParty\Include;$(SolutionDir)ThirdParty\SDL3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -183,7 +161,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)Runtime;$(ProjectDir);$(SolutionDir)ThirdParty\Include;$(SolutionDir)ThirdParty\SDL3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir);$(SolutionDir)Game;$(SolutionDir)Runtime;$(SolutionDir)ThirdParty\Include;$(SolutionDir)ThirdParty\SDL3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -206,7 +184,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)Runtime;$(ProjectDir);$(SolutionDir)ThirdParty\Include;$(SolutionDir)ThirdParty\SDL3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir);$(SolutionDir)Game;$(SolutionDir)Runtime;$(SolutionDir)ThirdParty\Include;$(SolutionDir)ThirdParty\SDL3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>

@@ -1,5 +1,5 @@
 #pragma once
-#include "Device/Audio/ISoundBuffer.h"
+#include "GameClient/Service/Audio/ISoundBuffer.h"
 
 struct MIX_Mixer;
 struct MIX_Audio;

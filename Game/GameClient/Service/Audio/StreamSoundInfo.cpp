@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "StreamSoundInfo.h"
-#include "Audio/SDL/Serializer/Serializer.h"
+#include "Serializer/Serializer.h"
 
 StreamSoundInfo::StreamSoundInfo() :
 	SoundInfo{ SoundType::Stream }

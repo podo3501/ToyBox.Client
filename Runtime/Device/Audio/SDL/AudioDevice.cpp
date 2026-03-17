@@ -17,7 +17,10 @@ bool AudioDevice::Initialize()
     return SDL_GetAudioDeviceFormat(m_device, &m_spec, nullptr);
 }
 
-SDL_AudioStream* AudioDevice::CreateStream(const SDL_AudioSpec& srcSpec) const
+SDL_AudioStream* AudioDevice::CreateDeviceStream(const SDL_AudioSpec& srcSpec) const
 {
-    return SDL_CreateAudioStream(&srcSpec, &m_spec);
+    auto stream = SDL_CreateAudioStream(&srcSpec, &m_spec);
+    if(!SDL_BindAudioStream(m_device, stream)) return nullptr;
+
+    return stream;
 }

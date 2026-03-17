@@ -1,6 +1,6 @@
 #pragma once
 #include <memory>
-#include "AudioTypes.h"
+#include "GameClient/Service/Audio/AudioTypes.h"
 
 struct IResourceStream;
 struct ISoundInstance;

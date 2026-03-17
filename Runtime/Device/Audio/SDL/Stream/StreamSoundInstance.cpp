@@ -4,7 +4,6 @@
 #include "../AudioDevice.h"
 #include "VorbisStreamCallbacks.h"
 #include "Platform/Resource/IResourceStream.h"
-#include "Audio/AudioTypes.h"
 
 SDL_AudioSpec VorbisToSDLAudioSpec(OggVorbis_File& vf)
 {
@@ -26,6 +25,9 @@ SDL_AudioSpec VorbisToSDLAudioSpec(OggVorbis_File& vf)
 
 StreamSoundInstance::~StreamSoundInstance()
 {
+    SDL_DestroyAudioStream(m_stream);
+    m_stream = nullptr;
+
     if (m_vorbisOpened)
         ov_clear(&m_vorbisFile);
 }
@@ -50,16 +52,24 @@ bool StreamSoundInstance::PrepareStream()
 {
     m_resourceStream = m_buffer->GetStream()->Clone();
 
+    if (m_vorbisOpened)
+    {
+        ov_clear(&m_vorbisFile);
+        m_vorbisOpened = false;
+    }
+
     auto cb = Vorbis::CreateCallbacks();
     int result = ov_open_callbacks(m_resourceStream.get(), &m_vorbisFile, nullptr, 0, cb);
     if (result < 0) return false;
     m_vorbisOpened = true;
 
     SDL_AudioSpec srcSpec = VorbisToSDLAudioSpec(m_vorbisFile);
-    m_stream = m_device->CreateStream(srcSpec);
-    if (!m_stream) return false;
 
-    return SDL_BindAudioStream(m_device->Get(), m_stream);
+    if (m_stream)
+        SDL_DestroyAudioStream(m_stream);
+    m_stream = m_device->CreateDeviceStream(srcSpec);
+    
+    return m_stream != nullptr;
 }
 
 bool StreamSoundInstance::Reset(const PlaybackParams& params)
@@ -70,6 +80,8 @@ bool StreamSoundInstance::Reset(const PlaybackParams& params)
     SDL_ClearAudioStream(m_stream);
     ReturnIfFalse(SetVolume(params.volume));
     m_loop = params.loop;
+    m_paused = false;
+    m_finished = false;
 
     return true;
 }
@@ -79,11 +91,12 @@ bool StreamSoundInstance::Play()
     if (!m_stream) return false;
 
     m_finished = false;
+    m_paused = false;
     constexpr int INITIAL_FILL = 4;
     for (int i = 0; i < INITIAL_FILL; ++i)
         if(!PushChunk()) return false;
 
-    return SDL_ResumeAudioStreamDevice(m_stream);
+    return true;
 }
 
 bool StreamSoundInstance::Pause()
@@ -91,7 +104,8 @@ bool StreamSoundInstance::Pause()
     if (!m_stream) 
         return false;
 
-    return SDL_PauseAudioStreamDevice(m_stream);
+    m_paused = true;
+    return true;
 }
 
 bool StreamSoundInstance::Resume()
@@ -99,7 +113,8 @@ bool StreamSoundInstance::Resume()
     if (!m_stream)
         return false;
 
-    return SDL_ResumeAudioStreamDevice(m_stream);
+    m_paused = false;
+    return SetVolume(m_volume);
 }
 
 bool StreamSoundInstance::Stop()
@@ -109,13 +124,14 @@ bool StreamSoundInstance::Stop()
 
     ReturnIfFalse(SDL_ClearAudioStream(m_stream));
     m_finished = true;
+    m_paused = false;
 
     return true;
 }
 
 void StreamSoundInstance::Update()
 {
-    if (!m_stream || m_finished)
+    if (!m_stream || m_finished || m_paused)
         return;
 
     constexpr int LOW_WATERMARK = 128 * 1024;
@@ -125,13 +141,16 @@ void StreamSoundInstance::Update()
 
 bool StreamSoundInstance::SetVolume(float volume)
 {
-    return SDL_SetAudioStreamGain(m_stream, volume);
+    ReturnIfFalse(SDL_SetAudioStreamGain(m_stream, volume));
+    m_volume = volume;
+
+    return true;
 }
 
 PlaybackState StreamSoundInstance::GetState() const noexcept 
 { 
     if (!m_stream) return EnumUtil::Invalid<PlaybackState>;
-    if (SDL_AudioStreamDevicePaused(m_stream)) return PlaybackState::Paused;
+    if (m_paused) return PlaybackState::Paused;
     if (!m_finished || SDL_GetAudioStreamQueued(m_stream) > 0) return PlaybackState::Playing;
 
     return PlaybackState::Stopped;
@@ -157,7 +176,10 @@ bool StreamSoundInstance::PushChunk()
     if (bytes == 0)
     {
         if (m_loop)
-            ov_pcm_seek(&m_vorbisFile, 0); // EOF (loop 원하면 사용)
+        {
+            if (ov_pcm_seek(&m_vorbisFile, 0) == 0)
+                return true; //루프일 경우에는 데이터 끝이 진짜 끝이 아니기 때문에 다시 읽게 한다.
+        }
         else
         {
             m_finished = true;

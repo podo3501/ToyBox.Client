@@ -183,6 +183,27 @@
     <ClCompile Include="Locator\UIComponentLocator.cpp">
       <Filter>Locator</Filter>
     </ClCompile>
+    <ClCompile Include="Service\Audio\AudioService.cpp">
+      <Filter>Service\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Service\Audio\SoundInfo.cpp">
+      <Filter>Service\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Service\Audio\StaticSoundInfo.cpp">
+      <Filter>Service\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Service\Audio\StaticSoundTable.cpp">
+      <Filter>Service\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Service\Audio\StreamSoundInfo.cpp">
+      <Filter>Service\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Service\Audio\StreamSoundTable.cpp">
+      <Filter>Service\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Service\Audio\Serializer\Format\AudioTraits.cpp">
+      <Filter>Service\Audio\Serializer\Format</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameLoop.h" />
@@ -391,6 +412,45 @@
     <ClInclude Include="Scenes\Test\TestScene2.h">
       <Filter>Scenes\Test</Filter>
     </ClInclude>
+    <ClInclude Include="Service\Audio\AudioService.h">
+      <Filter>Service\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Audio\AudioTypeHelpers.h">
+      <Filter>Service\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Audio\AudioTypes.h">
+      <Filter>Service\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Audio\IAudioBackend.h">
+      <Filter>Service\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Audio\ISoundBuffer.h">
+      <Filter>Service\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Audio\ISoundInstance.h">
+      <Filter>Service\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Audio\SoundInfo.h">
+      <Filter>Service\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Audio\StaticSoundInfo.h">
+      <Filter>Service\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Audio\StaticSoundTable.h">
+      <Filter>Service\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Audio\StreamSoundInfo.h">
+      <Filter>Service\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Audio\StreamSoundTable.h">
+      <Filter>Service\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Audio\Serializer\Serializer.h">
+      <Filter>Service\Audio\Serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Audio\Serializer\Format\AudioTraits.h">
+      <Filter>Service\Audio\Serializer\Format</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Locator">
@@ -446,6 +506,18 @@
     </Filter>
     <Filter Include="Scenes\Test">
       <UniqueIdentifier>{0e902521-2a69-4eb3-a1a7-b38398dda179}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Service">
+      <UniqueIdentifier>{0728ae55-8b30-41fb-9624-5d592f9c8867}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Service\Audio">
+      <UniqueIdentifier>{605fe766-761a-4cdc-bdc1-205c0855a333}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Service\Audio\Serializer">
+      <UniqueIdentifier>{41b1a7be-70f6-4eaa-b8a2-2283d51a64aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Service\Audio\Serializer\Format">
+      <UniqueIdentifier>{d363153e-5fc6-4c96-85c7-602da958ab78}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -1,3 +1,3 @@
 #pragma once
-#include "Format/Traits.h"
+#include "Format/AudioTraits.h"
 #include "Platform/Serializer/Serializer.h"

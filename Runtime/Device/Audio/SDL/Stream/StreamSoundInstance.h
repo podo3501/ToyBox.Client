@@ -1,5 +1,5 @@
 #pragma once
-#include "Device/Audio/ISoundInstance.h"
+#include "GameClient/Service/Audio/ISoundInstance.h"
 #include "SDL3/SDL.h"
 #include "vorbis/vorbisfile.h"
 #include <array>
@@ -36,7 +36,9 @@ private:
 	bool m_vorbisOpened{ false };
 
 	SDL_AudioStream* m_stream{ nullptr };
+	float m_volume{ 1.f };
 	bool m_loop{ false };
+	bool m_paused{ false };
 	bool m_finished{ false };
 
 	std::array<char, 16384> m_decodeBuffer{}; // 함수 한군데에서만 사용하지만 여기에 선언하는 이유는 멀티쓰레드나 멀티스트림이 되면 스택이 오버플로우 될수 있기 때문.

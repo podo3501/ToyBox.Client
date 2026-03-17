@@ -19,17 +19,14 @@
     <Filter Include="Input\DirectX">
       <UniqueIdentifier>{e04d1abe-6276-4378-90a5-5de3c0cf4d57}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Audio\SDL\Serializer">
-      <UniqueIdentifier>{27e0b79f-9fae-4c0a-afe0-3c895bddc645}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Audio\SDL\Serializer\Format">
-      <UniqueIdentifier>{e41a2911-1c00-4afe-9823-d076b12c217f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Audio\SDL\Static">
       <UniqueIdentifier>{6f98a661-4367-4c0c-af70-d71eaedf0cb1}</UniqueIdentifier>
     </Filter>
     <Filter Include="Audio\SDL\Stream">
       <UniqueIdentifier>{a238fae4-8a0d-42f9-b576-da384f094f3c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Audio\Descriptor">
+      <UniqueIdentifier>{42f17458-fd1d-4da7-9635-178eed296a81}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -40,32 +37,8 @@
     <ClInclude Include="Input\IInputManager.h">
       <Filter>Input</Filter>
     </ClInclude>
-    <ClInclude Include="Audio\AudioTypeHelpers.h">
-      <Filter>Audio</Filter>
-    </ClInclude>
-    <ClInclude Include="Audio\AudioTypes.h">
-      <Filter>Audio</Filter>
-    </ClInclude>
     <ClInclude Include="Input\DirectX\InputManager.h">
       <Filter>Input\DirectX</Filter>
-    </ClInclude>
-    <ClInclude Include="Audio\SDL\Serializer\Serializer.h">
-      <Filter>Audio\SDL\Serializer</Filter>
-    </ClInclude>
-    <ClInclude Include="Audio\SDL\Serializer\Format\Traits.h">
-      <Filter>Audio\SDL\Serializer\Format</Filter>
-    </ClInclude>
-    <ClInclude Include="Audio\SoundInfo.h">
-      <Filter>Audio</Filter>
-    </ClInclude>
-    <ClInclude Include="Audio\SoundTable.h">
-      <Filter>Audio</Filter>
-    </ClInclude>
-    <ClInclude Include="Audio\AudioService.h">
-      <Filter>Audio</Filter>
-    </ClInclude>
-    <ClInclude Include="Audio\IAudioBackend.h">
-      <Filter>Audio</Filter>
     </ClInclude>
     <ClInclude Include="Audio\SDL\SDLAudioBackend.h">
       <Filter>Audio\SDL</Filter>
@@ -73,29 +46,11 @@
     <ClInclude Include="Audio\SDL\AudioFormat.h">
       <Filter>Audio\SDL</Filter>
     </ClInclude>
-    <ClInclude Include="Audio\ISoundBuffer.h">
-      <Filter>Audio</Filter>
-    </ClInclude>
-    <ClInclude Include="Audio\ISoundInstance.h">
-      <Filter>Audio</Filter>
-    </ClInclude>
     <ClInclude Include="Audio\SDL\Static\StaticSoundBuffer.h">
       <Filter>Audio\SDL\Static</Filter>
     </ClInclude>
     <ClInclude Include="Audio\SDL\Static\StaticSoundInstance.h">
       <Filter>Audio\SDL\Static</Filter>
-    </ClInclude>
-    <ClInclude Include="Audio\StaticSoundTable.h">
-      <Filter>Audio</Filter>
-    </ClInclude>
-    <ClInclude Include="Audio\StaticSoundInfo.h">
-      <Filter>Audio</Filter>
-    </ClInclude>
-    <ClInclude Include="Audio\StreamSoundTable.h">
-      <Filter>Audio</Filter>
-    </ClInclude>
-    <ClInclude Include="Audio\StreamSoundInfo.h">
-      <Filter>Audio</Filter>
     </ClInclude>
     <ClInclude Include="Audio\SDL\Stream\StreamSoundBuffer.h">
       <Filter>Audio\SDL\Stream</Filter>
@@ -118,18 +73,6 @@
     <ClCompile Include="Input\DirectX\InputManager.cpp">
       <Filter>Input\DirectX</Filter>
     </ClCompile>
-    <ClCompile Include="Audio\SDL\Serializer\Format\Traits.cpp">
-      <Filter>Audio\SDL\Serializer\Format</Filter>
-    </ClCompile>
-    <ClCompile Include="Audio\SoundInfo.cpp">
-      <Filter>Audio</Filter>
-    </ClCompile>
-    <ClCompile Include="Audio\SoundTable.cpp">
-      <Filter>Audio</Filter>
-    </ClCompile>
-    <ClCompile Include="Audio\AudioService.cpp">
-      <Filter>Audio</Filter>
-    </ClCompile>
     <ClCompile Include="Audio\SDL\SDLAudioBackend.cpp">
       <Filter>Audio\SDL</Filter>
     </ClCompile>
@@ -141,18 +84,6 @@
     </ClCompile>
     <ClCompile Include="Audio\SDL\Static\StaticSoundInstance.cpp">
       <Filter>Audio\SDL\Static</Filter>
-    </ClCompile>
-    <ClCompile Include="Audio\StaticSoundTable.cpp">
-      <Filter>Audio</Filter>
-    </ClCompile>
-    <ClCompile Include="Audio\StaticSoundInfo.cpp">
-      <Filter>Audio</Filter>
-    </ClCompile>
-    <ClCompile Include="Audio\StreamSoundTable.cpp">
-      <Filter>Audio</Filter>
-    </ClCompile>
-    <ClCompile Include="Audio\StreamSoundInfo.cpp">
-      <Filter>Audio</Filter>
     </ClCompile>
     <ClCompile Include="Audio\SDL\Stream\StreamSoundBuffer.cpp">
       <Filter>Audio\SDL\Stream</Filter>

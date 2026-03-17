@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "SoundInfo.h"
-#include "Audio/SDL/Serializer/Serializer.h"
+#include "Serializer/Serializer.h"
 
 SoundInfo::SoundInfo(SoundType _sndType) :
 	sndType{ _sndType }

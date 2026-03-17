@@ -79,5 +79,8 @@
     <Filter Include="Session">
       <UniqueIdentifier>{5d525835-b1a1-4694-875d-f50e1c8532ad}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Service">
+      <UniqueIdentifier>{8b7f7ef3-f3a7-4dc6-9b44-9e2ddc99e89d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

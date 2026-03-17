@@ -1,6 +1,6 @@
 #include "pch.h"
-#include "Traits.h"
-#include "Audio/AudioTypeHelpers.h"
+#include "AudioTraits.h"
+#include "../../AudioTypeHelpers.h"
 #include "Platform/Serializer/Format/TraitsHelper.hpp"
 
 using namespace EnumUtil;

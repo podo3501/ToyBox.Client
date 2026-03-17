@@ -1,5 +1,4 @@
 #pragma once
-#include "SoundTable.h"
 #include "StaticSoundTable.h"
 #include "StreamSoundTable.h"
 #include "Core/Utils/CycleIterator.h"
@@ -51,7 +50,6 @@ private:
 	const ISoundInstance* GetInstance(int handle) const noexcept;
 	ISoundInstance* GetInstance(int handle) noexcept;
 
-	//SoundTable m_sndTable;
 	StaticSoundTable m_staticTable;
 	StreamSoundTable m_streamTable;
 	unique_ptr<IAudioBackend> m_audioBackend;
