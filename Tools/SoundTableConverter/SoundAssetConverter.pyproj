@@ -3,14 +3,16 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>21b4755d-ce45-4103-8f24-c3334f95f478</ProjectGuid>
-    <ProjectHome>.</ProjectHome>
-    <StartupFile>SoundTableConverter.py</StartupFile>
+    <ProjectHome>
+    </ProjectHome>
+    <StartupFile>SoundAssetConverter.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
-    <Name>SoundTableConverter</Name>
+    <Name>SoundAssetConverter</Name>
     <RootNamespace>SoundTableConverter</RootNamespace>
+    <IsWindowsApplication>False</IsWindowsApplication>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,10 +23,10 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="SoundTableConverter.py" />
+    <Content Include="사용법.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="사용법.txt" />
+    <Compile Include="SoundAssetConverter.py" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

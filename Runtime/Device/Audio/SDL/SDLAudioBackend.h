@@ -15,7 +15,8 @@ public:
 	virtual bool Initialize(int maxVoices, int maxStreams) noexcept override;
 	virtual unique_ptr<IStaticSoundBuffer> CreateStaticSoundBuffer() override;
 	virtual unique_ptr<IStreamSoundBuffer> CreateStreamSoundBuffer() override;
-	virtual ISoundInstance* AcquireInstance(SoundType type, ISoundBuffer* sndBuffer, int index) override;
+	virtual ISoundInstance* RequestStaticInstance(ISoundBuffer* sndBuffer, int index) override;
+	virtual ISoundInstance* RequestStreamInstance(ISoundBuffer* sndBuffer, int index) override;
 
 private:
 	bool SetupStaticInstances(int maxVoices) noexcept;

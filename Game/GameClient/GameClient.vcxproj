@@ -19,6 +19,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Asset\AssetRegistry.cpp" />
+    <ClCompile Include="Asset\Sound\Desc\Serializer\Format\AudioTraits.cpp" />
+    <ClCompile Include="Asset\Sound\Desc\SoundDescriptor.cpp" />
+    <ClCompile Include="Asset\Sound\Desc\StaticSoundDescriptor.cpp" />
+    <ClCompile Include="Asset\Sound\Desc\StreamSoundDescriptor.cpp" />
+    <ClCompile Include="Asset\Sound\StaticSoundDescriptors.cpp" />
+    <ClCompile Include="Asset\Sound\StreamSoundDescriptors.cpp" />
     <ClCompile Include="GameLoop.cpp" />
     <ClCompile Include="Locator\UIComponentLocator.cpp" />
     <ClCompile Include="pch.cpp">
@@ -31,12 +38,6 @@
     <ClCompile Include="Scenes\Test\TestScene1.cpp" />
     <ClCompile Include="Scenes\Test\TestScene2.cpp" />
     <ClCompile Include="Service\Audio\AudioService.cpp" />
-    <ClCompile Include="Service\Audio\Serializer\Format\AudioTraits.cpp" />
-    <ClCompile Include="Service\Audio\SoundInfo.cpp" />
-    <ClCompile Include="Service\Audio\StaticSoundInfo.cpp" />
-    <ClCompile Include="Service\Audio\StaticSoundTable.cpp" />
-    <ClCompile Include="Service\Audio\StreamSoundInfo.cpp" />
-    <ClCompile Include="Service\Audio\StreamSoundTable.cpp" />
     <ClCompile Include="UserInterface\CommandHistory\TextureResource\TexResCommandHistory.cpp" />
     <ClCompile Include="UserInterface\CommandHistory\TextureResource\TexResCommandRegistry.cpp" />
     <ClCompile Include="UserInterface\CommandHistory\UserInterface\UICommandHistory.cpp" />
@@ -95,6 +96,17 @@
     <ClCompile Include="UserInterface\UINameGenerator\UINameGenerator.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Asset\AssetRegistry.h" />
+    <ClInclude Include="Asset\SoundAssetView.h" />
+    <ClInclude Include="Asset\Sound\Desc\AudioTypeHelpers.h" />
+    <ClInclude Include="Asset\Sound\Desc\AudioTypes.h" />
+    <ClInclude Include="Asset\Sound\Desc\Serializer\Format\AudioTraits.h" />
+    <ClInclude Include="Asset\Sound\Desc\Serializer\Serializer.h" />
+    <ClInclude Include="Asset\Sound\Desc\SoundDescriptor.h" />
+    <ClInclude Include="Asset\Sound\Desc\StaticSoundDescriptor.h" />
+    <ClInclude Include="Asset\Sound\Desc\StreamSoundDescriptor.h" />
+    <ClInclude Include="Asset\Sound\StaticSoundDescriptors.h" />
+    <ClInclude Include="Asset\Sound\StreamSoundDescriptors.h" />
     <ClInclude Include="GameLoop.h" />
     <ClInclude Include="Locator\InputLocator.h" />
     <ClInclude Include="Locator\UIComponentLocator.h" />
@@ -103,18 +115,9 @@
     <ClInclude Include="Scenes\Test\TestScene1.h" />
     <ClInclude Include="Scenes\Test\TestScene2.h" />
     <ClInclude Include="Service\Audio\AudioService.h" />
-    <ClInclude Include="Service\Audio\AudioTypeHelpers.h" />
-    <ClInclude Include="Service\Audio\AudioTypes.h" />
     <ClInclude Include="Service\Audio\IAudioBackend.h" />
     <ClInclude Include="Service\Audio\ISoundBuffer.h" />
     <ClInclude Include="Service\Audio\ISoundInstance.h" />
-    <ClInclude Include="Service\Audio\Serializer\Format\AudioTraits.h" />
-    <ClInclude Include="Service\Audio\Serializer\Serializer.h" />
-    <ClInclude Include="Service\Audio\SoundInfo.h" />
-    <ClInclude Include="Service\Audio\StaticSoundInfo.h" />
-    <ClInclude Include="Service\Audio\StaticSoundTable.h" />
-    <ClInclude Include="Service\Audio\StreamSoundInfo.h" />
-    <ClInclude Include="Service\Audio\StreamSoundTable.h" />
     <ClInclude Include="UserInterface\CommandHistory\Command.h" />
     <ClInclude Include="UserInterface\CommandHistory\CommandHistory.h" />
     <ClInclude Include="UserInterface\CommandHistory\CommandType.h" />

@@ -1,10 +1,10 @@
 #pragma once
-#include "SoundInfo.h"
+#include "SoundDescriptor.h"
 
 class Serializer;
-struct StaticSoundInfo : public SoundInfo
+struct StaticSoundDescriptor : public SoundDescriptor
 {
-	StaticSoundInfo();
+	StaticSoundDescriptor();
 	void Serialize(Serializer& serializer);
 
 	//static 항목이 생기면 여기에 추가

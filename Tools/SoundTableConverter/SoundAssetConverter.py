@@ -40,7 +40,7 @@ def csv_to_json(csv_path, json_path):
 
             sound_dict[key] = entry
 
-    final_json = {"Infos": sound_dict}
+    final_json = {"Descriptors": sound_dict}
 
     with open(json_path, "w", encoding="utf-8") as f:
         json.dump(final_json, f, ensure_ascii=False, indent=4)
@@ -51,8 +51,8 @@ def csv_to_json(csv_path, json_path):
 if __name__ == "__main__":
 
     tables = [
-        ("StaticSoundTable.csv", "StaticSoundTable.json"),
-        ("StreamSoundTable.csv", "StreamSoundTable.json"),
+        ("StaticSoundDescriptors.csv", "StaticSoundDescriptors.json"),
+        ("StreamSoundDescriptors.csv", "StreamSoundDescriptors.json"),
     ]
 
     for csv_file, json_file in tables:

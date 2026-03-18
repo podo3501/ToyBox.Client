@@ -1,12 +1,12 @@
 #include "pch.h"
-#include "SoundInfo.h"
+#include "SoundDescriptor.h"
 #include "Serializer/Serializer.h"
 
-SoundInfo::SoundInfo(SoundType _sndType) :
+SoundDescriptor::SoundDescriptor(SoundType _sndType) :
 	sndType{ _sndType }
 {}
 
-void SoundInfo::Serialize(Serializer& serializer)
+void SoundDescriptor::Serialize(Serializer& serializer)
 {
 	serializer.Process("Filename", filename);
 	serializer.Process("Group", groupID);

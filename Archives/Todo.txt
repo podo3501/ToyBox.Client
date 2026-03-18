@@ -117,7 +117,6 @@
 --툴에서 Undo 할수 있게끔 추가 
 --리팩토링 미흡한게 있는지 확인    
 --imgui list도 utility class 작업
---TDD쪽 imageSwitcher 리팩토링
 --FitToTextureSource 함수 만들기
 --invocable(predicate)을 uicomponent의 loop 에도 적용
 --EditPatchTexture 작성중. editPathTexture작성할때 상속을 해서 윗단에 만들어 놓는게 한번만 만들고 좋기 때문에.
@@ -214,13 +213,11 @@
 --UIModule로 바꾸고 나서 생긴 버그들 수정
 --UINameGenerator에서 ComponentID가 인자로 들어가는거 있는데 그거 수정.
 --껏다 킬때 툴에서 마우스 때문에 뻑나는거 수정
---새로운 tdd작성법으로 바꾸면서 처음에 만들었던 부분 다시 리뷰 및 수정
 --UIModule을 Locator로 바꾸고 내부는 전역에 사용하는 부분과 노드에 사용하는 부분으로 분리
 --코어에서 UIComponentManager로 render를 날라면 이 매니져는 UIModule 리스트를 가지고 있으니까 
    각자 render를 날려주면 내부에서 Traverser가 랜더링을 하는 식으로 수정.
 --UIComponent 리팩토링
 --Include 정리
---tdd에서 traverser에 uimodule을 안쓰고 테스트 하는걸로 수정.
 --HierarchyTraverser 함수들 보기 좋게 다듬기.
 --UIComponent에 RecursiveUpdate를 수정. RecursivePositionUpdate와 합칠수 있으면 좋다. 
 --알아먹기 쉽도록 테스트 코드 재작성
@@ -228,7 +225,6 @@
     컴포넌트T 이름으로 파일명을 정하고, 이것들은 큰 흐름만 테스트 한다.
 --ITextureController가 Component에 있는데 이를 찾아서 Setup할때 넣는 걸로 한다.
 --RenderTexture를 클론했을때 RenderTexture 안에 사용되는 텍스쳐는 새로 만들어야 한다.
---tdd warning 찾아서 없애기
 --Json을 tdd에서 파일로 쓰는 부분을 DI로 수정하고 메모리에 쓰게끔 수정해서 tdd 속도 및 의존성 줄이기
 --wstring filename = L"Test/Data/RWSourceBinderTest.json"; 이것처럼 tdd에서 세이브 되는 데이터는 한곳으로 모으자.
 --ComponentT가 UIModuleT를 상속받아서 테스트 하도록 수정.
@@ -249,18 +245,22 @@
 --SoundID 같이 저장장치에 접근하는 것들은 인터페이스 클래스를 가지는데 이 인터페이스 클래스를 하나로 묶는 작업
 --runtime을 한단계 위로 올린다음 shared를 core로 바꾼다.
 --core 안에 window를 Platform 프로젝트를 만든후 옮긴다.
---tdd가 돌아가는걸 확인
 --프로젝트의 참조관계 및 pch, 디렉토리나 라이브러리 같은 것을 정리한다.
 --Game폴더를 만들고 resources를 복사. 그리고 그 밑에 /GameCore, /GameClient, /TextClient, /App 를 만든다.
 --/sandbox 및 기타 지울꺼 지우고 리팩토링 종료.
 --AudioService를 만들고 ogg streaming 처리.
 --StreamSoundInstance로 이름 바꿈. Stream쪽 정리 및 리팩토링. 
+--new 부분을 없애고 슬롯 형식으로 하고, 소리가 끝나면 인스턴스는 날리는 방식을 사용한다.
+--voice를 service 레이어로 올리고 playingSounds를 삭제한다.
+--로딩아이디와 인스턴스아이디를 구분해서 내보내게 한다. 그래서 로딩 아이디는 unload를 할 수 있게끔 한다.
+--StaticSoundInstance와 StaticSoundBuffer를 둘로 나누어서 메모리를 한번만 로딩하고 상태는 다르게 플레이 하도록 수정.
 
 @Audio쪽 정리 및 리팩토링.
-    @StaticSoundInstance와 StaticSoundBuffer를 둘로 나누어서 메모리를 한번만 로딩하고 상태는 다르게 플레이 하도록 수정.
-    @로딩아이디와 인스턴스아이디를 구분해서 내보내게 한다. 그래서 로딩 아이디는 unload를 할 수 있게끔 한다.
-    @new 부분을 없애고 슬롯 형식으로 하고, 소리가 끝나면 인스턴스는 날리는 방식을 사용한다.
-    @voice를 service 레이어로 올리고 playingSounds를 삭제한다.
+    Service 코드를 리팩토링해서 Asset, Library, voice로 나눈다.
+    info를 descriptor 및 핸들이 int로 되어 있는데 이거 타입 만들기. 이름 대대적으로 정리. Sound, Audio 혼재되어 있는거 정리
+    리팩토링 후 include가 어지럽게 되어 있는거 정리.
+    사운드가 종료되었을때 callback으로 처리할지 생각해 보기.
+    
 @	m_uiModule = CreateUIModule("Demo", layout, "Main", move(storage), move(resBinderOwner));
     Manager 안에서 생성한다음 붙일필요가 있나? CreateUIModule을 만들어서 UIModule을 만든다음에 manager에 insert 하는
     함수는 다른 이름으로 하는게 어떨까?
@@ -275,7 +275,6 @@
 @툴에서 버그 때문에 안되는 부분 수정 ResourceBinder 이상함.
 
 @테스트에서 setup 형식 맞추기
-@IJsonFileIO에서 메모리에서 읽어들인 것과 파일에서 읽어들인 것이 같은지 확인하는 것도 필요하지 않을까?
 @툴에서 Config 클래스 생성자 안들어오고 이상한거 같은데 확인
 @사운드에서 스트림으로 재생한다면 로딩하지 않고 재생할수 있도록 해야 한다.
 @툴에서 작업환경을 멀티로 할지 단일로 할지 생각해봐야 겠다.

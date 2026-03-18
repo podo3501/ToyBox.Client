@@ -3,6 +3,7 @@
 #include "IAudioBackend.h"
 #include "ISoundBuffer.h"
 #include "ISoundInstance.h"
+#include "Asset/SoundAssetView.h"
 #include "Platform/Resource/IResourceManager.h"
 
 struct GroupInfo //지금은 볼륨 하나지만 조금씩 확장될 가능성이 크다.
@@ -12,54 +13,50 @@ struct GroupInfo //지금은 볼륨 하나지만 조금씩 확장될 가능성이 크다.
 
 struct LoadedSound
 {
-	const SoundInfo* info;
+	const SoundDescriptor* desc;
 	shared_ptr<ISoundBuffer> buffer;
 };
 
 struct Voice
 {
 	ISoundInstance* instance{ nullptr };
-	const SoundInfo* info{ nullptr };
+	const SoundDescriptor* desc{ nullptr };
 	uint32_t generation{ 0 };
-
-	bool Stop() noexcept
-	{
-		if (!instance) return false;
-		return instance->Stop();
-	}
 
 	void Reset() noexcept
 	{
 		instance = nullptr;
-		info = nullptr;
+		desc = nullptr;
 	}
 
 	bool StopAndReset() noexcept
 	{
-		ReturnIfFalse(Stop());
+		if (!instance) return true;
+
+		ReturnIfFalse(instance->Stop());
 		Reset();
 
 		return true;
 	}
 };
 
-unique_ptr<AudioService> AudioService::Create(StaticSoundTable staticTable, StreamSoundTable streamTable, 
-	unique_ptr<IAudioBackend> backend, IResourceManager* resManager, int maxVoices, int maxStreams) noexcept
+unique_ptr<AudioService> AudioService::Create(const SoundAssetView* sndAssetView, unique_ptr<IAudioBackend> backend,
+	IResourceManager* resManager, int maxVoices, int maxStreams) noexcept
 {
-	if (!backend) return nullptr;
+	if (sndAssetView == nullptr) return nullptr;
+	if (backend == nullptr) return nullptr;
 
 	unique_ptr<AudioService> service(
-		new AudioService(move(staticTable), move(streamTable), move(backend), resManager)); //new를 쓰는 이유는 make_unique를 못 쓰기 때문이다. make_unique는 외부함수이기 때문에 private 생성자에 접근할 수 없다.
+		new AudioService(sndAssetView, move(backend), resManager)); //new를 쓰는 이유는 make_unique를 못 쓰기 때문이다. make_unique는 외부함수이기 때문에 private 생성자에 접근할 수 없다.
 	if (!service->Initialize(maxVoices, maxStreams)) return nullptr;
 
 	return service; 
 }
 
 AudioService::~AudioService() = default;
-AudioService::AudioService(StaticSoundTable staticTable, StreamSoundTable streamTable,
-	unique_ptr<IAudioBackend> audioBackend, IResourceManager* resManager) noexcept
-	: m_staticTable{ move(staticTable) },
-	m_streamTable{ move(streamTable) },
+AudioService::AudioService(const SoundAssetView* sndAssetView,
+	unique_ptr<IAudioBackend> audioBackend, IResourceManager* resManager) noexcept :
+	m_sndAssetView{ sndAssetView },
 	m_audioBackend{ move(audioBackend) },
 	m_resManager{ resManager }
 {}
@@ -85,49 +82,55 @@ void AudioService::CreateAudioGroup() noexcept
 
 int AudioService::LoadStaticSound(string_view soundID)
 {
-	auto info = m_staticTable.GetInfo(soundID);
-	if (info == nullptr) return 0;
+	auto staticDescriptors = m_sndAssetView->staticDescriptors;
+	if (staticDescriptors == nullptr) return 0;
 
-	return LoadSoundInternal(info,
-		[this](const StaticSoundInfo* i) { return CreateStaticSoundBuffer(i); });
+	auto desc = staticDescriptors->GetDescriptor(soundID);
+	if (desc == nullptr) return 0;
+
+	return LoadSoundInternal(desc,
+		[this](const StaticSoundDescriptor* i) { return CreateStaticSoundBuffer(i); });
 }
 
 int AudioService::LoadStreamSound(string_view soundID)
 {
-	auto info = m_streamTable.GetInfo(soundID);
-	if (info == nullptr) return 0;
+	auto streamDescriptors = m_sndAssetView->streamDescriptors;
+	if (streamDescriptors == nullptr) return 0;
 
-	return LoadSoundInternal(info,
-		[this](const StreamSoundInfo* i) { return CreateStreamSoundBuffer(i); });
+	auto desc = streamDescriptors->GetDescriptor(soundID);
+	if (desc == nullptr) return 0;
+
+	return LoadSoundInternal(desc,
+		[this](const StreamSoundDescriptor* i) { return CreateStreamSoundBuffer(i); });
 }
 
-template<typename InfoType, typename CreateFunc>
-int AudioService::LoadSoundInternal(const InfoType* info, CreateFunc createFunc)
+template<typename DescType, typename CreateFunc>
+int AudioService::LoadSoundInternal(const DescType* desc, CreateFunc createFunc)
 {
 	shared_ptr<ISoundBuffer> sndBuffer;
 
-	auto it = m_buffers.find(info->filename);
+	auto it = m_buffers.find(desc->filename);
 	if (it != m_buffers.end())
 		sndBuffer = it->second.lock();
 
 	if (!sndBuffer)
 	{
-		sndBuffer = createFunc(info);
+		sndBuffer = createFunc(desc);
 		if (!sndBuffer) return 0;
 
-		m_buffers.insert_or_assign(info->filename, sndBuffer);
+		m_buffers.insert_or_assign(desc->filename, sndBuffer);
 	}
 
 	int soundHandle = m_nextSoundHandle++;
-	m_loadedSounds.emplace(soundHandle, LoadedSound{ info, sndBuffer });
+	m_loadedSounds.emplace(soundHandle, LoadedSound{ desc, sndBuffer });
 
 	return soundHandle;
 }
 
-shared_ptr<ISoundBuffer> AudioService::CreateStaticSoundBuffer(const StaticSoundInfo* info)
+shared_ptr<ISoundBuffer> AudioService::CreateStaticSoundBuffer(const StaticSoundDescriptor* desc)
 {
 	Core::ByteBuffer buffer;
-	if (!m_resManager->Read(info->filename, buffer)) return nullptr;
+	if (!m_resManager->Read(desc->filename, buffer)) return nullptr;
 
 	auto staticBuffer = m_audioBackend->CreateStaticSoundBuffer();
 	if (!staticBuffer) return nullptr;
@@ -136,12 +139,12 @@ shared_ptr<ISoundBuffer> AudioService::CreateStaticSoundBuffer(const StaticSound
 	return staticBuffer;
 }
 
-shared_ptr<ISoundBuffer> AudioService::CreateStreamSoundBuffer(const StreamSoundInfo* info)
+shared_ptr<ISoundBuffer> AudioService::CreateStreamSoundBuffer(const StreamSoundDescriptor* desc)
 {
 	auto streamBuffer = m_audioBackend->CreateStreamSoundBuffer();
 	if (!streamBuffer) return nullptr;
 
-	auto stream = m_resManager->CreateReadStream(info->filename);
+	auto stream = m_resManager->CreateReadStream(desc->filename);
 	if (!stream) return nullptr;
 
 	if (!streamBuffer->AttachStream(move(stream))) return nullptr;
@@ -171,21 +174,21 @@ static int MakeHandle(uint16_t index, uint16_t generation)
 	return (index & 0xFFFF) | (generation << 16); // 32비트 핸들 생성: 하위 16비트 = 슬롯 인덱스, 상위 16비트 = 세대;
 }
 
-PlaybackParams AudioService::GetParams(const SoundInfo* info)
+PlaybackParams AudioService::GetParams(const SoundDescriptor* desc)
 {
 	PlaybackParams params;
-	params.volume = GetInstanceVolume(info->groupID, info->volume);
+	params.volume = GetInstanceVolume(desc->groupID, desc->volume);
 	
-	if (info->sndType == SoundType::Static)
+	if (desc->sndType == SoundType::Static)
 	{
-		const StaticSoundInfo* staticInfo = static_cast<const StaticSoundInfo*>(info);
+		const StaticSoundDescriptor* staticDesc = static_cast<const StaticSoundDescriptor*>(desc);
 		//여기에 새로 추가되는 것들을 params에 추가.
 	}
 
-	if (info->sndType == SoundType::Stream)
+	if (desc->sndType == SoundType::Stream)
 	{
-		const StreamSoundInfo* streamInfo = static_cast<const StreamSoundInfo*>(info);
-		params.loop = streamInfo->loop;
+		const StreamSoundDescriptor* streamDesc = static_cast<const StreamSoundDescriptor*>(desc);
+		params.loop = streamDesc->loop;
 	}
 
 	return params;
@@ -197,20 +200,20 @@ int AudioService::Play(int soundHandle) noexcept
 	if (it == m_loadedSounds.end()) return 0;
 
 	auto& loaded = it->second;
-	SoundType sndType = loaded.info->sndType;
+	SoundType sndType = loaded.desc->sndType;
 	int index = FindFreeVoiceIndex(sndType);
 	if (index == -1) return 0;
 
-	auto instance = m_audioBackend->AcquireInstance(sndType, loaded.buffer.get(), index);
+	auto instance = GetBackendInstance(sndType, loaded.buffer.get(), index);
 	if (!instance) return 0;
 	
-	if (!instance->Reset(GetParams(loaded.info))) return 0;
+	if (!instance->Reset(GetParams(loaded.desc))) return 0;
 	if (!instance->Play()) return 0;
 
 	auto& voice = GetVoiceSlot(sndType, index);
 	voice.instance = instance;
-	voice.info = loaded.info;
-	voice.generation++;
+	voice.desc = loaded.desc;
+	voice.generation = (voice.generation + 1) & 0xFFFF;
 	
 	int baseIndex = (sndType == SoundType::Stream) ? static_cast<int>(m_staticVoices.size()) : 0;
 	return MakeHandle(baseIndex + index, voice.generation);
@@ -240,17 +243,25 @@ bool AudioService::Stop(int instanceHandle) noexcept
 	return voice->StopAndReset();
 }
 
+bool AudioService::AllStop() noexcept
+{
+	bool staticOk = ranges::all_of(m_staticVoices, [](auto& voice) { return voice.StopAndReset(); });
+	bool streamOk = ranges::all_of(m_streamVoices, [](auto& voice) { return voice.StopAndReset(); });
+
+	return staticOk && streamOk;
+}
+
 bool AudioService::Unload(int soundHandle) noexcept
 {
 	auto it = m_loadedSounds.find(soundHandle);
 	if (it == m_loadedSounds.end()) return false;
 
-	auto targetInfo = it->second.info; 
-	auto stopVoices = [targetInfo](auto& voices) {
+	auto targetDesc = it->second.desc; 
+	auto stopVoices = [targetDesc](auto& voices) {
 		for (auto& voice : voices)
 		{
 			if (voice.instance == nullptr) continue;
-			if (voice.info != targetInfo) continue;
+			if (voice.desc != targetDesc) continue;
 
 			ReturnIfFalse(voice.StopAndReset());
 		}
@@ -292,10 +303,10 @@ bool AudioService::SetVolume(int instanceHandle, float volume) noexcept
 	auto voice = GetVoice(instanceHandle);
 	if (voice == nullptr) return false;
 
-	auto& info = *voice->info;
+	auto& desc = *voice->desc;
 	auto& instance = *voice->instance;
 
-	auto groupID = info.groupID;
+	auto groupID = desc.groupID;
 	if (groupID == EnumUtil::Invalid<AudioGroupID>) return false;
 
 	return instance.SetVolume(GetInstanceVolume(groupID, volume));
@@ -358,4 +369,15 @@ const ISoundInstance* AudioService::GetInstance(int handle) const noexcept
 ISoundInstance* AudioService::GetInstance(int handle) noexcept
 {
 	return const_cast<ISoundInstance*>(static_cast<const AudioService*>(this)->GetInstance(handle));
+}
+
+ISoundInstance* AudioService::GetBackendInstance(SoundType type, ISoundBuffer* buffer, int index)
+{
+	switch (type)
+	{
+	case SoundType::Static: return m_audioBackend->RequestStaticInstance(buffer, index);
+	case SoundType::Stream: return m_audioBackend->RequestStreamInstance(buffer, index);
+	}
+
+	return nullptr;
 }

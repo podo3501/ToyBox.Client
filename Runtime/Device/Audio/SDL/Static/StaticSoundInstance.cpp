@@ -8,6 +8,7 @@ using enum PlaybackState;
 StaticSoundInstance::~StaticSoundInstance()
 {
     if (m_track) MIX_DestroyTrack(m_track);
+    if (m_options) SDL_DestroyProperties(m_options);
 }
 StaticSoundInstance::StaticSoundInstance() = default;
 
@@ -17,13 +18,19 @@ bool StaticSoundInstance::Setup(MIX_Mixer* mixer)
     if (!m_track) return false;
 
     m_options = SDL_CreateProperties();
-    if (!m_options) return false;
+    if (!m_options)
+    {
+        MIX_DestroyTrack(m_track);
+        m_track = nullptr;
+        return false;
+    }
 
     return true;
 }
 
 bool StaticSoundInstance::SetBuffer(StaticSoundBuffer* buffer)
 {
+    if (!m_track || !buffer) return false;
     return MIX_SetTrackAudio(m_track, buffer->GetAudio());
 }
 
@@ -64,14 +71,15 @@ void StaticSoundInstance::Update()
 
 bool StaticSoundInstance::SetVolume(float volume)
 {
+    volume = clamp(volume, 0.0f, 1.0f);
     return MIX_SetTrackGain(m_track, volume);
 }
 
 PlaybackState StaticSoundInstance::GetState() const noexcept
 {
     if (m_track == nullptr) return EnumUtil::Invalid<PlaybackState>;
-    if (MIX_TrackPlaying(m_track)) return PlaybackState::Playing;
     if (MIX_TrackPaused(m_track)) return PlaybackState::Paused;
+    if (MIX_TrackPlaying(m_track)) return PlaybackState::Playing;
 
     return PlaybackState::Stopped;
 }

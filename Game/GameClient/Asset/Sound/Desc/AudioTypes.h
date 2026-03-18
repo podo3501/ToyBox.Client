@@ -15,11 +15,3 @@ enum class AudioGroupID : int
 	System,
 	Count
 };
-
-enum class PlaybackState : int
-{
-	Playing,
-	Paused,
-	Stopped,
-	Count
-};

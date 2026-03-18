@@ -51,27 +51,24 @@ unique_ptr<IStreamSoundBuffer> SDLAudioBackend::CreateStreamSoundBuffer()
 	return make_unique<StreamSoundBuffer>();
 }
 
-ISoundInstance* SDLAudioBackend::AcquireInstance(SoundType type, ISoundBuffer* sndBuffer, int index)
+ISoundInstance* SDLAudioBackend::RequestStaticInstance(ISoundBuffer* sndBuffer, int index)
 {
-	if (type == SoundType::Static)
-	{
-		auto staticBuffer = static_cast<StaticSoundBuffer*>(sndBuffer);
-		auto& instance = m_staticInstances[index];
-		if (!instance.SetBuffer(staticBuffer)) return nullptr;
+	if (index < 0 || index >= m_staticInstances.size()) return nullptr;
+	auto staticBuffer = static_cast<StaticSoundBuffer*>(sndBuffer);
+	auto& instance = m_staticInstances[index];
+	if (!instance.SetBuffer(staticBuffer)) return nullptr;
 
-		return &instance;
-	}
+	return &instance;
+}
 
-	if (type == SoundType::Stream)
-	{
-		auto streamBuffer = static_cast<StreamSoundBuffer*>(sndBuffer);
-		auto& instance = m_streamInstances[index];
-		if (!instance->SetBuffer(streamBuffer)) return nullptr;
+ISoundInstance* SDLAudioBackend::RequestStreamInstance(ISoundBuffer* sndBuffer, int index)
+{
+	if (index < 0 || index >= m_streamInstances.size()) return nullptr;
+	auto streamBuffer = static_cast<StreamSoundBuffer*>(sndBuffer);
+	auto& instance = m_streamInstances[index];
+	if (!instance->SetBuffer(streamBuffer)) return nullptr;
 
-		return instance.get();
-	}
-
-	return nullptr;
+	return instance.get();
 }
 
 //////////////////////////////////////////////////////

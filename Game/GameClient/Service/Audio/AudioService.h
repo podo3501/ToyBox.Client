@@ -1,23 +1,28 @@
 #pragma once
-#include "StaticSoundTable.h"
-#include "StreamSoundTable.h"
 #include "Core/Utils/CycleIterator.h"
 
 struct IAudioBackend;
 struct IResourceManager;
+struct SoundAssetView;
 struct ISoundBuffer;
 struct ISoundInstance;
 struct GroupInfo;
 struct LoadedSound;
 struct Voice;
 struct PlaybackParams;
+struct StaticSoundDescriptor;
+struct StreamSoundDescriptor;
+struct SoundDescriptor;
+enum class PlaybackState;
+enum class AudioGroupID;
+enum class SoundType;
 class AudioService
 {
 public:
 	~AudioService();
 	AudioService() = delete;
-	static unique_ptr<AudioService> Create(StaticSoundTable staticTable, StreamSoundTable streamTable,
-		unique_ptr<IAudioBackend> backend, IResourceManager* resManager, int maxVoices, int maxStreams) noexcept;
+	static unique_ptr<AudioService> Create(const SoundAssetView* sndAssetView, unique_ptr<IAudioBackend> backend,
+		IResourceManager* resManager, int maxVoices, int maxStreams) noexcept;
 	int LoadStaticSound(string_view soundID);
 	int LoadStreamSound(string_view soundID);
 	bool Unload(int soundHandle) noexcept;
@@ -25,6 +30,7 @@ public:
 	bool Pause(int instanceHandle) noexcept;
 	bool Resume(int instanceHandle) noexcept;
 	bool Stop(int instanceHandle) noexcept;
+	bool AllStop() noexcept;
 	void Update() noexcept;
 	PlaybackState GetState(int handle) const noexcept;
 	inline void SetMasterVolume(float volume) noexcept { m_masterVolume = volume; }
@@ -32,16 +38,16 @@ public:
 	bool SetVolume(int handle, float volume) noexcept;
 
 private:
-	AudioService(StaticSoundTable staticTable, StreamSoundTable streamTable, 
+	AudioService(const SoundAssetView* sndAssetView,
 		unique_ptr<IAudioBackend> audioBackend, IResourceManager* resManager) noexcept;
 	bool Initialize(int maxVoices, int maxStreams) noexcept;
-	shared_ptr<ISoundBuffer> CreateStaticSoundBuffer(const StaticSoundInfo* info);
-	shared_ptr<ISoundBuffer> CreateStreamSoundBuffer(const StreamSoundInfo* info);
-	template<typename InfoType, typename CreateFunc>
-	int LoadSoundInternal(const InfoType* info, CreateFunc createFunc);
+	shared_ptr<ISoundBuffer> CreateStaticSoundBuffer(const StaticSoundDescriptor* desc);
+	shared_ptr<ISoundBuffer> CreateStreamSoundBuffer(const StreamSoundDescriptor* desc);
+	template<typename DescType, typename CreateFunc>
+	int LoadSoundInternal(const DescType* desc, CreateFunc createFunc);
 	void CreateAudioGroup() noexcept;
 	int FindFreeVoiceIndex(SoundType type) noexcept;
-	PlaybackParams GetParams(const SoundInfo* info);
+	PlaybackParams GetParams(const SoundDescriptor* desc);
 	float GetGroupVolume(AudioGroupID groupID) const noexcept;
 	float GetInstanceVolume(AudioGroupID groupID, float volume) const noexcept;
 	Voice& GetVoiceSlot(SoundType type, int index) noexcept;
@@ -49,9 +55,9 @@ private:
 	Voice* GetVoice(int handle) noexcept;
 	const ISoundInstance* GetInstance(int handle) const noexcept;
 	ISoundInstance* GetInstance(int handle) noexcept;
+	ISoundInstance* GetBackendInstance(SoundType type, ISoundBuffer* buffer, int index);
 
-	StaticSoundTable m_staticTable;
-	StreamSoundTable m_streamTable;
+	const SoundAssetView* m_sndAssetView{ nullptr };
 	unique_ptr<IAudioBackend> m_audioBackend;
 	IResourceManager* m_resManager{ nullptr };
 	unordered_map<filesystem::path, weak_ptr<ISoundBuffer>> m_buffers;
