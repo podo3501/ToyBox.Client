@@ -1,32 +1,29 @@
 #include "pch.h"
 #include "AudioService.h"
+#include "SoundRepository.h"
 #include "IAudioBackend.h"
-#include "ISoundBuffer.h"
 #include "ISoundInstance.h"
 #include "Asset/SoundAssetView.h"
-#include "Platform/Resource/IResourceManager.h"
 
 struct GroupInfo //지금은 볼륨 하나지만 조금씩 확장될 가능성이 크다.
 {
 	float volume{ 1.f };
 };
 
-struct LoadedSound
-{
-	const SoundDescriptor* desc;
-	shared_ptr<ISoundBuffer> buffer;
-};
-
 struct Voice
 {
 	ISoundInstance* instance{ nullptr };
 	const SoundDescriptor* desc{ nullptr };
+	//?!? int soundHandle{ 0 }; 이걸 추가해서 unload할때 이 값으로 비교해서 없애는 것으로 하자. desc로 하지말고.
+	//?!? desc 비교를 하지 않게되면 포인터 비교에서 값 비교로 넘어갈 수 있으니까 포인터로 들고 다니지 말고 값으로 넘겨받자.
+	
 	uint32_t generation{ 0 };
 
 	void Reset() noexcept
 	{
 		instance = nullptr;
 		desc = nullptr;
+		//?!? soundHandle = 0;
 	}
 
 	bool StopAndReset() noexcept
@@ -45,20 +42,22 @@ unique_ptr<AudioService> AudioService::Create(const SoundAssetView* sndAssetView
 {
 	if (sndAssetView == nullptr) return nullptr;
 	if (backend == nullptr) return nullptr;
+	
+	auto sndRepository = make_unique<SoundRepository>(backend.get(), resManager);
 
 	unique_ptr<AudioService> service(
-		new AudioService(sndAssetView, move(backend), resManager)); //new를 쓰는 이유는 make_unique를 못 쓰기 때문이다. make_unique는 외부함수이기 때문에 private 생성자에 접근할 수 없다.
+		new AudioService(sndAssetView, move(sndRepository), move(backend))); //new를 쓰는 이유는 make_unique를 못 쓰기 때문이다. make_unique는 외부함수이기 때문에 private 생성자에 접근할 수 없다.
 	if (!service->Initialize(maxVoices, maxStreams)) return nullptr;
 
 	return service; 
 }
 
 AudioService::~AudioService() = default;
-AudioService::AudioService(const SoundAssetView* sndAssetView,
-	unique_ptr<IAudioBackend> audioBackend, IResourceManager* resManager) noexcept :
+AudioService::AudioService(const SoundAssetView* sndAssetView, unique_ptr<SoundRepository> sndRepository,
+	unique_ptr<IAudioBackend> audioBackend) noexcept :
 	m_sndAssetView{ sndAssetView },
 	m_audioBackend{ move(audioBackend) },
-	m_resManager{ resManager }
+	m_repository{ move(sndRepository)}
 {}
 
 bool AudioService::Initialize(int maxVoices, int maxStreams) noexcept
@@ -88,8 +87,7 @@ int AudioService::LoadStaticSound(string_view soundID)
 	auto desc = staticDescriptors->GetDescriptor(soundID);
 	if (desc == nullptr) return 0;
 
-	return LoadSoundInternal(desc,
-		[this](const StaticSoundDescriptor* i) { return CreateStaticSoundBuffer(i); });
+	return m_repository->AcquireStaticSound(desc);
 }
 
 int AudioService::LoadStreamSound(string_view soundID)
@@ -99,56 +97,8 @@ int AudioService::LoadStreamSound(string_view soundID)
 
 	auto desc = streamDescriptors->GetDescriptor(soundID);
 	if (desc == nullptr) return 0;
-
-	return LoadSoundInternal(desc,
-		[this](const StreamSoundDescriptor* i) { return CreateStreamSoundBuffer(i); });
-}
-
-template<typename DescType, typename CreateFunc>
-int AudioService::LoadSoundInternal(const DescType* desc, CreateFunc createFunc)
-{
-	shared_ptr<ISoundBuffer> sndBuffer;
-
-	auto it = m_buffers.find(desc->filename);
-	if (it != m_buffers.end())
-		sndBuffer = it->second.lock();
-
-	if (!sndBuffer)
-	{
-		sndBuffer = createFunc(desc);
-		if (!sndBuffer) return 0;
-
-		m_buffers.insert_or_assign(desc->filename, sndBuffer);
-	}
-
-	int soundHandle = m_nextSoundHandle++;
-	m_loadedSounds.emplace(soundHandle, LoadedSound{ desc, sndBuffer });
-
-	return soundHandle;
-}
-
-shared_ptr<ISoundBuffer> AudioService::CreateStaticSoundBuffer(const StaticSoundDescriptor* desc)
-{
-	Core::ByteBuffer buffer;
-	if (!m_resManager->Read(desc->filename, buffer)) return nullptr;
-
-	auto staticBuffer = m_audioBackend->CreateStaticSoundBuffer();
-	if (!staticBuffer) return nullptr;
-
-	if (!staticBuffer->LoadFromMemory(move(buffer))) return nullptr;
-	return staticBuffer;
-}
-
-shared_ptr<ISoundBuffer> AudioService::CreateStreamSoundBuffer(const StreamSoundDescriptor* desc)
-{
-	auto streamBuffer = m_audioBackend->CreateStreamSoundBuffer();
-	if (!streamBuffer) return nullptr;
-
-	auto stream = m_resManager->CreateReadStream(desc->filename);
-	if (!stream) return nullptr;
-
-	if (!streamBuffer->AttachStream(move(stream))) return nullptr;
-	return streamBuffer;
+	
+	return m_repository->AcquireStreamSound(desc);
 }
 
 int AudioService::FindFreeVoiceIndex(SoundType type) noexcept
@@ -196,23 +146,22 @@ PlaybackParams AudioService::GetParams(const SoundDescriptor* desc)
 
 int AudioService::Play(int soundHandle) noexcept
 {
-	auto it = m_loadedSounds.find(soundHandle);
-	if (it == m_loadedSounds.end()) return 0;
+	auto loaded = m_repository->Find(soundHandle);
+	if (loaded == nullptr) return 0;
 
-	auto& loaded = it->second;
-	SoundType sndType = loaded.desc->sndType;
+	SoundType sndType = loaded->desc->sndType;
 	int index = FindFreeVoiceIndex(sndType);
 	if (index == -1) return 0;
 
-	auto instance = GetBackendInstance(sndType, loaded.buffer.get(), index);
+	auto instance = GetBackendInstance(sndType, loaded->buffer.get());
 	if (!instance) return 0;
 	
-	if (!instance->Reset(GetParams(loaded.desc))) return 0;
+	if (!instance->Reset(GetParams(loaded->desc))) return 0;
 	if (!instance->Play()) return 0;
 
-	auto& voice = GetVoiceSlot(sndType, index);
+	auto& voice = GetVoiceSlot(sndType, index); //index를 backend로 안보내면서 FindFreeVoiceIndex와 합칠수 있게 되었다.
 	voice.instance = instance;
-	voice.desc = loaded.desc;
+	voice.desc = loaded->desc;
 	voice.generation = (voice.generation + 1) & 0xFFFF;
 	
 	int baseIndex = (sndType == SoundType::Stream) ? static_cast<int>(m_staticVoices.size()) : 0;
@@ -253,10 +202,10 @@ bool AudioService::AllStop() noexcept
 
 bool AudioService::Unload(int soundHandle) noexcept
 {
-	auto it = m_loadedSounds.find(soundHandle);
-	if (it == m_loadedSounds.end()) return false;
+	auto loaded = m_repository->Find(soundHandle);
+	if (loaded == nullptr) return false;
 
-	auto targetDesc = it->second.desc; 
+	auto targetDesc = loaded->desc;
 	auto stopVoices = [targetDesc](auto& voices) {
 		for (auto& voice : voices)
 		{
@@ -270,8 +219,7 @@ bool AudioService::Unload(int soundHandle) noexcept
 	ReturnIfFalse(stopVoices(m_staticVoices));
 	ReturnIfFalse(stopVoices(m_streamVoices));
 
-	m_loadedSounds.erase(it);
-	return true;
+	return m_repository->Remove(soundHandle);
 }
 
 PlaybackState AudioService::GetState(int handle) const noexcept
@@ -290,7 +238,10 @@ void AudioService::Update() noexcept
 			if (!voice.instance) continue;
 
 			voice.instance->Update();
-			if (voice.instance->GetState() == PlaybackState::Stopped)
+			auto state = voice.instance->GetState();
+			if (state == EnumUtil::Invalid<PlaybackState>)
+				int a = 1;
+			if (state == PlaybackState::Stopped)
 				voice.Reset();
 		}};
 
@@ -371,12 +322,12 @@ ISoundInstance* AudioService::GetInstance(int handle) noexcept
 	return const_cast<ISoundInstance*>(static_cast<const AudioService*>(this)->GetInstance(handle));
 }
 
-ISoundInstance* AudioService::GetBackendInstance(SoundType type, ISoundBuffer* buffer, int index)
+ISoundInstance* AudioService::GetBackendInstance(SoundType type, ISoundBuffer* buffer)
 {
 	switch (type)
 	{
-	case SoundType::Static: return m_audioBackend->RequestStaticInstance(buffer, index);
-	case SoundType::Stream: return m_audioBackend->RequestStreamInstance(buffer, index);
+	case SoundType::Static: return m_audioBackend->RequestStaticInstance(buffer);
+	case SoundType::Stream: return m_audioBackend->RequestStreamInstance(buffer);
 	}
 
 	return nullptr;

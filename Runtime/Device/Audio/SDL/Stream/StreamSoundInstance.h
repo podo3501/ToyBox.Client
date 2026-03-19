@@ -38,8 +38,8 @@ private:
 	SDL_AudioStream* m_stream{ nullptr };
 	float m_volume{ 1.f };
 	bool m_loop{ false };
-	bool m_paused{ false };
-	bool m_finished{ false };
+	bool m_draining{ false }; //데이터가 다 들어갔지만 큐에 소비할 것이 남아 있는지. 소비가 끝나야 Stopped로 전환된다.
+	PlaybackState m_state{ PlaybackState::Stopped };
 
 	std::array<char, 16384> m_decodeBuffer{}; // 함수 한군데에서만 사용하지만 여기에 선언하는 이유는 멀티쓰레드나 멀티스트림이 되면 스택이 오버플로우 될수 있기 때문.
 };

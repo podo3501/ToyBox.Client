@@ -25,12 +25,19 @@ bool StaticSoundInstance::Setup(MIX_Mixer* mixer)
         return false;
     }
 
+    MIX_SetTrackStoppedCallback(m_track, [](void* userdata, MIX_Track* track) {
+        if (auto* self = static_cast<StaticSoundInstance*>(userdata))
+            self->OnStopped();
+        }, this);
+
     return true;
 }
 
 bool StaticSoundInstance::SetBuffer(StaticSoundBuffer* buffer)
 {
+    if (m_state == Playing) return false;
     if (!m_track || !buffer) return false;
+
     return MIX_SetTrackAudio(m_track, buffer->GetAudio());
 }
 
@@ -39,31 +46,46 @@ bool StaticSoundInstance::Reset(const PlaybackParams& params)
     ReturnIfFalse(MIX_StopTrack(m_track, 0));
     ReturnIfFalse(MIX_SetTrackPlaybackPosition(m_track, 0));
     ReturnIfFalse(SetVolume(params.volume));
+    m_state = Stopped;
 
     return true;
 }
 
 bool StaticSoundInstance::Play()
 {
-    return MIX_PlayTrack(m_track, m_options);
+    ReturnIfFalse(MIX_PlayTrack(m_track, m_options));
+    m_state = Playing;
+    return true;
 }
 
 bool StaticSoundInstance::Pause()
 {
-    return MIX_PauseTrack(m_track);
+    if (m_state != Playing) return false;
+
+    ReturnIfFalse(MIX_PauseTrack(m_track));
+    m_state = Paused;
+    return true;
 }
 
 bool StaticSoundInstance::Resume()
 {
-    return MIX_ResumeTrack(m_track);
+    if (m_state != Paused) return false;
+
+    ReturnIfFalse(MIX_ResumeTrack(m_track));
+    m_state = Playing;
+    return true;
 }
 
 bool StaticSoundInstance::Stop()
 {
-    ReturnIfFalse(MIX_StopTrack(m_track, 0));
-    ReturnIfFalse(MIX_SetTrackPlaybackPosition(m_track, 0));
+    return MIX_StopTrack(m_track, 0);
+}
 
-    return true;
+void StaticSoundInstance::OnStopped()
+{
+    auto isOk = MIX_SetTrackPlaybackPosition(m_track, 0);
+    Assert(isOk);
+    m_state = Stopped;
 }
 
 void StaticSoundInstance::Update()
@@ -78,8 +100,5 @@ bool StaticSoundInstance::SetVolume(float volume)
 PlaybackState StaticSoundInstance::GetState() const noexcept
 {
     if (m_track == nullptr) return EnumUtil::Invalid<PlaybackState>;
-    if (MIX_TrackPaused(m_track)) return PlaybackState::Paused;
-    if (MIX_TrackPlaying(m_track)) return PlaybackState::Playing;
-
-    return PlaybackState::Stopped;
+    return m_state;
 }

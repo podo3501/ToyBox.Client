@@ -12,8 +12,8 @@ struct IAudioBackend
 	virtual bool Initialize(int maxVoices, int maxStreams) noexcept = 0;
 	virtual unique_ptr<IStaticSoundBuffer> CreateStaticSoundBuffer() = 0;
 	virtual unique_ptr<IStreamSoundBuffer> CreateStreamSoundBuffer() = 0;
-	virtual ISoundInstance* RequestStaticInstance(ISoundBuffer* sndBuffer, int index) = 0;
-	virtual ISoundInstance* RequestStreamInstance(ISoundBuffer* sndBuffer, int index) = 0;
+	virtual ISoundInstance* RequestStaticInstance(ISoundBuffer* sndBuffer) = 0;
+	virtual ISoundInstance* RequestStreamInstance(ISoundBuffer* sndBuffer) = 0;
 };
 
 std::unique_ptr<IAudioBackend> CreateAudioBackend();

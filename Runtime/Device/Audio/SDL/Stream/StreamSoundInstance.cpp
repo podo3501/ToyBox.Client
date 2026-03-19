@@ -5,6 +5,8 @@
 #include "VorbisStreamCallbacks.h"
 #include "Platform/Resource/IResourceStream.h"
 
+using enum PlaybackState;
+
 SDL_AudioSpec VorbisToSDLAudioSpec(OggVorbis_File& vf)
 {
     SDL_AudioSpec spec{};
@@ -42,9 +44,10 @@ bool StreamSoundInstance::Setup(AudioDevice* device)
 
 bool StreamSoundInstance::SetBuffer(StreamSoundBuffer* buffer)
 {
+    if (m_state == Playing) return false;
     if (buffer == nullptr) return false;
-    m_buffer = buffer;
 
+    m_buffer = buffer;
     return true;
 }
 
@@ -80,8 +83,8 @@ bool StreamSoundInstance::Reset(const PlaybackParams& params)
     SDL_ClearAudioStream(m_stream);
     ReturnIfFalse(SetVolume(params.volume));
     m_loop = params.loop;
-    m_paused = false;
-    m_finished = false;
+    m_draining = false;
+    m_state = Stopped;
 
     return true;
 }
@@ -90,53 +93,71 @@ bool StreamSoundInstance::Play()
 {
     if (!m_stream) return false;
 
-    m_finished = false;
-    m_paused = false;
+    m_draining = false;
+    m_state = Playing;
+
     constexpr int INITIAL_FILL = 4;
     for (int i = 0; i < INITIAL_FILL; ++i)
-        if(!PushChunk()) return false;
+    {
+        if (!PushChunk())
+        {
+            if (!m_draining) return false; //데이터를 다 넣고 끝난게 아니라면 오류.
+            break; //소리 버퍼가 원래 작은거.
+        }
+    }
 
     return true;
 }
 
 bool StreamSoundInstance::Pause()
 {
-    if (!m_stream) 
-        return false;
+    if (m_state != Playing) return false;
+    if (!m_stream) return false;
 
-    m_paused = true;
+    m_state = Paused;
     return true;
 }
 
 bool StreamSoundInstance::Resume()
 {
-    if (!m_stream)
-        return false;
+    if (m_state != Paused) return false;
+    if (!m_stream) return false;
 
-    m_paused = false;
+    m_state = Playing;
     return SetVolume(m_volume);
 }
 
 bool StreamSoundInstance::Stop()
 {
-    if (!m_stream)
-        return false;
+    if (!m_stream) return false;
 
     ReturnIfFalse(SDL_ClearAudioStream(m_stream));
-    m_finished = true;
-    m_paused = false;
+    m_draining = false;
+    m_state = Stopped;
 
     return true;
 }
 
 void StreamSoundInstance::Update()
 {
-    if (!m_stream || m_finished || m_paused)
+    if (!m_stream || m_state != Playing)
         return;
 
-    constexpr int LOW_WATERMARK = 128 * 1024;
-    while (SDL_GetAudioStreamQueued(m_stream) < LOW_WATERMARK)
-        if (!PushChunk()) break;
+    if (!m_draining)
+    {
+        constexpr int LOW_WATERMARK = 128 * 1024;
+
+        while (SDL_GetAudioStreamQueued(m_stream) < LOW_WATERMARK)
+            if (!PushChunk()) break;
+    }
+    else
+    {
+        if (SDL_GetAudioStreamQueued(m_stream) == 0)
+        {
+            m_draining = false;
+            m_state = PlaybackState::Stopped;
+        }
+    }
 }
 
 bool StreamSoundInstance::SetVolume(float volume)
@@ -150,10 +171,7 @@ bool StreamSoundInstance::SetVolume(float volume)
 PlaybackState StreamSoundInstance::GetState() const noexcept 
 { 
     if (!m_stream) return EnumUtil::Invalid<PlaybackState>;
-    if (m_paused) return PlaybackState::Paused;
-    if (!m_finished || SDL_GetAudioStreamQueued(m_stream) > 0) return PlaybackState::Playing;
-
-    return PlaybackState::Stopped;
+    return m_state;
 }
 
 bool StreamSoundInstance::PushChunk()
@@ -182,7 +200,7 @@ bool StreamSoundInstance::PushChunk()
         }
         else
         {
-            m_finished = true;
+            m_draining = true;
             SDL_FlushAudioStream(m_stream);
         }
 
@@ -190,7 +208,9 @@ bool StreamSoundInstance::PushChunk()
     }
 
     //bytes < 0 -> 디코딩 오류시 처리.
-    m_finished = true;
-    SDL_FlushAudioStream(m_stream);
+    m_draining = false;
+    m_state = Stopped;
+    SDL_ClearAudioStream(m_stream);
+
     return false;
 }

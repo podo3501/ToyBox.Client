@@ -51,24 +51,28 @@ unique_ptr<IStreamSoundBuffer> SDLAudioBackend::CreateStreamSoundBuffer()
 	return make_unique<StreamSoundBuffer>();
 }
 
-ISoundInstance* SDLAudioBackend::RequestStaticInstance(ISoundBuffer* sndBuffer, int index)
+ISoundInstance* SDLAudioBackend::RequestStaticInstance(ISoundBuffer* sndBuffer)
 {
-	if (index < 0 || index >= m_staticInstances.size()) return nullptr;
 	auto staticBuffer = static_cast<StaticSoundBuffer*>(sndBuffer);
-	auto& instance = m_staticInstances[index];
-	if (!instance.SetBuffer(staticBuffer)) return nullptr;
+	for (auto& instance : m_staticInstances)
+	{
+		if (instance.SetBuffer(staticBuffer))
+			return &instance;
+	}
 
-	return &instance;
+	return nullptr;
 }
 
-ISoundInstance* SDLAudioBackend::RequestStreamInstance(ISoundBuffer* sndBuffer, int index)
+ISoundInstance* SDLAudioBackend::RequestStreamInstance(ISoundBuffer* sndBuffer)
 {
-	if (index < 0 || index >= m_streamInstances.size()) return nullptr;
 	auto streamBuffer = static_cast<StreamSoundBuffer*>(sndBuffer);
-	auto& instance = m_streamInstances[index];
-	if (!instance->SetBuffer(streamBuffer)) return nullptr;
+	for (auto& instance : m_streamInstances)
+	{
+		if (instance->SetBuffer(streamBuffer))
+			return instance.get();
+	}
 
-	return instance.get();
+	return nullptr;
 }
 
 //////////////////////////////////////////////////////

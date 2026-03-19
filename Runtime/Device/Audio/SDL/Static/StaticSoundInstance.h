@@ -21,8 +21,10 @@ public:
 
     bool Setup(MIX_Mixer* mixer);
     bool SetBuffer(StaticSoundBuffer* buffer);
+    void OnStopped(); //callback ÇÔ¼ö
 
 private:
     MIX_Track* m_track{ nullptr };
     SDL_PropertiesID m_options{};
+    PlaybackState m_state{ PlaybackState::Stopped };
 };

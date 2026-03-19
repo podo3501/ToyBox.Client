@@ -38,6 +38,13 @@
     <ClCompile Include="Scenes\Test\TestScene1.cpp" />
     <ClCompile Include="Scenes\Test\TestScene2.cpp" />
     <ClCompile Include="Service\Audio\AudioService.cpp" />
+    <ClCompile Include="Service\Audio\SoundRepository.cpp" />
+    <ClCompile Include="Service\Audio\VoicePool.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="UserInterface\CommandHistory\TextureResource\TexResCommandHistory.cpp" />
     <ClCompile Include="UserInterface\CommandHistory\TextureResource\TexResCommandRegistry.cpp" />
     <ClCompile Include="UserInterface\CommandHistory\UserInterface\UICommandHistory.cpp" />
@@ -118,6 +125,13 @@
     <ClInclude Include="Service\Audio\IAudioBackend.h" />
     <ClInclude Include="Service\Audio\ISoundBuffer.h" />
     <ClInclude Include="Service\Audio\ISoundInstance.h" />
+    <ClInclude Include="Service\Audio\SoundRepository.h" />
+    <ClInclude Include="Service\Audio\VoicePool.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="UserInterface\CommandHistory\Command.h" />
     <ClInclude Include="UserInterface\CommandHistory\CommandHistory.h" />
     <ClInclude Include="UserInterface\CommandHistory\CommandType.h" />

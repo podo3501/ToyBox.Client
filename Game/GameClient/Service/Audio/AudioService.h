@@ -7,15 +7,14 @@ struct SoundAssetView;
 struct ISoundBuffer;
 struct ISoundInstance;
 struct GroupInfo;
-struct LoadedSound;
 struct Voice;
 struct PlaybackParams;
-struct StaticSoundDescriptor;
-struct StreamSoundDescriptor;
 struct SoundDescriptor;
+class SoundRepository;
 enum class PlaybackState;
 enum class AudioGroupID;
 enum class SoundType;
+
 class AudioService
 {
 public:
@@ -38,13 +37,9 @@ public:
 	bool SetVolume(int handle, float volume) noexcept;
 
 private:
-	AudioService(const SoundAssetView* sndAssetView,
-		unique_ptr<IAudioBackend> audioBackend, IResourceManager* resManager) noexcept;
+	AudioService(const SoundAssetView* sndAssetView, unique_ptr<SoundRepository> sndRepository,
+		unique_ptr<IAudioBackend> audioBackend) noexcept;
 	bool Initialize(int maxVoices, int maxStreams) noexcept;
-	shared_ptr<ISoundBuffer> CreateStaticSoundBuffer(const StaticSoundDescriptor* desc);
-	shared_ptr<ISoundBuffer> CreateStreamSoundBuffer(const StreamSoundDescriptor* desc);
-	template<typename DescType, typename CreateFunc>
-	int LoadSoundInternal(const DescType* desc, CreateFunc createFunc);
 	void CreateAudioGroup() noexcept;
 	int FindFreeVoiceIndex(SoundType type) noexcept;
 	PlaybackParams GetParams(const SoundDescriptor* desc);
@@ -55,14 +50,11 @@ private:
 	Voice* GetVoice(int handle) noexcept;
 	const ISoundInstance* GetInstance(int handle) const noexcept;
 	ISoundInstance* GetInstance(int handle) noexcept;
-	ISoundInstance* GetBackendInstance(SoundType type, ISoundBuffer* buffer, int index);
+	ISoundInstance* GetBackendInstance(SoundType type, ISoundBuffer* buffer);
 
 	const SoundAssetView* m_sndAssetView{ nullptr };
 	unique_ptr<IAudioBackend> m_audioBackend;
-	IResourceManager* m_resManager{ nullptr };
-	unordered_map<filesystem::path, weak_ptr<ISoundBuffer>> m_buffers;
-	unordered_map<int, LoadedSound> m_loadedSounds;
-	int m_nextSoundHandle{ 1 };
+	unique_ptr<SoundRepository> m_repository;
 	float m_masterVolume{ 1.0f };
 	unordered_map<AudioGroupID, unique_ptr<GroupInfo>> m_groupInfos;
 
