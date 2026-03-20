@@ -11,31 +11,23 @@ SoundRepository::SoundRepository(IAudioBackend* audioBackend, IResourceManager* 
     m_audioBackend{ audioBackend }, m_resManager{ resManager }
 {}
 
-int SoundRepository::AcquireStaticSound(const StaticSoundDescriptor* desc)
+SoundHandle SoundRepository::AcquireStaticSound(const StaticSoundDescriptor* desc)
 {
-    std::shared_ptr<ISoundBuffer> sndBuffer;
-
-    auto it = m_buffers.find(desc->filename);
-    if (it != m_buffers.end())
-        sndBuffer = it->second.lock();
-
-    if (!sndBuffer)
-    {
-        sndBuffer = CreateStaticSoundBuffer(desc);
-        if (!sndBuffer) return 0;
-
-        m_buffers.insert_or_assign(desc->filename, sndBuffer);
-    }
-
-    int soundHandle = m_nextSoundHandle++;
-    m_loadedSounds.emplace(soundHandle, LoadedSound{ desc, sndBuffer });
-
-    return soundHandle;
+    return AcquireSoundInternal(desc, [this](const auto* d) {
+        return CreateStaticSoundBuffer(d);
+        });
 }
 
-int SoundRepository::AcquireStreamSound(const StreamSoundDescriptor* desc)
+SoundHandle SoundRepository::AcquireStreamSound(const StreamSoundDescriptor* desc)
 {
-    std::shared_ptr<ISoundBuffer> sndBuffer;
+    return AcquireSoundInternal(desc, [this](const auto* d) {
+        return CreateStreamSoundBuffer(d);
+        });
+}
+
+SoundHandle SoundRepository::AcquireSoundInternal(auto* desc, auto&& createBuffer)
+{
+    shared_ptr<ISoundBuffer> sndBuffer;
 
     auto it = m_buffers.find(desc->filename);
     if (it != m_buffers.end())
@@ -43,16 +35,16 @@ int SoundRepository::AcquireStreamSound(const StreamSoundDescriptor* desc)
 
     if (!sndBuffer)
     {
-        sndBuffer = CreateStreamSoundBuffer(desc);
-        if (!sndBuffer) return 0;
+        sndBuffer = createBuffer(desc);
+        if (!sndBuffer) return InvalidSoundHandle;
 
         m_buffers.insert_or_assign(desc->filename, sndBuffer);
     }
 
-    int soundHandle = m_nextSoundHandle++;
-    m_loadedSounds.emplace(soundHandle, LoadedSound{ desc, sndBuffer });
+    SoundHandle handle = SoundHandle{ m_nextSoundHandle.value++ };
+    m_loadedSounds.emplace(handle, LoadedSound{ desc, sndBuffer });
 
-    return soundHandle;
+    return handle;
 }
 
 shared_ptr<ISoundBuffer> SoundRepository::CreateStaticSoundBuffer(const StaticSoundDescriptor* desc)
@@ -79,17 +71,17 @@ shared_ptr<ISoundBuffer> SoundRepository::CreateStreamSoundBuffer(const StreamSo
     return streamBuffer;
 }
 
-const LoadedSound* SoundRepository::Find(int soundHandle) const noexcept
+const LoadedSound* SoundRepository::Find(SoundHandle h) const noexcept
 {
-	auto it = m_loadedSounds.find(soundHandle);
+	auto it = m_loadedSounds.find(h);
 	if (it == m_loadedSounds.end()) return nullptr;
 
 	return &(it->second);
 }
 
-bool SoundRepository::Remove(int soundHandle) noexcept
+bool SoundRepository::Remove(SoundHandle h) noexcept
 {
-	auto it = m_loadedSounds.find(soundHandle);
+	auto it = m_loadedSounds.find(h);
 	if (it == m_loadedSounds.end()) return false;
 
 	m_loadedSounds.erase(it);

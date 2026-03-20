@@ -31,6 +31,7 @@
     <ClInclude Include="Utils\CommonUtils.h" />
     <ClInclude Include="Utils\CycleIterator.h" />
     <ClInclude Include="Utils\EnumHelpers.h" />
+    <ClInclude Include="Utils\Handle.h" />
     <ClInclude Include="Utils\Memory.h" />
     <ClInclude Include="Utils\StlExt.h" />
     <ClInclude Include="Utils\StlExtTraitsConcepts.hpp" />

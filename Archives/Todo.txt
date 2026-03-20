@@ -254,12 +254,15 @@
 --voice를 service 레이어로 올리고 playingSounds를 삭제한다.
 --로딩아이디와 인스턴스아이디를 구분해서 내보내게 한다. 그래서 로딩 아이디는 unload를 할 수 있게끔 한다.
 --StaticSoundInstance와 StaticSoundBuffer를 둘로 나누어서 메모리를 한번만 로딩하고 상태는 다르게 플레이 하도록 수정.
+--Service 코드를 리팩토링해서 Asset, Library, voice로 나눈다.
+--리팩토링 후 include가 어지럽게 되어 있는거 정리.
+--사운드가 종료되었을때 callback으로 처리.
 
 @Audio쪽 정리 및 리팩토링.
-    Service 코드를 리팩토링해서 Asset, Library, voice로 나눈다.
     info를 descriptor 및 핸들이 int로 되어 있는데 이거 타입 만들기. 이름 대대적으로 정리. Sound, Audio 혼재되어 있는거 정리
-    리팩토링 후 include가 어지럽게 되어 있는거 정리.
-    사운드가 종료되었을때 callback으로 처리할지 생각해 보기.
+        using VoiceHandle = uint32_t;
+        constexpr VoiceHandle InvalidHandle = 0;
+    voice steal 작업
     
 @	m_uiModule = CreateUIModule("Demo", layout, "Main", move(storage), move(resBinderOwner));
     Manager 안에서 생성한다음 붙일필요가 있나? CreateUIModule을 만들어서 UIModule을 만든다음에 manager에 insert 하는

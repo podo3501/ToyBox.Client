@@ -1,4 +1,5 @@
 #pragma once
+#include "SoundHandle.h"
 
 struct IAudioBackend;
 struct IResourceManager;
@@ -9,7 +10,7 @@ struct StreamSoundDescriptor;
 
 struct LoadedSound
 {
-	const SoundDescriptor* desc;
+	const SoundDescriptor* desc{ nullptr };
 	shared_ptr<ISoundBuffer> buffer;
 };
 
@@ -19,18 +20,19 @@ public:
 	~SoundRepository();
 	SoundRepository() = delete;
 	SoundRepository(IAudioBackend* audioBackend, IResourceManager* resManager);
-	int AcquireStaticSound(const StaticSoundDescriptor* desc);
-	int AcquireStreamSound(const StreamSoundDescriptor* desc);
-	const LoadedSound* Find(int soundHandle) const noexcept;
-	bool Remove(int soundHandle) noexcept;
+	SoundHandle AcquireStaticSound(const StaticSoundDescriptor* desc);
+	SoundHandle AcquireStreamSound(const StreamSoundDescriptor* desc);
+	const LoadedSound* Find(SoundHandle h) const noexcept;
+	bool Remove(SoundHandle h) noexcept;
 
 private:
+	SoundHandle AcquireSoundInternal(auto* desc, auto&& createBuffer);
 	shared_ptr<ISoundBuffer> CreateStaticSoundBuffer(const StaticSoundDescriptor* desc);
 	shared_ptr<ISoundBuffer> CreateStreamSoundBuffer(const StreamSoundDescriptor* desc);
 
 	IAudioBackend* m_audioBackend{ nullptr };
 	IResourceManager* m_resManager{ nullptr };
 	unordered_map<filesystem::path, weak_ptr<ISoundBuffer>> m_buffers;
-	unordered_map<int, LoadedSound> m_loadedSounds;
-	int m_nextSoundHandle{ 1 };
+	unordered_map<SoundHandle, LoadedSound> m_loadedSounds;
+	SoundHandle m_nextSoundHandle{ 1 }; // 0은 오류코드.
 };
