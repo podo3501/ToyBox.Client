@@ -213,6 +213,9 @@
     <ClCompile Include="Service\Audio\VoicePool.cpp">
       <Filter>Service\Audio</Filter>
     </ClCompile>
+    <ClCompile Include="Service\Audio\Voice.cpp">
+      <Filter>Service\Audio</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameLoop.h" />
@@ -475,7 +478,10 @@
     <ClInclude Include="Service\Audio\SoundHandle.h">
       <Filter>Service\Audio</Filter>
     </ClInclude>
-    <ClInclude Include="Service\Audio\InstanceHandle.h">
+    <ClInclude Include="Service\Audio\VoiceHandle.h">
+      <Filter>Service\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Audio\Voice.h">
       <Filter>Service\Audio</Filter>
     </ClInclude>
   </ItemGroup>

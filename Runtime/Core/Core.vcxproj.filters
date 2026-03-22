@@ -58,7 +58,10 @@
     <ClInclude Include="Utils\CommonUtils.h">
       <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="Utils\Handle.h">
+    <ClInclude Include="Utils\IDHandle.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\HandleAllocator.h">
       <Filter>Utils</Filter>
     </ClInclude>
   </ItemGroup>

@@ -9,6 +9,9 @@ SDLAudioBackend::~SDLAudioBackend() = default;
 SDLAudioBackend::SDLAudioBackend() = default;
 bool SDLAudioBackend::Initialize(int maxVoices, int maxStreams) noexcept
 {
+	if (maxVoices > 64 || maxStreams > 16) return false; //?!? 64와 16 이건 config 같은데로 constexpr 로 만들어 놓자.
+	if (maxVoices < maxStreams) return false;
+	
 	ReturnIfFalse(m_mixer.Initialize());
 	ReturnIfFalse(m_streamDevice.Initialize());
 	ReturnIfFalse(SetupStaticInstances(maxVoices));

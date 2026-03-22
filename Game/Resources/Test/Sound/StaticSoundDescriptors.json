@@ -1,23 +1,27 @@
 {
     "Descriptors": {
-        "TestWav_01": {
+        "TestWav_01_P3": {
             "Filename": "Sound/Wav/test1.wav",
             "Group": "SFX",
+            "Priority": 3,
             "Volume": 1.0
         },
-        "TestWav_01_Copy": {
+        "TestWav_01_P3_Copy": {
             "Filename": "Sound/Wav/test1.wav",
             "Group": "SFX",
+            "Priority": 3,
             "Volume": 1.0
         },
-        "TestWav_02": {
+        "TestWav_02_P2": {
             "Filename": "Sound/Wav/test2.wav",
             "Group": "SFX",
+            "Priority": 2,
             "Volume": 1.0
         },
-        "TestOgg_01": {
+        "TestOgg_01_P1": {
             "Filename": "Sound/Ogg/mouseclick1.ogg",
             "Group": "BGM",
+            "Priority": 1,
             "Volume": 1.0
         }
     }

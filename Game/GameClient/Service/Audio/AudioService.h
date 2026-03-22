@@ -1,5 +1,6 @@
 #pragma once
 #include "SoundHandle.h"
+#include "VoiceHandle.h"
 
 struct IAudioBackend;
 struct IResourceManager;
@@ -25,17 +26,17 @@ public:
 		IResourceManager* resManager, int maxVoices, int maxStreams) noexcept;
 	SoundHandle LoadStaticSound(string_view soundID);
 	SoundHandle LoadStreamSound(string_view soundID);
-	int Play(SoundHandle h) noexcept;
-	bool Pause(int instanceHandle) noexcept;
-	bool Resume(int instanceHandle) noexcept;
-	bool Stop(int instanceHandle) noexcept;
+	VoiceHandle Play(SoundHandle sh) noexcept;
+	bool Pause(VoiceHandle vh) noexcept;
+	bool Resume(VoiceHandle vh) noexcept;
+	bool Stop(VoiceHandle vh) noexcept;
 	bool AllStop() noexcept;
 	void Update() noexcept;
 	bool Unload(SoundHandle h) noexcept;
-	PlaybackState GetState(int handle) const noexcept;
+	PlaybackState GetState(VoiceHandle vh) const noexcept;
 	inline void SetMasterVolume(float volume) noexcept { m_masterVolume = volume; }
 	inline float GetMasterVolume() const noexcept { return m_masterVolume; }
-	bool SetVolume(int handle, float volume) noexcept;
+	bool SetVolume(VoiceHandle vh, float volume) noexcept;
 
 private:
 	AudioService(const SoundAssetView* sndAssetView, unique_ptr<SoundRepository> sndRepository,

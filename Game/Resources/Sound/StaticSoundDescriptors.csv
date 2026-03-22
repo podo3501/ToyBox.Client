@@ -1,5 +1,5 @@
-Key,Filename,Group,Volume
-TestWav_01,Sound/Wav/test1.wav,SFX,1.0
-TestWav_01_Copy,Sound/Wav/test1.wav,SFX,1.0
-TestWav_02,Sound/Wav/test2.wav,SFX,1.0
-TestOgg_01,Sound/Ogg/mouseclick1.ogg,BGM,1.0
+Key,Filename,Group,Priority,Volume
+TestWav_01_P3,Sound/Wav/test1.wav,SFX,3,1.0
+TestWav_01_P3_Copy,Sound/Wav/test1.wav,SFX,3,1.0
+TestWav_02_P2,Sound/Wav/test2.wav,SFX,2,1.0
+TestOgg_01_P1,Sound/Ogg/mouseclick1.ogg,BGM,1,1.0

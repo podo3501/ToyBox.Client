@@ -92,68 +92,63 @@ PlaybackParams AudioService::GetParams(const SoundDescriptor* desc)
 	return params;
 }
 
-int AudioService::Play(SoundHandle h) noexcept
+VoiceHandle AudioService::Play(SoundHandle sh) noexcept
 {
-	auto loaded = m_repository->Find(h);
-	if (loaded == nullptr) return 0;
+	auto loaded = m_repository->Find(sh);
+	if (loaded == nullptr) return InvalidVoiceHandle;
 
 	auto desc = loaded->desc;
 	SoundType sndType = desc->sndType;
 	auto instance = GetBackendInstance(sndType, loaded->buffer.get());
-	if (!instance) return 0;
+	if (!instance) return InvalidVoiceHandle;
 	
-	if (!instance->Reset(GetParams(desc))) return 0;
-	if (!instance->Play()) return 0;
+	if (!instance->Reset(GetParams(desc))) return InvalidVoiceHandle;
+	if (!instance->Play()) return InvalidVoiceHandle;
 
-	return m_voicePool->AcquireVoice(sndType, loaded, instance);
+	return m_voicePool->AcquireVoice(sh, instance, desc);
 }
 
-bool AudioService::Pause(int instanceHandle) noexcept
+bool AudioService::Pause(VoiceHandle vh) noexcept
 {
-	auto instance = m_voicePool->GetInstance(instanceHandle);
+	auto instance = m_voicePool->GetInstance(vh);
 	if (instance == nullptr) return false;
 
 	return instance->Pause();
 }
 
-bool AudioService::Resume(int instanceHandle) noexcept
+bool AudioService::Resume(VoiceHandle vh) noexcept
 {
-	auto instance = m_voicePool->GetInstance(instanceHandle);
+	auto instance = m_voicePool->GetInstance(vh);
 	if (instance == nullptr) return false;
 
 	return instance->Resume();
 }
 
-bool AudioService::Stop(int instanceHandle) noexcept
+bool AudioService::Stop(VoiceHandle vh) noexcept
 {
-	auto voice = m_voicePool->GetVoice(instanceHandle);
-	if (voice == nullptr) return false;
-
-	return voice->StopAndReset();
+	return m_voicePool->StopVoice(vh);
 }
 
 bool AudioService::AllStop() noexcept
 {
-	bool staticOk = m_voicePool->StopAllStaticVoices();
-	bool streamOk = m_voicePool->StopAllStreamVoices();
+	bool staticOk = m_voicePool->StopVoices(SoundType::Static);
+	bool streamOk = m_voicePool->StopVoices(SoundType::Stream);
 
 	return staticOk && streamOk;
 }
 
-bool AudioService::Unload(SoundHandle h) noexcept
+bool AudioService::Unload(SoundHandle sh) noexcept
 {
-	auto loaded = m_repository->Find(h);
+	auto loaded = m_repository->Find(sh);
 	if (loaded == nullptr) return false;
 
-	ReturnIfFalse(m_voicePool->StopStaticVoices(loaded));
-	ReturnIfFalse(m_voicePool->StopStreamVoices(loaded));
-
-	return m_repository->Remove(h);
+	ReturnIfFalse(m_voicePool->StopVoices(sh));
+	return m_repository->Remove(sh);
 }
 
-PlaybackState AudioService::GetState(int handle) const noexcept
+PlaybackState AudioService::GetState(VoiceHandle vh) const noexcept
 {
-	auto instance = m_voicePool->GetInstance(handle);
+	auto instance = m_voicePool->GetInstance(vh);
 	if (instance == nullptr) return EnumUtil::Invalid<PlaybackState>;
 
 	return instance->GetState();
@@ -161,19 +156,16 @@ PlaybackState AudioService::GetState(int handle) const noexcept
 
 void AudioService::Update() noexcept
 {
-	m_voicePool->UpdateStaticVoices();
-	m_voicePool->UpdateStreamVoices();
+	m_voicePool->UpdateVoices();
 }
 
-bool AudioService::SetVolume(int instanceHandle, float volume) noexcept
+bool AudioService::SetVolume(VoiceHandle vh, float volume) noexcept
 {
-	auto voice = m_voicePool->GetVoice(instanceHandle);
+	auto voice = m_voicePool->GetVoice(vh);
 	if (voice == nullptr) return false;
 
-	auto& desc = *voice->loaded->desc;
 	auto& instance = *voice->instance;
-
-	auto groupID = desc.groupID;
+	auto groupID = voice->desc.groupID;
 	if (groupID == EnumUtil::Invalid<AudioGroupID>) return false;
 
 	return instance.SetVolume(GetInstanceVolume(groupID, volume));

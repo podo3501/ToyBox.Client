@@ -10,5 +10,6 @@ void SoundDescriptor::Serialize(Serializer& serializer)
 {
 	serializer.Process("Filename", filename);
 	serializer.Process("Group", groupID);
+	serializer.Process("Priority", priority);
 	serializer.Process("Volume", volume);
 }

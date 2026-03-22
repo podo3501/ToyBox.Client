@@ -1,26 +1,30 @@
 {
     "Descriptors": {
-        "TestOgg_01": {
+        "TestOgg_01_P3": {
             "Filename": "Sound/Ogg/hope_it_will.ogg",
             "Group": "BGM",
+            "Priority": 3,
             "Volume": 1.0,
             "Loop": false
         },
-        "TestOgg_01_Copy": {
+        "TestOgg_01_P3_Copy": {
             "Filename": "Sound/Ogg/hope_it_will.ogg",
             "Group": "BGM",
+            "Priority": 3,
             "Volume": 1.0,
             "Loop": false
         },
-        "TestOgg_02": {
+        "TestOgg_02_P2": {
             "Filename": "Sound/Ogg/future_tribal.ogg",
             "Group": "BGM",
+            "Priority": 2,
             "Volume": 1.0,
             "Loop": true
         },
-        "TestOgg_03": {
+        "TestOgg_03_P1": {
             "Filename": "Sound/Ogg/909beat01.ogg",
             "Group": "BGM",
+            "Priority": 1,
             "Volume": 1.0,
             "Loop": false
         }

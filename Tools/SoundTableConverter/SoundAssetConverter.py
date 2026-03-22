@@ -25,9 +25,9 @@ def csv_to_json(csv_path, json_path):
 
                 v_lower = v.lower()
 
-                if v_lower in ("true", "1"):
+                if v_lower == "true":
                     entry[k] = True
-                elif v_lower in ("false", "0"):
+                elif v_lower == "false":
                     entry[k] = False
                 else:
                     try:

@@ -1,5 +1,5 @@
-Key,Filename,Group,Volume,Loop
-TestOgg_01,Sound/Ogg/hope_it_will.ogg,BGM,1.0,FALSE
-TestOgg_01_Copy,Sound/Ogg/hope_it_will.ogg,BGM,1.0,FALSE
-TestOgg_02,Sound/Ogg/future_tribal.ogg,BGM,1.0,TRUE
-TestOgg_03,Sound/Ogg/909beat01.ogg,BGM,1.0,FALSE
+Key,Filename,Group,Priority,Volume,Loop
+TestOgg_01_P3,Sound/Ogg/hope_it_will.ogg,BGM,3,1.0,FALSE
+TestOgg_01_P3_Copy,Sound/Ogg/hope_it_will.ogg,BGM,3,1.0,FALSE
+TestOgg_02_P2,Sound/Ogg/future_tribal.ogg,BGM,2,1.0,TRUE
+TestOgg_03_P1,Sound/Ogg/909beat01.ogg,BGM,1,1.0,FALSE

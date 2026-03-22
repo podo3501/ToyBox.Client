@@ -257,12 +257,11 @@
 --Service 코드를 리팩토링해서 Asset, Library, voice로 나눈다.
 --리팩토링 후 include가 어지럽게 되어 있는거 정리.
 --사운드가 종료되었을때 callback으로 처리.
+--info를 descriptor 및 핸들이 int로 되어 있는데 이거 타입 만들기. 
 
 @Audio쪽 정리 및 리팩토링.
-    info를 descriptor 및 핸들이 int로 되어 있는데 이거 타입 만들기. 이름 대대적으로 정리. Sound, Audio 혼재되어 있는거 정리
-        using VoiceHandle = uint32_t;
-        constexpr VoiceHandle InvalidHandle = 0;
-    voice steal 작업
+    voice stealing 작업
+    이름 대대적으로 정리. Sound, Audio 혼재되어 있는거 정리
     
 @	m_uiModule = CreateUIModule("Demo", layout, "Main", move(storage), move(resBinderOwner));
     Manager 안에서 생성한다음 붙일필요가 있나? CreateUIModule을 만들어서 UIModule을 만든다음에 manager에 insert 하는

@@ -12,5 +12,6 @@ struct SoundDescriptor
 	SoundType sndType{ EnumUtil::Invalid<SoundType> };
 	filesystem::path filename{};
 	AudioGroupID groupID{ EnumUtil::Invalid<AudioGroupID> };
+	int priority{ 0 };
 	float volume{ 0.f };
 };

@@ -39,6 +39,7 @@
     <ClCompile Include="Scenes\Test\TestScene2.cpp" />
     <ClCompile Include="Service\Audio\AudioService.cpp" />
     <ClCompile Include="Service\Audio\SoundRepository.cpp" />
+    <ClCompile Include="Service\Audio\Voice.cpp" />
     <ClCompile Include="Service\Audio\VoicePool.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
@@ -122,7 +123,8 @@
     <ClInclude Include="Scenes\Test\TestScene1.h" />
     <ClInclude Include="Scenes\Test\TestScene2.h" />
     <ClInclude Include="Service\Audio\AudioService.h" />
-    <ClInclude Include="Service\Audio\InstanceHandle.h" />
+    <ClInclude Include="Service\Audio\Voice.h" />
+    <ClInclude Include="Service\Audio\VoiceHandle.h" />
     <ClInclude Include="Service\Audio\SoundHandle.h" />
     <ClInclude Include="Service\Audio\IAudioBackend.h" />
     <ClInclude Include="Service\Audio\ISoundBuffer.h" />
