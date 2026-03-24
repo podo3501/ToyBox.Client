@@ -5,17 +5,13 @@
 struct IAudioBackend;
 struct IResourceManager;
 struct SoundAssetView;
-struct ISoundBuffer;
-struct ISoundInstance;
 struct GroupInfo;
-struct Voice;
 struct PlaybackParams;
 struct SoundDescriptor;
 class SoundRepository;
 class VoicePool;
 enum class PlaybackState;
-enum class AudioGroupID;
-enum class SoundType;
+enum class AudioGroup;
 
 class AudioService
 {
@@ -43,15 +39,14 @@ private:
 		unique_ptr<IAudioBackend> audioBackend) noexcept;
 	bool Initialize(int maxVoices, int maxStreams) noexcept;
 	void CreateAudioGroup() noexcept;
-	PlaybackParams GetParams(const SoundDescriptor* desc);
-	float GetGroupVolume(AudioGroupID groupID) const noexcept;
-	float GetInstanceVolume(AudioGroupID groupID, float volume) const noexcept;
-	ISoundInstance* GetBackendInstance(SoundType type, ISoundBuffer* buffer);
+	PlaybackParams GetParams(const SoundDescriptor* desc) noexcept;
+	float GetGroupVolume(AudioGroup group) const noexcept;
+	float GetInstanceVolume(AudioGroup group, float volume) const noexcept;
 
 	const SoundAssetView* m_sndAssetView{ nullptr };
 	unique_ptr<IAudioBackend> m_audioBackend;
 	unique_ptr<SoundRepository> m_repository;
 	unique_ptr<VoicePool> m_voicePool;
 	float m_masterVolume{ 1.0f };
-	unordered_map<AudioGroupID, unique_ptr<GroupInfo>> m_groupInfos;
+	unordered_map<AudioGroup, unique_ptr<GroupInfo>> m_groupInfos;
 };

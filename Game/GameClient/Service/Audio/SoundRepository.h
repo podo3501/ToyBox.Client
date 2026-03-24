@@ -7,13 +7,7 @@ struct ISoundBuffer;
 struct SoundDescriptor;
 struct StaticSoundDescriptor;
 struct StreamSoundDescriptor;
-
-struct LoadedSound
-{
-	const SoundDescriptor* desc{ nullptr };
-	shared_ptr<ISoundBuffer> buffer;
-};
-
+struct LoadedSound;
 class SoundRepository
 {
 public:

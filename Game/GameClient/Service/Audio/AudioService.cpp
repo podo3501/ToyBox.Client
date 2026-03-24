@@ -1,9 +1,10 @@
 #include "pch.h"
 #include "AudioService.h"
+#include "IAudioBackend.h"
 #include "SoundRepository.h"
 #include "VoicePool.h"
-#include "IAudioBackend.h"
-#include "ISoundInstance.h"
+#include "LoadedSound.h"
+#include "PlaybackTypes.h"
 #include "Asset/SoundAssetView.h"
 
 struct GroupInfo //지금은 볼륨 하나지만 조금씩 확장될 가능성이 크다.
@@ -32,7 +33,7 @@ AudioService::AudioService(const SoundAssetView* sndAssetView, unique_ptr<SoundR
 	m_sndAssetView{ sndAssetView },
 	m_audioBackend{ move(audioBackend) },
 	m_repository{ move(sndRepository)},
-	m_voicePool{ make_unique<VoicePool>() }
+	m_voicePool{ make_unique<VoicePool>(m_audioBackend.get()) }
 {}
 
 bool AudioService::Initialize(int maxVoices, int maxStreams) noexcept
@@ -46,7 +47,7 @@ bool AudioService::Initialize(int maxVoices, int maxStreams) noexcept
 
 void AudioService::CreateAudioGroup() noexcept
 {
-	for (auto id : EnumUtil::EnumValues<AudioGroupID>())
+	for (auto id : EnumUtil::EnumValues<AudioGroup>())
 		m_groupInfos[id] = make_unique<GroupInfo>();
 }
 
@@ -72,21 +73,25 @@ SoundHandle AudioService::LoadStreamSound(string_view soundID)
 	return m_repository->AcquireStreamSound(desc);
 }
 
-PlaybackParams AudioService::GetParams(const SoundDescriptor* desc)
+static void ApplyStaticParams(const StaticSoundDescriptor* desc, PlaybackParams& params) noexcept
+{
+	//여기에 새로 추가되는 것들을 params에 추가.
+}
+
+static void ApplyStreamParams(const StreamSoundDescriptor* desc, PlaybackParams& params) noexcept
+{
+	params.loop = desc->loop;
+}
+
+PlaybackParams AudioService::GetParams(const SoundDescriptor* desc) noexcept
 {
 	PlaybackParams params;
-	params.volume = GetInstanceVolume(desc->groupID, desc->volume);
-	
-	if (desc->sndType == SoundType::Static)
-	{
-		const StaticSoundDescriptor* staticDesc = static_cast<const StaticSoundDescriptor*>(desc);
-		//여기에 새로 추가되는 것들을 params에 추가.
-	}
+	params.volume = GetInstanceVolume(desc->group, desc->volume);
 
-	if (desc->sndType == SoundType::Stream)
+	switch (desc->sndType)
 	{
-		const StreamSoundDescriptor* streamDesc = static_cast<const StreamSoundDescriptor*>(desc);
-		params.loop = streamDesc->loop;
+	case SoundType::Static: ApplyStaticParams(static_cast<const StaticSoundDescriptor*>(desc), params); break;
+	case SoundType::Stream: ApplyStreamParams(static_cast<const StreamSoundDescriptor*>(desc), params); break;
 	}
 
 	return params;
@@ -95,33 +100,19 @@ PlaybackParams AudioService::GetParams(const SoundDescriptor* desc)
 VoiceHandle AudioService::Play(SoundHandle sh) noexcept
 {
 	auto loaded = m_repository->Find(sh);
-	if (loaded == nullptr) return InvalidVoiceHandle;
+	if (!loaded) return InvalidVoiceHandle;
 
-	auto desc = loaded->desc;
-	SoundType sndType = desc->sndType;
-	auto instance = GetBackendInstance(sndType, loaded->buffer.get());
-	if (!instance) return InvalidVoiceHandle;
-	
-	if (!instance->Reset(GetParams(desc))) return InvalidVoiceHandle;
-	if (!instance->Play()) return InvalidVoiceHandle;
-
-	return m_voicePool->AcquireVoice(sh, instance, desc);
+	return m_voicePool->Play(sh, loaded, GetParams(loaded->desc));
 }
 
 bool AudioService::Pause(VoiceHandle vh) noexcept
 {
-	auto instance = m_voicePool->GetInstance(vh);
-	if (instance == nullptr) return false;
-
-	return instance->Pause();
+	return m_voicePool->Pause(vh);
 }
 
 bool AudioService::Resume(VoiceHandle vh) noexcept
 {
-	auto instance = m_voicePool->GetInstance(vh);
-	if (instance == nullptr) return false;
-
-	return instance->Resume();
+	return m_voicePool->Resume(vh);
 }
 
 bool AudioService::Stop(VoiceHandle vh) noexcept
@@ -148,10 +139,7 @@ bool AudioService::Unload(SoundHandle sh) noexcept
 
 PlaybackState AudioService::GetState(VoiceHandle vh) const noexcept
 {
-	auto instance = m_voicePool->GetInstance(vh);
-	if (instance == nullptr) return EnumUtil::Invalid<PlaybackState>;
-
-	return instance->GetState();
+	return m_voicePool->GetState(vh);
 }
 
 void AudioService::Update() noexcept
@@ -160,37 +148,26 @@ void AudioService::Update() noexcept
 }
 
 bool AudioService::SetVolume(VoiceHandle vh, float volume) noexcept
-{
-	auto voice = m_voicePool->GetVoice(vh);
-	if (voice == nullptr) return false;
-
-	auto& instance = *voice->instance;
-	auto groupID = voice->desc.groupID;
-	if (groupID == EnumUtil::Invalid<AudioGroupID>) return false;
-
-	return instance.SetVolume(GetInstanceVolume(groupID, volume));
+{ 
+	auto desc = m_voicePool->GetDesc(vh);
+	if (!desc) return false;
+	
+	auto group = desc->group; 
+	if (group == EnumUtil::Invalid<AudioGroup>) return false; 
+	
+	float curVolume = GetInstanceVolume(group, volume); 
+	return m_voicePool->SetVolume(vh, curVolume);
 }
 
-float AudioService::GetGroupVolume(AudioGroupID groupID) const noexcept
+float AudioService::GetGroupVolume(AudioGroup group) const noexcept
 {
-	float groupVolume = m_groupInfos.at(groupID)->volume;
+	float groupVolume = m_groupInfos.at(group)->volume;
 	float volume = m_masterVolume * groupVolume;
 
 	return std::clamp(volume, 0.f, 1.f);
 }
 
-float AudioService::GetInstanceVolume(AudioGroupID groupID, float volume) const noexcept
+float AudioService::GetInstanceVolume(AudioGroup group, float volume) const noexcept
 {
-	return GetGroupVolume(groupID) * volume;
-}
-
-ISoundInstance* AudioService::GetBackendInstance(SoundType type, ISoundBuffer* buffer)
-{
-	switch (type)
-	{
-	case SoundType::Static: return m_audioBackend->RequestStaticInstance(buffer);
-	case SoundType::Stream: return m_audioBackend->RequestStreamInstance(buffer);
-	}
-
-	return nullptr;
+	return GetGroupVolume(group) * volume;
 }

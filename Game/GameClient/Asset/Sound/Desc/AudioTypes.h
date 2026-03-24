@@ -7,7 +7,7 @@ enum class SoundType : int
 	Count
 };
 
-enum class AudioGroupID : int
+enum class AudioGroup : int
 {
 	BGM,
 	SFX,

@@ -9,7 +9,7 @@ SoundDescriptor::SoundDescriptor(SoundType _sndType) :
 void SoundDescriptor::Serialize(Serializer& serializer)
 {
 	serializer.Process("Filename", filename);
-	serializer.Process("Group", groupID);
+	serializer.Process("Group", group);
 	serializer.Process("Priority", priority);
 	serializer.Process("Volume", volume);
 }

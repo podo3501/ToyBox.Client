@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "SDLAudioBackend.h"
+#include "SDLAudioConfig.h"
 #include "Static/StaticSoundBuffer.h"
 #include "Static/StaticSoundInstance.h"
 #include "Stream/StreamSoundBuffer.h"
@@ -9,11 +10,11 @@ SDLAudioBackend::~SDLAudioBackend() = default;
 SDLAudioBackend::SDLAudioBackend() = default;
 bool SDLAudioBackend::Initialize(int maxVoices, int maxStreams) noexcept
 {
-	if (maxVoices > 64 || maxStreams > 16) return false; //?!? 64와 16 이건 config 같은데로 constexpr 로 만들어 놓자.
+	if (maxVoices > VoiceLimits::MaxVoices || maxStreams > VoiceLimits::MaxStreams) return false;
 	if (maxVoices < maxStreams) return false;
 	
 	ReturnIfFalse(m_mixer.Initialize());
-	ReturnIfFalse(m_streamDevice.Initialize());
+	ReturnIfFalse(m_streamDevice.Initialize(StreamAudioRequestDevice{}));
 	ReturnIfFalse(SetupStaticInstances(maxVoices));
 	ReturnIfFalse(SetupStreamInstances(maxStreams));
 

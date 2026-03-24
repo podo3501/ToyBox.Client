@@ -2,30 +2,49 @@
 #include "Voice.h"
 
 struct Voice;
+struct IAudioBackend;
 struct ISoundInstance;
 struct SoundDescriptor;
+struct LoadedSound;
+struct PlaybackParams;
 enum class SoundType;
+enum class PlaybackState;
 
 class VoicePool
 {
 public:
 	~VoicePool();
-	VoicePool();
+	VoicePool(IAudioBackend* audioBackend);
 	bool Setup(int maxVoices, int maxStreams) noexcept;
-	VoiceHandle AcquireVoice(SoundHandle sh, ISoundInstance* instance, const SoundDescriptor* desc) noexcept;
+	VoiceHandle Play(SoundHandle sh, const LoadedSound* loaded, const PlaybackParams& params) noexcept;
+	bool Pause(VoiceHandle vh) noexcept;
+	bool Resume(VoiceHandle vh) noexcept;
 	bool StopVoice(VoiceHandle vh) noexcept;
-	bool StopVoices(SoundHandle sv) noexcept;
-	bool StopVoices(SoundType type) noexcept;
+	bool StopVoices(SoundHandle sh) noexcept; //동일한 데이터를 가진거 전부 스톱
+	bool StopVoices(SoundType type) noexcept; // 동일한 타입 전부 스톱
+	bool SetVolume(VoiceHandle vh, float volume) noexcept;
+	PlaybackState GetState(VoiceHandle vh) const noexcept;
 	void UpdateVoices() noexcept;
+	const SoundDescriptor* GetDesc(VoiceHandle vh) const noexcept;
+
+private:
+	ISoundInstance* CreateInstance(const LoadedSound* loaded);
+	VoiceHandle AcquireVoiceHandle(const SoundDescriptor* desc) noexcept;
+	void ActivateVoice(VoiceHandle vh, SoundHandle sh, ISoundInstance* instance, const SoundDescriptor* desc) noexcept;
+	VoiceHandle StealAndAcquire(const SoundDescriptor* desc, vector<Voice*>& stealList) noexcept;
 
 	const Voice* GetVoice(VoiceHandle vh) const noexcept;
 	Voice* GetVoice(VoiceHandle vh) noexcept;
 	const ISoundInstance* GetInstance(VoiceHandle vh) const noexcept;
 	ISoundInstance* GetInstance(VoiceHandle vh) noexcept;
 
-private:
+	IAudioBackend* m_audioBackend{ nullptr };
+	int m_maxVoices{ 0 };
 	int m_maxStreams{ 0 };
-	HandleAllocator<VoiceTag, 64> m_allocator{ 0 }; //?!? constexpr에 64가 생길 예정.
+	static const int MaxHandles{ 64 }; //핸들의 최종 크기. Setup시 voice 크기가 더 크면 오류.
+	HandleAllocator<VoiceTag, MaxHandles> m_allocator{ 0 };
+
 	vector<Voice> m_voices;
-	vector<Voice*> m_stealCandidates;
+	vector<Voice*> m_stealStatics;
+	vector<Voice*> m_stealStreams;
 };

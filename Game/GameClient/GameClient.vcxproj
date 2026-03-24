@@ -123,6 +123,8 @@
     <ClInclude Include="Scenes\Test\TestScene1.h" />
     <ClInclude Include="Scenes\Test\TestScene2.h" />
     <ClInclude Include="Service\Audio\AudioService.h" />
+    <ClInclude Include="Service\Audio\LoadedSound.h" />
+    <ClInclude Include="Service\Audio\PlaybackTypes.h" />
     <ClInclude Include="Service\Audio\Voice.h" />
     <ClInclude Include="Service\Audio\VoiceHandle.h" />
     <ClInclude Include="Service\Audio\SoundHandle.h" />

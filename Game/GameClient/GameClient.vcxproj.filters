@@ -484,6 +484,12 @@
     <ClInclude Include="Service\Audio\Voice.h">
       <Filter>Service\Audio</Filter>
     </ClInclude>
+    <ClInclude Include="Service\Audio\LoadedSound.h">
+      <Filter>Service\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Audio\PlaybackTypes.h">
+      <Filter>Service\Audio</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Locator">

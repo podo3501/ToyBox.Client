@@ -2,6 +2,7 @@
 #include "SoundRepository.h"
 #include "IAudioBackend.h"
 #include "ISoundBuffer.h"
+#include "LoadedSound.h"
 #include "Asset/Sound/Desc/StaticSoundDescriptor.h"
 #include "Asset/Sound/Desc/StreamSoundDescriptor.h"
 #include "Platform/Resource/IResourceManager.h"

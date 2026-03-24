@@ -67,6 +67,9 @@
     <ClInclude Include="Audio\SDL\AudioMixer.h">
       <Filter>Audio\SDL</Filter>
     </ClInclude>
+    <ClInclude Include="Audio\SDL\SDLAudioConfig.h">
+      <Filter>Audio\SDL</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />

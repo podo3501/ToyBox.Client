@@ -12,9 +12,9 @@ SoundType JsonTraitsBase<SoundType>::DeserializeFromJson(const nlohmann::json& d
 		data = *StringToEnum<SoundType>(dataJ); });
 }
 
-nlohmann::json JsonTraitsBase<AudioGroupID>::SerializeToJson(const AudioGroupID& data) { return EnumToString(data); }
-AudioGroupID JsonTraitsBase<AudioGroupID>::DeserializeFromJson(const nlohmann::json& dataJ)
+nlohmann::json JsonTraitsBase<AudioGroup>::SerializeToJson(const AudioGroup& data) { return EnumToString(data); }
+AudioGroup JsonTraitsBase<AudioGroup>::DeserializeFromJson(const nlohmann::json& dataJ)
 {
-	return CreateAndFill<AudioGroupID>([&dataJ](AudioGroupID& data) {
-		data = *StringToEnum<AudioGroupID>(dataJ); });
+	return CreateAndFill<AudioGroup>([&dataJ](AudioGroup& data) {
+		data = *StringToEnum<AudioGroup>(dataJ); });
 }

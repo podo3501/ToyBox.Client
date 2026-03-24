@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClInclude Include="Audio\SDL\AudioDevice.h" />
     <ClInclude Include="Audio\SDL\AudioFormat.h" />
+    <ClInclude Include="Audio\SDL\SDLAudioConfig.h" />
     <ClInclude Include="Audio\SDL\AudioMixer.h" />
     <ClInclude Include="Audio\SDL\SDLAudioBackend.h" />
     <ClInclude Include="Audio\SDL\Static\StaticSoundBuffer.h" />

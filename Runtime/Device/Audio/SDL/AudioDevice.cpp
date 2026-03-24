@@ -1,14 +1,15 @@
 #include "pch.h"
 #include "AudioDevice.h"
+#include "SDLAudioConfig.h"
 
 AudioDevice::~AudioDevice() { SDL_CloseAudioDevice(m_device); }
 AudioDevice::AudioDevice() = default;
-bool AudioDevice::Initialize()
+bool AudioDevice::Initialize(const StreamAudioRequestDevice& config)
 {
     SDL_AudioSpec desired{};
-    desired.freq = 48000;
-    desired.format = SDL_AUDIO_F32;
-    desired.channels = 2;
+    desired.freq = config.freq;
+    desired.format = config.format;
+    desired.channels = config.channels;
 
     m_device = SDL_OpenAudioDevice(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &desired);
     if (m_device == 0)
