@@ -216,6 +216,9 @@
     <ClCompile Include="Service\Audio\Voice.cpp">
       <Filter>Service\Audio</Filter>
     </ClCompile>
+    <ClCompile Include="Service\Input\InputService.cpp">
+      <Filter>Service\Input</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameLoop.h" />
@@ -490,6 +493,21 @@
     <ClInclude Include="Service\Audio\PlaybackTypes.h">
       <Filter>Service\Audio</Filter>
     </ClInclude>
+    <ClInclude Include="Service\Input\InputService.h">
+      <Filter>Service\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Input\IKeyboardInputProvider.h">
+      <Filter>Service\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Input\KeyCode.h">
+      <Filter>Service\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Input\IMouseInputProvider.h">
+      <Filter>Service\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Input\MouseButton.h">
+      <Filter>Service\Input</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Locator">
@@ -566,6 +584,9 @@
     </Filter>
     <Filter Include="Asset\Sound\Desc\Serializer\Format">
       <UniqueIdentifier>{2001ba0e-af2a-49ae-b5d0-ca76de6a9f22}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Service\Input">
+      <UniqueIdentifier>{25a4f086-8a02-40da-a2d8-2935e843f341}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

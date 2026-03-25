@@ -6,7 +6,7 @@
 struct HWND__; 
 typedef HWND__* HWND;
 
-enum class MouseButton
+enum class MouseButtonState
 {
     Left,
     Right,
@@ -36,9 +36,9 @@ struct IInputManager
     virtual const DirectX::XMINT2& GetPosition() const noexcept = 0;
 
     virtual bool IsInputAction(DirectX::Keyboard::Keys key, InputState inputState) noexcept = 0;
-    virtual bool IsInputAction(DirectX::Keyboard::Keys key, MouseButton mouseButton) noexcept = 0;
+    virtual bool IsInputAction(DirectX::Keyboard::Keys key, MouseButtonState mouseButton) noexcept = 0;
     virtual bool IsInputAction(DirectX::Keyboard::Keys firstKey, DirectX::Keyboard::Keys secondKey) noexcept = 0;
-    virtual bool IsInputAction(MouseButton mouseButton, InputState keyState) noexcept = 0;
+    virtual bool IsInputAction(MouseButtonState mouseButton, InputState keyState) noexcept = 0;
     virtual void ResetMouseWheelValue() noexcept = 0;
     virtual int GetMouseWheelValue() noexcept = 0;
 };

@@ -35,7 +35,7 @@ bool ComponentController::CheckAttachComponent(IToolInputManager* input) noexcep
 {
 	if (!m_uiWindow) return false;
 	if (!m_floater->IsComponent()) return false;
-	if (!input->IsInputAction(Keyboard::LeftShift, MouseButton::Left)) return false;
+	if (!input->IsInputAction(Keyboard::LeftShift, MouseButtonState::Left)) return false;
 
 	const XMINT2& mousePosition = input->GetPosition();
 	AttachSelectedComponent(m_cmdHistory.get(), m_selector.get(), m_floater.get(), mousePosition);

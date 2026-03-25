@@ -74,13 +74,13 @@ bool EditWindow::IsUpdateSizeOnDrag() const noexcept
 
 void EditWindow::UpdateDragState(IToolInputManager* toolInput, OnDrag dragState, XMINT2& outStartPos) noexcept
 {
-    if (toolInput->IsInputAction(MouseButton::Left, InputState::Pressed) && dragState != OnDrag::Normal)
+    if (toolInput->IsInputAction(MouseButtonState::Left, InputState::Pressed) && dragState != OnDrag::Normal)
     {
         m_dragState = dragState;
         outStartPos = toolInput->GetPosition();
     }
 
-    if (toolInput->IsInputAction(MouseButton::Left, InputState::Released))
+    if (toolInput->IsInputAction(MouseButtonState::Left, InputState::Released))
     {
         m_dragState = OnDrag::Normal;
         outStartPos = {};

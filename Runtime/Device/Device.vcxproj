@@ -29,7 +29,11 @@
     <ClInclude Include="Audio\SDL\Stream\StreamSoundBuffer.h" />
     <ClInclude Include="Audio\SDL\Stream\StreamSoundInstance.h" />
     <ClInclude Include="Audio\SDL\Stream\VorbisStreamCallbacks.h" />
+    <ClInclude Include="Input\DirectX\DXKeyboardInputProvider.h" />
+    <ClInclude Include="Input\DirectX\DXKeyMap.h" />
+    <ClInclude Include="Input\DirectX\DXMouseInputProvider.h" />
     <ClInclude Include="Input\DirectX\InputManager.h" />
+    <ClInclude Include="Input\DirectX\InputTransitionState.h" />
     <ClInclude Include="Input\IInputManager.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Storage\JsonObjectIO.h" />
@@ -44,6 +48,8 @@
     <ClCompile Include="Audio\SDL\Stream\StreamSoundBuffer.cpp" />
     <ClCompile Include="Audio\SDL\Stream\StreamSoundInstance.cpp" />
     <ClCompile Include="Audio\SDL\Stream\VorbisStreamCallbacks.cpp" />
+    <ClCompile Include="Input\DirectX\DXKeyboardInputProvider.cpp" />
+    <ClCompile Include="Input\DirectX\DXMouseInputProvider.cpp" />
     <ClCompile Include="Input\DirectX\InputManager.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

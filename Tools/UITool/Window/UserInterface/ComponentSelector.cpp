@@ -54,7 +54,7 @@ void ComponentSelector::SetComponent(UIComponent* component) noexcept
 void ComponentSelector::SelectComponent(IToolInputManager* input) noexcept
 {
 	if (!m_uiWindow) return;
-	if (!input->IsInputAction(MouseButton::Left, InputState::Pressed)) return;
+	if (!input->IsInputAction(MouseButtonState::Left, InputState::Pressed)) return;
 
 	static vector<UIComponent*> preComponentList{ nullptr };
 	const XMINT2& pos = input->GetPosition();

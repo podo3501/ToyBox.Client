@@ -125,10 +125,10 @@ void UserInterfaceWindow::CheckActiveUpdate(IToolInputManager* toolInput) noexce
 void UserInterfaceWindow::CheckWindowResized(IToolInputManager* toolInput)
 {
 	static ImVec2 startSize{};
-	if (toolInput->IsInputAction(MouseButton::Left, InputState::Pressed))
+	if (toolInput->IsInputAction(MouseButtonState::Left, InputState::Pressed))
 		startSize = m_window->Size;
 
-	if (!toolInput->IsInputAction(MouseButton::Left, InputState::Released))
+	if (!toolInput->IsInputAction(MouseButtonState::Left, InputState::Released))
 		return;
 	
 	if(startSize != m_window->Size && !m_window->Collapsed)

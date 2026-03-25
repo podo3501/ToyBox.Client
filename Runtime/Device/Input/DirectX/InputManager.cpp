@@ -35,7 +35,7 @@ static inline Mouse::ButtonStateTracker::ButtonState GetMouseKeyState(InputState
 
 static bool IsMouseButtonState(
     const Mouse::ButtonStateTracker& mouseTracker, 
-    MouseButton mouseButton, 
+    MouseButtonState mouseButton, 
     Mouse::ButtonStateTracker::ButtonState state) noexcept
 {
     constexpr MouseButtonStateChecker mouseButtonCheckers[] = {
@@ -91,7 +91,7 @@ bool InputManager::IsInputAction(Keyboard::Keys key, InputState inputState) noex
     return KeyboardActions[static_cast<size_t>(inputState)](m_keyboardTracker, key);
 }
 
-bool InputManager::IsInputAction(Keyboard::Keys key, MouseButton mouseButton) noexcept
+bool InputManager::IsInputAction(Keyboard::Keys key, MouseButtonState mouseButton) noexcept
 {
     //앞 키는 hold 하고 뒤에는 pressed를 해야 한다. 둘다 pressed를 하면 동시에 눌러야 하기 때문에 키가 안 먹힌다.
     return IsInputAction(key, InputState::Held) && IsInputAction(mouseButton, InputState::Pressed);
@@ -108,7 +108,7 @@ bool InputManager::IsInputAction(Keyboard::Keys firstKey, Keyboard::Keys secondK
     //부분을 개선해서 계속 키를 눌렀을때 간격과, 눌렀을 때 눌리고 있을때 이 사이의 간격을 지정하게끔 구현하자.
 }
 
-bool InputManager::IsInputAction(MouseButton mouseButton, InputState inputState) noexcept
+bool InputManager::IsInputAction(MouseButtonState mouseButton, InputState inputState) noexcept
 {
     return IsMouseButtonState(m_mouseTracker, mouseButton, GetMouseKeyState(inputState));
 }
