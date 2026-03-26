@@ -13,7 +13,7 @@ enum class MouseButtonState
     Middle
 };
 
-enum class InputState
+enum class InputKeyState
 {
     Up,
     Held,
@@ -21,10 +21,10 @@ enum class InputState
     Pressed,
 };
 
-struct MouseState
+struct MouseDataState
 {
     DirectX::XMINT2 pos{};
-    InputState leftButton{ InputState::Up };
+    InputKeyState leftButton{ InputKeyState::Up };
 };
 
 struct IInputManager
@@ -32,13 +32,13 @@ struct IInputManager
     virtual ~IInputManager() = default;
     virtual void SetMouseStartOffset(const DirectX::XMINT2& offset) noexcept = 0;
     virtual void Update() noexcept = 0;
-    virtual MouseState GetMouseState() const noexcept = 0;
+    virtual MouseDataState GetMouseState() const noexcept = 0;
     virtual const DirectX::XMINT2& GetPosition() const noexcept = 0;
 
-    virtual bool IsInputAction(DirectX::Keyboard::Keys key, InputState inputState) noexcept = 0;
+    virtual bool IsInputAction(DirectX::Keyboard::Keys key, InputKeyState inputState) noexcept = 0;
     virtual bool IsInputAction(DirectX::Keyboard::Keys key, MouseButtonState mouseButton) noexcept = 0;
     virtual bool IsInputAction(DirectX::Keyboard::Keys firstKey, DirectX::Keyboard::Keys secondKey) noexcept = 0;
-    virtual bool IsInputAction(MouseButtonState mouseButton, InputState keyState) noexcept = 0;
+    virtual bool IsInputAction(MouseButtonState mouseButton, InputKeyState keyState) noexcept = 0;
     virtual void ResetMouseWheelValue() noexcept = 0;
     virtual int GetMouseWheelValue() noexcept = 0;
 };

@@ -69,9 +69,9 @@ bool ImageSelector::RemoveArea() noexcept
 void ImageSelector::CheckSelectArea() noexcept
 {
     auto input = ToolInputLocator::GetService();
-    if (input->IsInputAction(MouseButtonState::Left, InputState::Pressed)) SelectArea();
-    if (input->IsInputAction(Keyboard::Escape, InputState::Pressed)) DeselectArea();
-    if (input->IsInputAction(Keyboard::Delete, InputState::Pressed)) RemoveArea();
+    if (input->IsInputAction(MouseButtonState::Left, InputKeyState::Pressed)) SelectArea();
+    if (input->IsInputAction(Keyboard::Escape, InputKeyState::Pressed)) DeselectArea();
+    if (input->IsInputAction(Keyboard::Delete, InputKeyState::Pressed)) RemoveArea();
 }
 
 optional<Rectangle> ImageSelector::FindAreaFromMousePos(const XMINT2& pos) const noexcept

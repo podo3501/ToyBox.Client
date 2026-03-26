@@ -33,7 +33,6 @@
     <ClInclude Include="Input\DirectX\DXKeyMap.h" />
     <ClInclude Include="Input\DirectX\DXMouseInputProvider.h" />
     <ClInclude Include="Input\DirectX\InputManager.h" />
-    <ClInclude Include="Input\DirectX\InputTransitionState.h" />
     <ClInclude Include="Input\IInputManager.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Storage\JsonObjectIO.h" />

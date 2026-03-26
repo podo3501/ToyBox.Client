@@ -27,7 +27,7 @@ static bool CheckMouseMiddleButton(const Mouse::ButtonStateTracker& tracker, Mou
     return tracker.middleButton == state;
 }
 
-static inline Mouse::ButtonStateTracker::ButtonState GetMouseKeyState(InputState inputState)
+static inline Mouse::ButtonStateTracker::ButtonState GetMouseKeyState(InputKeyState inputState)
 {
     //두 enum의 값이 동일하다.
     return static_cast<Mouse::ButtonStateTracker::ButtonState>(inputState);
@@ -75,10 +75,10 @@ void InputManager::Update() noexcept
     m_mouseTracker.Update(offset);
 }
 
-MouseState InputManager::GetMouseState() const noexcept
+MouseDataState InputManager::GetMouseState() const noexcept
 {
     auto dxState = g_mouse.GetState();
-    return { m_position, static_cast<InputState>(m_mouseTracker.leftButton) };
+    return { m_position, static_cast<InputKeyState>(m_mouseTracker.leftButton) };
 }
 
 const XMINT2& InputManager::GetPosition() const noexcept
@@ -86,7 +86,7 @@ const XMINT2& InputManager::GetPosition() const noexcept
     return m_position;
 }
 
-bool InputManager::IsInputAction(Keyboard::Keys key, InputState inputState) noexcept
+bool InputManager::IsInputAction(Keyboard::Keys key, InputKeyState inputState) noexcept
 {
     return KeyboardActions[static_cast<size_t>(inputState)](m_keyboardTracker, key);
 }
@@ -94,13 +94,13 @@ bool InputManager::IsInputAction(Keyboard::Keys key, InputState inputState) noex
 bool InputManager::IsInputAction(Keyboard::Keys key, MouseButtonState mouseButton) noexcept
 {
     //앞 키는 hold 하고 뒤에는 pressed를 해야 한다. 둘다 pressed를 하면 동시에 눌러야 하기 때문에 키가 안 먹힌다.
-    return IsInputAction(key, InputState::Held) && IsInputAction(mouseButton, InputState::Pressed);
+    return IsInputAction(key, InputKeyState::Held) && IsInputAction(mouseButton, InputKeyState::Pressed);
 }
 
 bool InputManager::IsInputAction(Keyboard::Keys firstKey, Keyboard::Keys secondKey) noexcept
 {
-    bool firstKeyHeld = IsInputAction(firstKey, InputState::Held);
-    bool secondKeyPressed = IsInputAction(secondKey, InputState::Pressed);
+    bool firstKeyHeld = IsInputAction(firstKey, InputKeyState::Held);
+    bool secondKeyPressed = IsInputAction(secondKey, InputKeyState::Pressed);
 
     return firstKeyHeld && secondKeyPressed;
     //눌리고 있을때 너무 빨리 이벤트가 들어간다. 그래서 시간 지연을 줄 생각이었는데 눌렀을때와 눌리고 있
@@ -108,7 +108,7 @@ bool InputManager::IsInputAction(Keyboard::Keys firstKey, Keyboard::Keys secondK
     //부분을 개선해서 계속 키를 눌렀을때 간격과, 눌렀을 때 눌리고 있을때 이 사이의 간격을 지정하게끔 구현하자.
 }
 
-bool InputManager::IsInputAction(MouseButtonState mouseButton, InputState inputState) noexcept
+bool InputManager::IsInputAction(MouseButtonState mouseButton, InputKeyState inputState) noexcept
 {
     return IsMouseButtonState(m_mouseTracker, mouseButton, GetMouseKeyState(inputState));
 }

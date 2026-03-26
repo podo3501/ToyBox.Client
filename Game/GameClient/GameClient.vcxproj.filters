@@ -508,6 +508,15 @@
     <ClInclude Include="Service\Input\MouseButton.h">
       <Filter>Service\Input</Filter>
     </ClInclude>
+    <ClInclude Include="Service\Input\MouseState.h">
+      <Filter>Service\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Input\InputState.h">
+      <Filter>Service\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Input\KeyboardState.h">
+      <Filter>Service\Input</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Locator">

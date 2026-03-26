@@ -1,7 +1,7 @@
 #pragma once
 #include "../UIComponent.h"
 
-enum class InputState;
+enum class InputKeyState;
 namespace DX { class StepTimer; }
 class Container : public UIComponent
 {

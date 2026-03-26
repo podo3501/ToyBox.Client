@@ -73,7 +73,7 @@ ASSERT_ENUM_COUNT(Origin);
 
 ///////////////////////////////////////////////////////////////
 
-enum class InteractState : int //이미지같은 보여주는 상태 변화 InputState는 키의 상태 변화이기 때문에 비슷해 보여도 둘이 다르다.
+enum class InteractState : int //이미지같은 보여주는 상태 변화 InputKeyState는 키의 상태 변화이기 때문에 비슷해 보여도 둘이 다르다.
 {
 	Normal,
 	Hovered,

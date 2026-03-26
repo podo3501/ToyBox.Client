@@ -142,8 +142,11 @@
     <ClInclude Include="Service\Input\IKeyboardInputProvider.h" />
     <ClInclude Include="Service\Input\IMouseInputProvider.h" />
     <ClInclude Include="Service\Input\InputService.h" />
+    <ClInclude Include="Service\Input\InputState.h" />
+    <ClInclude Include="Service\Input\KeyboardState.h" />
     <ClInclude Include="Service\Input\KeyCode.h" />
     <ClInclude Include="Service\Input\MouseButton.h" />
+    <ClInclude Include="Service\Input\MouseState.h" />
     <ClInclude Include="UserInterface\CommandHistory\Command.h" />
     <ClInclude Include="UserInterface\CommandHistory\CommandHistory.h" />
     <ClInclude Include="UserInterface\CommandHistory\CommandType.h" />

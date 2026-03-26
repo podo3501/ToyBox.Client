@@ -1,6 +1,6 @@
 #pragma once
 
-struct MouseState;
+struct MouseDataState;
 class UIComponent;
 class MouseEventReceiver;
 class MouseEventRouter : private NoCopyNoMove
@@ -11,8 +11,8 @@ public:
 
 private:
 	void UpdateHoverState(vector<MouseEventReceiver*> receivers, const XMINT2& pos) noexcept;
-	void ProcessCaptureComponent(const MouseState& mouseState) noexcept;
-	void CaptureComponent(const MouseState& mouseState) noexcept;
+	void ProcessCaptureComponent(const MouseDataState& mouseState) noexcept;
+	void CaptureComponent(const MouseDataState& mouseState) noexcept;
 	void ProcessMouseWheel(int wheelValue) noexcept;
 
 	UIComponent* m_component{ nullptr };

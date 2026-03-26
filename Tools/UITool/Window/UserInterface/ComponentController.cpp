@@ -46,7 +46,7 @@ bool ComponentController::CheckAttachComponent(IToolInputManager* input) noexcep
 bool ComponentController::CheckDetachComponent(IToolInputManager* input) noexcept
 {
 	if (m_floater->IsComponent()) return false;
-	if (!input->IsInputAction(Keyboard::D, InputState::Pressed)) return false;
+	if (!input->IsInputAction(Keyboard::D, InputKeyState::Pressed)) return false;
 
 	auto detachComponent = DetachSelectedComponent(m_cmdHistory.get(), m_selector.get());
 	if (!detachComponent)
@@ -65,7 +65,7 @@ bool ComponentController::CheckDetachComponent(IToolInputManager* input) noexcep
 bool ComponentController::CheckDeleteComponent(IToolInputManager* input) noexcept
 {
 	if (m_floater->IsComponent()) return false;
-	if (!input->IsInputAction(Keyboard::Delete, InputState::Pressed)) return false;
+	if (!input->IsInputAction(Keyboard::Delete, InputKeyState::Pressed)) return false;
 
 	DetachSelectedComponent(m_cmdHistory.get(), m_selector.get());
 
@@ -91,7 +91,7 @@ bool ComponentController::CheckRedoComponent(IToolInputManager* input) noexcept
 bool ComponentController::CheckCloneComponent(IToolInputManager* input) noexcept
 {
 	if (m_floater->IsComponent()) return false;
-	if (!input->IsInputAction(Keyboard::B, InputState::Pressed)) return false;
+	if (!input->IsInputAction(Keyboard::B, InputKeyState::Pressed)) return false;
 	UIComponent* component = m_selector->GetComponent();
 	if (!component) return false;
 

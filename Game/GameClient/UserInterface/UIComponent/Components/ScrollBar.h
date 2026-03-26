@@ -3,7 +3,7 @@
 #include "../UIHelperClass.h"
 #include "GameClient/UserInterface/InputEvent/MouseEventReceiver.h"
 
-enum class InputState;
+enum class InputKeyState;
 class PatchTextureStd3;
 class TextureSwitcher;
 

@@ -117,7 +117,7 @@ void UserInterfaceWindow::ToggleToolMode() noexcept
 
 void UserInterfaceWindow::CheckActiveUpdate(IToolInputManager* toolInput) noexcept
 {
-	if (!toolInput->IsInputAction(Keyboard::F5, InputState::Pressed)) return;
+	if (!toolInput->IsInputAction(Keyboard::F5, InputKeyState::Pressed)) return;
 	
 	ToggleToolMode();
 }
@@ -125,10 +125,10 @@ void UserInterfaceWindow::CheckActiveUpdate(IToolInputManager* toolInput) noexce
 void UserInterfaceWindow::CheckWindowResized(IToolInputManager* toolInput)
 {
 	static ImVec2 startSize{};
-	if (toolInput->IsInputAction(MouseButtonState::Left, InputState::Pressed))
+	if (toolInput->IsInputAction(MouseButtonState::Left, InputKeyState::Pressed))
 		startSize = m_window->Size;
 
-	if (!toolInput->IsInputAction(MouseButtonState::Left, InputState::Released))
+	if (!toolInput->IsInputAction(MouseButtonState::Left, InputKeyState::Released))
 		return;
 	
 	if(startSize != m_window->Size && !m_window->Collapsed)

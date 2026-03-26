@@ -2,7 +2,7 @@
 #include "../UIComponent.h"
 #include "GameClient/UserInterface/InputEvent/MouseEventReceiver.h"
 
-enum class InputState;
+enum class InputKeyState;
 struct TextureSourceInfo;
 class PatchTextureLite;
 namespace DX { class StepTimer; }

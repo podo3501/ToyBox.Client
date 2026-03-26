@@ -14,13 +14,13 @@ public:
 
     virtual void SetMouseStartOffset(const XMINT2& offset) noexcept override;
     virtual void Update() noexcept override;
-    virtual MouseState GetMouseState() const noexcept override;
+    virtual MouseDataState GetMouseState() const noexcept override;
     virtual const XMINT2& GetPosition() const noexcept override;
 
-    virtual bool IsInputAction(Keyboard::Keys key, InputState inputState) noexcept override;
+    virtual bool IsInputAction(Keyboard::Keys key, InputKeyState inputState) noexcept override;
     virtual bool IsInputAction(Keyboard::Keys key, MouseButtonState mouseButton) noexcept override;
     virtual bool IsInputAction(Keyboard::Keys firstKey, Keyboard::Keys secondKey) noexcept override;
-    virtual bool IsInputAction(MouseButtonState mouseButton, InputState keyState) noexcept override;
+    virtual bool IsInputAction(MouseButtonState mouseButton, InputKeyState keyState) noexcept override;
     virtual void ResetMouseWheelValue() noexcept override;
     virtual int GetMouseWheelValue() noexcept override;
 
@@ -43,17 +43,17 @@ public:
 
     virtual void SetMouseStartOffset(const DirectX::XMINT2& offset) noexcept override {};
     virtual void Update() noexcept override {}
-    virtual MouseState GetMouseState() const noexcept override { return {}; }
+    virtual MouseDataState GetMouseState() const noexcept override { return {}; }
     virtual const DirectX::XMINT2& GetPosition() const noexcept override
     {
         static DirectX::XMINT2 dummy{ 0, 0 };
         return dummy;
     }
 
-    virtual bool IsInputAction(DirectX::Keyboard::Keys, InputState) noexcept override { return false; }
+    virtual bool IsInputAction(DirectX::Keyboard::Keys, InputKeyState) noexcept override { return false; }
     virtual bool IsInputAction(DirectX::Keyboard::Keys, MouseButtonState) noexcept override { return false; }
     virtual bool IsInputAction(DirectX::Keyboard::Keys, DirectX::Keyboard::Keys) noexcept override { return false; }
-    virtual bool IsInputAction(MouseButtonState, InputState) noexcept override { return false; }
+    virtual bool IsInputAction(MouseButtonState, InputKeyState) noexcept override { return false; }
     virtual void ResetMouseWheelValue() noexcept override {}
     virtual int GetMouseWheelValue() noexcept override { return 0; }
 };

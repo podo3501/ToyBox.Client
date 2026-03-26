@@ -54,7 +54,7 @@ void ComponentSelector::SetComponent(UIComponent* component) noexcept
 void ComponentSelector::SelectComponent(IToolInputManager* input) noexcept
 {
 	if (!m_uiWindow) return;
-	if (!input->IsInputAction(MouseButtonState::Left, InputState::Pressed)) return;
+	if (!input->IsInputAction(MouseButtonState::Left, InputKeyState::Pressed)) return;
 
 	static vector<UIComponent*> preComponentList{ nullptr };
 	const XMINT2& pos = input->GetPosition();
@@ -82,7 +82,7 @@ void ComponentSelector::Update() noexcept
 
 bool ComponentSelector::HandleEscapeKey(IToolInputManager* input) noexcept
 {
-	if (!input->IsInputAction(Keyboard::Escape, InputState::Pressed)) return false;
+	if (!input->IsInputAction(Keyboard::Escape, InputKeyState::Pressed)) return false;
 	
 	SetComponent(nullptr);
 	return true;

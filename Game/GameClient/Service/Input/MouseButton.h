@@ -3,8 +3,6 @@
 
 enum class MouseButton : uint8_t
 {
-    None = 0,
-
     Left,
     Right,
     Middle,

@@ -37,18 +37,18 @@ void MouseEventRouter::UpdateHoverState(vector<MouseEventReceiver*> receivers, c
 	m_hoveredReceivers = hoveredReceivers;
 }
 
-void MouseEventRouter::ProcessCaptureComponent(const MouseState& mouseState) noexcept
+void MouseEventRouter::ProcessCaptureComponent(const MouseDataState& mouseState) noexcept
 {
 	if (!m_capture) return;
 
 	bool inside = (ranges::find(m_hoveredReceivers, m_capture) != m_hoveredReceivers.end()); //hovered에서 찾으면 inside.
-	if (mouseState.leftButton == InputState::Released) //3. 마우스를 떼면 release호출하고 캡쳐해제
+	if (mouseState.leftButton == InputKeyState::Released) //3. 마우스를 떼면 release호출하고 캡쳐해제
 	{
 		m_capture->OnRelease(inside);
 		m_capture = nullptr;
 	}
 
-	if (mouseState.leftButton == InputState::Held)
+	if (mouseState.leftButton == InputKeyState::Held)
 		m_capture->OnHold(mouseState.pos, inside); //2. 캡쳐한걸 hold로 호출한다.
 }
 
@@ -57,10 +57,10 @@ static inline bool IsHandled(InputResult result) noexcept
 	return result == InputResult::Consumed || result == InputResult::Propagate;
 }
 
-void MouseEventRouter::CaptureComponent(const MouseState& mouseState) noexcept
+void MouseEventRouter::CaptureComponent(const MouseDataState& mouseState) noexcept
 {
 	if (m_capture) return;
-	if (mouseState.leftButton != InputState::Pressed) return;
+	if (mouseState.leftButton != InputKeyState::Pressed) return;
 
 	for (auto& receiver : m_hoveredReceivers)
 	{

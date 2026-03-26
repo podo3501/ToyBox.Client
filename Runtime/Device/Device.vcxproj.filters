@@ -73,9 +73,6 @@
     <ClInclude Include="Input\DirectX\DXKeyboardInputProvider.h">
       <Filter>Input\DirectX</Filter>
     </ClInclude>
-    <ClInclude Include="Input\DirectX\InputTransitionState.h">
-      <Filter>Input\DirectX</Filter>
-    </ClInclude>
     <ClInclude Include="Input\DirectX\DXKeyMap.h">
       <Filter>Input\DirectX</Filter>
     </ClInclude>

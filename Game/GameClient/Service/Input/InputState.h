@@ -1,6 +1,6 @@
 #pragma once
 
-struct InputTransitionState
+struct InputState
 {
     bool previous{ false };
     bool current{ false };

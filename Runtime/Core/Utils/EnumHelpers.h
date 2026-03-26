@@ -83,7 +83,7 @@ namespace EnumUtil
 	}
 
 	template<CountEnum T>
-	constexpr auto EnumValues()
+	constexpr auto EnumValues() //for에서 사용하기 좋음.
 	{
 		constexpr size_t count = static_cast<size_t>(T::Count);
 
