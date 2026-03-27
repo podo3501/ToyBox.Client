@@ -24,7 +24,14 @@ public:
 	bool IsMouseButtonReleased(MouseButton button) const noexcept;
 	bool IsMouseButtonUp(MouseButton button) const noexcept;
 
+	bool AreKeysCombo(initializer_list<KeyCode> heldKeys, KeyCode pressedKey) const noexcept;
+	bool AreKeysMouseCombo(initializer_list<KeyCode> heldKeys, MouseButton pressedButton) const noexcept;
+
 	void Update() noexcept;
+
+	void SetMousePositionOffset(const Point& offset) noexcept;
+	KeyboardState GetKeyboardState() const noexcept;
+	MouseState GetMouseState() const noexcept;
 
 private:
 	InputService(
@@ -36,4 +43,6 @@ private:
 
 	KeyboardState m_keyboardState{};
 	MouseState m_mouseState{};
+
+	Point m_mouseOffset{};
 };

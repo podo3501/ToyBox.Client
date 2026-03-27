@@ -64,6 +64,9 @@
     <ClInclude Include="Utils\HandleAllocator.h">
       <Filter>Utils</Filter>
     </ClInclude>
+    <ClInclude Include="Foundation\Point.h">
+      <Filter>Foundation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Utils\EnumHelpers.cpp">

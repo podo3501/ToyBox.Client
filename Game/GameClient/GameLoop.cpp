@@ -39,6 +39,7 @@ GameLoop::GameLoop(unique_ptr<Window> window, unique_ptr<IRenderer> renderer, II
 
 bool GameLoop::InitializeDerived()
 {
+    
     m_resManager = CreateResourceManager(m_resourcePath);
     m_inputManager = CreateInputManager(GetWindowHandle());
     InputLocator::Provide(m_inputManager.get());

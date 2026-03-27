@@ -25,6 +25,7 @@
     <ClInclude Include="Foundation\NoCopyNoMove.h" />
     <ClInclude Include="Foundation\NonCopyable.h" />
     <ClInclude Include="Foundation\NonMovable.h" />
+    <ClInclude Include="Foundation\Point.h" />
     <ClInclude Include="Foundation\Types.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Service\Locator.h" />

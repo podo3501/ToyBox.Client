@@ -1,82 +1,79 @@
 #include "pch.h"
 #include "DXMouseInputProvider.h"
+#include "DirectXTK12/Mouse.h"
 
-namespace
+inline constexpr bool DirectX::Mouse::State::* ButtonMap[] =
 {
-    static constexpr bool DirectX::Mouse::State::* ButtonMap[] =
-    {
-        &DirectX::Mouse::State::leftButton,
-        &DirectX::Mouse::State::rightButton,
-        &DirectX::Mouse::State::middleButton,
-        &DirectX::Mouse::State::xButton1,
-        &DirectX::Mouse::State::xButton2
-    };
-}
+    &DirectX::Mouse::State::leftButton,
+    &DirectX::Mouse::State::rightButton,
+    &DirectX::Mouse::State::middleButton,
+    &DirectX::Mouse::State::xButton1,
+    &DirectX::Mouse::State::xButton2
+};
+inline constexpr size_t ButtonCount = std::size(ButtonMap);
+static_assert(ButtonCount == static_cast<size_t>(MouseButton::Count), "ButtonMap and MouseState::buttons size mismatch");
 
-void DXMouseInputProvider::UpdateButton(const DirectX::Mouse::State& dxState)
+DXMouseInputProvider::~DXMouseInputProvider() = default;
+DXMouseInputProvider::DXMouseInputProvider(DirectX::Mouse& mouse) noexcept :
+    m_mouse{ mouse }
+{}
+
+void DXMouseInputProvider::UpdateButton(const DirectX::Mouse::State& dxState, UpdateMode mode)
 {
-    for (int i = 0; i < (int)MouseButton::Count; ++i)
+    for (size_t i = 0; i < ButtonCount; ++i)
     {
-        bool value = dxState.*ButtonMap[i];
+        auto value = dxState.*ButtonMap[i];
+
+        if (mode == UpdateMode::Sync)
+        {
+            m_state.buttons[i].current = value;
+            m_state.buttons[i].previous = value;
+            continue;
+        }
+
         m_state.buttons[i].Update(value);
-    }
-}
-
-void DXMouseInputProvider::SyncButton(const DirectX::Mouse::State& dxState)
-{
-    for (int i = 0; i < (int)MouseButton::Count; ++i)
-    {
-        bool value = dxState.*ButtonMap[i];
-
-        m_state.buttons[i].current = value;
-        m_state.buttons[i].previous = value;
     }
 }
 
 void DXMouseInputProvider::Update() noexcept
 {
-    auto raw = m_mouse.GetState();
+    const auto& raw = m_mouse.GetState();
 
     if (!m_initialized) //처음에 마우스 튀는거 방지.
     {
-        SyncButton(raw);
+        UpdateButton(raw, UpdateMode::Sync);
 
-        m_state.x = raw.x;
-        m_state.y = raw.y;
-        m_state.dx = 0;
-        m_state.dy = 0;
+        auto rawPos = ToPoint(raw.x, raw.y);
+        m_state.prevPosition = rawPos;
+        m_state.position = rawPos;
 
-        m_prevWheel = raw.scrollWheelValue;
-        m_state.wheelDelta = 0;
+        m_state.prevWheel = raw.scrollWheelValue;
+        m_state.wheel = raw.scrollWheelValue;
 
         m_initialized = true;
         return;
     }
 
-    UpdateButton(raw);
+    UpdateButton(raw, UpdateMode::Normal);
 
-    int prevX = m_state.x;
-    int prevY = m_state.y;
+    m_state.prevPosition = m_state.position;
+    m_state.position = ToPoint(raw.x, raw.y);
 
-    m_state.x = raw.x;
-    m_state.y = raw.y;
-
-    m_state.dx = m_state.x - prevX;
-    m_state.dy = m_state.y - prevY;
-
-    int currentWheel = raw.scrollWheelValue;
-    m_state.wheelDelta = currentWheel - m_prevWheel;
-    m_prevWheel = currentWheel;
+    m_state.prevWheel = m_state.wheel;
+    m_state.wheel = raw.scrollWheelValue;
 }
 
 const MouseState& DXMouseInputProvider::GetState() const noexcept
 {
+    assert(m_initialized && "DXMouseInputProvider not initialized");
     return m_state;
 }
 
 //////////////////////////////////////////////////
 
-std::unique_ptr<IMouseInputProvider> CreateDXMouseInputProvider()
+#ifdef _WIN32
+unique_ptr<IMouseInputProvider> CreateDXMouseInputProvider(DirectX::Mouse& mouse)
 {
-	return make_unique<DXMouseInputProvider>();
+	return make_unique<DXMouseInputProvider>(mouse);
 }
+#endif

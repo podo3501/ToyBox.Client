@@ -9,4 +9,7 @@ struct IMouseInputProvider
 	virtual const MouseState& GetState() const noexcept = 0;
 };
 
-std::unique_ptr<IMouseInputProvider> CreateDXMouseInputProvider();
+#ifdef _WIN32
+namespace DirectX { class Mouse; }
+std::unique_ptr<IMouseInputProvider> CreateDXMouseInputProvider(DirectX::Mouse& mouse);
+#endif

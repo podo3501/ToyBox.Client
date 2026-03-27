@@ -9,4 +9,7 @@ struct IKeyboardInputProvider
 	virtual const KeyboardState& GetState() const noexcept = 0;
 };
 
-std::unique_ptr<IKeyboardInputProvider> CreateDXKeyboardInputProvider();
+#ifdef _WIN32
+namespace DirectX { class Keyboard; }
+std::unique_ptr<IKeyboardInputProvider> CreateDXKeyboardInputProvider(DirectX::Keyboard& keyboard);
+#endif

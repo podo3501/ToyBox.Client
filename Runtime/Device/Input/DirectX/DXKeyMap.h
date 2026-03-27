@@ -33,6 +33,24 @@ constexpr std::pair<DXKey, KeyCode> DXKeyMap[] = {
     { DXKey::Y, KeyCode::Y },
     { DXKey::Z, KeyCode::Z },
 
+    { DXKey::Space, KeyCode::Space },
+    { DXKey::Enter, KeyCode::Enter },
+    { DXKey::Escape, KeyCode::Escape },
+    { DXKey::Tab, KeyCode::Tab },
+    { DXKey::Back, KeyCode::Backspace },
+
+    { DXKey::LeftShift, KeyCode::LeftShift },
+    { DXKey::RightShift, KeyCode::RightShift },
+    { DXKey::LeftControl, KeyCode::LeftCtrl },
+    { DXKey::RightControl, KeyCode::RightCtrl },
+    { DXKey::LeftAlt, KeyCode::LeftAlt },
+    { DXKey::RightAlt, KeyCode::RightAlt },
+
+    { DXKey::Up, KeyCode::Up },
+    { DXKey::Down, KeyCode::Down },
+    { DXKey::Left, KeyCode::Left },
+    { DXKey::Right, KeyCode::Right },
+
     { DXKey::D0, KeyCode::Digit0 },
     { DXKey::D1, KeyCode::Digit1 },
     { DXKey::D2, KeyCode::Digit2 },
@@ -44,10 +62,18 @@ constexpr std::pair<DXKey, KeyCode> DXKeyMap[] = {
     { DXKey::D8, KeyCode::Digit8 },
     { DXKey::D9, KeyCode::Digit9 },
 
-    { DXKey::Space, KeyCode::Space },
-    { DXKey::Escape, KeyCode::Escape },
-    { DXKey::Enter, KeyCode::Enter },
-    { DXKey::LeftShift, KeyCode::LeftShift },
-    { DXKey::RightShift, KeyCode::RightShift },
+    { DXKey::F1, KeyCode::F1 },
+    { DXKey::F2, KeyCode::F2 },
+    { DXKey::F3, KeyCode::F3 },
+    { DXKey::F4, KeyCode::F4 },
+    { DXKey::F5, KeyCode::F5 },
+    { DXKey::F6, KeyCode::F6 },
+    { DXKey::F7, KeyCode::F7 },
+    { DXKey::F8, KeyCode::F8 },
+    { DXKey::F9, KeyCode::F9 },
+    { DXKey::F10, KeyCode::F10 },
+    { DXKey::F11, KeyCode::F11 },
+    { DXKey::F12, KeyCode::F12 },
+
     // 필요한 키 추가
 };
