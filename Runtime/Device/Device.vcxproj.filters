@@ -28,6 +28,9 @@
     <Filter Include="Audio\Descriptor">
       <UniqueIdentifier>{42f17458-fd1d-4da7-9635-178eed296a81}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Render">
+      <UniqueIdentifier>{f38fc198-7943-4c01-b22f-725867379203}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Storage\JsonObjectIO.h">
@@ -79,6 +82,9 @@
     <ClInclude Include="Input\DirectX\DXMouseInputProvider.h">
       <Filter>Input\DirectX</Filter>
     </ClInclude>
+    <ClInclude Include="Render\DX12RenderBackend.h">
+      <Filter>Render</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -117,6 +123,9 @@
     </ClCompile>
     <ClCompile Include="Input\DirectX\DXMouseInputProvider.cpp">
       <Filter>Input\DirectX</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12RenderBackend.cpp">
+      <Filter>Render</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

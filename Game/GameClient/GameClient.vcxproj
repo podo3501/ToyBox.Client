@@ -47,6 +47,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="Service\Input\InputService.cpp" />
+    <ClCompile Include="Service\Render\RenderService.cpp" />
     <ClCompile Include="UserInterface\CommandHistory\TextureResource\TexResCommandHistory.cpp" />
     <ClCompile Include="UserInterface\CommandHistory\TextureResource\TexResCommandRegistry.cpp" />
     <ClCompile Include="UserInterface\CommandHistory\UserInterface\UICommandHistory.cpp" />
@@ -147,6 +148,8 @@
     <ClInclude Include="Service\Input\KeyCode.h" />
     <ClInclude Include="Service\Input\MouseButton.h" />
     <ClInclude Include="Service\Input\MouseState.h" />
+    <ClInclude Include="Service\Render\IRenderBackend.h" />
+    <ClInclude Include="Service\Render\RenderService.h" />
     <ClInclude Include="UserInterface\CommandHistory\Command.h" />
     <ClInclude Include="UserInterface\CommandHistory\CommandHistory.h" />
     <ClInclude Include="UserInterface\CommandHistory\CommandType.h" />

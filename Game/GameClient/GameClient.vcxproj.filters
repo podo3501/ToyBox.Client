@@ -219,6 +219,9 @@
     <ClCompile Include="Service\Input\InputService.cpp">
       <Filter>Service\Input</Filter>
     </ClCompile>
+    <ClCompile Include="Service\Render\RenderService.cpp">
+      <Filter>Service\Render</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameLoop.h" />
@@ -517,6 +520,12 @@
     <ClInclude Include="Service\Input\KeyboardState.h">
       <Filter>Service\Input</Filter>
     </ClInclude>
+    <ClInclude Include="Service\Render\RenderService.h">
+      <Filter>Service\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\IRenderBackend.h">
+      <Filter>Service\Render</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Locator">
@@ -596,6 +605,9 @@
     </Filter>
     <Filter Include="Service\Input">
       <UniqueIdentifier>{25a4f086-8a02-40da-a2d8-2935e843f341}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Service\Render">
+      <UniqueIdentifier>{180aab40-1760-4e84-bf76-340c77be0489}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
