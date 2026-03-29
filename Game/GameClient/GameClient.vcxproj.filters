@@ -526,6 +526,9 @@
     <ClInclude Include="Service\Render\IRenderBackend.h">
       <Filter>Service\Render</Filter>
     </ClInclude>
+    <ClInclude Include="Service\Render\RenderConfig.h">
+      <Filter>Service\Render</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Locator">

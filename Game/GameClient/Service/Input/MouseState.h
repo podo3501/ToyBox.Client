@@ -1,6 +1,6 @@
 #pragma once
 #include <array>
-#include "Core/Foundation/Point.h"
+#include "Core/Foundation/Geometry2D.h"
 #include "MouseButton.h"
 #include "InputState.h"
 

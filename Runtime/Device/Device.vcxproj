@@ -35,7 +35,13 @@
     <ClInclude Include="Input\DirectX\InputManager.h" />
     <ClInclude Include="Input\IInputManager.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="Render\DX12RenderBackend.h" />
+    <ClInclude Include="Render\DX12\BuildConfig.h" />
+    <ClInclude Include="Render\DX12\d3dx12.h" />
+    <ClInclude Include="Render\DX12\Common.h" />
+    <ClInclude Include="Render\DX12\Debug.h" />
+    <ClInclude Include="Render\DX12\DebugHelper.h" />
+    <ClInclude Include="Render\DX12\DeviceResources.h" />
+    <ClInclude Include="Render\DX12\RenderBackend.h" />
     <ClInclude Include="Storage\JsonObjectIO.h" />
   </ItemGroup>
   <ItemGroup>
@@ -57,7 +63,9 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Render\DX12RenderBackend.cpp" />
+    <ClCompile Include="Render\DX12\DebugHelper.cpp" />
+    <ClCompile Include="Render\DX12\DeviceResources.cpp" />
+    <ClCompile Include="Render\DX12\RenderBackend.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Platform\Platform.vcxproj">

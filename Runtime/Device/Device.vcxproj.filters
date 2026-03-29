@@ -31,6 +31,9 @@
     <Filter Include="Render">
       <UniqueIdentifier>{f38fc198-7943-4c01-b22f-725867379203}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Render\DX12">
+      <UniqueIdentifier>{9705a1b6-dbbc-4a71-a12a-443bf80a7889}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Storage\JsonObjectIO.h">
@@ -82,8 +85,26 @@
     <ClInclude Include="Input\DirectX\DXMouseInputProvider.h">
       <Filter>Input\DirectX</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12RenderBackend.h">
-      <Filter>Render</Filter>
+    <ClInclude Include="Render\DX12\BuildConfig.h">
+      <Filter>Render\DX12</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\d3dx12.h">
+      <Filter>Render\DX12</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Common.h">
+      <Filter>Render\DX12</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Debug.h">
+      <Filter>Render\DX12</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\RenderBackend.h">
+      <Filter>Render\DX12</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\DeviceResources.h">
+      <Filter>Render\DX12</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\DebugHelper.h">
+      <Filter>Render\DX12</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -124,8 +145,14 @@
     <ClCompile Include="Input\DirectX\DXMouseInputProvider.cpp">
       <Filter>Input\DirectX</Filter>
     </ClCompile>
-    <ClCompile Include="Render\DX12RenderBackend.cpp">
-      <Filter>Render</Filter>
+    <ClCompile Include="Render\DX12\RenderBackend.cpp">
+      <Filter>Render\DX12</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\DeviceResources.cpp">
+      <Filter>Render\DX12</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\DebugHelper.cpp">
+      <Filter>Render\DX12</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -64,7 +64,7 @@
     <ClInclude Include="Utils\HandleAllocator.h">
       <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="Foundation\Point.h">
+    <ClInclude Include="Foundation\Geometry2D.h">
       <Filter>Foundation</Filter>
     </ClInclude>
   </ItemGroup>
