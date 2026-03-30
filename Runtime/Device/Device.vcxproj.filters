@@ -106,6 +106,21 @@
     <ClInclude Include="Render\DX12\DebugHelper.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
+    <ClInclude Include="Render\DX12\DX12Device.h">
+      <Filter>Render\DX12</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\FrameDisplay.h">
+      <Filter>Render\DX12</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\DX12Core.h">
+      <Filter>Render\DX12</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\CommandScheduler.h">
+      <Filter>Render\DX12</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\QuadRenderer.h">
+      <Filter>Render\DX12</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -152,6 +167,21 @@
       <Filter>Render\DX12</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\DebugHelper.cpp">
+      <Filter>Render\DX12</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\DX12Link.cpp">
+      <Filter>Render\DX12</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\DX12Device.cpp">
+      <Filter>Render\DX12</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\FrameDisplay.cpp">
+      <Filter>Render\DX12</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\CommandScheduler.cpp">
+      <Filter>Render\DX12</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\QuadRenderer.cpp">
       <Filter>Render\DX12</Filter>
     </ClCompile>
   </ItemGroup>

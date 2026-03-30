@@ -3,6 +3,7 @@
 #include "Common.h"
 #include "DebugHelper.h"
 #include "GameClient/Service/Render/RenderConfig.h"
+#include <d3dcompiler.h>
 
 using namespace DirectX;
 using Microsoft::WRL::ComPtr;
@@ -33,6 +34,8 @@ bool DeviceResources::Initialize(HWND hwnd, const Size& size, const RenderConfig
     ReturnIfFalse(CreateRTV());
     ReturnIfFalse(CreateCommandObjects());
     ReturnIfFalse(CreateFence());
+
+    CreateQuadResources();
 
     m_frameIndex = m_swapChain->GetCurrentBackBufferIndex();
 
@@ -78,9 +81,6 @@ bool DeviceResources::BeginFrame()
     m_command.list->RSSetViewports(1, &viewport);
     m_command.list->RSSetScissorRects(1, &scissor);
 
-    float clearColor[] = { 0.1f, 0.2f, 0.3f, 1.0f };
-    m_command.list->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
-
     return true;
 }
 
@@ -118,8 +118,8 @@ bool DeviceResources::Present(bool vsync)
 
 bool DeviceResources::Resize(const Size& size) //WM_SIZE: renderer->Resize(width, height);
 {
-    if (size.width == 0 || size.height == 0)
-        return false;
+    if (size.width == 0 || size.height == 0) return false;
+    if (m_size == size) return true;
 
     ReturnIfFalse(FlushGPU()); // GPU 작업 끝날 때까지 대기
 
@@ -160,6 +160,20 @@ bool DeviceResources::Resize(const Size& size) //WM_SIZE: renderer->Resize(width
     }
 
     return true;
+}
+
+void DeviceResources::BindQuadPipeline(ID3D12GraphicsCommandList* cmd)
+{
+    cmd->SetGraphicsRootSignature(m_rootSignature.Get());
+    cmd->SetPipelineState(m_pso.Get());
+}
+
+void DeviceResources::DrawQuad(ID3D12GraphicsCommandList* cmd)
+{
+    cmd->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    cmd->IASetVertexBuffers(0, 1, &m_quadVBView);
+
+    cmd->DrawInstanced(6, 1, 0, 0);
 }
 
 void DeviceResources::CheckTearingSupport(bool& allowTearing)
@@ -352,6 +366,104 @@ bool DeviceResources::FlushGPU()
     return true;
 }
 
+void DeviceResources::CreateQuadResources()
+{
+    Vertex quad[] =
+    {
+        { -0.5f, -0.5f, 0, 1,0,0,1 },
+        { -0.5f,  0.5f, 0, 0,1,0,1 },
+        {  0.5f, -0.5f, 0, 0,0,1,1 },
+
+        {  0.5f, -0.5f, 0, 0,0,1,1 },
+        { -0.5f,  0.5f, 0, 0,1,0,1 },
+        {  0.5f,  0.5f, 0, 1,1,1,1 },
+    };
+
+    UINT vbSize = sizeof(quad);
+
+    CD3DX12_HEAP_PROPERTIES heap(D3D12_HEAP_TYPE_UPLOAD);
+    CD3DX12_RESOURCE_DESC desc = CD3DX12_RESOURCE_DESC::Buffer(vbSize);
+
+    m_device->CreateCommittedResource( 
+        &heap,
+        D3D12_HEAP_FLAG_NONE,
+        &desc,
+        D3D12_RESOURCE_STATE_GENERIC_READ,
+        nullptr,
+        IID_PPV_ARGS(&m_quadVB)
+    ); //VertexBuffer (Upload Heap)
+
+    void* data;
+    m_quadVB->Map(0, nullptr, &data);
+    memcpy(data, quad, vbSize);
+    m_quadVB->Unmap(0, nullptr);
+
+    m_quadVBView.BufferLocation = m_quadVB->GetGPUVirtualAddress();
+    m_quadVBView.SizeInBytes = vbSize;
+    m_quadVBView.StrideInBytes = sizeof(Vertex);
+
+    CD3DX12_ROOT_SIGNATURE_DESC rsDesc;
+    rsDesc.Init(0, nullptr, 0, nullptr,
+        D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT); // RootSignature(비어있음)
+
+    ComPtr<ID3DBlob> sig;
+    ComPtr<ID3DBlob> err;
+
+    D3D12SerializeRootSignature(&rsDesc, D3D_ROOT_SIGNATURE_VERSION_1, &sig, &err);
+
+    m_device->CreateRootSignature(
+        0,
+        sig->GetBufferPointer(),
+        sig->GetBufferSize(),
+        IID_PPV_ARGS(&m_rootSignature)
+    );
+
+    ComPtr<ID3DBlob> vs; //Shader(컴파일했다고 가정)
+    ComPtr<ID3DBlob> ps;
+    
+    wstring shaderFile = L"D:\\ProgrammingStudy\\ToyBox\\Runtime\\Device\\Render\\DX12\\Quad.hlsl";
+    D3DCompileFromFile(shaderFile.c_str(), nullptr, nullptr, "VSMain", "vs_5_0", 0, 0, &vs, nullptr);
+    D3DCompileFromFile(shaderFile.c_str(), nullptr, nullptr, "PSMain", "ps_5_0", 0, 0, &ps, nullptr);
+
+    D3D12_INPUT_ELEMENT_DESC layout[] =
+    {
+        { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,
+            D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+
+        { "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12,
+            D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+    }; // Input Layout
+
+    D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
+    psoDesc.InputLayout = { layout, _countof(layout) };
+    psoDesc.pRootSignature = m_rootSignature.Get();
+    psoDesc.VS = { vs->GetBufferPointer(), vs->GetBufferSize() };
+    psoDesc.PS = { ps->GetBufferPointer(), ps->GetBufferSize() };
+
+    psoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+    psoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
+
+    psoDesc.DepthStencilState.DepthEnable = FALSE;
+    psoDesc.DepthStencilState.StencilEnable = FALSE;
+
+    psoDesc.SampleMask = UINT_MAX;
+    psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+
+    psoDesc.NumRenderTargets = 1;
+    psoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
+    psoDesc.SampleDesc.Count = 1;
+
+    m_device->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&m_pso));
+}
+
 ID3D12Device* DeviceResources::GetDevice() const { return m_device.Get(); }
 ID3D12CommandQueue* DeviceResources::GetCommandQueue() const { return m_commandQueue.Get(); }
 IDXGISwapChain4* DeviceResources::GetSwapChain() const { return m_swapChain.Get(); }
+ID3D12GraphicsCommandList* DeviceResources::GetCommandList() const { return m_command.list.Get(); }
+D3D12_CPU_DESCRIPTOR_HANDLE DeviceResources::GetCurrentRTV() const
+{
+    return CD3DX12_CPU_DESCRIPTOR_HANDLE(
+        m_rtv.heap->GetCPUDescriptorHandleForHeapStart(),
+        m_frameIndex,
+        m_rtv.descriptorSize);
+}

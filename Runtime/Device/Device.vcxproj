@@ -36,11 +36,16 @@
     <ClInclude Include="Input\IInputManager.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Render\DX12\BuildConfig.h" />
+    <ClInclude Include="Render\DX12\CommandScheduler.h" />
     <ClInclude Include="Render\DX12\d3dx12.h" />
     <ClInclude Include="Render\DX12\Common.h" />
     <ClInclude Include="Render\DX12\Debug.h" />
     <ClInclude Include="Render\DX12\DebugHelper.h" />
+    <ClInclude Include="Render\DX12\DX12Core.h" />
     <ClInclude Include="Render\DX12\DeviceResources.h" />
+    <ClInclude Include="Render\DX12\DX12Device.h" />
+    <ClInclude Include="Render\DX12\FrameDisplay.h" />
+    <ClInclude Include="Render\DX12\QuadRenderer.h" />
     <ClInclude Include="Render\DX12\RenderBackend.h" />
     <ClInclude Include="Storage\JsonObjectIO.h" />
   </ItemGroup>
@@ -63,8 +68,13 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Render\DX12\CommandScheduler.cpp" />
     <ClCompile Include="Render\DX12\DebugHelper.cpp" />
     <ClCompile Include="Render\DX12\DeviceResources.cpp" />
+    <ClCompile Include="Render\DX12\DX12Device.cpp" />
+    <ClCompile Include="Render\DX12\DX12Link.cpp" />
+    <ClCompile Include="Render\DX12\FrameDisplay.cpp" />
+    <ClCompile Include="Render\DX12\QuadRenderer.cpp" />
     <ClCompile Include="Render\DX12\RenderBackend.cpp" />
   </ItemGroup>
   <ItemGroup>

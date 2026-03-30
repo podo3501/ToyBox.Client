@@ -2,17 +2,16 @@
 #include <dxgi1_6.h>
 #include <wrl/client.h>
 #include "Core/Foundation/Geometry2D.h"
+#include "d3d12.h"
 
 constexpr static const UINT FrameCount = 2;
 
-struct ID3D12Device;
-struct ID3D12CommandQueue;
-struct IDXGISwapChain4;
-struct ID3D12DescriptorHeap;
-struct ID3D12Resource;
-struct ID3D12CommandAllocator;
-struct ID3D12GraphicsCommandList;
-struct ID3D12Fence;
+struct Vertex
+{
+	float x, y, z;
+	float r, g, b, a;
+};
+
 struct RenderConfig;
 
 struct RenderTargetData
@@ -47,9 +46,15 @@ public:
 	bool Present(bool vsync);
 	bool Resize(const Size& size);
 
+	// Quad
+	void BindQuadPipeline(ID3D12GraphicsCommandList* cmd);
+	void DrawQuad(ID3D12GraphicsCommandList* cmd);
+
 	ID3D12Device* GetDevice() const;
 	ID3D12CommandQueue* GetCommandQueue() const;
 	IDXGISwapChain4* GetSwapChain() const;
+	ID3D12GraphicsCommandList* GetCommandList() const;
+	D3D12_CPU_DESCRIPTOR_HANDLE GetCurrentRTV() const;
 
 private:
 	void CheckTearingSupport(bool& allowTearing);
@@ -61,6 +66,8 @@ private:
 	bool CreateCommandObjects();
 	bool CreateFence();
 	bool FlushGPU();
+
+	void CreateQuadResources();
 
 	bool m_tearing{ false };
 	Size m_size{};
@@ -74,4 +81,11 @@ private:
 	RenderTargetData m_rtv;
 	CommandData m_command;
 	SyncData m_sync;
+
+	// quad
+	Microsoft::WRL::ComPtr<ID3D12Resource> m_quadVB;
+	D3D12_VERTEX_BUFFER_VIEW m_quadVBView{};
+
+	Microsoft::WRL::ComPtr<ID3D12RootSignature> m_rootSignature;
+	Microsoft::WRL::ComPtr<ID3D12PipelineState> m_pso;
 };

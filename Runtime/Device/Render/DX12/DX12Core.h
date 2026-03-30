@@ -1,0 +1,12 @@
+#pragma once
+
+struct ID3D12Device;
+struct ID3D12CommandQueue;
+struct IDXGIFactory4;
+
+struct DX12Core
+{
+    ID3D12Device* device{ nullptr };
+    ID3D12CommandQueue* queue{ nullptr };
+    IDXGIFactory4* factory{ nullptr };
+};

@@ -12,3 +12,8 @@ unique_ptr<RenderService> RenderService::Create(unique_ptr<IRenderBackend> backe
 	unique_ptr<RenderService> service(new RenderService(move(backend)));
 	return service;
 }
+
+void RenderService::RenderFrame()
+{
+	m_backend->Render();
+}
