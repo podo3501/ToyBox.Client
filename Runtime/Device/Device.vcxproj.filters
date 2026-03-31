@@ -109,10 +109,10 @@
     <ClInclude Include="Render\DX12\DX12Device.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\FrameDisplay.h">
+    <ClInclude Include="Render\DX12\SwapChainPresenter.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\DX12Core.h">
+    <ClInclude Include="Render\DX12\DX12DeviceView.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
     <ClInclude Include="Render\DX12\CommandScheduler.h">
@@ -175,7 +175,7 @@
     <ClCompile Include="Render\DX12\DX12Device.cpp">
       <Filter>Render\DX12</Filter>
     </ClCompile>
-    <ClCompile Include="Render\DX12\FrameDisplay.cpp">
+    <ClCompile Include="Render\DX12\SwapChainPresenter.cpp">
       <Filter>Render\DX12</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\CommandScheduler.cpp">

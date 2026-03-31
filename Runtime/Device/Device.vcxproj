@@ -41,10 +41,10 @@
     <ClInclude Include="Render\DX12\Common.h" />
     <ClInclude Include="Render\DX12\Debug.h" />
     <ClInclude Include="Render\DX12\DebugHelper.h" />
-    <ClInclude Include="Render\DX12\DX12Core.h" />
+    <ClInclude Include="Render\DX12\DX12DeviceView.h" />
     <ClInclude Include="Render\DX12\DeviceResources.h" />
     <ClInclude Include="Render\DX12\DX12Device.h" />
-    <ClInclude Include="Render\DX12\FrameDisplay.h" />
+    <ClInclude Include="Render\DX12\SwapChainPresenter.h" />
     <ClInclude Include="Render\DX12\QuadRenderer.h" />
     <ClInclude Include="Render\DX12\RenderBackend.h" />
     <ClInclude Include="Storage\JsonObjectIO.h" />
@@ -73,7 +73,7 @@
     <ClCompile Include="Render\DX12\DeviceResources.cpp" />
     <ClCompile Include="Render\DX12\DX12Device.cpp" />
     <ClCompile Include="Render\DX12\DX12Link.cpp" />
-    <ClCompile Include="Render\DX12\FrameDisplay.cpp" />
+    <ClCompile Include="Render\DX12\SwapChainPresenter.cpp" />
     <ClCompile Include="Render\DX12\QuadRenderer.cpp" />
     <ClCompile Include="Render\DX12\RenderBackend.cpp" />
   </ItemGroup>

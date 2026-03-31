@@ -1,6 +1,6 @@
 #pragma once
 #include <wrl/client.h>
-#include "DX12Core.h"
+#include "DX12DeviceView.h"
 
 struct ID3D12CommandAllocator;
 struct ID3D12GraphicsCommandList;
@@ -10,7 +10,7 @@ class CommandScheduler
 {
 public:
     ~CommandScheduler();
-    CommandScheduler(DX12Core core);
+    CommandScheduler(const DX12DeviceView& dv);
     bool Initialize();
     bool BeginFrame();
     bool EndFrame();
@@ -22,7 +22,7 @@ private:
     bool CreateCommandObjects();
     bool CreateFence();
 
-    DX12Core m_core{};
+    DX12DeviceView m_dv{};
     Microsoft::WRL::ComPtr<ID3D12CommandAllocator> m_allocator;
     Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> m_commandList;
     Microsoft::WRL::ComPtr<ID3D12Fence> m_fence;

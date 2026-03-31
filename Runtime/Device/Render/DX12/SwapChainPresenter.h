@@ -1,6 +1,6 @@
 #pragma once
 #include <wrl/client.h>
-#include "DX12Core.h"
+#include "DX12DeviceView.h"
 #include "Core/Foundation/Geometry2D.h"
 
 struct IDXGISwapChain4;
@@ -10,15 +10,18 @@ struct ID3D12Resource;
 struct D3D12_CPU_DESCRIPTOR_HANDLE;
 struct Size;
 class CommandScheduler;
+enum D3D12_RESOURCE_STATES;
 
-class FrameDisplay
+class SwapChainPresenter
 {
 public:
-    ~FrameDisplay();
-    FrameDisplay(DX12Core core);
+    ~SwapChainPresenter();
+    SwapChainPresenter(const DX12DeviceView& dv);
 
-    bool Initialize(HWND hwnd, const Size& size, bool allowTearing);
-    void BindCurrentRTV(ID3D12GraphicsCommandList* cmdList);
+    bool Initialize(HWND hwnd, const Size& size, bool allowTearing, UINT frameCount = 2 );
+    void TransitionToRenderTarget(ID3D12GraphicsCommandList* cmdList);
+    void SetRenderTarget(ID3D12GraphicsCommandList* cmdList);
+    void TransitionToPresent(ID3D12GraphicsCommandList* cmdList);
     bool Present(bool vsync);
     bool Resize(CommandScheduler* cmd, const Size& size);
 
@@ -29,15 +32,14 @@ private:
     bool CreateRTV();
     bool CreateFrameRTVs();
 
-    constexpr static UINT FrameCount = 2;
-
-    DX12Core m_core;
+    DX12DeviceView m_dv{};
     Microsoft::WRL::ComPtr<IDXGISwapChain4> m_swapChain;
     Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> m_rtvHeap;
-    Microsoft::WRL::ComPtr<ID3D12Resource> m_renderTargets[FrameCount];
+    vector<Microsoft::WRL::ComPtr<ID3D12Resource>> m_renderTargets;
 
     Size m_size{};
     bool m_tearing{ false };
     UINT m_frameIndex = 0;
     UINT m_rtvDescriptorSize = 0;
+    UINT m_frameCount{ 2 };
 };

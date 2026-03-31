@@ -1,17 +1,22 @@
 #pragma once
 
 struct IRenderBackend;
+struct IResourceManager;
+struct Rect;
 
 class RenderService
 {
 public:
 	~RenderService();
 	RenderService() = delete;
-	static unique_ptr<RenderService> Create(unique_ptr<IRenderBackend> backend) noexcept;
+	static unique_ptr<RenderService> Create(unique_ptr<IRenderBackend> backend, IResourceManager* resManager) noexcept;
+	int LoadTexture(const filesystem::path& filePath);
+	void Draw(int index, const Rect& dest, const Rect* source);
 	void RenderFrame();
 
 private:
-	RenderService(unique_ptr<IRenderBackend> backend);
+	RenderService(unique_ptr<IRenderBackend> backend, IResourceManager* resManager);
 
 	unique_ptr<IRenderBackend> m_backend;
+	IResourceManager* m_resManager{ nullptr };
 };

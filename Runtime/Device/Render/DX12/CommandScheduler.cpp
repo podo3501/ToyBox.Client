@@ -7,8 +7,8 @@ CommandScheduler::~CommandScheduler()
     if (m_eventHandle)
         CloseHandle(m_eventHandle);
 }
-CommandScheduler::CommandScheduler(DX12Core core) :
-    m_core(core)
+CommandScheduler::CommandScheduler(const DX12DeviceView& dv) :
+    m_dv{ dv }
 {}
 
 bool CommandScheduler::Initialize()
@@ -32,7 +32,7 @@ bool CommandScheduler::EndFrame()
     if (FAILED(m_commandList->Close())) return false;
 
     ID3D12CommandList* lists[] = { m_commandList.Get() };
-    m_core.queue->ExecuteCommandLists(1, lists);
+    m_dv.queue->ExecuteCommandLists(1, lists);
 
     return FlushGPU();
 }
@@ -40,7 +40,7 @@ bool CommandScheduler::EndFrame()
 bool CommandScheduler::FlushGPU()
 {
     const UINT64 fenceToWait = m_fenceValue;
-    if (FAILED(m_core.queue->Signal(m_fence.Get(), fenceToWait)))
+    if (FAILED(m_dv.queue->Signal(m_fence.Get(), fenceToWait)))
         return false;
 
     m_fenceValue++;
@@ -56,12 +56,12 @@ bool CommandScheduler::FlushGPU()
 
 bool CommandScheduler::CreateCommandObjects()
 {
-    if (FAILED(m_core.device->CreateCommandAllocator(
+    if (FAILED(m_dv.device->CreateCommandAllocator(
         D3D12_COMMAND_LIST_TYPE_DIRECT,
         IID_PPV_ARGS(&m_allocator))))
         return false;
 
-    if (FAILED(m_core.device->CreateCommandList(
+    if (FAILED(m_dv.device->CreateCommandList(
         0,
         D3D12_COMMAND_LIST_TYPE_DIRECT,
         m_allocator.Get(),
@@ -76,7 +76,7 @@ bool CommandScheduler::CreateCommandObjects()
 
 bool CommandScheduler::CreateFence()
 {
-    if (FAILED(m_core.device->CreateFence(
+    if (FAILED(m_dv.device->CreateFence(
         0,
         D3D12_FENCE_FLAG_NONE,
         IID_PPV_ARGS(&m_fence))))
