@@ -5,8 +5,12 @@
 #include "SwapChainPresenter.h"
 #include "CommandScheduler.h"
 #include "QuadRenderer.h"
+#include "TextureLoader.h"
+#include "ResourceUploader.h"
+#include "ImageData.h"
 #include "d3dx12.h"
 #include <dxgi1_6.h>
+#include "Vertex.h"
 
 #include <wincodec.h> 
 
@@ -15,6 +19,7 @@ using Microsoft::WRL::ComPtr;
 struct TextureEntry
 {
     ComPtr<ID3D12Resource> resource;
+    ComPtr<ID3D12Resource> uploadBuffer;
     CD3DX12_GPU_DESCRIPTOR_HANDLE gpuHandle;
 };
 
@@ -51,8 +56,14 @@ bool RenderBackend::Initialize(HWND hwnd, const Size& wndSize, const RenderConfi
 
     m_quadRenderer = make_unique<QuadRenderer>(dv);
     ReturnIfFalse(m_quadRenderer->Initialize(wndSize));
-
     m_quadRenderer->SetSRVHeap(m_srvHeap.Get());
+
+    auto uploadCmd = m_command->CreateUploadCommandList(); // 업로드 전용 커맨드 리스트 생성
+    m_quadRenderer->UploadQuad(uploadCmd);
+    m_command->ExecuteUploadCommandList(); // 업로드 완료까지 대기
+
+    m_textureLoader = make_unique<TextureLoader>();
+    m_uploader = make_unique<ResourceUploader>(dv);
 
     return true;
 }
@@ -76,10 +87,12 @@ bool RenderBackend::EndFrame()
 
 int RenderBackend::LoadTextureFromMemory(Core::ByteBuffer buffer)
 {
-    BeginFrame();
+    ImageData img = m_textureLoader->LoadFromMemory(move(buffer)); // CPU 디코딩
 
-    const auto& dv = m_device->GetDeviceView();
-    auto texRes = LoadFromMemory(move(buffer));
+    auto uploadCmd = m_command->CreateUploadCommandList(); // 업로드용 커맨드 리스트 생성
+   
+    ComPtr<ID3D12Resource> uploadBuffer;
+    auto texRes = m_uploader->UploadTexture(img, uploadBuffer, uploadCmd);
 
     CD3DX12_CPU_DESCRIPTOR_HANDLE cpuHandle(m_srvHeap->GetCPUDescriptorHandleForHeapStart(),
         static_cast<UINT>(m_textures.size()), m_srvDescriptorSize);
@@ -90,111 +103,17 @@ int RenderBackend::LoadTextureFromMemory(Core::ByteBuffer buffer)
     srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
     srvDesc.Texture2D.MipLevels = 1;
 
+    const auto& dv = m_device->GetDeviceView();
     dv.device->CreateShaderResourceView(texRes.Get(), &srvDesc, cpuHandle);
 
     CD3DX12_GPU_DESCRIPTOR_HANDLE gpuHandle(m_srvHeap->GetGPUDescriptorHandleForHeapStart(),
         static_cast<UINT>(m_textures.size()), m_srvDescriptorSize);
 
-    m_textures.push_back({ texRes, gpuHandle });
+    m_textures.push_back({ texRes, uploadBuffer, gpuHandle });
 
-    EndFrame();
-
-    m_command->FlushGPU();
+    m_command->ExecuteUploadCommandList(); // 업로드 커맨드 제출 후 완료 대기
 
     return static_cast<int>(m_textures.size() - 1);
-}
-
-ComPtr<ID3D12Resource> RenderBackend::LoadFromMemory(Core::ByteBuffer buffer)
-{
-    // WIC으로 이미지 디코딩 (PNG, JPEG 등)
-    Microsoft::WRL::ComPtr<IWICImagingFactory> wicFactory;
-    CoInitialize(nullptr);
-    CoCreateInstance(
-        CLSID_WICImagingFactory,
-        nullptr,
-        CLSCTX_INPROC_SERVER,
-        IID_PPV_ARGS(&wicFactory)
-    );
-
-    ComPtr<IWICStream> stream;
-    wicFactory->CreateStream(&stream);
-    stream->InitializeFromMemory(reinterpret_cast<BYTE*>(buffer.data()), static_cast<DWORD>(buffer.size()));
-
-    ComPtr<IWICBitmapDecoder> decoder;
-    wicFactory->CreateDecoderFromStream(stream.Get(), nullptr, WICDecodeMetadataCacheOnLoad, &decoder);
-
-    ComPtr<IWICBitmapFrameDecode> frame;
-    decoder->GetFrame(0, &frame);
-
-    // 픽셀 포맷 변환
-    ComPtr<IWICFormatConverter> converter;
-    wicFactory->CreateFormatConverter(&converter);
-    converter->Initialize(frame.Get(), GUID_WICPixelFormat32bppBGRA, WICBitmapDitherTypeNone, nullptr, 0.f, WICBitmapPaletteTypeCustom);
-
-    UINT width, height;
-    converter->GetSize(&width, &height);
-
-    std::vector<BYTE> pixels(width * height * 4);
-    converter->CopyPixels(nullptr, width * 4, static_cast<UINT>(pixels.size()), pixels.data());
-
-    // 이제 DX12 텍스처 생성
-    auto device = m_device->GetDeviceView().device;
-
-    D3D12_RESOURCE_DESC texDesc{};
-    texDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-    texDesc.Width = width;
-    texDesc.Height = height;
-    texDesc.DepthOrArraySize = 1;
-    texDesc.MipLevels = 1;
-    texDesc.SampleDesc.Count = 1;
-    texDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
-    texDesc.Flags = D3D12_RESOURCE_FLAG_NONE;
-    texDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
-
-    ComPtr<ID3D12Resource> texture;
-    CD3DX12_HEAP_PROPERTIES heapProps(D3D12_HEAP_TYPE_DEFAULT);
-    device->CreateCommittedResource(
-        &heapProps,
-        D3D12_HEAP_FLAG_NONE,
-        &texDesc,
-        D3D12_RESOURCE_STATE_COPY_DEST,
-        nullptr,
-        IID_PPV_ARGS(&texture)
-    );
-
-    // 업로드 버퍼 생성
-    UINT64 uploadSize = 0;
-    device->GetCopyableFootprints(&texDesc, 0, 1, 0, nullptr, nullptr, nullptr, &uploadSize);
-
-    ComPtr<ID3D12Resource> uploadBuffer;
-    CD3DX12_HEAP_PROPERTIES uploadHeap(D3D12_HEAP_TYPE_UPLOAD);
-    CD3DX12_RESOURCE_DESC bufferDesc = CD3DX12_RESOURCE_DESC::Buffer(uploadSize);
-    device->CreateCommittedResource(
-        &uploadHeap,
-        D3D12_HEAP_FLAG_NONE,
-        &bufferDesc,
-        D3D12_RESOURCE_STATE_GENERIC_READ,
-        nullptr,
-        IID_PPV_ARGS(&uploadBuffer)
-    );
-
-    // 텍스처 데이터를 업로드 버퍼에 복사
-    D3D12_SUBRESOURCE_DATA subresource{};
-    subresource.pData = pixels.data();
-    subresource.RowPitch = width * 4;
-    subresource.SlicePitch = width * height * 4;
-
-    auto cmd = m_command->GetCommandList();
-    UpdateSubresources(cmd, texture.Get(), uploadBuffer.Get(), 0, 0, 1, &subresource);
-
-    CD3DX12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition(
-        texture.Get(),
-        D3D12_RESOURCE_STATE_COPY_DEST,
-        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
-    );
-    cmd->ResourceBarrier(1, &barrier);
-
-    return texture;
 }
 
 void RenderBackend::Draw(int index, const Rect& dest, const Rect* source)
@@ -202,9 +121,22 @@ void RenderBackend::Draw(int index, const Rect& dest, const Rect* source)
     if (index < 0 || index >= static_cast<int>(m_textures.size())) return;
 
     BeginFrame();
-    
-    auto& tex = m_textures[index];
+
     auto cmd = m_command->GetCommandList();
+    auto& tex = m_textures[index];
+
+    if(!m_ready)
+    {
+        m_quadRenderer->TransitionToRenderState(cmd);
+
+        auto barrier = CD3DX12_RESOURCE_BARRIER::Transition(
+            tex.resource.Get(),
+            D3D12_RESOURCE_STATE_COPY_DEST,
+            D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+        cmd->ResourceBarrier(1, &barrier);
+
+        m_ready = true;
+    }
 
     m_quadRenderer->BindPipeline(cmd);
     m_quadRenderer->Draw(cmd, dest, tex.gpuHandle);

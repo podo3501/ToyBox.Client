@@ -17,6 +17,7 @@ bool DX12Device::Initialize(bool enableDebug)
     ReturnIfFalse(CreateFactory(enableDebug));
     ReturnIfFalse(CreateDevice());
     ReturnIfFalse(CreateCommandQueue());
+    ReturnIfFalse(CreateCommandCopyQueue());
 
     return true;
 }
@@ -80,7 +81,20 @@ bool DX12Device::CreateCommandQueue()
     return SUCCEEDED(m_device->CreateCommandQueue(&desc, IID_PPV_ARGS(&m_commandQueue)));
 }
 
+bool DX12Device::CreateCommandCopyQueue()
+{
+    D3D12_COMMAND_QUEUE_DESC desc{};
+    desc.Type = D3D12_COMMAND_LIST_TYPE_COPY;
+
+    return SUCCEEDED(m_device->CreateCommandQueue(&desc, IID_PPV_ARGS(&m_commandCopyQueue)));
+}
+
 DX12DeviceView DX12Device::GetDeviceView() const
 {
-    return { m_device.Get(), m_commandQueue.Get(), m_dxgiFactory.Get() };
+    return { 
+        m_device.Get(), 
+        m_dxgiFactory.Get(), 
+        m_commandQueue.Get(), 
+        m_commandCopyQueue.Get()
+    };
 }

@@ -1,3 +1,9 @@
+cbuffer TransformBuffer : register(b0)
+{
+    float2 scale;
+    float2 offset;
+};
+
 struct VSInput
 {
     float3 pos : POSITION;
@@ -14,11 +20,17 @@ struct PSInput
 
 PSInput VSMain(VSInput input)
 {
-    PSInput o;
-    o.pos = float4(input.pos, 1);
-    o.color = input.color;
-    o.uv = input.uv;
-    return o;
+    PSInput output;
+    float2 pos = input.pos.xy;
+
+    pos *= scale;
+    pos += offset;
+
+    output.pos = float4(pos, 0.0f, 1.0f);
+    output.uv = input.uv;
+    output.color = input.color;
+
+    return output;
 }
 
 Texture2D tex : register(t0);
@@ -28,5 +40,4 @@ float4 PSMain(PSInput input) : SV_TARGET
 {
     float4 texColor = tex.Sample(samp, input.uv);
     return texColor * input.color; // 색 곱해서 tint 가능
-//return tex.Sample(samp, float2(0.5, 0.5));
 }

@@ -25,12 +25,14 @@ private:
     bool CreateFactory(bool enableDebug);
     bool CreateDevice();
     bool CreateCommandQueue();
+    bool CreateCommandCopyQueue();
     
     bool TryCreateDevice(IUnknown* adapter);
 
     Microsoft::WRL::ComPtr<IDXGIFactory4> m_dxgiFactory;
     Microsoft::WRL::ComPtr<ID3D12Device> m_device;
     Microsoft::WRL::ComPtr<ID3D12CommandQueue> m_commandQueue;
+    Microsoft::WRL::ComPtr<ID3D12CommandQueue> m_commandCopyQueue;
 
     D3D_FEATURE_LEVEL m_featureLevel{ D3D_FEATURE_LEVEL_11_0 };
 };

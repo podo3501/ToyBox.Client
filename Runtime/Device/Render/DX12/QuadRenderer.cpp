@@ -2,15 +2,15 @@
 #include "QuadRenderer.h"
 #include "d3dx12.h"
 #include <d3dcompiler.h>
+#include "Vertex.h"
+
+struct QuadTransform
+{
+    float scale[2];
+    float offset[2];
+};
 
 using Microsoft::WRL::ComPtr;
-
-struct Vertex 
-{ 
-    float x, y, z; 
-    float r, g, b, a; 
-    float u, v;
-};
 
 QuadRenderer::~QuadRenderer() = default;
 QuadRenderer::QuadRenderer(const DX12DeviceView& dv) : 
@@ -22,24 +22,12 @@ bool QuadRenderer::Initialize(const Size& screenSize)
     HRESULT hr;
     m_screenSize = screenSize;
 
-    Vertex quad[6] = {};
-    UINT vbSize = sizeof(quad);
-
-    CD3DX12_HEAP_PROPERTIES heap(D3D12_HEAP_TYPE_UPLOAD);
-    CD3DX12_RESOURCE_DESC desc = CD3DX12_RESOURCE_DESC::Buffer(vbSize);
-
-    m_dv.device->CreateCommittedResource(&heap, D3D12_HEAP_FLAG_NONE, &desc,
-        D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&m_vertexBuffer)); //VertexBuffer (Upload Heap)
-
-    m_vertexView.BufferLocation = m_vertexBuffer->GetGPUVirtualAddress();
-    m_vertexView.SizeInBytes = vbSize;
-    m_vertexView.StrideInBytes = sizeof(Vertex);
-
     CD3DX12_DESCRIPTOR_RANGE range;
     range.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0); // t0
 
-    CD3DX12_ROOT_PARAMETER param;
-    param.InitAsDescriptorTable(1, &range);
+    CD3DX12_ROOT_PARAMETER params[2] = {};
+    params[0].InitAsDescriptorTable(1, &range);
+    params[1].InitAsConstantBufferView(0);
 
     CD3DX12_STATIC_SAMPLER_DESC sampler(
         0, // s0
@@ -47,7 +35,7 @@ bool QuadRenderer::Initialize(const Size& screenSize)
     );
 
     CD3DX12_ROOT_SIGNATURE_DESC rsDesc;
-    rsDesc.Init(1, &param, 1, &sampler,
+    rsDesc.Init(2, params, 1, &sampler,
         D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
     ComPtr<ID3DBlob> sig{ nullptr };
@@ -104,7 +92,90 @@ bool QuadRenderer::Initialize(const Size& screenSize)
     psoDesc.SampleDesc.Count = 1;
 
     hr = m_dv.device->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&m_pipelineState));
-    return SUCCEEDED(hr);
+    if (FAILED(hr)) return false;
+
+    // Constant Buffer 생성
+    CD3DX12_HEAP_PROPERTIES heap(D3D12_HEAP_TYPE_UPLOAD);
+    CD3DX12_RESOURCE_DESC desc = CD3DX12_RESOURCE_DESC::Buffer(256); // 256 align 필수
+
+    HRESULT hrCB = m_dv.device->CreateCommittedResource(
+        &heap,
+        D3D12_HEAP_FLAG_NONE,
+        &desc,
+        D3D12_RESOURCE_STATE_GENERIC_READ,
+        nullptr,
+        IID_PPV_ARGS(&m_constantBuffer)
+    );
+    if (FAILED(hrCB)) return false;
+
+    // Map은 한 번만 (평생 유지)
+    m_constantBuffer->Map(0, nullptr, (void**)&m_cbvData);
+
+    return true;
+}
+
+void QuadRenderer::UploadQuad(ID3D12GraphicsCommandList* uploadCmd)
+{
+    auto device = m_dv.device;
+
+    Vertex quad[6] =
+    {
+        { -0.5f, -0.5f, 0, 1,1,1,1, 0,1 },
+        { -0.5f,  0.5f, 0, 1,1,1,1, 0,0 },
+        {  0.5f, -0.5f, 0, 1,1,1,1, 1,1 },
+
+        {  0.5f, -0.5f, 0, 1,1,1,1, 1,1 },
+        { -0.5f,  0.5f, 0, 1,1,1,1, 0,0 },
+        {  0.5f,  0.5f, 0, 1,1,1,1, 1,0 },
+    };
+
+    UINT bufferSize = sizeof(quad);
+
+    // 1. GPU 전용 DEFAULT 버퍼
+    CD3DX12_HEAP_PROPERTIES defaultHeap(D3D12_HEAP_TYPE_DEFAULT);
+    CD3DX12_RESOURCE_DESC vbDesc = CD3DX12_RESOURCE_DESC::Buffer(bufferSize);
+
+    device->CreateCommittedResource(
+        &defaultHeap,
+        D3D12_HEAP_FLAG_NONE,
+        &vbDesc,
+        D3D12_RESOURCE_STATE_COMMON,
+        nullptr,
+        IID_PPV_ARGS(&m_vertexBuffer)
+    );
+
+    auto barrier = CD3DX12_RESOURCE_BARRIER::Transition(
+        m_vertexBuffer.Get(),
+        D3D12_RESOURCE_STATE_COMMON,
+        D3D12_RESOURCE_STATE_COPY_DEST
+    );
+    uploadCmd->ResourceBarrier(1, &barrier);
+
+    // 2. CPU 접근용 UPLOAD 버퍼
+    CD3DX12_HEAP_PROPERTIES uploadHeap(D3D12_HEAP_TYPE_UPLOAD);
+    CD3DX12_RESOURCE_DESC uploadDesc = CD3DX12_RESOURCE_DESC::Buffer(bufferSize);
+
+    device->CreateCommittedResource(
+        &uploadHeap,
+        D3D12_HEAP_FLAG_NONE,
+        &uploadDesc,
+        D3D12_RESOURCE_STATE_GENERIC_READ,
+        nullptr,
+        IID_PPV_ARGS(&m_uploadBuffer)
+    );
+
+    // 3. 데이터 복사
+    void* data;
+    m_uploadBuffer->Map(0, nullptr, &data);
+    memcpy(data, quad, bufferSize);
+    m_uploadBuffer->Unmap(0, nullptr);
+
+    // 4. GPU 복사
+    uploadCmd->CopyBufferRegion(m_vertexBuffer.Get(), 0, m_uploadBuffer.Get(), 0, bufferSize);
+
+    m_vertexView.BufferLocation = m_vertexBuffer->GetGPUVirtualAddress();
+    m_vertexView.SizeInBytes = bufferSize;
+    m_vertexView.StrideInBytes = sizeof(Vertex);
 }
 
 void QuadRenderer::BindPipeline(ID3D12GraphicsCommandList* cmd)
@@ -113,12 +184,15 @@ void QuadRenderer::BindPipeline(ID3D12GraphicsCommandList* cmd)
     cmd->SetPipelineState(m_pipelineState.Get());
 }
 
-//void QuadRenderer::Draw(ID3D12GraphicsCommandList* cmd)
-//{
-//    cmd->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-//    cmd->IASetVertexBuffers(0, 1, &m_vertexView);
-//    cmd->DrawInstanced(6, 1, 0, 0);
-//}
+void QuadRenderer::TransitionToRenderState(ID3D12GraphicsCommandList* cmd)
+{
+    auto barrier = CD3DX12_RESOURCE_BARRIER::Transition(
+        m_vertexBuffer.Get(),
+        D3D12_RESOURCE_STATE_COPY_DEST,
+        D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER
+    );
+    cmd->ResourceBarrier(1, &barrier);
+}
 
 void QuadRenderer::Draw( ID3D12GraphicsCommandList* cmd, const Rect& dest,
     const CD3DX12_GPU_DESCRIPTOR_HANDLE& gpuHandle)
@@ -132,22 +206,16 @@ void QuadRenderer::Draw( ID3D12GraphicsCommandList* cmd, const Rect& dest,
     float top = 1.0f - (dest.Top() / (float)m_screenSize.height) * 2.0f;
     float bottom = 1.0f - (dest.Bottom() / (float)m_screenSize.height) * 2.0f;
 
-    Vertex quad[6] =
-    {
-        { left,  bottom, 0, 1,1,1,1, 0,1 },
-        { left,  top,    0, 1,1,1,1, 0,0 },
-        { right, bottom, 0, 1,1,1,1, 1,1 },
+    float width = right - left;
+    float height = top - bottom;
 
-        { right, bottom, 0, 1,1,1,1, 1,1 },
-        { left,  top,    0, 1,1,1,1, 0,0 },
-        { right, top,    0, 1,1,1,1, 1,0 },
-    };
+    // scale / offset 계산
+    m_cbvData->scale[0] = width;
+    m_cbvData->scale[1] = height;
+    m_cbvData->offset[0] = (left + right) * 0.5f;
+    m_cbvData->offset[1] = (top + bottom) * 0.5f;
 
-    void* data;
-    m_vertexBuffer->Map(0, nullptr, &data);
-    memcpy(data, quad, sizeof(quad));
-    m_vertexBuffer->Unmap(0, nullptr);
-
+    cmd->SetGraphicsRootConstantBufferView(1, m_constantBuffer->GetGPUVirtualAddress());
     cmd->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     cmd->IASetVertexBuffers(0, 1, &m_vertexView);
     cmd->DrawInstanced(6, 1, 0, 0);

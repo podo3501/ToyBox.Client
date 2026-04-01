@@ -6,10 +6,13 @@
 struct ID3D12Resource;
 struct ID3D12DescriptorHeap;
 struct TextureEntry;
+struct ImageData;
 class DX12Device;
 class SwapChainPresenter;
 class CommandScheduler;
 class QuadRenderer;
+class TextureLoader;
+class ResourceUploader;
 
 class RenderBackend : public IRenderBackend
 {
@@ -28,16 +31,19 @@ public:
 private:
 	void PrepareRender();
 	void PreparePresent();
-	Microsoft::WRL::ComPtr<ID3D12Resource> LoadFromMemory(Core::ByteBuffer buffer);
 
 	unique_ptr<DX12Device> m_device;
 	unique_ptr<SwapChainPresenter> m_swapChain;
 	unique_ptr<CommandScheduler> m_command;
 	unique_ptr<QuadRenderer> m_quadRenderer;
+	unique_ptr<TextureLoader> m_textureLoader;
+	unique_ptr<ResourceUploader> m_uploader;
 
 	Size m_size{};
 
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> m_srvHeap;
 	UINT m_srvDescriptorSize = 0;
 	vector<TextureEntry> m_textures;
+
+	bool m_ready{ false };
 };
