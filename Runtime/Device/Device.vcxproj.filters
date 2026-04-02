@@ -100,13 +100,10 @@
     <ClInclude Include="Render\DX12\RenderBackend.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\DeviceResources.h">
-      <Filter>Render\DX12</Filter>
-    </ClInclude>
     <ClInclude Include="Render\DX12\DebugHelper.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\DX12Device.h">
+    <ClInclude Include="Render\DX12\DX12Core.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
     <ClInclude Include="Render\DX12\SwapChainPresenter.h">
@@ -131,6 +128,12 @@
       <Filter>Render\DX12</Filter>
     </ClInclude>
     <ClInclude Include="Render\DX12\Vertex.h">
+      <Filter>Render\DX12</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\CommandUtils.h">
+      <Filter>Render\DX12</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\CommandContext.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
   </ItemGroup>
@@ -175,16 +178,13 @@
     <ClCompile Include="Render\DX12\RenderBackend.cpp">
       <Filter>Render\DX12</Filter>
     </ClCompile>
-    <ClCompile Include="Render\DX12\DeviceResources.cpp">
-      <Filter>Render\DX12</Filter>
-    </ClCompile>
     <ClCompile Include="Render\DX12\DebugHelper.cpp">
       <Filter>Render\DX12</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\DX12Link.cpp">
       <Filter>Render\DX12</Filter>
     </ClCompile>
-    <ClCompile Include="Render\DX12\DX12Device.cpp">
+    <ClCompile Include="Render\DX12\DX12Core.cpp">
       <Filter>Render\DX12</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\SwapChainPresenter.cpp">
@@ -200,6 +200,12 @@
       <Filter>Render\DX12</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\ResourceUploader.cpp">
+      <Filter>Render\DX12</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\CommandUtils.cpp">
+      <Filter>Render\DX12</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\CommandContext.cpp">
       <Filter>Render\DX12</Filter>
     </ClCompile>
   </ItemGroup>

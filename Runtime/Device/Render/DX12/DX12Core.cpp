@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "DX12Device.h"
+#include "DX12Core.h"
 #include "DebugHelper.h"
 #include "DX12DeviceView.h"
 #include "d3dx12.h"
@@ -7,7 +7,7 @@
 
 using Microsoft::WRL::ComPtr;
 
-bool DX12Device::Initialize(bool enableDebug)
+bool DX12Core::Initialize(bool enableDebug)
 {
 #if defined(_DEBUG)
     if (enableDebug)
@@ -16,19 +16,17 @@ bool DX12Device::Initialize(bool enableDebug)
 
     ReturnIfFalse(CreateFactory(enableDebug));
     ReturnIfFalse(CreateDevice());
-    ReturnIfFalse(CreateCommandQueue());
-    ReturnIfFalse(CreateCommandCopyQueue());
 
     return true;
 }
 
-bool DX12Device::CreateFactory(bool enableDebug)
+bool DX12Core::CreateFactory(bool enableDebug)
 {
     UINT flags = enableDebug ? DXGI_CREATE_FACTORY_DEBUG : 0;
     return SUCCEEDED(CreateDXGIFactory2(flags, IID_PPV_ARGS(&m_dxgiFactory)));
 }
 
-bool DX12Device::TryCreateDevice(IUnknown* adapter)
+bool DX12Core::TryCreateDevice(IUnknown* adapter)
 {
     const D3D_FEATURE_LEVEL levels[] =
     {
@@ -49,8 +47,7 @@ bool DX12Device::TryCreateDevice(IUnknown* adapter)
     return false;
 }
 
-
-bool DX12Device::CreateDevice()
+bool DX12Core::CreateDevice()
 {
     ComPtr<IDXGIAdapter1> adapter;
 
@@ -73,28 +70,10 @@ bool DX12Device::CreateDevice()
     return TryCreateDevice(warpAdapter.Get());
 }
 
-bool DX12Device::CreateCommandQueue()
-{
-    D3D12_COMMAND_QUEUE_DESC desc{};
-    desc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
-
-    return SUCCEEDED(m_device->CreateCommandQueue(&desc, IID_PPV_ARGS(&m_commandQueue)));
-}
-
-bool DX12Device::CreateCommandCopyQueue()
-{
-    D3D12_COMMAND_QUEUE_DESC desc{};
-    desc.Type = D3D12_COMMAND_LIST_TYPE_COPY;
-
-    return SUCCEEDED(m_device->CreateCommandQueue(&desc, IID_PPV_ARGS(&m_commandCopyQueue)));
-}
-
-DX12DeviceView DX12Device::GetDeviceView() const
+DX12DeviceView DX12Core::GetDeviceView() const
 {
     return { 
         m_device.Get(), 
-        m_dxgiFactory.Get(), 
-        m_commandQueue.Get(), 
-        m_commandCopyQueue.Get()
+        m_dxgiFactory.Get()
     };
 }

@@ -5,9 +5,10 @@
 
 struct ID3D12Resource;
 struct ID3D12DescriptorHeap;
+struct ID3D12GraphicsCommandList;
 struct TextureEntry;
 struct ImageData;
-class DX12Device;
+class DX12Core;
 class SwapChainPresenter;
 class CommandScheduler;
 class QuadRenderer;
@@ -20,21 +21,17 @@ public:
 	~RenderBackend();
 	RenderBackend();
 	virtual bool Initialize(HWND hwnd, const Size& wndSize, const RenderConfig& renderConfig) override;
-	virtual bool BeginFrame() override;
-	virtual void Clear(float r, float g, float b, float a) override;
-	virtual bool EndFrame() override;
-	virtual bool Render() override;
-
 	virtual int LoadTextureFromMemory(Core::ByteBuffer buffer) override;
 	virtual void Draw(int index, const Rect& dest, const Rect* source) override;
 
 private:
-	void PrepareRender();
-	void PreparePresent();
+	ID3D12GraphicsCommandList* BeginFrame();
+	void Clear(ID3D12GraphicsCommandList* cmd, float r, float g, float b, float a);
+	bool EndFrame(ID3D12GraphicsCommandList* cmd);
 
-	unique_ptr<DX12Device> m_device;
-	unique_ptr<SwapChainPresenter> m_swapChain;
+	unique_ptr<DX12Core> m_core;
 	unique_ptr<CommandScheduler> m_command;
+	unique_ptr<SwapChainPresenter> m_swapChain;
 	unique_ptr<QuadRenderer> m_quadRenderer;
 	unique_ptr<TextureLoader> m_textureLoader;
 	unique_ptr<ResourceUploader> m_uploader;

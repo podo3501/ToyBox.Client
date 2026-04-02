@@ -68,14 +68,13 @@ bool TextureRenderTarget::CreateTextureResource(DXGI_FORMAT texFormat, const XMU
     const CD3DX12_HEAP_PROPERTIES heapProperties(D3D12_HEAP_TYPE_DEFAULT);
     D3D12_CLEAR_VALUE clear = GetClearValue();
 
-    ReturnIfFailed(m_device->CreateCommittedResource(
+    if(FAILED(m_device->CreateCommittedResource(
         &heapProperties,
         D3D12_HEAP_FLAG_NONE,
         &m_resDesc,
         D3D12_RESOURCE_STATE_GENERIC_READ,
         &clear,
-        IID_PPV_ARGS(m_texResource.ReleaseAndGetAddressOf())
-    ));
+        IID_PPV_ARGS(m_texResource.ReleaseAndGetAddressOf())))) return false;
 
     CreateRtvAndSrv(m_texResource.Get());
     SetSize(size);

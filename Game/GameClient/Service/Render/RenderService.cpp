@@ -27,8 +27,3 @@ void RenderService::Draw(int index, const Rect& dest, const Rect* source)
 {
 	m_backend->Draw(index, dest, source);
 }
-
-void RenderService::RenderFrame()
-{
-	m_backend->Render();
-}

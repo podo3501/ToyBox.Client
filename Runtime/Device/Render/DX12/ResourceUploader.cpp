@@ -3,7 +3,7 @@
 #include "CommandScheduler.h"
 #include "DX12DeviceView.h"
 #include "ImageData.h"
-#include "d3dx12.h"
+#include "CommandUtils.h"
 
 using Microsoft::WRL::ComPtr;
 
@@ -57,12 +57,6 @@ ComPtr<ID3D12Resource> ResourceUploader::UploadTexture(
         nullptr,
         IID_PPV_ARGS(&outUploadBuffer));
 
-    //auto toCopyDest = CD3DX12_RESOURCE_BARRIER::Transition(
-    //    texture.Get(),
-    //    D3D12_RESOURCE_STATE_COMMON,
-    //    D3D12_RESOURCE_STATE_COPY_DEST);
-    //uploadCmd->ResourceBarrier(1, &toCopyDest);
-
     // 3. 데이터 복사
     D3D12_SUBRESOURCE_DATA subresource{};
     subresource.pData = img.pixels.data();
@@ -75,13 +69,9 @@ ComPtr<ID3D12Resource> ResourceUploader::UploadTexture(
         0, 0, 1,
         &subresource);
 
-    //// 4. 상태 전환
-    //auto barrier = CD3DX12_RESOURCE_BARRIER::Transition(
-    //    texture.Get(),
-    //    D3D12_RESOURCE_STATE_COPY_DEST,
-    //    D3D12_RESOURCE_STATE_COMMON);
-
-    //uploadCmd->ResourceBarrier(1, &barrier);
+    CommandUtils::Transition(uploadCmd, texture.Get(),
+        D3D12_RESOURCE_STATE_COPY_DEST,
+        D3D12_RESOURCE_STATE_COMMON);
 
     return texture;
 }

@@ -9,14 +9,15 @@ static bool CreateReadbackBuffer(ID3D12Device* device, UINT64 totalBytes, ComPtr
 {
     CD3DX12_HEAP_PROPERTIES heapProps(D3D12_HEAP_TYPE_READBACK);
     CD3DX12_RESOURCE_DESC bufferDesc = CD3DX12_RESOURCE_DESC::Buffer(totalBytes);
-
-    ReturnIfFailed(device->CreateCommittedResource(
+    
+    if (FAILED(device->CreateCommittedResource(
         &heapProps,
         D3D12_HEAP_FLAG_NONE,
         &bufferDesc,
         D3D12_RESOURCE_STATE_COPY_DEST,
         nullptr,
-        IID_PPV_ARGS(&outReadbackBuffer)));
+        IID_PPV_ARGS(&outReadbackBuffer))))
+        return false;
 
     return true;
 }
@@ -41,8 +42,8 @@ static bool WaitForGpuWork(ID3D12Device* device, ID3D12CommandQueue* commandQueu
     Microsoft::WRL::ComPtr<ID3D12Fence> fence;
     UINT64 fenceValue = 1;
 
-    ReturnIfFailed(device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence)));
-    ReturnIfFailed(commandQueue->Signal(fence.Get(), fenceValue));
+    if (FAILED(device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence)))) return false;
+    if (FAILED(commandQueue->Signal(fence.Get(), fenceValue))) return false;
 
     if (fence->GetCompletedValue() < fenceValue) // GPU 작업 완료 대기
     {
@@ -152,13 +153,13 @@ bool ExtractAreas(DX::DeviceResources* deviceRes, ID3D12Resource* texRes, const 
     Microsoft::WRL::ComPtr<ID3D12Resource> readbackBuffer;
     ReturnIfFalse(CreateReadbackBuffer(device, totalBytes, readbackBuffer));
 
-    ReturnIfFailed(commandList->Reset(commandAllocator, nullptr));
+    if (FAILED(commandList->Reset(commandAllocator, nullptr))) return false;
 
     // 텍스처를 복사하는 명령어 실행
     CopyTextureToBuffer(commandList, texRes, layout, readbackBuffer);
 
     // 명령 리스트 종료
-    ReturnIfFailed(commandList->Close());
+    if (FAILED(commandList->Close())) return false;
     ID3D12CommandList* commandLists[] = { commandList };
     commandQueue->ExecuteCommandLists(_countof(commandLists), commandLists);
 

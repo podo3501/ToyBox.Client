@@ -44,3 +44,12 @@ using namespace DirectX::SimpleMath;
 #pragma comment(lib, "vorbis_Release.lib")
 #pragma comment(lib, "vorbisfile_Release.lib")
 #endif
+
+//이 매크로는 나중에 Render 프로젝트를 만들면 같이 들고갈 예정. FAILED가 HRESULT를 사용하기 때문에 window 종속이다.
+#ifndef ReturnIfFailed
+#define ReturnIfFailed(x) \
+	do{ \
+		if(FAILED(x)) \
+			return false; \
+	} while (0)
+#endif

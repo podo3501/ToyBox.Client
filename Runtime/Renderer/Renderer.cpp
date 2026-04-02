@@ -56,7 +56,7 @@ bool Renderer::Initialize()
 {
     //com을 생성할때 다중쓰레드로 생성하게끔 초기화 한다. RAII이기 때문에 com을 사용할때 초기화 한다.
 #ifdef __MINGW32__
-    ReturnIfFailed(CoInitializeEx(nullptr, COINITBASE_MULTITHREADED))
+    if (FAILED(CoInitializeEx(nullptr, COINITBASE_MULTITHREADED))) return false;
 #else
     Microsoft::WRL::Wrappers::RoInitializeWrapper initialize(RO_INIT_MULTITHREADED);
     if (FAILED(initialize)) return false;
@@ -166,7 +166,7 @@ bool Renderer::LoadTextureBinder(ITextureBinder* textureBinder)
     ReturnIfFalse(textureBinder);
     //com을 생성할때 다중쓰레드로 생성하게끔 초기화 한다. RAII이기 때문에 com을 사용할때 초기화 한다.
 #ifdef __MINGW32__
-    ReturnIfFailed(CoInitializeEx(nullptr, COINITBASE_MULTITHREADED))
+    if (FAILED(CoInitializeEx(nullptr, COINITBASE_MULTITHREADED))) return false;
 #else
     Microsoft::WRL::Wrappers::RoInitializeWrapper initialize(RO_INIT_MULTITHREADED);
     if (FAILED(initialize)) return false;

@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "QuadRenderer.h"
-#include "d3dx12.h"
+#include "CommandUtils.h"
 #include <d3dcompiler.h>
 #include "Vertex.h"
 
@@ -144,12 +144,9 @@ void QuadRenderer::UploadQuad(ID3D12GraphicsCommandList* uploadCmd)
         IID_PPV_ARGS(&m_vertexBuffer)
     );
 
-    auto barrier = CD3DX12_RESOURCE_BARRIER::Transition(
-        m_vertexBuffer.Get(),
+    CommandUtils::Transition(uploadCmd, m_vertexBuffer.Get(),
         D3D12_RESOURCE_STATE_COMMON,
-        D3D12_RESOURCE_STATE_COPY_DEST
-    );
-    uploadCmd->ResourceBarrier(1, &barrier);
+        D3D12_RESOURCE_STATE_COPY_DEST);
 
     // 2. CPU 접근용 UPLOAD 버퍼
     CD3DX12_HEAP_PROPERTIES uploadHeap(D3D12_HEAP_TYPE_UPLOAD);
@@ -186,12 +183,9 @@ void QuadRenderer::BindPipeline(ID3D12GraphicsCommandList* cmd)
 
 void QuadRenderer::TransitionToRenderState(ID3D12GraphicsCommandList* cmd)
 {
-    auto barrier = CD3DX12_RESOURCE_BARRIER::Transition(
-        m_vertexBuffer.Get(),
+    CommandUtils::Transition(cmd, m_vertexBuffer.Get(),
         D3D12_RESOURCE_STATE_COPY_DEST,
-        D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER
-    );
-    cmd->ResourceBarrier(1, &barrier);
+        D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
 }
 
 void QuadRenderer::Draw( ID3D12GraphicsCommandList* cmd, const Rect& dest,
