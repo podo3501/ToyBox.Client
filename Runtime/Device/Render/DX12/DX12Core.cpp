@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "DX12Core.h"
 #include "DebugHelper.h"
-#include "DX12DeviceView.h"
 #include "d3dx12.h"
 #include <dxgi1_6.h>
 
@@ -68,12 +67,4 @@ bool DX12Core::CreateDevice()
         return false;
 
     return TryCreateDevice(warpAdapter.Get());
-}
-
-DX12DeviceView DX12Core::GetDeviceView() const
-{
-    return { 
-        m_device.Get(), 
-        m_dxgiFactory.Get()
-    };
 }

@@ -5,7 +5,6 @@
 struct ID3D12Device;
 struct IDXGIFactory4;
 struct ID3D12CommandQueue;
-struct DX12DeviceView;
 
 class DX12Core
 {
@@ -17,8 +16,6 @@ public:
 
     ID3D12Device* GetDevice() const { return m_device.Get(); }
     IDXGIFactory4* GetFactory() const { return m_dxgiFactory.Get(); }
-
-    DX12DeviceView GetDeviceView() const; //멤버변수들이 빈번하게 쓰이기 때문에 Get 함수를 두는 것보다 struct로 내보낸다.
     D3D_FEATURE_LEVEL GetFeatureLevel() const { return m_featureLevel; }
 
 private:

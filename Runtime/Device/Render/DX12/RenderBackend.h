@@ -7,11 +7,13 @@ struct ID3D12Resource;
 struct ID3D12DescriptorHeap;
 struct ID3D12GraphicsCommandList;
 struct TextureEntry;
+struct MeshEntry;
 struct ImageData;
 class DX12Core;
 class SwapChainPresenter;
 class CommandScheduler;
 class QuadRenderer;
+class TextureRepository;
 class TextureLoader;
 class ResourceUploader;
 
@@ -35,12 +37,16 @@ private:
 	unique_ptr<QuadRenderer> m_quadRenderer;
 	unique_ptr<TextureLoader> m_textureLoader;
 	unique_ptr<ResourceUploader> m_uploader;
+	
+
+	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> m_srvHeap;
+	//unique_ptr<TextureRepository> m_textureRepository;
 
 	Size m_size{};
 
-	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> m_srvHeap;
 	UINT m_srvDescriptorSize = 0;
 	vector<TextureEntry> m_textures;
+	vector<MeshEntry> m_meshes;
 
 	bool m_ready{ false };
 };

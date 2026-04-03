@@ -1,6 +1,5 @@
 #pragma once
 #include <wrl/client.h>
-#include "DX12DeviceView.h"
 #include "CommandContext.h"
 
 enum class CommandType

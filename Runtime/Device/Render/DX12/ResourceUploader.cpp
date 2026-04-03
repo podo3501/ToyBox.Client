@@ -1,77 +1,110 @@
 #include "pch.h"
 #include "ResourceUploader.h"
 #include "CommandScheduler.h"
-#include "DX12DeviceView.h"
 #include "ImageData.h"
-#include "CommandUtils.h"
-
-using Microsoft::WRL::ComPtr;
 
 ResourceUploader::~ResourceUploader() = default;
-ResourceUploader::ResourceUploader(const DX12DeviceView& dv) :
-    m_dv{ dv }
+ResourceUploader::ResourceUploader(ID3D12Device* device) :
+    m_device{ device }
 {}
 
-ComPtr<ID3D12Resource> ResourceUploader::UploadTexture(
-    const ImageData& img,
-    ComPtr<ID3D12Resource>& outUploadBuffer,
-    ID3D12GraphicsCommandList* uploadCmd)
+static D3D12_RESOURCE_DESC CreateTexture2DDesc(const ImageData& img)
 {
-    auto device = m_dv.device;
+    D3D12_RESOURCE_DESC desc{};
+    desc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+    desc.Width = img.width;
+    desc.Height = img.height;
+    desc.DepthOrArraySize = 1;
+    desc.MipLevels = 1;
+    desc.SampleDesc.Count = 1;
+    desc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
+    desc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
+    return desc;
+}
 
-    // 1. 텍스처 생성 (DEFAULT heap)
-    D3D12_RESOURCE_DESC texDesc{};
-    texDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-    texDesc.Width = img.width;
-    texDesc.Height = img.height;
-    texDesc.DepthOrArraySize = 1;
-    texDesc.MipLevels = 1;
-    texDesc.SampleDesc.Count = 1;
-    texDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
-    texDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
+static D3D12_RESOURCE_DESC CreateBufferDesc(UINT64 size)
+{
+    return CD3DX12_RESOURCE_DESC::Buffer(size);
+}
 
-    ComPtr<ID3D12Resource> texture;
+static void UploadSubresource(
+    ID3D12GraphicsCommandList* cmd,
+    ID3D12Resource* dest,
+    ID3D12Resource* upload,
+    const D3D12_SUBRESOURCE_DATA& subresource)
+{
+    UpdateSubresources(cmd, dest, upload, 0, 0, 1, &subresource);
+}
 
-    CD3DX12_HEAP_PROPERTIES defaultHeap(D3D12_HEAP_TYPE_DEFAULT);
-    device->CreateCommittedResource(
-        &defaultHeap,
-        D3D12_HEAP_FLAG_NONE,
-        &texDesc,
-        D3D12_RESOURCE_STATE_COMMON,
-        nullptr,
-        IID_PPV_ARGS(&texture));
+ComPtr<ID3D12Resource> ResourceUploader::UploadTexture(
+    ID3D12GraphicsCommandList* uploadCmd,
+    const ImageData& img,
+    ComPtr<ID3D12Resource>& outUploadBuffer)
+{
+    auto texDesc = CreateTexture2DDesc(img);
+    auto texture = CreateResource(
+        texDesc,
+        D3D12_HEAP_TYPE_DEFAULT,
+        D3D12_RESOURCE_STATE_COMMON);
 
-    // 2. 업로드 버퍼 생성
     UINT64 uploadSize = 0;
-    device->GetCopyableFootprints(&texDesc, 0, 1, 0,
+    m_device->GetCopyableFootprints(&texDesc, 0, 1, 0,
         nullptr, nullptr, nullptr, &uploadSize);
 
-    CD3DX12_HEAP_PROPERTIES uploadHeap(D3D12_HEAP_TYPE_UPLOAD);
-    auto bufferDesc = CD3DX12_RESOURCE_DESC::Buffer(uploadSize);
+    outUploadBuffer = CreateResource(
+        CreateBufferDesc(uploadSize),
+        D3D12_HEAP_TYPE_UPLOAD,
+        D3D12_RESOURCE_STATE_GENERIC_READ);
 
-    device->CreateCommittedResource(
-        &uploadHeap,
-        D3D12_HEAP_FLAG_NONE,
-        &bufferDesc,
-        D3D12_RESOURCE_STATE_GENERIC_READ,
-        nullptr,
-        IID_PPV_ARGS(&outUploadBuffer));
-
-    // 3. 데이터 복사
     D3D12_SUBRESOURCE_DATA subresource{};
     subresource.pData = img.pixels.data();
     subresource.RowPitch = img.stride;
     subresource.SlicePitch = img.stride * img.height;
-
-    UpdateSubresources(uploadCmd,
-        texture.Get(),
-        outUploadBuffer.Get(),
-        0, 0, 1,
-        &subresource);
-
-    CommandUtils::Transition(uploadCmd, texture.Get(),
-        D3D12_RESOURCE_STATE_COPY_DEST,
-        D3D12_RESOURCE_STATE_COMMON);
+    UploadSubresource(uploadCmd, texture.Get(), outUploadBuffer.Get(), subresource);
 
     return texture;
+}
+
+ComPtr<ID3D12Resource> ResourceUploader::UploadVertexBuffer(
+    ID3D12GraphicsCommandList* cmd,
+    const void* data,
+    UINT bufferSize,
+    ComPtr<ID3D12Resource>& outUploadBuffer)
+{
+    auto vertexBuffer = CreateResource(
+        CreateBufferDesc(bufferSize),
+        D3D12_HEAP_TYPE_DEFAULT,
+        D3D12_RESOURCE_STATE_COMMON);
+
+    outUploadBuffer = CreateResource(
+        CreateBufferDesc(bufferSize),
+        D3D12_HEAP_TYPE_UPLOAD,
+        D3D12_RESOURCE_STATE_GENERIC_READ);
+
+    D3D12_SUBRESOURCE_DATA subresource{};
+    subresource.pData = data;
+    subresource.RowPitch = bufferSize;
+    subresource.SlicePitch = bufferSize;
+    UploadSubresource(cmd, vertexBuffer.Get(), outUploadBuffer.Get(), subresource);
+
+    return vertexBuffer;
+}
+
+ComPtr<ID3D12Resource> ResourceUploader::CreateResource(
+    const D3D12_RESOURCE_DESC& desc,
+    D3D12_HEAP_TYPE heapType,
+    D3D12_RESOURCE_STATES state)
+{
+    CD3DX12_HEAP_PROPERTIES heap(heapType);
+    
+    ComPtr<ID3D12Resource> res;
+    m_device->CreateCommittedResource(
+        &heap,
+        D3D12_HEAP_FLAG_NONE,
+        &desc,
+        state,
+        nullptr,
+        IID_PPV_ARGS(&res));
+
+    return res;
 }

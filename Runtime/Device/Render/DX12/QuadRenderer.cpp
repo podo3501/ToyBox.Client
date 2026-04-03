@@ -13,13 +13,10 @@ struct QuadTransform
 using Microsoft::WRL::ComPtr;
 
 QuadRenderer::~QuadRenderer() = default;
-QuadRenderer::QuadRenderer(const DX12DeviceView& dv) : 
-    m_dv{ dv }
-{}
+QuadRenderer::QuadRenderer() = default;
 
-bool QuadRenderer::Initialize(const Size& screenSize)
+bool QuadRenderer::Initialize(ID3D12Device* device, const Size& screenSize)
 {
-    HRESULT hr;
     m_screenSize = screenSize;
 
     CD3DX12_DESCRIPTOR_RANGE range;
@@ -43,7 +40,7 @@ bool QuadRenderer::Initialize(const Size& screenSize)
 
     D3D12SerializeRootSignature(&rsDesc, D3D_ROOT_SIGNATURE_VERSION_1, &sig, &err);
 
-    m_dv.device->CreateRootSignature(
+    device->CreateRootSignature(
         0,
         sig->GetBufferPointer(),
         sig->GetBufferSize(),
@@ -53,6 +50,7 @@ bool QuadRenderer::Initialize(const Size& screenSize)
     ComPtr<ID3DBlob> vs{ nullptr };
     ComPtr<ID3DBlob> ps{ nullptr };
 
+    HRESULT hr = S_OK;
     wstring shaderFile = L"D:\\ProgrammingStudy\\ToyBox\\Runtime\\Device\\Render\\DX12\\Quad.hlsl";
     hr = D3DCompileFromFile(shaderFile.c_str(), nullptr, nullptr, "VSMain", "vs_5_0", 0, 0, &vs, &err);
     if (FAILED(hr)) return false;
@@ -91,14 +89,14 @@ bool QuadRenderer::Initialize(const Size& screenSize)
     psoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
     psoDesc.SampleDesc.Count = 1;
 
-    hr = m_dv.device->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&m_pipelineState));
+    hr = device->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&m_pipelineState));
     if (FAILED(hr)) return false;
 
     // Constant Buffer 생성
     CD3DX12_HEAP_PROPERTIES heap(D3D12_HEAP_TYPE_UPLOAD);
     CD3DX12_RESOURCE_DESC desc = CD3DX12_RESOURCE_DESC::Buffer(256); // 256 align 필수
 
-    HRESULT hrCB = m_dv.device->CreateCommittedResource(
+    HRESULT hrCB = device->CreateCommittedResource(
         &heap,
         D3D12_HEAP_FLAG_NONE,
         &desc,
@@ -114,12 +112,9 @@ bool QuadRenderer::Initialize(const Size& screenSize)
     return true;
 }
 
-void QuadRenderer::UploadQuad(ID3D12GraphicsCommandList* uploadCmd)
+vector<Vertex> QuadRenderer::CreateQuadVertices() noexcept
 {
-    auto device = m_dv.device;
-
-    Vertex quad[6] =
-    {
+    return {
         { -0.5f, -0.5f, 0, 1,1,1,1, 0,1 },
         { -0.5f,  0.5f, 0, 1,1,1,1, 0,0 },
         {  0.5f, -0.5f, 0, 1,1,1,1, 1,1 },
@@ -128,50 +123,14 @@ void QuadRenderer::UploadQuad(ID3D12GraphicsCommandList* uploadCmd)
         { -0.5f,  0.5f, 0, 1,1,1,1, 0,0 },
         {  0.5f,  0.5f, 0, 1,1,1,1, 1,0 },
     };
+}
 
-    UINT bufferSize = sizeof(quad);
-
-    // 1. GPU 전용 DEFAULT 버퍼
-    CD3DX12_HEAP_PROPERTIES defaultHeap(D3D12_HEAP_TYPE_DEFAULT);
-    CD3DX12_RESOURCE_DESC vbDesc = CD3DX12_RESOURCE_DESC::Buffer(bufferSize);
-
-    device->CreateCommittedResource(
-        &defaultHeap,
-        D3D12_HEAP_FLAG_NONE,
-        &vbDesc,
-        D3D12_RESOURCE_STATE_COMMON,
-        nullptr,
-        IID_PPV_ARGS(&m_vertexBuffer)
-    );
-
-    CommandUtils::Transition(uploadCmd, m_vertexBuffer.Get(),
-        D3D12_RESOURCE_STATE_COMMON,
-        D3D12_RESOURCE_STATE_COPY_DEST);
-
-    // 2. CPU 접근용 UPLOAD 버퍼
-    CD3DX12_HEAP_PROPERTIES uploadHeap(D3D12_HEAP_TYPE_UPLOAD);
-    CD3DX12_RESOURCE_DESC uploadDesc = CD3DX12_RESOURCE_DESC::Buffer(bufferSize);
-
-    device->CreateCommittedResource(
-        &uploadHeap,
-        D3D12_HEAP_FLAG_NONE,
-        &uploadDesc,
-        D3D12_RESOURCE_STATE_GENERIC_READ,
-        nullptr,
-        IID_PPV_ARGS(&m_uploadBuffer)
-    );
-
-    // 3. 데이터 복사
-    void* data;
-    m_uploadBuffer->Map(0, nullptr, &data);
-    memcpy(data, quad, bufferSize);
-    m_uploadBuffer->Unmap(0, nullptr);
-
-    // 4. GPU 복사
-    uploadCmd->CopyBufferRegion(m_vertexBuffer.Get(), 0, m_uploadBuffer.Get(), 0, bufferSize);
+void QuadRenderer::SetVertexBuffer(ComPtr<ID3D12Resource> vb, UINT size) noexcept
+{
+    m_vertexBuffer = vb;
 
     m_vertexView.BufferLocation = m_vertexBuffer->GetGPUVirtualAddress();
-    m_vertexView.SizeInBytes = bufferSize;
+    m_vertexView.SizeInBytes = size;
     m_vertexView.StrideInBytes = sizeof(Vertex);
 }
 

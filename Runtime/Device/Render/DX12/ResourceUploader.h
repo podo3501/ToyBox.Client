@@ -1,23 +1,32 @@
 #pragma once
 #include <wrl/client.h>
-#include "DX12DeviceView.h"
+#include "d3dx12.h"
 
-struct ID3D12Resource;
-struct ID3D12GraphicsCommandList;
-class CommandScheduler;
+using Microsoft::WRL::ComPtr;
+
 struct ImageData;
 
 class ResourceUploader
 {
 public:
     ~ResourceUploader();
-    ResourceUploader() = delete;
-    ResourceUploader(const DX12DeviceView& dv);
-    Microsoft::WRL::ComPtr<ID3D12Resource> UploadTexture(
+    ResourceUploader(ID3D12Device* device);
+    ComPtr<ID3D12Resource> UploadTexture(
+        ID3D12GraphicsCommandList* uploadCmd,
         const ImageData& img,
-        Microsoft::WRL::ComPtr<ID3D12Resource>& outUploadBuffer,
-        ID3D12GraphicsCommandList* uploadCmd);
+        ComPtr<ID3D12Resource>& outUploadBuffer);
+
+    ComPtr<ID3D12Resource> UploadVertexBuffer(
+        ID3D12GraphicsCommandList* cmd,
+        const void* data,
+        UINT bufferSize,
+        ComPtr<ID3D12Resource>& outUploadBuffer);
 
 private:
-    DX12DeviceView m_dv{};
+    ComPtr<ID3D12Resource> CreateResource(
+        const D3D12_RESOURCE_DESC& desc,
+        D3D12_HEAP_TYPE heapType,
+        D3D12_RESOURCE_STATES state);
+
+    ID3D12Device* m_device{ nullptr };
 };
