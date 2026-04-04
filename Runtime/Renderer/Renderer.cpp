@@ -2,7 +2,7 @@
 #include "Renderer.h"
 #include "Public/ITextureBinder.h"
 #include "Public/IImguiRegistry.h"
-#include "TextureRepository/TextureRepository.h"
+#include "TextureRepository/TextureRepo.h"
 #include "TextureRepository/TextureRenderTarget.h"
 #include "External/DX12/DeviceResources.h"
 #include "External/Imgui.h"
@@ -78,7 +78,7 @@ bool Renderer::Initialize()
 
     auto device = m_deviceResources->GetD3DDevice();
     m_batch = make_unique<ResourceUploadBatch>(device);
-    m_texRepository = make_unique<TextureRepository>(
+    m_texRepository = make_unique<TextureRepo>(
         m_deviceResources.get(), m_srvDescriptors.get(), m_batch.get(), m_spriteBatch.get());
 
     return true;

@@ -65,7 +65,7 @@ bool SwapChainPresenter::Resize(ID3D12Device* device, CommandScheduler* cmd, con
     if (size.width == 0 || size.height == 0) return false;
     if (m_size == size) return true;
 
-    ReturnIfFalse(cmd->Flush()); // GPU 작업 끝날 때까지 대기
+    ReturnIfFalse(cmd->WaitForAllGPU()); // GPU 작업 끝날 때까지 대기
 
     for (UINT i = 0; i < m_frameCount; ++i)
         m_renderTargets[i].Reset(); //기존 RTV 리소스 해제

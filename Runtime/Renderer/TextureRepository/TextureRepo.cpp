@@ -1,17 +1,17 @@
 #include "pch.h"
-#include "TextureRepository.h"
+#include "TextureRepo.h"
 #include "Texture.h"
 #include "TextureRenderTarget.h"
 #include "Font.h"
 #include "External/DX12/DeviceResources.h"
 #include "Utils/Common.h"
 
-TextureRepository::~TextureRepository()
+TextureRepo::~TextureRepo()
 {
     Assert(ranges::all_of(m_texResources, [](const auto& ptr) { return ptr == nullptr; })); //잘 지워졌는지 확인
 }
 
-TextureRepository::TextureRepository(DX::DeviceResources* deviceRes, DescriptorHeap* descriptorHeap, ResourceUploadBatch* upload, SpriteBatch* sprite) :
+TextureRepo::TextureRepo(DX::DeviceResources* deviceRes, DescriptorHeap* descriptorHeap, ResourceUploadBatch* upload, SpriteBatch* sprite) :
     m_deviceResources{ deviceRes },
     m_device{ deviceRes->GetD3DDevice() },
     m_descHeap{ descriptorHeap },
@@ -19,13 +19,13 @@ TextureRepository::TextureRepository(DX::DeviceResources* deviceRes, DescriptorH
     m_sprite{ sprite }
 {}
 
-void TextureRepository::AddRef(size_t index) noexcept
+void TextureRepo::AddRef(size_t index) noexcept
 {
     m_refCount[index]++;
 }
 
 template<typename TexResType>
-bool TextureRepository::LoadTextureResource(const wstring& filename, size_t& outIndex,
+bool TextureRepo::LoadTextureResource(const wstring& filename, size_t& outIndex,
     function<void(TextureResource*)> postLoadAction)
 {
     if (auto find = FindTextureResource(filename); find)
@@ -47,12 +47,12 @@ bool TextureRepository::LoadTextureResource(const wstring& filename, size_t& out
     return true;
 }
 
-bool TextureRepository::LoadFont(const wstring& filename, size_t& outIndex)
+bool TextureRepo::LoadFont(const wstring& filename, size_t& outIndex)
 {
     return LoadTextureResource<CFont>(filename, outIndex, [](TextureResource*) {});
 }
 
-bool TextureRepository::LoadTexture(const wstring& filename, size_t& outIndex, XMUINT2* outSize, UINT64* outGfxMemOffset)
+bool TextureRepo::LoadTexture(const wstring& filename, size_t& outIndex, XMUINT2* outSize, UINT64* outGfxMemOffset)
 {
     return LoadTextureResource<Texture>(filename, outIndex, 
         [outSize, outGfxMemOffset](TextureResource* res) {
@@ -61,12 +61,12 @@ bool TextureRepository::LoadTexture(const wstring& filename, size_t& outIndex, X
         });
 }
 
-void TextureRepository::SetTextureRenderer(function<void(size_t index, ITextureRender*)> rendererFn) noexcept
+void TextureRepo::SetTextureRenderer(function<void(size_t index, ITextureRender*)> rendererFn) noexcept
 {
     m_textureRenderer = rendererFn;
 }
 
-bool TextureRepository::CreateRenderTexture(const Rectangle& targetRect, size_t& outIndex, UINT64* outGfxMemOffset)
+bool TextureRepo::CreateRenderTexture(const Rectangle& targetRect, size_t& outIndex, UINT64* outGfxMemOffset)
 {
     auto renderTex = make_unique<TextureRenderTarget>(m_textureRenderer, m_deviceResources, m_descHeap);
 
@@ -86,22 +86,22 @@ bool TextureRepository::CreateRenderTexture(const Rectangle& targetRect, size_t&
     return true;
 }
 
-void TextureRepository::ModifyRenderTexturePosition(size_t index, const XMINT2& leftTop) noexcept {
+void TextureRepo::ModifyRenderTexturePosition(size_t index, const XMINT2& leftTop) noexcept {
     return ToType<TextureRenderTarget*>(m_texResources[index].get())->ModifyPosition(leftTop); }
 
-bool TextureRepository::ModifyRenderTextureSize(size_t index, const XMUINT2& size) {
+bool TextureRepo::ModifyRenderTextureSize(size_t index, const XMUINT2& size) {
     return ToType<TextureRenderTarget*>(m_texResources[index].get())->ModifySize(size); }
 
-void TextureRepository::DrawString(size_t index, const wstring& text, const Vector2& pos, const FXMVECTOR& color) const {
+void TextureRepo::DrawString(size_t index, const wstring& text, const Vector2& pos, const FXMVECTOR& color) const {
     ToType<CFont*>(m_texResources[index].get())->DrawString(m_sprite, text, pos, color); }
 
-Rectangle TextureRepository::MeasureText(size_t index, const wstring& text, const Vector2& position) {
+Rectangle TextureRepo::MeasureText(size_t index, const wstring& text, const Vector2& position) {
     return ToType<CFont*>(m_texResources[index].get())->MeasureText(text, position); }
 
-float TextureRepository::GetLineSpacing(size_t index) const noexcept {
+float TextureRepo::GetLineSpacing(size_t index) const noexcept {
     return ToType<CFont*>(m_texResources[index].get())->GetLineSpacing(); }
 
-optional<vector<Rectangle>> TextureRepository::GetTextureAreaList(size_t index, const UINT32& bgColor) 
+optional<vector<Rectangle>> TextureRepo::GetTextureAreaList(size_t index, const UINT32& bgColor)
 {
     auto find = FindTextureResource(index);
     if (!find) return nullopt;
@@ -113,7 +113,7 @@ optional<vector<Rectangle>> TextureRepository::GetTextureAreaList(size_t index, 
     return areaList;
 }
 
-TextureResource* TextureRepository::FindTextureResource(const wstring& filename) const noexcept
+TextureResource* TextureRepo::FindTextureResource(const wstring& filename) const noexcept
 {
     auto find = ranges::find_if(m_texResources, [&filename](const auto& res) {
         return res && res->GetFilename() == filename;
@@ -125,7 +125,7 @@ TextureResource* TextureRepository::FindTextureResource(const wstring& filename)
     return nullptr;
 }
 
-TextureResource* TextureRepository::FindTextureResource(size_t index) const noexcept
+TextureResource* TextureRepo::FindTextureResource(size_t index) const noexcept
 {
     if (index < 0 || index >= MAX_DESC) return nullptr;
     const auto& texRes = m_texResources[index];
@@ -133,7 +133,7 @@ TextureResource* TextureRepository::FindTextureResource(size_t index) const noex
     return texRes.get();
 }
 
-void TextureRepository::Render(size_t index, const RECT& dest, const RECT* source)
+void TextureRepo::Render(size_t index, const RECT& dest, const RECT* source)
 {
     assert(!m_texResources.empty() && index <= m_texResources.size() - 1); //assert로 한 이유는 release일때는 조금이라도 동작을 안하게 하기 위해서이다.
     assert(m_texResources[index]->GetTypeID() != CFont::GetTypeStatic());
@@ -148,7 +148,7 @@ void TextureRepository::Render(size_t index, const RECT& dest, const RECT* sourc
     m_sprite->Draw(m_descHeap->GetGpuHandle(index), m_texResources[index]->GetSize(), dest, source, Colors::White, 0.f);
 }
 
-void TextureRepository::DrawRenderTextures()
+void TextureRepo::DrawRenderTextures()
 {
     auto texResViews = m_texResources
         | views::filter([](const unique_ptr<TextureResource>& resource) {
@@ -163,7 +163,7 @@ void TextureRepository::DrawRenderTextures()
     }
 }
 
-void TextureRepository::ReleaseTexture(size_t idx) noexcept
+void TextureRepo::ReleaseTexture(size_t idx) noexcept
 {
     if (idx < 0 || idx >= MAX_DESC) return;
 
@@ -179,19 +179,19 @@ void TextureRepository::ReleaseTexture(size_t idx) noexcept
     ReleaseDescriptor(idx);
 }
 
-void TextureRepository::Reset()
+void TextureRepo::Reset()
 {
     ranges::for_each(m_texResources, [](auto& res) { res->Reset(); });
 }
 
-void TextureRepository::ReleaseDescriptor(size_t idx) noexcept
+void TextureRepo::ReleaseDescriptor(size_t idx) noexcept
 {
     assert(idx < MAX_DESC);
     
     m_freeDescIndices.push_back(idx);
 }
 
-size_t TextureRepository::AllocateDescriptor() noexcept
+size_t TextureRepo::AllocateDescriptor() noexcept
 {
     if (!m_freeDescIndices.empty()) 
     {

@@ -10,15 +10,13 @@ CommandContext::CommandContext() = default;
 
 bool CommandContext::Initialize(ID3D12Device* device, D3D12_COMMAND_LIST_TYPE type)
 {
-    m_type = type;
-
-    D3D12_COMMAND_QUEUE_DESC queueDesc{};
-    queueDesc.Type = m_type;
-    queueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
+    //D3D12_COMMAND_QUEUE_DESC queueDesc{};
+    //queueDesc.Type = type;
+    //queueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
     
-    ReturnIfFailed(device->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&m_queue)));
-    ReturnIfFailed(device->CreateCommandAllocator(m_type, IID_PPV_ARGS(&m_allocator)));
-    ReturnIfFailed(device->CreateCommandList(0, m_type, m_allocator.Get(), nullptr, IID_PPV_ARGS(&m_command)));
+    //ReturnIfFailed(device->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&m_queue)));
+    ReturnIfFailed(device->CreateCommandAllocator(type, IID_PPV_ARGS(&m_allocator)));
+    ReturnIfFailed(device->CreateCommandList(0, type, m_allocator.Get(), nullptr, IID_PPV_ARGS(&m_command)));
     m_command->Close(); // 초기 상태는 닫아둠
 
     ReturnIfFailed(device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&m_fence)));
@@ -38,27 +36,60 @@ bool CommandContext::Reset()
 
 bool CommandContext::Close()
 {
-    ReturnIfFailed(m_command->Close());
+    //ReturnIfFailed(m_command->Close());
 
-    ID3D12CommandList* lists[] = { m_command.Get() };
-    m_queue->ExecuteCommandLists(1, lists);
+    //ID3D12CommandList* lists[] = { m_command.Get() };
+    //m_queue->ExecuteCommandLists(1, lists);
 
-    return true;
+    //return true;
+
+    return SUCCEEDED(m_command->Close());
 }
 
-bool CommandContext::Flush()
+//uint64_t CommandContext::Signal()
+//{
+//    const uint64_t fenceValue = m_fenceValue;
+//    ReturnIfFailed(m_queue->Signal(m_fence.Get(), fenceValue)); // GPU에게 "여기까지 오면 fenceValue 찍어라"라고 예약
+//
+//    m_fenceValue++;
+//    return fenceValue;
+//}
+
+uint64_t CommandContext::NextFenceValue()
 {
-    if (!m_queue) return false;
+    return m_fenceValue++;
+}
 
-    const UINT64 fenceToWait = m_fenceValue;
-    ReturnIfFailed(m_queue->Signal(m_fence.Get(), fenceToWait));
+uint64_t CommandContext::GetCompletedValue() const
+{
+    return m_fence->GetCompletedValue();
+}
 
-    m_fenceValue++;
-    if (m_fence->GetCompletedValue() < fenceToWait)
-    {
-        ReturnIfFailed(m_fence->SetEventOnCompletion(fenceToWait, m_eventHandle));
-        WaitForSingleObject(m_eventHandle, INFINITE);
-    }
+bool CommandContext::WaitForFence(uint64_t fenceValue)
+{
+    if (m_fence->GetCompletedValue() >= fenceValue)
+        return true;
+
+    ReturnIfFailed(m_fence->SetEventOnCompletion(fenceValue, m_eventHandle));
+    WaitForSingleObject(m_eventHandle, INFINITE);
 
     return true;
 }
+
+//
+//bool CommandContext::Flush()
+//{
+//    if (!m_queue) return false;
+//
+//    const UINT64 fenceToWait = m_fenceValue;
+//    ReturnIfFailed(m_queue->Signal(m_fence.Get(), fenceToWait));
+//
+//    m_fenceValue++;
+//    if (m_fence->GetCompletedValue() < fenceToWait)
+//    {
+//        ReturnIfFailed(m_fence->SetEventOnCompletion(fenceToWait, m_eventHandle));
+//        WaitForSingleObject(m_eventHandle, INFINITE);
+//    }
+//
+//    return true;
+//}

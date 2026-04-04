@@ -21,7 +21,7 @@ public:
     void BindPipeline(ID3D12GraphicsCommandList* cmd);
     void TransitionToRenderState(ID3D12GraphicsCommandList* cmd);
     void Draw(ID3D12GraphicsCommandList* cmd, const Rect& dest, 
-        const CD3DX12_GPU_DESCRIPTOR_HANDLE& gpuHandle);
+        D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle);
 
 private:
     Microsoft::WRL::ComPtr<ID3D12RootSignature> m_rootSignature;

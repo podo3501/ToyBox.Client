@@ -27,3 +27,8 @@ void RenderService::Draw(int index, const Rect& dest, const Rect* source)
 {
 	m_backend->Draw(index, dest, source);
 }
+
+void RenderService::Update()
+{
+	m_backend->Update();
+}

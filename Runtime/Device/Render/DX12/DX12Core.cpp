@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "DX12Core.h"
 #include "DebugHelper.h"
+#include "DebugOptions.h"
 #include "d3dx12.h"
 #include <dxgi1_6.h>
 
@@ -9,12 +10,21 @@ using Microsoft::WRL::ComPtr;
 bool DX12Core::Initialize(bool enableDebug)
 {
 #if defined(_DEBUG)
+    DebugOptions opt;
+    opt.enableDebugLayer = true;
+    opt.enableGpuValidation = false;   //필요할 때만 true. 계속 켜 놓으면 오래 걸린다.
+    opt.breakOnWarning = false; // Warning도 잡는다.
+
     if (enableDebug)
-        DebugHelper::EnableDebugLayer();
+        DebugHelper::EnableDebugLayer(opt);
 #endif
 
     ReturnIfFalse(CreateFactory(enableDebug));
     ReturnIfFalse(CreateDevice());
+
+#if defined(_DEBUG)
+    DebugHelper::SetupInfoQueue(m_device.Get(), opt);
+#endif
 
     return true;
 }

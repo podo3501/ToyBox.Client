@@ -6,7 +6,7 @@
 struct IImgui;
 struct IImguiRenderer;
 struct IComponent;
-class TextureRepository;
+class TextureRepo;
 class TextureRenderTarget;
 
 namespace DX
@@ -73,7 +73,7 @@ private:
     unique_ptr<IImguiRenderer> m_imguiRenderer;
 
     unique_ptr<SpriteBatch> m_spriteBatch;
-    unique_ptr<TextureRepository> m_texRepository;
+    unique_ptr<TextureRepo> m_texRepository;
 
     function<void(ITextureRender*)> m_componentRenderer;
 };

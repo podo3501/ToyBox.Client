@@ -12,6 +12,7 @@
 #include <cmath>
 #include <filesystem>
 #include <optional>
+#include <queue>
 #include <ranges>
 #include <string>
 #include <string_view>

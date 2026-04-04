@@ -1,30 +1,41 @@
 #pragma once
-#include "d3dx12.h"
 #include <wrl/client.h>
+#include "d3dx12.h"
 
 using Microsoft::WRL::ComPtr;
 
-struct TextureResource2
+struct ImageData;
+class TextureLoader;
+class DescriptorAllocator;
+class ResourceUploader;
+class CommandScheduler;
+
+struct GpuTexture
 {
     ComPtr<ID3D12Resource> resource{ nullptr };
-    ComPtr<ID3D12Resource> uploadBuffer{ nullptr };
-    CD3DX12_GPU_DESCRIPTOR_HANDLE gpuHandle{};
+    UINT srvIndex{ 0 };
 };
 
 class TextureRepository
 {
 public:
     ~TextureRepository();
-    TextureRepository(ID3D12Device* device);
-    int AddTexture(ComPtr<ID3D12Resource> tex, ComPtr<ID3D12Resource> uploadBuffer);
+    TextureRepository(ID3D12Device* device, CommandScheduler* command,
+        DescriptorAllocator* srvAllocator, ResourceUploader* uploader);
+    int LoadFromMemory(Core::ByteBuffer buffer);
+    const GpuTexture* GetTexture(int index) const;
 
-    const TextureResource2& GetTexture(int index) const { return m_textureResources[index]; }
-    ID3D12DescriptorHeap* GetSrvHeap() const { return m_srvHeap.Get(); }
-    int Count() const { return static_cast<int>(m_textureResources.size()); }
+private:
+    ImageData Decode(Core::ByteBuffer buffer);
+    ComPtr<ID3D12Resource> Upload(ImageData& img);
+    int AddTexture(ComPtr<ID3D12Resource> tex);
 
 private:
     ID3D12Device* m_device{ nullptr };
-    ComPtr<ID3D12DescriptorHeap> m_srvHeap;
-    UINT m_srvDescriptorSize{ 0 };
-    vector<TextureResource2> m_textureResources;
+    CommandScheduler* m_command{ nullptr };
+    DescriptorAllocator* m_srvAllocator{ nullptr };
+    ResourceUploader* m_uploader{ nullptr };
+
+    unique_ptr<TextureLoader> m_loader;
+    vector<GpuTexture> m_textureResources;
 };

@@ -8,14 +8,14 @@ class RenderTexture;
 class TextureResource;
 namespace DX { class DeviceResources; }
 
-class TextureRepository : public ITextureLoad, public ITextureController, public ITextureRender
+class TextureRepo : public ITextureLoad, public ITextureController, public ITextureRender
 {
 public:
-    TextureRepository(DX::DeviceResources* deviceRes,
+    TextureRepo(DX::DeviceResources* deviceRes,
         DescriptorHeap* descriptorHeap,
         ResourceUploadBatch* upload, 
         SpriteBatch* sprite); //SpriteBatch는 여기서 만들어 줄 수 있다.
-    ~TextureRepository();
+    ~TextureRepo();
 
     //ITextureLoad
     virtual bool LoadTexture(const wstring& filename, size_t& outIndex, XMUINT2* outSize, UINT64* outGfxMemOffset) override;

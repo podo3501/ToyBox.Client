@@ -1,29 +1,59 @@
 #include "pch.h"
 #include "TextureRepository.h"
+#include "TextureLoader.h"
+#include "CommandScheduler.h"
+#include "DescriptorAllocator.h"
+#include "ResourceUploader.h"
+#include "ImageData.h"
 
-TextureRepository::~TextureRepository()
+TextureRepository::~TextureRepository() = default;
+TextureRepository::TextureRepository(ID3D12Device* device, CommandScheduler* command,
+    DescriptorAllocator* srvAllocator, ResourceUploader* uploader) :
+    m_device{ device },
+    m_command{ command },
+    m_srvAllocator{ srvAllocator },
+    m_uploader{ uploader }
 {
-    int a = 1;
+    m_loader = make_unique<TextureLoader>();
 }
-TextureRepository::TextureRepository(ID3D12Device* device) :
-    m_device{ device }
-{
-    D3D12_DESCRIPTOR_HEAP_DESC heapDesc{};
-    heapDesc.NumDescriptors = 256; // ÀÏ´Ü ³Ë³ËÇÏ°Ô
-    heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-    heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 
-    device->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&m_srvHeap));
-    m_srvDescriptorSize = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+int TextureRepository::LoadFromMemory(Core::ByteBuffer buffer)
+{
+    ImageData img = Decode(move(buffer));
+    ComPtr<ID3D12Resource> texture = Upload(img);
+
+    return AddTexture(texture);
 }
 
-int TextureRepository::AddTexture(ComPtr<ID3D12Resource> tex, ComPtr<ID3D12Resource> uploadBuffer)
+const GpuTexture* TextureRepository::GetTexture(int index) const
+{ 
+    if (index < 0 || index >= static_cast<int>(m_textureResources.size()))
+        return nullptr;
+
+    return &m_textureResources[index];
+}
+
+ImageData TextureRepository::Decode(Core::ByteBuffer buffer)
 {
-    CD3DX12_CPU_DESCRIPTOR_HANDLE cpuHandle(
-        m_srvHeap->GetCPUDescriptorHandleForHeapStart(),
-        static_cast<UINT>(m_textureResources.size()),
-        m_srvDescriptorSize
-    );
+    return m_loader->LoadFromMemory(std::move(buffer));
+}
+
+ComPtr<ID3D12Resource> TextureRepository::Upload(ImageData& img)
+{
+    auto cmd = m_command->Begin(CommandType::Copy);
+
+    ComPtr<ID3D12Resource> uploadBuffer;
+    auto texture = m_uploader->UploadTexture(cmd, img, uploadBuffer);
+
+    m_command->End({ uploadBuffer });
+
+    return texture;
+}
+
+int TextureRepository::AddTexture(ComPtr<ID3D12Resource> tex)
+{
+    UINT index = m_srvAllocator->Allocate();
+    auto cpuHandle = m_srvAllocator->GetCpuHandle(index);
 
     D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
     srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
@@ -33,12 +63,6 @@ int TextureRepository::AddTexture(ComPtr<ID3D12Resource> tex, ComPtr<ID3D12Resou
 
     m_device->CreateShaderResourceView(tex.Get(), &srvDesc, cpuHandle);
 
-    CD3DX12_GPU_DESCRIPTOR_HANDLE gpuHandle(
-        m_srvHeap->GetGPUDescriptorHandleForHeapStart(),
-        static_cast<UINT>(m_textureResources.size()),
-        m_srvDescriptorSize
-    );
-
-    m_textureResources.push_back({ tex, uploadBuffer, gpuHandle });
+    m_textureResources.push_back({ tex, index });
     return static_cast<int>(m_textureResources.size() - 1);
 }

@@ -12,6 +12,7 @@ public:
 	static unique_ptr<RenderService> Create(unique_ptr<IRenderBackend> backend, IResourceManager* resManager) noexcept;
 	int LoadTexture(const filesystem::path& filePath);
 	void Draw(int index, const Rect& dest, const Rect* source);
+	void Update();
 
 private:
 	RenderService(unique_ptr<IRenderBackend> backend, IResourceManager* resManager);

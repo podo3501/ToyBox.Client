@@ -3,35 +3,26 @@
 #include "DX12Core.h"
 #include "SwapChainPresenter.h"
 #include "CommandScheduler.h"
+#include "DescriptorAllocator.h"
 #include "QuadRenderer.h"
-#include "TextureRepository.h"
 #include "TextureLoader.h"
+#include "TextureRepository.h"
 #include "ResourceUploader.h"
-#include "ImageData.h"
 #include "CommandUtils.h"
 #include <dxgi1_6.h>
 #include "Vertex.h"
 
 using Microsoft::WRL::ComPtr;
 
-struct TextureEntry
-{
-    ComPtr<ID3D12Resource> resource;
-    ComPtr<ID3D12Resource> uploadBuffer;
-    CD3DX12_GPU_DESCRIPTOR_HANDLE gpuHandle;
-};
-
 struct MeshEntry
 {
     ComPtr<ID3D12Resource> vertexBuffer;
-    ComPtr<ID3D12Resource> uploadBuffer;
 };
 
 RenderBackend::~RenderBackend()
 {
     if(m_command)
-        m_command->Flush(); //gpu가 사용중이면 중지시킨다. 
-    Sleep(1000);         // 임시 테스트
+        m_command->WaitForAllGPU(); //gpu가 사용중이면 기다린다.
 }
 
 RenderBackend::RenderBackend() :
@@ -45,42 +36,36 @@ bool RenderBackend::Initialize(HWND hwnd, const Size& wndSize, const RenderConfi
     auto device = m_core->GetDevice();
     auto factory = m_core->GetFactory();
 
-    D3D12_DESCRIPTOR_HEAP_DESC heapDesc{};
-    heapDesc.NumDescriptors = 256; // 일단 넉넉하게
-    heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-    heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-
-    device->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&m_srvHeap));
-    m_srvDescriptorSize = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-    
     m_command = make_unique<CommandScheduler>();
-    ReturnIfFalse(m_command->Initialize(device));
+    ReturnIfFalse(m_command->Initialize(device, 3));
 
     auto queue = m_command->GetCommandQueue(CommandType::Direct);
     SwapChainDesc desc{ hwnd, wndSize, config.allowTearing };
     m_swapChain = make_unique<SwapChainPresenter>();
     ReturnIfFalse(m_swapChain->Initialize(device, factory, queue, desc));
 
+    m_srvAllocator = make_unique<DescriptorAllocator>(device);
+    ReturnIfFalse(m_srvAllocator->Initialize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 2048, true));
+
+    m_uploader = make_unique<ResourceUploader>(device);
+    m_textureRepository = make_unique<TextureRepository>(device, m_command.get(), m_srvAllocator.get(), m_uploader.get());
+
     m_quadRenderer = make_unique<QuadRenderer>();
     ReturnIfFalse(m_quadRenderer->Initialize(device, wndSize));
-    m_quadRenderer->SetSRVHeap(m_srvHeap.Get());
-
-    //m_textureRepository = make_unique<TextureRepository>(device, m_srvHeap.Get(), m_srvDescriptorSize);
-    m_textureLoader = make_unique<TextureLoader>();
-    m_uploader = make_unique<ResourceUploader>(device);
+    m_quadRenderer->SetSRVHeap(m_srvAllocator->GetHeap());
 
     auto vertices = m_quadRenderer->CreateQuadVertices();
-    ComPtr<ID3D12Resource> uploadBuffer;
     auto copyCmd = m_command->Begin(CommandType::Copy); // 업로드 전용 커맨드 리스트 생성
+    ComPtr<ID3D12Resource> uploadBuffer;
     auto vb = m_uploader->UploadVertexBuffer(
         copyCmd,
         vertices.data(),
         static_cast<UINT>(vertices.size() * sizeof(Vertex)),
         uploadBuffer
     );
-    m_command->End(); // 업로드 완료까지 대기
+    m_command->End({ move(uploadBuffer) }); // 업로드 완료까지 대기
     m_quadRenderer->SetVertexBuffer(vb, static_cast<UINT>(vertices.size() * sizeof(Vertex)));
-    m_meshes.push_back({ vb, uploadBuffer });
+    m_meshes.push_back({ vb });
 
     return true;
 }
@@ -88,6 +73,8 @@ bool RenderBackend::Initialize(HWND hwnd, const Size& wndSize, const RenderConfi
 ID3D12GraphicsCommandList* RenderBackend::BeginFrame()
 {
     auto directCmd = m_command->Begin(CommandType::Direct);
+    if (!directCmd) return nullptr;
+
     m_swapChain->TransitionToRenderTarget(directCmd);
     m_swapChain->SetRenderTarget(directCmd);
     Clear(directCmd, 0.4f, 0.4f, 0.5f, 1.0f); //눈이 적당히 덜 피곤하면서 비어있는 영역 확인 가능한 색깔.
@@ -106,51 +93,22 @@ bool RenderBackend::EndFrame(ID3D12GraphicsCommandList* cmd)
 
 int RenderBackend::LoadTextureFromMemory(Core::ByteBuffer buffer)
 {
-    ImageData img = m_textureLoader->LoadFromMemory(move(buffer)); // CPU 디코딩
-
-    ComPtr<ID3D12Resource> uploadBuffer;
-    auto copyCmd = m_command->Begin(CommandType::Copy); // 업로드용 커맨드 리스트 생성
-    auto texRes = m_uploader->UploadTexture(copyCmd, img, uploadBuffer);
-    m_command->End(); // 업로드 커맨드 제출 후 완료 대기
-
-    CD3DX12_CPU_DESCRIPTOR_HANDLE cpuHandle(
-        m_srvHeap->GetCPUDescriptorHandleForHeapStart(),
-        static_cast<UINT>(m_textures.size()),
-        m_srvDescriptorSize
-    );
-
-    D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
-    srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-    srvDesc.Format = texRes->GetDesc().Format;
-    srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-    srvDesc.Texture2D.MipLevels = 1;
-
-    m_core->GetDevice()->CreateShaderResourceView(texRes.Get(), &srvDesc, cpuHandle);
-
-    CD3DX12_GPU_DESCRIPTOR_HANDLE gpuHandle(
-        m_srvHeap->GetGPUDescriptorHandleForHeapStart(),
-        static_cast<UINT>(m_textures.size()),
-        m_srvDescriptorSize
-    );
-
-    m_textures.push_back({ texRes, uploadBuffer, gpuHandle });
-    return static_cast<int>(m_textures.size() - 1);
-
-    //return m_textureRepository->AddTexture(texRes, uploadBuffer);
-    }
+    return m_textureRepository->LoadFromMemory(move(buffer));
+}
 
 void RenderBackend::Draw(int index, const Rect& dest, const Rect* source)
 {
-    if (index < 0 || index >= static_cast<int>(m_textures.size())) return;
-
     auto cmd = BeginFrame();
+    if (!cmd) return; //gpu가 바쁘면 그리는걸 스킵한다.
 
-    auto& tex = m_textures[index];
+    auto tex = m_textureRepository->GetTexture(index);
+    if (!tex) return;
+
     if(!m_ready)
     {
         m_quadRenderer->TransitionToRenderState(cmd);
 
-        CommandUtils::Transition(cmd, tex.resource.Get(),
+        CommandUtils::Transition(cmd, tex->resource.Get(),
             D3D12_RESOURCE_STATE_COMMON,
             D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 
@@ -158,9 +116,14 @@ void RenderBackend::Draw(int index, const Rect& dest, const Rect* source)
     }
 
     m_quadRenderer->BindPipeline(cmd);
-    m_quadRenderer->Draw(cmd, dest, tex.gpuHandle);
+    m_quadRenderer->Draw(cmd, dest, m_srvAllocator->GetGpuHandle(tex->srvIndex));
 
     EndFrame(cmd);
+}
+
+void RenderBackend::Update()
+{
+    m_command->ReleaseCompletedResources();
 }
 
 void RenderBackend::Clear(ID3D12GraphicsCommandList* cmd, float r, float g, float b, float a)
@@ -170,6 +133,7 @@ void RenderBackend::Clear(ID3D12GraphicsCommandList* cmd, float r, float g, floa
     float color[4] = { r, g, b, a };
     CommandUtils::ClearRTV(cmd, rtv, color);
 }
+
 
 //////////////////////////////////////////////////////
 

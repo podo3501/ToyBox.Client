@@ -148,7 +148,7 @@ void QuadRenderer::TransitionToRenderState(ID3D12GraphicsCommandList* cmd)
 }
 
 void QuadRenderer::Draw( ID3D12GraphicsCommandList* cmd, const Rect& dest,
-    const CD3DX12_GPU_DESCRIPTOR_HANDLE& gpuHandle)
+    D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle)
 {
     ID3D12DescriptorHeap* heaps[] = { m_srvHeap };
     cmd->SetDescriptorHeaps(1, heaps);
