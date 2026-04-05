@@ -54,3 +54,15 @@ using namespace DirectX::SimpleMath;
 			return false; \
 	} while (0)
 #endif
+
+#ifndef DxCheck
+#define DxCheck(expr) \
+do { \
+    HRESULT _hr = (expr); \
+    if (FAILED(_hr)) { \
+        __debugbreak(); \
+        assert(SUCCEEDED(_hr)); \
+        std::terminate(); \
+    } \
+} while(0)
+#endif

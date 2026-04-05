@@ -2,6 +2,7 @@
 #include <wrl/client.h>
 #include "Core/Foundation/Geometry2D.h"
 
+struct ID3D12Fence;
 struct ID3D12Device;
 struct IDXGIFactory4;
 struct IDXGISwapChain4;
@@ -28,12 +29,12 @@ public:
     ~SwapChainPresenter();
     SwapChainPresenter();
 
-    bool Initialize(ID3D12Device* device, IDXGIFactory4* factory, ID3D12CommandQueue* queue, const SwapChainDesc& desc);
+    bool Initialize(ID3D12Device* device, IDXGIFactory4* factory, CommandScheduler* scheduler, const SwapChainDesc& desc);
     void TransitionToRenderTarget(ID3D12GraphicsCommandList* cmdList);
     void SetRenderTarget(ID3D12GraphicsCommandList* cmdList);
     void TransitionToPresent(ID3D12GraphicsCommandList* cmdList);
     bool Present(bool vsync);
-    bool Resize(ID3D12Device* device, CommandScheduler* cmd, const Size& size);
+    bool Resize(ID3D12Device* device, const Size& size);
 
     D3D12_CPU_DESCRIPTOR_HANDLE GetCurrentRTV() const;
 
@@ -46,6 +47,7 @@ private:
     Microsoft::WRL::ComPtr<IDXGISwapChain4> m_swapChain;
     Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> m_rtvHeap;
     vector<Microsoft::WRL::ComPtr<ID3D12Resource>> m_renderTargets;
+    CommandScheduler* m_scheduler{ nullptr };
 
     Size m_size{};
     bool m_tearing{ false };

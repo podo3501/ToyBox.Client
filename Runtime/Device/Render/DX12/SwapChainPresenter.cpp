@@ -6,18 +6,24 @@
 
 using Microsoft::WRL::ComPtr;
 
-SwapChainPresenter::~SwapChainPresenter() = default;
+SwapChainPresenter::~SwapChainPresenter()
+{
+    if (m_scheduler)
+        m_scheduler->WaitQueueIdle(CommandType::Direct);
+}
 SwapChainPresenter::SwapChainPresenter() = default;
 
 bool SwapChainPresenter::Initialize(ID3D12Device* device, IDXGIFactory4* factory,
-    ID3D12CommandQueue* queue, const SwapChainDesc& desc)
+    CommandScheduler* scheduler, const SwapChainDesc& desc)
 {
     m_frameCount = desc.frameCount;
     m_renderTargets.resize(m_frameCount);
 
+    auto queue = scheduler->GetCommandQueue(CommandType::Direct);
     ReturnIfFalse(CreateSwapChain(device, factory, queue, desc));
     ReturnIfFalse(CreateRTV(device));
 
+    m_scheduler = scheduler;
     m_size = desc.size;
     m_tearing = desc.allowTearing;
     m_frameIndex = m_swapChain->GetCurrentBackBufferIndex();
@@ -56,16 +62,17 @@ bool SwapChainPresenter::Present(bool vsync)
     UINT flags = (!vsync && m_tearing) ? DXGI_PRESENT_ALLOW_TEARING : 0;
     if (FAILED(m_swapChain->Present(syncInterval, flags))) return false;
 
+    m_scheduler->SignalQueue(CommandType::Direct);
     m_frameIndex = m_swapChain->GetCurrentBackBufferIndex();
     return true;
 }
 
-bool SwapChainPresenter::Resize(ID3D12Device* device, CommandScheduler* cmd, const Size& size)
+bool SwapChainPresenter::Resize(ID3D12Device* device, const Size& size)
 {
     if (size.width == 0 || size.height == 0) return false;
     if (m_size == size) return true;
 
-    ReturnIfFalse(cmd->WaitForAllGPU()); // GPU 작업 끝날 때까지 대기
+    ReturnIfFalse(m_scheduler->WaitForAllGPU()); // GPU 작업 끝날 때까지 대기
 
     for (UINT i = 0; i < m_frameCount; ++i)
         m_renderTargets[i].Reset(); //기존 RTV 리소스 해제

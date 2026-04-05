@@ -1,7 +1,10 @@
 #include "pch.h"
 #include "DescriptorAllocator.h"
 
-DescriptorAllocator::~DescriptorAllocator() = default;
+DescriptorAllocator::~DescriptorAllocator()
+{
+    int a = 1;
+}
 DescriptorAllocator::DescriptorAllocator(ID3D12Device* device) noexcept :
     m_device{ device }
 {}

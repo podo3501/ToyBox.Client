@@ -262,9 +262,12 @@
 --매직숫자 정리 및 정리할것이 있나 확인
 --이름 대대적으로 정리. Sound, Audio 혼재되어 있는거 정리
 --Audio쪽 정리 및 리팩토링.
+--class DescriptorAllocator 만들기. TextureRepository안에서 srvHeap을 분리시켜야 한다.
 
-렌더러 만들기
-    class DescriptorAllocator 만들기. TextureRepository안에서 srvHeap을 분리시켜야 한다.
+@렌더러 만들기
+    @SwapChain안에 fence 있는거 딴데로 이동.
+    @fence와 queue가 두개씩 있는거 CommandContext 위에 클래스 하나 만들어서 거기에 넣자.
+    @멀티 큐에서 뭔가 문제가 생길꺼 같다.
     
 @	m_uiModule = CreateUIModule("Demo", layout, "Main", move(storage), move(resBinderOwner));
     Manager 안에서 생성한다음 붙일필요가 있나? CreateUIModule을 만들어서 UIModule을 만든다음에 manager에 insert 하는

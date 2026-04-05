@@ -21,8 +21,10 @@ struct MeshEntry
 
 RenderBackend::~RenderBackend()
 {
-    if(m_command)
+    if (m_command)
+    {
         m_command->WaitForAllGPU(); //gpu가 사용중이면 기다린다.
+    }
 }
 
 RenderBackend::RenderBackend() :
@@ -42,7 +44,7 @@ bool RenderBackend::Initialize(HWND hwnd, const Size& wndSize, const RenderConfi
     auto queue = m_command->GetCommandQueue(CommandType::Direct);
     SwapChainDesc desc{ hwnd, wndSize, config.allowTearing };
     m_swapChain = make_unique<SwapChainPresenter>();
-    ReturnIfFalse(m_swapChain->Initialize(device, factory, queue, desc));
+    ReturnIfFalse(m_swapChain->Initialize(device, factory, m_command.get(), desc));
 
     m_srvAllocator = make_unique<DescriptorAllocator>(device);
     ReturnIfFalse(m_srvAllocator->Initialize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 2048, true));
@@ -99,7 +101,8 @@ int RenderBackend::LoadTextureFromMemory(Core::ByteBuffer buffer)
 void RenderBackend::Draw(int index, const Rect& dest, const Rect* source)
 {
     auto cmd = BeginFrame();
-    if (!cmd) return; //gpu가 바쁘면 그리는걸 스킵한다.
+    if (!cmd) 
+        return; //gpu가 바쁘면 그리는걸 스킵한다.
 
     auto tex = m_textureRepository->GetTexture(index);
     if (!tex) return;

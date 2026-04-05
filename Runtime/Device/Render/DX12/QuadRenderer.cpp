@@ -12,7 +12,10 @@ struct QuadTransform
 
 using Microsoft::WRL::ComPtr;
 
-QuadRenderer::~QuadRenderer() = default;
+QuadRenderer::~QuadRenderer()
+{
+    int a = 1;
+}
 QuadRenderer::QuadRenderer() = default;
 
 bool QuadRenderer::Initialize(ID3D12Device* device, const Size& screenSize)

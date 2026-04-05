@@ -4,22 +4,22 @@
 
 using Microsoft::WRL::ComPtr;
 
-CommandScheduler::~CommandScheduler() = default;
+CommandScheduler::~CommandScheduler()
+{
+    CloseHandleSafe(m_fenceDirectEvent);
+    CloseHandleSafe(m_fenceCopyEvent);
+}
 CommandScheduler::CommandScheduler() = default;
 
 bool CommandScheduler::Initialize(ID3D12Device* device, int poolSize)
 {
-    /*ReturnIfFalse(m_direct.Initialize(device, D3D12_COMMAND_LIST_TYPE_DIRECT));
-    ReturnIfFalse(m_copy.Initialize(device, D3D12_COMMAND_LIST_TYPE_COPY));
+    if (!CreateQueue(device, D3D12_COMMAND_LIST_TYPE_DIRECT, m_directQueue) ||
+        !CreateQueue(device, D3D12_COMMAND_LIST_TYPE_COPY, m_copyQueue))
+        return false;
 
-    return true;*/
-
-    D3D12_COMMAND_QUEUE_DESC desc{};
-    desc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
-    ReturnIfFailed(device->CreateCommandQueue(&desc, IID_PPV_ARGS(&m_directQueue)));
-
-    desc.Type = D3D12_COMMAND_LIST_TYPE_COPY;
-    ReturnIfFailed(device->CreateCommandQueue(&desc, IID_PPV_ARGS(&m_copyQueue)));
+    if (!CreateFence(device, m_directFence, m_fenceDirectEvent) ||
+        !CreateFence(device, m_copyFence, m_fenceCopyEvent))
+        return false;
 
     for (int i = 0; i < poolSize; ++i)
     {
@@ -44,47 +44,75 @@ CommandContext* CommandScheduler::GetAvailableContext(CommandType type)
         CommandContext* ctx = pool[nextIndex].get();
         nextIndex = (nextIndex + 1) % pool.size();
 
-        if (ctx->GetCompletedValue() >= ctx->GetLastSignaledFence())
+        if (ctx->IsAvailable())
             return ctx;
-
     }
     return nullptr; // 사용 가능한 context 없음
 }
 
 ID3D12GraphicsCommandList* CommandScheduler::Begin(CommandType type)
 {
-    if (m_currentContext) return nullptr;
+    Assert(!m_currentContext);
 
-    CommandContext* cmd = GetAvailableContext(type);
-    if (!cmd) return nullptr;
+    auto ctx = GetAvailableContext(type);
+    if (!ctx) return nullptr;
 
-    if (!cmd->Reset()) return nullptr;
-    m_currentContext = cmd;
+    ctx->Reset();
+    m_currentContext = ctx;
     m_currentType = type;
 
-    return cmd->Get();
+    return ctx->Get();
 }
 
 uint64_t CommandScheduler::End(std::vector<ComPtr<ID3D12Resource>>&& resources)
 {
-    if (!m_currentContext) return 0;
+    Assert(m_currentContext);
 
-    CommandContext* context = m_currentContext;
-    ReturnIfFalse(context->Close());
+    m_currentContext->Close();
 
-    //uint64_t fenceValue = context->Signal(); // GPU에 fence signal
     ID3D12CommandQueue* queue = GetCommandQueue(m_currentType);
-    ID3D12CommandList* lists[] = { context->Get() };
+    ID3D12CommandList* lists[] = { m_currentContext->Get() };
     queue->ExecuteCommandLists(1, lists);
 
-    uint64_t fenceValue = context->NextFenceValue();
-    ReturnIfFailed(queue->Signal(context->GetFence(), fenceValue));
+    uint64_t fenceValue = SignalFence(queue, m_currentType);
 
+    auto fence = GetFence(m_currentType);
+    m_currentContext->SetFence(fence, fenceValue); // context에 fence 기록 (allocator 재사용용)
     if (!resources.empty())
-        m_pendingReleases.push({ context, fenceValue, move(resources) });
+        m_pendingReleases.push({ fence, fenceValue, std::move(resources) });
 
     m_currentContext = nullptr;
     return fenceValue;
+}
+
+uint64_t CommandScheduler::SignalQueue(CommandType type)
+{
+    return SignalFence(GetCommandQueue(type), type);
+}
+
+uint64_t CommandScheduler::SignalFence(ID3D12CommandQueue* queue, CommandType type)
+{
+    ID3D12Fence* fence = GetFence(type);
+    uint64_t value = IncrementFenceValue(type);
+
+    DxCheck(queue->Signal(fence, value));
+    return value;
+}
+
+ID3D12Fence* CommandScheduler::GetFence(CommandType type) const
+{
+    return (type == CommandType::Direct) ? m_directFence.Get() : m_copyFence.Get();
+}
+
+uint64_t CommandScheduler::IncrementFenceValue(CommandType type)
+{
+    return (type == CommandType::Direct) ? m_directFenceValue++ : m_copyFenceValue++;
+}
+
+void CommandScheduler::WaitQueueIdle(CommandType type)
+{
+    auto [fence, event, value] = GetFenceEventValue(type);
+    WaitFence(fence, event, value);
 }
 
 void CommandScheduler::ReleaseCompletedResources()
@@ -92,57 +120,69 @@ void CommandScheduler::ReleaseCompletedResources()
     while (!m_pendingReleases.empty())
     {
         auto& front = m_pendingReleases.front();
-        uint64_t completed = front.context->GetCompletedValue();
-        if (completed < front.fenceValue) break;
+        if (front.fence->GetCompletedValue() < front.fenceValue) break;
 
-        m_pendingReleases.pop(); // ComPtr 벡터 파괴. 자동 Release
+        m_pendingReleases.pop();
     }
 }
 
 bool CommandScheduler::WaitForAllGPU()
 {
-    /*ReturnIfFalse(m_direct.WaitForFence(m_direct.GetLastSignaledFence()));
-    ReturnIfFalse(m_copy.WaitForFence(m_copy.GetLastSignaledFence()));*/
-
-    for (auto& ctx : m_directPool) 
-        ReturnIfFalse(ctx->WaitForFence(ctx->GetLastSignaledFence()));
-    for (auto& ctx : m_copyPool) 
-        ReturnIfFalse(ctx->WaitForFence(ctx->GetLastSignaledFence()));
-
-    ReleaseCompletedResources(); // ReleasePending 모두 처리
+    WaitFence(m_directFence.Get(), m_fenceDirectEvent, m_directFenceValue - 1);
+    WaitFence(m_copyFence.Get(), m_fenceCopyEvent, m_copyFenceValue - 1);
+    
+    ReleaseCompletedResources();
 
     return true;
 }
 
-//CommandContext* CommandScheduler::GetCommandContext(CommandType type)
-//{
-//    switch (type)
-//    {
-//    case CommandType::Direct: return &m_direct;
-//    case CommandType::Copy:   return &m_copy;
-//    }
-//    return nullptr;
-//}
-
 ID3D12CommandQueue* CommandScheduler::GetCommandQueue(CommandType type)
 {
-    //switch (type)
-    //{
-    //case CommandType::Direct: return m_direct.GetQueue();
-    //case CommandType::Copy:   return m_copy.GetQueue();
-    //}
-    //return nullptr;
-
-    switch (type)
-    {
-    case CommandType::Direct: return m_directQueue.Get();
-    case CommandType::Copy:   return m_copyQueue.Get();
-    }
-    return nullptr;
+    return (type == CommandType::Direct)
+        ? m_directQueue.Get()
+        : m_copyQueue.Get();
 }
 
 ID3D12GraphicsCommandList* CommandScheduler::GetCurrentCommandList()
 {
-    if (!m_currentContext) return nullptr;
-    return m_currentContext->Get();
+    return m_currentContext ? m_currentContext->Get() : nullptr;
+}
+
+bool CommandScheduler::CreateQueue(ID3D12Device* device, D3D12_COMMAND_LIST_TYPE type, ComPtr<ID3D12CommandQueue>& outQueue)
+{
+    D3D12_COMMAND_QUEUE_DESC desc{};
+    desc.Type = type;
+    return SUCCEEDED(device->CreateCommandQueue(&desc, IID_PPV_ARGS(&outQueue)));
+}
+
+bool CommandScheduler::CreateFence(ID3D12Device* device, ComPtr<ID3D12Fence>& outFence, HANDLE& outEvent)
+{
+    if (FAILED(device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&outFence))))
+        return false;
+
+    outEvent = CreateEvent(nullptr, FALSE, FALSE, nullptr);
+    return outEvent != nullptr;
+}
+
+void CommandScheduler::WaitFence(ID3D12Fence* fence, HANDLE event, uint64_t value)
+{
+    if (fence->GetCompletedValue() < value)
+    {
+        fence->SetEventOnCompletion(value, event);
+        WaitForSingleObject(event, INFINITE);
+    }
+}
+
+std::tuple<ID3D12Fence*, HANDLE, uint64_t> CommandScheduler::GetFenceEventValue(CommandType type) const
+{
+    if (type == CommandType::Direct)
+        return { m_directFence.Get(), m_fenceDirectEvent, m_directFenceValue - 1 };
+    else
+        return { m_copyFence.Get(), m_fenceCopyEvent, m_copyFenceValue - 1 };
+}
+
+HANDLE CommandScheduler::CloseHandleSafe(HANDLE h)
+{
+    if (h) CloseHandle(h);
+    return nullptr;
 }

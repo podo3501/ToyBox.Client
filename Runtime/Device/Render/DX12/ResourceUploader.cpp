@@ -3,7 +3,10 @@
 #include "CommandScheduler.h"
 #include "ImageData.h"
 
-ResourceUploader::~ResourceUploader() = default;
+ResourceUploader::~ResourceUploader()
+{
+    int a = 1;
+}
 ResourceUploader::ResourceUploader(ID3D12Device* device) :
     m_device{ device }
 {}

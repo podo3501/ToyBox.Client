@@ -6,7 +6,10 @@
 #include "ResourceUploader.h"
 #include "ImageData.h"
 
-TextureRepository::~TextureRepository() = default;
+TextureRepository::~TextureRepository()
+{
+    int a = 1;
+}
 TextureRepository::TextureRepository(ID3D12Device* device, CommandScheduler* command,
     DescriptorAllocator* srvAllocator, ResourceUploader* uploader) :
     m_device{ device },
