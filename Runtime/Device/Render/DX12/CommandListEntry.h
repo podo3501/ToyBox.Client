@@ -4,11 +4,11 @@
 
 using Microsoft::WRL::ComPtr;
 
-class CommandContext
+class CommandListEntry
 {
 public:
-    ~CommandContext();
-    CommandContext();
+    ~CommandListEntry();
+    CommandListEntry();
     bool Initialize(ID3D12Device* device, D3D12_COMMAND_LIST_TYPE type);
     void Reset();
     void Close();

@@ -10,6 +10,7 @@ struct IRenderBackend
 	virtual bool Initialize(HWND hwnd, const Size& wndSize, const RenderConfig& config) = 0;
 	virtual int LoadTextureFromMemory(Core::ByteBuffer buffer) = 0;
 	virtual void Draw(int index, const Rect& dest, const Rect* source) = 0;
+	virtual void Resize(const Size& size) = 0;
 	virtual void Update() = 0;
 };
 

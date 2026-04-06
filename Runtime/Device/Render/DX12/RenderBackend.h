@@ -5,6 +5,7 @@
 
 struct ID3D12GraphicsCommandList;
 struct MeshEntry;
+struct QuadDrawInfo;
 class DX12Core;
 class SwapChainPresenter;
 class CommandScheduler;
@@ -21,11 +22,13 @@ public:
 	virtual bool Initialize(HWND hwnd, const Size& wndSize, const RenderConfig& renderConfig) override;
 	virtual int LoadTextureFromMemory(Core::ByteBuffer buffer) override;
 	virtual void Draw(int index, const Rect& dest, const Rect* source) override;
+	virtual void Resize(const Size& size) override;
 	virtual void Update() override;
 private:
 	ID3D12GraphicsCommandList* BeginFrame();
 	void Clear(ID3D12GraphicsCommandList* cmd, float r, float g, float b, float a);
 	bool EndFrame(ID3D12GraphicsCommandList* cmd);
+	void FlushDraws();
 
 	unique_ptr<DX12Core> m_core;
 	unique_ptr<CommandScheduler> m_command;
@@ -41,4 +44,6 @@ private:
 	vector<MeshEntry> m_meshes;
 
 	bool m_ready{ false };
+
+	vector<QuadDrawInfo> m_pendingDraws;
 };

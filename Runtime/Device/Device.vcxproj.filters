@@ -88,9 +88,6 @@
     <ClInclude Include="Render\DX12\BuildConfig.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\d3dx12.h">
-      <Filter>Render\DX12</Filter>
-    </ClInclude>
     <ClInclude Include="Render\DX12\Debug.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
@@ -127,7 +124,7 @@
     <ClInclude Include="Render\DX12\CommandUtils.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\CommandContext.h">
+    <ClInclude Include="Render\DX12\CommandListEntry.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
     <ClInclude Include="Render\DX12\DebugOptions.h">
@@ -137,6 +134,9 @@
       <Filter>Render\DX12</Filter>
     </ClInclude>
     <ClInclude Include="Render\DX12\DescriptorAllocator.h">
+      <Filter>Render\DX12</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\CommandQueue.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
   </ItemGroup>
@@ -208,13 +208,16 @@
     <ClCompile Include="Render\DX12\CommandUtils.cpp">
       <Filter>Render\DX12</Filter>
     </ClCompile>
-    <ClCompile Include="Render\DX12\CommandContext.cpp">
+    <ClCompile Include="Render\DX12\CommandListEntry.cpp">
       <Filter>Render\DX12</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\TextureRepository.cpp">
       <Filter>Render\DX12</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\DescriptorAllocator.cpp">
+      <Filter>Render\DX12</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\CommandQueue.cpp">
       <Filter>Render\DX12</Filter>
     </ClCompile>
   </ItemGroup>

@@ -36,10 +36,10 @@
     <ClInclude Include="Input\IInputManager.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Render\DX12\BuildConfig.h" />
-    <ClInclude Include="Render\DX12\CommandContext.h" />
+    <ClInclude Include="Render\DX12\CommandListEntry.h" />
+    <ClInclude Include="Render\DX12\CommandQueue.h" />
     <ClInclude Include="Render\DX12\CommandScheduler.h" />
     <ClInclude Include="Render\DX12\CommandUtils.h" />
-    <ClInclude Include="Render\DX12\d3dx12.h" />
     <ClInclude Include="Render\DX12\Debug.h" />
     <ClInclude Include="Render\DX12\DebugHelper.h" />
     <ClInclude Include="Render\DX12\DebugOptions.h" />
@@ -74,7 +74,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Render\DX12\CommandContext.cpp" />
+    <ClCompile Include="Render\DX12\CommandListEntry.cpp" />
+    <ClCompile Include="Render\DX12\CommandQueue.cpp" />
     <ClCompile Include="Render\DX12\CommandScheduler.cpp" />
     <ClCompile Include="Render\DX12\CommandUtils.cpp" />
     <ClCompile Include="Render\DX12\DebugHelper.cpp" />

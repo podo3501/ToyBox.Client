@@ -28,6 +28,11 @@ void RenderService::Draw(int index, const Rect& dest, const Rect* source)
 	m_backend->Draw(index, dest, source);
 }
 
+void RenderService::Resize(const Size& size)
+{
+	m_backend->Resize(size);
+}
+
 void RenderService::Update()
 {
 	m_backend->Update();

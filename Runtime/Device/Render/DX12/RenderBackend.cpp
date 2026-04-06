@@ -19,6 +19,13 @@ struct MeshEntry
     ComPtr<ID3D12Resource> vertexBuffer;
 };
 
+struct QuadDrawInfo
+{
+    int textureIndex;
+    Rect dest;
+    Rect source;
+};
+
 RenderBackend::~RenderBackend()
 {
     if (m_command)
@@ -100,33 +107,41 @@ int RenderBackend::LoadTextureFromMemory(Core::ByteBuffer buffer)
 
 void RenderBackend::Draw(int index, const Rect& dest, const Rect* source)
 {
-    auto cmd = BeginFrame();
-    if (!cmd) 
-        return; //gpu가 바쁘면 그리는걸 스킵한다.
+    m_pendingDraws.emplace_back(index, dest, source ? *source : Rect{});
 
-    auto tex = m_textureRepository->GetTexture(index);
-    if (!tex) return;
+    //auto cmd = BeginFrame();
+    //if (!cmd) 
+    //    return; //gpu가 바쁘면 그리는걸 스킵한다.
 
-    if(!m_ready)
-    {
-        m_quadRenderer->TransitionToRenderState(cmd);
+    //auto tex = m_textureRepository->GetTexture(index);
+    //if (!tex) return;
 
-        CommandUtils::Transition(cmd, tex->resource.Get(),
-            D3D12_RESOURCE_STATE_COMMON,
-            D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+    //if(!m_ready)
+    //{
+    //    m_quadRenderer->TransitionToRenderState(cmd);
 
-        m_ready = true;
-    }
+    //    CommandUtils::Transition(cmd, tex->resource.Get(),
+    //        D3D12_RESOURCE_STATE_COMMON,
+    //        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 
-    m_quadRenderer->BindPipeline(cmd);
-    m_quadRenderer->Draw(cmd, dest, m_srvAllocator->GetGpuHandle(tex->srvIndex));
+    //    m_ready = true;
+    //}
 
-    EndFrame(cmd);
+    //m_quadRenderer->BindPipeline(cmd);
+    //m_quadRenderer->Draw(cmd, dest, m_srvAllocator->GetGpuHandle(tex->srvIndex));
+
+    //EndFrame(cmd);
+}
+
+void RenderBackend::Resize(const Size& size)
+{
+    m_swapChain->Resize(m_core->GetDevice(), size);
 }
 
 void RenderBackend::Update()
 {
     m_command->ReleaseCompletedResources();
+    FlushDraws();
 }
 
 void RenderBackend::Clear(ID3D12GraphicsCommandList* cmd, float r, float g, float b, float a)
@@ -135,6 +150,50 @@ void RenderBackend::Clear(ID3D12GraphicsCommandList* cmd, float r, float g, floa
 
     float color[4] = { r, g, b, a };
     CommandUtils::ClearRTV(cmd, rtv, color);
+}
+
+void RenderBackend::FlushDraws()
+{
+    auto cmd = BeginFrame();
+    if (!cmd) return;
+
+    // 처음 Flush 시 한 번만 상태 전환
+    static bool ready = false;
+    if (!ready)
+    {
+        m_quadRenderer->TransitionToRenderState(cmd);
+        for (auto& draw : m_pendingDraws)
+        {
+            auto tex = m_textureRepository->GetTexture(draw.textureIndex);
+            if (!tex) continue;
+
+            CommandUtils::Transition(cmd, tex->resource.Get(),
+                D3D12_RESOURCE_STATE_COMMON,
+                D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+        }
+        ready = true;
+    }
+
+    m_quadRenderer->BindDescriptorHeap(cmd);
+    m_quadRenderer->BindPipeline(cmd);
+
+    int currentTex = -1;
+    for (auto& draw : m_pendingDraws)
+    {
+        auto tex = m_textureRepository->GetTexture(draw.textureIndex);
+        if (!tex) continue;
+
+        if (draw.textureIndex != currentTex)
+        {
+            m_quadRenderer->BindTexture(cmd, m_srvAllocator->GetGpuHandle(tex->srvIndex));
+            currentTex = draw.textureIndex;
+        }
+
+        m_quadRenderer->Draw(cmd, draw.dest);
+    }
+    m_pendingDraws.clear();
+
+    EndFrame(cmd);
 }
 
 

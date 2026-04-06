@@ -18,10 +18,11 @@ public:
     void SetVertexBuffer(Microsoft::WRL::ComPtr<ID3D12Resource> vb, UINT size) noexcept;
     void SetSRVHeap(ID3D12DescriptorHeap* heap);
 
+    void BindDescriptorHeap(ID3D12GraphicsCommandList* cmd);
     void BindPipeline(ID3D12GraphicsCommandList* cmd);
     void TransitionToRenderState(ID3D12GraphicsCommandList* cmd);
-    void Draw(ID3D12GraphicsCommandList* cmd, const Rect& dest, 
-        D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle);
+    void BindTexture(ID3D12GraphicsCommandList* cmd, D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle);
+    void Draw(ID3D12GraphicsCommandList* cmd, const Rect& dest);
 
 private:
     Microsoft::WRL::ComPtr<ID3D12RootSignature> m_rootSignature;

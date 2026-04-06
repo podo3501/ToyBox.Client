@@ -150,13 +150,19 @@ void QuadRenderer::TransitionToRenderState(ID3D12GraphicsCommandList* cmd)
         D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
 }
 
-void QuadRenderer::Draw( ID3D12GraphicsCommandList* cmd, const Rect& dest,
-    D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle)
+void QuadRenderer::BindDescriptorHeap(ID3D12GraphicsCommandList* cmd)
 {
     ID3D12DescriptorHeap* heaps[] = { m_srvHeap };
     cmd->SetDescriptorHeaps(1, heaps);
-    cmd->SetGraphicsRootDescriptorTable(0, gpuHandle);
+}
 
+void QuadRenderer::BindTexture(ID3D12GraphicsCommandList* cmd, D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle)
+{
+    cmd->SetGraphicsRootDescriptorTable(0, gpuHandle);
+}
+
+void QuadRenderer::Draw( ID3D12GraphicsCommandList* cmd, const Rect& dest)
+{
     float left = (dest.Left() / (float)m_screenSize.width) * 2.0f - 1.0f;
     float right = (dest.Right() / (float)m_screenSize.width) * 2.0f - 1.0f;
     float top = 1.0f - (dest.Top() / (float)m_screenSize.height) * 2.0f;

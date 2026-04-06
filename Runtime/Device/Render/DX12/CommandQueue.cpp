@@ -1,0 +1,136 @@
+#include "pch.h"
+#include "CommandQueue.h"
+#include "CommandListEntry.h"
+
+CommandQueue::~CommandQueue() 
+{ 
+    if (m_event)
+    {
+        CloseHandle(m_event);
+        m_event = nullptr;
+    }
+}
+CommandQueue::CommandQueue() = default;
+
+bool CommandQueue::Initialize(ID3D12Device* device, D3D12_COMMAND_LIST_TYPE type, int poolSize)
+{
+    if (!device || poolSize <= 0) return false;
+
+    ReturnIfFalse(CreateQueue(device, type));
+    ReturnIfFalse(CreateFence(device));
+
+    m_pool.reserve(poolSize);
+    for (int i = 0; i < poolSize; ++i)
+    {
+        auto context = make_unique<CommandListEntry>();
+        ReturnIfFalse(context->Initialize(device, type));
+
+        m_pool.emplace_back(move(context));
+    }
+
+    return true;
+}
+
+ID3D12GraphicsCommandList* CommandQueue::Begin()
+{
+    Assert(!m_currentCmdEntry);
+
+    auto entry = GetAvailableCommandListEntry();
+    if (!entry) return nullptr;
+
+    entry->Reset();
+    m_currentCmdEntry = entry;
+
+    return entry->Get();
+}
+
+uint64_t CommandQueue::End(vector<ComPtr<ID3D12Resource>>&& resources)
+{
+    Assert(m_currentCmdEntry);
+
+    m_currentCmdEntry->Close();
+
+    ID3D12CommandList* lists[] = { m_currentCmdEntry->Get() };
+    m_queue->ExecuteCommandLists(1, lists);
+
+    uint64_t fenceValue = Signal();
+    m_currentCmdEntry->SetFence(m_fence.Get(), fenceValue); // 재사용하기 위해서 fence 기록
+    if (!resources.empty())
+        m_pendingReleases.push({ fenceValue, std::move(resources) });
+
+    m_currentCmdEntry = nullptr;
+    return fenceValue;
+}
+
+uint64_t CommandQueue::Signal()
+{
+    uint64_t value = m_fenceValue++;
+    DxCheck(m_queue->Signal(m_fence.Get(), value));
+    return value;
+}
+
+void CommandQueue::WaitIdle()
+{
+    if (m_fenceValue > 1)
+        WaitFence(m_fenceValue - 1);
+}
+
+void CommandQueue::ReleaseCompletedResources()
+{
+    while (!m_pendingReleases.empty())
+    {
+        auto& front = m_pendingReleases.front();
+        if (m_fence->GetCompletedValue() < front.fenceValue) break;
+
+        m_pendingReleases.pop();
+    }
+}
+
+void CommandQueue::WaitForGPU()
+{
+    WaitIdle();
+    ReleaseCompletedResources();
+}
+
+bool CommandQueue::CreateQueue(ID3D12Device* device, D3D12_COMMAND_LIST_TYPE type)
+{
+    D3D12_COMMAND_QUEUE_DESC desc = {};
+    desc.Type = type;
+    desc.Priority = D3D12_COMMAND_QUEUE_PRIORITY_NORMAL;
+    desc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
+    desc.NodeMask = 0;
+
+    return SUCCEEDED(device->CreateCommandQueue(&desc, IID_PPV_ARGS(&m_queue)));
+}
+
+bool CommandQueue::CreateFence(ID3D12Device* device)
+{
+    if (FAILED(device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&m_fence))))
+        return false;
+
+    m_event = CreateEvent(nullptr, FALSE, FALSE, nullptr);
+    return m_event != nullptr;
+}
+
+CommandListEntry* CommandQueue::GetAvailableCommandListEntry()
+{
+    for (size_t i = 0; i < m_pool.size(); ++i)
+    {
+        CommandListEntry* entry = m_pool[m_next].get();
+        m_next = (m_next + 1) % m_pool.size();
+
+        if (entry->IsAvailable())
+            return entry;
+    }
+
+    return nullptr; // 사용 가능한 context 없음 여기서 만약 while로 기다리게 되면 cpu, gpu 동기화가 되기 때문에 일부러 nullptr 리턴함. begin에서 nullptr이면 present 안하고 리턴. 의도한 바임.
+}
+
+void CommandQueue::WaitFence(uint64_t value)
+{
+    if (m_fence->GetCompletedValue() < value)
+    {
+        m_fence->SetEventOnCompletion(value, m_event);
+        WaitForSingleObject(m_event, INFINITE);
+    }
+}
