@@ -108,29 +108,6 @@ int RenderBackend::LoadTextureFromMemory(Core::ByteBuffer buffer)
 void RenderBackend::Draw(int index, const Rect& dest, const Rect* source)
 {
     m_pendingDraws.emplace_back(index, dest, source ? *source : Rect{});
-
-    //auto cmd = BeginFrame();
-    //if (!cmd) 
-    //    return; //gpu가 바쁘면 그리는걸 스킵한다.
-
-    //auto tex = m_textureRepository->GetTexture(index);
-    //if (!tex) return;
-
-    //if(!m_ready)
-    //{
-    //    m_quadRenderer->TransitionToRenderState(cmd);
-
-    //    CommandUtils::Transition(cmd, tex->resource.Get(),
-    //        D3D12_RESOURCE_STATE_COMMON,
-    //        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
-
-    //    m_ready = true;
-    //}
-
-    //m_quadRenderer->BindPipeline(cmd);
-    //m_quadRenderer->Draw(cmd, dest, m_srvAllocator->GetGpuHandle(tex->srvIndex));
-
-    //EndFrame(cmd);
 }
 
 void RenderBackend::Resize(const Size& size)
@@ -155,7 +132,8 @@ void RenderBackend::Clear(ID3D12GraphicsCommandList* cmd, float r, float g, floa
 void RenderBackend::FlushDraws()
 {
     auto cmd = BeginFrame();
-    if (!cmd) return;
+    if (!cmd) 
+        return;
 
     // 처음 Flush 시 한 번만 상태 전환
     static bool ready = false;

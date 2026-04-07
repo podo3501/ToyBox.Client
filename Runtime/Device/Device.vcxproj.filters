@@ -34,6 +34,12 @@
     <Filter Include="Render\DX12">
       <UniqueIdentifier>{9705a1b6-dbbc-4a71-a12a-443bf80a7889}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Asset">
+      <UniqueIdentifier>{19aa7215-d67b-4ef0-856e-aeb4181b4a01}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Asset\STB">
+      <UniqueIdentifier>{7aee34ca-5a42-477d-a59a-9fdf2c2115ec}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Storage\JsonObjectIO.h">
@@ -139,6 +145,12 @@
     <ClInclude Include="Render\DX12\CommandQueue.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
+    <ClInclude Include="Asset\STB\PngTextureLoader.h">
+      <Filter>Asset\STB</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\STB\STBAssetBackend.h">
+      <Filter>Asset\STB</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -219,6 +231,12 @@
     </ClCompile>
     <ClCompile Include="Render\DX12\CommandQueue.cpp">
       <Filter>Render\DX12</Filter>
+    </ClCompile>
+    <ClCompile Include="Asset\STB\STBAssetBackend.cpp">
+      <Filter>Asset\STB</Filter>
+    </ClCompile>
+    <ClCompile Include="Asset\STB\PngTextureLoader.cpp">
+      <Filter>Asset\STB</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

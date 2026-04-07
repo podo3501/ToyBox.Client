@@ -19,6 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Asset\STB\PngTextureLoader.h" />
+    <ClInclude Include="Asset\STB\STBAssetBackend.h" />
     <ClInclude Include="Audio\SDL\AudioDevice.h" />
     <ClInclude Include="Audio\SDL\AudioFormat.h" />
     <ClInclude Include="Audio\SDL\SDLAudioConfig.h" />
@@ -56,6 +58,8 @@
     <ClInclude Include="Storage\JsonObjectIO.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Asset\STB\PngTextureLoader.cpp" />
+    <ClCompile Include="Asset\STB\STBAssetBackend.cpp" />
     <ClCompile Include="Audio\SDL\AudioDevice.cpp" />
     <ClCompile Include="Audio\SDL\AudioFormat.cpp" />
     <ClCompile Include="Audio\SDL\AudioMixer.cpp" />
