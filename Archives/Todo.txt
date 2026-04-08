@@ -265,12 +265,13 @@
 --class DescriptorAllocator 만들기. TextureRepository안에서 srvHeap을 분리시켜야 한다.
 --SwapChain안에 fence 있는거 딴데로 이동.
 --fence와 queue가 두개씩 있는거 CommandContext 위에 클래스 하나 만들어서 거기에 넣자.
+--update에서 begin 프레임 하도록
 
 @렌더러 만들기
     @텍스쳐 max 설정.
     @texture batching
-    @update에서 begin 프레임 하도록
     @화면 배경색깔 지정하게끔
+    @텍스쳐 핸들로 리턴하게끔
     
 @	m_uiModule = CreateUIModule("Demo", layout, "Main", move(storage), move(resBinderOwner));
     Manager 안에서 생성한다음 붙일필요가 있나? CreateUIModule을 만들어서 UIModule을 만든다음에 manager에 insert 하는

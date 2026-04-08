@@ -37,8 +37,8 @@
     <Filter Include="Asset">
       <UniqueIdentifier>{19aa7215-d67b-4ef0-856e-aeb4181b4a01}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Asset\STB">
-      <UniqueIdentifier>{7aee34ca-5a42-477d-a59a-9fdf2c2115ec}</UniqueIdentifier>
+    <Filter Include="Asset\Loader">
+      <UniqueIdentifier>{438a40f3-470d-4394-87f2-1de9c2ef81e2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -115,13 +115,7 @@
     <ClInclude Include="Render\DX12\QuadRenderer.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\TextureLoader.h">
-      <Filter>Render\DX12</Filter>
-    </ClInclude>
     <ClInclude Include="Render\DX12\ResourceUploader.h">
-      <Filter>Render\DX12</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\DX12\ImageData.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
     <ClInclude Include="Render\DX12\Vertex.h">
@@ -145,11 +139,11 @@
     <ClInclude Include="Render\DX12\CommandQueue.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
-    <ClInclude Include="Asset\STB\PngTextureLoader.h">
-      <Filter>Asset\STB</Filter>
+    <ClInclude Include="Asset\AssetBackend.h">
+      <Filter>Asset</Filter>
     </ClInclude>
-    <ClInclude Include="Asset\STB\STBAssetBackend.h">
-      <Filter>Asset\STB</Filter>
+    <ClInclude Include="Asset\Loader\PngTextureLoader.h">
+      <Filter>Asset\Loader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -211,9 +205,6 @@
     <ClCompile Include="Render\DX12\QuadRenderer.cpp">
       <Filter>Render\DX12</Filter>
     </ClCompile>
-    <ClCompile Include="Render\DX12\TextureLoader.cpp">
-      <Filter>Render\DX12</Filter>
-    </ClCompile>
     <ClCompile Include="Render\DX12\ResourceUploader.cpp">
       <Filter>Render\DX12</Filter>
     </ClCompile>
@@ -232,11 +223,11 @@
     <ClCompile Include="Render\DX12\CommandQueue.cpp">
       <Filter>Render\DX12</Filter>
     </ClCompile>
-    <ClCompile Include="Asset\STB\STBAssetBackend.cpp">
-      <Filter>Asset\STB</Filter>
+    <ClCompile Include="Asset\AssetBackend.cpp">
+      <Filter>Asset</Filter>
     </ClCompile>
-    <ClCompile Include="Asset\STB\PngTextureLoader.cpp">
-      <Filter>Asset\STB</Filter>
+    <ClCompile Include="Asset\Loader\PngTextureLoader.cpp">
+      <Filter>Asset\Loader</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

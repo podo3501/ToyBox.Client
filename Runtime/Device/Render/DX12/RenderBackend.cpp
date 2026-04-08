@@ -5,7 +5,6 @@
 #include "CommandScheduler.h"
 #include "DescriptorAllocator.h"
 #include "QuadRenderer.h"
-#include "TextureLoader.h"
 #include "TextureRepository.h"
 #include "ResourceUploader.h"
 #include "CommandUtils.h"
@@ -100,9 +99,9 @@ bool RenderBackend::EndFrame(ID3D12GraphicsCommandList* cmd)
     return true;
 }
 
-int RenderBackend::LoadTextureFromMemory(Core::ByteBuffer buffer)
+int RenderBackend::UploadTexture(const TextureAsset& asset)
 {
-    return m_textureRepository->LoadFromMemory(move(buffer));
+    return m_textureRepository->Upload(asset);
 }
 
 void RenderBackend::Draw(int index, const Rect& dest, const Rect* source)

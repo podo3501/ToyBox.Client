@@ -1,29 +1,26 @@
 #include "pch.h"
 #include "TextureRepository.h"
-#include "TextureLoader.h"
 #include "CommandScheduler.h"
 #include "DescriptorAllocator.h"
 #include "ResourceUploader.h"
-#include "ImageData.h"
 
-TextureRepository::~TextureRepository()
-{
-    int a = 1;
-}
+TextureRepository::~TextureRepository() = default;
 TextureRepository::TextureRepository(ID3D12Device* device, CommandScheduler* command,
     DescriptorAllocator* srvAllocator, ResourceUploader* uploader) :
     m_device{ device },
     m_command{ command },
     m_srvAllocator{ srvAllocator },
     m_uploader{ uploader }
-{
-    m_loader = make_unique<TextureLoader>();
-}
+{}
 
-int TextureRepository::LoadFromMemory(Core::ByteBuffer buffer)
+int TextureRepository::Upload(const TextureAsset& asset)
 {
-    ImageData img = Decode(move(buffer));
-    ComPtr<ID3D12Resource> texture = Upload(img);
+    auto cmd = m_command->Begin(CommandType::Copy);
+
+    ComPtr<ID3D12Resource> uploadBuffer;
+    auto texture = m_uploader->UploadTexture(cmd, asset, uploadBuffer);
+
+    m_command->End({ uploadBuffer });
 
     return AddTexture(texture);
 }
@@ -34,23 +31,6 @@ const GpuTexture* TextureRepository::GetTexture(int index) const
         return nullptr;
 
     return &m_textureResources[index];
-}
-
-ImageData TextureRepository::Decode(Core::ByteBuffer buffer)
-{
-    return m_loader->LoadFromMemory(std::move(buffer));
-}
-
-ComPtr<ID3D12Resource> TextureRepository::Upload(ImageData& img)
-{
-    auto cmd = m_command->Begin(CommandType::Copy);
-
-    ComPtr<ID3D12Resource> uploadBuffer;
-    auto texture = m_uploader->UploadTexture(cmd, img, uploadBuffer);
-
-    m_command->End({ uploadBuffer });
-
-    return texture;
 }
 
 int TextureRepository::AddTexture(ComPtr<ID3D12Resource> tex)

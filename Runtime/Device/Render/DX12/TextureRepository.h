@@ -4,8 +4,7 @@
 
 using Microsoft::WRL::ComPtr;
 
-struct ImageData;
-class TextureLoader;
+struct TextureAsset;
 class DescriptorAllocator;
 class ResourceUploader;
 class CommandScheduler;
@@ -23,11 +22,10 @@ public:
     TextureRepository(ID3D12Device* device, CommandScheduler* command,
         DescriptorAllocator* srvAllocator, ResourceUploader* uploader);
     int LoadFromMemory(Core::ByteBuffer buffer);
+    int Upload(const TextureAsset& asset);
     const GpuTexture* GetTexture(int index) const;
 
 private:
-    ImageData Decode(Core::ByteBuffer buffer);
-    ComPtr<ID3D12Resource> Upload(ImageData& img);
     int AddTexture(ComPtr<ID3D12Resource> tex);
 
 private:
@@ -36,6 +34,5 @@ private:
     DescriptorAllocator* m_srvAllocator{ nullptr };
     ResourceUploader* m_uploader{ nullptr };
 
-    unique_ptr<TextureLoader> m_loader;
     vector<GpuTexture> m_textureResources;
 };

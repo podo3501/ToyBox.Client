@@ -20,10 +20,11 @@ public:
 	~RenderBackend();
 	RenderBackend();
 	virtual bool Initialize(HWND hwnd, const Size& wndSize, const RenderConfig& renderConfig) override;
-	virtual int LoadTextureFromMemory(Core::ByteBuffer buffer) override;
+	virtual int UploadTexture(const TextureAsset& asset) override;
 	virtual void Draw(int index, const Rect& dest, const Rect* source) override;
 	virtual void Resize(const Size& size) override;
 	virtual void Update() override;
+
 private:
 	ID3D12GraphicsCommandList* BeginFrame();
 	void Clear(ID3D12GraphicsCommandList* cmd, float r, float g, float b, float a);

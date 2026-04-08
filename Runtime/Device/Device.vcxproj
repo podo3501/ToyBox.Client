@@ -19,8 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Asset\STB\PngTextureLoader.h" />
-    <ClInclude Include="Asset\STB\STBAssetBackend.h" />
+    <ClInclude Include="Asset\AssetBackend.h" />
+    <ClInclude Include="Asset\Loader\PngTextureLoader.h" />
     <ClInclude Include="Audio\SDL\AudioDevice.h" />
     <ClInclude Include="Audio\SDL\AudioFormat.h" />
     <ClInclude Include="Audio\SDL\SDLAudioConfig.h" />
@@ -47,19 +47,17 @@
     <ClInclude Include="Render\DX12\DebugOptions.h" />
     <ClInclude Include="Render\DX12\DescriptorAllocator.h" />
     <ClInclude Include="Render\DX12\DX12Core.h" />
-    <ClInclude Include="Render\DX12\ImageData.h" />
     <ClInclude Include="Render\DX12\ResourceUploader.h" />
     <ClInclude Include="Render\DX12\SwapChainPresenter.h" />
     <ClInclude Include="Render\DX12\QuadRenderer.h" />
     <ClInclude Include="Render\DX12\RenderBackend.h" />
     <ClInclude Include="Render\DX12\TextureRepository.h" />
-    <ClInclude Include="Render\DX12\TextureLoader.h" />
     <ClInclude Include="Render\DX12\Vertex.h" />
     <ClInclude Include="Storage\JsonObjectIO.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Asset\STB\PngTextureLoader.cpp" />
-    <ClCompile Include="Asset\STB\STBAssetBackend.cpp" />
+    <ClCompile Include="Asset\AssetBackend.cpp" />
+    <ClCompile Include="Asset\Loader\PngTextureLoader.cpp" />
     <ClCompile Include="Audio\SDL\AudioDevice.cpp" />
     <ClCompile Include="Audio\SDL\AudioFormat.cpp" />
     <ClCompile Include="Audio\SDL\AudioMixer.cpp" />
@@ -91,7 +89,6 @@
     <ClCompile Include="Render\DX12\QuadRenderer.cpp" />
     <ClCompile Include="Render\DX12\RenderBackend.cpp" />
     <ClCompile Include="Render\DX12\TextureRepository.cpp" />
-    <ClCompile Include="Render\DX12\TextureLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Platform\Platform.vcxproj">

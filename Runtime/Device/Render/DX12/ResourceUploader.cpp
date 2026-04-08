@@ -1,26 +1,34 @@
 #include "pch.h"
 #include "ResourceUploader.h"
 #include "CommandScheduler.h"
-#include "ImageData.h"
+#include "GameCore/Service/Asset/AssetTypes.h"
 
-ResourceUploader::~ResourceUploader()
-{
-    int a = 1;
-}
+ResourceUploader::~ResourceUploader() = default;
 ResourceUploader::ResourceUploader(ID3D12Device* device) :
     m_device{ device }
 {}
 
-static D3D12_RESOURCE_DESC CreateTexture2DDesc(const ImageData& img)
+static DXGI_FORMAT GetFormat(PixelFormat format)
+{
+    switch (format)
+    {
+    case PixelFormat::RGB8: return DXGI_FORMAT_R8G8B8A8_UNORM; //3채널은 지원하지 않는다. 일단 이걸로.
+    case PixelFormat::RGBA8: return DXGI_FORMAT_R8G8B8A8_UNORM;
+    }
+
+    return DXGI_FORMAT_R8G8B8A8_UNORM;
+}
+
+static D3D12_RESOURCE_DESC CreateTexture2DDesc(const TextureAsset& asset)
 {
     D3D12_RESOURCE_DESC desc{};
     desc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-    desc.Width = img.width;
-    desc.Height = img.height;
+    desc.Width = asset.width;
+    desc.Height = asset.height;
     desc.DepthOrArraySize = 1;
     desc.MipLevels = 1;
     desc.SampleDesc.Count = 1;
-    desc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
+    desc.Format = GetFormat(asset.format);
     desc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
     return desc;
 }
@@ -41,10 +49,10 @@ static void UploadSubresource(
 
 ComPtr<ID3D12Resource> ResourceUploader::UploadTexture(
     ID3D12GraphicsCommandList* uploadCmd,
-    const ImageData& img,
+    const TextureAsset& asset,
     ComPtr<ID3D12Resource>& outUploadBuffer)
 {
-    auto texDesc = CreateTexture2DDesc(img);
+    auto texDesc = CreateTexture2DDesc(asset);
     auto texture = CreateResource(
         texDesc,
         D3D12_HEAP_TYPE_DEFAULT,
@@ -60,9 +68,9 @@ ComPtr<ID3D12Resource> ResourceUploader::UploadTexture(
         D3D12_RESOURCE_STATE_GENERIC_READ);
 
     D3D12_SUBRESOURCE_DATA subresource{};
-    subresource.pData = img.pixels.data();
-    subresource.RowPitch = img.stride;
-    subresource.SlicePitch = img.stride * img.height;
+    subresource.pData = asset.pixels.data();
+    subresource.RowPitch = asset.stride;
+    subresource.SlicePitch = asset.stride * asset.height;
     UploadSubresource(uploadCmd, texture.Get(), outUploadBuffer.Get(), subresource);
 
     return texture;

@@ -4,16 +4,17 @@
 
 using Microsoft::WRL::ComPtr;
 
-struct ImageData;
+struct TextureAsset;
 
 class ResourceUploader
 {
 public:
     ~ResourceUploader();
     ResourceUploader(ID3D12Device* device);
+
     ComPtr<ID3D12Resource> UploadTexture(
         ID3D12GraphicsCommandList* uploadCmd,
-        const ImageData& img,
+        const TextureAsset& asset,
         ComPtr<ID3D12Resource>& outUploadBuffer);
 
     ComPtr<ID3D12Resource> UploadVertexBuffer(

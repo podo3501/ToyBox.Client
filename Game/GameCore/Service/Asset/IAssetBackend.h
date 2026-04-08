@@ -9,4 +9,4 @@ struct IAssetBackend
 	virtual shared_ptr<IAssetLoader> GetLoaderForExtension(string_view ext) = 0;
 };
 
-std::unique_ptr<IAssetBackend> CreateSTBAssetBackend();
+std::unique_ptr<IAssetBackend> CreateAssetBackend();

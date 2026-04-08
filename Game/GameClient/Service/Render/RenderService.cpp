@@ -1,26 +1,34 @@
 #include "pch.h"
 #include "RenderService.h"
 #include "IRenderBackend.h"
+#include "GameCore/Service/Asset/AssetTypes.h"
 #include "Platform/Resource/IResourceManager.h"
 
 RenderService::~RenderService() = default;
-RenderService::RenderService(unique_ptr<IRenderBackend> backend, IResourceManager* resManager) :
-	m_backend{ move(backend) },
-	m_resManager{ resManager }
+RenderService::RenderService(unique_ptr<IRenderBackend> backend) :
+	m_backend{ move(backend) }
 {}
 
-unique_ptr<RenderService> RenderService::Create(unique_ptr<IRenderBackend> backend, IResourceManager* resManager) noexcept
+unique_ptr<RenderService> RenderService::Create(unique_ptr<IRenderBackend> backend) noexcept
 {
-	unique_ptr<RenderService> service(new RenderService(move(backend), resManager));
+	unique_ptr<RenderService> service(new RenderService(move(backend)));
 	return service;
 }
 
-int RenderService::LoadTexture(const filesystem::path& filePath)
+int RenderService::AcquireTexture(const filesystem::path& path, 
+	function<shared_ptr<TextureAsset>(const filesystem::path&)> loader)
 {
-	Core::ByteBuffer buffer;
-	if (!m_resManager->Read(filePath, buffer)) return -1; //-1은 에러코드
+	auto it = m_cache.find(path);
+	if (it != m_cache.end())
+		return it->second;
 
-	return m_backend->LoadTextureFromMemory(move(buffer));
+	auto asset = loader(path);
+	if (!asset) return -1;
+
+	int tex = m_backend->UploadTexture(*asset);
+	m_cache[path] = tex;
+
+	return tex;
 }
 
 void RenderService::Draw(int index, const Rect& dest, const Rect* source)
