@@ -266,8 +266,16 @@
 --SwapChain안에 fence 있는거 딴데로 이동.
 --fence와 queue가 두개씩 있는거 CommandContext 위에 클래스 하나 만들어서 거기에 넣자.
 --update에서 begin 프레임 하도록
+--테스트를 testclient에서 하도록 하고, sound 관련 desc는 다 삭제 하고 client에 asset이라는 폴더를 만들고 거기다가 Asset을 상속받은 desc를 만든다.
+--사운드 테이블을 asset을 사용해서 읽도록 수정.
+--render도 바뀐 asset으로 통일
+--assetService 내부 정리. backend 삭제.
+--프로젝트에는 Asset이라는 폴더 안에 thirdparty 용 loader를 몰아 넣자.
+--json도 thirdparty 이다. serialize도 다른 프로젝트에 두어서 client 및 core에 전염이 안되도록.
 
+@soundrepository에서 asset을 이용해서 파일을 pcm으로 바꾼후 넣어주는 식으로 수정.
 @렌더러 만들기
+    @vram에 upload 중에 렌더링이 걸리면 어떻게 되는지 테스트
     @텍스쳐 max 설정.
     @texture batching
     @화면 배경색깔 지정하게끔

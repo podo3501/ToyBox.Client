@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "RenderService.h"
 #include "IRenderBackend.h"
-#include "GameCore/Service/Asset/AssetTypes.h"
 #include "Platform/Resource/IResourceManager.h"
 
 RenderService::~RenderService() = default;

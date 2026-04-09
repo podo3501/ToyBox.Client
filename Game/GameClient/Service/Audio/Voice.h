@@ -1,7 +1,7 @@
 #pragma once
 #include "VoiceHandle.h"
 #include "Soundhandle.h"
-#include "Asset/Sound/Desc/SoundDescriptor.h"
+#include "Service/Asset/AssetTypes.h"
 
 struct ISoundInstance;
 enum class SoundType;
@@ -10,7 +10,7 @@ struct Voice
 	VoiceHandle voiceHandle{};
 	SoundHandle soundHandle{};
 	ISoundInstance* instance{ nullptr };
-	SoundDescriptor desc{};
+	SoundDesc desc{};
 
 	uint32_t playbackTime{ 0 };
 

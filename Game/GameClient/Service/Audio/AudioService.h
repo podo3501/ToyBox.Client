@@ -7,7 +7,7 @@ struct IResourceManager;
 struct SoundAssetView;
 struct GroupInfo;
 struct PlaybackParams;
-struct SoundDescriptor;
+struct SoundDesc;
 class SoundRepository;
 class VoicePool;
 enum class PlaybackState;
@@ -18,7 +18,7 @@ class AudioService
 public:
 	~AudioService();
 	AudioService() = delete;
-	static unique_ptr<AudioService> Create(const SoundAssetView* sndAssetView, unique_ptr<IAudioBackend> backend,
+	static unique_ptr<AudioService> Create(const SoundAssetView& sndAssetView, unique_ptr<IAudioBackend> backend,
 		IResourceManager* resManager, int maxVoices, int maxStreams) noexcept;
 	SoundHandle LoadStaticSound(string_view soundID);
 	SoundHandle LoadStreamSound(string_view soundID);
@@ -35,15 +35,15 @@ public:
 	bool SetVolume(VoiceHandle vh, float volume) noexcept;
 
 private:
-	AudioService(const SoundAssetView* sndAssetView, unique_ptr<SoundRepository> sndRepository,
+	AudioService(const SoundAssetView& sndAssetView, unique_ptr<SoundRepository> sndRepository,
 		unique_ptr<IAudioBackend> audioBackend) noexcept;
 	bool Initialize(int maxVoices, int maxStreams) noexcept;
 	void CreateAudioGroup() noexcept;
-	PlaybackParams GetParams(const SoundDescriptor* desc) noexcept;
+	PlaybackParams GetParams(const SoundDesc* desc) noexcept;
 	float GetGroupVolume(AudioGroup group) const noexcept;
 	float GetInstanceVolume(AudioGroup group, float volume) const noexcept;
 
-	const SoundAssetView* m_sndAssetView{ nullptr };
+	unique_ptr<SoundAssetView> m_sndAssetView;
 	unique_ptr<IAudioBackend> m_audioBackend;
 	unique_ptr<SoundRepository> m_repository;
 	unique_ptr<VoicePool> m_voicePool;

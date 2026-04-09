@@ -62,7 +62,7 @@ ISoundInstance* VoicePool::CreateInstance(const LoadedSound* loaded)
 	return nullptr;
 }
 
-VoiceHandle VoicePool::AcquireVoiceHandle(const SoundDescriptor* desc) noexcept
+VoiceHandle VoicePool::AcquireVoiceHandle(const SoundDesc* desc) noexcept
 {
 	const bool isStream = (desc->sndType == SoundType::Stream);
 	auto& stealList = isStream ? m_stealStreams : m_stealStatics;
@@ -76,7 +76,7 @@ VoiceHandle VoicePool::AcquireVoiceHandle(const SoundDescriptor* desc) noexcept
 	return vh;
 }
 
-VoiceHandle VoicePool::StealAndAcquire(const SoundDescriptor* desc, vector<Voice*>& stealList) noexcept
+VoiceHandle VoicePool::StealAndAcquire(const SoundDesc* desc, vector<Voice*>& stealList) noexcept
 {
 	for (auto* voice : stealList)
 	{
@@ -92,7 +92,7 @@ VoiceHandle VoicePool::StealAndAcquire(const SoundDescriptor* desc, vector<Voice
 	return InvalidVoiceHandle;
 }
 
-void VoicePool::ActivateVoice(VoiceHandle vh, SoundHandle sh, ISoundInstance* instance, const SoundDescriptor* desc) noexcept
+void VoicePool::ActivateVoice(VoiceHandle vh, SoundHandle sh, ISoundInstance* instance, const SoundDesc* desc) noexcept
 {
 	const bool isStream = (desc->sndType == SoundType::Stream);
 	auto& stealList = isStream ? m_stealStreams : m_stealStatics;
@@ -209,7 +209,7 @@ void VoicePool::UpdateVoices() noexcept
 	SortStealCandidateList(m_stealStatics);
 }
 
-const SoundDescriptor* VoicePool::GetDesc(VoiceHandle vh) const noexcept
+const SoundDesc* VoicePool::GetDesc(VoiceHandle vh) const noexcept
 {
 	auto voice = GetVoice(vh);
 	if (!voice) return nullptr;

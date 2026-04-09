@@ -5,17 +5,16 @@
 #include "VoicePool.h"
 #include "LoadedSound.h"
 #include "PlaybackTypes.h"
-#include "Asset/SoundAssetView.h"
+#include "Service/Asset/AssetTypes.h"
 
 struct GroupInfo //지금은 볼륨 하나지만 조금씩 확장될 가능성이 크다.
 {
 	float volume{ 1.f };
 };
 
-unique_ptr<AudioService> AudioService::Create(const SoundAssetView* sndAssetView, unique_ptr<IAudioBackend> backend,
+unique_ptr<AudioService> AudioService::Create(const SoundAssetView& sndAssetView, unique_ptr<IAudioBackend> backend,
 	IResourceManager* resManager, int maxVoices, int maxStreams) noexcept
 {
-	if (sndAssetView == nullptr) return nullptr;
 	if (backend == nullptr) return nullptr;
 	
 	auto sndRepository = make_unique<SoundRepository>(backend.get(), resManager);
@@ -28,9 +27,9 @@ unique_ptr<AudioService> AudioService::Create(const SoundAssetView* sndAssetView
 }
 
 AudioService::~AudioService() = default;
-AudioService::AudioService(const SoundAssetView* sndAssetView, unique_ptr<SoundRepository> sndRepository,
+AudioService::AudioService(const SoundAssetView& sndAssetView, unique_ptr<SoundRepository> sndRepository,
 	unique_ptr<IAudioBackend> audioBackend) noexcept :
-	m_sndAssetView{ sndAssetView },
+	m_sndAssetView{ make_unique<SoundAssetView>(sndAssetView) },
 	m_audioBackend{ move(audioBackend) },
 	m_repository{ move(sndRepository)},
 	m_voicePool{ make_unique<VoicePool>(m_audioBackend.get()) }
@@ -53,10 +52,10 @@ void AudioService::CreateAudioGroup() noexcept
 
 SoundHandle AudioService::LoadStaticSound(string_view soundID)
 {
-	auto staticDescriptors = m_sndAssetView->staticDescriptors;
-	if (staticDescriptors == nullptr) return InvalidSoundHandle;
+	auto staticSoundTable = m_sndAssetView->staticSoundTable;
+	if (staticSoundTable == nullptr) return InvalidSoundHandle;
 
-	auto desc = staticDescriptors->GetDescriptor(soundID);
+	auto desc = staticSoundTable->GetDescriptor(soundID);
 	if (desc == nullptr) return InvalidSoundHandle;
 
 	return m_repository->AcquireStaticSound(desc);
@@ -64,34 +63,34 @@ SoundHandle AudioService::LoadStaticSound(string_view soundID)
 
 SoundHandle AudioService::LoadStreamSound(string_view soundID)
 {
-	auto streamDescriptors = m_sndAssetView->streamDescriptors;
-	if (streamDescriptors == nullptr) return InvalidSoundHandle;
+	auto streamSoundTable = m_sndAssetView->streamSoundTable;
+	if (streamSoundTable == nullptr) return InvalidSoundHandle;
 
-	auto desc = streamDescriptors->GetDescriptor(soundID);
+	auto desc = streamSoundTable->GetDescriptor(soundID);
 	if (desc == nullptr) return InvalidSoundHandle;
 	
 	return m_repository->AcquireStreamSound(desc);
 }
 
-static void ApplyStaticParams(const StaticSoundDescriptor* desc, PlaybackParams& params) noexcept
+static void ApplyStaticParams(const StaticSoundDesc* desc, PlaybackParams& params) noexcept
 {
 	//여기에 새로 추가되는 것들을 params에 추가.
 }
 
-static void ApplyStreamParams(const StreamSoundDescriptor* desc, PlaybackParams& params) noexcept
+static void ApplyStreamParams(const StreamSoundDesc* desc, PlaybackParams& params) noexcept
 {
 	params.loop = desc->loop;
 }
 
-PlaybackParams AudioService::GetParams(const SoundDescriptor* desc) noexcept
+PlaybackParams AudioService::GetParams(const SoundDesc* desc) noexcept
 {
 	PlaybackParams params;
 	params.volume = GetInstanceVolume(desc->group, desc->volume);
 
 	switch (desc->sndType)
 	{
-	case SoundType::Static: ApplyStaticParams(static_cast<const StaticSoundDescriptor*>(desc), params); break;
-	case SoundType::Stream: ApplyStreamParams(static_cast<const StreamSoundDescriptor*>(desc), params); break;
+	case SoundType::Static: ApplyStaticParams(static_cast<const StaticSoundDesc*>(desc), params); break;
+	case SoundType::Stream: ApplyStreamParams(static_cast<const StreamSoundDesc*>(desc), params); break;
 	}
 
 	return params;

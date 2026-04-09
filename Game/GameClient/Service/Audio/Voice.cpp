@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "Voice.h"
-#include "Asset/Sound/Desc/AudioTypes.h"
 #include "ISoundInstance.h"
 
 void Voice::Reset() noexcept

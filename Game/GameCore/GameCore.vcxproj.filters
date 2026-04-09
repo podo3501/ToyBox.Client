@@ -65,13 +65,10 @@
     <ClInclude Include="Service\Asset\AssetService.h">
       <Filter>Service\Asset</Filter>
     </ClInclude>
-    <ClInclude Include="Service\Asset\AssetTypes.h">
+    <ClInclude Include="Service\Asset\Asset.h">
       <Filter>Service\Asset</Filter>
     </ClInclude>
-    <ClInclude Include="Service\Asset\IAssetLoaders.h">
-      <Filter>Service\Asset</Filter>
-    </ClInclude>
-    <ClInclude Include="Service\Asset\IAssetBackend.h">
+    <ClInclude Include="Service\Asset\IAssetLoader.h">
       <Filter>Service\Asset</Filter>
     </ClInclude>
   </ItemGroup>

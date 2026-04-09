@@ -1,10 +1,10 @@
 #include "pch.h"
 #include "PngTextureLoader.h"
-#include "GameCore/Service/Asset/AssetTypes.h"
+#include "GameClient/Service/Asset/AssetTypes.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
-shared_ptr<TextureAsset> PngTextureLoader::LoadTexture(const Core::ByteBuffer& buffer)
+shared_ptr<Asset> PngTextureLoader::Load(const Core::ByteBuffer& buffer)
 {
     int width, height, channels;
 
@@ -32,4 +32,9 @@ shared_ptr<TextureAsset> PngTextureLoader::LoadTexture(const Core::ByteBuffer& b
     stbi_image_free(data);
 
     return asset;
+}
+
+unique_ptr<IAssetLoader> CreatePngTextureLoader()
+{
+    return make_unique<PngTextureLoader>();
 }

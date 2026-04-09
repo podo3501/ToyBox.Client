@@ -1,9 +1,9 @@
 #pragma once
-#include "GameCore/Service/Asset/IAssetLoaders.h"
+#include "GameCore/Service/Asset/IAssetLoader.h"
 
-class PngTextureLoader : public ITextureLoader
+class PngTextureLoader : public IAssetLoader
 {
 public:
-	virtual std::shared_ptr<TextureAsset> LoadTexture(const Core::ByteBuffer& buffer) override;
+	virtual std::shared_ptr<Asset> Load(const Core::ByteBuffer& buffer) override;
 };
 

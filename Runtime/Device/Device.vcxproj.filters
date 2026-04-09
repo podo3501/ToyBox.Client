@@ -139,10 +139,10 @@
     <ClInclude Include="Render\DX12\CommandQueue.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
-    <ClInclude Include="Asset\AssetBackend.h">
-      <Filter>Asset</Filter>
-    </ClInclude>
     <ClInclude Include="Asset\Loader\PngTextureLoader.h">
+      <Filter>Asset\Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\Loader\JsonLoader.h">
       <Filter>Asset\Loader</Filter>
     </ClInclude>
   </ItemGroup>
@@ -223,10 +223,16 @@
     <ClCompile Include="Render\DX12\CommandQueue.cpp">
       <Filter>Render\DX12</Filter>
     </ClCompile>
-    <ClCompile Include="Asset\AssetBackend.cpp">
-      <Filter>Asset</Filter>
-    </ClCompile>
     <ClCompile Include="Asset\Loader\PngTextureLoader.cpp">
+      <Filter>Asset\Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="Asset\Loader\StaticSoundTable.cpp">
+      <Filter>Asset\Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="Asset\Loader\SoundDesc.cpp">
+      <Filter>Asset\Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="Asset\Loader\StreamSoundTable.cpp">
       <Filter>Asset\Loader</Filter>
     </ClCompile>
   </ItemGroup>

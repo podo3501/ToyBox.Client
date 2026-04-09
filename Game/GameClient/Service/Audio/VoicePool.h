@@ -4,7 +4,7 @@
 struct Voice;
 struct IAudioBackend;
 struct ISoundInstance;
-struct SoundDescriptor;
+struct SoundDesc;
 struct LoadedSound;
 struct PlaybackParams;
 enum class SoundType;
@@ -25,13 +25,13 @@ public:
 	bool SetVolume(VoiceHandle vh, float volume) noexcept;
 	PlaybackState GetState(VoiceHandle vh) const noexcept;
 	void UpdateVoices() noexcept;
-	const SoundDescriptor* GetDesc(VoiceHandle vh) const noexcept;
+	const SoundDesc* GetDesc(VoiceHandle vh) const noexcept;
 
 private:
 	ISoundInstance* CreateInstance(const LoadedSound* loaded);
-	VoiceHandle AcquireVoiceHandle(const SoundDescriptor* desc) noexcept;
-	void ActivateVoice(VoiceHandle vh, SoundHandle sh, ISoundInstance* instance, const SoundDescriptor* desc) noexcept;
-	VoiceHandle StealAndAcquire(const SoundDescriptor* desc, vector<Voice*>& stealList) noexcept;
+	VoiceHandle AcquireVoiceHandle(const SoundDesc* desc) noexcept;
+	void ActivateVoice(VoiceHandle vh, SoundHandle sh, ISoundInstance* instance, const SoundDesc* desc) noexcept;
+	VoiceHandle StealAndAcquire(const SoundDesc* desc, vector<Voice*>& stealList) noexcept;
 
 	const Voice* GetVoice(VoiceHandle vh) const noexcept;
 	Voice* GetVoice(VoiceHandle vh) noexcept;

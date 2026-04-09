@@ -186,27 +186,6 @@
     <ClCompile Include="Service\Audio\AudioService.cpp">
       <Filter>Service\Audio</Filter>
     </ClCompile>
-    <ClCompile Include="Asset\AssetRegistry.cpp">
-      <Filter>Asset</Filter>
-    </ClCompile>
-    <ClCompile Include="Asset\Sound\StaticSoundDescriptors.cpp">
-      <Filter>Asset\Sound</Filter>
-    </ClCompile>
-    <ClCompile Include="Asset\Sound\StreamSoundDescriptors.cpp">
-      <Filter>Asset\Sound</Filter>
-    </ClCompile>
-    <ClCompile Include="Asset\Sound\Desc\SoundDescriptor.cpp">
-      <Filter>Asset\Sound\Desc</Filter>
-    </ClCompile>
-    <ClCompile Include="Asset\Sound\Desc\StaticSoundDescriptor.cpp">
-      <Filter>Asset\Sound\Desc</Filter>
-    </ClCompile>
-    <ClCompile Include="Asset\Sound\Desc\StreamSoundDescriptor.cpp">
-      <Filter>Asset\Sound\Desc</Filter>
-    </ClCompile>
-    <ClCompile Include="Asset\Sound\Desc\Serializer\Format\AudioTraits.cpp">
-      <Filter>Asset\Sound\Desc\Serializer\Format</Filter>
-    </ClCompile>
     <ClCompile Include="Service\Audio\SoundRepository.cpp">
       <Filter>Service\Audio</Filter>
     </ClCompile>
@@ -442,39 +421,6 @@
     <ClInclude Include="Service\Audio\ISoundInstance.h">
       <Filter>Service\Audio</Filter>
     </ClInclude>
-    <ClInclude Include="Asset\AssetRegistry.h">
-      <Filter>Asset</Filter>
-    </ClInclude>
-    <ClInclude Include="Asset\SoundAssetView.h">
-      <Filter>Asset</Filter>
-    </ClInclude>
-    <ClInclude Include="Asset\Sound\StaticSoundDescriptors.h">
-      <Filter>Asset\Sound</Filter>
-    </ClInclude>
-    <ClInclude Include="Asset\Sound\StreamSoundDescriptors.h">
-      <Filter>Asset\Sound</Filter>
-    </ClInclude>
-    <ClInclude Include="Asset\Sound\Desc\AudioTypeHelpers.h">
-      <Filter>Asset\Sound\Desc</Filter>
-    </ClInclude>
-    <ClInclude Include="Asset\Sound\Desc\AudioTypes.h">
-      <Filter>Asset\Sound\Desc</Filter>
-    </ClInclude>
-    <ClInclude Include="Asset\Sound\Desc\SoundDescriptor.h">
-      <Filter>Asset\Sound\Desc</Filter>
-    </ClInclude>
-    <ClInclude Include="Asset\Sound\Desc\StaticSoundDescriptor.h">
-      <Filter>Asset\Sound\Desc</Filter>
-    </ClInclude>
-    <ClInclude Include="Asset\Sound\Desc\StreamSoundDescriptor.h">
-      <Filter>Asset\Sound\Desc</Filter>
-    </ClInclude>
-    <ClInclude Include="Asset\Sound\Desc\Serializer\Serializer.h">
-      <Filter>Asset\Sound\Desc\Serializer</Filter>
-    </ClInclude>
-    <ClInclude Include="Asset\Sound\Desc\Serializer\Format\AudioTraits.h">
-      <Filter>Asset\Sound\Desc\Serializer\Format</Filter>
-    </ClInclude>
     <ClInclude Include="Service\Audio\SoundRepository.h">
       <Filter>Service\Audio</Filter>
     </ClInclude>
@@ -528,6 +474,15 @@
     </ClInclude>
     <ClInclude Include="Service\Render\RenderConfig.h">
       <Filter>Service\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Asset\AssetTypes.h">
+      <Filter>Service\Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Asset\IAssetLoaders.h">
+      <Filter>Service\Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Asset\AudioTypes.h">
+      <Filter>Service\Asset</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -591,26 +546,14 @@
     <Filter Include="Service\Audio">
       <UniqueIdentifier>{605fe766-761a-4cdc-bdc1-205c0855a333}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Asset">
-      <UniqueIdentifier>{3d3de1aa-f325-4e4c-bb28-efc9b18654e6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Asset\Sound">
-      <UniqueIdentifier>{c39032c5-4414-4370-86d6-758610ee3c4f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Asset\Sound\Desc">
-      <UniqueIdentifier>{0193e787-831d-440c-905f-717371cade9a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Asset\Sound\Desc\Serializer">
-      <UniqueIdentifier>{9c65d399-fe49-4c8b-a7af-e42ba06ca642}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Asset\Sound\Desc\Serializer\Format">
-      <UniqueIdentifier>{2001ba0e-af2a-49ae-b5d0-ca76de6a9f22}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Service\Input">
       <UniqueIdentifier>{25a4f086-8a02-40da-a2d8-2935e843f341}</UniqueIdentifier>
     </Filter>
     <Filter Include="Service\Render">
       <UniqueIdentifier>{180aab40-1760-4e84-bf76-340c77be0489}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Service\Asset">
+      <UniqueIdentifier>{c54a3847-74ea-4edb-8bbc-64483cc22ace}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

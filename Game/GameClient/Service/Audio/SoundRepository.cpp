@@ -3,8 +3,7 @@
 #include "IAudioBackend.h"
 #include "ISoundBuffer.h"
 #include "LoadedSound.h"
-#include "Asset/Sound/Desc/StaticSoundDescriptor.h"
-#include "Asset/Sound/Desc/StreamSoundDescriptor.h"
+#include "Service/Asset/AssetTypes.h"
 #include "Platform/Resource/IResourceManager.h"
 
 SoundRepository::~SoundRepository() = default;
@@ -12,14 +11,14 @@ SoundRepository::SoundRepository(IAudioBackend* audioBackend, IResourceManager* 
     m_audioBackend{ audioBackend }, m_resManager{ resManager }
 {}
 
-SoundHandle SoundRepository::AcquireStaticSound(const StaticSoundDescriptor* desc)
+SoundHandle SoundRepository::AcquireStaticSound(const StaticSoundDesc* desc)
 {
     return AcquireSoundInternal(desc, [this](const auto* d) {
         return CreateStaticSoundBuffer(d);
         });
 }
 
-SoundHandle SoundRepository::AcquireStreamSound(const StreamSoundDescriptor* desc)
+SoundHandle SoundRepository::AcquireStreamSound(const StreamSoundDesc* desc)
 {
     return AcquireSoundInternal(desc, [this](const auto* d) {
         return CreateStreamSoundBuffer(d);
@@ -48,7 +47,7 @@ SoundHandle SoundRepository::AcquireSoundInternal(auto* desc, auto&& createBuffe
     return handle;
 }
 
-shared_ptr<ISoundBuffer> SoundRepository::CreateStaticSoundBuffer(const StaticSoundDescriptor* desc)
+shared_ptr<ISoundBuffer> SoundRepository::CreateStaticSoundBuffer(const StaticSoundDesc* desc)
 {
     Core::ByteBuffer buffer;
     if (!m_resManager->Read(desc->filename, buffer)) return nullptr;
@@ -60,7 +59,7 @@ shared_ptr<ISoundBuffer> SoundRepository::CreateStaticSoundBuffer(const StaticSo
     return staticBuffer;
 }
 
-shared_ptr<ISoundBuffer> SoundRepository::CreateStreamSoundBuffer(const StreamSoundDescriptor* desc)
+shared_ptr<ISoundBuffer> SoundRepository::CreateStreamSoundBuffer(const StreamSoundDesc* desc)
 {
     auto streamBuffer = m_audioBackend->CreateStreamSoundBuffer();
     if (!streamBuffer) return nullptr;
