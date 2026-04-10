@@ -145,6 +145,9 @@
     <ClInclude Include="Asset\Loader\JsonLoader.h">
       <Filter>Asset\Loader</Filter>
     </ClInclude>
+    <ClInclude Include="Asset\Loader\OggSoundLoader.h">
+      <Filter>Asset\Loader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -233,6 +236,9 @@
       <Filter>Asset\Loader</Filter>
     </ClCompile>
     <ClCompile Include="Asset\Loader\StreamSoundTable.cpp">
+      <Filter>Asset\Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="Asset\Loader\OggSoundLoader.cpp">
       <Filter>Asset\Loader</Filter>
     </ClCompile>
   </ItemGroup>

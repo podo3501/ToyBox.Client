@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "AssetService.h"
 #include "Asset.h"
+#include "Platform/Resource/IResourceManager.h"
 
 AssetService::~AssetService() = default;
 AssetService::AssetService(IResourceManager* resManager) noexcept :
@@ -13,4 +14,12 @@ unique_ptr<AssetService> AssetService::Create(IResourceManager* resManager) noex
 
 	unique_ptr<AssetService> service(new AssetService(resManager));
 	return service;
+}
+
+Core::ByteBuffer AssetService::ReadFile(const filesystem::path& path)
+{
+	Core::ByteBuffer buffer;
+	if (!m_resManager->Read(path, buffer)) return {};
+
+	return buffer;
 }

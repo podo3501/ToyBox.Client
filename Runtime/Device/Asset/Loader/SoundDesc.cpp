@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "GameClient/Service/Asset/AssetTypes.h"
+#include "GameClient/Service/Asset/Assets/SoundTableAsset.h"
 #include "Platform/Serializer/Serializer.h"
 #include "Platform/Serializer/Format/TraitsHelper.hpp"
 #include "Platform/Serializer/Format/Traits.h"

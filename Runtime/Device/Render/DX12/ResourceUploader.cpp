@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "ResourceUploader.h"
 #include "CommandScheduler.h"
-#include "GameClient/Service/Asset/AssetTypes.h"
+#include "GameClient/Service/Asset/Assets/TextureAsset.h"
 
 ResourceUploader::~ResourceUploader() = default;
 ResourceUploader::ResourceUploader(ID3D12Device* device) :

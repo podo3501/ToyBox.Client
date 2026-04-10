@@ -67,6 +67,9 @@
     <ClInclude Include="Foundation\Geometry2D.h">
       <Filter>Foundation</Filter>
     </ClInclude>
+    <ClInclude Include="Utils\StringUtils.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Utils\EnumHelpers.cpp">
@@ -81,6 +84,9 @@
     </ClCompile>
     <ClCompile Include="Foundation\Geometry2D.cpp">
       <Filter>Foundation</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\StringUtils.cpp">
+      <Filter>Utils</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

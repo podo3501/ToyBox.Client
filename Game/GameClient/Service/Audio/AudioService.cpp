@@ -5,12 +5,12 @@
 #include "VoicePool.h"
 #include "LoadedSound.h"
 #include "PlaybackTypes.h"
-#include "Service/Asset/AssetTypes.h"
 
 struct GroupInfo //지금은 볼륨 하나지만 조금씩 확장될 가능성이 크다.
 {
 	float volume{ 1.f };
 };
+
 
 unique_ptr<AudioService> AudioService::Create(const SoundAssetView& sndAssetView, unique_ptr<IAudioBackend> backend,
 	IResourceManager* resManager, int maxVoices, int maxStreams) noexcept

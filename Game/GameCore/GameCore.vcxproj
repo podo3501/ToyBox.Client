@@ -45,6 +45,8 @@
     <ClInclude Include="Scenes\SceneType.h" />
     <ClInclude Include="Scenes\State\BattleState.h" />
     <ClInclude Include="Scenes\State\SceneState.h" />
+    <ClInclude Include="Service\Asset\AssetHelper.hpp" />
+    <ClInclude Include="Service\Asset\AssetKeys.h" />
     <ClInclude Include="Service\Asset\AssetService.h" />
     <ClInclude Include="Service\Asset\Asset.h" />
     <ClInclude Include="Service\Asset\IAssetLoader.h" />

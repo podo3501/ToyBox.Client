@@ -38,6 +38,7 @@
     <ClInclude Include="Utils\StlExt.h" />
     <ClInclude Include="Utils\StlExtTraitsConcepts.hpp" />
     <ClInclude Include="Utils\StlTypeExt.hpp" />
+    <ClInclude Include="Utils\StringUtils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Foundation\Geometry2D.cpp" />
@@ -50,6 +51,7 @@
     <ClCompile Include="Utils\CycleIterator.cpp" />
     <ClCompile Include="Utils\EnumHelpers.cpp" />
     <ClCompile Include="Utils\StlExt.cpp" />
+    <ClCompile Include="Utils\StringUtils.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Asset\Loader\JsonLoader.h" />
+    <ClInclude Include="Asset\Loader\OggSoundLoader.h" />
     <ClInclude Include="Asset\Loader\PngTextureLoader.h" />
     <ClInclude Include="Audio\SDL\AudioDevice.h" />
     <ClInclude Include="Audio\SDL\AudioFormat.h" />
@@ -56,6 +57,7 @@
     <ClInclude Include="Storage\JsonObjectIO.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Asset\Loader\OggSoundLoader.cpp" />
     <ClCompile Include="Asset\Loader\SoundDesc.cpp" />
     <ClCompile Include="Asset\Loader\StaticSoundTable.cpp" />
     <ClCompile Include="Asset\Loader\PngTextureLoader.cpp" />

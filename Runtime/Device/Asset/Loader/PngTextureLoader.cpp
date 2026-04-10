@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "PngTextureLoader.h"
-#include "GameClient/Service/Asset/AssetTypes.h"
+#include "GameClient/Service/Asset/Assets/TextureAsset.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 

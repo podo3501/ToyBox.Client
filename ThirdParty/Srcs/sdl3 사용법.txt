@@ -1,0 +1,21 @@
+sdl3를 먼저 만든 다음에 sdl mixer를 해야 한다.
+
+sdl3를 만드는 방법은
+
+1. sdl 폴더에서
+
+build, install 폴더를 삭제 하고(없으면 상관없음) 인스톨 폴더는 D:/ProgrammingStudy/ToyBox/ThirdParty/SDL3 여기임.
+cmake -S . -B build -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX="D:/ProgrammingStudy/ToyBox/ThirdParty/SDL3"
+생성된 솔루션에 들어가서 debug, release 를 빌드한다.
+cmake --install build (이걸 하면 위에 지정한 폴더로 필요한 include 파일등이 카피된다.)
+
+2. mixer 폴더에서
+
+build 폴더를 삭제하고(없으면 상관없음)
+cmake -S . -B build -DCMAKE_PREFIX_PATH="D:/ProgrammingStudy/ToyBox/ThirdParty/SDL3" -DSDL_SHARED=OFF -DSDL_STATIC=ON -DBUILD_SHARED_LIBS=OFF -DSDLMIXER_VORBIS_STB=OFF
+위에서 release 빌드하고 나온 SDL3-static.lib, SDL3_test.lib 이 두 파일이 SDL3/lib 안에 있어야 한다.(인스톨된 lib 폴더에 있어야 한다)
+생성된 솔루션에 들어가서 debug, release 를 빌드한다.
+
+-DSDLMIXER_VENDORED=ON 이건 알아서 내부적으로 decode를 쓴다는 거고 OFF는 다 안쓴다는것. OFF로 안쓴다고 해도 옵션 설정에 따라 내부적으로 stb를 사용할수도 있음.
+-DSDLMIXER_VORBIS_STB=OFF stb만 끄는것. 그래도 ogg는 플레이 됨. 하지만 stb로 decode를 하지 않는다는 것.
+

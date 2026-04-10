@@ -71,6 +71,12 @@
     <ClInclude Include="Service\Asset\IAssetLoader.h">
       <Filter>Service\Asset</Filter>
     </ClInclude>
+    <ClInclude Include="Service\Asset\AssetHelper.hpp">
+      <Filter>Service\Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Asset\AssetKeys.h">
+      <Filter>Service\Asset</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="System">

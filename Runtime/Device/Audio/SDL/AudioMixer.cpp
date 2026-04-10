@@ -16,6 +16,12 @@ bool AudioMixer::Initialize()
 
     ReturnIfFalse(SDL_Init(SDL_INIT_AUDIO));
     ReturnIfFalse(MIX_Init());
-    m_mixer = MIX_CreateMixerDevice(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, nullptr);
+
+    SDL_AudioSpec spec{}; //static sound 설정부분.
+    spec.freq = 48000;
+    spec.format = SDL_AUDIO_S16;
+    spec.channels = 2;
+
+    m_mixer = MIX_CreateMixerDevice(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &spec);
     return m_mixer != nullptr;
 }

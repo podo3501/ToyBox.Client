@@ -3,7 +3,7 @@
 #include "IAudioBackend.h"
 #include "ISoundBuffer.h"
 #include "LoadedSound.h"
-#include "Service/Asset/AssetTypes.h"
+#include "Service/Asset/Assets/SoundTableAsset.h"
 #include "Platform/Resource/IResourceManager.h"
 
 SoundRepository::~SoundRepository() = default;
