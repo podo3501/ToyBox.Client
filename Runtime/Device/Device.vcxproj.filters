@@ -25,9 +25,6 @@
     <Filter Include="Audio\SDL\Stream">
       <UniqueIdentifier>{a238fae4-8a0d-42f9-b576-da384f094f3c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Audio\Descriptor">
-      <UniqueIdentifier>{42f17458-fd1d-4da7-9635-178eed296a81}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Render">
       <UniqueIdentifier>{f38fc198-7943-4c01-b22f-725867379203}</UniqueIdentifier>
     </Filter>
@@ -39,6 +36,9 @@
     </Filter>
     <Filter Include="Asset\Loader">
       <UniqueIdentifier>{438a40f3-470d-4394-87f2-1de9c2ef81e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Asset\Loader\Sound">
+      <UniqueIdentifier>{86fee15d-c694-4d46-99c9-caf0cb39370f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -68,9 +68,6 @@
       <Filter>Audio\SDL\Stream</Filter>
     </ClInclude>
     <ClInclude Include="Audio\SDL\Stream\StreamSoundInstance.h">
-      <Filter>Audio\SDL\Stream</Filter>
-    </ClInclude>
-    <ClInclude Include="Audio\SDL\Stream\VorbisStreamCallbacks.h">
       <Filter>Audio\SDL\Stream</Filter>
     </ClInclude>
     <ClInclude Include="Audio\SDL\AudioDevice.h">
@@ -145,8 +142,20 @@
     <ClInclude Include="Asset\Loader\JsonLoader.h">
       <Filter>Asset\Loader</Filter>
     </ClInclude>
-    <ClInclude Include="Asset\Loader\OggSoundLoader.h">
-      <Filter>Asset\Loader</Filter>
+    <ClInclude Include="Asset\Loader\Sound\OggSoundLoader.h">
+      <Filter>Asset\Loader\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\Loader\Sound\WavSoundLoader.h">
+      <Filter>Asset\Loader\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\Loader\Sound\AudioProcessing.h">
+      <Filter>Asset\Loader\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\Loader\Sound\VorbisDecoder.h">
+      <Filter>Asset\Loader\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio\SDL\Stream\VorbisStreamCallbacks.h">
+      <Filter>Audio\SDL\Stream</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -170,9 +179,6 @@
       <Filter>Audio\SDL\Stream</Filter>
     </ClCompile>
     <ClCompile Include="Audio\SDL\Stream\StreamSoundInstance.cpp">
-      <Filter>Audio\SDL\Stream</Filter>
-    </ClCompile>
-    <ClCompile Include="Audio\SDL\Stream\VorbisStreamCallbacks.cpp">
       <Filter>Audio\SDL\Stream</Filter>
     </ClCompile>
     <ClCompile Include="Audio\SDL\AudioDevice.cpp">
@@ -238,8 +244,20 @@
     <ClCompile Include="Asset\Loader\StreamSoundTable.cpp">
       <Filter>Asset\Loader</Filter>
     </ClCompile>
-    <ClCompile Include="Asset\Loader\OggSoundLoader.cpp">
-      <Filter>Asset\Loader</Filter>
+    <ClCompile Include="Asset\Loader\Sound\OggSoundLoader.cpp">
+      <Filter>Asset\Loader\Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="Asset\Loader\Sound\WavSoundLoader.cpp">
+      <Filter>Asset\Loader\Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="Asset\Loader\Sound\AudioProcessing.cpp">
+      <Filter>Asset\Loader\Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="Asset\Loader\Sound\VorbisDecoder.cpp">
+      <Filter>Asset\Loader\Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="Audio\SDL\Stream\VorbisStreamCallbacks.cpp">
+      <Filter>Audio\SDL\Stream</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

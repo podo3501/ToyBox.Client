@@ -3,5 +3,6 @@
 
 std::unique_ptr<IAssetLoader> CreatePngTextureLoader();
 std::unique_ptr<IAssetLoader> CreateOggSoundLoader();
+std::unique_ptr<IAssetLoader> CreateWavSoundLoader();
 std::unique_ptr<IAssetLoader> CreateStaticSoundTableLoader();
 std::unique_ptr<IAssetLoader> CreateStreamSoundTableLoader();

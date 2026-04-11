@@ -20,8 +20,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Asset\Loader\JsonLoader.h" />
-    <ClInclude Include="Asset\Loader\OggSoundLoader.h" />
     <ClInclude Include="Asset\Loader\PngTextureLoader.h" />
+    <ClInclude Include="Asset\Loader\Sound\AudioProcessing.h" />
+    <ClInclude Include="Asset\Loader\Sound\OggSoundLoader.h" />
+    <ClInclude Include="Asset\Loader\Sound\VorbisDecoder.h" />
+    <ClInclude Include="Asset\Loader\Sound\WavSoundLoader.h" />
     <ClInclude Include="Audio\SDL\AudioDevice.h" />
     <ClInclude Include="Audio\SDL\AudioFormat.h" />
     <ClInclude Include="Audio\SDL\SDLAudioConfig.h" />
@@ -57,8 +60,11 @@
     <ClInclude Include="Storage\JsonObjectIO.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Asset\Loader\OggSoundLoader.cpp" />
     <ClCompile Include="Asset\Loader\SoundDesc.cpp" />
+    <ClCompile Include="Asset\Loader\Sound\AudioProcessing.cpp" />
+    <ClCompile Include="Asset\Loader\Sound\OggSoundLoader.cpp" />
+    <ClCompile Include="Asset\Loader\Sound\VorbisDecoder.cpp" />
+    <ClCompile Include="Asset\Loader\Sound\WavSoundLoader.cpp" />
     <ClCompile Include="Asset\Loader\StaticSoundTable.cpp" />
     <ClCompile Include="Asset\Loader\PngTextureLoader.cpp" />
     <ClCompile Include="Asset\Loader\StreamSoundTable.cpp" />
