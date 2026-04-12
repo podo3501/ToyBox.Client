@@ -490,7 +490,10 @@
     <ClInclude Include="Service\Asset\Assets\AudioTypes.h">
       <Filter>Service\Asset\Assets</Filter>
     </ClInclude>
-    <ClInclude Include="Service\Asset\Assets\SoundAsset.h">
+    <ClInclude Include="Service\Asset\Assets\StaticSoundAsset.h">
+      <Filter>Service\Asset\Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Asset\Assets\StreamSoundAsset.h">
       <Filter>Service\Asset\Assets</Filter>
     </ClInclude>
   </ItemGroup>

@@ -142,10 +142,10 @@
     <ClInclude Include="Asset\Loader\JsonLoader.h">
       <Filter>Asset\Loader</Filter>
     </ClInclude>
-    <ClInclude Include="Asset\Loader\Sound\OggSoundLoader.h">
+    <ClInclude Include="Asset\Loader\Sound\OggStaticLoader.h">
       <Filter>Asset\Loader\Sound</Filter>
     </ClInclude>
-    <ClInclude Include="Asset\Loader\Sound\WavSoundLoader.h">
+    <ClInclude Include="Asset\Loader\Sound\WavStaticLoader.h">
       <Filter>Asset\Loader\Sound</Filter>
     </ClInclude>
     <ClInclude Include="Asset\Loader\Sound\AudioProcessing.h">
@@ -156,6 +156,9 @@
     </ClInclude>
     <ClInclude Include="Audio\SDL\Stream\VorbisStreamCallbacks.h">
       <Filter>Audio\SDL\Stream</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\Loader\Sound\OggStreamLoader.h">
+      <Filter>Asset\Loader\Sound</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -244,10 +247,10 @@
     <ClCompile Include="Asset\Loader\StreamSoundTable.cpp">
       <Filter>Asset\Loader</Filter>
     </ClCompile>
-    <ClCompile Include="Asset\Loader\Sound\OggSoundLoader.cpp">
+    <ClCompile Include="Asset\Loader\Sound\OggStaticLoader.cpp">
       <Filter>Asset\Loader\Sound</Filter>
     </ClCompile>
-    <ClCompile Include="Asset\Loader\Sound\WavSoundLoader.cpp">
+    <ClCompile Include="Asset\Loader\Sound\WavStaticLoader.cpp">
       <Filter>Asset\Loader\Sound</Filter>
     </ClCompile>
     <ClCompile Include="Asset\Loader\Sound\AudioProcessing.cpp">
@@ -258,6 +261,9 @@
     </ClCompile>
     <ClCompile Include="Audio\SDL\Stream\VorbisStreamCallbacks.cpp">
       <Filter>Audio\SDL\Stream</Filter>
+    </ClCompile>
+    <ClCompile Include="Asset\Loader\Sound\OggStreamLoader.cpp">
+      <Filter>Asset\Loader\Sound</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

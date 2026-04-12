@@ -29,6 +29,7 @@
     <ClCompile Include="Scenes\SceneManager.cpp" />
     <ClCompile Include="Scenes\SceneNew.cpp" />
     <ClCompile Include="Scenes\State\BattleState.cpp" />
+    <ClCompile Include="Service\Asset\AssetInput.cpp" />
     <ClCompile Include="Service\Asset\AssetService.cpp" />
     <ClCompile Include="Session\GameSession.cpp" />
     <ClCompile Include="System\EventDispatcherManager.cpp" />
@@ -46,6 +47,7 @@
     <ClInclude Include="Scenes\State\BattleState.h" />
     <ClInclude Include="Scenes\State\SceneState.h" />
     <ClInclude Include="Service\Asset\AssetHelper.hpp" />
+    <ClInclude Include="Service\Asset\AssetInput.h" />
     <ClInclude Include="Service\Asset\AssetKeys.h" />
     <ClInclude Include="Service\Asset\AssetService.h" />
     <ClInclude Include="Service\Asset\Asset.h" />

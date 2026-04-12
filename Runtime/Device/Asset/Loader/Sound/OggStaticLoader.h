@@ -1,7 +1,7 @@
 #pragma once
 #include "GameCore/Service/Asset/IAssetLoader.h"
 
-class PngTextureLoader : public IAssetLoader
+class OggStaticLoader : public IAssetLoader
 {
 public:
 	virtual std::shared_ptr<Asset> Load(const AssetInput& source) override
@@ -15,4 +15,3 @@ public:
 private:
 	std::shared_ptr<Asset> LoadFromMemory(const Core::ByteBuffer& buffer);
 };
-

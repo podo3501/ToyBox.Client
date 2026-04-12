@@ -1,10 +1,10 @@
 #include "pch.h"
-#include "OggSoundLoader.h"
-#include "GameClient/Service/Asset/Assets/SoundAsset.h"
+#include "OggStaticLoader.h"
+#include "GameClient/Service/Asset/Assets/StaticSoundAsset.h"
 #include "AudioProcessing.h"
 #include "VorbisDecoder.h"
 
-std::shared_ptr<Asset> OggSoundLoader::Load(const Core::ByteBuffer& buffer)
+std::shared_ptr<Asset> OggStaticLoader::LoadFromMemory(const Core::ByteBuffer& buffer)
 {
     VorbisDecoder decoder;
 
@@ -38,7 +38,7 @@ std::shared_ptr<Asset> OggSoundLoader::Load(const Core::ByteBuffer& buffer)
     std::vector<uint8_t> pcm16;
     ConvertFloatToInt16(finalPCM.data(), static_cast<int>(finalPCM.size()), pcm16);
 
-    auto asset = std::make_shared<SoundAsset>();
+    auto asset = std::make_shared<StaticSoundAsset>();
     asset->channels = channels;
     asset->sampleRate = dstRate;
     asset->format = SampleFormat::Int16;
@@ -49,7 +49,7 @@ std::shared_ptr<Asset> OggSoundLoader::Load(const Core::ByteBuffer& buffer)
 
 ///////////////////////////////////////////////////////
 
-unique_ptr<IAssetLoader> CreateOggSoundLoader()
+unique_ptr<IAssetLoader> CreateOggStaticLoader()
 {
-	return make_unique<OggSoundLoader>();
+	return make_unique<OggStaticLoader>();
 }

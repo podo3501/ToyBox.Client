@@ -4,7 +4,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
-shared_ptr<Asset> PngTextureLoader::Load(const Core::ByteBuffer& buffer)
+shared_ptr<Asset> PngTextureLoader::LoadFromMemory(const Core::ByteBuffer& buffer)
 {
     int width, height, channels;
 

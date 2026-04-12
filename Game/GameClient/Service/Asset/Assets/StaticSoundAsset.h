@@ -8,7 +8,7 @@ enum class SampleFormat
     Float32
 };
 
-struct SoundAsset : public Asset
+struct StaticSoundAsset : public Asset
 {
     int sampleRate = 0;
     int channels = 0;

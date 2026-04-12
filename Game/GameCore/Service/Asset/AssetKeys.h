@@ -10,7 +10,7 @@ inline size_t HashCombine(size_t h1, size_t h2)
 
 struct LoaderKey
 {
-	std::type_index type;
+	Core::TypeId type;
 	std::string ext;
 
 	bool operator==(const LoaderKey& other) const = default;
@@ -21,7 +21,7 @@ struct LoaderKeyHasher
 	size_t operator()(const LoaderKey& k) const
 	{
 		return HashCombine(
-			std::hash<std::type_index>()(k.type),
+			std::hash<Core::TypeId>()(k.type),
 			std::hash<std::string>()(k.ext)
 		);
 	}
@@ -30,7 +30,7 @@ struct LoaderKeyHasher
 struct CacheKey
 {
 	std::filesystem::path path;
-	std::type_index type;
+	Core::TypeId type;
 
 	bool operator==(const CacheKey& other) const = default;
 };
@@ -41,7 +41,7 @@ struct CacheKeyHasher
 	{
 		return HashCombine(
 			std::hash<std::filesystem::path>()(k.path),
-			std::hash<std::type_index>()(k.type)
+			std::hash<Core::TypeId>()(k.type)
 		);
 	}
 };

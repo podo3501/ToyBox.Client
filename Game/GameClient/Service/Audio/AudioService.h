@@ -5,6 +5,8 @@
 struct IAudioBackend;
 struct IResourceManager;
 struct SoundAssetView;
+struct StaticSoundAsset;
+struct StreamSoundAsset;
 struct GroupInfo;
 struct PlaybackParams;
 struct SoundDesc;
@@ -20,8 +22,12 @@ public:
 	AudioService() = delete;
 	static unique_ptr<AudioService> Create(const SoundAssetView& sndAssetView, unique_ptr<IAudioBackend> backend,
 		IResourceManager* resManager, int maxVoices, int maxStreams) noexcept;
-	SoundHandle LoadStaticSound(string_view soundID);
-	SoundHandle LoadStreamSound(string_view soundID);
+	//SoundHandle LoadStreamSound(string_view soundID);
+
+	SoundHandle AcquireStaticSound(string_view soundID, function<shared_ptr<StaticSoundAsset>(const filesystem::path&)> loader);
+	SoundHandle AcquireStreamSound(string_view soundID, function<shared_ptr<StreamSoundAsset>(const filesystem::path&)> loader);
+
+
 	VoiceHandle Play(SoundHandle sh) noexcept;
 	bool Pause(VoiceHandle vh) noexcept;
 	bool Resume(VoiceHandle vh) noexcept;

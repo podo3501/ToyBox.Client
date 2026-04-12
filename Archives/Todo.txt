@@ -274,6 +274,8 @@
 --json도 thirdparty 이다. serialize도 다른 프로젝트에 두어서 client 및 core에 전염이 안되도록.
 
 @soundrepository에서 asset을 이용해서 파일을 pcm으로 바꾼후 넣어주는 식으로 수정.
+    @AudioService에서 asset을 이용해서 로딩하는 식으로 수정. static, stream 둘다.
+
 @렌더러 만들기
     @vram에 upload 중에 렌더링이 걸리면 어떻게 되는지 테스트
     @텍스쳐 max 설정.

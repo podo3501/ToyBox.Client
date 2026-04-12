@@ -23,6 +23,9 @@
     <ClCompile Include="Service\Asset\AssetService.cpp">
       <Filter>Service\Asset</Filter>
     </ClCompile>
+    <ClCompile Include="Service\Asset\AssetInput.cpp">
+      <Filter>Service\Asset</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -75,6 +78,9 @@
       <Filter>Service\Asset</Filter>
     </ClInclude>
     <ClInclude Include="Service\Asset\AssetKeys.h">
+      <Filter>Service\Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Asset\AssetInput.h">
       <Filter>Service\Asset</Filter>
     </ClInclude>
   </ItemGroup>

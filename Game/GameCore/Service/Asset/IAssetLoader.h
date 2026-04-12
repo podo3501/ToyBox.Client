@@ -1,6 +1,5 @@
 #pragma once
-#include <memory>
-#include "Core/Foundation/Types.h"
+#include "AssetInput.h"
 
 struct Asset;
 struct IAssetLoader
@@ -8,5 +7,13 @@ struct IAssetLoader
 public:
 	virtual ~IAssetLoader() = default;
 
-	virtual std::shared_ptr<Asset> Load(const Core::ByteBuffer& buffer) = 0;
+	virtual bool PreferStream() const { return false; }
+	virtual std::shared_ptr<Asset> Load(const AssetInput& source) = 0;
 };
+
+template <typename T>
+std::unique_ptr<IAssetLoader> CreateLoader()
+{
+	static_assert(std::is_base_of_v<IAssetLoader, T>);
+	return std::make_unique<T>();
+}

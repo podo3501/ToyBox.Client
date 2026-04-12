@@ -1,6 +1,6 @@
 #include "pch.h"
-#include "WavSoundLoader.h"
-#include "GameClient/Service/Asset/Assets/SoundAsset.h"
+#include "WavStaticLoader.h"
+#include "GameClient/Service/Asset/Assets/StaticSoundAsset.h"
 #include "AudioProcessing.h"
 
 #pragma warning(push)
@@ -9,7 +9,7 @@
 #include "dr_wav.h"
 #pragma warning(pop)
 
-std::shared_ptr<Asset> WavSoundLoader::Load(const Core::ByteBuffer& buffer)
+std::shared_ptr<Asset> WavStaticLoader::LoadFromMemory(const Core::ByteBuffer& buffer)
 {
     drwav wav;
 
@@ -50,7 +50,7 @@ std::shared_ptr<Asset> WavSoundLoader::Load(const Core::ByteBuffer& buffer)
     std::vector<uint8_t> finalData;
     ConvertFloatToInt16(processed.data(), static_cast<int>(processed.size()), finalData);
 
-    auto asset = std::make_shared<SoundAsset>();
+    auto asset = std::make_shared<StaticSoundAsset>();
     asset->channels = channels;
     asset->sampleRate = 48000;
     asset->format = SampleFormat::Int16;
@@ -61,7 +61,7 @@ std::shared_ptr<Asset> WavSoundLoader::Load(const Core::ByteBuffer& buffer)
 
 ///////////////////////////////////////////////////////
 
-unique_ptr<IAssetLoader> CreateWavSoundLoader()
+unique_ptr<IAssetLoader> CreateWavStaticLoader()
 {
-    return make_unique<WavSoundLoader>();
+    return make_unique<WavStaticLoader>();
 }

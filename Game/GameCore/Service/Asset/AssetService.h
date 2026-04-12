@@ -21,7 +21,7 @@ public:
 		if (!loader) return false;
 
 		std::string normalized = ToLower(ext);
-		LoaderKey key{ typeid(T), normalized };
+		LoaderKey key{ Core::GetTypeId<T>(), normalized };
 		m_loaders[key] = move(loader);
 		return true;
 	}
@@ -31,7 +31,7 @@ public:
 
 private:
 	AssetService(IResourceManager* resManager) noexcept;
-	Core::ByteBuffer ReadFile(const filesystem::path& path);
+	shared_ptr<Asset> LoadWithSource(IAssetLoader* loader, const filesystem::path& path);
 
 	IResourceManager* m_resManager{ nullptr };
 	unordered_map<LoaderKey, unique_ptr<IAssetLoader>, LoaderKeyHasher> m_loaders;
@@ -42,7 +42,7 @@ template<typename T>
 shared_ptr<T> AssetService::Load(const filesystem::path& path)
 {
 	auto normalizedPath = path.lexically_normal();
-	CacheKey cacheKey{ normalizedPath, typeid(T) };
+	CacheKey cacheKey{ normalizedPath, Core::GetTypeId<T>() };
 
 	auto it = m_cache.find(cacheKey);
 	if (it != m_cache.end())
@@ -51,23 +51,19 @@ shared_ptr<T> AssetService::Load(const filesystem::path& path)
 			return static_pointer_cast<T>(cached);
 	}
 
-	auto buffer = ReadFile(path);
-	if (buffer.empty()) return nullptr;
-
 	string ext = path.extension().string();
 	string normalized = ToLowerCopy(ext);
 
-	LoaderKey key{ typeid(T), normalized };
+	LoaderKey key{ Core::GetTypeId<T>(), normalized };
 	auto loaderIt = m_loaders.find(key);
 	if (loaderIt == m_loaders.end())
 		return nullptr;
+	auto& loader = loaderIt->second;
 
-	auto asset = loaderIt->second->Load(buffer);
-	if (!asset)
-		return nullptr;
+	auto asset = LoadWithSource(loader.get(), path);
+	if (!asset) return nullptr;
 
 	m_cache[cacheKey] = asset;
-
 	return static_pointer_cast<T>(asset);
 }
 

@@ -50,7 +50,8 @@ void AudioService::CreateAudioGroup() noexcept
 		m_groupInfos[id] = make_unique<GroupInfo>();
 }
 
-SoundHandle AudioService::LoadStaticSound(string_view soundID)
+SoundHandle AudioService::AcquireStaticSound(string_view soundID, 
+	function<shared_ptr<StaticSoundAsset>(const filesystem::path&)> loader)
 {
 	auto staticSoundTable = m_sndAssetView->staticSoundTable;
 	if (staticSoundTable == nullptr) return InvalidSoundHandle;
@@ -58,18 +59,30 @@ SoundHandle AudioService::LoadStaticSound(string_view soundID)
 	auto desc = staticSoundTable->GetDescriptor(soundID);
 	if (desc == nullptr) return InvalidSoundHandle;
 
-	return m_repository->AcquireStaticSound(desc);
+	return m_repository->AcquireStaticSound(desc, loader);
 }
 
-SoundHandle AudioService::LoadStreamSound(string_view soundID)
+//SoundHandle AudioService::LoadStreamSound(string_view soundID)
+//{
+//	auto streamSoundTable = m_sndAssetView->streamSoundTable;
+//	if (streamSoundTable == nullptr) return InvalidSoundHandle;
+//
+//	auto desc = streamSoundTable->GetDescriptor(soundID);
+//	if (desc == nullptr) return InvalidSoundHandle;
+//	
+//	return m_repository->AcquireStreamSound(desc);
+//}
+
+SoundHandle AudioService::AcquireStreamSound(string_view soundID,
+	function<shared_ptr<StreamSoundAsset>(const filesystem::path&)> loader)
 {
 	auto streamSoundTable = m_sndAssetView->streamSoundTable;
 	if (streamSoundTable == nullptr) return InvalidSoundHandle;
 
 	auto desc = streamSoundTable->GetDescriptor(soundID);
 	if (desc == nullptr) return InvalidSoundHandle;
-	
-	return m_repository->AcquireStreamSound(desc);
+
+	return m_repository->AcquireStreamSound(desc, loader);
 }
 
 static void ApplyStaticParams(const StaticSoundDesc* desc, PlaybackParams& params) noexcept

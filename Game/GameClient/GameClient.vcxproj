@@ -108,8 +108,9 @@
     <ClInclude Include="Scenes\Test\TestScene2.h" />
     <ClInclude Include="Service\Asset\AssetService.h" />
     <ClInclude Include="Service\Asset\Assets\AudioTypes.h" />
-    <ClInclude Include="Service\Asset\Assets\SoundAsset.h" />
+    <ClInclude Include="Service\Asset\Assets\StaticSoundAsset.h" />
     <ClInclude Include="Service\Asset\Assets\SoundTableAsset.h" />
+    <ClInclude Include="Service\Asset\Assets\StreamSoundAsset.h" />
     <ClInclude Include="Service\Asset\Assets\TextureAsset.h" />
     <ClInclude Include="Service\Asset\IAssetLoaders.h" />
     <ClInclude Include="Service\Audio\AudioService.h" />

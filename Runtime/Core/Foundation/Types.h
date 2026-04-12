@@ -5,6 +5,15 @@ namespace Core
 {
     using Byte = std::byte;
     using ByteBuffer = std::vector<Byte>;
+
+    //static 변수가 한번만 만들어진다는 것과 주소가 다르다는 성질을 이용해서 이 클래스가 어떤 클래스인지 알게끔 하는 코드.
+    using TypeId = size_t;
+    template<typename T>
+    TypeId GetTypeId()
+    {
+        static const char unique;
+        return reinterpret_cast<TypeId>(&unique);
+    }
 }
 
 //값과 값이 없는 표현으로 nullopt가 '꼭' 존재해야 하는 부분에만 적용해야함.
