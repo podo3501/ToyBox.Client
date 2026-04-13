@@ -17,7 +17,7 @@ class CommandScheduler
 public:
     ~CommandScheduler();
     CommandScheduler();
-    bool Initialize(ID3D12Device* device, int poolSize);
+    bool Initialize(ID3D12Device* device, uint32_t directPoolSize, uint32_t copyPoolSize);
     ID3D12GraphicsCommandList* Begin(CommandType type);
     uint64_t End(vector<ComPtr<ID3D12Resource>>&& resources = {}); // End -> Close + Signal, PendingRelease µî·Ï
     uint64_t SignalQueue(CommandType type);

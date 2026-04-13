@@ -6,11 +6,10 @@
 #include "Service/Asset/Assets/SoundTableAsset.h"
 #include "Service/Asset/Assets/StaticSoundAsset.h"
 #include "Service/Asset/Assets/StreamSoundAsset.h"
-#include "Platform/Resource/IResourceManager.h"
 
 SoundRepository::~SoundRepository() = default;
-SoundRepository::SoundRepository(IAudioBackend* audioBackend, IResourceManager* resManager) :
-    m_audioBackend{ audioBackend }, m_resManager{ resManager }
+SoundRepository::SoundRepository(IAudioBackend* audioBackend) :
+    m_audioBackend{ audioBackend }
 {}
 
 SoundHandle SoundRepository::AcquireStaticSound(const StaticSoundDesc* desc,
@@ -40,15 +39,12 @@ SoundHandle SoundRepository::AcquireSoundInternal(auto* desc, auto&& createBuffe
     if (!sndBuffer)
     {
         sndBuffer = createBuffer();
-        if (!sndBuffer) return InvalidSoundHandle;
+        if (!sndBuffer) return SoundHandle::Invalid();
 
         m_buffers.insert_or_assign(desc->filename, sndBuffer);
     }
 
-    SoundHandle handle = SoundHandle{ m_nextSoundHandle.value++ };
-    m_loadedSounds.emplace(handle, LoadedSound{ desc, sndBuffer });
-
-    return handle;
+    return m_loadedSounds.Emplace(desc, sndBuffer);
 }
 
 shared_ptr<ISoundBuffer> SoundRepository::CreateStaticSoundBuffer(const StaticSoundDesc* desc,
@@ -77,31 +73,15 @@ shared_ptr<ISoundBuffer> SoundRepository::CreateStreamSoundBuffer(const StreamSo
     return streamBuffer;
 }
 
-//shared_ptr<ISoundBuffer> SoundRepository::CreateStreamSoundBuffer(const StreamSoundDesc* desc)
-//{
-//    auto streamBuffer = m_audioBackend->CreateStreamSoundBuffer();
-//    if (!streamBuffer) return nullptr;
-//
-//    auto stream = m_resManager->CreateReadStream(desc->filename);
-//    if (!stream) return nullptr;
-//
-//    if (!streamBuffer->AttachStream(move(stream))) return nullptr;
-//    return streamBuffer;
-//}
-
 const LoadedSound* SoundRepository::Find(SoundHandle h) const noexcept
 {
-	auto it = m_loadedSounds.find(h);
-	if (it == m_loadedSounds.end()) return nullptr;
+    const LoadedSound* snd = m_loadedSounds.Find(h);
+    if (!snd) return nullptr; 
 
-	return &(it->second);
+    return snd;
 }
 
 bool SoundRepository::Remove(SoundHandle h) noexcept
 {
-	auto it = m_loadedSounds.find(h);
-	if (it == m_loadedSounds.end()) return false;
-
-	m_loadedSounds.erase(it);
-	return true;
+    return m_loadedSounds.Remove(h);
 }

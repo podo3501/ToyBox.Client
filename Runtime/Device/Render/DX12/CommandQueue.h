@@ -12,7 +12,7 @@ public:
     ~CommandQueue();
     CommandQueue();
 
-    bool Initialize(ID3D12Device* device, D3D12_COMMAND_LIST_TYPE type, int poolSize);
+    bool Initialize(ID3D12Device* device, D3D12_COMMAND_LIST_TYPE type, uint32_t poolSize);
     ID3D12GraphicsCommandList* Begin();
     uint64_t End(vector<ComPtr<ID3D12Resource>>&& resources);
 

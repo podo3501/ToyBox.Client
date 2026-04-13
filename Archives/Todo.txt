@@ -272,11 +272,12 @@
 --assetService 내부 정리. backend 삭제.
 --프로젝트에는 Asset이라는 폴더 안에 thirdparty 용 loader를 몰아 넣자.
 --json도 thirdparty 이다. serialize도 다른 프로젝트에 두어서 client 및 core에 전염이 안되도록.
-
-@soundrepository에서 asset을 이용해서 파일을 pcm으로 바꾼후 넣어주는 식으로 수정.
-    @AudioService에서 asset을 이용해서 로딩하는 식으로 수정. static, stream 둘다.
+--AudioService에서 asset을 이용해서 로딩하는 식으로 수정. static, stream 둘다.
+--soundrepository에서 asset을 이용해서 파일을 pcm으로 바꾼후 넣어주는 식으로 수정.
+    
 
 @렌더러 만들기
+    @upload를 여러개 업로드 해도 안 죽도록.
     @vram에 upload 중에 렌더링이 걸리면 어떻게 되는지 테스트
     @텍스쳐 max 설정.
     @texture batching

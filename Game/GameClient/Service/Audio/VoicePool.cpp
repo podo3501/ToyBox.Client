@@ -24,8 +24,7 @@ bool VoicePool::Setup(int maxVoices, int maxStreams) noexcept
 	if (maxVoices < 0 || maxStreams < 0) return false;
 	if (maxVoices < maxStreams) return false;
 
-	m_allocator = HandleAllocator<VoiceTag, 64>(maxVoices);
-	m_voices.resize(maxVoices);
+	m_voices.Setup(maxVoices);
 
 	m_maxVoices = maxVoices;
 	m_maxStreams = maxStreams;
@@ -40,10 +39,10 @@ VoiceHandle VoicePool::Play(SoundHandle sh, const LoadedSound* loaded, const Pla
 	if (!vh) return vh;
 
 	auto instance = CreateInstance(loaded);
-	if (!instance) return InvalidVoiceHandle;
+	if (!instance) return VoiceHandle::Invalid();
 
-	if (!instance->Reset(params)) return InvalidVoiceHandle;
-	if (!instance->Play()) return InvalidVoiceHandle;
+	if (!instance->Reset(params)) return VoiceHandle::Invalid();
+	if (!instance->Play()) return VoiceHandle::Invalid();
 
 	ActivateVoice(vh, sh, instance, desc);
 	return vh;
@@ -70,8 +69,8 @@ VoiceHandle VoicePool::AcquireVoiceHandle(const SoundDesc* desc) noexcept
 
 	VoiceHandle vh = (stealList.size() >= limit)
 		? StealAndAcquire(desc, stealList)
-		: m_allocator.Acquire();
-	if (!vh) return InvalidVoiceHandle;
+		: m_voices.Emplace();
+	if (!vh) return VoiceHandle::Invalid();
 
 	return vh;
 }
@@ -85,27 +84,28 @@ VoiceHandle VoicePool::StealAndAcquire(const SoundDesc* desc, vector<Voice*>& st
 
 		StopVoice(voice->voiceHandle);
 
-		auto vh = m_allocator.Acquire();
+		auto vh = m_voices.Emplace();
 		if (vh) return vh;
 	}
 
-	return InvalidVoiceHandle;
+	return VoiceHandle::Invalid();
 }
 
 void VoicePool::ActivateVoice(VoiceHandle vh, SoundHandle sh, ISoundInstance* instance, const SoundDesc* desc) noexcept
 {
+	auto* voice = m_voices.Get(vh);
+	if (!voice) return;
+
 	const bool isStream = (desc->sndType == SoundType::Stream);
 	auto& stealList = isStream ? m_stealStreams : m_stealStatics;
 
-	uint16_t index = vh.Index();
-	Voice& voice = m_voices[index];
-	voice.voiceHandle = vh;
-	voice.soundHandle = sh;
-	voice.instance = instance;
-	voice.desc = *desc;
-	voice.playbackTime = 0;
+	voice->voiceHandle = vh;
+	voice->soundHandle = sh;
+	voice->instance = instance;
+	voice->desc = *desc;
+	voice->playbackTime = 0;
 
-	stealList.emplace_back(&voice);
+	stealList.emplace_back(voice);
 }
 
 bool VoicePool::Pause(VoiceHandle vh) noexcept
@@ -136,44 +136,52 @@ static void RemoveFromStealList(vector<Voice*>& voices, Voice* v)
 
 bool VoicePool::StopVoice(VoiceHandle vh) noexcept
 {
-	auto voice = GetVoice(vh);
+	auto voice = m_voices.Get(vh);
 	if (!voice) return false;
 
 	if (voice->desc.sndType == SoundType::Stream) RemoveFromStealList(m_stealStreams, voice);
 	if (voice->desc.sndType == SoundType::Static) RemoveFromStealList(m_stealStatics, voice);
 	ReturnIfFalse(voice->StopAndReset());
 
-	m_allocator.Release(vh);
+	m_voices.Remove(vh);
 	return true;
 }
 
 bool VoicePool::StopVoices(SoundHandle sh) noexcept
 {
-	for (auto& voice : m_voices)
-	{
-		if (!voice.instance) continue;
-		if (voice.soundHandle != sh) continue;
+	std::vector<VoiceHandle> toStop;
 
-		ReturnIfFalse(StopVoice(voice.voiceHandle));
-	}
+	m_voices.Visit([&toStop, sh](VoiceHandle h, Voice& voice) {
+		if (!voice.instance) return;
+		if (voice.soundHandle == sh)
+			toStop.push_back(h);
+		});
+
+	for (auto& h : toStop)
+		ReturnIfFalse(StopVoice(h));
+
 	return true;
 }
 
 bool VoicePool::StopVoices(SoundType type) noexcept
 {
-	for (auto& voice : m_voices)
-	{
-		if (!voice.instance) continue;
-		if (voice.desc.sndType != type) continue;
+	std::vector<VoiceHandle> toStop;
 
-		ReturnIfFalse(StopVoice(voice.voiceHandle));
-	}
+	m_voices.Visit([&toStop, type](VoiceHandle h, Voice& voice) {
+		if (!voice.instance) return;
+		if (voice.desc.sndType == type)
+			toStop.push_back(h);
+		});
+
+	for (auto& h : toStop)
+		ReturnIfFalse(StopVoice(h));
+
 	return true;
 }
 
 bool VoicePool::SetVolume(VoiceHandle vh, float volume) noexcept
 {
-	auto voice = GetVoice(vh);
+	auto voice = m_voices.Get(vh);
 	if (!voice) return false;
 
 	auto instance = voice->instance;
@@ -192,18 +200,22 @@ PlaybackState VoicePool::GetState(VoiceHandle vh) const noexcept
 
 void VoicePool::UpdateVoices() noexcept
 {
-	for (auto& voice : m_voices)
-	{
-		if (!voice.instance) continue;
+	std::vector<VoiceHandle> toStop; //삭제할 것을 넣어놓는 이유는 visit안에서 삭제하게 되면 iterator가 꼬여서 깨지기 때문이다.
+
+	m_voices.Visit([&](VoiceHandle h, Voice& voice) {
+		if (!voice.instance) return;
 
 		voice.instance->Update();
-		
+
 		auto state = voice.instance->GetState();
 		if (state == PlaybackState::Playing)
-			voice.playbackTime += 1; // 재생 중이면 playbackTime값을 프레임 단위로 증가.
+			voice.playbackTime += 1;
 		else if (state == PlaybackState::Stopped)
-			StopVoice(voice.voiceHandle);
-	}
+			toStop.push_back(h);
+		});
+
+	for (auto& h : toStop)
+		StopVoice(h);
 
 	SortStealCandidateList(m_stealStreams);
 	SortStealCandidateList(m_stealStatics);
@@ -211,28 +223,15 @@ void VoicePool::UpdateVoices() noexcept
 
 const SoundDesc* VoicePool::GetDesc(VoiceHandle vh) const noexcept
 {
-	auto voice = GetVoice(vh);
+	auto voice = m_voices.Get(vh);
 	if (!voice) return nullptr;
 
 	return &voice->desc;
 }
 
-const Voice* VoicePool::GetVoice(VoiceHandle vh) const noexcept
-{
-	if (!m_allocator.IsValid(vh))
-		return nullptr;
-
-	return &m_voices[vh.Index()];
-}
-
-Voice* VoicePool::GetVoice(VoiceHandle vh) noexcept
-{
-	return const_cast<Voice*>(static_cast<const VoicePool*>(this)->GetVoice(vh));
-}
-
 const ISoundInstance* VoicePool::GetInstance(VoiceHandle vh) const noexcept
 {
-	auto voice = GetVoice(vh);
+	auto voice = m_voices.Get(vh);
 	return voice ? voice->instance : nullptr;
 }
 

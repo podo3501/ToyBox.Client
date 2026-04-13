@@ -25,18 +25,3 @@ struct StreamInput : public AssetInput
     explicit StreamInput(std::unique_ptr<IResourceStream>&& s) noexcept;
     bool IsStream() const override { return true; }
 };
-
-template<typename T>
-const T* As(const AssetInput& source)
-{
-    if constexpr (std::is_same_v<T, MemoryInput>)
-    {
-        if (source.IsStream()) return nullptr;
-    }
-    else if constexpr (std::is_same_v<T, StreamInput>)
-    {
-        if (!source.IsStream()) return nullptr;
-    }
-
-    return static_cast<const T*>(&source);
-}

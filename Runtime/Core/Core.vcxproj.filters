@@ -10,6 +10,9 @@
     <Filter Include="Utils">
       <UniqueIdentifier>{2464969a-ccc9-47e9-a47b-fab764013851}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Utils\Handle">
+      <UniqueIdentifier>{eac12419-8692-4464-a024-da52e933e990}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Foundation\NoCopyNoMove.h">
@@ -58,17 +61,23 @@
     <ClInclude Include="Utils\CommonUtils.h">
       <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="Utils\IDHandle.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="Utils\HandleAllocator.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
     <ClInclude Include="Foundation\Geometry2D.h">
       <Filter>Foundation</Filter>
     </ClInclude>
     <ClInclude Include="Utils\StringUtils.h">
       <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\Handle\IDHandle.h">
+      <Filter>Utils\Handle</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\Handle\HandlePool.h">
+      <Filter>Utils\Handle</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\Handle\FixedHandlePool.h">
+      <Filter>Utils\Handle</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\Handle\GenerationalHandle.h">
+      <Filter>Utils\Handle</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

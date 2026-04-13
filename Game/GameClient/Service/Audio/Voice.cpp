@@ -4,8 +4,8 @@
 
 void Voice::Reset() noexcept
 {
-	voiceHandle = InvalidVoiceHandle;
-	soundHandle = InvalidSoundHandle;
+	voiceHandle = {};
+	soundHandle = {};
 	instance = nullptr;
 	desc = {};
 	playbackTime = 0;

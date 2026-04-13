@@ -1,6 +1,5 @@
 #pragma once
-#include "Core/Utils/IDHandle.h"
+#include "Core/Utils/Handle/IDHandle.h"
 
 struct SoundTag {};
 using SoundHandle = IDHandle<SoundTag>;
-inline constexpr SoundHandle InvalidSoundHandle = IDHandle<SoundTag>::Invalid();

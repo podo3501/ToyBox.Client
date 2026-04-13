@@ -6,10 +6,10 @@ class PngTextureLoader : public IAssetLoader
 public:
 	virtual std::shared_ptr<Asset> Load(const AssetInput& source) override
 	{
-		if (auto mem = As<MemoryInput>(source))
-			return LoadFromMemory(mem->buffer);
+		if (source.IsStream()) return nullptr;
 
-		return nullptr;
+		const MemoryInput* mem = static_cast<const MemoryInput*>(&source);
+		return LoadFromMemory(mem->buffer);
 	}
 
 private:

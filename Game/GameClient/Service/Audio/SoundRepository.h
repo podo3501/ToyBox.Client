@@ -1,8 +1,8 @@
 #pragma once
+#include "Core/Utils/Handle/HandlePool.h"
 #include "SoundHandle.h"
 
 struct IAudioBackend;
-struct IResourceManager;
 struct ISoundBuffer;
 struct SoundDesc;
 struct StaticSoundDesc;
@@ -15,9 +15,7 @@ class SoundRepository
 public:
 	~SoundRepository();
 	SoundRepository() = delete;
-	SoundRepository(IAudioBackend* audioBackend, IResourceManager* resManager);
-	//SoundHandle AcquireStaticSound(const StaticSoundDesc* desc);
-	//SoundHandle AcquireStreamSound(const StreamSoundDesc* desc);
+	SoundRepository(IAudioBackend* audioBackend);
 
 	SoundHandle AcquireStaticSound(const StaticSoundDesc* desc,
 		function<shared_ptr<StaticSoundAsset>(const filesystem::path&)> loader);
@@ -29,16 +27,12 @@ public:
 
 private:
 	SoundHandle AcquireSoundInternal(auto* desc, auto&& createBuffer);
-	//shared_ptr<ISoundBuffer> CreateStreamSoundBuffer(const StreamSoundDesc* desc);
-
 	shared_ptr<ISoundBuffer> CreateStaticSoundBuffer(const StaticSoundDesc* desc,
 		function<shared_ptr<StaticSoundAsset>(const filesystem::path&)> loader);
 	shared_ptr<ISoundBuffer> CreateStreamSoundBuffer(const StreamSoundDesc* desc,
 		function<shared_ptr<StreamSoundAsset>(const filesystem::path&)> loader);
 
 	IAudioBackend* m_audioBackend{ nullptr };
-	IResourceManager* m_resManager{ nullptr };
 	unordered_map<filesystem::path, weak_ptr<ISoundBuffer>> m_buffers;
-	unordered_map<SoundHandle, LoadedSound> m_loadedSounds;
-	SoundHandle m_nextSoundHandle{ 1 }; // 0은 오류코드.
+	HandlePool<LoadedSound, SoundTag> m_loadedSounds; //빈 SoundTag 스트럭쳐를 넣어서 handle의 타입을 만든다.
 };

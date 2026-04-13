@@ -13,13 +13,6 @@ StaticSoundBuffer::StaticSoundBuffer(MIX_Mixer* mixer) noexcept :
     m_audio{ nullptr }
 {}
 
-bool StaticSoundBuffer::LoadFromMemory(Core::ByteBuffer fileBuffer)
-{
-    SDL_IOStream* io = SDL_IOFromConstMem(fileBuffer.data(), fileBuffer.size());
-    m_audio = MIX_LoadAudio_IO(m_mixer, io, true, true);
-    return m_audio != nullptr;
-}
-
 bool StaticSoundBuffer::LoadFromAsset(shared_ptr<StaticSoundAsset> asset)
 {
     if (m_audio)

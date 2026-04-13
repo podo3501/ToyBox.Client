@@ -1,5 +1,6 @@
 #pragma once
 #include "Voice.h"
+#include "Core/Utils/Handle/FixedHandlePool.h"
 
 struct Voice;
 struct IAudioBackend;
@@ -33,8 +34,6 @@ private:
 	void ActivateVoice(VoiceHandle vh, SoundHandle sh, ISoundInstance* instance, const SoundDesc* desc) noexcept;
 	VoiceHandle StealAndAcquire(const SoundDesc* desc, vector<Voice*>& stealList) noexcept;
 
-	const Voice* GetVoice(VoiceHandle vh) const noexcept;
-	Voice* GetVoice(VoiceHandle vh) noexcept;
 	const ISoundInstance* GetInstance(VoiceHandle vh) const noexcept;
 	ISoundInstance* GetInstance(VoiceHandle vh) noexcept;
 
@@ -42,9 +41,8 @@ private:
 	int m_maxVoices{ 0 };
 	int m_maxStreams{ 0 };
 	static const int MaxHandles{ 64 }; //핸들의 최종 크기. Setup시 voice 크기가 더 크면 오류.
-	HandleAllocator<VoiceTag, MaxHandles> m_allocator{ 0 };
 
-	vector<Voice> m_voices;
+	FixedHandlePool<Voice, VoiceTag, MaxHandles> m_voices;
 	vector<Voice*> m_stealStatics;
 	vector<Voice*> m_stealStreams;
 };

@@ -8,13 +8,13 @@ using Microsoft::WRL::ComPtr;
 CommandScheduler::~CommandScheduler() = default;
 CommandScheduler::CommandScheduler() = default;
 
-bool CommandScheduler::Initialize(ID3D12Device* device, int poolSize)
+bool CommandScheduler::Initialize(ID3D12Device* device, uint32_t directPoolSize, uint32_t copyPoolSize)
 {
     m_directQueue = make_unique<CommandQueue>();
     m_copyQueue = make_unique<CommandQueue>();
 
-    ReturnIfFalse(m_directQueue->Initialize(device, D3D12_COMMAND_LIST_TYPE_DIRECT, poolSize));
-    ReturnIfFalse(m_copyQueue->Initialize(device, D3D12_COMMAND_LIST_TYPE_COPY, poolSize));
+    ReturnIfFalse(m_directQueue->Initialize(device, D3D12_COMMAND_LIST_TYPE_DIRECT, directPoolSize));
+    ReturnIfFalse(m_copyQueue->Initialize(device, D3D12_COMMAND_LIST_TYPE_COPY, copyPoolSize));
     
     return true;
 }

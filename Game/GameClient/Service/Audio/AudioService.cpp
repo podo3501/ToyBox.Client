@@ -11,27 +11,22 @@ struct GroupInfo //지금은 볼륨 하나지만 조금씩 확장될 가능성이 크다.
 	float volume{ 1.f };
 };
 
-
 unique_ptr<AudioService> AudioService::Create(const SoundAssetView& sndAssetView, unique_ptr<IAudioBackend> backend,
-	IResourceManager* resManager, int maxVoices, int maxStreams) noexcept
+	int maxVoices, int maxStreams) noexcept
 {
 	if (backend == nullptr) return nullptr;
 	
-	auto sndRepository = make_unique<SoundRepository>(backend.get(), resManager);
-
-	unique_ptr<AudioService> service(
-		new AudioService(sndAssetView, move(sndRepository), move(backend))); //new를 쓰는 이유는 make_unique를 못 쓰기 때문이다. make_unique는 외부함수이기 때문에 private 생성자에 접근할 수 없다.
+	unique_ptr<AudioService> service(new AudioService(sndAssetView, move(backend))); //new를 쓰는 이유는 make_unique를 못 쓰기 때문이다. make_unique는 외부함수이기 때문에 private 생성자에 접근할 수 없다.
 	if (!service->Initialize(maxVoices, maxStreams)) return nullptr;
 
 	return service; 
 }
 
 AudioService::~AudioService() = default;
-AudioService::AudioService(const SoundAssetView& sndAssetView, unique_ptr<SoundRepository> sndRepository,
-	unique_ptr<IAudioBackend> audioBackend) noexcept :
+AudioService::AudioService(const SoundAssetView& sndAssetView, unique_ptr<IAudioBackend> audioBackend) noexcept :
 	m_sndAssetView{ make_unique<SoundAssetView>(sndAssetView) },
 	m_audioBackend{ move(audioBackend) },
-	m_repository{ move(sndRepository)},
+	m_repository{ make_unique<SoundRepository>(m_audioBackend.get()) },
 	m_voicePool{ make_unique<VoicePool>(m_audioBackend.get()) }
 {}
 
@@ -54,33 +49,22 @@ SoundHandle AudioService::AcquireStaticSound(string_view soundID,
 	function<shared_ptr<StaticSoundAsset>(const filesystem::path&)> loader)
 {
 	auto staticSoundTable = m_sndAssetView->staticSoundTable;
-	if (staticSoundTable == nullptr) return InvalidSoundHandle;
+	if (staticSoundTable == nullptr) return SoundHandle::Invalid();
 
 	auto desc = staticSoundTable->GetDescriptor(soundID);
-	if (desc == nullptr) return InvalidSoundHandle;
+	if (desc == nullptr) return SoundHandle::Invalid();
 
 	return m_repository->AcquireStaticSound(desc, loader);
 }
-
-//SoundHandle AudioService::LoadStreamSound(string_view soundID)
-//{
-//	auto streamSoundTable = m_sndAssetView->streamSoundTable;
-//	if (streamSoundTable == nullptr) return InvalidSoundHandle;
-//
-//	auto desc = streamSoundTable->GetDescriptor(soundID);
-//	if (desc == nullptr) return InvalidSoundHandle;
-//	
-//	return m_repository->AcquireStreamSound(desc);
-//}
 
 SoundHandle AudioService::AcquireStreamSound(string_view soundID,
 	function<shared_ptr<StreamSoundAsset>(const filesystem::path&)> loader)
 {
 	auto streamSoundTable = m_sndAssetView->streamSoundTable;
-	if (streamSoundTable == nullptr) return InvalidSoundHandle;
+	if (streamSoundTable == nullptr) return SoundHandle::Invalid();
 
 	auto desc = streamSoundTable->GetDescriptor(soundID);
-	if (desc == nullptr) return InvalidSoundHandle;
+	if (desc == nullptr) return SoundHandle::Invalid();
 
 	return m_repository->AcquireStreamSound(desc, loader);
 }
@@ -112,7 +96,7 @@ PlaybackParams AudioService::GetParams(const SoundDesc* desc) noexcept
 VoiceHandle AudioService::Play(SoundHandle sh) noexcept
 {
 	auto loaded = m_repository->Find(sh);
-	if (!loaded) return InvalidVoiceHandle;
+	if (!loaded) return VoiceHandle::Invalid();
 
 	return m_voicePool->Play(sh, loaded, GetParams(loaded->desc));
 }
