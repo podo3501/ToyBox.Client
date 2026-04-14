@@ -1,11 +1,11 @@
 #pragma once
-#include "TextureResource.h"
+#include "TextureRes.h"
 
 struct ITextureRender;
 struct IComponent;
 namespace DX { class DeviceResources; }
 
-class TextureRenderTarget : public TextureResource
+class TextureRenderTarget : public TextureRes
 {
 public:
 	static TextureResourceID GetTypeStatic() { return TextureResourceID::TextureRenderTarget; }

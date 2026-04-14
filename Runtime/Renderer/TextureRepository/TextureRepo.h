@@ -5,7 +5,7 @@
 class Texture;
 class CFont;
 class RenderTexture;
-class TextureResource;
+class TextureRes;
 namespace DX { class DeviceResources; }
 
 class TextureRepo : public ITextureLoad, public ITextureController, public ITextureRender
@@ -41,9 +41,9 @@ public:
 
 private:
     template<typename TexResType>
-    bool LoadTextureResource(const wstring& filename, size_t& outIndex, function<void(TextureResource*)> postLoadAction);
-    TextureResource* FindTextureResource(const wstring& filename) const noexcept;
-    TextureResource* FindTextureResource(size_t index) const noexcept;
+    bool LoadTextureResource(const wstring& filename, size_t& outIndex, function<void(TextureRes*)> postLoadAction);
+    TextureRes* FindTextureResource(const wstring& filename) const noexcept;
+    TextureRes* FindTextureResource(size_t index) const noexcept;
     void ReleaseDescriptor(size_t idx) noexcept;
     size_t AllocateDescriptor() noexcept;
 
@@ -54,7 +54,7 @@ private:
     SpriteBatch* m_sprite;
 
     function<void(size_t index, ITextureRender*)> m_textureRenderer;
-    array<unique_ptr<TextureResource>, MAX_DESC> m_texResources;
+    array<unique_ptr<TextureRes>, MAX_DESC> m_texResources;
     array<int, MAX_DESC> m_refCount{};
     vector<size_t> m_freeDescIndices; //해제되고나서 재활용될 인덱스 모음
     size_t m_nextDescIdx{ 0 };  //새롭게 할당할 인덱스

@@ -3,7 +3,7 @@
 
 CFont::~CFont() = default;
 CFont::CFont(ID3D12Device* device, DescriptorHeap* descHeap) noexcept :
-    TextureResource{ device, descHeap }
+    TextureRes{ device, descHeap }
 {}
 
 void CFont::Load(ResourceUploadBatch* upload, const wstring& filename, size_t index)

@@ -36,7 +36,7 @@
     <ClCompile Include="TextureRepository\TextureRepo.cpp">
       <Filter>TextureRepository</Filter>
     </ClCompile>
-    <ClCompile Include="TextureRepository\TextureResource.cpp">
+    <ClCompile Include="TextureRepository\TextureRes.cpp">
       <Filter>TextureRepository</Filter>
     </ClCompile>
     <ClCompile Include="TextureRepository\TextureHelper.cpp">
@@ -70,7 +70,7 @@
     <ClInclude Include="TextureRepository\TextureRepo.h">
       <Filter>TextureRepository</Filter>
     </ClInclude>
-    <ClInclude Include="TextureRepository\TextureResource.h">
+    <ClInclude Include="TextureRepository\TextureRes.h">
       <Filter>TextureRepository</Filter>
     </ClInclude>
     <ClInclude Include="TextureRepository\TextureHelper.h">

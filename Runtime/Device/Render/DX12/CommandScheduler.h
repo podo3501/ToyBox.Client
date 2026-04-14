@@ -1,6 +1,7 @@
 #pragma once
 #include <wrl/client.h>
 #include "d3dx12.h"
+#include "FenceTypes.h"
 
 using Microsoft::WRL::ComPtr;
 
@@ -25,6 +26,8 @@ public:
     void ReleaseCompletedResources(); // Pending release 眉农 饶 府家胶 秦力
     void WaitForAllGPU();
     ID3D12CommandQueue* GetCommandQueue(CommandType type);
+    SubmittedFences GetLastSubmittedFences() const noexcept;
+    CompletedFences GetCompletedFences() const noexcept;
 
 private:
     CommandQueue* GetQueue(CommandType type);

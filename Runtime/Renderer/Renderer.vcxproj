@@ -179,7 +179,7 @@
     <ClCompile Include="TextureRepository\Texture.cpp" />
     <ClCompile Include="TextureRepository\TextureHelper.cpp" />
     <ClCompile Include="TextureRepository\TextureRepo.cpp" />
-    <ClCompile Include="TextureRepository\TextureResource.cpp" />
+    <ClCompile Include="TextureRepository\TextureRes.cpp" />
     <ClCompile Include="Utils\Common.cpp" />
     <ClCompile Include="Utils\DxLeakCheck.cpp" />
   </ItemGroup>
@@ -200,7 +200,7 @@
     <ClInclude Include="TextureRepository\Texture.h" />
     <ClInclude Include="TextureRepository\TextureHelper.h" />
     <ClInclude Include="TextureRepository\TextureRepo.h" />
-    <ClInclude Include="TextureRepository\TextureResource.h" />
+    <ClInclude Include="TextureRepository\TextureRes.h" />
     <ClInclude Include="Utils\Common.h" />
     <ClInclude Include="Utils\DxLeakCheck.h" />
   </ItemGroup>

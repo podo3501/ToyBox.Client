@@ -30,7 +30,8 @@ public:
         }
 
         auto& slot = m_slots[index];
-        slot.data = T(std::forward<Args>(args)...);
+        slot.data.reset();
+        slot.data.emplace(std::forward<Args>(args)...);
         slot.alive = true;
 
         return Handle{ index, slot.generation }; // generation은 1 이상 보장됨
@@ -39,13 +40,13 @@ public:
     T* Find(Handle h)
     {
         if (!IsValid(h)) return nullptr;
-        return &m_slots[h.index].data;
+        return &(*m_slots[h.index].data);
     }
 
     const T* Find(Handle h) const
     {
         if (!IsValid(h)) return nullptr;
-        return &m_slots[h.index].data;
+        return &(*m_slots[h.index].data);
     }
 
     bool Remove(Handle h)
@@ -53,6 +54,7 @@ public:
         if (!IsValid(h)) return false;
 
         auto& slot = m_slots[h.index];
+        slot.data.reset();
         slot.alive = false;
 
         slot.generation++;
@@ -75,7 +77,7 @@ private:
     template<typename T>
     struct HandleSlot
     {
-        T data{};
+        std::optional<T> data;
         uint32_t generation = 1; // 0은 사용 안 함
         bool alive = false;
     };

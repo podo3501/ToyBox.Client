@@ -26,7 +26,7 @@ void TextureRepo::AddRef(size_t index) noexcept
 
 template<typename TexResType>
 bool TextureRepo::LoadTextureResource(const wstring& filename, size_t& outIndex,
-    function<void(TextureResource*)> postLoadAction)
+    function<void(TextureRes*)> postLoadAction)
 {
     if (auto find = FindTextureResource(filename); find)
     {
@@ -49,13 +49,13 @@ bool TextureRepo::LoadTextureResource(const wstring& filename, size_t& outIndex,
 
 bool TextureRepo::LoadFont(const wstring& filename, size_t& outIndex)
 {
-    return LoadTextureResource<CFont>(filename, outIndex, [](TextureResource*) {});
+    return LoadTextureResource<CFont>(filename, outIndex, [](TextureRes*) {});
 }
 
 bool TextureRepo::LoadTexture(const wstring& filename, size_t& outIndex, XMUINT2* outSize, UINT64* outGfxMemOffset)
 {
     return LoadTextureResource<Texture>(filename, outIndex, 
-        [outSize, outGfxMemOffset](TextureResource* res) {
+        [outSize, outGfxMemOffset](TextureRes* res) {
             if (outSize) *outSize = res->GetSize();
             if (outGfxMemOffset) *outGfxMemOffset = res->GetGraphicMemoryOffset();
         });
@@ -113,7 +113,7 @@ optional<vector<Rectangle>> TextureRepo::GetTextureAreaList(size_t index, const 
     return areaList;
 }
 
-TextureResource* TextureRepo::FindTextureResource(const wstring& filename) const noexcept
+TextureRes* TextureRepo::FindTextureResource(const wstring& filename) const noexcept
 {
     auto find = ranges::find_if(m_texResources, [&filename](const auto& res) {
         return res && res->GetFilename() == filename;
@@ -125,7 +125,7 @@ TextureResource* TextureRepo::FindTextureResource(const wstring& filename) const
     return nullptr;
 }
 
-TextureResource* TextureRepo::FindTextureResource(size_t index) const noexcept
+TextureRes* TextureRepo::FindTextureResource(size_t index) const noexcept
 {
     if (index < 0 || index >= MAX_DESC) return nullptr;
     const auto& texRes = m_texResources[index];
@@ -151,7 +151,7 @@ void TextureRepo::Render(size_t index, const RECT& dest, const RECT* source)
 void TextureRepo::DrawRenderTextures()
 {
     auto texResViews = m_texResources
-        | views::filter([](const unique_ptr<TextureResource>& resource) {
+        | views::filter([](const unique_ptr<TextureRes>& resource) {
         return resource && resource->GetTypeID() == TextureRenderTarget::GetTypeStatic();
             });
 

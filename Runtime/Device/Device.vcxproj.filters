@@ -160,6 +160,12 @@
     <ClInclude Include="Asset\Loader\Sound\OggStreamLoader.h">
       <Filter>Asset\Loader\Sound</Filter>
     </ClInclude>
+    <ClInclude Include="Render\DX12\TextureResource.h">
+      <Filter>Render\DX12</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\FenceTypes.h">
+      <Filter>Render\DX12</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -264,6 +270,9 @@
     </ClCompile>
     <ClCompile Include="Asset\Loader\Sound\OggStreamLoader.cpp">
       <Filter>Asset\Loader\Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\TextureResource.cpp">
+      <Filter>Render\DX12</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -8,7 +8,7 @@ using Microsoft::WRL::ComPtr;
 
 Texture::~Texture() = default;
 Texture::Texture(ID3D12Device* device, DescriptorHeap* descHeap) noexcept :
-    TextureResource{ device, descHeap }
+    TextureRes{ device, descHeap }
 {}
 
 void Texture::Load(ResourceUploadBatch* resUpload, const wstring& filename, size_t index)

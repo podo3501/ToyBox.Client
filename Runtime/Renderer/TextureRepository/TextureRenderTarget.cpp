@@ -11,7 +11,7 @@ TextureRenderTarget::~TextureRenderTarget()
 TextureRenderTarget::TextureRenderTarget(function<void(size_t index, ITextureRender*)> rendererFn, 
     DX::DeviceResources* deviceResources, DescriptorHeap* descHeap) :
     m_textureRenderer{ rendererFn },
-    TextureResource{ deviceResources->GetD3DDevice(), descHeap },
+    TextureRes{ deviceResources->GetD3DDevice(), descHeap },
     m_deviceResources{ deviceResources }
 {
     m_rtvDescriptor = make_unique<DescriptorHeap>(m_device,

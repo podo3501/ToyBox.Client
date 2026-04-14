@@ -8,15 +8,15 @@ enum class TextureResourceID
 	Unknown
 };
 
-class TextureResource
+class TextureRes
 {
 public:
 	static TextureResourceID GetTypeStatic() { return TextureResourceID::Unknown; }
 	virtual TextureResourceID GetTypeID() const noexcept = 0;
 
-	virtual ~TextureResource();
-	TextureResource() = delete;
-	TextureResource(ID3D12Device* device, DescriptorHeap* descHeap) noexcept;
+	virtual ~TextureRes();
+	TextureRes() = delete;
+	TextureRes(ID3D12Device* device, DescriptorHeap* descHeap) noexcept;
 	
 	virtual void Reset() {};
 
@@ -40,7 +40,7 @@ private:
 };
 
 template<typename TargetType>
-TargetType ToType(TextureResource* texRes)
+TargetType ToType(TextureRes* texRes)
 {
 	using NonPointerTargetType = typename remove_pointer<TargetType>::type;
 	assert(texRes->GetTypeID() == NonPointerTargetType::GetTypeStatic());

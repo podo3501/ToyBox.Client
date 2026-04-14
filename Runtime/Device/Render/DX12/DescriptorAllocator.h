@@ -2,7 +2,12 @@
 #include <d3d12.h>
 #include <wrl/client.h>
 
+
 using Microsoft::WRL::ComPtr;
+
+struct SubmittedFences;
+struct CompletedFences;
+struct PendingFree;
 
 class DescriptorAllocator
 {
@@ -11,6 +16,8 @@ public:
     explicit DescriptorAllocator(ID3D12Device* device) noexcept;
     bool Initialize(D3D12_DESCRIPTOR_HEAP_TYPE type, UINT maxCount, bool shaderVisible) noexcept;
     UINT Allocate() noexcept;
+    void DeferredFree(UINT index, const SubmittedFences& fences);
+    void ProcessDeferredFree(const CompletedFences& fences);
 
     D3D12_CPU_DESCRIPTOR_HANDLE GetCpuHandle(UINT index) const noexcept;
     D3D12_GPU_DESCRIPTOR_HANDLE GetGpuHandle(UINT index) const noexcept;
@@ -26,6 +33,8 @@ private:
     UINT m_capacity{ 0 };
     UINT m_allocated{ 0 }; //현재할당
     bool m_shaderVisible{ false };
+    std::vector<UINT> m_freeList;
+    vector<PendingFree> m_pendingFrees;
 
     D3D12_CPU_DESCRIPTOR_HANDLE m_cpuStart{};
     D3D12_GPU_DESCRIPTOR_HANDLE m_gpuStart{};

@@ -1,12 +1,12 @@
 #pragma once
-#include "TextureResource.h"
+#include "TextureRes.h"
 
 namespace DX
 {
     class DeviceResources;
 }
 
-class Texture : public TextureResource
+class Texture : public TextureRes
 {
 public:
     static TextureResourceID GetTypeStatic() { return TextureResourceID::Texture; }

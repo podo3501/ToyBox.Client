@@ -54,6 +54,8 @@ uint64_t CommandQueue::End(vector<ComPtr<ID3D12Resource>>&& resources)
     m_queue->ExecuteCommandLists(1, lists);
 
     uint64_t fenceValue = Signal();
+    m_lastSubmittedFence = fenceValue;
+
     m_currentCmdEntry->SetFence(m_fence.Get(), fenceValue); // 재사용하기 위해서 fence 기록
     if (!resources.empty())
         m_pendingReleases.push({ fenceValue, std::move(resources) });

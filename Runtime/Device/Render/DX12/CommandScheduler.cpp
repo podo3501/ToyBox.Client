@@ -72,3 +72,17 @@ CommandQueue* CommandScheduler::GetQueue(CommandType type)
         ? m_directQueue.get()
         : m_copyQueue.get();
 }
+
+SubmittedFences CommandScheduler::GetLastSubmittedFences() const noexcept
+{
+    return SubmittedFences{
+        m_directQueue->GetLastSubmittedFence(),
+        m_copyQueue->GetLastSubmittedFence() };
+}
+
+CompletedFences CommandScheduler::GetCompletedFences() const noexcept
+{
+    return CompletedFences{
+        m_directQueue->GetCompletedFence(),
+        m_copyQueue->GetCompletedFence() };
+}

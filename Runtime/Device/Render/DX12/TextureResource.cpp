@@ -1,15 +1,17 @@
 #include "pch.h"
-#include "TextureRepository.h"
+#include "TextureResource.h"
 #include "CommandScheduler.h"
 #include "DescriptorAllocator.h"
 #include "ResourceUploader.h"
+#include "GameClient/Service/Asset/Assets/TextureAsset.h"
 
-TextureRepository::~TextureRepository()
+TextureResource::~TextureResource()
 {
-
+    if (m_srvAllocator && m_srvIndex != UINT_MAX)
+        m_srvAllocator->DeferredFree(m_srvIndex, m_command->GetLastSubmittedFences());
 }
 
-TextureRepository::TextureRepository(ID3D12Device* device, CommandScheduler* command,
+TextureResource::TextureResource(ID3D12Device* device, CommandScheduler* command,
     DescriptorAllocator* srvAllocator, ResourceUploader* uploader) :
     m_device{ device },
     m_command{ command },
@@ -17,29 +19,26 @@ TextureRepository::TextureRepository(ID3D12Device* device, CommandScheduler* com
     m_uploader{ uploader }
 {}
 
-int TextureRepository::Upload(const TextureAsset& asset)
+bool TextureResource::LoadFromAsset(shared_ptr<TextureAsset> asset)
 {
+    UINT index = m_srvAllocator->Allocate();
+    if (index == UINT_MAX)
+        return false;
+
     auto cmd = m_command->Begin(CommandType::Copy);
+    if (!cmd) return false; 
 
     ComPtr<ID3D12Resource> uploadBuffer;
-    auto texture = m_uploader->UploadTexture(cmd, asset, uploadBuffer);
+    auto texture = m_uploader->UploadTexture(cmd, *asset, uploadBuffer);
 
     m_command->End({ uploadBuffer });
 
-    return AddTexture(texture);
+    AddTexture(index, texture);
+    return true;
 }
 
-const GpuTexture* TextureRepository::GetTexture(int index) const
-{ 
-    if (index < 0 || index >= static_cast<int>(m_textureResources.size()))
-        return nullptr;
-
-    return &m_textureResources[index];
-}
-
-int TextureRepository::AddTexture(ComPtr<ID3D12Resource> tex)
+void TextureResource::AddTexture(UINT index, ComPtr<ID3D12Resource> tex)
 {
-    UINT index = m_srvAllocator->Allocate();
     auto cpuHandle = m_srvAllocator->GetCpuHandle(index);
 
     D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
@@ -50,6 +49,6 @@ int TextureRepository::AddTexture(ComPtr<ID3D12Resource> tex)
 
     m_device->CreateShaderResourceView(tex.Get(), &srvDesc, cpuHandle);
 
-    m_textureResources.push_back({ tex, index });
-    return static_cast<int>(m_textureResources.size() - 1);
+    m_tex = tex;
+    m_srvIndex = index;
 }

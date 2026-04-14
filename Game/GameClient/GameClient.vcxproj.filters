@@ -496,6 +496,12 @@
     <ClInclude Include="Service\Asset\Assets\StreamSoundAsset.h">
       <Filter>Service\Asset\Assets</Filter>
     </ClInclude>
+    <ClInclude Include="Service\Render\ITextureResource.h">
+      <Filter>Service\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\TextureHandle.h">
+      <Filter>Service\Render</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Locator">

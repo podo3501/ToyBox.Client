@@ -1,7 +1,7 @@
 #pragma once
-#include "TextureResource.h"
+#include "TextureRes.h"
 
-class CFont : public TextureResource
+class CFont : public TextureRes
 {
 public:
     static TextureResourceID GetTypeStatic() { return TextureResourceID::Font; }

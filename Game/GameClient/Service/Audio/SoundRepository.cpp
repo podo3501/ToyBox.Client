@@ -56,7 +56,7 @@ shared_ptr<ISoundBuffer> SoundRepository::CreateStaticSoundBuffer(const StaticSo
     auto asset = loader(desc->filename);
     if (!asset) return nullptr;
 
-    if (!staticBuffer->LoadFromAsset(move(asset))) return nullptr;
+    if (!staticBuffer->LoadFromAsset(move(asset))) return nullptr; //?!? CreateStaticSoundBuffer 할때 asset을 인자로 바로 넣어서 하면 코드량이 조금 줄어들겠지.
     return staticBuffer;
 }
 

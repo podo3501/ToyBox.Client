@@ -5,6 +5,7 @@
 #include "CommandScheduler.h"
 #include "DescriptorAllocator.h"
 #include "QuadRenderer.h"
+#include "TextureResource.h"
 #include "TextureRepository.h"
 #include "ResourceUploader.h"
 #include "CommandUtils.h"
@@ -53,10 +54,9 @@ bool RenderBackend::Initialize(HWND hwnd, const Size& wndSize, const RenderConfi
     ReturnIfFalse(m_swapChain->Initialize(device, factory, m_command.get(), desc));
 
     m_srvAllocator = make_unique<DescriptorAllocator>(device);
-    ReturnIfFalse(m_srvAllocator->Initialize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 2048, true));
+    ReturnIfFalse(m_srvAllocator->Initialize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, config.srvDescriptorCount, true));
 
     m_uploader = make_unique<ResourceUploader>(device);
-    m_textureRepository = make_unique<TextureRepository>(device, m_command.get(), m_srvAllocator.get(), m_uploader.get());
 
     m_quadRenderer = make_unique<QuadRenderer>();
     ReturnIfFalse(m_quadRenderer->Initialize(device, wndSize));
@@ -99,14 +99,36 @@ bool RenderBackend::EndFrame(ID3D12GraphicsCommandList* cmd)
     return true;
 }
 
-int RenderBackend::UploadTexture(const TextureAsset& asset)
+unique_ptr<ITextureResource> RenderBackend::CreateTextureResource()
 {
-    return m_textureRepository->Upload(asset);
+    return make_unique<TextureResource>(m_core->GetDevice(), m_command.get(), m_srvAllocator.get(), m_uploader.get());
 }
 
-void RenderBackend::Draw(int index, const Rect& dest, const Rect* source)
+void RenderBackend::Draw(ITextureResource* texRes, const Rect& dest, const Rect* source)
 {
-    m_pendingDraws.emplace_back(index, dest, source ? *source : Rect{});
+    auto cmd = BeginFrame();
+    if (!cmd) return;
+
+    auto texResource = static_cast<TextureResource*>(texRes);
+    // 처음 Flush 시 한 번만 상태 전환
+    static bool ready = false;
+    if (!ready)
+    {
+        m_quadRenderer->TransitionToRenderState(cmd);
+        CommandUtils::Transition(cmd, texResource->Get(),
+            D3D12_RESOURCE_STATE_COMMON,
+            D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+
+        ready = true;
+    }
+
+    m_quadRenderer->BindDescriptorHeap(cmd);
+    m_quadRenderer->BindPipeline(cmd);
+
+    m_quadRenderer->BindTexture(cmd, m_srvAllocator->GetGpuHandle(texResource->GetSrvIndex()));
+    m_quadRenderer->Draw(cmd, dest);
+
+    EndFrame(cmd);
 }
 
 void RenderBackend::Resize(const Size& size)
@@ -117,7 +139,7 @@ void RenderBackend::Resize(const Size& size)
 void RenderBackend::Update()
 {
     m_command->ReleaseCompletedResources();
-    FlushDraws();
+    m_srvAllocator->ProcessDeferredFree(m_command->GetCompletedFences());
 }
 
 void RenderBackend::Clear(ID3D12GraphicsCommandList* cmd, float r, float g, float b, float a)
@@ -127,52 +149,6 @@ void RenderBackend::Clear(ID3D12GraphicsCommandList* cmd, float r, float g, floa
     float color[4] = { r, g, b, a };
     CommandUtils::ClearRTV(cmd, rtv, color);
 }
-
-void RenderBackend::FlushDraws()
-{
-    auto cmd = BeginFrame();
-    if (!cmd) 
-        return;
-
-    // 처음 Flush 시 한 번만 상태 전환
-    static bool ready = false;
-    if (!ready)
-    {
-        m_quadRenderer->TransitionToRenderState(cmd);
-        for (auto& draw : m_pendingDraws)
-        {
-            auto tex = m_textureRepository->GetTexture(draw.textureIndex);
-            if (!tex) continue;
-
-            CommandUtils::Transition(cmd, tex->resource.Get(),
-                D3D12_RESOURCE_STATE_COMMON,
-                D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
-        }
-        ready = true;
-    }
-
-    m_quadRenderer->BindDescriptorHeap(cmd);
-    m_quadRenderer->BindPipeline(cmd);
-
-    int currentTex = -1;
-    for (auto& draw : m_pendingDraws)
-    {
-        auto tex = m_textureRepository->GetTexture(draw.textureIndex);
-        if (!tex) continue;
-
-        if (draw.textureIndex != currentTex)
-        {
-            m_quadRenderer->BindTexture(cmd, m_srvAllocator->GetGpuHandle(tex->srvIndex));
-            currentTex = draw.textureIndex;
-        }
-
-        m_quadRenderer->Draw(cmd, draw.dest);
-    }
-    m_pendingDraws.clear();
-
-    EndFrame(cmd);
-}
-
 
 //////////////////////////////////////////////////////
 

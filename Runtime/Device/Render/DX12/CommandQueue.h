@@ -22,6 +22,8 @@ public:
     void WaitForGPU();
 
     ID3D12CommandQueue* GetQueue() const { return m_queue.Get(); }
+    uint64_t GetLastSubmittedFence() const noexcept { return m_lastSubmittedFence; }
+    uint64_t GetCompletedFence() const noexcept { return m_fence->GetCompletedValue(); }
 
 private:
     struct PendingRelease
@@ -44,6 +46,7 @@ private:
 
     vector<unique_ptr<CommandListEntry>> m_pool;
     size_t m_next{ 0 }; //command pool에서 다음에 어떤 command를 사용할지.
+    uint64_t m_lastSubmittedFence{ 0 }; //여기까지 명령어가 들어가 있는 펜스값. GetCompletedValue() 값은 실제로 다 끝난 펜스값.
 
     CommandListEntry* m_currentCmdEntry{ nullptr };
 
