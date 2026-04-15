@@ -4,10 +4,10 @@
 #include "SwapChainPresenter.h"
 #include "CommandScheduler.h"
 #include "DescriptorAllocator.h"
-#include "QuadRenderer.h"
 #include "TextureResource.h"
-#include "TextureRepository.h"
 #include "ResourceUploader.h"
+#include "ResourcePreparer.h"
+#include "QuadRenderer.h"
 #include "CommandUtils.h"
 #include <dxgi1_6.h>
 #include "Vertex.h"
@@ -57,6 +57,7 @@ bool RenderBackend::Initialize(HWND hwnd, const Size& wndSize, const RenderConfi
     ReturnIfFalse(m_srvAllocator->Initialize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, config.srvDescriptorCount, true));
 
     m_uploader = make_unique<ResourceUploader>(device);
+    m_preparer = make_unique<ResourcePreparer>();
 
     m_quadRenderer = make_unique<QuadRenderer>();
     ReturnIfFalse(m_quadRenderer->Initialize(device, wndSize));
@@ -83,6 +84,9 @@ ID3D12GraphicsCommandList* RenderBackend::BeginFrame()
     auto directCmd = m_command->Begin(CommandType::Direct);
     if (!directCmd) return nullptr;
 
+    auto fences = m_command->GetCompletedFences();
+    m_preparer->Process(directCmd, fences);
+
     m_swapChain->TransitionToRenderTarget(directCmd);
     m_swapChain->SetRenderTarget(directCmd);
     Clear(directCmd, 0.4f, 0.4f, 0.5f, 1.0f); //눈이 적당히 덜 피곤하면서 비어있는 영역 확인 가능한 색깔.
@@ -101,7 +105,12 @@ bool RenderBackend::EndFrame(ID3D12GraphicsCommandList* cmd)
 
 unique_ptr<ITextureResource> RenderBackend::CreateTextureResource()
 {
-    return make_unique<TextureResource>(m_core->GetDevice(), m_command.get(), m_srvAllocator.get(), m_uploader.get());
+    return make_unique<TextureResource>(
+        m_core->GetDevice(),
+        m_command.get(),
+        m_srvAllocator.get(),
+        m_uploader.get(),
+        m_preparer.get());
 }
 
 void RenderBackend::Draw(ITextureResource* texRes, const Rect& dest, const Rect* source)
@@ -115,10 +124,6 @@ void RenderBackend::Draw(ITextureResource* texRes, const Rect& dest, const Rect*
     if (!ready)
     {
         m_quadRenderer->TransitionToRenderState(cmd);
-        CommandUtils::Transition(cmd, texResource->Get(),
-            D3D12_RESOURCE_STATE_COMMON,
-            D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
-
         ready = true;
     }
 

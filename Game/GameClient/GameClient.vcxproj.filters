@@ -201,6 +201,9 @@
     <ClCompile Include="Service\Render\RenderService.cpp">
       <Filter>Service\Render</Filter>
     </ClCompile>
+    <ClCompile Include="Service\Render\TextureRepository.cpp">
+      <Filter>Service\Render</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameLoop.h" />
@@ -500,6 +503,9 @@
       <Filter>Service\Render</Filter>
     </ClInclude>
     <ClInclude Include="Service\Render\TextureHandle.h">
+      <Filter>Service\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\TextureRepository.h">
       <Filter>Service\Render</Filter>
     </ClInclude>
   </ItemGroup>

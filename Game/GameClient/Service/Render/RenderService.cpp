@@ -2,7 +2,7 @@
 #include "RenderService.h"
 #include "IRenderBackend.h"
 #include "ITextureResource.h"
-#include "Platform/Resource/IResourceManager.h"
+#include "TextureRepository.h"
 #include "Core/Foundation/Geometry2D.h"
 
 struct DrawCommand
@@ -16,7 +16,8 @@ struct DrawCommand
 
 RenderService::~RenderService() = default;
 RenderService::RenderService(unique_ptr<IRenderBackend> backend) :
-	m_backend{ move(backend) }
+	m_backend{ move(backend) },
+	m_texRepository{ make_unique<TextureRepository>(m_backend.get()) }
 {}
 
 unique_ptr<RenderService> RenderService::Create(unique_ptr<IRenderBackend> backend) noexcept
@@ -25,50 +26,25 @@ unique_ptr<RenderService> RenderService::Create(unique_ptr<IRenderBackend> backe
 	return service;
 }
 
-TextureHandle RenderService::AcquireTexture(const filesystem::path& path, 
+TextureHandle RenderService::LoadTexture(const filesystem::path& path,
 	function<shared_ptr<TextureAsset>(const filesystem::path&)> loader)
 {
-	shared_ptr<ITextureResource> texRes;
-
-	auto it = m_cache.find(path);
-	if (it != m_cache.end())
-		texRes = it->second.lock();
-	
-	if (!texRes)
-	{
-		auto asset = loader(path);
-		if (!asset) return TextureHandle::Invalid();
-
-		texRes = CreateTextureResource(move(asset));
-		if (!texRes) return TextureHandle::Invalid();
-
-		m_cache.insert_or_assign(path, texRes);
-	}
-
-	return m_loadedTextures.Emplace(texRes);
-}
-
-shared_ptr<ITextureResource> RenderService::CreateTextureResource(shared_ptr<TextureAsset> asset)
-{
-	auto texRes = m_backend->CreateTextureResource();
-	if (!texRes) return nullptr;
-
-	if (!texRes->LoadFromAsset(move(asset))) return nullptr;
-	return texRes;
+	return m_texRepository->GetOrCreate(path, loader);
 }
 
 bool RenderService::ReleaseTexture(TextureHandle th)
 {
-	return m_loadedTextures.Remove(th);
+	return m_texRepository->Release(th);
 }
 
 void RenderService::Draw(TextureHandle th, const Rect& dest, const Rect* source)
 {
-	auto texRes = m_loadedTextures.Find(th);
-	if (!texRes) return;
+	auto entry = m_texRepository->Get(th);
+	if (!entry || entry->state != TextureState::Ready)
+		return; //일단 ready가 안됐으면 리턴. 가짜 텍스춰를 보여주기도 한다.
 
 	DrawCommand cmd;
-	cmd.texRes = *texRes;
+	cmd.texRes = entry->texRes;
 	cmd.dest = dest;
 
 	if (source)
@@ -95,6 +71,7 @@ void RenderService::Resize(const Size& size)
 
 void RenderService::Update()
 {
+	m_texRepository->Update();
 	m_backend->Update();
 	Flush();
 }

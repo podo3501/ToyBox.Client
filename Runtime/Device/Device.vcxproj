@@ -53,11 +53,12 @@
     <ClInclude Include="Render\DX12\DescriptorAllocator.h" />
     <ClInclude Include="Render\DX12\DX12Core.h" />
     <ClInclude Include="Render\DX12\FenceTypes.h" />
+    <ClInclude Include="Render\DX12\PendingTransition.h" />
+    <ClInclude Include="Render\DX12\ResourcePreparer.h" />
     <ClInclude Include="Render\DX12\ResourceUploader.h" />
     <ClInclude Include="Render\DX12\SwapChainPresenter.h" />
     <ClInclude Include="Render\DX12\QuadRenderer.h" />
     <ClInclude Include="Render\DX12\RenderBackend.h" />
-    <ClInclude Include="Render\DX12\TextureRepository.h" />
     <ClInclude Include="Render\DX12\TextureResource.h" />
     <ClInclude Include="Render\DX12\Vertex.h" />
     <ClInclude Include="Storage\JsonObjectIO.h" />
@@ -98,11 +99,11 @@
     <ClCompile Include="Render\DX12\DescriptorAllocator.cpp" />
     <ClCompile Include="Render\DX12\DX12Core.cpp" />
     <ClCompile Include="Render\DX12\DX12Link.cpp" />
+    <ClCompile Include="Render\DX12\ResourcePreparer.cpp" />
     <ClCompile Include="Render\DX12\ResourceUploader.cpp" />
     <ClCompile Include="Render\DX12\SwapChainPresenter.cpp" />
     <ClCompile Include="Render\DX12\QuadRenderer.cpp" />
     <ClCompile Include="Render\DX12\RenderBackend.cpp" />
-    <ClCompile Include="Render\DX12\TextureRepository.cpp" />
     <ClCompile Include="Render\DX12\TextureResource.cpp" />
   </ItemGroup>
   <ItemGroup>

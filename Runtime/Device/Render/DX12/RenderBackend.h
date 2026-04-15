@@ -10,9 +10,9 @@ class DX12Core;
 class SwapChainPresenter;
 class CommandScheduler;
 class DescriptorAllocator;
-class QuadRenderer;
-class TextureRepository;
 class ResourceUploader;
+class ResourcePreparer;
+class QuadRenderer;
 
 class RenderBackend : public IRenderBackend
 {
@@ -35,6 +35,7 @@ private:
 	unique_ptr<SwapChainPresenter> m_swapChain;
 	unique_ptr<DescriptorAllocator> m_srvAllocator;
 	unique_ptr<ResourceUploader> m_uploader;
+	unique_ptr<ResourcePreparer> m_preparer;
 	unique_ptr<QuadRenderer> m_quadRenderer;
 	
 	Size m_size{};

@@ -274,15 +274,14 @@
 --json도 thirdparty 이다. serialize도 다른 프로젝트에 두어서 client 및 core에 전염이 안되도록.
 --AudioService에서 asset을 이용해서 로딩하는 식으로 수정. static, stream 둘다.
 --soundrepository에서 asset을 이용해서 파일을 pcm으로 바꾼후 넣어주는 식으로 수정.
-    
+--upload를 여러개 업로드 해도 안 죽도록.    
+--텍스쳐 max 설정.
+--텍스쳐 핸들로 리턴하게끔
 
 @렌더러 만들기
-    @upload를 여러개 업로드 해도 안 죽도록.
     @vram에 upload 중에 렌더링이 걸리면 어떻게 되는지 테스트
-    @텍스쳐 max 설정.
     @texture batching
     @화면 배경색깔 지정하게끔
-    @텍스쳐 핸들로 리턴하게끔
     
 @	m_uiModule = CreateUIModule("Demo", layout, "Main", move(storage), move(resBinderOwner));
     Manager 안에서 생성한다음 붙일필요가 있나? CreateUIModule을 만들어서 UIModule을 만든다음에 manager에 insert 하는

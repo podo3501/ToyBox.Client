@@ -3,6 +3,7 @@
 #include "CommandScheduler.h"
 #include "DescriptorAllocator.h"
 #include "ResourceUploader.h"
+#include "ResourcePreparer.h"
 #include "GameClient/Service/Asset/Assets/TextureAsset.h"
 
 TextureResource::~TextureResource()
@@ -12,11 +13,12 @@ TextureResource::~TextureResource()
 }
 
 TextureResource::TextureResource(ID3D12Device* device, CommandScheduler* command,
-    DescriptorAllocator* srvAllocator, ResourceUploader* uploader) :
+    DescriptorAllocator* srvAllocator, ResourceUploader* uploader, ResourcePreparer* preparer) :
     m_device{ device },
     m_command{ command },
     m_srvAllocator{ srvAllocator },
-    m_uploader{ uploader }
+    m_uploader{ uploader },
+    m_preparer{ preparer }
 {}
 
 bool TextureResource::LoadFromAsset(shared_ptr<TextureAsset> asset)
@@ -31,7 +33,12 @@ bool TextureResource::LoadFromAsset(shared_ptr<TextureAsset> asset)
     ComPtr<ID3D12Resource> uploadBuffer;
     auto texture = m_uploader->UploadTexture(cmd, *asset, uploadBuffer);
 
-    m_command->End({ uploadBuffer });
+    auto submitFence = m_command->End({ uploadBuffer });
+
+    m_preparer->Enqueue({ texture.Get(),
+        D3D12_RESOURCE_STATE_COMMON,
+        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
+        submitFence, this });
 
     AddTexture(index, texture);
     return true;
@@ -52,3 +59,12 @@ void TextureResource::AddTexture(UINT index, ComPtr<ID3D12Resource> tex)
     m_tex = tex;
     m_srvIndex = index;
 }
+
+//bool TextureResource::IsReady() const noexcept
+//{
+//    if (!m_tex) return false;
+//    if (m_submitFence == 0) return false;
+//
+//    auto fences = m_command->GetCompletedFences();
+//    return fences.copy >= m_submitFence;
+//}

@@ -127,9 +127,6 @@
     <ClInclude Include="Render\DX12\DebugOptions.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\TextureRepository.h">
-      <Filter>Render\DX12</Filter>
-    </ClInclude>
     <ClInclude Include="Render\DX12\DescriptorAllocator.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
@@ -164,6 +161,12 @@
       <Filter>Render\DX12</Filter>
     </ClInclude>
     <ClInclude Include="Render\DX12\FenceTypes.h">
+      <Filter>Render\DX12</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\ResourcePreparer.h">
+      <Filter>Render\DX12</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\PendingTransition.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
   </ItemGroup>
@@ -232,9 +235,6 @@
     <ClCompile Include="Render\DX12\CommandListEntry.cpp">
       <Filter>Render\DX12</Filter>
     </ClCompile>
-    <ClCompile Include="Render\DX12\TextureRepository.cpp">
-      <Filter>Render\DX12</Filter>
-    </ClCompile>
     <ClCompile Include="Render\DX12\DescriptorAllocator.cpp">
       <Filter>Render\DX12</Filter>
     </ClCompile>
@@ -272,6 +272,9 @@
       <Filter>Asset\Loader\Sound</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\TextureResource.cpp">
+      <Filter>Render\DX12</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\ResourcePreparer.cpp">
       <Filter>Render\DX12</Filter>
     </ClCompile>
   </ItemGroup>

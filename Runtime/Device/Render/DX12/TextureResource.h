@@ -1,22 +1,26 @@
 #pragma once
 #include "GameClient/Service/Render/ITextureResource.h"
+#include "PendingTransition.h"
 #include <wrl/client.h>
 #include "d3dx12.h"
 
 using Microsoft::WRL::ComPtr;
 
+class CommandScheduler;
 class DescriptorAllocator;
 class ResourceUploader;
-class CommandScheduler;
+class ResourcePreparer;
 
-class TextureResource : public ITextureResource
+class TextureResource : public ITextureResource, public IResourceReady
 {
 public:
 	~TextureResource();
 	TextureResource() = delete;
 	TextureResource(ID3D12Device* device, CommandScheduler* command,
-		DescriptorAllocator* srvAllocator, ResourceUploader* uploader);
+		DescriptorAllocator* srvAllocator, ResourceUploader* uploader, ResourcePreparer* preparer);
 	virtual bool LoadFromAsset(shared_ptr<TextureAsset> asset) override;
+	virtual bool IsReady() const noexcept override { return m_ready; }
+	virtual void OnReady() override { m_ready = true; }
 
 	ID3D12Resource* Get() const noexcept { return m_tex.Get(); };
 	UINT GetSrvIndex() const noexcept { return m_srvIndex; }
@@ -28,7 +32,11 @@ private:
 	CommandScheduler* m_command{ nullptr };
 	DescriptorAllocator* m_srvAllocator{ nullptr };
 	ResourceUploader* m_uploader{ nullptr };
+	ResourcePreparer* m_preparer{ nullptr };
 
 	ComPtr<ID3D12Resource> m_tex{ nullptr };
 	UINT m_srvIndex{ UINT_MAX };
+	uint64_t m_submitFence{ 0 };
+
+	bool m_ready{ false };
 };
