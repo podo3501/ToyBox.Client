@@ -21,14 +21,14 @@ public:
 	RenderBackend();
 	virtual bool Initialize(HWND hwnd, const Size& wndSize, const RenderConfig& renderConfig) override;
 	virtual unique_ptr<ITextureResource> CreateTextureResource() override;
+	virtual void BeginFrame() override;
+	virtual void EndFrame() override;
 	virtual void Draw(ITextureResource* texRes, const Rect& dest, const Rect* source) override;
 	virtual void Resize(const Size& size) override;
 	virtual void Update() override;
 
 private:
-	ID3D12GraphicsCommandList* BeginFrame();
 	void Clear(ID3D12GraphicsCommandList* cmd, float r, float g, float b, float a);
-	bool EndFrame(ID3D12GraphicsCommandList* cmd);
 
 	unique_ptr<DX12Core> m_core;
 	unique_ptr<CommandScheduler> m_command;
@@ -37,7 +37,9 @@ private:
 	unique_ptr<ResourceUploader> m_uploader;
 	unique_ptr<ResourcePreparer> m_preparer;
 	unique_ptr<QuadRenderer> m_quadRenderer;
-	
+
+	ID3D12GraphicsCommandList* m_graphicsCmdList{ nullptr }; //direct command юс.
+
 	Size m_size{};
 	vector<MeshEntry> m_meshes;
 	bool m_ready{ false };

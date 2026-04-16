@@ -79,28 +79,28 @@ bool RenderBackend::Initialize(HWND hwnd, const Size& wndSize, const RenderConfi
     return true;
 }
 
-ID3D12GraphicsCommandList* RenderBackend::BeginFrame()
+void RenderBackend::BeginFrame()
 {
-    auto directCmd = m_command->Begin(CommandType::Direct);
-    if (!directCmd) return nullptr;
+    m_graphicsCmdList = m_command->Begin(CommandType::Direct);
+    if (!m_graphicsCmdList) return;
 
     auto fences = m_command->GetCompletedFences();
-    m_preparer->Process(directCmd, fences);
+    m_preparer->Process(m_graphicsCmdList, fences);
 
-    m_swapChain->TransitionToRenderTarget(directCmd);
-    m_swapChain->SetRenderTarget(directCmd);
-    Clear(directCmd, 0.4f, 0.4f, 0.5f, 1.0f); //눈이 적당히 덜 피곤하면서 비어있는 영역 확인 가능한 색깔.
-
-    return directCmd;
+    m_swapChain->TransitionToRenderTarget(m_graphicsCmdList);
+    m_swapChain->SetRenderTarget(m_graphicsCmdList);
+    Clear(m_graphicsCmdList, 0.4f, 0.4f, 0.5f, 1.0f); //눈이 적당히 덜 피곤하면서 비어있는 영역 확인 가능한 색깔.
 }
 
-bool RenderBackend::EndFrame(ID3D12GraphicsCommandList* cmd)
+void RenderBackend::EndFrame()
 {
-    m_swapChain->TransitionToPresent(cmd);
-    ReturnIfFalse(m_command->End());
-    ReturnIfFalse(m_swapChain->Present(false));
+    if (!m_graphicsCmdList) return;
 
-    return true;
+    m_swapChain->TransitionToPresent(m_graphicsCmdList);
+    m_command->End();
+    m_swapChain->Present(false);
+
+    m_graphicsCmdList = nullptr;
 }
 
 unique_ptr<ITextureResource> RenderBackend::CreateTextureResource()
@@ -115,25 +115,22 @@ unique_ptr<ITextureResource> RenderBackend::CreateTextureResource()
 
 void RenderBackend::Draw(ITextureResource* texRes, const Rect& dest, const Rect* source)
 {
-    auto cmd = BeginFrame();
-    if (!cmd) return;
+    if (!m_graphicsCmdList) return;
 
     auto texResource = static_cast<TextureResource*>(texRes);
     // 처음 Flush 시 한 번만 상태 전환
     static bool ready = false;
     if (!ready)
     {
-        m_quadRenderer->TransitionToRenderState(cmd);
+        m_quadRenderer->TransitionToRenderState(m_graphicsCmdList);
         ready = true;
     }
 
-    m_quadRenderer->BindDescriptorHeap(cmd);
-    m_quadRenderer->BindPipeline(cmd);
+    m_quadRenderer->BindDescriptorHeap(m_graphicsCmdList);
+    m_quadRenderer->BindPipeline(m_graphicsCmdList);
 
-    m_quadRenderer->BindTexture(cmd, m_srvAllocator->GetGpuHandle(texResource->GetSrvIndex()));
-    m_quadRenderer->Draw(cmd, dest);
-
-    EndFrame(cmd);
+    m_quadRenderer->BindTexture(m_graphicsCmdList, m_srvAllocator->GetGpuHandle(texResource->GetSrvIndex()));
+    m_quadRenderer->Draw(m_graphicsCmdList, dest);
 }
 
 void RenderBackend::Resize(const Size& size)

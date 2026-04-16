@@ -6,6 +6,7 @@
 struct PendingRequest
 {
 	filesystem::path path;
+	TextureDesc desc;
 	function<std::shared_ptr<TextureAsset>(const filesystem::path&)> loader;
 	TextureHandle handle;
 };
@@ -15,45 +16,37 @@ TextureRepository::TextureRepository(IRenderBackend* backend) :
 	m_backend{ backend }
 {}
 
-TextureHandle TextureRepository::GetOrCreate(const filesystem::path& path,
+TextureHandle TextureRepository::GetOrCreate( const filesystem::path& path, const TextureDesc& desc,
 	function<shared_ptr<TextureAsset>(const filesystem::path&)> loader)
 {
-	auto it = m_cache.find(path);
+	TextureKey key{ path, desc };
+
+	auto it = m_cache.find(key);
 	if (it != m_cache.end())
-	{
-		auto existing = it->second.lock();
-		if (existing)
-		{
-			TextureEntry entry;
-			entry.texRes = existing;
-			if (existing->IsReady()) //먼저 로딩한 애가 있는데 그게 Ready가 아닐경우에는 loading이 끝나기를 기다려야 한다. gpu에서 로딩이 안 끝났기 때문에 또 들어올 수가 있다.
-				entry.state = TextureState::Ready;
-			else
-			{
-				entry.state = TextureState::Loading;
-				entry.inLoadingList = true;
-			}
+		return it->second;
 
-			auto handle = m_loadedTextures.Emplace(entry);
-			if (entry.state == TextureState::Loading)
-				m_loadingList.push_back(handle);
-
-			return handle;
-		}
-	}
-
-	shared_ptr<ITextureResource> texRes = m_backend->CreateTextureResource();
+	auto texRes = m_backend->CreateTextureResource();
 	if (!texRes) return TextureHandle::Invalid();
 
-	m_cache[path] = texRes;
+	TextureEntry entry;
+	entry.key = key;
+	entry.texRes = move(texRes);
+	entry.state = TextureState::Pending;
 
-	auto handle = m_loadedTextures.Emplace(TextureEntry{ texRes, TextureState::Pending, false });
-	m_pending.push_back(PendingRequest{ path, loader, handle });
+	auto handle = m_loadedTextures.Emplace(move(entry));
+	m_cache[key] = handle;
+	m_pending.push_back(PendingRequest{ path, desc, loader, handle });
+
 	return handle;
 }
 
 bool TextureRepository::Release(TextureHandle th)
 {
+	auto entry = m_loadedTextures.Find(th);
+	if (!entry) return false;
+
+	m_cache.erase(entry->key);
+	std::erase(m_loadingList, th);
 	return m_loadedTextures.Remove(th);
 }
 
@@ -63,17 +56,13 @@ void TextureRepository::Update()
 	ProcessLoading();
 }
 
-const TextureEntry* TextureRepository::Get(TextureHandle handle) const noexcept
-{
-	return m_loadedTextures.Find(handle);
-}
-
 void TextureRepository::ProcessPending()
 {
 	for (auto& req : m_pending)
 	{
 		auto entry = m_loadedTextures.Find(req.handle);
 		if (!entry) continue;
+		if (entry->state != TextureState::Pending) continue; // 중복으로 들어온 경우 이미 Loading/Ready 라면 처리안함.
 
 		auto asset = req.loader(req.path);
 		if (!asset)
@@ -85,17 +74,13 @@ void TextureRepository::ProcessPending()
 		entry->state = TextureState::Loading;
 
 		auto& texRes = entry->texRes;
-		if (!texRes->LoadFromAsset(move(asset)))
+		if (!texRes->LoadFromAsset(move(asset), req.desc))
 		{
 			entry->state = TextureState::Failed;
 			continue;
 		}
 
-		if (!entry->inLoadingList)
-		{
-			m_loadingList.push_back(req.handle);
-			entry->inLoadingList = true;
-		}
+		m_loadingList.push_back(req.handle);
 	}
 
 	m_pending.clear();
@@ -106,7 +91,6 @@ void TextureRepository::ProcessLoading()
 	for (auto it = m_loadingList.begin(); it != m_loadingList.end(); )
 	{
 		auto entry = m_loadedTextures.Find(*it);
-
 		if (!entry || !entry->texRes)
 		{
 			it = m_loadingList.erase(it);
@@ -114,17 +98,13 @@ void TextureRepository::ProcessLoading()
 		}
 
 		auto& tex = entry->texRes;
-
 		if (tex->IsReady())
-			entry->state = TextureState::Ready;
-		else
 		{
-			++it;
-			continue;
+			entry->state = TextureState::Ready;
+			it = m_loadingList.erase(it);
 		}
-
-		entry->inLoadingList = false;
-		it = m_loadingList.erase(it);
+		else
+			++it;
 	}
 }
 

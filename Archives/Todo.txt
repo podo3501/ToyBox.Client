@@ -279,6 +279,10 @@
 --텍스쳐 핸들로 리턴하게끔
 
 @렌더러 만들기
+    @TextureResource 에서 TextureDesc에 정해진대로 옵션줘서 로딩하게.
+    @Material Repository가 지금은 Texture wrapper 수준인데 옵션 넣어서 동작하게끔.
+    @간단한 사각형 mesh 렌더링
+    @ui 사각형 만들기(mesh랑 종류가 다름)
     @vram에 upload 중에 렌더링이 걸리면 어떻게 되는지 테스트
     @texture batching
     @화면 배경색깔 지정하게끔

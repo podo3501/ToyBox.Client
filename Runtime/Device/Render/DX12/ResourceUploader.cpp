@@ -50,9 +50,12 @@ static void UploadSubresource(
 ComPtr<ID3D12Resource> ResourceUploader::UploadTexture(
     ID3D12GraphicsCommandList* uploadCmd,
     const TextureAsset& asset,
+    bool generateMips,
     ComPtr<ID3D12Resource>& outUploadBuffer)
 {
     auto texDesc = CreateTexture2DDesc(asset);
+
+    texDesc.MipLevels = generateMips ? 0 : 1; //0이면 전체 mip 생성
     auto texture = CreateResource(
         texDesc,
         D3D12_HEAP_TYPE_DEFAULT,
@@ -72,6 +75,16 @@ ComPtr<ID3D12Resource> ResourceUploader::UploadTexture(
     subresource.RowPitch = asset.stride;
     subresource.SlicePitch = asset.stride * asset.height;
     UploadSubresource(uploadCmd, texture.Get(), outUploadBuffer.Get(), subresource);
+
+    //if (generateMips)
+    //{
+    //    TransitionBarrier(uploadCmd,
+    //        texture.Get(),
+    //        D3D12_RESOURCE_STATE_COPY_DEST,
+    //        D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
+
+    //    GenerateMips(uploadCmd, texture.Get());
+    //}
 
     return texture;
 }

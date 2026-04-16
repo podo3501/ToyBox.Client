@@ -15,6 +15,7 @@ public:
     ComPtr<ID3D12Resource> UploadTexture(
         ID3D12GraphicsCommandList* uploadCmd,
         const TextureAsset& asset,
+        bool generateMips,
         ComPtr<ID3D12Resource>& outUploadBuffer);
 
     ComPtr<ID3D12Resource> UploadVertexBuffer(
