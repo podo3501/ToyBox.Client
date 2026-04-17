@@ -2,6 +2,7 @@
 #include "CommandScheduler.h"
 #include "d3dx12.h"
 #include "CommandQueue.h"
+#include "DescriptorAllocation.h"
 
 using Microsoft::WRL::ComPtr;
 
@@ -13,8 +14,8 @@ bool CommandScheduler::Initialize(ID3D12Device* device, uint32_t directPoolSize,
     m_directQueue = make_unique<CommandQueue>();
     m_copyQueue = make_unique<CommandQueue>();
 
-    ReturnIfFalse(m_directQueue->Initialize(device, D3D12_COMMAND_LIST_TYPE_DIRECT, directPoolSize));
-    ReturnIfFalse(m_copyQueue->Initialize(device, D3D12_COMMAND_LIST_TYPE_COPY, copyPoolSize));
+    ReturnIfFalse(m_directQueue->Initialize(device, CommandType::Direct, directPoolSize));
+    ReturnIfFalse(m_copyQueue->Initialize(device, CommandType::Copy, copyPoolSize));
     
     return true;
 }
@@ -30,13 +31,28 @@ ID3D12GraphicsCommandList* CommandScheduler::Begin(CommandType type)
     return cmd;
 }
 
-uint64_t CommandScheduler::End(std::vector<ComPtr<ID3D12Resource>>&& resources)
+uint64_t CommandScheduler::End(vector<ComPtr<ID3D12Resource>>&& resources)
 {
     Assert(m_currentQueue);
 
     auto fenceValue = m_currentQueue->End(move(resources));
+    DeferredFreeDescriptors();
+
     m_currentQueue = nullptr;
     return fenceValue;
+}
+
+void CommandScheduler::EnqueueDeferredDescriptors(DescriptorAllocation&& descriptor)
+{
+    m_pendingDescriptors.emplace_back(move(descriptor)); //end때의 fence 값으로 지워야 하기 때문에 일단 모아놓음.
+}
+
+void CommandScheduler::DeferredFreeDescriptors()
+{
+    SubmittedFences fences = GetLastSubmittedFences();
+    for (auto& d : m_pendingDescriptors)
+        d.SetDeferredContext(fences); // descriptors는 여기서 scope 끝 -> destructor -> DeferredFree 호출됨
+    m_pendingDescriptors.clear();
 }
 
 uint64_t CommandScheduler::SignalQueue(CommandType type)

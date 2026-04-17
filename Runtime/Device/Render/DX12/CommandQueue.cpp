@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "CommandQueue.h"
-#include "CommandListEntry.h"
+#include "CommandList.h"
 
 CommandQueue::~CommandQueue() 
 { 
@@ -12,7 +12,7 @@ CommandQueue::~CommandQueue()
 }
 CommandQueue::CommandQueue() = default;
 
-bool CommandQueue::Initialize(ID3D12Device* device, D3D12_COMMAND_LIST_TYPE type, uint32_t poolSize)
+bool CommandQueue::Initialize(ID3D12Device* device, CommandType type, uint32_t poolSize)
 {
     if (!device || poolSize <= 0) return false;
 
@@ -22,7 +22,7 @@ bool CommandQueue::Initialize(ID3D12Device* device, D3D12_COMMAND_LIST_TYPE type
     m_pool.reserve(poolSize);
     for (uint32_t i = 0; i < poolSize; ++i)
     {
-        auto context = make_unique<CommandListEntry>();
+        auto context = make_unique<CommandList>();
         ReturnIfFalse(context->Initialize(device, type));
 
         m_pool.emplace_back(move(context));
@@ -35,7 +35,7 @@ ID3D12GraphicsCommandList* CommandQueue::Begin()
 {
     Assert(!m_currentCmdEntry);
 
-    auto entry = GetAvailableCommandListEntry();
+    auto entry = GetAvailableCommandList();
     if (!entry) return nullptr;
 
     entry->Reset();
@@ -94,10 +94,10 @@ void CommandQueue::WaitForGPU()
     ReleaseCompletedResources();
 }
 
-bool CommandQueue::CreateQueue(ID3D12Device* device, D3D12_COMMAND_LIST_TYPE type)
+bool CommandQueue::CreateQueue(ID3D12Device* device, CommandType type)
 {
     D3D12_COMMAND_QUEUE_DESC desc = {};
-    desc.Type = type;
+    desc.Type = ToD3D12(type);
     desc.Priority = D3D12_COMMAND_QUEUE_PRIORITY_NORMAL;
     desc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
     desc.NodeMask = 0;
@@ -114,11 +114,11 @@ bool CommandQueue::CreateFence(ID3D12Device* device)
     return m_event != nullptr;
 }
 
-CommandListEntry* CommandQueue::GetAvailableCommandListEntry()
+CommandList* CommandQueue::GetAvailableCommandList()
 {
     for (size_t i = 0; i < m_pool.size(); ++i)
     {
-        CommandListEntry* entry = m_pool[m_next].get();
+        CommandList* entry = m_pool[m_next].get();
         m_next = (m_next + 1) % m_pool.size();
 
         if (entry->IsAvailable())

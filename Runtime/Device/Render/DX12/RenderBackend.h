@@ -12,6 +12,7 @@ class CommandScheduler;
 class DescriptorAllocator;
 class ResourceUploader;
 class ResourcePreparer;
+class MipGenerator;
 class QuadRenderer;
 
 class RenderBackend : public IRenderBackend
@@ -36,6 +37,7 @@ private:
 	unique_ptr<DescriptorAllocator> m_srvAllocator;
 	unique_ptr<ResourceUploader> m_uploader;
 	unique_ptr<ResourcePreparer> m_preparer;
+	unique_ptr<MipGenerator> m_mipGenerator;
 	unique_ptr<QuadRenderer> m_quadRenderer;
 
 	ID3D12GraphicsCommandList* m_graphicsCmdList{ nullptr }; //direct command юс.

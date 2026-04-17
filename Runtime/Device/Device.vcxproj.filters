@@ -121,7 +121,7 @@
     <ClInclude Include="Render\DX12\CommandUtils.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\CommandListEntry.h">
+    <ClInclude Include="Render\DX12\CommandList.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
     <ClInclude Include="Render\DX12\DebugOptions.h">
@@ -167,6 +167,15 @@
       <Filter>Render\DX12</Filter>
     </ClInclude>
     <ClInclude Include="Render\DX12\PendingTransition.h">
+      <Filter>Render\DX12</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\MipGenerator.h">
+      <Filter>Render\DX12</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\DescriptorAllocation.h">
+      <Filter>Render\DX12</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\CommandType.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
   </ItemGroup>
@@ -232,7 +241,7 @@
     <ClCompile Include="Render\DX12\CommandUtils.cpp">
       <Filter>Render\DX12</Filter>
     </ClCompile>
-    <ClCompile Include="Render\DX12\CommandListEntry.cpp">
+    <ClCompile Include="Render\DX12\CommandList.cpp">
       <Filter>Render\DX12</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\DescriptorAllocator.cpp">
@@ -275,6 +284,12 @@
       <Filter>Render\DX12</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\ResourcePreparer.cpp">
+      <Filter>Render\DX12</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\MipGenerator.cpp">
+      <Filter>Render\DX12</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\DescriptorAllocation.cpp">
       <Filter>Render\DX12</Filter>
     </ClCompile>
   </ItemGroup>

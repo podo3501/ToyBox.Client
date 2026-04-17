@@ -25,7 +25,7 @@ void ResourcePreparer::Process(
         {
             CommandUtils::Transition(cmd, e.resource, e.before, e.after);
             if (e.owner) 
-                e.owner->OnReady();
+                e.owner->OnReady(cmd);
         }
         else
             m_pendingTransitions[write++] = e;

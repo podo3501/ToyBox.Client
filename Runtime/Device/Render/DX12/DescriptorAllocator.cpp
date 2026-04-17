@@ -40,24 +40,34 @@ bool DescriptorAllocator::Initialize(D3D12_DESCRIPTOR_HEAP_TYPE type, UINT maxCo
     return true;
 }
 
-UINT DescriptorAllocator::Allocate() noexcept
+DescriptorAllocation DescriptorAllocator::Allocate() noexcept
 {
+    UINT index;
+
     if (!m_freeList.empty())
     {
-        UINT index = m_freeList.back();
+        index = m_freeList.back();
         m_freeList.pop_back();
-        return index;
+    }
+    else
+    {
+        if (m_allocated >= m_capacity)
+            return {}; // invalid
+
+        index = m_allocated++;
     }
 
-    if (m_allocated >= m_capacity)
-        return UINT_MAX; // 여기선 단순 처리 (나중에 grow or assert)
-
-    return m_allocated++;
+    return DescriptorAllocation(this, index);
 }
 
 void DescriptorAllocator::DeferredFree(UINT index, const SubmittedFences& fences)
 {
     m_pendingFrees.push_back({ index, fences }); //double free 방지 없음(현재 구조) 나중에 추가할 예정.
+}
+
+void DescriptorAllocator::Free(UINT index)
+{
+    m_freeList.push_back(index);
 }
 
 void DescriptorAllocator::ProcessDeferredFree(const CompletedFences& completed)

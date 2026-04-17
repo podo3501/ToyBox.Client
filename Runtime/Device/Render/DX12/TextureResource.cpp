@@ -4,28 +4,31 @@
 #include "DescriptorAllocator.h"
 #include "ResourceUploader.h"
 #include "ResourcePreparer.h"
+#include "MipGenerator.h"
+#include "FenceTypes.h"
+#include "CommandUtils.h"
 #include "GameClient/Service/Asset/Assets/TextureAsset.h"
-#include "GameClient/Service/Render/TextureDesc.h"
 
 TextureResource::~TextureResource()
 {
-    if (m_srvAllocator && m_srvIndex != UINT_MAX)
-        m_srvAllocator->DeferredFree(m_srvIndex, m_command->GetLastSubmittedFences());
+    if (m_srv.IsValid())
+        m_srv.SetDeferredContext(m_command->GetLastSubmittedFences());
 }
 
 TextureResource::TextureResource(ID3D12Device* device, CommandScheduler* command,
-    DescriptorAllocator* srvAllocator, ResourceUploader* uploader, ResourcePreparer* preparer) :
+    DescriptorAllocator* srvAllocator, ResourceUploader* uploader, ResourcePreparer* preparer, MipGenerator* mipGenerator) :
     m_device{ device },
     m_command{ command },
     m_srvAllocator{ srvAllocator },
     m_uploader{ uploader },
-    m_preparer{ preparer }
+    m_preparer{ preparer },
+    m_mipGenerator{ mipGenerator }
 {}
 
 bool TextureResource::LoadFromAsset(shared_ptr<TextureAsset> asset, const TextureDesc& desc)
 {
-    UINT index = m_srvAllocator->Allocate();
-    if (index == UINT_MAX)
+    m_srv = m_srvAllocator->Allocate();
+    if (!m_srv.IsValid())
         return false;
 
     auto cmd = m_command->Begin(CommandType::Copy);
@@ -41,7 +44,7 @@ bool TextureResource::LoadFromAsset(shared_ptr<TextureAsset> asset, const Textur
         D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
         submitFence, this });
 
-    AddTexture(index, texture, desc);
+    AddTexture(texture, desc);
     return true;
 }
 
@@ -58,9 +61,9 @@ static DXGI_FORMAT MakeSRGBFormat(DXGI_FORMAT format)
     }
 }
 
-void TextureResource::AddTexture(UINT index, ComPtr<ID3D12Resource> tex, const TextureDesc& desc)
+void TextureResource::AddTexture(ComPtr<ID3D12Resource> tex, const TextureDesc& desc)
 {
-    auto cpuHandle = m_srvAllocator->GetCpuHandle(index);
+    auto cpuHandle = m_srv.GetCpuHandle();
     const auto texDesc = tex->GetDesc();
 
     D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
@@ -82,5 +85,27 @@ void TextureResource::AddTexture(UINT index, ComPtr<ID3D12Resource> tex, const T
 
     m_device->CreateShaderResourceView(tex.Get(), &srvDesc, cpuHandle);
 
-    m_srvIndex = index;
+    m_desc = desc;
+    m_texture = tex;
+}
+
+void TextureResource::OnReady(ID3D12GraphicsCommandList* cmd)
+{
+    m_ready = true; 
+    if (!m_mipGenerator) return;
+
+    if (m_desc.generateMips && !m_mipGenerated) 
+    { 
+        m_mipGenerated = true; 
+
+        CommandUtils::Transition(cmd, m_texture.Get(),
+            D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
+            D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
+
+        m_mipGenerator->GenerateMips(cmd, m_texture.Get());
+
+        CommandUtils::Transition(cmd, m_texture.Get(),
+            D3D12_RESOURCE_STATE_UNORDERED_ACCESS,
+            D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+    } 
 }

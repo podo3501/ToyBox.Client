@@ -43,16 +43,19 @@
     <ClInclude Include="Input\IInputManager.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Render\DX12\BuildConfig.h" />
-    <ClInclude Include="Render\DX12\CommandListEntry.h" />
+    <ClInclude Include="Render\DX12\CommandList.h" />
     <ClInclude Include="Render\DX12\CommandQueue.h" />
     <ClInclude Include="Render\DX12\CommandScheduler.h" />
+    <ClInclude Include="Render\DX12\CommandType.h" />
     <ClInclude Include="Render\DX12\CommandUtils.h" />
     <ClInclude Include="Render\DX12\Debug.h" />
     <ClInclude Include="Render\DX12\DebugHelper.h" />
     <ClInclude Include="Render\DX12\DebugOptions.h" />
+    <ClInclude Include="Render\DX12\DescriptorAllocation.h" />
     <ClInclude Include="Render\DX12\DescriptorAllocator.h" />
     <ClInclude Include="Render\DX12\DX12Core.h" />
     <ClInclude Include="Render\DX12\FenceTypes.h" />
+    <ClInclude Include="Render\DX12\MipGenerator.h" />
     <ClInclude Include="Render\DX12\PendingTransition.h" />
     <ClInclude Include="Render\DX12\ResourcePreparer.h" />
     <ClInclude Include="Render\DX12\ResourceUploader.h" />
@@ -91,14 +94,16 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Render\DX12\CommandListEntry.cpp" />
+    <ClCompile Include="Render\DX12\CommandList.cpp" />
     <ClCompile Include="Render\DX12\CommandQueue.cpp" />
     <ClCompile Include="Render\DX12\CommandScheduler.cpp" />
     <ClCompile Include="Render\DX12\CommandUtils.cpp" />
     <ClCompile Include="Render\DX12\DebugHelper.cpp" />
+    <ClCompile Include="Render\DX12\DescriptorAllocation.cpp" />
     <ClCompile Include="Render\DX12\DescriptorAllocator.cpp" />
     <ClCompile Include="Render\DX12\DX12Core.cpp" />
     <ClCompile Include="Render\DX12\DX12Link.cpp" />
+    <ClCompile Include="Render\DX12\MipGenerator.cpp" />
     <ClCompile Include="Render\DX12\ResourcePreparer.cpp" />
     <ClCompile Include="Render\DX12\ResourceUploader.cpp" />
     <ClCompile Include="Render\DX12\SwapChainPresenter.cpp" />

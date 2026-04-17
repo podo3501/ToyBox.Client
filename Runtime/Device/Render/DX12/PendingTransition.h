@@ -4,7 +4,7 @@
 struct IResourceReady 
 { 
     virtual ~IResourceReady() = default;
-    virtual void OnReady() = 0; 
+    virtual void OnReady(ID3D12GraphicsCommandList* cmd) = 0;
 };
 
 struct PendingTransition

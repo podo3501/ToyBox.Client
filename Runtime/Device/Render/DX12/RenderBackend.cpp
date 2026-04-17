@@ -7,6 +7,7 @@
 #include "TextureResource.h"
 #include "ResourceUploader.h"
 #include "ResourcePreparer.h"
+#include "MipGenerator.h"
 #include "QuadRenderer.h"
 #include "CommandUtils.h"
 #include <dxgi1_6.h>
@@ -58,6 +59,8 @@ bool RenderBackend::Initialize(HWND hwnd, const Size& wndSize, const RenderConfi
 
     m_uploader = make_unique<ResourceUploader>(device);
     m_preparer = make_unique<ResourcePreparer>();
+    m_mipGenerator = make_unique<MipGenerator>(device, m_srvAllocator.get());
+    ReturnIfFalse(m_mipGenerator->Initialize());
 
     m_quadRenderer = make_unique<QuadRenderer>();
     ReturnIfFalse(m_quadRenderer->Initialize(device, wndSize));
@@ -110,7 +113,8 @@ unique_ptr<ITextureResource> RenderBackend::CreateTextureResource()
         m_command.get(),
         m_srvAllocator.get(),
         m_uploader.get(),
-        m_preparer.get());
+        m_preparer.get(),
+        m_mipGenerator.get());
 }
 
 void RenderBackend::Draw(ITextureResource* texRes, const Rect& dest, const Rect* source)
@@ -129,7 +133,7 @@ void RenderBackend::Draw(ITextureResource* texRes, const Rect& dest, const Rect*
     m_quadRenderer->BindDescriptorHeap(m_graphicsCmdList);
     m_quadRenderer->BindPipeline(m_graphicsCmdList);
 
-    m_quadRenderer->BindTexture(m_graphicsCmdList, m_srvAllocator->GetGpuHandle(texResource->GetSrvIndex()));
+    m_quadRenderer->BindTexture(m_graphicsCmdList, texResource->GetSrv().GetGpuHandle());
     m_quadRenderer->Draw(m_graphicsCmdList, dest);
 }
 
