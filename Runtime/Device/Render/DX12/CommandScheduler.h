@@ -7,6 +7,7 @@
 
 using Microsoft::WRL::ComPtr;
 
+class CommandList;
 class CommandQueue;
 
 class CommandScheduler
@@ -15,7 +16,7 @@ public:
     ~CommandScheduler();
     CommandScheduler();
     bool Initialize(ID3D12Device* device, uint32_t directPoolSize, uint32_t copyPoolSize);
-    ID3D12GraphicsCommandList* Begin(CommandType type);
+    CommandList* Begin(CommandType type);
     uint64_t End(vector<ComPtr<ID3D12Resource>>&& resources = {});
     void EnqueueDeferredDescriptors(DescriptorAllocation&& descriptor);
     
@@ -25,8 +26,8 @@ public:
     void ReleaseCompletedResources(); // Pending release 眉农 饶 府家胶 秦力
     void WaitForAllGPU();
     ID3D12CommandQueue* GetCommandQueue(CommandType type);
-    SubmittedFences GetLastSubmittedFences() const noexcept;
-    CompletedFences GetCompletedFences() const noexcept;
+    QueueFences GetLastSubmittedFences() const noexcept;
+    QueueFences GetCompletedFences() const noexcept;
 
 private:
     void DeferredFreeDescriptors();

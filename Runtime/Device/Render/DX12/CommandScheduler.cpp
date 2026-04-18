@@ -6,7 +6,10 @@
 
 using Microsoft::WRL::ComPtr;
 
-CommandScheduler::~CommandScheduler() = default;
+CommandScheduler::~CommandScheduler()
+{
+    WaitForAllGPU();
+}
 CommandScheduler::CommandScheduler() = default;
 
 bool CommandScheduler::Initialize(ID3D12Device* device, uint32_t directPoolSize, uint32_t copyPoolSize)
@@ -20,7 +23,7 @@ bool CommandScheduler::Initialize(ID3D12Device* device, uint32_t directPoolSize,
     return true;
 }
 
-ID3D12GraphicsCommandList* CommandScheduler::Begin(CommandType type)
+CommandList* CommandScheduler::Begin(CommandType type)
 {
     Assert(!m_currentQueue);
 
@@ -49,7 +52,7 @@ void CommandScheduler::EnqueueDeferredDescriptors(DescriptorAllocation&& descrip
 
 void CommandScheduler::DeferredFreeDescriptors()
 {
-    SubmittedFences fences = GetLastSubmittedFences();
+    QueueFences fences = GetLastSubmittedFences();
     for (auto& d : m_pendingDescriptors)
         d.SetDeferredContext(fences); // descriptors는 여기서 scope 끝 -> destructor -> DeferredFree 호출됨
     m_pendingDescriptors.clear();
@@ -89,16 +92,16 @@ CommandQueue* CommandScheduler::GetQueue(CommandType type)
         : m_copyQueue.get();
 }
 
-SubmittedFences CommandScheduler::GetLastSubmittedFences() const noexcept
+QueueFences CommandScheduler::GetLastSubmittedFences() const noexcept
 {
-    return SubmittedFences{
+    return QueueFences{
         m_directQueue->GetLastSubmittedFence(),
         m_copyQueue->GetLastSubmittedFence() };
 }
 
-CompletedFences CommandScheduler::GetCompletedFences() const noexcept
+QueueFences CommandScheduler::GetCompletedFences() const noexcept
 {
-    return CompletedFences{
+    return QueueFences{
         m_directQueue->GetCompletedFence(),
         m_copyQueue->GetCompletedFence() };
 }

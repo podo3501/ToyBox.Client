@@ -5,7 +5,9 @@
 DescriptorAllocation::~DescriptorAllocation() { Release(); }
 DescriptorAllocation::DescriptorAllocation(DescriptorAllocator* allocator, UINT index) : 
 	m_allocator(allocator), m_index(index)
-{}
+{
+    int a = 1;
+}
 
 DescriptorAllocation::DescriptorAllocation(DescriptorAllocation&& other) noexcept
 {
@@ -34,7 +36,7 @@ void DescriptorAllocation::MoveFrom(DescriptorAllocation& other)
     other.m_deferred = false;
 }
 
-void DescriptorAllocation::SetDeferredContext(const SubmittedFences& fences)
+void DescriptorAllocation::SetDeferredContext(const QueueFences& fences)
 {
     m_fences = fences;
     m_deferred = true;
@@ -42,7 +44,7 @@ void DescriptorAllocation::SetDeferredContext(const SubmittedFences& fences)
 
 void DescriptorAllocation::SetDeferredContext(CommandType type, uint64_t fence)
 {
-    SubmittedFences f{};
+    QueueFences f{};
 
     switch (type)
     {

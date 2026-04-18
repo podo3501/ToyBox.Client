@@ -7,11 +7,11 @@ struct ID3D12Device;
 struct IDXGIFactory4;
 struct IDXGISwapChain4;
 struct ID3D12DescriptorHeap;
-struct ID3D12GraphicsCommandList;
 struct ID3D12CommandQueue;
 struct ID3D12Resource;
 struct D3D12_CPU_DESCRIPTOR_HANDLE;
 struct Size;
+class CommandList;
 class CommandScheduler;
 enum D3D12_RESOURCE_STATES;
 
@@ -30,9 +30,9 @@ public:
     SwapChainPresenter();
 
     bool Initialize(ID3D12Device* device, IDXGIFactory4* factory, CommandScheduler* scheduler, const SwapChainDesc& desc);
-    void TransitionToRenderTarget(ID3D12GraphicsCommandList* cmdList);
-    void SetRenderTarget(ID3D12GraphicsCommandList* cmdList);
-    void TransitionToPresent(ID3D12GraphicsCommandList* cmdList);
+    void TransitionToRenderTarget(CommandList& cmd);
+    void SetRenderTarget(CommandList& cmd);
+    void TransitionToPresent(CommandList& cmd);
     bool Present(bool vsync);
     bool Resize(ID3D12Device* device, const Size& size);
 

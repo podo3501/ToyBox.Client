@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "MipGenerator.h"
 #include "DescriptorAllocator.h"
+#include "CommandList.h"
 #include "d3dx12.h"
 #include <d3dcompiler.h>
 #include <algorithm>
@@ -88,7 +89,7 @@ bool MipGenerator::CreatePSO()
     return true;
 }
 
-void MipGenerator::GenerateMips(ID3D12GraphicsCommandList* cmd, ID3D12Resource* texture)
+void MipGenerator::GenerateMips(CommandList& cmd, ID3D12Resource* texture)
 {
     const D3D12_RESOURCE_DESC desc = texture->GetDesc();
     const UINT mipCount = desc.MipLevels;
@@ -151,8 +152,8 @@ void MipGenerator::GenerateMips(ID3D12GraphicsCommandList* cmd, ID3D12Resource* 
 
         cmd->ResourceBarrier(1, &barrier);
 
-        //outDescriptors.push_back(move(srv));
-        //outDescriptors.push_back(move(uav));
+        cmd.EnqueueDeferredDescriptors(move(srv));
+        cmd.EnqueueDeferredDescriptors(move(uav));
     }
 }
 

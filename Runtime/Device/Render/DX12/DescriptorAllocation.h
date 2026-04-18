@@ -18,7 +18,7 @@ public:
     DescriptorAllocation& operator=(DescriptorAllocation&& other) noexcept;
 
     bool IsValid() const { return m_index != UINT_MAX; }
-    void SetDeferredContext(const SubmittedFences& fences);
+    void SetDeferredContext(const QueueFences& fences);
     void SetDeferredContext(CommandType type, uint64_t fence);
     
     D3D12_CPU_DESCRIPTOR_HANDLE GetCpuHandle() const;
@@ -32,6 +32,6 @@ private:
     DescriptorAllocator* m_allocator{ nullptr };
     UINT m_index{ UINT_MAX };
 
-    SubmittedFences m_fences{};
+    QueueFences m_fences{};
     bool m_deferred{ false };
 };

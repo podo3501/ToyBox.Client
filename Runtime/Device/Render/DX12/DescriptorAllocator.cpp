@@ -5,7 +5,7 @@
 struct PendingFree
 {
     UINT index;
-    SubmittedFences required;
+    QueueFences required;
 };
 
 DescriptorAllocator::~DescriptorAllocator()
@@ -60,7 +60,7 @@ DescriptorAllocation DescriptorAllocator::Allocate() noexcept
     return DescriptorAllocation(this, index);
 }
 
-void DescriptorAllocator::DeferredFree(UINT index, const SubmittedFences& fences)
+void DescriptorAllocator::DeferredFree(UINT index, const QueueFences& fences)
 {
     m_pendingFrees.push_back({ index, fences }); //double free 방지 없음(현재 구조) 나중에 추가할 예정.
 }
@@ -70,7 +70,7 @@ void DescriptorAllocator::Free(UINT index)
     m_freeList.push_back(index);
 }
 
-void DescriptorAllocator::ProcessDeferredFree(const CompletedFences& completed)
+void DescriptorAllocator::ProcessDeferredFree(const QueueFences& completed)
 {
     size_t write = 0;
 

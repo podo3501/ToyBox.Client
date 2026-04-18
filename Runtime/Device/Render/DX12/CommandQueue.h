@@ -14,7 +14,7 @@ public:
     CommandQueue();
 
     bool Initialize(ID3D12Device* device, CommandType type, uint32_t poolSize);
-    ID3D12GraphicsCommandList* Begin();
+    CommandList* Begin();
     uint64_t End(vector<ComPtr<ID3D12Resource>>&& resources);
 
     uint64_t Signal();

@@ -1,10 +1,11 @@
 #pragma once
 #include <d3d12.h>
 
+class CommandList;
 struct IResourceReady 
 { 
     virtual ~IResourceReady() = default;
-    virtual void OnReady(ID3D12GraphicsCommandList* cmd) = 0;
+    virtual void OnReady(CommandList& cmd) = 0;
 };
 
 struct PendingTransition

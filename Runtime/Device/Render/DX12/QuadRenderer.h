@@ -4,9 +4,9 @@
 #include "Core/Foundation/Geometry2D.h"
 
 struct CD3DX12_GPU_DESCRIPTOR_HANDLE;
-struct ID3D12GraphicsCommandList;
 struct Vertex;
 struct QuadTransform;
+class CommandList;
 
 class QuadRenderer
 {
@@ -18,11 +18,11 @@ public:
     void SetVertexBuffer(Microsoft::WRL::ComPtr<ID3D12Resource> vb, UINT size) noexcept;
     void SetSRVHeap(ID3D12DescriptorHeap* heap);
 
-    void BindDescriptorHeap(ID3D12GraphicsCommandList* cmd);
-    void BindPipeline(ID3D12GraphicsCommandList* cmd);
-    void TransitionToRenderState(ID3D12GraphicsCommandList* cmd);
-    void BindTexture(ID3D12GraphicsCommandList* cmd, D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle);
-    void Draw(ID3D12GraphicsCommandList* cmd, const Rect& dest);
+    void BindDescriptorHeap(CommandList& cmd);
+    void BindPipeline(CommandList& cmd);
+    void TransitionToRenderState(CommandList& cmd);
+    void BindTexture(CommandList& cmd, D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle);
+    void Draw(CommandList& cmd, const Rect& dest);
 
 private:
     Microsoft::WRL::ComPtr<ID3D12RootSignature> m_rootSignature;

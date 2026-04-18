@@ -6,13 +6,14 @@
 #include "ResourcePreparer.h"
 #include "MipGenerator.h"
 #include "FenceTypes.h"
+#include "CommandList.h"
 #include "CommandUtils.h"
 #include "GameClient/Service/Asset/Assets/TextureAsset.h"
 
 TextureResource::~TextureResource()
 {
     if (m_srv.IsValid())
-        m_srv.SetDeferredContext(m_command->GetLastSubmittedFences());
+        m_srv.SetDeferredContext(m_command->GetCompletedFences());
 }
 
 TextureResource::TextureResource(ID3D12Device* device, CommandScheduler* command,
@@ -35,7 +36,7 @@ bool TextureResource::LoadFromAsset(shared_ptr<TextureAsset> asset, const Textur
     if (!cmd) return false; 
 
     ComPtr<ID3D12Resource> uploadBuffer;
-    auto texture = m_uploader->UploadTexture(cmd, *asset, desc.generateMips, uploadBuffer);
+    auto [texture, canGenerateMips] = m_uploader->UploadTexture(cmd, *asset, desc.generateMips, uploadBuffer);
 
     auto submitFence = m_command->End({ uploadBuffer });
 
@@ -44,7 +45,7 @@ bool TextureResource::LoadFromAsset(shared_ptr<TextureAsset> asset, const Textur
         D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
         submitFence, this });
 
-    AddTexture(texture, desc);
+    AddTexture(texture, desc, canGenerateMips);
     return true;
 }
 
@@ -61,7 +62,7 @@ static DXGI_FORMAT MakeSRGBFormat(DXGI_FORMAT format)
     }
 }
 
-void TextureResource::AddTexture(ComPtr<ID3D12Resource> tex, const TextureDesc& desc)
+void TextureResource::AddTexture(ComPtr<ID3D12Resource> tex, const TextureDesc& desc, bool generateMips)
 {
     auto cpuHandle = m_srv.GetCpuHandle();
     const auto texDesc = tex->GetDesc();
@@ -70,7 +71,7 @@ void TextureResource::AddTexture(ComPtr<ID3D12Resource> tex, const TextureDesc& 
     srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
     srvDesc.Format = desc.srgb ? MakeSRGBFormat(texDesc.Format) : texDesc.Format;
     srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-    if (desc.generateMips)
+    if (generateMips)
     {
         srvDesc.Texture2D.MipLevels = texDesc.MipLevels;
         srvDesc.Texture2D.MostDetailedMip = 0;
@@ -84,17 +85,16 @@ void TextureResource::AddTexture(ComPtr<ID3D12Resource> tex, const TextureDesc& 
     }
 
     m_device->CreateShaderResourceView(tex.Get(), &srvDesc, cpuHandle);
-
-    m_desc = desc;
     m_texture = tex;
+    m_canGenerateMips = generateMips;
 }
 
-void TextureResource::OnReady(ID3D12GraphicsCommandList* cmd)
+void TextureResource::OnReady(CommandList& cmd)
 {
     m_ready = true; 
     if (!m_mipGenerator) return;
 
-    if (m_desc.generateMips && !m_mipGenerated) 
+    if (m_canGenerateMips && !m_mipGenerated)
     { 
         m_mipGenerated = true; 
 

@@ -2,6 +2,7 @@
 #include <d3d12.h>
 #include <wrl/client.h>
 
+class CommandList;
 class DescriptorAllocator;
 class DescriptorAllocation;
 
@@ -13,7 +14,7 @@ public:
     ~MipGenerator();
     MipGenerator(ID3D12Device* device, DescriptorAllocator* srvAllocator);
     bool Initialize();
-    void GenerateMips(ID3D12GraphicsCommandList* cmd, ID3D12Resource* texture);
+    void GenerateMips(CommandList& cmd, ID3D12Resource* texture);
 
 private:
     bool LoadShader();

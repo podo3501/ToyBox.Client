@@ -17,8 +17,8 @@ public:
     bool Initialize(D3D12_DESCRIPTOR_HEAP_TYPE type, UINT maxCount, bool shaderVisible) noexcept;
     DescriptorAllocation Allocate() noexcept;
     void Free(UINT index); //일반적으로 잘 쓰지 않는다.
-    void DeferredFree(UINT index, const SubmittedFences& fences);
-    void ProcessDeferredFree(const CompletedFences& fences); //매프레임당 부르는 함수
+    void DeferredFree(UINT index, const QueueFences& fences);
+    void ProcessDeferredFree(const QueueFences& fences); //매프레임당 부르는 함수
 
     D3D12_CPU_DESCRIPTOR_HANDLE GetCpuHandle(UINT index) const noexcept;
     D3D12_GPU_DESCRIPTOR_HANDLE GetGpuHandle(UINT index) const noexcept;

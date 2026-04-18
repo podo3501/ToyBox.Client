@@ -238,9 +238,6 @@
     <ClCompile Include="Render\DX12\ResourceUploader.cpp">
       <Filter>Render\DX12</Filter>
     </ClCompile>
-    <ClCompile Include="Render\DX12\CommandUtils.cpp">
-      <Filter>Render\DX12</Filter>
-    </ClCompile>
     <ClCompile Include="Render\DX12\CommandList.cpp">
       <Filter>Render\DX12</Filter>
     </ClCompile>

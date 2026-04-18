@@ -9,6 +9,7 @@
 #include "ResourcePreparer.h"
 #include "MipGenerator.h"
 #include "QuadRenderer.h"
+#include "CommandList.h"
 #include "CommandUtils.h"
 #include <dxgi1_6.h>
 #include "Vertex.h"
@@ -27,14 +28,7 @@ struct QuadDrawInfo
     Rect source;
 };
 
-RenderBackend::~RenderBackend()
-{
-    if (m_command)
-    {
-        m_command->WaitForAllGPU(); //gpu가 사용중이면 기다린다.
-    }
-}
-
+RenderBackend::~RenderBackend() = default;
 RenderBackend::RenderBackend() :
     m_core{ make_unique<DX12Core>() }
 {}
@@ -84,26 +78,26 @@ bool RenderBackend::Initialize(HWND hwnd, const Size& wndSize, const RenderConfi
 
 void RenderBackend::BeginFrame()
 {
-    m_graphicsCmdList = m_command->Begin(CommandType::Direct);
-    if (!m_graphicsCmdList) return;
+    m_cmd = m_command->Begin(CommandType::Direct);
+    if (!m_cmd) return;
 
     auto fences = m_command->GetCompletedFences();
-    m_preparer->Process(m_graphicsCmdList, fences);
+    m_preparer->Process(*m_cmd, fences);
 
-    m_swapChain->TransitionToRenderTarget(m_graphicsCmdList);
-    m_swapChain->SetRenderTarget(m_graphicsCmdList);
-    Clear(m_graphicsCmdList, 0.4f, 0.4f, 0.5f, 1.0f); //눈이 적당히 덜 피곤하면서 비어있는 영역 확인 가능한 색깔.
+    m_swapChain->TransitionToRenderTarget(*m_cmd);
+    m_swapChain->SetRenderTarget(*m_cmd);
+    Clear(*m_cmd, 0.4f, 0.4f, 0.5f, 1.0f); //눈이 적당히 덜 피곤하면서 비어있는 영역 확인 가능한 색깔.
 }
 
 void RenderBackend::EndFrame()
 {
-    if (!m_graphicsCmdList) return;
+    if (!m_cmd) return;
 
-    m_swapChain->TransitionToPresent(m_graphicsCmdList);
+    m_swapChain->TransitionToPresent(*m_cmd);
     m_command->End();
     m_swapChain->Present(false);
 
-    m_graphicsCmdList = nullptr;
+    m_cmd = nullptr;
 }
 
 unique_ptr<ITextureResource> RenderBackend::CreateTextureResource()
@@ -119,22 +113,22 @@ unique_ptr<ITextureResource> RenderBackend::CreateTextureResource()
 
 void RenderBackend::Draw(ITextureResource* texRes, const Rect& dest, const Rect* source)
 {
-    if (!m_graphicsCmdList) return;
+    if (!m_cmd) return;
 
     auto texResource = static_cast<TextureResource*>(texRes);
     // 처음 Flush 시 한 번만 상태 전환
     static bool ready = false;
     if (!ready)
     {
-        m_quadRenderer->TransitionToRenderState(m_graphicsCmdList);
+        m_quadRenderer->TransitionToRenderState(*m_cmd);
         ready = true;
     }
 
-    m_quadRenderer->BindDescriptorHeap(m_graphicsCmdList);
-    m_quadRenderer->BindPipeline(m_graphicsCmdList);
+    m_quadRenderer->BindDescriptorHeap(*m_cmd);
+    m_quadRenderer->BindPipeline(*m_cmd);
 
-    m_quadRenderer->BindTexture(m_graphicsCmdList, texResource->GetSrv().GetGpuHandle());
-    m_quadRenderer->Draw(m_graphicsCmdList, dest);
+    m_quadRenderer->BindTexture(*m_cmd, texResource->GetSrv().GetGpuHandle());
+    m_quadRenderer->Draw(*m_cmd, dest);
 }
 
 void RenderBackend::Resize(const Size& size)
@@ -148,7 +142,7 @@ void RenderBackend::Update()
     m_srvAllocator->ProcessDeferredFree(m_command->GetCompletedFences());
 }
 
-void RenderBackend::Clear(ID3D12GraphicsCommandList* cmd, float r, float g, float b, float a)
+void RenderBackend::Clear(CommandList& cmd, float r, float g, float b, float a)
 {
     auto rtv = m_swapChain->GetCurrentRTV();
 

@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "QuadRenderer.h"
+#include "CommandList.h"
 #include "CommandUtils.h"
 #include <d3dcompiler.h>
 #include "Vertex.h"
@@ -137,31 +138,31 @@ void QuadRenderer::SetVertexBuffer(ComPtr<ID3D12Resource> vb, UINT size) noexcep
     m_vertexView.StrideInBytes = sizeof(Vertex);
 }
 
-void QuadRenderer::BindPipeline(ID3D12GraphicsCommandList* cmd)
+void QuadRenderer::BindPipeline(CommandList& cmd)
 {
     cmd->SetGraphicsRootSignature(m_rootSignature.Get());
     cmd->SetPipelineState(m_pipelineState.Get());
 }
 
-void QuadRenderer::TransitionToRenderState(ID3D12GraphicsCommandList* cmd)
+void QuadRenderer::TransitionToRenderState(CommandList& cmd)
 {
     CommandUtils::Transition(cmd, m_vertexBuffer.Get(),
         D3D12_RESOURCE_STATE_COPY_DEST,
         D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
 }
 
-void QuadRenderer::BindDescriptorHeap(ID3D12GraphicsCommandList* cmd)
+void QuadRenderer::BindDescriptorHeap(CommandList& cmd)
 {
     ID3D12DescriptorHeap* heaps[] = { m_srvHeap };
     cmd->SetDescriptorHeaps(1, heaps);
 }
 
-void QuadRenderer::BindTexture(ID3D12GraphicsCommandList* cmd, D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle)
+void QuadRenderer::BindTexture(CommandList& cmd, D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle)
 {
     cmd->SetGraphicsRootDescriptorTable(0, gpuHandle);
 }
 
-void QuadRenderer::Draw( ID3D12GraphicsCommandList* cmd, const Rect& dest)
+void QuadRenderer::Draw(CommandList& cmd, const Rect& dest)
 {
     float left = (dest.Left() / (float)m_screenSize.width) * 2.0f - 1.0f;
     float right = (dest.Right() / (float)m_screenSize.width) * 2.0f - 1.0f;

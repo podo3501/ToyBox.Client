@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "ResourceUploader.h"
 #include "CommandScheduler.h"
+#include "CommandList.h"
 #include "GameClient/Service/Asset/Assets/TextureAsset.h"
 
 ResourceUploader::~ResourceUploader() = default;
@@ -19,17 +20,40 @@ static DXGI_FORMAT GetFormat(PixelFormat format)
     return DXGI_FORMAT_R8G8B8A8_UNORM;
 }
 
-static D3D12_RESOURCE_DESC CreateTexture2DDesc(const TextureAsset& asset)
+static bool IsUAVCompatibleFormat(DXGI_FORMAT format)
+{
+    switch (format)
+    {
+    case DXGI_FORMAT_R32_FLOAT:
+    case DXGI_FORMAT_R32_UINT:
+    case DXGI_FORMAT_R32_SINT:
+    case DXGI_FORMAT_R8G8B8A8_UNORM:
+    case DXGI_FORMAT_R8G8B8A8_UNORM_SRGB:
+    case DXGI_FORMAT_R8G8B8A8_UINT:
+    case DXGI_FORMAT_R8G8B8A8_SINT:
+    case DXGI_FORMAT_R32G32_FLOAT:
+    case DXGI_FORMAT_R32G32_UINT:
+    case DXGI_FORMAT_R32G32_SINT:
+    case DXGI_FORMAT_R32G32B32A32_FLOAT:
+    case DXGI_FORMAT_R32G32B32A32_UINT:
+    case DXGI_FORMAT_R32G32B32A32_SINT:
+        return true;
+    default: return false;
+    }
+}
+
+static D3D12_RESOURCE_DESC CreateTexture2DDesc(const TextureAsset& asset, bool generateMips)
 {
     D3D12_RESOURCE_DESC desc{};
     desc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
     desc.Width = asset.width;
     desc.Height = asset.height;
     desc.DepthOrArraySize = 1;
-    desc.MipLevels = 1;
     desc.SampleDesc.Count = 1;
     desc.Format = GetFormat(asset.format);
+    desc.MipLevels = 1;
     desc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
+
     return desc;
 }
 
@@ -38,31 +62,43 @@ static D3D12_RESOURCE_DESC CreateBufferDesc(UINT64 size)
     return CD3DX12_RESOURCE_DESC::Buffer(size);
 }
 
+static bool CanGenerateMips(const TextureAsset& asset, bool generateMips)
+{
+    DXGI_FORMAT format = GetFormat(asset.format);
+    return generateMips && IsUAVCompatibleFormat(format);
+}
+
+static void ApplyMipSettings(D3D12_RESOURCE_DESC& desc, bool canGenerateMips)
+{
+    if (!canGenerateMips) return;
+
+    desc.MipLevels = 0; // full mip chain
+    desc.Flags |= D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
+}
+
 static void UploadSubresource(
-    ID3D12GraphicsCommandList* cmd,
+    CommandList* cmd,
     ID3D12Resource* dest,
     ID3D12Resource* upload,
     const D3D12_SUBRESOURCE_DATA& subresource)
 {
-    UpdateSubresources(cmd, dest, upload, 0, 0, 1, &subresource);
+    UpdateSubresources(cmd->Get(), dest, upload, 0, 0, 1, &subresource);
 }
 
-ComPtr<ID3D12Resource> ResourceUploader::UploadTexture(
-    ID3D12GraphicsCommandList* uploadCmd,
+std::pair<ComPtr<ID3D12Resource>, bool> ResourceUploader::UploadTexture(
+    CommandList* uploadCmd,
     const TextureAsset& asset,
     bool generateMips,
     ComPtr<ID3D12Resource>& outUploadBuffer)
 {
-    auto texDesc = CreateTexture2DDesc(asset);
-
-    texDesc.MipLevels = generateMips ? 0 : 1; //0이면 전체 mip 생성
-    auto texture = CreateResource(
-        texDesc,
-        D3D12_HEAP_TYPE_DEFAULT,
-        D3D12_RESOURCE_STATE_COMMON);
+    auto texDesc = CreateTexture2DDesc(asset, generateMips);
+    bool canGenerateMips = CanGenerateMips(asset, generateMips);
+    ApplyMipSettings(texDesc, canGenerateMips);
+    auto texture = CreateResource(texDesc, D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_STATE_COMMON);
 
     UINT64 uploadSize = 0;
-    m_device->GetCopyableFootprints(&texDesc, 0, 1, 0,
+    UINT numSubresources = 1; // only mip0 uploaded
+    m_device->GetCopyableFootprints(&texDesc, 0, numSubresources, 0,
         nullptr, nullptr, nullptr, &uploadSize);
 
     outUploadBuffer = CreateResource(
@@ -76,21 +112,11 @@ ComPtr<ID3D12Resource> ResourceUploader::UploadTexture(
     subresource.SlicePitch = asset.stride * asset.height;
     UploadSubresource(uploadCmd, texture.Get(), outUploadBuffer.Get(), subresource);
 
-    //if (generateMips)
-    //{
-    //    TransitionBarrier(uploadCmd,
-    //        texture.Get(),
-    //        D3D12_RESOURCE_STATE_COPY_DEST,
-    //        D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
-
-    //    GenerateMips(uploadCmd, texture.Get());
-    //}
-
-    return texture;
+    return { texture, canGenerateMips };
 }
 
 ComPtr<ID3D12Resource> ResourceUploader::UploadVertexBuffer(
-    ID3D12GraphicsCommandList* cmd,
+    CommandList* cmd,
     const void* data,
     UINT bufferSize,
     ComPtr<ID3D12Resource>& outUploadBuffer)

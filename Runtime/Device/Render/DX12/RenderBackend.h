@@ -3,11 +3,11 @@
 #include "Core/Foundation/Geometry2D.h"
 #include <wrl/client.h>
 
-struct ID3D12GraphicsCommandList;
 struct MeshEntry;
 struct QuadDrawInfo;
 class DX12Core;
 class SwapChainPresenter;
+class CommandList;
 class CommandScheduler;
 class DescriptorAllocator;
 class ResourceUploader;
@@ -29,7 +29,7 @@ public:
 	virtual void Update() override;
 
 private:
-	void Clear(ID3D12GraphicsCommandList* cmd, float r, float g, float b, float a);
+	void Clear(CommandList& cmd, float r, float g, float b, float a);
 
 	unique_ptr<DX12Core> m_core;
 	unique_ptr<CommandScheduler> m_command;
@@ -40,7 +40,7 @@ private:
 	unique_ptr<MipGenerator> m_mipGenerator;
 	unique_ptr<QuadRenderer> m_quadRenderer;
 
-	ID3D12GraphicsCommandList* m_graphicsCmdList{ nullptr }; //direct command юс.
+	CommandList* m_cmd{ nullptr }; //direct command юс.
 
 	Size m_size{};
 	vector<MeshEntry> m_meshes;

@@ -1,18 +1,62 @@
 #pragma once
 #include "d3dx12.h"
+#include <concepts>
+
+template<typename T>
+concept CommandListLike = requires(T t)
+{
+    { t.Get() } -> std::same_as<ID3D12GraphicsCommandList*>;
+};
 
 namespace CommandUtils
 {
-    // 상태
-    void Transition(
-        ID3D12GraphicsCommandList* cmd,
-        ID3D12Resource* resource,
+    template<CommandListLike T>
+    inline void Transition(T& cmd, ID3D12Resource* resource,
         D3D12_RESOURCE_STATES before,
-        D3D12_RESOURCE_STATES after) noexcept;
+        D3D12_RESOURCE_STATES after) noexcept
+    {
+        if (before == after)
+            return;
 
-    // 프레임 기본
-    void SetViewport(ID3D12GraphicsCommandList* cmd, float w, float h) noexcept;
-    void SetScissor(ID3D12GraphicsCommandList* cmd, int w, int h) noexcept;
-    void ClearRTV(ID3D12GraphicsCommandList* cmd, D3D12_CPU_DESCRIPTOR_HANDLE rtv, const float clearColor[4]) noexcept;
-    void SetRenderTarget(ID3D12GraphicsCommandList* cmd, D3D12_CPU_DESCRIPTOR_HANDLE rtv) noexcept;
+        auto barrier = CD3DX12_RESOURCE_BARRIER::Transition(resource, before, after);
+        cmd.Get()->ResourceBarrier(1, &barrier);
+    }
+
+    template<CommandListLike T>
+    inline void SetViewport(T& cmd, float w, float h) noexcept
+    {
+        D3D12_VIEWPORT vp = {};
+        vp.TopLeftX = 0.0f;
+        vp.TopLeftY = 0.0f;
+        vp.Width = w;
+        vp.Height = h;
+        vp.MinDepth = 0.0f;
+        vp.MaxDepth = 1.0f;
+
+        cmd.Get()->RSSetViewports(1, &vp);
+    }
+
+    template<CommandListLike T>
+    inline void SetScissor(T& cmd, int w, int h) noexcept
+    {
+        D3D12_RECT rect = {};
+        rect.left = 0;
+        rect.top = 0;
+        rect.right = w;
+        rect.bottom = h;
+
+        cmd.Get()->RSSetScissorRects(1, &rect);
+    }
+
+    template<CommandListLike T>
+    inline void ClearRTV(T& cmd, D3D12_CPU_DESCRIPTOR_HANDLE rtv, const float clearColor[4]) noexcept
+    {
+        cmd.Get()->ClearRenderTargetView(rtv, clearColor, 0, nullptr);
+    }
+
+    template<CommandListLike T>
+    inline void SetRenderTarget(T& cmd, D3D12_CPU_DESCRIPTOR_HANDLE rtv) noexcept
+    {
+        cmd.Get()->OMSetRenderTargets(1, &rtv, FALSE, nullptr);
+    }
 }

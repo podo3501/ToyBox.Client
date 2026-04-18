@@ -2,6 +2,7 @@
 #include "SwapChainPresenter.h"
 #include "CommandScheduler.h"
 #include <dxgi1_6.h>
+#include "CommandList.h"
 #include "CommandUtils.h"
 
 using Microsoft::WRL::ComPtr;
@@ -31,27 +32,27 @@ bool SwapChainPresenter::Initialize(ID3D12Device* device, IDXGIFactory4* factory
     return true;
 }
 
-void SwapChainPresenter::SetRenderTarget(ID3D12GraphicsCommandList* cmdList)
+void SwapChainPresenter::SetRenderTarget(CommandList& cmd)
 {
     CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(
         m_rtvHeap->GetCPUDescriptorHandleForHeapStart(),
         m_frameIndex,
         m_rtvDescriptorSize);
-    CommandUtils::SetRenderTarget(cmdList, rtvHandle);
-    CommandUtils::SetViewport(cmdList, static_cast<float>(m_size.width), static_cast<float>(m_size.height));
-    CommandUtils::SetScissor(cmdList, m_size.width, m_size.height);
+    CommandUtils::SetRenderTarget(cmd, rtvHandle);
+    CommandUtils::SetViewport(cmd, static_cast<float>(m_size.width), static_cast<float>(m_size.height));
+    CommandUtils::SetScissor(cmd, m_size.width, m_size.height);
 }
 
-void SwapChainPresenter::TransitionToRenderTarget(ID3D12GraphicsCommandList* cmdList)
+void SwapChainPresenter::TransitionToRenderTarget(CommandList& cmd)
 {
-    CommandUtils::Transition(cmdList, m_renderTargets[m_frameIndex].Get(),
+    CommandUtils::Transition(cmd, m_renderTargets[m_frameIndex].Get(),
         D3D12_RESOURCE_STATE_PRESENT,
         D3D12_RESOURCE_STATE_RENDER_TARGET);
 }
 
-void SwapChainPresenter::TransitionToPresent(ID3D12GraphicsCommandList* cmdList)
+void SwapChainPresenter::TransitionToPresent(CommandList& cmd)
 {
-    CommandUtils::Transition(cmdList, m_renderTargets[m_frameIndex].Get(),
+    CommandUtils::Transition(cmd, m_renderTargets[m_frameIndex].Get(),
         D3D12_RESOURCE_STATE_RENDER_TARGET,
         D3D12_RESOURCE_STATE_PRESENT);
 }

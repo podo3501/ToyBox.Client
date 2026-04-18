@@ -2,6 +2,8 @@
 #include "ResourcePreparer.h"
 #include "CommandUtils.h"
 #include "PendingTransition.h"
+#include "CommandList.h"
+#include "CommandUtils.h"
 
 void ResourcePreparer::Enqueue(const PendingTransition& p)
 {
@@ -11,9 +13,7 @@ void ResourcePreparer::Enqueue(const PendingTransition& p)
     m_pendingTransitions.push_back(p);
 }
 
-void ResourcePreparer::Process(
-    ID3D12GraphicsCommandList* cmd,
-    const CompletedFences& fences)
+void ResourcePreparer::Process(CommandList& cmd, const QueueFences& fences)
 {
     size_t write = 0;
 
@@ -24,7 +24,7 @@ void ResourcePreparer::Process(
         if (fences.copy >= e.fence)
         {
             CommandUtils::Transition(cmd, e.resource, e.before, e.after);
-            if (e.owner) 
+            if (e.owner)
                 e.owner->OnReady(cmd);
         }
         else

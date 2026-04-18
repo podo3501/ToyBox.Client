@@ -97,7 +97,6 @@
     <ClCompile Include="Render\DX12\CommandList.cpp" />
     <ClCompile Include="Render\DX12\CommandQueue.cpp" />
     <ClCompile Include="Render\DX12\CommandScheduler.cpp" />
-    <ClCompile Include="Render\DX12\CommandUtils.cpp" />
     <ClCompile Include="Render\DX12\DebugHelper.cpp" />
     <ClCompile Include="Render\DX12\DescriptorAllocation.cpp" />
     <ClCompile Include="Render\DX12\DescriptorAllocator.cpp" />

@@ -31,7 +31,7 @@ bool CommandQueue::Initialize(ID3D12Device* device, CommandType type, uint32_t p
     return true;
 }
 
-ID3D12GraphicsCommandList* CommandQueue::Begin()
+CommandList* CommandQueue::Begin()
 {
     Assert(!m_currentCmdEntry);
 
@@ -41,7 +41,7 @@ ID3D12GraphicsCommandList* CommandQueue::Begin()
     entry->Reset();
     m_currentCmdEntry = entry;
 
-    return entry->Get();
+    return entry;
 }
 
 uint64_t CommandQueue::End(vector<ComPtr<ID3D12Resource>>&& resources)
