@@ -86,7 +86,7 @@ void RenderBackend::BeginFrame()
 
     m_swapChain->TransitionToRenderTarget(*m_cmd);
     m_swapChain->SetRenderTarget(*m_cmd);
-    Clear(*m_cmd, 0.4f, 0.4f, 0.5f, 1.0f); //눈이 적당히 덜 피곤하면서 비어있는 영역 확인 가능한 색깔.
+    Clear(*m_cmd, 0.13f, 0.13f, 0.16f, 1.0f); //눈이 적당히 덜 피곤하면서 비어있는 영역 확인 가능한 색깔.
 }
 
 void RenderBackend::EndFrame()
@@ -127,7 +127,7 @@ void RenderBackend::Draw(ITextureResource* texRes, const Rect& dest, const Rect*
     m_quadRenderer->BindDescriptorHeap(*m_cmd);
     m_quadRenderer->BindPipeline(*m_cmd);
 
-    m_quadRenderer->BindTexture(*m_cmd, texResource->GetSrv().GetGpuHandle());
+    m_quadRenderer->BindTexture(*m_cmd, texResource->GetSrv());
     m_quadRenderer->Draw(*m_cmd, dest);
 }
 

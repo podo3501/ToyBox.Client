@@ -10,12 +10,7 @@
 #include "CommandUtils.h"
 #include "GameClient/Service/Asset/Assets/TextureAsset.h"
 
-TextureResource::~TextureResource()
-{
-    if (m_srv.IsValid())
-        m_srv.SetDeferredContext(m_command->GetCompletedFences());
-}
-
+TextureResource::~TextureResource() = default;
 TextureResource::TextureResource(ID3D12Device* device, CommandScheduler* command,
     DescriptorAllocator* srvAllocator, ResourceUploader* uploader, ResourcePreparer* preparer, MipGenerator* mipGenerator) :
     m_device{ device },

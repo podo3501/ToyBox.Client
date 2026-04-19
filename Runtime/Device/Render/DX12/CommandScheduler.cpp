@@ -39,23 +39,8 @@ uint64_t CommandScheduler::End(vector<ComPtr<ID3D12Resource>>&& resources)
     Assert(m_currentQueue);
 
     auto fenceValue = m_currentQueue->End(move(resources));
-    DeferredFreeDescriptors();
-
     m_currentQueue = nullptr;
     return fenceValue;
-}
-
-void CommandScheduler::EnqueueDeferredDescriptors(DescriptorAllocation&& descriptor)
-{
-    m_pendingDescriptors.emplace_back(move(descriptor)); //end때의 fence 값으로 지워야 하기 때문에 일단 모아놓음.
-}
-
-void CommandScheduler::DeferredFreeDescriptors()
-{
-    QueueFences fences = GetLastSubmittedFences();
-    for (auto& d : m_pendingDescriptors)
-        d.SetDeferredContext(fences); // descriptors는 여기서 scope 끝 -> destructor -> DeferredFree 호출됨
-    m_pendingDescriptors.clear();
 }
 
 uint64_t CommandScheduler::SignalQueue(CommandType type)

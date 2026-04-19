@@ -86,11 +86,9 @@
 --TextureWindow를 main처럼 창 상단에서 열게 해서 source를 이름과 매칭시키는 클래스(TextureResourceBinder) 작성
     툴작업
     json으로 로드 세이브 되는지 확인
-    1차 마무리 했다면 tdd코드에서 좌표 확인 하는 부분 수정
 --extureSourceBinder에서 source 위치를 옮긴후 저장할때 버그.
     그 이미지가 선택되었다 라고 해서 이미지에서 수정하는 식으로 코드를 짜는 것을 추천
     버그 수정후에 파일을 저장하고 테스트 코드를 한단계씩 바꿔간다. ImageGrid3 할 차례
-    현재는 TDD가 작동하지 않는다 TextureResourceBinder 읽을때 안에 파일 형식이 달라서 오류생김
     이름을 먼저 정하면 선택할 수 있게 되고 선택이 가능하면 source 관련 수치가 바뀔 수 있도록 수정
     insert와 modify로 나누면 될꺼 같기도 하고.
 --TextureResourceBinder Vertical작업
@@ -98,13 +96,10 @@
 --툴에서 TextureResourceBinder 키로 저장하게끔 수정
 --툴에서 editwindow쪽 수정 필요
 --3이미지 9이미지 늘릴때 안늘어나는 이미지 가로 세로 lock 걸고 이미지 조정하는 걸로 수정
---TextureResourceBinder도 TDD 작성 및 리팩토링
 --m_index를 컴포넌트들이 가지고 있는데 이것을 TextureResourceBinder가 가지는 방식도 고려
---기존의 TDD에 좌표로 하드코딩 돼 있는 부분 TextrueSourceBinder로 수정
     바꾸는 중에 m_index도 셋팅 하게끔 바꾸는데 그러다 보니 bind부분과 post부분이 겹치게 되어서 
     한꺼번에 바꿔야 해서 img1 했고, 이전에는 반쪽만 했는데 switcher부터는 다 해야한다.
---리팩토링 및 TDD 수정
-    기존의 Image컴포넌트들도 TextureResourceBinder 사용하게 수정
+--기존의 Image컴포넌트들도 TextureResourceBinder 사용하게 수정
     ImageGrid1이 텍스쳐 파일을 로딩하기도 하는데, 이 부분을 Binder로 옮기고 Component는 직접적으로 로딩 하는 부분을 없애자.
 --TextureResourceBinder 함수 정리
     ImageSwitcher 저장 로드시 버그 수정
@@ -142,7 +137,7 @@
 --리스트가 컴포넌트 안에 있을때 사이즈 변경시 RenderTexture 위치가 이상해지는 문제(ratio와 관련해서 core쪽에 위치 문제일듯)
 --스크롤 바에서 순서이상한 부분 확인해보기
 --Tracy 측정도구 클라이언트에 붙이기
---tdd 코드가 tracy가 늦게 돌아가는데 이유는 코드 전송때문이었다. 그 코드 전송을 끄는 옵션을 사용하자.
+--tracy가 늦게 돌아가는데 이유는 코드 전송때문이었다. 그 코드 전송을 끄는 옵션을 사용하자.
 --Tracy가 다른 프로젝트와 연동시 문제가 없도록 수정
 --UINameGenerator에 SerializeIO 완성하기
 --UIModule에 Read 함수 만들기
@@ -156,7 +151,6 @@
 --바꾼후 Tracy를 통해서 얼만큼 속도 향상이 있는지 체크. (결과: attach하는데 시간을 거의 소비하지 않게 수정됨)
 --Tracy 때문에 성능측정을 하지 않는데도 테스트가 느려진다. 
 --Traits 패턴을 이용해서 TMP 쪽 코드 정리. 컨셉이 많아지면 복잡해져서 traits로 가야하긴 한다. traits.hpp 하는중
---기존의 툴이나 TDD에서 UIComponent를 쓴 부분을 UIModule로 바꾸기
 --JsonHelper 클래스 지우기
 --UIModule 을 찾아내서 내부적으로 attach하는 부분을 UIModule을 통해서 attach 하도록 수정.
 --Tracy의 build 폴더 github에 추가
@@ -209,7 +203,7 @@
 --Update 함수에 if를 지울 수 있을것 같다.
 --UIComponent에 option중에서 active? 인가 이거 삭제 할수 있지 않을까?
 --툴에서 위치값 갱신 안되는 버그 수정
---UIModule에서 panel에 name과 region이 버그가 있다. 이거 수정하고 tdd 쪽 수정하자.
+--UIModule에서 panel에 name과 region이 버그가 있다
 --UIModule로 바꾸고 나서 생긴 버그들 수정
 --UINameGenerator에서 ComponentID가 인자로 들어가는거 있는데 그거 수정.
 --껏다 킬때 툴에서 마우스 때문에 뻑나는거 수정
@@ -225,8 +219,7 @@
     컴포넌트T 이름으로 파일명을 정하고, 이것들은 큰 흐름만 테스트 한다.
 --ITextureController가 Component에 있는데 이를 찾아서 Setup할때 넣는 걸로 한다.
 --RenderTexture를 클론했을때 RenderTexture 안에 사용되는 텍스쳐는 새로 만들어야 한다.
---Json을 tdd에서 파일로 쓰는 부분을 DI로 수정하고 메모리에 쓰게끔 수정해서 tdd 속도 및 의존성 줄이기
---wstring filename = L"Test/Data/RWSourceBinderTest.json"; 이것처럼 tdd에서 세이브 되는 데이터는 한곳으로 모으자.
+--wstring filename = L"Test/Data/RWSourceBinderTest.json"; 이것처럼 세이브 되는 데이터는 한곳으로 모으자.
 --ComponentT가 UIModuleT를 상속받아서 테스트 하도록 수정.
 --audio manager 만들기
 --struct IMouseEventReceiver를 없애고 class MouseEventReceiver로 대체한다.
@@ -235,8 +228,7 @@
 --storage에서 desc 초기값을 안넣어줘도 되는 것이 있으니까 그때 기본 초기값을 넣게 수정
     FileIO를 클래스로 만들고 어떤 로딩을 할 것인지는 StorageDesc에 넣는걸로
 --storage 가 커져셔 SerializerIO는 Serializer로 바꾸고 Storage+FileIO 폴더를 만들어서 이쪽에 이동시켜야 할듯
---프로젝트 이름 바꾸기 Common으로, 다른 프로젝트들도 xxTest, xxTDD 식으로 나누어서 테스트와 tdd 프로젝트를 구분하게 한다.
---storage 정리가 끝나면 tdd 쪽 파일 m_storage 라고 명명된 파일명을 수정해야 한다. 
+--storage 정리가 끝나면 m_storage 라고 명명된 파일명을 수정해야 한다. 
 --Toy.Client.sln 파일 새롭게 하나 만들기.
 --include 할때 Renderer\public 을 인클루드 하는데 d3dx12.h 포함해서 이거 어떻게 할지 정리해야함.
 --프로젝트별 의존 정리 shared 테스트하는데 Toy를 참조해서는 안된다 같은것들.
@@ -277,9 +269,13 @@
 --upload를 여러개 업로드 해도 안 죽도록.    
 --텍스쳐 max 설정.
 --텍스쳐 핸들로 리턴하게끔
+--TextureResource 에서 TextureDesc에 정해진대로 옵션줘서 로딩하게.
 
 @렌더러 만들기
-    @TextureResource 에서 TextureDesc에 정해진대로 옵션줘서 로딩하게.
+    @Compute Queue 만들기
+    @Backend Draw쪽 정리
+    @Resize 되는지 확인
+    @코드 정리 및 폴더 만들어서 정리
     @Material Repository가 지금은 Texture wrapper 수준인데 옵션 넣어서 동작하게끔.
     @간단한 사각형 mesh 렌더링
     @ui 사각형 만들기(mesh랑 종류가 다름)

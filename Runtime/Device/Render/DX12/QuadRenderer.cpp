@@ -2,6 +2,7 @@
 #include "QuadRenderer.h"
 #include "CommandList.h"
 #include "CommandUtils.h"
+#include "DescriptorAllocation.h"
 #include <d3dcompiler.h>
 #include "Vertex.h"
 
@@ -90,7 +91,7 @@ bool QuadRenderer::Initialize(ID3D12Device* device, const Size& screenSize)
     psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 
     psoDesc.NumRenderTargets = 1;
-    psoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
+    psoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
     psoDesc.SampleDesc.Count = 1;
 
     hr = device->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&m_pipelineState));
@@ -157,9 +158,11 @@ void QuadRenderer::BindDescriptorHeap(CommandList& cmd)
     cmd->SetDescriptorHeaps(1, heaps);
 }
 
-void QuadRenderer::BindTexture(CommandList& cmd, D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle)
+void QuadRenderer::BindTexture(CommandList& cmd, DescriptorAllocation& srv)
 {
-    cmd->SetGraphicsRootDescriptorTable(0, gpuHandle);
+    auto handle = srv.GetGpuHandle();
+    cmd->SetGraphicsRootDescriptorTable(0, handle);
+    srv.MarkUsed(cmd.GetType(), cmd.GetFence());
 }
 
 void QuadRenderer::Draw(CommandList& cmd, const Rect& dest)

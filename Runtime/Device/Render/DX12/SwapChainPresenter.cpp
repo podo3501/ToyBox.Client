@@ -160,7 +160,13 @@ bool SwapChainPresenter::CreateFrameRTVs(ID3D12Device* device)
     {
         if (FAILED(m_swapChain->GetBuffer(i, IID_PPV_ARGS(&m_renderTargets[i])))) return false;
 
-        device->CreateRenderTargetView(m_renderTargets[i].Get(), nullptr, handle);
+        D3D12_RENDER_TARGET_VIEW_DESC rtvDesc{};
+        rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+        rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
+        rtvDesc.Texture2D.MipSlice = 0;
+        rtvDesc.Texture2D.PlaneSlice = 0;
+
+        device->CreateRenderTargetView(m_renderTargets[i].Get(), &rtvDesc, handle);
         handle.Offset(1, m_rtvDescriptorSize);
     }
 

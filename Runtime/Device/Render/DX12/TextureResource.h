@@ -26,7 +26,8 @@ public:
 	virtual bool IsReady() const noexcept override { return m_ready; }
 	virtual void OnReady(CommandList& cmd) override;
 
-	const DescriptorAllocation& GetSrv() const { return m_srv; }
+	DescriptorAllocation& GetSrv() { return m_srv; }
+	ID3D12Resource* Get() { return m_texture.Get(); }
 
 private:
 	void AddTexture(ComPtr<ID3D12Resource> tex, const TextureDesc& desc, bool generateMips);

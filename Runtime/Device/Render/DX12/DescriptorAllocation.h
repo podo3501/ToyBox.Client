@@ -18,8 +18,8 @@ public:
     DescriptorAllocation& operator=(DescriptorAllocation&& other) noexcept;
 
     bool IsValid() const { return m_index != UINT_MAX; }
-    void SetDeferredContext(const QueueFences& fences);
-    void SetDeferredContext(CommandType type, uint64_t fence);
+    void MarkUsed(const QueueFences& fences);
+    void MarkUsed(CommandType type, uint64_t fence);
     
     D3D12_CPU_DESCRIPTOR_HANDLE GetCpuHandle() const;
     D3D12_GPU_DESCRIPTOR_HANDLE GetGpuHandle() const;

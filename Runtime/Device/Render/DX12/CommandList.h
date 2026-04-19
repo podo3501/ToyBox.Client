@@ -22,6 +22,8 @@ public:
 
     ID3D12GraphicsCommandList* operator->() const { return m_command.Get(); }
     ID3D12GraphicsCommandList* Get() { return m_command.Get(); }
+    uint64_t GetFence() const noexcept { return m_lastFenceValue; }
+    CommandType GetType() const noexcept { return m_type; }
 
 private:
     ComPtr<ID3D12CommandAllocator> m_allocator;
@@ -30,5 +32,4 @@ private:
     CommandType m_type;
     ID3D12Fence* m_fence{ nullptr };
     uint64_t m_lastFenceValue{ 0 };
-    vector<DescriptorAllocation> m_deferredDescriptors;
 };

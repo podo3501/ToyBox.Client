@@ -152,8 +152,8 @@ void MipGenerator::GenerateMips(CommandList& cmd, ID3D12Resource* texture)
 
         cmd->ResourceBarrier(1, &barrier);
 
-        cmd.EnqueueDeferredDescriptors(move(srv));
-        cmd.EnqueueDeferredDescriptors(move(uav));
+        srv.MarkUsed(cmd.GetType(), cmd.GetFence());
+        uav.MarkUsed(cmd.GetType(), cmd.GetFence());
     }
 }
 

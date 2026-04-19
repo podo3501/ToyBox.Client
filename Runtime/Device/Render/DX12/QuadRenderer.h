@@ -7,6 +7,7 @@ struct CD3DX12_GPU_DESCRIPTOR_HANDLE;
 struct Vertex;
 struct QuadTransform;
 class CommandList;
+class DescriptorAllocation;
 
 class QuadRenderer
 {
@@ -21,7 +22,7 @@ public:
     void BindDescriptorHeap(CommandList& cmd);
     void BindPipeline(CommandList& cmd);
     void TransitionToRenderState(CommandList& cmd);
-    void BindTexture(CommandList& cmd, D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle);
+    void BindTexture(CommandList& cmd, DescriptorAllocation& srv);
     void Draw(CommandList& cmd, const Rect& dest);
 
 private:

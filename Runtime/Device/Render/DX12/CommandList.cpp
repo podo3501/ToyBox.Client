@@ -26,11 +26,6 @@ void CommandList::Close()
     DxCheck(m_command->Close());
 }
 
-void CommandList::EnqueueDeferredDescriptors(DescriptorAllocation&& descriptor)
-{
-    m_deferredDescriptors.emplace_back(move(descriptor));
-}
-
 bool CommandList::IsAvailable() const
 {
     if (!m_fence)
@@ -43,8 +38,4 @@ void CommandList::SetFence(ID3D12Fence* fence, uint64_t value)
 {
     m_fence = fence;
     m_lastFenceValue = value;
-
-    for (auto& desc : m_deferredDescriptors)
-        desc.SetDeferredContext(m_type, value);
-    m_deferredDescriptors.clear();
 }

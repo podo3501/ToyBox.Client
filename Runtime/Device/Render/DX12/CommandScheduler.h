@@ -18,7 +18,6 @@ public:
     bool Initialize(ID3D12Device* device, uint32_t directPoolSize, uint32_t copyPoolSize);
     CommandList* Begin(CommandType type);
     uint64_t End(vector<ComPtr<ID3D12Resource>>&& resources = {});
-    void EnqueueDeferredDescriptors(DescriptorAllocation&& descriptor);
     
     // End -> Close + Signal, PendingRelease µî·Ï
     uint64_t SignalQueue(CommandType type);
@@ -30,7 +29,6 @@ public:
     QueueFences GetCompletedFences() const noexcept;
 
 private:
-    void DeferredFreeDescriptors();
     CommandQueue* GetQueue(CommandType type);
 
     unique_ptr<CommandQueue> m_directQueue;

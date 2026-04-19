@@ -36,13 +36,19 @@ void DescriptorAllocation::MoveFrom(DescriptorAllocation& other)
     other.m_deferred = false;
 }
 
-void DescriptorAllocation::SetDeferredContext(const QueueFences& fences)
+void DescriptorAllocation::MarkUsed(const QueueFences& fences)
 {
-    m_fences = fences;
-    m_deferred = true;
+    if (!m_deferred)
+    {
+        m_fences = fences;
+        m_deferred = true;
+        return;
+    }
+
+    m_fences.Merge(fences);
 }
 
-void DescriptorAllocation::SetDeferredContext(CommandType type, uint64_t fence)
+void DescriptorAllocation::MarkUsed(CommandType type, uint64_t fence)
 {
     QueueFences f{};
 
@@ -52,7 +58,7 @@ void DescriptorAllocation::SetDeferredContext(CommandType type, uint64_t fence)
     case CommandType::Copy: f.copy = fence; break;
     }
 
-    SetDeferredContext(f);
+    MarkUsed(f);
 }
 
 D3D12_CPU_DESCRIPTOR_HANDLE DescriptorAllocation::GetCpuHandle() const
