@@ -41,7 +41,8 @@ bool RenderBackend::Initialize(HWND hwnd, const Size& wndSize, const RenderConfi
     auto factory = m_core->GetFactory();
 
     m_command = make_unique<CommandScheduler>();
-    ReturnIfFalse(m_command->Initialize(device, config.directQueuePoolSize, config.copyQueuePoolSize));
+    ReturnIfFalse(m_command->Initialize(device, 
+        config.directQueuePoolSize, config.copyQueuePoolSize, config.computeQueuePoolSize));
 
     auto queue = m_command->GetCommandQueue(CommandType::Direct);
     SwapChainDesc desc{ hwnd, wndSize, config.allowTearing };

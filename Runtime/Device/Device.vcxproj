@@ -63,6 +63,8 @@
     <ClInclude Include="Render\DX12\SwapChainPresenter.h" />
     <ClInclude Include="Render\DX12\QuadRenderer.h" />
     <ClInclude Include="Render\DX12\RenderBackend.h" />
+    <ClInclude Include="Render\DX12\Task.h" />
+    <ClInclude Include="Render\DX12\TaskHandle.h" />
     <ClInclude Include="Render\DX12\TaskNode.h" />
     <ClInclude Include="Render\DX12\TaskScheduler.h" />
     <ClInclude Include="Render\DX12\TextureResource.h" />

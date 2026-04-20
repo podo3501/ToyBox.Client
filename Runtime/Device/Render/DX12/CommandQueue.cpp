@@ -122,7 +122,10 @@ CommandList* CommandQueue::GetAvailableCommandList()
         m_next = (m_next + 1) % m_pool.size();
 
         if (entry->IsAvailable())
+        {
+            entry->MarkInUse();
             return entry;
+        }
     }
 
     return nullptr; // 사용 가능한 context 없음 여기서 만약 while로 기다리게 되면 cpu, gpu 동기화가 되기 때문에 일부러 nullptr 리턴함. begin에서 nullptr이면 present 안하고 리턴. 의도한 바임.

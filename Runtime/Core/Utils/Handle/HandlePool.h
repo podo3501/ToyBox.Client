@@ -31,10 +31,50 @@ public:
 
         auto& slot = m_slots[index];
         slot.data.reset();
+        slot.handle = Handle{ index, slot.generation };
         slot.data.emplace(std::forward<Args>(args)...);
         slot.alive = true;
 
-        return Handle{ index, slot.generation }; // generation은 1 이상 보장됨
+        return slot.handle; // generation은 1 이상 보장됨
+    }
+
+    bool Remove(Handle h)
+    {
+        if (!IsValid(h)) return false;
+
+        auto& slot = m_slots[h.index];
+        slot.data.reset();
+        slot.handle = Handle::Invalid();
+        slot.alive = false;
+
+        slot.generation++;
+        if (slot.generation == 0) slot.generation = 1; // generation 증가 (0 방지)
+
+        m_freeList.push_back(h.index);
+        return true;
+    }
+
+    void Clear()
+    {
+        for (uint32_t i = 1; i < m_slots.size(); ++i) // 0은 dummy
+        {
+            auto& slot = m_slots[i];
+
+            if (!slot.alive) continue;
+
+            slot.data.reset();
+            slot.handle = Handle::Invalid();
+            slot.alive = false;
+
+            slot.generation++;
+            if (slot.generation == 0) slot.generation = 1;
+        }
+
+        m_freeList.clear();
+        for (uint32_t i = 1; i < m_slots.size(); ++i)
+        {
+            m_freeList.push_back(i);
+        }
     }
 
     T* Find(Handle h)
@@ -49,21 +89,6 @@ public:
         return &(*m_slots[h.index].data);
     }
 
-    bool Remove(Handle h)
-    {
-        if (!IsValid(h)) return false;
-
-        auto& slot = m_slots[h.index];
-        slot.data.reset();
-        slot.alive = false;
-
-        slot.generation++;
-        if (slot.generation == 0) slot.generation = 1; // generation 증가 (0 방지)
-
-        m_freeList.push_back(h.index);
-        return true;
-    }
-
     bool IsValid(Handle h) const
     {
         if (!h) return false;
@@ -73,11 +98,32 @@ public:
         return slot.alive && slot.generation == h.generation;
     }
 
+    template<typename Func>
+    void Visit(Func&& f)
+    {
+        for (auto& slot : m_slots)
+        {
+            if (!slot.alive) continue;
+            f(slot.handle, *slot.data);
+        }
+    }
+
+    template<typename Func>
+    void Visit(Func&& f) const
+    {
+        for (const auto& slot : m_slots)
+        {
+            if (!slot.alive) continue;
+            f(slot.handle, *slot.data);
+        }
+    }
+
 private:
     template<typename T>
     struct HandleSlot
     {
         std::optional<T> data;
+        Handle handle{ Handle::Invalid() };
         uint32_t generation = 1; // 0은 사용 안 함
         bool alive = false;
     };

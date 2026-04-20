@@ -2,6 +2,12 @@
 #include "CommandList.h"
 #include "DescriptorAllocation.h"
 
+struct QueueDependency
+{
+    CommandType type;
+    uint64_t fenceValue;
+};
+
 CommandList::~CommandList() = default;
 CommandList::CommandList() = default;
 
@@ -28,8 +34,8 @@ void CommandList::Close()
 
 bool CommandList::IsAvailable() const
 {
-    if (!m_fence)
-        return true; // 아직 한 번도 안 쓴 경우
+    if (!m_fence) return true; // 아직 한 번도 안 쓴 경우
+    if (m_inUse) return false;
 
     return m_fence->GetCompletedValue() >= m_lastFenceValue;
 }
@@ -38,4 +44,15 @@ void CommandList::SetFence(ID3D12Fence* fence, uint64_t value)
 {
     m_fence = fence;
     m_lastFenceValue = value;
+    m_inUse = false;
+}
+
+void CommandList::DependOn(CommandType type, uint64_t fenceValue)
+{
+    m_dependencies.push_back({ type, fenceValue });
+}
+
+const std::vector<QueueDependency>& CommandList::GetDependencies() const
+{
+    return m_dependencies;
 }

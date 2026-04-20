@@ -55,6 +55,28 @@ public:
         return true;
     }
 
+    void Clear()
+    {
+        for (uint16_t i = 1; i < m_capacity; ++i)
+        {
+            auto& slot = m_slots[i];
+
+            if (slot.alive)
+            {
+                slot.data = T{};
+                slot.alive = false;
+                slot.handle = Handle::Invalid();
+
+                ++slot.generation;
+                if (slot.generation == 0) slot.generation = 1;
+            }
+        }
+
+        m_freeList.clear();
+        for (uint16_t i = 1; i < m_capacity; ++i)
+            m_freeList.push_back(i);
+    }
+
     T* Get(Handle h)
     {
         if (!IsValid(h)) return nullptr;
@@ -78,39 +100,23 @@ public:
         return slot.alive && slot.generation == h.Generation();
     }
 
-    template<typename Func> //const visit
-    void Visit(Func&& f) const 
+    template<typename Func>
+    void Visit(Func&& f)
     {
-        for (uint16_t i = 1; i < m_capacity; ++i)
+        for (auto& slot : m_slots)
         {
-            const auto& slot = m_slots[i];
             if (!slot.alive) continue;
-
-            if constexpr (std::is_same_v<std::invoke_result_t<Func, Handle, const T&>, bool>)
-            {
-                if (!f(slot.handle, slot.data))
-                    return;
-            }
-            else
-                f(slot.handle, slot.data);
+            f(slot.handle, slot.data);
         }
     }
 
-    template<typename Func> //mutable visit
-    void Visit(Func&& f)
+    template<typename Func>
+    void Visit(Func&& f) const
     {
-        for (uint16_t i = 1; i < m_capacity; ++i)
+        for (const auto& slot : m_slots)
         {
-            auto& slot = m_slots[i];
             if (!slot.alive) continue;
-
-            if constexpr (std::is_same_v<std::invoke_result_t<Func, Handle, T&>, bool>)
-            {
-                if (!f(slot.handle, slot.data))
-                    return;
-            }
-            else
-                f(slot.handle, slot.data);
+            f(slot.handle, slot.data);
         }
     }
 

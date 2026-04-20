@@ -4,7 +4,8 @@
 enum class CommandType
 {
     Direct, //랜더링
-    Copy //리소스 전송
+    Copy, //리소스 전송
+    Compute //계산 
 };
 
 inline D3D12_COMMAND_LIST_TYPE ToD3D12(CommandType type)

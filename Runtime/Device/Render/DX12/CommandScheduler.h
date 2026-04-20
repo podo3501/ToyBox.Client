@@ -15,7 +15,7 @@ class CommandScheduler
 public:
     ~CommandScheduler();
     CommandScheduler();
-    bool Initialize(ID3D12Device* device, uint32_t directPoolSize, uint32_t copyPoolSize);
+    bool Initialize(ID3D12Device* device, uint32_t directPoolSize, uint32_t copyPoolSize, uint32_t computePoolSize);
     CommandList* Begin(CommandType type);
     uint64_t End(vector<ComPtr<ID3D12Resource>>&& resources = {});
     
@@ -24,6 +24,8 @@ public:
     void WaitQueueIdle(CommandType type);
     void ReleaseCompletedResources(); // Pending release 체크 후 리소스 해제
     void WaitForAllGPU();
+    bool IsFenceComplete(CommandType type, uint64_t fenceValue);
+
     ID3D12CommandQueue* GetCommandQueue(CommandType type);
     QueueFences GetLastSubmittedFences() const noexcept;
     QueueFences GetCompletedFences() const noexcept;
@@ -33,6 +35,8 @@ private:
 
     unique_ptr<CommandQueue> m_directQueue;
     unique_ptr<CommandQueue> m_copyQueue;
+    unique_ptr<CommandQueue> m_computeQueue;
+
     CommandQueue* m_currentQueue{ nullptr };
     vector<DescriptorAllocation> m_pendingDescriptors; //fence때까지 기다렸다 지워질 descriptors 
 };

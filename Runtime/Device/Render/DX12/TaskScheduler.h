@@ -1,18 +1,26 @@
 #pragma once
+#include "Task.h"
+#include "Core/Utils/Handle/HandlePool.h"
 
-class TaskNode;
 class CommandScheduler;
 
 class TaskScheduler
 {
 public:
-    ~TaskScheduler();
     TaskScheduler(CommandScheduler* cmdScheduler);
-    void AddTask(TaskNode* task);
-    void Clear();
+    ~TaskScheduler();
+
+    TaskHandle Enqueue(const TaskDesc& desc);
     void Execute();
+    void Clear();
+
+private:
+    bool AreDependenciesDone(const Task& task);
+    bool IsTaskFinished(const Task& task);
+    void ExecuteTask(Task& task);
 
 private:
     CommandScheduler* m_cmdScheduler{ nullptr };
-    vector<TaskNode*> m_tasks;
+    HandlePool<Task, struct TaskTag> m_tasks;
+    uint32_t m_nextId{ 1 };
 };

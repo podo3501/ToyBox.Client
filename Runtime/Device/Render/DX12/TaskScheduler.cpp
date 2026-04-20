@@ -3,59 +3,62 @@
 #include "CommandScheduler.h"
 
 TaskScheduler::~TaskScheduler() = default;
-TaskScheduler::TaskScheduler(CommandScheduler* cmdScheduler) :
-    m_cmdScheduler{ cmdScheduler }
+TaskScheduler::TaskScheduler(CommandScheduler* cmdScheduler)
+    : m_cmdScheduler(cmdScheduler)
 {}
 
-void TaskScheduler::AddTask(TaskNode* task)
+TaskHandle TaskScheduler::Enqueue(const TaskDesc& desc)
 {
-    m_tasks.push_back(task);
-}
-
-void TaskScheduler::Clear()
-{
-    m_tasks.clear();
+    Task task;
+    task.desc = desc;
+    return m_tasks.Emplace(std::move(task));
 }
 
 void TaskScheduler::Execute()
 {
-    ////prepare
-    //{
-    //    auto& cmd = backend.GetDirectCommand();
-    //    cmd.Begin();
+    m_tasks.Visit([this](TaskHandle, Task& task) {
+        if (!task.submitted)
+        {
+            if (AreDependenciesDone(task))
+                ExecuteTask(task);
+            return;
+        }
 
-    //    for (auto* task : m_tasks)
-    //        task->ExecutePrepare(cmd);
+        if (!task.finished && IsTaskFinished(task))
+            task.finished = true;
+        });
+}
 
-    //    cmd.End();
-    //    backend.SubmitDirect(cmd);
-    //}
+void TaskScheduler::ExecuteTask(Task& task)
+{
+    auto cmd = m_cmdScheduler->Begin(task.desc.type);
+    if (!cmd) return;
 
-    ////dispatch
-    //{
-    //    auto& cmd = backend.GetComputeCommand();
-    //    cmd.Begin();
+    task.desc.execute(*cmd);
 
-    //    backend.WaitForDirect();
+    task.fenceValue = m_cmdScheduler->End();
+    task.submitted = true;
+}
 
-    //    for (auto* task : m_tasks)
-    //        task->ExecuteDispatch(cmd);
+bool TaskScheduler::AreDependenciesDone(const Task& task)
+{
+    for (auto& dep : task.desc.dependencies)
+    {
+        const Task* depTask = m_tasks.Find(dep);
+        if (!depTask) return false;
+        if (!depTask->finished) return false;
+    }
 
-    //    cmd.End();
-    //    backend.SubmitCompute(cmd);
-    //}
+    return true;
+}
 
-    ////finalize
-    //{
-    //    auto& cmd = backend.GetDirectCommand2();
-    //    cmd.Begin();
+bool TaskScheduler::IsTaskFinished(const Task& task)
+{
+    if (!task.submitted) return false;
+    return m_cmdScheduler->IsFenceComplete(task.desc.type, task.fenceValue);
+}
 
-    //    backend.WaitForCompute();
-
-    //    for (auto* task : m_tasks)
-    //        task->ExecuteFinalize(cmd);
-
-    //    cmd.End();
-    //    backend.SubmitDirect(cmd);
-    //}
+void TaskScheduler::Clear()
+{
+    m_tasks.Clear();
 }
