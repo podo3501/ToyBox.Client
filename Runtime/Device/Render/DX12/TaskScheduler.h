@@ -12,12 +12,15 @@ public:
 
     TaskHandle Enqueue(const TaskDesc& desc);
     void Execute();
+    void Cancel(TaskHandle handle);
     void Clear();
 
 private:
     bool AreDependenciesDone(const Task& task);
     bool IsTaskFinished(const Task& task);
     void ExecuteTask(Task& task);
+    bool CanDeleteTask(const Task& task);
+    void RemoveTask(TaskHandle handle, Task& task);
 
 private:
     CommandScheduler* m_cmdScheduler{ nullptr };

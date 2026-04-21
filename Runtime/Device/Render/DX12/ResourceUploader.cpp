@@ -62,12 +62,6 @@ static D3D12_RESOURCE_DESC CreateBufferDesc(UINT64 size)
     return CD3DX12_RESOURCE_DESC::Buffer(size);
 }
 
-static bool CanGenerateMips(const TextureAsset& asset, bool generateMips)
-{
-    DXGI_FORMAT format = GetFormat(asset.format);
-    return generateMips && IsUAVCompatibleFormat(format);
-}
-
 static void ApplyMipSettings(D3D12_RESOURCE_DESC& desc, bool canGenerateMips)
 {
     if (!canGenerateMips) return;
@@ -77,23 +71,28 @@ static void ApplyMipSettings(D3D12_RESOURCE_DESC& desc, bool canGenerateMips)
 }
 
 static void UploadSubresource(
-    CommandList* cmd,
+    CommandList& cmd,
     ID3D12Resource* dest,
     ID3D12Resource* upload,
     const D3D12_SUBRESOURCE_DATA& subresource)
 {
-    UpdateSubresources(cmd->Get(), dest, upload, 0, 0, 1, &subresource);
+    UpdateSubresources(cmd.Get(), dest, upload, 0, 0, 1, &subresource);
 }
 
-std::pair<ComPtr<ID3D12Resource>, bool> ResourceUploader::UploadTexture(
-    CommandList* uploadCmd,
+bool ResourceUploader::ShouldGenerateMips(const TextureAsset& asset, bool generateMips)
+{
+    DXGI_FORMAT format = GetFormat(asset.format);
+    return generateMips && IsUAVCompatibleFormat(format);
+}
+
+ComPtr<ID3D12Resource> ResourceUploader::UploadTexture(
+    CommandList& uploadCmd,
     const TextureAsset& asset,
     bool generateMips,
     ComPtr<ID3D12Resource>& outUploadBuffer)
 {
     auto texDesc = CreateTexture2DDesc(asset, generateMips);
-    bool canGenerateMips = CanGenerateMips(asset, generateMips);
-    ApplyMipSettings(texDesc, canGenerateMips);
+    ApplyMipSettings(texDesc, generateMips);
     auto texture = CreateResource(texDesc, D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_STATE_COMMON);
 
     UINT64 uploadSize = 0;
@@ -112,11 +111,11 @@ std::pair<ComPtr<ID3D12Resource>, bool> ResourceUploader::UploadTexture(
     subresource.SlicePitch = asset.stride * asset.height;
     UploadSubresource(uploadCmd, texture.Get(), outUploadBuffer.Get(), subresource);
 
-    return { texture, canGenerateMips };
+    return texture;
 }
 
 ComPtr<ID3D12Resource> ResourceUploader::UploadVertexBuffer(
-    CommandList* cmd,
+    CommandList& cmd,
     const void* data,
     UINT bufferSize,
     ComPtr<ID3D12Resource>& outUploadBuffer)

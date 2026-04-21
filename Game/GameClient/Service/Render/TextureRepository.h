@@ -41,7 +41,7 @@ enum class TextureState
 struct TextureEntry
 {
     TextureKey key;
-    unique_ptr<ITextureResource> texRes;
+    shared_ptr<ITextureResource> texRes;
     TextureState state{ TextureState::Pending };
 };
 

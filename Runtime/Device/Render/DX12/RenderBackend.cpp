@@ -4,6 +4,7 @@
 #include "SwapChainPresenter.h"
 #include "CommandScheduler.h"
 #include "DescriptorAllocator.h"
+#include "TaskScheduler.h"
 #include "TextureResource.h"
 #include "ResourceUploader.h"
 #include "ResourcePreparer.h"
@@ -52,6 +53,7 @@ bool RenderBackend::Initialize(HWND hwnd, const Size& wndSize, const RenderConfi
     m_srvAllocator = make_unique<DescriptorAllocator>(device);
     ReturnIfFalse(m_srvAllocator->Initialize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, config.srvDescriptorCount, true));
 
+    m_taskScheduler = make_unique<TaskScheduler>(m_command.get());
     m_uploader = make_unique<ResourceUploader>(device);
     m_preparer = make_unique<ResourcePreparer>();
     m_mipGenerator = make_unique<MipGenerator>(device, m_srvAllocator.get());
@@ -65,7 +67,7 @@ bool RenderBackend::Initialize(HWND hwnd, const Size& wndSize, const RenderConfi
     auto copyCmd = m_command->Begin(CommandType::Copy); // 업로드 전용 커맨드 리스트 생성
     ComPtr<ID3D12Resource> uploadBuffer;
     auto vb = m_uploader->UploadVertexBuffer(
-        copyCmd,
+        *copyCmd,
         vertices.data(),
         static_cast<UINT>(vertices.size() * sizeof(Vertex)),
         uploadBuffer
@@ -82,8 +84,8 @@ void RenderBackend::BeginFrame()
     m_cmd = m_command->Begin(CommandType::Direct);
     if (!m_cmd) return;
 
-    auto fences = m_command->GetCompletedFences();
-    m_preparer->Process(*m_cmd, fences);
+    //auto fences = m_command->GetCompletedFences();
+    //m_preparer->Process(*m_cmd, fences);
 
     m_swapChain->TransitionToRenderTarget(*m_cmd);
     m_swapChain->SetRenderTarget(*m_cmd);
@@ -101,12 +103,13 @@ void RenderBackend::EndFrame()
     m_cmd = nullptr;
 }
 
-unique_ptr<ITextureResource> RenderBackend::CreateTextureResource()
+shared_ptr<ITextureResource> RenderBackend::CreateTextureResource()
 {
-    return make_unique<TextureResource>(
+    return make_shared<TextureResource>(
         m_core->GetDevice(),
         m_command.get(),
         m_srvAllocator.get(),
+        m_taskScheduler.get(),
         m_uploader.get(),
         m_preparer.get(),
         m_mipGenerator.get());
@@ -141,6 +144,8 @@ void RenderBackend::Update()
 {
     m_command->ReleaseCompletedResources();
     m_srvAllocator->ProcessDeferredFree(m_command->GetCompletedFences());
+
+    m_taskScheduler->Execute();
 }
 
 void RenderBackend::Clear(CommandList& cmd, float r, float g, float b, float a)

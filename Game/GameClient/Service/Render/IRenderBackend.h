@@ -10,7 +10,7 @@ struct IRenderBackend
 {
 	virtual ~IRenderBackend() = default;
 	virtual bool Initialize(HWND hwnd, const Size& wndSize, const RenderConfig& config) = 0;
-	virtual unique_ptr<ITextureResource> CreateTextureResource() = 0;
+	virtual shared_ptr<ITextureResource> CreateTextureResource() = 0;
 	virtual void BeginFrame() = 0;
 	virtual void EndFrame() = 0;
 	virtual void Draw(ITextureResource* texRes, const Rect& dest, const Rect* source) = 0;

@@ -10,6 +10,7 @@ class SwapChainPresenter;
 class CommandList;
 class CommandScheduler;
 class DescriptorAllocator;
+class TaskScheduler;
 class ResourceUploader;
 class ResourcePreparer;
 class MipGenerator;
@@ -21,7 +22,7 @@ public:
 	~RenderBackend();
 	RenderBackend();
 	virtual bool Initialize(HWND hwnd, const Size& wndSize, const RenderConfig& renderConfig) override;
-	virtual unique_ptr<ITextureResource> CreateTextureResource() override;
+	virtual shared_ptr<ITextureResource> CreateTextureResource() override;
 	virtual void BeginFrame() override;
 	virtual void EndFrame() override;
 	virtual void Draw(ITextureResource* texRes, const Rect& dest, const Rect* source) override;
@@ -35,6 +36,7 @@ private:
 	unique_ptr<CommandScheduler> m_command;
 	unique_ptr<SwapChainPresenter> m_swapChain;
 	unique_ptr<DescriptorAllocator> m_srvAllocator;
+	unique_ptr<TaskScheduler> m_taskScheduler;
 	unique_ptr<ResourceUploader> m_uploader;
 	unique_ptr<ResourcePreparer> m_preparer;
 	unique_ptr<MipGenerator> m_mipGenerator;

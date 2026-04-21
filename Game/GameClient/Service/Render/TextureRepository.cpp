@@ -74,7 +74,7 @@ void TextureRepository::ProcessPending()
 		entry->state = TextureState::Loading;
 
 		auto& texRes = entry->texRes;
-		if (!texRes->LoadFromAsset(move(asset), req.desc))
+		if (!texRes || !texRes->LoadFromAsset(asset, req.desc))
 		{
 			entry->state = TextureState::Failed;
 			continue;

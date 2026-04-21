@@ -12,15 +12,16 @@ class ResourceUploader
 public:
     ~ResourceUploader();
     ResourceUploader(ID3D12Device* device);
+    bool ShouldGenerateMips(const TextureAsset& asset, bool generateMips);
 
-    std::pair<ComPtr<ID3D12Resource>, bool> UploadTexture(
-        CommandList* uploadCmd,
+    ComPtr<ID3D12Resource> UploadTexture(
+        CommandList& uploadCmd,
         const TextureAsset& asset,
         bool generateMips,
         ComPtr<ID3D12Resource>& outUploadBuffer);
 
     ComPtr<ID3D12Resource> UploadVertexBuffer(
-        CommandList* cmd,
+        CommandList& cmd,
         const void* data,
         UINT bufferSize,
         ComPtr<ID3D12Resource>& outUploadBuffer);
