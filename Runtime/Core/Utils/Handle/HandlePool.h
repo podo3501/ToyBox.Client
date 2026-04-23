@@ -77,6 +77,11 @@ public:
         }
     }
 
+    size_t Size() const
+    {
+        return m_slots.size();
+    }
+
     T* Find(Handle h)
     {
         if (!IsValid(h)) return nullptr;

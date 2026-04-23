@@ -10,7 +10,7 @@ public:
     TaskScheduler(CommandScheduler* cmdScheduler);
     ~TaskScheduler();
 
-    TaskHandle Enqueue(const TaskDesc& desc);
+    TaskHandle Enqueue(const TaskDesc& desc, shared_ptr<FrameResources> resources);
     void Execute();
     void Cancel(TaskHandle handle);
     void Clear();

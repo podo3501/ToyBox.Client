@@ -520,6 +520,9 @@
     <ClInclude Include="Service\Render\TextureDesc.h">
       <Filter>Service\Render</Filter>
     </ClInclude>
+    <ClInclude Include="Service\Render\ITextureSystem.h">
+      <Filter>Service\Render</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Locator">

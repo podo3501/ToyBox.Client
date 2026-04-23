@@ -9,48 +9,70 @@
 
 using Microsoft::WRL::ComPtr;
 
-class CommandScheduler;
-class DescriptorAllocator;
-class ResourceUploader;
-class TaskScheduler;
-class ResourcePreparer;
-class MipGenerator;
-struct SubmittedFences;
+//class CommandScheduler;
+//class DescriptorAllocator;
+//class ResourceUploader;
+//class TaskScheduler;
+//class ResourcePreparer;
+//class MipGenerator;
+//struct SubmittedFences;
+//
+//class TextureResource : public ITextureResource, public IResourceReady
+//{
+//public:
+//	~TextureResource();
+//	TextureResource() = delete;
+//	TextureResource(ID3D12Device* device, CommandScheduler* command, DescriptorAllocator* srvAllocator, 
+//		TaskScheduler* taskScheduler, ResourceUploader* uploader, ResourcePreparer* preparer, MipGenerator* mipGenerator);
+//	virtual bool LoadFromAsset(shared_ptr<TextureAsset> asset, const TextureDesc& desc) override;
+//	virtual bool IsReady() const noexcept override { return m_ready; }
+//	virtual void OnReady(CommandList& cmd) override {};
+//
+//	DescriptorAllocation& GetSrv() { return m_srv; }
+//	ID3D12Resource* Get() { return m_texture.Get(); }
+//
+//private:
+//	void AddTexture(ComPtr<ID3D12Resource> tex, const TextureDesc& desc, bool generateMips);
+//
+//	ID3D12Device* m_device{ nullptr };
+//	CommandScheduler* m_command{ nullptr };
+//	DescriptorAllocator* m_srvAllocator{ nullptr };
+//	TaskScheduler* m_taskScheduler{ nullptr };
+//	ResourceUploader* m_uploader{ nullptr };
+//	ResourcePreparer* m_preparer{ nullptr };
+//	MipGenerator* m_mipGenerator{ nullptr };
+//
+//	DescriptorAllocation m_srv;
+//	bool m_ready{ false };
+//	ComPtr<ID3D12Resource> m_texture;
+//	//bool m_canGenerateMips{ false }; //실제로 mip을 만들수 있는가.
+//	bool m_mipGenerated{ false }; //두번 만드는거 방지용
+//
+//	TaskHandle m_uploadHandle{};
+//	TaskHandle m_toSrvHandle{};
+//	TaskHandle m_toUavHandle{};
+//	TaskHandle m_mipHandle{};
+//	TaskHandle m_finalizeHandle{};
+//};
 
-class TextureResource : public ITextureResource, public IResourceReady
+class TextureGraphBuilder;
+
+class TextureResource : public ITextureResource
 {
 public:
-	~TextureResource();
-	TextureResource() = delete;
-	TextureResource(ID3D12Device* device, CommandScheduler* command, DescriptorAllocator* srvAllocator, 
-		TaskScheduler* taskScheduler, ResourceUploader* uploader, ResourcePreparer* preparer, MipGenerator* mipGenerator);
-	virtual bool LoadFromAsset(shared_ptr<TextureAsset> asset, const TextureDesc& desc) override;
-	virtual bool IsReady() const noexcept override { return m_ready; }
-	virtual void OnReady(CommandList& cmd) override {};
+	TextureResource() = default;
+	//virtual bool LoadFromAsset(std::shared_ptr<TextureAsset> asset, const TextureDesc& desc) override;
+	virtual bool IsReady() const noexcept { return m_ready; }
 
+	void SetResource(ComPtr<ID3D12Resource> resource) { m_texture = std::move(resource); }
+	void SetSRV(DescriptorAllocation allocation) { m_srv = std::move(allocation); }
 	DescriptorAllocation& GetSrv() { return m_srv; }
-	ID3D12Resource* Get() { return m_texture.Get(); }
+	void MarkReady() { m_ready = true; }
+	ID3D12Resource* Get() const { return m_texture.Get(); }
+	void Set(ComPtr<ID3D12Resource> tex) { m_texture = tex; }
 
 private:
-	void AddTexture(ComPtr<ID3D12Resource> tex, const TextureDesc& desc, bool generateMips);
-
-	ID3D12Device* m_device{ nullptr };
-	CommandScheduler* m_command{ nullptr };
-	DescriptorAllocator* m_srvAllocator{ nullptr };
-	TaskScheduler* m_taskScheduler{ nullptr };
-	ResourceUploader* m_uploader{ nullptr };
-	ResourcePreparer* m_preparer{ nullptr };
-	MipGenerator* m_mipGenerator{ nullptr };
-
+	ComPtr<ID3D12Resource> m_texture;
 	DescriptorAllocation m_srv;
 	bool m_ready{ false };
-	ComPtr<ID3D12Resource> m_texture;
-	//bool m_canGenerateMips{ false }; //실제로 mip을 만들수 있는가.
-	bool m_mipGenerated{ false }; //두번 만드는거 방지용
-
-	TaskHandle m_uploadHandle{};
-	TaskHandle m_toSrvHandle{};
-	TaskHandle m_toUavHandle{};
-	TaskHandle m_mipHandle{};
-	TaskHandle m_finalizeHandle{};
 };

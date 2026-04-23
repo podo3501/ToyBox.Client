@@ -141,6 +141,7 @@
     <ClInclude Include="Service\Input\MouseState.h" />
     <ClInclude Include="Service\Render\IRenderBackend.h" />
     <ClInclude Include="Service\Render\ITextureResource.h" />
+    <ClInclude Include="Service\Render\ITextureSystem.h" />
     <ClInclude Include="Service\Render\MaterialHandle.h" />
     <ClInclude Include="Service\Render\MaterialRepository.h" />
     <ClInclude Include="Service\Render\RenderConfig.h" />

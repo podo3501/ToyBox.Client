@@ -10,6 +10,10 @@
 #include "ResourcePreparer.h"
 #include "MipGenerator.h"
 #include "QuadRenderer.h"
+#include "TextureRegistry.h"
+#include "DescriptorFactory.h"
+#include "TextureGraphBuilder.h"
+#include "TextureSystem.h"
 #include "CommandList.h"
 #include "CommandUtils.h"
 #include <dxgi1_6.h>
@@ -59,6 +63,12 @@ bool RenderBackend::Initialize(HWND hwnd, const Size& wndSize, const RenderConfi
     m_mipGenerator = make_unique<MipGenerator>(device, m_srvAllocator.get());
     ReturnIfFalse(m_mipGenerator->Initialize());
 
+    m_texRegistry = make_unique<TextureRegistry>();
+    m_descriptorFactory = make_unique<DescriptorFactory>(device, m_srvAllocator.get());
+    m_texGraphBuilder = make_unique<TextureGraphBuilder>(m_taskScheduler.get(), m_uploader.get(),
+        m_mipGenerator.get(), m_descriptorFactory.get(), m_texRegistry.get());
+    m_texSystem = make_unique<TextureSystem>(m_texGraphBuilder.get(), m_texRegistry.get());
+
     m_quadRenderer = make_unique<QuadRenderer>();
     ReturnIfFalse(m_quadRenderer->Initialize(device, wndSize));
     m_quadRenderer->SetSRVHeap(m_srvAllocator->GetHeap());
@@ -102,18 +112,18 @@ void RenderBackend::EndFrame()
 
     m_cmd = nullptr;
 }
-
-shared_ptr<ITextureResource> RenderBackend::CreateTextureResource()
-{
-    return make_shared<TextureResource>(
-        m_core->GetDevice(),
-        m_command.get(),
-        m_srvAllocator.get(),
-        m_taskScheduler.get(),
-        m_uploader.get(),
-        m_preparer.get(),
-        m_mipGenerator.get());
-}
+//
+//shared_ptr<ITextureResource> RenderBackend::CreateTextureResource()
+//{
+//    return make_shared<TextureResource>(
+//        m_core->GetDevice(),
+//        m_command.get(),
+//        m_srvAllocator.get(),
+//        m_taskScheduler.get(),
+//        m_uploader.get(),
+//        m_preparer.get(),
+//        m_mipGenerator.get());
+//}
 
 void RenderBackend::Draw(ITextureResource* texRes, const Rect& dest, const Rect* source)
 {
@@ -154,6 +164,11 @@ void RenderBackend::Clear(CommandList& cmd, float r, float g, float b, float a)
 
     float color[4] = { r, g, b, a };
     CommandUtils::ClearRTV(cmd, rtv, color);
+}
+
+ITextureSystem* RenderBackend::GetTextureSystem() 
+{ 
+    return m_texSystem.get(); 
 }
 
 //////////////////////////////////////////////////////

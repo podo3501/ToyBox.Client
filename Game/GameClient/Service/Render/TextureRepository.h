@@ -3,7 +3,7 @@
 #include "TextureHandle.h"
 #include "TextureDesc.h"
 
-struct IRenderBackend;
+struct ITextureSystem;
 struct ITextureResource;
 struct TextureAsset;
 struct PendingRequest;
@@ -49,7 +49,7 @@ class TextureRepository
 {
 public:
     ~TextureRepository();
-    explicit TextureRepository(IRenderBackend* backend);
+    explicit TextureRepository(ITextureSystem* texSystem);
 
     TextureHandle GetOrCreate(const filesystem::path& path, const TextureDesc& desc,
         function<shared_ptr<TextureAsset>(const filesystem::path&)> loader);
@@ -62,7 +62,7 @@ private:
     void ProcessLoading();
 
 private:
-    IRenderBackend* m_backend{ nullptr };
+    ITextureSystem* m_texSystem{ nullptr };
     unordered_map<TextureKey, TextureHandle, TextureKeyHash> m_cache;
     HandlePool<TextureEntry, TextureTag> m_loadedTextures;
 

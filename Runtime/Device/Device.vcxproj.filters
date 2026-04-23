@@ -193,6 +193,27 @@
     <ClInclude Include="Render\DX12\TaskHandle.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
+    <ClInclude Include="Render\DX12\RenderGraph.h">
+      <Filter>Render\DX12</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\RGTypes.h">
+      <Filter>Render\DX12</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\RenderPass.h">
+      <Filter>Render\DX12</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\TextureRegistry.h">
+      <Filter>Render\DX12</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\TextureGraphBuilder.h">
+      <Filter>Render\DX12</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\TextureSystem.h">
+      <Filter>Render\DX12</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\DescriptorFactory.h">
+      <Filter>Render\DX12</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -308,6 +329,21 @@
       <Filter>Render\DX12</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\MipTask.cpp">
+      <Filter>Render\DX12</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\RenderGraph.cpp">
+      <Filter>Render\DX12</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\TextureGraphBuilder.cpp">
+      <Filter>Render\DX12</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\TextureRegistry.cpp">
+      <Filter>Render\DX12</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\TextureSystem.cpp">
+      <Filter>Render\DX12</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\DescriptorFactory.cpp">
       <Filter>Render\DX12</Filter>
     </ClCompile>
   </ItemGroup>

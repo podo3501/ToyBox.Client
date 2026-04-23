@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "TextureRepository.h"
-#include "IRenderBackend.h"
+#include "ITextureSystem.h"
 #include "ITextureResource.h"
 
 struct PendingRequest
@@ -12,8 +12,8 @@ struct PendingRequest
 };
 
 TextureRepository::~TextureRepository() = default;
-TextureRepository::TextureRepository(IRenderBackend* backend) :
-	m_backend{ backend }
+TextureRepository::TextureRepository(ITextureSystem* texSystem) :
+	m_texSystem{ texSystem }
 {}
 
 TextureHandle TextureRepository::GetOrCreate( const filesystem::path& path, const TextureDesc& desc,
@@ -25,7 +25,7 @@ TextureHandle TextureRepository::GetOrCreate( const filesystem::path& path, cons
 	if (it != m_cache.end())
 		return it->second;
 
-	auto texRes = m_backend->CreateTextureResource();
+	auto texRes = m_texSystem->CreateTextureResource();
 	if (!texRes) return TextureHandle::Invalid();
 
 	TextureEntry entry;
@@ -74,11 +74,17 @@ void TextureRepository::ProcessPending()
 		entry->state = TextureState::Loading;
 
 		auto& texRes = entry->texRes;
-		if (!texRes || !texRes->LoadFromAsset(asset, req.desc))
+		if (!m_texSystem->LoadFromAsset(texRes, asset, req.desc))
 		{
 			entry->state = TextureState::Failed;
 			continue;
 		}
+
+		/*if (!texRes || !texRes->LoadFromAsset(asset, req.desc))
+		{
+			entry->state = TextureState::Failed;
+			continue;
+		}*/
 
 		m_loadingList.push_back(req.handle);
 	}

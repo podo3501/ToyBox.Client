@@ -7,12 +7,14 @@ TaskScheduler::TaskScheduler(CommandScheduler* cmdScheduler)
     : m_cmdScheduler(cmdScheduler)
 {}
 
-TaskHandle TaskScheduler::Enqueue(const TaskDesc& desc)
+TaskHandle TaskScheduler::Enqueue(const TaskDesc& desc, shared_ptr<FrameResources> resources)
 {
     Task task;
     task.desc = desc;
-    auto taskHandle = m_tasks.Emplace(std::move(task));
+    task.onComplete = desc.onComplete;
+    task.context.resources = resources;
 
+    auto taskHandle = m_tasks.Emplace(std::move(task));
     for (auto& depHandle : desc.dependencies) //역으로 의지하는 Task를 찾는다.
     {
         Task* depTask = m_tasks.Find(depHandle);
@@ -36,7 +38,15 @@ void TaskScheduler::Execute()
         }
 
         if (!task.finished && IsTaskFinished(task))
+        {
             task.finished = true;
+
+            if (task.onComplete && !task.completionCalled)
+            {
+                task.completionCalled = true;
+                task.onComplete(task.context);
+            }
+        }
 
         if (CanDeleteTask(task))
             toRemove.push_back(handle);

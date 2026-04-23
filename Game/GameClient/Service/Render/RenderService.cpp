@@ -18,7 +18,7 @@ struct DrawCommand
 RenderService::~RenderService() = default;
 RenderService::RenderService(unique_ptr<IRenderBackend> backend) :
 	m_backend{ move(backend) },
-	m_texRepository{ make_unique<TextureRepository>(m_backend.get()) },
+	m_texRepository{ make_unique<TextureRepository>(m_backend->GetTextureSystem()) },
 	m_matRepository{ make_unique<MaterialRepository>(m_texRepository.get()) }
 {}
 
