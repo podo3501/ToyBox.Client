@@ -28,6 +28,8 @@ bool CommandScheduler::Initialize(ID3D12Device* device,
 
 CommandList* CommandScheduler::Begin(CommandType type)
 {
+    if (type == CommandType::None) return nullptr;
+
     Assert(!m_currentQueue);
 
     m_currentQueue = GetQueue(type);

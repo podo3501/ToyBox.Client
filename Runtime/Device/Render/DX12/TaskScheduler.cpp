@@ -11,7 +11,6 @@ TaskHandle TaskScheduler::Enqueue(const TaskDesc& desc, shared_ptr<FrameResource
 {
     Task task;
     task.desc = desc;
-    task.onComplete = desc.onComplete;
     task.context.resources = resources;
 
     auto taskHandle = m_tasks.Emplace(std::move(task));
@@ -23,6 +22,14 @@ TaskHandle TaskScheduler::Enqueue(const TaskDesc& desc, shared_ptr<FrameResource
     }
 
     return taskHandle;
+}
+
+TaskHandle TaskScheduler::CreateTask(const TaskDesc& desc, std::shared_ptr<FrameResources> resources)
+{
+    Task task;
+    task.desc = desc;
+    task.context.resources = resources;
+    return m_tasks.Emplace(std::move(task));
 }
 
 void TaskScheduler::Execute()
@@ -38,15 +45,7 @@ void TaskScheduler::Execute()
         }
 
         if (!task.finished && IsTaskFinished(task))
-        {
             task.finished = true;
-
-            if (task.onComplete && !task.completionCalled)
-            {
-                task.completionCalled = true;
-                task.onComplete(task.context);
-            }
-        }
 
         if (CanDeleteTask(task))
             toRemove.push_back(handle);
@@ -59,12 +58,34 @@ void TaskScheduler::Execute()
     }
 }
 
+//void TaskScheduler::Execute() 
+//{
+//    for (auto handle : m_executionOrder) 
+//    {
+//        Task* task = Find(handle); 
+//        if (!task) continue; 
+//
+//        if (AreDependenciesDone(*task)) // dependency üũ
+//            ExecuteTask(*task); 
+//    } 
+//}
+
 void TaskScheduler::ExecuteTask(Task& task)
 {
+    // CPU TASK
+    if (task.desc.type == CommandType::None)
+    {
+        task.desc.cpuExecute(task.context); // no command list
+        task.fenceValue = 0;
+        task.submitted = true;
+        return;
+    }
+
+    // GPU TASK
     auto cmd = m_cmdScheduler->Begin(task.desc.type);
     if (!cmd) return;
 
-    task.desc.execute(*cmd, task.context);
+    task.desc.gpuExecute(*cmd, task.context);
 
     task.fenceValue = m_cmdScheduler->End();
     task.submitted = true;

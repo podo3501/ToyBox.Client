@@ -11,9 +11,12 @@ public:
     ~TaskScheduler();
 
     TaskHandle Enqueue(const TaskDesc& desc, shared_ptr<FrameResources> resources);
+    TaskHandle CreateTask(const TaskDesc& desc, std::shared_ptr<FrameResources> resources);
     void Execute();
     void Cancel(TaskHandle handle);
     void Clear();
+    Task* Find(TaskHandle h) { return m_tasks.Find(h); }
+    void SetExecutionOrder(const std::vector<TaskHandle>& ordered) { m_executionOrder = ordered; }
 
 private:
     bool AreDependenciesDone(const Task& task);
@@ -25,5 +28,6 @@ private:
 private:
     CommandScheduler* m_cmdScheduler{ nullptr };
     HandlePool<Task, struct TaskTag> m_tasks;
+    std::vector<TaskHandle> m_executionOrder;
     uint32_t m_nextId{ 1 };
 };

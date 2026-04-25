@@ -7,6 +7,7 @@
 #include "CommandType.h"
 #include "TaskHandle.h"
 #include "DescriptorAllocation.h"
+#include "RGTypes.h"
 
 class CommandList;
 
@@ -29,6 +30,11 @@ struct FrameResources
     std::unordered_map<uint32_t, DescriptorAllocation> srvAllocations;
 
     TextureTransientData TakeTexture(uint32_t id);
+
+    void SetTexture(RGTexture t, ComPtr<ID3D12Resource>&& res) { textures[t.id] = std::move(res); }
+    ComPtr<ID3D12Resource>& GetTexture(RGTexture t) { return textures[t.id]; }
+    void SetSRV(RGTexture t, DescriptorAllocation&& srv) { srvAllocations[t.id] = std::move(srv); }
+    DescriptorAllocation& GetSRV(RGTexture t) { return srvAllocations[t.id]; }
 };
 
 inline TextureTransientData FrameResources::TakeTexture(uint32_t id)
@@ -54,14 +60,19 @@ struct TaskContext
 {
     shared_ptr<FrameResources> resources;
     std::variant<UploadContext> passData;
+
+    void SetTexture(RGTexture t, ComPtr<ID3D12Resource>&& res) { resources->SetTexture(t, std::move(res)); }
+    ComPtr<ID3D12Resource>& GetTexture(RGTexture t) { return resources->GetTexture(t); }
+    void SetSRV(RGTexture t, DescriptorAllocation&& srv) { resources->SetSRV(t, std::move(srv)); }
+    DescriptorAllocation& GetSRV(RGTexture t) { return resources->GetSRV(t); }
 };
 
 struct TaskDesc
 {
     CommandType type;
     std::vector<TaskHandle> dependencies; //앞에 Task에 의존하는지. Task의 시작지점을 알게 해 준다.
-    std::function<void(CommandList&, TaskContext&)> execute;
-    std::function<void(TaskContext&)> onComplete;
+    std::function<void(CommandList&, TaskContext&)> gpuExecute = [](CommandList&, const TaskContext&) {};
+    std::function<void(TaskContext&)> cpuExecute = [](const TaskContext&) {};
 };
 
 struct Task
@@ -72,8 +83,5 @@ struct Task
 
     bool submitted{ false };
     bool finished{ false };
-    bool completionCalled{ false };
     uint64_t fenceValue{ 0 };
-
-    std::function<void(TaskContext&)> onComplete;
 };

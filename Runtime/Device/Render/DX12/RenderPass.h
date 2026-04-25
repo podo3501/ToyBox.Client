@@ -5,20 +5,28 @@
 
 #include "CommandType.h"
 #include "Task.h"
+#include "RGTypes.h"
 
 class CommandList;
 
-struct RGTexture;
+struct BarrierPlan
+{
+    RGTexture tex;
+    CommandType cmdType{ CommandType::Direct };
+    D3D12_RESOURCE_STATES before;
+    D3D12_RESOURCE_STATES after;
+};
 
 struct RenderPass
 {
     std::string name;
-
-    std::vector<RGTexture> reads;
-    std::vector<RGTexture> writes;
-
     CommandType type;
 
-    std::function<void(CommandList&, TaskContext&)> execute;
+    std::vector<RGUsage> reads;
+    std::vector<RGUsage> writes;
+    std::vector<BarrierPlan> barriers;
+
+    std::function<void(CommandList&, TaskContext&)> gpuExecute;
+    std::function<void(TaskContext&)> cpuExecute;
     std::function<void(TaskContext&)> onComplete;
 };
