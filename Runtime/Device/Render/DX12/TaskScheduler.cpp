@@ -7,6 +7,29 @@ TaskScheduler::TaskScheduler(CommandScheduler* cmdScheduler)
     : m_cmdScheduler(cmdScheduler)
 {}
 
+TaskHandle TaskScheduler::AllocateHandle()
+{
+    return m_tasks.Emplace(Task{});
+}
+
+void TaskScheduler::Commit(TaskHandle handle, const TaskDesc& desc, std::shared_ptr<FrameResources> resources)
+{
+    Task* task = m_tasks.Find(handle);
+    if (!task) return;
+
+    task->desc = desc;
+    task->context.resources = resources;
+    for (auto& depHandle : desc.dependencies)
+    {
+        Task* depTask = m_tasks.Find(depHandle);
+        if (depTask)
+            depTask->dependents.push_back(handle);
+    }
+
+    assert(!task->committed);
+    task->committed = true;
+}
+
 TaskHandle TaskScheduler::Enqueue(const TaskDesc& desc, shared_ptr<FrameResources> resources)
 {
     Task task;

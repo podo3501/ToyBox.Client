@@ -13,11 +13,6 @@ class CommandList;
 
 using Microsoft::WRL::ComPtr;
 
-struct UploadContext
-{
-    ComPtr<ID3D12Resource> uploadBuffer;
-};
-
 struct TextureTransientData
 {
     ComPtr<ID3D12Resource> resource;
@@ -33,7 +28,10 @@ struct FrameResources
 
     void SetTexture(RGTexture t, ComPtr<ID3D12Resource>&& res) { textures[t.id] = std::move(res); }
     ComPtr<ID3D12Resource>& GetTexture(RGTexture t) { return textures[t.id]; }
-    void SetSRV(RGTexture t, DescriptorAllocation&& srv) { srvAllocations[t.id] = std::move(srv); }
+    void SetSRV(RGTexture t, DescriptorAllocation&& srv) 
+    { 
+        srvAllocations[t.id] = std::move(srv); 
+    }
     DescriptorAllocation& GetSRV(RGTexture t) { return srvAllocations[t.id]; }
 };
 
@@ -55,6 +53,11 @@ inline TextureTransientData FrameResources::TakeTexture(uint32_t id)
 
     return data;
 }
+
+struct UploadContext
+{
+    ComPtr<ID3D12Resource> uploadBuffer;
+};
 
 struct TaskContext
 {
@@ -81,6 +84,7 @@ struct Task
     TaskContext context;
     std::vector<TaskHandle> dependents; //다른 Task가 나를 의존하고 있는지. 이게 없으면 지울때 뒤에 Task 생각안하고 바로 삭제되버림.
 
+    bool committed{ false };
     bool submitted{ false };
     bool finished{ false };
     uint64_t fenceValue{ 0 };

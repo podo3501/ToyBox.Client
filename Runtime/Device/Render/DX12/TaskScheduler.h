@@ -10,6 +10,8 @@ public:
     TaskScheduler(CommandScheduler* cmdScheduler);
     ~TaskScheduler();
 
+    TaskHandle AllocateHandle();
+    void Commit(TaskHandle handle, const TaskDesc& desc, std::shared_ptr<FrameResources> resources);
     TaskHandle Enqueue(const TaskDesc& desc, shared_ptr<FrameResources> resources);
     TaskHandle CreateTask(const TaskDesc& desc, std::shared_ptr<FrameResources> resources);
     void Execute();

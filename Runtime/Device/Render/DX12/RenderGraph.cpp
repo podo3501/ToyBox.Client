@@ -243,67 +243,74 @@ static CommandType ResolveCommandType(CommandType type,
     return type;
 }
 
-std::vector<BarrierPlan> RenderGraph::BuildBarriers(CommandType cmdType, const RenderPass& pass)
+static std::vector<BarrierPlan> BuildBarriers(CommandType cmdType, const RenderPass& pass, ResourceState& resState)
 {
     std::vector<BarrierPlan> barriers;
 
+    auto& state = resState.state;
     for (auto& use : pass.reads)
     {
-        auto& state = m_states[use.tex.id];
         auto desired = AccessToState(use.access);
         
-        if (state.state != desired)
+        if (state != desired)
         {
-            auto type = ResolveCommandType(cmdType, state.state, desired);
-            barriers.push_back({ use.tex, type, state.state, desired });
-            state.state = desired;
+            auto type = ResolveCommandType(cmdType, state, desired);
+            barriers.push_back({ use.tex, type, state, desired });
+            state = desired;
         }
     }
 
     for (auto& use : pass.writes)
     {
-        auto& state = m_states[use.tex.id];
         auto desired = AccessToState(use.access);
 
-        if (state.state != desired)
+        if (state != desired)
         {
-            auto type = ResolveCommandType(cmdType, state.state, desired);
-            barriers.push_back({ use.tex, type, state.state, desired });
-            state.state = desired;
+            auto type = ResolveCommandType(cmdType, state, desired);
+            barriers.push_back({ use.tex, type, state, desired });
+            state = desired;
         }
     }
 
     return barriers;
 }
 
-static TaskHandle CreateBarrierTask(
-    const std::vector<BarrierPlan>& barriers,    
+static TaskDesc CreateBarrierTask(
+    const std::vector<BarrierPlan>& barriers,
     TaskScheduler& scheduler,
     std::shared_ptr<FrameResources> resources)
 {
     TaskDesc barrierTask{};
-
     barrierTask.gpuExecute = [barriers](CommandList& cmd, TaskContext& ctx) {
         for (auto& b : barriers)
         {
             auto res = ctx.GetTexture(b.tex).Get();
             CommandUtils::Transition(cmd, res, b.before, b.after);
-        } 
+        }
         };
 
-    return scheduler.Enqueue(barrierTask, resources);
+    return barrierTask;
 }
 
 void RenderGraph::Compile(TaskScheduler& scheduler)
 {
+    ResourceState states;
     std::unordered_map<uint32_t, TaskHandle> lastWriter;
     auto resources = std::make_shared<FrameResources>();
+
+    struct PendingTask
+    {
+        TaskHandle handle;
+        TaskDesc desc;
+    };
+
+    std::vector<PendingTask> pendingTasks;
 
     for (auto& pass : m_passes)
     {
         TaskDesc task{};
         task.type = pass.type;
-
+        
         for (auto& use : pass.reads)
         {
             if (lastWriter.contains(use.tex.id))
@@ -316,26 +323,30 @@ void RenderGraph::Compile(TaskScheduler& scheduler)
                 task.dependencies.push_back(lastWriter[use.tex.id]);
         }
 
-        auto barriers = BuildBarriers(task.type, pass); //barrier가 필요하면 task를 만든다.
+        auto barriers = BuildBarriers(task.type, pass, states); //barrier가 필요하면 task를 만든다.
         if (!barriers.empty())
         {
-            auto barrierHandle = CreateBarrierTask(barriers, scheduler, resources);
+            TaskHandle barrierHandle = scheduler.AllocateHandle();
+            auto barrierTask = CreateBarrierTask(barriers, scheduler, resources);
+            pendingTasks.push_back({ barrierHandle, std::move(barrierTask) });
             task.dependencies.push_back(barrierHandle);
         }
 
         task.gpuExecute = pass.gpuExecute;
         task.cpuExecute = pass.cpuExecute;
 
-        auto handle = scheduler.Enqueue(task, resources);
+        TaskHandle handle = scheduler.AllocateHandle();
+        pendingTasks.push_back({ handle, std::move(task) });
         for (auto& use : pass.writes)
             lastWriter[use.tex.id] = handle;
     }
+
+    for (auto& pt : pendingTasks)
+        scheduler.Commit(pt.handle, pt.desc, resources);
 }
 
 RGTexture RenderGraph::CreateTexture(const TextureDesc& desc)
 {
     RGTexture handle{ m_nextId++ };
-    m_textureDescs[handle.id] = desc;
-    m_states[handle.id] = ResourceState{};
     return handle;
 }

@@ -6,10 +6,9 @@
 class TextureRegistry
 {
 public:
-    void Register(uint32_t id, TextureResource* res);
+    void Register(uint32_t id, std::shared_ptr<ITextureResource> resource);
     void FinalizeTexture(uint32_t id, ComPtr<ID3D12Resource> resource, DescriptorAllocation alloc);
-    TextureResource* Get(uint32_t id) { return m_textures[id]; }
 
 private:
-    std::unordered_map<uint32_t, TextureResource*> m_textures;
+    std::unordered_map<uint32_t, std::weak_ptr<ITextureResource>> m_textures;
 };
