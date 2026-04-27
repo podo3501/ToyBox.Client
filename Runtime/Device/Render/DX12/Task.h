@@ -19,7 +19,7 @@ struct TextureTransientData
     DescriptorAllocation srv;
 };
 
-struct FrameResources
+struct ResourceContext
 {
     std::unordered_map<uint32_t, ComPtr<ID3D12Resource>> textures;
     std::unordered_map<uint32_t, DescriptorAllocation> srvAllocations;
@@ -35,7 +35,7 @@ struct FrameResources
     DescriptorAllocation& GetSRV(RGTexture t) { return srvAllocations[t.id]; }
 };
 
-inline TextureTransientData FrameResources::TakeTexture(uint32_t id)
+inline TextureTransientData ResourceContext::TakeTexture(uint32_t id)
 {
     TextureTransientData data;
 
@@ -57,11 +57,12 @@ inline TextureTransientData FrameResources::TakeTexture(uint32_t id)
 struct UploadContext
 {
     ComPtr<ID3D12Resource> uploadBuffer;
+    //다른 리소스들이 붙을수 있다. 간단하게 구현하기 위해서 variant를 했지만, 나중에는 variant를 제거하는게 목적이다.
 };
 
 struct TaskContext
 {
-    shared_ptr<FrameResources> resources;
+    shared_ptr<ResourceContext> resources;
     std::variant<UploadContext> passData;
 
     void SetTexture(RGTexture t, ComPtr<ID3D12Resource>&& res) { resources->SetTexture(t, std::move(res)); }
@@ -70,7 +71,7 @@ struct TaskContext
     DescriptorAllocation& GetSRV(RGTexture t) { return resources->GetSRV(t); }
 };
 
-struct TaskDesc
+struct Task
 {
     CommandType type;
     std::vector<TaskHandle> dependencies; //앞에 Task에 의존하는지. Task의 시작지점을 알게 해 준다.
@@ -78,14 +79,9 @@ struct TaskDesc
     std::function<void(TaskContext&)> cpuExecute = [](const TaskContext&) {};
 };
 
-struct Task
+struct CompiledTask //RenderGraph에서 pass를 가지고 계산해서 tasks로 만든 결과물.
 {
-    TaskDesc desc;
-    TaskContext context;
-    std::vector<TaskHandle> dependents; //다른 Task가 나를 의존하고 있는지. 이게 없으면 지울때 뒤에 Task 생각안하고 바로 삭제되버림.
-
-    bool committed{ false };
-    bool submitted{ false };
-    bool finished{ false };
-    uint64_t fenceValue{ 0 };
+    TaskHandle handle;
+    Task task;
+    std::vector<TaskHandle> dependents;
 };

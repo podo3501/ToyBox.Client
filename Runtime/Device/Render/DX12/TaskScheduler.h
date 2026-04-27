@@ -4,6 +4,18 @@
 
 class CommandScheduler;
 
+struct TaskEntry
+{
+    Task task;
+    TaskContext context;
+    std::vector<TaskHandle> dependents; //다른 Task가 나를 의존하고 있는지. 이게 없으면 지울때 뒤에 Task 생각안하고 바로 삭제되버림.
+
+    bool submitted{ false };
+    bool started{ false };
+    bool finished{ false };
+    uint64_t fenceValue{ 0 };
+};
+
 class TaskScheduler
 {
 public:
@@ -11,25 +23,22 @@ public:
     ~TaskScheduler();
 
     TaskHandle AllocateHandle();
-    void Commit(TaskHandle handle, const TaskDesc& desc, std::shared_ptr<FrameResources> resources);
-    TaskHandle Enqueue(const TaskDesc& desc, shared_ptr<FrameResources> resources);
-    TaskHandle CreateTask(const TaskDesc& desc, std::shared_ptr<FrameResources> resources);
+    void Submit(const std::vector<CompiledTask>& compiledTasks, std::shared_ptr<ResourceContext> resources);
     void Execute();
     void Cancel(TaskHandle handle);
     void Clear();
-    Task* Find(TaskHandle h) { return m_tasks.Find(h); }
     void SetExecutionOrder(const std::vector<TaskHandle>& ordered) { m_executionOrder = ordered; }
 
 private:
-    bool AreDependenciesDone(const Task& task);
-    bool IsTaskFinished(const Task& task);
-    void ExecuteTask(Task& task);
-    bool CanDeleteTask(const Task& task);
-    void RemoveTask(TaskHandle handle, Task& task);
+    bool AreDependenciesDone(const TaskEntry& task);
+    bool IsTaskFinished(const TaskEntry& task);
+    void ExecuteTask(TaskEntry& task);
+    bool CanDeleteTask(const TaskEntry& task);
+    void RemoveTask(TaskHandle handle, TaskEntry& task);
 
 private:
     CommandScheduler* m_cmdScheduler{ nullptr };
-    HandlePool<Task, struct TaskTag> m_tasks;
+    HandlePool<TaskEntry, struct TaskTag> m_tasks;
     std::vector<TaskHandle> m_executionOrder;
     uint32_t m_nextId{ 1 };
 };

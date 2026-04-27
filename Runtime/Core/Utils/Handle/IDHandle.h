@@ -17,6 +17,20 @@ struct IDHandle
     static constexpr IDHandle Invalid() noexcept { return IDHandle{ 0, 0 }; }
 };
 
+namespace std //unordered_map에서 hash를 어떻게 계산할지 정해주어야 한다.
+{
+    template<typename Tag>
+    struct hash<IDHandle<Tag>>
+    {
+        size_t operator()(const IDHandle<Tag>& h) const noexcept
+        {
+            size_t seed = h.index;
+            seed ^= (h.generation + 0x9e3779b97f4a7c15ULL + (seed << 6) + (seed >> 2));
+            return seed;
+        }
+    };
+}
+
 /*
     사용법: Name에 이름 바꿔 넣기.
     struct NameTag {};

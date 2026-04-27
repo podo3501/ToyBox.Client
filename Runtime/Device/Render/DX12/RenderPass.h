@@ -17,10 +17,52 @@ struct BarrierPlan
     D3D12_RESOURCE_STATES after;
 };
 
+enum class ResourceState
+{
+    Undefined,
+
+    // upload / transfer phase
+    TransferWrite,
+    TransferRead,
+
+    // shader usage phase
+    ShaderRead,
+    ShaderWrite,
+
+    // graphics pipeline usage
+    RenderTarget,
+    DepthStencil
+};
+
+enum class ResourceAccessType
+{
+    None,       // 의미 없음 (state transition-only pass)
+
+    Copy,       // CopyQueue (upload/download)
+
+    SRV,        // Shader Resource View (read-only)
+    UAV,        // Unordered Access View (read/write compute)
+
+    RTV,        // Render Target View (color output)
+    DSV         // Depth Stencil View (depth output)
+};
+
+struct ResourceAccess
+{
+    RGTexture tex;
+
+    ResourceState before;
+    ResourceState after;
+
+    ResourceAccessType type;
+};
+
 struct RenderPass
 {
     std::string name;
     CommandType type;
+
+    std::vector<ResourceAccess> accesses;
 
     std::vector<RGUsage> reads;
     std::vector<RGUsage> writes;
@@ -28,5 +70,4 @@ struct RenderPass
 
     std::function<void(CommandList&, TaskContext&)> gpuExecute;
     std::function<void(TaskContext&)> cpuExecute;
-    std::function<void(TaskContext&)> onComplete;
 };

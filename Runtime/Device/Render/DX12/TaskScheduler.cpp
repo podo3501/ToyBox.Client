@@ -9,75 +9,47 @@ TaskScheduler::TaskScheduler(CommandScheduler* cmdScheduler)
 
 TaskHandle TaskScheduler::AllocateHandle()
 {
-    return m_tasks.Emplace(Task{});
+    return m_tasks.Emplace(TaskEntry{});
 }
 
-void TaskScheduler::Commit(TaskHandle handle, const TaskDesc& desc, std::shared_ptr<FrameResources> resources)
+void TaskScheduler::Submit(const std::vector<CompiledTask>& compiledTasks, std::shared_ptr<ResourceContext> resources)
 {
-    Task* task = m_tasks.Find(handle);
-    if (!task) return;
-
-    task->desc = desc;
-    task->context.resources = resources;
-    for (auto& depHandle : desc.dependencies)
+    for (const auto& compiled : compiledTasks)
     {
-        Task* depTask = m_tasks.Find(depHandle);
-        if (depTask)
-            depTask->dependents.push_back(handle);
+        TaskEntry* entry = m_tasks.Find(compiled.handle);
+        if (!entry) continue;
+        assert(!entry->submitted);
+
+        entry->task = compiled.task;
+        entry->dependents = compiled.dependents;
+        entry->context.resources = resources;
+        entry->submitted = true;
     }
-
-    assert(!task->committed);
-    task->committed = true;
-}
-
-TaskHandle TaskScheduler::Enqueue(const TaskDesc& desc, shared_ptr<FrameResources> resources)
-{
-    Task task;
-    task.desc = desc;
-    task.context.resources = resources;
-
-    auto taskHandle = m_tasks.Emplace(std::move(task));
-    for (auto& depHandle : desc.dependencies) //역으로 의지하는 Task를 찾는다.
-    {
-        Task* depTask = m_tasks.Find(depHandle);
-        if (depTask)
-            depTask->dependents.push_back(taskHandle);
-    }
-
-    return taskHandle;
-}
-
-TaskHandle TaskScheduler::CreateTask(const TaskDesc& desc, std::shared_ptr<FrameResources> resources)
-{
-    Task task;
-    task.desc = desc;
-    task.context.resources = resources;
-    return m_tasks.Emplace(std::move(task));
 }
 
 void TaskScheduler::Execute()
 {
     std::vector<TaskHandle> toRemove;
 
-    m_tasks.Visit([this, &toRemove](TaskHandle handle, Task& task) {
-        if (!task.submitted)
+    m_tasks.Visit([this, &toRemove](TaskHandle handle, TaskEntry& entry) {
+        if (!entry.started)
         {
-            if (AreDependenciesDone(task))
-                ExecuteTask(task);
+            if (AreDependenciesDone(entry))
+                ExecuteTask(entry);
             return;
         }
 
-        if (!task.finished && IsTaskFinished(task))
-            task.finished = true;
+        if (!entry.finished && IsTaskFinished(entry))
+            entry.finished = true;
 
-        if (CanDeleteTask(task))
+        if (CanDeleteTask(entry))
             toRemove.push_back(handle);
         });
 
     for (auto& handle : toRemove)
     {
-        if (Task* task = m_tasks.Find(handle))
-            RemoveTask(handle, *task);
+        if (TaskEntry* entry = m_tasks.Find(handle))
+            RemoveTask(handle, *entry);
     }
 }
 
@@ -93,55 +65,54 @@ void TaskScheduler::Execute()
 //    } 
 //}
 
-void TaskScheduler::ExecuteTask(Task& task)
+void TaskScheduler::ExecuteTask(TaskEntry& entry)
 {
     // CPU TASK
-    if (task.desc.type == CommandType::None)
+    if (entry.task.type == CommandType::None)
     {
-        task.desc.cpuExecute(task.context); // no command list
-        task.fenceValue = 0;
-        task.submitted = true;
+        entry.task.cpuExecute(entry.context); // no command list
+        entry.fenceValue = 0;
+        entry.started = true;
         return;
     }
 
     // GPU TASK
-    auto cmd = m_cmdScheduler->Begin(task.desc.type);
+    auto cmd = m_cmdScheduler->Begin(entry.task.type);
     if (!cmd) return;
 
-    task.desc.gpuExecute(*cmd, task.context);
-
-    task.fenceValue = m_cmdScheduler->End();
-    task.submitted = true;
+    entry.task.gpuExecute(*cmd, entry.context);
+    entry.fenceValue = m_cmdScheduler->End();
+    entry.started = true;
 }
 
-bool TaskScheduler::AreDependenciesDone(const Task& task)
+bool TaskScheduler::AreDependenciesDone(const TaskEntry& entry)
 {
-    for (auto& dep : task.desc.dependencies)
+    for (auto& dep : entry.task.dependencies)
     {
-        const Task* depTask = m_tasks.Find(dep);
-        if (!depTask) return false;
-        if (!depTask->finished) return false;
+        const TaskEntry* depEntry = m_tasks.Find(dep);
+        if (!depEntry) return false;
+        if (!depEntry->finished) return false;
     }
 
     return true;
 }
 
-bool TaskScheduler::IsTaskFinished(const Task& task)
+bool TaskScheduler::IsTaskFinished(const TaskEntry& entry)
 {
-    if (!task.submitted) return false;
-    return m_cmdScheduler->IsFenceComplete(task.desc.type, task.fenceValue);
+    if (!entry.started) return false;
+    return m_cmdScheduler->IsFenceComplete(entry.task.type, entry.fenceValue);
 }
 
-bool TaskScheduler::CanDeleteTask(const Task& task)
+bool TaskScheduler::CanDeleteTask(const TaskEntry& entry)
 {
-    return task.finished && task.dependents.empty();
+    return entry.finished && entry.dependents.empty();
 }
 
-void TaskScheduler::RemoveTask(TaskHandle handle, Task& task)
+void TaskScheduler::RemoveTask(TaskHandle handle, TaskEntry& entry)
 {
-    for (auto& depHandle : task.desc.dependencies)
+    for (auto& depHandle : entry.task.dependencies)
     {
-        if (Task* dep = m_tasks.Find(depHandle))
+        if (TaskEntry* dep = m_tasks.Find(depHandle))
             std::erase(dep->dependents, handle);
     }
 
@@ -150,19 +121,19 @@ void TaskScheduler::RemoveTask(TaskHandle handle, Task& task)
 
 void TaskScheduler::Cancel(TaskHandle handle)
 {
-    Task* task = m_tasks.Find(handle);
-    if (!task) return;
+    TaskEntry* entry = m_tasks.Find(handle);
+    if (!entry) return;
 
-    for (auto& depHandle : task->desc.dependencies)
+    for (auto& depHandle : entry->task.dependencies)
     {
-        if (Task* dep = m_tasks.Find(depHandle))
+        if (TaskEntry* dep = m_tasks.Find(depHandle))
             std::erase(dep->dependents, handle);
     }
 
-    for (auto& childHandle : task->dependents)
+    for (auto& childHandle : entry->dependents)
     {
-        if (Task* child = m_tasks.Find(childHandle))
-            std::erase(child->desc.dependencies, handle);
+        if (TaskEntry* child = m_tasks.Find(childHandle))
+            std::erase(child->task.dependencies, handle);
     }
 
     m_tasks.Remove(handle);
@@ -172,14 +143,14 @@ void TaskScheduler::Clear()
 {
     std::vector<TaskHandle> toRemove;
 
-    m_tasks.Visit([this, &toRemove](TaskHandle handle, const Task& task) {
-        if (CanDeleteTask(task))
+    m_tasks.Visit([this, &toRemove](TaskHandle handle, const TaskEntry& entry) {
+        if (CanDeleteTask(entry))
             toRemove.push_back(handle);
         });
 
     for (auto& handle : toRemove)
     {
-        if (Task* task = m_tasks.Find(handle))
-            RemoveTask(handle, *task);
+        if (TaskEntry* entry = m_tasks.Find(handle))
+            RemoveTask(handle, *entry);
     }
 }
