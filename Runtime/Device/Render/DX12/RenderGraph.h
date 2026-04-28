@@ -23,7 +23,6 @@ class RenderGraph
 {
 public:
     ~RenderGraph();
-    //RGTexture Import(ID3D12Resource* resource);
     RenderPass& AddPass(const std::string& name, CommandType type);
     std::vector<CompiledTask> Compile(TaskScheduler& scheduler);
     RGTexture CreateTexture(const TextureDesc& desc);
@@ -34,5 +33,4 @@ private:
 
     uint32_t m_nextId{ 1 };
     std::vector<RenderPass> m_passes;
-    std::unordered_map<uint32_t, ID3D12Resource*> m_imported;
 };

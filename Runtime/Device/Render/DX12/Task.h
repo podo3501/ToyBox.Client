@@ -13,46 +13,13 @@ class CommandList;
 
 using Microsoft::WRL::ComPtr;
 
-struct TextureTransientData
-{
-    ComPtr<ID3D12Resource> resource;
-    DescriptorAllocation srv;
-};
-
 struct ResourceContext
 {
     std::unordered_map<uint32_t, ComPtr<ID3D12Resource>> textures;
-    std::unordered_map<uint32_t, DescriptorAllocation> srvAllocations;
-
-    TextureTransientData TakeTexture(uint32_t id);
 
     void SetTexture(RGTexture t, ComPtr<ID3D12Resource>&& res) { textures[t.id] = std::move(res); }
     ComPtr<ID3D12Resource>& GetTexture(RGTexture t) { return textures[t.id]; }
-    void SetSRV(RGTexture t, DescriptorAllocation&& srv) 
-    { 
-        srvAllocations[t.id] = std::move(srv); 
-    }
-    DescriptorAllocation& GetSRV(RGTexture t) { return srvAllocations[t.id]; }
 };
-
-inline TextureTransientData ResourceContext::TakeTexture(uint32_t id)
-{
-    TextureTransientData data;
-
-    auto itRes = textures.find(id);
-    auto itSrv = srvAllocations.find(id);
-
-    assert(itRes != textures.end());
-    assert(itSrv != srvAllocations.end());
-
-    data.resource = std::move(itRes->second);
-    data.srv = std::move(itSrv->second);
-
-    textures.erase(itRes);
-    srvAllocations.erase(itSrv);
-
-    return data;
-}
 
 struct UploadContext
 {
@@ -67,8 +34,6 @@ struct TaskContext
 
     void SetTexture(RGTexture t, ComPtr<ID3D12Resource>&& res) { resources->SetTexture(t, std::move(res)); }
     ComPtr<ID3D12Resource>& GetTexture(RGTexture t) { return resources->GetTexture(t); }
-    void SetSRV(RGTexture t, DescriptorAllocation&& srv) { resources->SetSRV(t, std::move(srv)); }
-    DescriptorAllocation& GetSRV(RGTexture t) { return resources->GetSRV(t); }
 };
 
 struct Task

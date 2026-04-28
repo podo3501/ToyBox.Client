@@ -6,8 +6,14 @@
 #include "CommandList.h"
 #include <unordered_set>
 
-static D3D12_RESOURCE_STATES AccessToState(RGAccess access)
+static D3D12_RESOURCE_STATES AccessToState(CommandType cmdType, RGAccess access)
 {
+    if (access == RGAccess::CopyDest)
+    {
+        if (cmdType == CommandType::Copy) return D3D12_RESOURCE_STATE_COMMON; //copy queue 일때에는 common에서 처리하기 때문이다.
+        return D3D12_RESOURCE_STATE_COPY_DEST;
+    }
+
     switch (access)
     {
     case RGAccess::SRV: return D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
@@ -19,42 +25,7 @@ static D3D12_RESOURCE_STATES AccessToState(RGAccess access)
     }
 }
 
-struct AccessRule
-{
-    bool readsFromWriter{ false }; //지난 결과 보여줘(writer만 기다림)
-    bool readsFromReaders{ false }; //누군가 읽고 있는 중인데?(write 못 들어감)
-    bool writesInvalidateReaders{ false }; //이제 덮어쓴다(모든 reader 끊음)
-};
-
-static AccessRule GetRule(RGAccess access)
-{
-    switch (access)
-    {
-    case RGAccess::SRV:
-    case RGAccess::Read:
-        return { true, false, false };
-
-    case RGAccess::UAV:
-    case RGAccess::Write:
-        return { true, true, true };
-    }
-
-    return {};
-}
-
-RenderGraph::~RenderGraph()
-{
-    int a = 1;
-}
-
-//RGTexture RenderGraph::Import(ID3D12Resource* resource)
-//{
-//    RGTexture handle{ m_nextId++ };
-//    m_imported[handle.id] = resource;
-//    //m_states[handle.id] = ResourceState{};
-//    return handle;
-//}
-
+RenderGraph::~RenderGraph() = default;
 RenderPass& RenderGraph::AddPass(const std::string& name, CommandType type)
 {
     m_passes.emplace_back();
@@ -65,158 +36,6 @@ RenderPass& RenderGraph::AddPass(const std::string& name, CommandType type)
 
     return pass;
 }
-
-//struct TaskHandleHash
-//{
-//    size_t operator()(const TaskHandle& h) const noexcept
-//    {
-//        return (size_t(h.index) << 32) ^ h.generation;
-//    }
-//};
-//
-//static std::vector<TaskHandle> TopologicalSort(
-//    TaskScheduler& scheduler, const std::vector<TaskHandle>& tasks) //Kahn algorithm
-//{
-//    std::unordered_map<TaskHandle, int, TaskHandleHash> indegree;
-//    std::unordered_map<TaskHandle, std::vector<TaskHandle>, TaskHandleHash> graph;
-//
-//    for (auto t : tasks)
-//        indegree[t] = 0;
-//
-//    for (auto t : tasks)
-//    {
-//        Task* task = scheduler.Find(t);
-//        if (!task) continue;
-//
-//        for (auto dep : task->desc.dependencies)
-//        {
-//            graph[dep].push_back(t);
-//            indegree[t]++;
-//        }
-//    }
-//
-//    std::queue<TaskHandle> q;
-//    for (auto& [t, deg] : indegree)
-//    {
-//        if (deg == 0)
-//            q.push(t);
-//    }
-//
-//    std::vector<TaskHandle> result;
-//    while (!q.empty())
-//    {
-//        TaskHandle cur = q.front();
-//        q.pop();
-//
-//        result.push_back(cur);
-//        for (auto next : graph[cur])
-//        {
-//            indegree[next]--;
-//
-//            if (indegree[next] == 0)
-//                q.push(next);
-//        }
-//    }
-//
-//    return result;
-//}
-//
-//void RenderGraph::Compile(TaskScheduler& scheduler)
-//{
-//    std::unordered_map<uint32_t, ResourceState> states;
-//    auto resources = std::make_shared<FrameResources>();
-//    std::vector<TaskHandle> allTasks;
-//
-//    //task 생성
-//    for (auto& pass : m_passes)
-//    {
-//        TaskDesc task{};
-//        task.type = pass.type;
-//        task.execute = pass.execute;
-//        task.onComplete = pass.onComplete;
-//
-//        TaskHandle handle = scheduler.CreateTask(task, resources);
-//        allTasks.push_back(handle);
-//    }
-//
-//    //dependency 계산
-//    for (size_t i = 0; i < m_passes.size(); i++)
-//    {
-//        auto& pass = m_passes[i];
-//        TaskHandle handle = allTasks[i];
-//
-//        Task* task = scheduler.Find(handle);
-//        auto& desc = task->desc;
-//
-//        // READ PASS
-//        for (auto& use : pass.reads)
-//        {
-//            auto& state = states[use.tex.id];
-//            auto rule = GetRule(use.access);
-//
-//            if (rule.readsFromWriter)
-//            {
-//                if (state.lastWriter)
-//                    desc.dependencies.push_back(state.lastWriter);
-//            }
-//
-//            if (rule.readsFromReaders)
-//            {
-//                for (auto reader : state.lastReaders)
-//                    desc.dependencies.push_back(reader);
-//            }
-//        }
-//
-//        // WRITE PASS
-//        for (auto& use : pass.writes)
-//        {
-//            auto& state = states[use.tex.id];
-//            auto rule = GetRule(use.access);
-//
-//            if (rule.writesInvalidateReaders)
-//            {
-//                if (state.lastWriter)
-//                    desc.dependencies.push_back(state.lastWriter);
-//
-//                for (auto reader : state.lastReaders)
-//                    desc.dependencies.push_back(reader);
-//            }
-//        }
-//
-//        // State update
-//        for (auto& use : pass.reads)
-//        {
-//            auto& state = states[use.tex.id];
-//            auto rule = GetRule(use.access);
-//
-//            if (rule.readsFromWriter || rule.readsFromReaders)
-//                state.lastReaders.push_back(handle);
-//        }
-//
-//        for (auto& use : pass.writes)
-//        {
-//            auto& state = states[use.tex.id];
-//            auto rule = GetRule(use.access);
-//
-//            if (rule.writesInvalidateReaders)
-//            {
-//                state.lastWriter = handle;
-//                state.lastReaders.clear();
-//            }
-//        }
-//    }
-//
-//
-//    for (auto t : allTasks)
-//    {
-//        Task* task = scheduler.Find(t);
-//        int a = 1;
-//    }
-//
-//    auto ordered = TopologicalSort(scheduler, allTasks);
-//
-//    scheduler.SetExecutionOrder(ordered);
-//}
 
 static CommandType ResolveCommandType(CommandType type,
     D3D12_RESOURCE_STATES before, D3D12_RESOURCE_STATES after)
@@ -251,7 +70,7 @@ static std::vector<BarrierPlan> BuildBarriers(CommandType cmdType, const RenderP
     auto& state = resStateTracker.state;
     for (auto& use : pass.reads)
     {
-        auto desired = AccessToState(use.access);
+        auto desired = AccessToState(cmdType, use.access);
         
         if (state != desired)
         {
@@ -263,7 +82,7 @@ static std::vector<BarrierPlan> BuildBarriers(CommandType cmdType, const RenderP
 
     for (auto& use : pass.writes)
     {
-        auto desired = AccessToState(use.access);
+        auto desired = AccessToState(cmdType, use.access);
 
         if (state != desired)
         {
@@ -312,311 +131,77 @@ static void BuildDependents(std::vector<CompiledTask>& tasks)
 struct PassNode
 {
     int index;
-    std::vector<ResourceAccess> accesses;
     std::vector<int> dependencies;
     int indegree{ 0 };
 };
 
-bool areStatesCompatible(const std::vector<ResourceAccess>& readerAccesses, const std::vector<ResourceAccess>& writerAccesses)
-{
-    for (const auto& rAccess : readerAccesses)
-    {
-        for (const auto& wAccess : writerAccesses)
-        {
-            if (rAccess.before == wAccess.after) // writer의 after 상태와 reader의 before 상태가 같다면 의존성 성립
-            {
-                return true;
-            }
-        }
-    }
-    return false;
-}
-
-
 std::vector<PassNode> RenderGraph::BuildDependencyGraph()
 {
     const int n = (int)m_passes.size();
-
     std::vector<PassNode> nodes(n);
 
-    // -----------------------------------------------------
     // 1. pass 복사
-    // -----------------------------------------------------
     for (int i = 0; i < n; ++i)
-    {
         nodes[i].index = i;
-        nodes[i].accesses = m_passes[i].accesses;
-    }
 
-    auto getKey = [](const RGTexture& tex)
-        {
-            return tex.id;
-        };
+    auto getKey = [](const RGTexture& tex) { return tex.id; };
 
-    // -----------------------------------------------------
-    // 2. resource usage 수집 (WRITE / READ 분리)
-    // -----------------------------------------------------
-    struct ResourceUsage
+    struct ResourceUsage // 2. resource usage 수집 (WRITE / READ 분리)
     {
-        std::vector<int> writers;
-        std::vector<int> readers;
+        std::vector<std::pair<int, RGAccess>> writers;
+        std::vector<std::pair<int, RGAccess>> readers;
     };
-
     std::unordered_map<uint64_t, ResourceUsage> usageMap;
 
     for (int i = 0; i < n; ++i)
     {
-        for (auto& access : nodes[i].accesses)
+        auto& pass = m_passes[i];
+        for (auto& w : pass.writes)
         {
-            uint64_t key = getKey(access.tex);
+            auto key = getKey(w.tex);
+            usageMap[key].writers.push_back({ i, w.access });
+        }
 
-            bool isWrite =
-                (access.type == ResourceAccessType::UAV ||
-                    access.type == ResourceAccessType::Copy ||
-                    access.type == ResourceAccessType::RTV ||
-                    access.type == ResourceAccessType::DSV);
-
-            if (access.type == ResourceAccessType::SRV)
-            {
-                usageMap[key].readers.push_back(i);
-                if(access.before != access.after)
-                    usageMap[key].writers.push_back(i);
-            }
-
-            if (isWrite)
-            {
-                usageMap[key].writers.push_back(i);
-            }
+        for (auto& r : pass.reads)
+        {
+            auto key = getKey(r.tex);
+            usageMap[key].readers.push_back({ i, r.access });
         }
     }
 
-    // -----------------------------------------------------
-    // 3. dependency 생성 (resource 기반)
-    // -----------------------------------------------------
     for (auto& [key, usage] : usageMap)
     {
         const auto& writers = usage.writers;
         const auto& readers = usage.readers;
 
-        for (int r : readers)
+        for (auto& [r, rAccess] : readers)
         {
-            const auto& readerAccess = nodes[r].accesses;
-
-            for (int w : writers)
+            for (auto& [w, wAccess] : writers)
             {
-                if (w != r)
-                {
-                    const auto& writerAccess = nodes[w].accesses;
-
-                    if (areStatesCompatible(readerAccess, writerAccess))
-                    {
-                        // w는 이전 r는 이후 ResourceState가 동일할때 넣는다.
-                        nodes[r].dependencies.push_back(w);
-                    }
-                }
+                if (w != r && rAccess == wAccess)
+                    nodes[r].dependencies.push_back(w); // w는 이전 r는 이후 ResourceState가 동일할때 넣는다.
             }
         }
     }
 
-    //for (auto& [key, usage] : usageMap)
-    //{
-    //    auto& writers = usage.writers;
-    //    auto& readers = usage.readers;
-
-    //    // writers는 반드시 정렬
-    //    std::sort(writers.begin(), writers.end());
-
-    //    for (int r : readers)
-    //    {
-    //        int lastWriter = -1;
-
-    //        for (int w : writers)
-    //        {
-    //            if (w < r)
-    //                lastWriter = w;
-    //            else
-    //                break;
-    //        }
-
-    //        if (lastWriter != -1)
-    //        {
-    //            nodes[r].dependencies.push_back(lastWriter);
-    //        }
-    //    }
-    //}
-
-    // -----------------------------------------------------
     // 4. indegree 계산
-    // -----------------------------------------------------
     for (int i = 0; i < n; ++i)
     {
         for (int dep : nodes[i].dependencies)
-        {
             nodes[i].indegree++;
-        }
     }
 
     return nodes;
 }
-
-//std::vector<PassNode> RenderGraph::BuildDependencyGraph()
-//{
-//    const int n = (int)m_passes.size();
-//
-//    std::vector<PassNode> nodes(n);
-//
-//    for (int i = 0; i < n; ++i)
-//    {
-//        nodes[i].index = i;
-//        nodes[i].accesses = m_passes[i].accesses;
-//    }
-//
-//    struct ResourceInfo
-//    {
-//        int lastWriterPass = -1;
-//        ResourceState lastState = ResourceState::Undefined;
-//    };
-//
-//    std::unordered_map<uint64_t, ResourceInfo> resourceMap;
-//
-//    auto getKey = [](const RGTexture& tex)
-//        {
-//            return tex.id;
-//        };
-//
-//    // =====================================================
-//    // Build dependency graph (VERSION / PRODUCER BASED)
-//    // =====================================================
-//    for (int i = 0; i < n; ++i)
-//    {
-//        auto& pass = nodes[i];
-//
-//        for (auto& access : pass.accesses)
-//        {
-//            uint64_t key = getKey(access.tex);
-//            auto& info = resourceMap[key];
-//
-//            // -------------------------------------------------
-//            // READ dependency (consumer → last writer)
-//            // -------------------------------------------------
-//            if (access.type == ResourceAccessType::SRV)
-//            {
-//                if (info.lastWriterPass != -1 &&
-//                    info.lastWriterPass != i)
-//                {
-//                    pass.dependencies.push_back(info.lastWriterPass);
-//                }
-//            }
-//
-//            // -------------------------------------------------
-//            // WRITE / PRODUCER update
-//            // -------------------------------------------------
-//            bool isWriter =
-//                (access.type == ResourceAccessType::UAV ||
-//                    access.type == ResourceAccessType::Copy ||
-//                    access.type == ResourceAccessType::RTV ||
-//                    access.type == ResourceAccessType::DSV);
-//
-//            if (isWriter)
-//            {
-//                info.lastWriterPass = i;
-//                info.lastState = access.after;
-//            }
-//
-//            // -------------------------------------------------
-//            // STATE TRANSITION PASS (important!)
-//            // SRV인데 state 변경이 있는 경우도 producer
-//            // -------------------------------------------------
-//            if (access.type == ResourceAccessType::SRV &&
-//                access.before != access.after)
-//            {
-//                info.lastWriterPass = i;
-//                info.lastState = access.after;
-//            }
-//        }
-//    }
-//
-//    // =====================================================
-//    // indegree 계산
-//    // =====================================================
-//    for (int i = 0; i < n; ++i)
-//    {
-//        for (int dep : nodes[i].dependencies)
-//        {
-//            nodes[i].indegree++;
-//        }
-//    }
-//
-//    return nodes;
-//}
-
-//
-//std::vector<PassNode> RenderGraph::BuildDependencyGraph()
-//{
-//    const int n = (int)m_passes.size();
-//
-//    std::vector<PassNode> nodes(n);
-//
-//    for (int i = 0; i < n; ++i)
-//    {
-//        nodes[i].index = i;
-//        nodes[i].accesses = m_passes[i].accesses;
-//    }
-//
-//    // resource -> last writer pass
-//    struct ResourceStateInfo
-//    {
-//        ResourceState lastState = ResourceState::Undefined;
-//        int lastWriter = -1;
-//    };
-//
-//    std::unordered_map<uint64_t, ResourceStateInfo> resourceMap;
-//
-//    auto getKey = [](const RGTexture& tex)
-//        {
-//            return tex.id;
-//        };
-//
-//    // build dependency
-//    for (int i = 0; i < n; ++i)
-//    {
-//        auto& pass = nodes[i];
-//
-//        for (auto& access : pass.accesses)
-//        {
-//            uint64_t key = getKey(access.tex);
-//            auto& info = resourceMap[key];
-//
-//            if (info.lastWriter != -1)
-//                pass.dependencies.push_back(info.lastWriter);
-//
-//            // update writer state
-//            info.lastWriter = i;
-//            info.lastState = access.after;
-//        }
-//    }
-//
-//    // indegree 계산
-//    for (auto& node : nodes)
-//    {
-//        for (int dep : node.dependencies)
-//            nodes[dep].indegree++;
-//    }
-//
-//    return nodes;
-//}
 
 std::vector<int> RenderGraph::TopologicalSort(const std::vector<PassNode>& graph)
 {
     const int n = (int)graph.size();
 
     std::vector<int> indegree(n);
-
-    // indegree 복사
-    for (int i = 0; i < n; ++i)
-    {
+    
+    for (int i = 0; i < n; ++i) // indegree 복사
         indegree[i] = graph[i].indegree;
-    }
 
     std::queue<int> q;
     std::vector<int> result;
@@ -637,14 +222,9 @@ std::vector<int> RenderGraph::TopologicalSort(const std::vector<PassNode>& graph
 
         result.push_back(cur);
 
-        // 현재 노드가 "cur → next" 관계를 가진다고 보면
-        // graph[cur].dependencies = "cur가 의존하는 노드"라면 안 됨
-        // 우리는 reverse adjacency를 만들어야 정상
-
         for (int i = 0; i < n; ++i)
         {
-            // i가 cur를 dependency로 가지고 있다면
-            for (int dep : graph[i].dependencies)
+            for (int dep : graph[i].dependencies) // i가 cur를 dependency로 가지고 있다면
             {
                 if (dep == cur)
                 {
@@ -662,15 +242,16 @@ std::vector<int> RenderGraph::TopologicalSort(const std::vector<PassNode>& graph
 
 std::vector<CompiledTask> RenderGraph::Compile(TaskScheduler& scheduler)
 {
-    auto passNode = BuildDependencyGraph();
-    auto sortedPass = TopologicalSort(passNode);
-
     ResourceStateTracker statesTracker;
     std::unordered_map<uint32_t, TaskHandle> lastWriter;
     std::vector<CompiledTask> compiledTasks;
 
-    for (auto& pass : m_passes)
+    auto passNode = BuildDependencyGraph();
+    auto sortedPass = TopologicalSort(passNode);
+    for(auto i : sortedPass)
     {
+        auto& pass = m_passes[i];
+
         Task task{};
         task.type = pass.type;
         
@@ -691,7 +272,11 @@ std::vector<CompiledTask> RenderGraph::Compile(TaskScheduler& scheduler)
         {
             TaskHandle barrierHandle = scheduler.AllocateHandle();
             auto barrierTask = CreateBarrierTask(barriers, scheduler);
+
+            barrierTask.dependencies = std::move(task.dependencies);
             compiledTasks.push_back({ barrierHandle, std::move(barrierTask) });
+
+            task.dependencies.clear();
             task.dependencies.push_back(barrierHandle);
         }
 

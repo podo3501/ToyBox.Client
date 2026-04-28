@@ -8,10 +8,9 @@ struct RGTexture
 
 enum class RGAccess
 {
-    Read,   // ¿œπ› read
+    CopyDest,   // init / upload
     SRV,    // shader read
     UAV,    // unordered write/read
-    Write   // init / upload
 };
 
 struct RGUsage
