@@ -270,14 +270,22 @@
 --텍스쳐 max 설정.
 --텍스쳐 핸들로 리턴하게끔
 --TextureResource 에서 TextureDesc에 정해진대로 옵션줘서 로딩하게.
+--Compute Queue 만들기
+--std::vector<PendingTask> pendingTasks;
+--이렇게 로컬변수로 만들었는데 이걸 멤버 변수로 옮기고 LoadTexture할때 graph에서 get 해서 schaduler에 Excute를 하던가 commit을 하던가 해야 한다.
+--컴파일 함수를 쪼개서 처음에는 위치 조정, 그리고 소트 그리고 barrier 만들기 이렇게 나누어야 한다. 지금은 앞에 2개가 없기 때문에 하나지만.
+--m_tasks에서 barrier의 dependency가 이상하다.
+--m_state를 멤버변수로 만들지 않기. m_textureDesc 안쓰니까 없애기 
+--renderGraph 에서 task 리스트를 만들어서 TaskScheduler에 넘기는 식으로 수정.
+--task 리스트를 들고 있는 구조로 되면 task를 보고 중간에 barrier를 끼워 넣을 수 있게 만들 수 있다.
 
-@렌더러 만들기
-    @Compute Queue 만들기
+@렌더러 만들기    
+    @간단한 사각형 mesh 렌더링
+    @RGTexture 핸들값이 항상 1만 나오는건 이상한거다.
     @Backend Draw쪽 정리
     @Resize 되는지 확인
     @코드 정리 및 폴더 만들어서 정리
     @Material Repository가 지금은 Texture wrapper 수준인데 옵션 넣어서 동작하게끔.
-    @간단한 사각형 mesh 렌더링
     @ui 사각형 만들기(mesh랑 종류가 다름)
     @vram에 upload 중에 렌더링이 걸리면 어떻게 되는지 테스트
     @texture batching

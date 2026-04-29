@@ -40,6 +40,9 @@
     <Filter Include="Asset\Loader\Sound">
       <UniqueIdentifier>{86fee15d-c694-4d46-99c9-caf0cb39370f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Asset\Loader\Graphics">
+      <UniqueIdentifier>{b4202579-0679-47f3-9dda-6ed761bc7e62}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Storage\JsonObjectIO.h">
@@ -133,9 +136,6 @@
     <ClInclude Include="Render\DX12\CommandQueue.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
-    <ClInclude Include="Asset\Loader\PngTextureLoader.h">
-      <Filter>Asset\Loader</Filter>
-    </ClInclude>
     <ClInclude Include="Asset\Loader\JsonLoader.h">
       <Filter>Asset\Loader</Filter>
     </ClInclude>
@@ -214,6 +214,12 @@
     <ClInclude Include="Render\DX12\DescriptorFactory.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
+    <ClInclude Include="Asset\Loader\Graphics\PngTextureLoader.h">
+      <Filter>Asset\Loader\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\Loader\Graphics\MeshJsonLoader.h">
+      <Filter>Asset\Loader\Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -283,9 +289,6 @@
     <ClCompile Include="Render\DX12\CommandQueue.cpp">
       <Filter>Render\DX12</Filter>
     </ClCompile>
-    <ClCompile Include="Asset\Loader\PngTextureLoader.cpp">
-      <Filter>Asset\Loader</Filter>
-    </ClCompile>
     <ClCompile Include="Asset\Loader\StaticSoundTable.cpp">
       <Filter>Asset\Loader</Filter>
     </ClCompile>
@@ -345,6 +348,12 @@
     </ClCompile>
     <ClCompile Include="Render\DX12\DescriptorFactory.cpp">
       <Filter>Render\DX12</Filter>
+    </ClCompile>
+    <ClCompile Include="Asset\Loader\Graphics\PngTextureLoader.cpp">
+      <Filter>Asset\Loader\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Asset\Loader\Graphics\MeshJsonLoader.cpp">
+      <Filter>Asset\Loader\Graphics</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

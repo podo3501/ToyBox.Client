@@ -523,6 +523,9 @@
     <ClInclude Include="Service\Render\ITextureSystem.h">
       <Filter>Service\Render</Filter>
     </ClInclude>
+    <ClInclude Include="Service\Asset\Assets\MeshAsset.h">
+      <Filter>Service\Asset\Assets</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Locator">
