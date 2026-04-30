@@ -1,6 +1,7 @@
 #pragma once
 #include "RenderConfig.h"
-#include "ITextureSystem.h"
+#include "GameClient/Service/Render/Repository/ITextureSystem.h"
+#include "GameClient/Service/Render/Repository/IMeshSystem.h"
 
 struct ITextureResource;
 struct TextureAsset;
@@ -18,6 +19,7 @@ struct IRenderBackend
 	virtual void Resize(const Size& size) = 0;
 	virtual void Update() = 0;
 	virtual ITextureSystem* GetTextureSystem() = 0;
+	virtual IMeshSystem* GetMeshSystem() = 0;
 };
 
 unique_ptr<IRenderBackend> CreateRenderBackend();

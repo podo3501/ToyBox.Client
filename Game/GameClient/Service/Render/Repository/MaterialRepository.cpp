@@ -16,7 +16,7 @@ MaterialHandle MaterialRepository::Create(TextureHandle th)
     MaterialEntry entry;
     entry.texRes = texEntry->texRes.get();
     entry.sourceTextureHandle = th;
-    auto materialState = (texEntry->state == TextureState::Ready) ? MaterialState::Ready : MaterialState::Pending;
+    auto materialState = (texEntry->state == LoadState::Ready) ? MaterialState::Ready : MaterialState::Pending;
     entry.state = materialState;
 
     MaterialHandle h = m_pool.Emplace(move(entry));
@@ -43,9 +43,9 @@ void MaterialRepository::Update()
             continue;
         }
 
-        if (texEntry->state == TextureState::Ready) 
+        if (texEntry->state == LoadState::Ready)
             m->state = MaterialState::Ready;
-        else if (texEntry->state == TextureState::Failed) 
+        else if (texEntry->state == LoadState::Failed)
             m->state = MaterialState::Failed;
         else 
             m_loadingList[write++] = mh;

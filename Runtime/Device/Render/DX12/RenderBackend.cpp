@@ -7,13 +7,9 @@
 #include "TaskScheduler.h"
 #include "TextureResource.h"
 #include "ResourceUploader.h"
-#include "ResourcePreparer.h"
-#include "MipGenerator.h"
 #include "QuadRenderer.h"
-#include "TextureRegistry.h"
-#include "DescriptorFactory.h"
-#include "TextureGraphBuilder.h"
 #include "TextureSystem.h"
+#include "MeshSystem.h"
 #include "CommandList.h"
 #include "CommandUtils.h"
 #include <dxgi1_6.h>
@@ -21,7 +17,7 @@
 
 using Microsoft::WRL::ComPtr;
 
-struct MeshEntry
+struct MeshBuffer
 {
     ComPtr<ID3D12Resource> vertexBuffer;
 };
@@ -59,15 +55,8 @@ bool RenderBackend::Initialize(HWND hwnd, const Size& wndSize, const RenderConfi
 
     m_taskScheduler = make_unique<TaskScheduler>(m_command.get());
     m_uploader = make_unique<ResourceUploader>(device);
-    m_preparer = make_unique<ResourcePreparer>();
-    m_mipGenerator = make_unique<MipGenerator>(device, m_srvAllocator.get());
-    ReturnIfFalse(m_mipGenerator->Initialize());
-
-    m_texRegistry = make_unique<TextureRegistry>();
-    m_descriptorFactory = make_unique<DescriptorFactory>(device, m_srvAllocator.get());
-    m_texGraphBuilder = make_unique<TextureGraphBuilder>(m_taskScheduler.get(), m_uploader.get(),
-        m_mipGenerator.get(), m_descriptorFactory.get(), m_texRegistry.get());
-    m_texSystem = make_unique<TextureSystem>(m_texGraphBuilder.get(), m_texRegistry.get());
+    m_texSystem = make_unique<TextureSystem>(device, m_srvAllocator.get(), m_taskScheduler.get(), m_uploader.get());
+    ReturnIfFalse(m_texSystem->Initialize());
 
     m_quadRenderer = make_unique<QuadRenderer>();
     ReturnIfFalse(m_quadRenderer->Initialize(device, wndSize));
@@ -94,9 +83,6 @@ void RenderBackend::BeginFrame()
     m_cmd = m_command->Begin(CommandType::Direct);
     if (!m_cmd) return;
 
-    //auto fences = m_command->GetCompletedFences();
-    //m_preparer->Process(*m_cmd, fences);
-
     m_swapChain->TransitionToRenderTarget(*m_cmd);
     m_swapChain->SetRenderTarget(*m_cmd);
     Clear(*m_cmd, 0.13f, 0.13f, 0.16f, 1.0f); //눈이 적당히 덜 피곤하면서 비어있는 영역 확인 가능한 색깔.
@@ -112,18 +98,6 @@ void RenderBackend::EndFrame()
 
     m_cmd = nullptr;
 }
-//
-//shared_ptr<ITextureResource> RenderBackend::CreateTextureResource()
-//{
-//    return make_shared<TextureResource>(
-//        m_core->GetDevice(),
-//        m_command.get(),
-//        m_srvAllocator.get(),
-//        m_taskScheduler.get(),
-//        m_uploader.get(),
-//        m_preparer.get(),
-//        m_mipGenerator.get());
-//}
 
 void RenderBackend::Draw(ITextureResource* texRes, const Rect& dest, const Rect* source)
 {
@@ -169,6 +143,11 @@ void RenderBackend::Clear(CommandList& cmd, float r, float g, float b, float a)
 ITextureSystem* RenderBackend::GetTextureSystem() 
 { 
     return m_texSystem.get(); 
+}
+
+IMeshSystem* RenderBackend::GetMeshSystem()
+{
+    return m_meshSystem.get();
 }
 
 //////////////////////////////////////////////////////

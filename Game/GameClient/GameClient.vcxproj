@@ -40,9 +40,11 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="Service\Input\InputService.cpp" />
-    <ClCompile Include="Service\Render\MaterialRepository.cpp" />
-    <ClCompile Include="Service\Render\TextureRepository.cpp" />
     <ClCompile Include="Service\Render\RenderService.cpp" />
+    <ClCompile Include="Service\Render\Repository\MaterialRepository.cpp" />
+    <ClCompile Include="Service\Render\Repository\MeshRepository.cpp" />
+    <ClCompile Include="Service\Render\Repository\RenderRepository.cpp" />
+    <ClCompile Include="Service\Render\Repository\TextureRepository.cpp" />
     <ClCompile Include="UserInterface\CommandHistory\TextureResource\TexResCommandHistory.cpp" />
     <ClCompile Include="UserInterface\CommandHistory\TextureResource\TexResCommandRegistry.cpp" />
     <ClCompile Include="UserInterface\CommandHistory\UserInterface\UICommandHistory.cpp" />
@@ -141,15 +143,21 @@
     <ClInclude Include="Service\Input\MouseButton.h" />
     <ClInclude Include="Service\Input\MouseState.h" />
     <ClInclude Include="Service\Render\IRenderBackend.h" />
-    <ClInclude Include="Service\Render\ITextureResource.h" />
-    <ClInclude Include="Service\Render\ITextureSystem.h" />
-    <ClInclude Include="Service\Render\MaterialHandle.h" />
-    <ClInclude Include="Service\Render\MaterialRepository.h" />
     <ClInclude Include="Service\Render\RenderConfig.h" />
-    <ClInclude Include="Service\Render\TextureDesc.h" />
-    <ClInclude Include="Service\Render\TextureRepository.h" />
     <ClInclude Include="Service\Render\RenderService.h" />
-    <ClInclude Include="Service\Render\TextureHandle.h" />
+    <ClInclude Include="Service\Render\Repository\IMeshResource.h" />
+    <ClInclude Include="Service\Render\Repository\IMeshSystem.h" />
+    <ClInclude Include="Service\Render\Repository\ITextureResource.h" />
+    <ClInclude Include="Service\Render\Repository\ITextureSystem.h" />
+    <ClInclude Include="Service\Render\Repository\MaterialHandle.h" />
+    <ClInclude Include="Service\Render\Repository\MaterialRepository.h" />
+    <ClInclude Include="Service\Render\Repository\MeshHandle.h" />
+    <ClInclude Include="Service\Render\Repository\MeshRepository.h" />
+    <ClInclude Include="Service\Render\Repository\RenderRepository.h" />
+    <ClInclude Include="Service\Render\Repository\ResourceTypes.h" />
+    <ClInclude Include="Service\Render\Repository\TextureDesc.h" />
+    <ClInclude Include="Service\Render\Repository\TextureHandle.h" />
+    <ClInclude Include="Service\Render\Repository\TextureRepository.h" />
     <ClInclude Include="UserInterface\CommandHistory\Command.h" />
     <ClInclude Include="UserInterface\CommandHistory\CommandHistory.h" />
     <ClInclude Include="UserInterface\CommandHistory\CommandType.h" />

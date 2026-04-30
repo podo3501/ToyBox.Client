@@ -201,11 +201,17 @@
     <ClCompile Include="Service\Render\RenderService.cpp">
       <Filter>Service\Render</Filter>
     </ClCompile>
-    <ClCompile Include="Service\Render\TextureRepository.cpp">
-      <Filter>Service\Render</Filter>
+    <ClCompile Include="Service\Render\Repository\MaterialRepository.cpp">
+      <Filter>Service\Render\Repository</Filter>
     </ClCompile>
-    <ClCompile Include="Service\Render\MaterialRepository.cpp">
-      <Filter>Service\Render</Filter>
+    <ClCompile Include="Service\Render\Repository\MeshRepository.cpp">
+      <Filter>Service\Render\Repository</Filter>
+    </ClCompile>
+    <ClCompile Include="Service\Render\Repository\RenderRepository.cpp">
+      <Filter>Service\Render\Repository</Filter>
+    </ClCompile>
+    <ClCompile Include="Service\Render\Repository\TextureRepository.cpp">
+      <Filter>Service\Render\Repository</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -502,29 +508,47 @@
     <ClInclude Include="Service\Asset\Assets\StreamSoundAsset.h">
       <Filter>Service\Asset\Assets</Filter>
     </ClInclude>
-    <ClInclude Include="Service\Render\ITextureResource.h">
-      <Filter>Service\Render</Filter>
-    </ClInclude>
-    <ClInclude Include="Service\Render\TextureHandle.h">
-      <Filter>Service\Render</Filter>
-    </ClInclude>
-    <ClInclude Include="Service\Render\TextureRepository.h">
-      <Filter>Service\Render</Filter>
-    </ClInclude>
-    <ClInclude Include="Service\Render\MaterialHandle.h">
-      <Filter>Service\Render</Filter>
-    </ClInclude>
-    <ClInclude Include="Service\Render\MaterialRepository.h">
-      <Filter>Service\Render</Filter>
-    </ClInclude>
-    <ClInclude Include="Service\Render\TextureDesc.h">
-      <Filter>Service\Render</Filter>
-    </ClInclude>
-    <ClInclude Include="Service\Render\ITextureSystem.h">
-      <Filter>Service\Render</Filter>
-    </ClInclude>
     <ClInclude Include="Service\Asset\Assets\MeshAsset.h">
       <Filter>Service\Asset\Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Repository\IMeshResource.h">
+      <Filter>Service\Render\Repository</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Repository\IMeshSystem.h">
+      <Filter>Service\Render\Repository</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Repository\ITextureResource.h">
+      <Filter>Service\Render\Repository</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Repository\ITextureSystem.h">
+      <Filter>Service\Render\Repository</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Repository\MaterialHandle.h">
+      <Filter>Service\Render\Repository</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Repository\MaterialRepository.h">
+      <Filter>Service\Render\Repository</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Repository\MeshHandle.h">
+      <Filter>Service\Render\Repository</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Repository\MeshRepository.h">
+      <Filter>Service\Render\Repository</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Repository\RenderRepository.h">
+      <Filter>Service\Render\Repository</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Repository\TextureDesc.h">
+      <Filter>Service\Render\Repository</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Repository\TextureHandle.h">
+      <Filter>Service\Render\Repository</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Repository\TextureRepository.h">
+      <Filter>Service\Render\Repository</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Repository\ResourceTypes.h">
+      <Filter>Service\Render\Repository</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -599,6 +623,9 @@
     </Filter>
     <Filter Include="Service\Asset\Assets">
       <UniqueIdentifier>{f79ae1e7-337f-44e7-99df-8326f2020e96}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Service\Render\Repository">
+      <UniqueIdentifier>{30138ba1-74c3-45a6-8dc3-a9d6068fb07c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

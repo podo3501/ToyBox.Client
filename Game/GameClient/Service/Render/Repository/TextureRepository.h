@@ -2,11 +2,12 @@
 #include "Core/Utils/Handle/HandlePool.h"
 #include "TextureHandle.h"
 #include "TextureDesc.h"
+#include "ResourceTypes.h"
 
 struct ITextureSystem;
 struct ITextureResource;
 struct TextureAsset;
-struct PendingRequest;
+struct TexturePendingRequest;
 
 struct TextureKey
 {
@@ -30,19 +31,11 @@ struct TextureKeyHash
     }
 };
 
-enum class TextureState
-{
-    Pending,
-    Loading,
-    Ready,
-    Failed
-};
-
 struct TextureEntry
 {
     TextureKey key;
     shared_ptr<ITextureResource> texRes;
-    TextureState state{ TextureState::Pending };
+    LoadState state{ LoadState::Pending };
 };
 
 class TextureRepository
@@ -53,9 +46,9 @@ public:
 
     TextureHandle GetOrCreate(const filesystem::path& path, const TextureDesc& desc,
         function<shared_ptr<TextureAsset>(const filesystem::path&)> loader);
-    bool Release(TextureHandle handle);
+    bool Release(TextureHandle h);
     void Update();
-    const TextureEntry* Get(TextureHandle handle) const noexcept { return m_loadedTextures.Find(handle); }
+    const TextureEntry* Get(TextureHandle h) const noexcept { return m_loadedTextures.Find(h); }
 
 private:
     void ProcessPending();
@@ -66,7 +59,7 @@ private:
     unordered_map<TextureKey, TextureHandle, TextureKeyHash> m_cache;
     HandlePool<TextureEntry, TextureTag> m_loadedTextures;
 
-    vector<PendingRequest> m_pending;
+    vector<TexturePendingRequest> m_pending;
     vector<TextureHandle> m_loadingList;
 };
 

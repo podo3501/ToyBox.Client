@@ -1,8 +1,5 @@
 #pragma once
-#include <memory>
 
-struct TextureAsset;
-struct TextureDesc;
 struct ITextureResource
 {
 	virtual ~ITextureResource() = default;

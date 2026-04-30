@@ -1,14 +1,11 @@
 #pragma once
-#include "GameClient/Service/Render/ITextureResource.h"
-#include "GameClient/Service/Render/TextureDesc.h"
-#include "PendingTransition.h"
+#include "GameClient/Service/Render/Repository/ITextureResource.h"
+#include "GameClient/Service/Render/Repository/TextureDesc.h"
 #include "DescriptorAllocation.h"
 #include <wrl/client.h>
 #include "d3dx12.h"
 
 using Microsoft::WRL::ComPtr;
-
-class TextureGraphBuilder;
 
 class TextureResource : public ITextureResource
 {

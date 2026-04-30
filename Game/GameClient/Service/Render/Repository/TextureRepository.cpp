@@ -3,7 +3,7 @@
 #include "ITextureSystem.h"
 #include "ITextureResource.h"
 
-struct PendingRequest
+struct TexturePendingRequest
 {
 	filesystem::path path;
 	TextureDesc desc;
@@ -31,23 +31,23 @@ TextureHandle TextureRepository::GetOrCreate( const filesystem::path& path, cons
 	TextureEntry entry;
 	entry.key = key;
 	entry.texRes = move(texRes);
-	entry.state = TextureState::Pending;
+	entry.state = LoadState::Pending;
 
 	auto handle = m_loadedTextures.Emplace(move(entry));
 	m_cache[key] = handle;
-	m_pending.push_back(PendingRequest{ path, desc, loader, handle });
+	m_pending.push_back(TexturePendingRequest{ path, desc, loader, handle });
 
 	return handle;
 }
 
-bool TextureRepository::Release(TextureHandle th)
+bool TextureRepository::Release(TextureHandle h)
 {
-	auto entry = m_loadedTextures.Find(th);
+	auto entry = m_loadedTextures.Find(h);
 	if (!entry) return false;
 
 	m_cache.erase(entry->key);
-	std::erase(m_loadingList, th);
-	return m_loadedTextures.Remove(th);
+	std::erase(m_loadingList, h);
+	return m_loadedTextures.Remove(h);
 }
 
 void TextureRepository::Update()
@@ -62,29 +62,23 @@ void TextureRepository::ProcessPending()
 	{
 		auto entry = m_loadedTextures.Find(req.handle);
 		if (!entry) continue;
-		if (entry->state != TextureState::Pending) continue; // 중복으로 들어온 경우 이미 Loading/Ready 라면 처리안함.
+		if (entry->state != LoadState::Pending) continue; // 중복으로 들어온 경우 이미 Loading/Ready 라면 처리안함.
 
 		auto asset = req.loader(req.path);
 		if (!asset)
 		{
-			entry->state = TextureState::Failed;
+			entry->state = LoadState::Failed;
 			continue;
 		}
 
-		entry->state = TextureState::Loading;
+		entry->state = LoadState::Loading;
 
 		auto& texRes = entry->texRes;
 		if (!m_texSystem->LoadFromAsset(texRes, asset, req.desc))
 		{
-			entry->state = TextureState::Failed;
+			entry->state = LoadState::Failed;
 			continue;
 		}
-
-		/*if (!texRes || !texRes->LoadFromAsset(asset, req.desc))
-		{
-			entry->state = TextureState::Failed;
-			continue;
-		}*/
 
 		m_loadingList.push_back(req.handle);
 	}
@@ -106,7 +100,7 @@ void TextureRepository::ProcessLoading()
 		auto& tex = entry->texRes;
 		if (tex->IsReady())
 		{
-			entry->state = TextureState::Ready;
+			entry->state = LoadState::Ready;
 			it = m_loadingList.erase(it);
 		}
 		else

@@ -1,9 +1,9 @@
 #include "pch.h"
 #include "RenderService.h"
 #include "IRenderBackend.h"
-#include "ITextureResource.h"
-#include "TextureRepository.h"
-#include "MaterialRepository.h"
+#include "Repository/ITextureResource.h"
+#include "Repository/TextureRepository.h"
+#include "Repository/MaterialRepository.h"
 #include "Core/Foundation/Geometry2D.h"
 
 struct DrawCommand
@@ -18,8 +18,7 @@ struct DrawCommand
 RenderService::~RenderService() = default;
 RenderService::RenderService(unique_ptr<IRenderBackend> backend) :
 	m_backend{ move(backend) },
-	m_texRepository{ make_unique<TextureRepository>(m_backend->GetTextureSystem()) },
-	m_matRepository{ make_unique<MaterialRepository>(m_texRepository.get()) }
+	m_repository{ make_unique<RenderRepository>(m_backend.get()) }
 {}
 
 unique_ptr<RenderService> RenderService::Create(unique_ptr<IRenderBackend> backend) noexcept
@@ -28,26 +27,10 @@ unique_ptr<RenderService> RenderService::Create(unique_ptr<IRenderBackend> backe
 	return service;
 }
 
-TextureHandle RenderService::LoadTexture(const filesystem::path& path, const TextureDesc& desc,
-	function<shared_ptr<TextureAsset>(const filesystem::path&)> loader)
-{
-	return m_texRepository->GetOrCreate(path, desc, loader);
-}
-
-bool RenderService::ReleaseTexture(TextureHandle th)
-{
-	return m_texRepository->Release(th);
-}
-
-MaterialHandle RenderService::CreateMaterial(TextureHandle th)
-{
-	return m_matRepository->Create(th);
-}
-
 void RenderService::Draw(TextureHandle th, const Rect& dest, const Rect* source)
 {
-	auto entry = m_texRepository->Get(th);
-	if (!entry || entry->state != TextureState::Ready)
+	auto entry = m_repository->Get(th);
+	if (!entry || entry->state != LoadState::Ready)
 		return; //일단 ready가 안됐으면 리턴. 가짜 텍스춰를 보여주기도 한다.
 
 	DrawCommand cmd;
@@ -65,8 +48,7 @@ void RenderService::Draw(TextureHandle th, const Rect& dest, const Rect* source)
 
 void RenderService::Update()
 {
-	m_texRepository->Update();
-	m_matRepository->Update();
+	m_repository->Update();
 	m_backend->Update();
 }
 
@@ -86,3 +68,5 @@ void RenderService::Resize(const Size& size)
 {
 	m_backend->Resize(size);
 }
+
+RenderRepository* RenderService::GetRepository() { return m_repository.get(); }

@@ -163,9 +163,6 @@
     <ClInclude Include="Render\DX12\FenceTypes.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\ResourcePreparer.h">
-      <Filter>Render\DX12</Filter>
-    </ClInclude>
     <ClInclude Include="Render\DX12\PendingTransition.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
@@ -219,6 +216,12 @@
     </ClInclude>
     <ClInclude Include="Asset\Loader\Graphics\MeshJsonLoader.h">
       <Filter>Asset\Loader\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\MeshSystem.h">
+      <Filter>Render\DX12</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\MeshResource.h">
+      <Filter>Render\DX12</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -319,9 +322,6 @@
     <ClCompile Include="Render\DX12\TextureResource.cpp">
       <Filter>Render\DX12</Filter>
     </ClCompile>
-    <ClCompile Include="Render\DX12\ResourcePreparer.cpp">
-      <Filter>Render\DX12</Filter>
-    </ClCompile>
     <ClCompile Include="Render\DX12\MipGenerator.cpp">
       <Filter>Render\DX12</Filter>
     </ClCompile>
@@ -354,6 +354,9 @@
     </ClCompile>
     <ClCompile Include="Asset\Loader\Graphics\MeshJsonLoader.cpp">
       <Filter>Asset\Loader\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\MeshSystem.cpp">
+      <Filter>Render\DX12</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
