@@ -19,13 +19,13 @@ TextureGraphBuilder::TextureGraphBuilder(TaskScheduler* taskScheduler, ResourceU
     m_registry{ registry }
 {}
 
-RGTexture TextureGraphBuilder::LoadTexture(std::shared_ptr<TextureAsset> asset, const TextureDesc& desc)
+RGResource TextureGraphBuilder::LoadTexture(std::shared_ptr<TextureAsset> asset, const TextureDesc& desc)
 {
     RenderGraph graph;
-    RGTexture tex = graph.CreateTexture(desc);
+    RGResource tex = graph.CreateResource();
     auto resources = std::make_shared<ResourceContext>();
 
-    BuildTextureGraph(graph, asset, desc, tex); //?!? graph를 주면 texture graph가 pass를 만들어서 주는식인데 이게 TextureGraphBuiler 안에서 이루어 지는게 아니라 이 위에 클래스에서 해야할 것 같다.
+    BuildGraph(graph, asset, desc, tex); //?!? graph를 주면 texture graph가 pass를 만들어서 주는식인데 이게 TextureGraphBuiler 안에서 이루어 지는게 아니라 이 위에 클래스에서 해야할 것 같다.
 
     auto compiledTasks = graph.Compile(*m_taskScheduler);
     m_taskScheduler->Submit(compiledTasks, resources);
@@ -33,37 +33,37 @@ RGTexture TextureGraphBuilder::LoadTexture(std::shared_ptr<TextureAsset> asset, 
     return tex;
 }
 
-void TextureGraphBuilder::BuildTextureGraph(RenderGraph& graph, std::shared_ptr<TextureAsset> asset,
-    const TextureDesc& desc, RGTexture tex)
+void TextureGraphBuilder::BuildGraph(RenderGraph& graph, std::shared_ptr<TextureAsset> asset,
+    const TextureDesc& desc, RGResource texRes)
 {
     bool generateMips = m_uploader->ShouldGenerateMips(*asset, desc.generateMips);
 
     if (generateMips)
     {
         auto& mip = graph.AddPass("GenerateMips", CommandType::Compute);
-        mip.reads.push_back({ tex, RGAccess::CopyDest });
-        mip.writes.push_back({ tex, RGAccess::UAV });
-        mip.gpuExecute = [this, tex](CommandList& cmd, TaskContext& ctx) {
-            auto& res = ctx.GetTexture(tex);
+        mip.reads.push_back({ texRes, RGAccess::CopyDest });
+        mip.writes.push_back({ texRes, RGAccess::UAV });
+        mip.gpuExecute = [this, texRes](CommandList& cmd, TaskContext& ctx) {
+            auto& res = ctx.GetResource(texRes);
             m_mipGenerator->GenerateMips(cmd, res.Get());
             };
     }
 
     auto& createSrv = graph.AddPass("CreateSRV", CommandType::None);
-    createSrv.reads.push_back({ tex, generateMips ? RGAccess::UAV : RGAccess::CopyDest});
-    createSrv.writes.push_back({ tex, RGAccess::SRV });
-    createSrv.cpuExecute = [this, tex, desc, generateMips](TaskContext& ctx) {
-        auto& res = ctx.GetTexture(tex);
+    createSrv.reads.push_back({ texRes, generateMips ? RGAccess::UAV : RGAccess::CopyDest});
+    createSrv.writes.push_back({ texRes, RGAccess::SRV });
+    createSrv.cpuExecute = [this, texRes, desc, generateMips](TaskContext& ctx) {
+        auto& res = ctx.GetResource(texRes);
         auto allocation = m_descriptorFactory->CreateSRV(res.Get(), desc, generateMips);
-        m_registry->FinalizeTexture(tex.id, res, std::move(allocation));
+        m_registry->FinalizeTexture(texRes.id, res, std::move(allocation));
         };
 
     auto& upload = graph.AddPass("TextureUpload", CommandType::Copy);
-    upload.writes.push_back({ tex, RGAccess::CopyDest});
-    upload.gpuExecute = [this, asset, generateMips, tex](CommandList& cmd, TaskContext& ctx) {
+    upload.writes.push_back({ texRes, RGAccess::CopyDest});
+    upload.gpuExecute = [this, asset, generateMips, texRes](CommandList& cmd, TaskContext& ctx) {
         auto& uploadCtx = std::get<UploadContext>(ctx.passData);
         auto resource = m_uploader->UploadTexture(cmd, *asset, generateMips, uploadCtx.uploadBuffer);
-        ctx.SetTexture(tex, std::move(resource));
+        ctx.SetResource(texRes, std::move(resource));
         };
 
     return;

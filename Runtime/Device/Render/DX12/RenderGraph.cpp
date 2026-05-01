@@ -101,7 +101,7 @@ static Task CreateBarrierTask(const std::vector<BarrierPlan>& barriers, TaskSche
     barrierTask.gpuExecute = [barriers](CommandList& cmd, TaskContext& ctx) {
         for (auto& b : barriers)
         {
-            auto res = ctx.GetTexture(b.tex).Get();
+            auto res = ctx.GetResource(b.res).Get();
             CommandUtils::Transition(cmd, res, b.before, b.after);
         }
         };
@@ -144,7 +144,7 @@ std::vector<PassNode> RenderGraph::BuildDependencyGraph()
     for (int i = 0; i < n; ++i)
         nodes[i].index = i;
 
-    auto getKey = [](const RGTexture& tex) { return tex.id; };
+    auto getKey = [](const RGResource& res) { return res.id; };
 
     struct ResourceUsage // 2. resource usage 수집 (WRITE / READ 분리)
     {
@@ -294,8 +294,8 @@ std::vector<CompiledTask> RenderGraph::Compile(TaskScheduler& scheduler)
     return compiledTasks;
 }
 
-RGTexture RenderGraph::CreateTexture(const TextureDesc& desc)
+RGResource RenderGraph::CreateResource()
 {
-    RGTexture handle{ m_nextId++ };
+    RGResource handle{ m_nextId++ };
     return handle;
 }

@@ -13,6 +13,7 @@ class TaskScheduler;
 class ResourceUploader;
 class TextureSystem;
 class MeshSystem;
+class MeshRenderer;
 class QuadRenderer;
 
 class RenderBackend : public IRenderBackend
@@ -42,6 +43,7 @@ private:
 	unique_ptr<TextureSystem> m_texSystem;
 	unique_ptr<MeshSystem> m_meshSystem;
 
+	unique_ptr<MeshRenderer> m_meshRenderer;
 	unique_ptr<QuadRenderer> m_quadRenderer;
 
 	CommandList* m_cmd{ nullptr }; //direct command юс.

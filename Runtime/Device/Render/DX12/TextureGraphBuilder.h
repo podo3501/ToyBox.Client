@@ -15,11 +15,11 @@ public:
     TextureGraphBuilder() = delete;
     TextureGraphBuilder(TaskScheduler* taskScheduler, ResourceUploader* uploader,
         MipGenerator* mipGenerator, DescriptorFactory* descriptorFactory, TextureRegistry* registry);
-    RGTexture LoadTexture(std::shared_ptr<TextureAsset> asset, const TextureDesc& desc);
+    RGResource LoadTexture(std::shared_ptr<TextureAsset> asset, const TextureDesc& desc);
 
 private:
-    void BuildTextureGraph(RenderGraph& graph, std::shared_ptr<TextureAsset> asset,
-        const TextureDesc& desc, RGTexture tex);
+    void BuildGraph(RenderGraph& graph, std::shared_ptr<TextureAsset> asset,
+        const TextureDesc& desc, RGResource texRes);
 
     TaskScheduler* m_taskScheduler{ nullptr };
     ResourceUploader* m_uploader{ nullptr };

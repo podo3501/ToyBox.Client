@@ -1,9 +1,9 @@
 #pragma once
 #include <cstdint>
 
-struct RGTexture
+struct RGResource
 {
-    uint32_t id = 0;
+    uint32_t id{ 0 };
 };
 
 enum class RGAccess
@@ -15,6 +15,6 @@ enum class RGAccess
 
 struct RGUsage
 {
-    RGTexture tex;
+    RGResource tex;
     RGAccess access;
 };

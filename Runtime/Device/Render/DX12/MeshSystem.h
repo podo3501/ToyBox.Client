@@ -13,6 +13,6 @@ public:
     virtual bool LoadFromAsset(std::shared_ptr<IMeshResource> resource, std::shared_ptr<MeshAsset> asset) override;
 
 private:
-    //TextureGraphBuilder* m_builder{ nullptr };
+    unique_ptr<MeshGraphBuilder> m_builder;
     //TextureRegistry* m_registry{ nullptr };
 };

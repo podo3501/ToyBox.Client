@@ -15,10 +15,10 @@ using Microsoft::WRL::ComPtr;
 
 struct ResourceContext
 {
-    std::unordered_map<uint32_t, ComPtr<ID3D12Resource>> textures;
+    std::unordered_map<uint32_t, ComPtr<ID3D12Resource>> resources;
 
-    void SetTexture(RGTexture t, ComPtr<ID3D12Resource>&& res) { textures[t.id] = std::move(res); }
-    ComPtr<ID3D12Resource>& GetTexture(RGTexture t) { return textures[t.id]; }
+    void SetResource(RGResource h, ComPtr<ID3D12Resource>&& res) { resources[h.id] = std::move(res); }
+    ComPtr<ID3D12Resource>& GetResource(RGResource h) { return resources[h.id]; }
 };
 
 struct UploadContext
@@ -32,8 +32,8 @@ struct TaskContext
     shared_ptr<ResourceContext> resources;
     std::variant<UploadContext> passData;
 
-    void SetTexture(RGTexture t, ComPtr<ID3D12Resource>&& res) { resources->SetTexture(t, std::move(res)); }
-    ComPtr<ID3D12Resource>& GetTexture(RGTexture t) { return resources->GetTexture(t); }
+    void SetResource(RGResource h, ComPtr<ID3D12Resource>&& res) { resources->SetResource(h, std::move(res)); }
+    ComPtr<ID3D12Resource>& GetResource(RGResource h) { return resources->GetResource(h); }
 };
 
 struct Task

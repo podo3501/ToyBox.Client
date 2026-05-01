@@ -1,13 +1,14 @@
 #include "pch.h"
 #include "MeshSystem.h"
 #include "MeshResource.h"
-//#include "TextureGraphBuilder.h"
+#include "MeshGraphBuilder.h"
+#include "RGTypes.h"
 
 MeshSystem::~MeshSystem() = default;
-MeshSystem::MeshSystem(MeshGraphBuilder* builder, MeshRegistry* registry) {}
-    //m_builder{ builder },
+MeshSystem::MeshSystem(MeshGraphBuilder* builder, MeshRegistry* registry) :
+    m_builder{ make_unique<MeshGraphBuilder>() }
     //m_registry{ registry }
-//{}
+{}
 
 shared_ptr<IMeshResource> MeshSystem::CreateMeshResource()
 {
@@ -16,7 +17,7 @@ shared_ptr<IMeshResource> MeshSystem::CreateMeshResource()
 
 bool MeshSystem::LoadFromAsset(std::shared_ptr<IMeshResource> resource, std::shared_ptr<MeshAsset> asset)
 {
-    //RGTexture tex = m_builder->LoadTexture(asset, desc);
+    RGResource mesh = m_builder->LoadMesh(asset);
     //m_registry->Register(tex.id, resource);
 
     return true;

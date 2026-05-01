@@ -7,6 +7,7 @@
 #include "TaskScheduler.h"
 #include "TextureResource.h"
 #include "ResourceUploader.h"
+#include "MeshRenderer.h"
 #include "QuadRenderer.h"
 #include "TextureSystem.h"
 #include "MeshSystem.h"
@@ -57,6 +58,9 @@ bool RenderBackend::Initialize(HWND hwnd, const Size& wndSize, const RenderConfi
     m_uploader = make_unique<ResourceUploader>(device);
     m_texSystem = make_unique<TextureSystem>(device, m_srvAllocator.get(), m_taskScheduler.get(), m_uploader.get());
     ReturnIfFalse(m_texSystem->Initialize());
+
+    m_meshRenderer = make_unique<MeshRenderer>();
+    ReturnIfFalse(m_meshRenderer->Initialize(device));
 
     m_quadRenderer = make_unique<QuadRenderer>();
     ReturnIfFalse(m_quadRenderer->Initialize(device, wndSize));

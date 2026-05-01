@@ -26,7 +26,7 @@ shared_ptr<ITextureResource> TextureSystem::CreateTextureResource()
 
 bool TextureSystem::LoadFromAsset(std::shared_ptr<ITextureResource> resource, std::shared_ptr<TextureAsset> asset, const TextureDesc& desc)
 {
-    RGTexture tex = m_builder->LoadTexture(asset, desc);
+    RGResource tex = m_builder->LoadTexture(asset, desc);
     m_registry->Register(tex.id, resource);
 
     return true;

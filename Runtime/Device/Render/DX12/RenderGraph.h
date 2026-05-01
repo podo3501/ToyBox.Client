@@ -25,7 +25,7 @@ public:
     ~RenderGraph();
     RenderPass& AddPass(const std::string& name, CommandType type);
     std::vector<CompiledTask> Compile(TaskScheduler& scheduler);
-    RGTexture CreateTexture(const TextureDesc& desc);
+    RGResource CreateResource();
 
 private:
     std::vector<PassNode> BuildDependencyGraph();
