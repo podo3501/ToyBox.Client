@@ -2,7 +2,19 @@
 #include <wrl/client.h>
 #include "d3dx12.h"
 
+struct MeshBundle //?!? 리팩토링하면서 다른 이름으로 바꾸자.
+{
+    Microsoft::WRL::ComPtr<ID3D12Resource> vb{ nullptr };
+    Microsoft::WRL::ComPtr<ID3D12Resource> ib{ nullptr };
+};
+
+struct UploadBuffer
+{
+    Microsoft::WRL::ComPtr<ID3D12Resource> resource{ nullptr };
+};
+
 struct TextureAsset;
+struct MeshAsset;
 class CommandList;
 
 using Microsoft::WRL::ComPtr;
@@ -18,13 +30,18 @@ public:
         CommandList& uploadCmd,
         const TextureAsset& asset,
         bool generateMips,
-        ComPtr<ID3D12Resource>& outUploadBuffer);
+        UploadBuffer& outUploadBuffer);
 
     ComPtr<ID3D12Resource> UploadVertexBuffer(
         CommandList& cmd,
         const void* data,
         UINT bufferSize,
         ComPtr<ID3D12Resource>& outUploadBuffer);
+
+    MeshBundle UploadMesh(
+        CommandList& uploadCmd,
+        const MeshAsset& asset,
+        UploadBuffer& outUploadBuffer);
 
 private:
     ComPtr<ID3D12Resource> CreateResource(

@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "TextureGraphBuilder.h"
 #include "RenderGraph.h"
 #include "RenderPass.h"
@@ -25,7 +25,7 @@ RGResource TextureGraphBuilder::LoadTexture(std::shared_ptr<TextureAsset> asset,
     RGResource tex = graph.CreateResource();
     auto resources = std::make_shared<ResourceContext>();
 
-    BuildGraph(graph, asset, desc, tex); //?!? graph¸¦ ÁÖ¸é texture graph°¡ pass¸¦ ¸¸µé¾î¼­ ÁÖ´Â½ÄÀÎµ¥ ÀÌ°Ô TextureGraphBuiler ¾È¿¡¼­ ÀÌ·ç¾î Áö´Â°Ô ¾Æ´Ï¶ó ÀÌ À§¿¡ Å¬·¡½º¿¡¼­ ÇØ¾ßÇÒ °Í °°´Ù.
+    BuildGraph(graph, asset, desc, tex); //?!? graphë¥¼ ì£¼ë©´ texture graphê°€ passë¥¼ ë§Œë“¤ì–´ì„œ ì£¼ëŠ”ì‹ì¸ë° ì´ê²Œ TextureGraphBuiler ì•ˆì—ì„œ ì´ë£¨ì–´ ì§€ëŠ”ê²Œ ì•„ë‹ˆë¼ ì´ ìœ„ì— í´ëž˜ìŠ¤ì—ì„œ í•´ì•¼í•  ê²ƒ ê°™ë‹¤.
 
     auto compiledTasks = graph.Compile(*m_taskScheduler);
     m_taskScheduler->Submit(compiledTasks, resources);
@@ -44,16 +44,16 @@ void TextureGraphBuilder::BuildGraph(RenderGraph& graph, std::shared_ptr<Texture
         mip.reads.push_back({ texRes, RGAccess::CopyDest });
         mip.writes.push_back({ texRes, RGAccess::UAV });
         mip.gpuExecute = [this, texRes](CommandList& cmd, TaskContext& ctx) {
-            auto& res = ctx.GetResource(texRes);
+            auto& res = ctx.GetResource<ComPtr<ID3D12Resource>>(texRes);
             m_mipGenerator->GenerateMips(cmd, res.Get());
             };
     }
 
-    auto& createSrv = graph.AddPass("CreateSRV", CommandType::None);
-    createSrv.reads.push_back({ texRes, generateMips ? RGAccess::UAV : RGAccess::CopyDest});
-    createSrv.writes.push_back({ texRes, RGAccess::SRV });
-    createSrv.cpuExecute = [this, texRes, desc, generateMips](TaskContext& ctx) {
-        auto& res = ctx.GetResource(texRes);
+    auto& finalize = graph.AddPass("FinalizeTexture", CommandType::None);
+    finalize.reads.push_back({ texRes, generateMips ? RGAccess::UAV : RGAccess::CopyDest});
+    finalize.writes.push_back({ texRes, RGAccess::SRV });
+    finalize.cpuExecute = [this, texRes, desc, generateMips](TaskContext& ctx) {
+        auto& res = ctx.GetResource<ComPtr<ID3D12Resource>>(texRes);
         auto allocation = m_descriptorFactory->CreateSRV(res.Get(), desc, generateMips);
         m_registry->FinalizeTexture(texRes.id, res, std::move(allocation));
         };
@@ -61,9 +61,11 @@ void TextureGraphBuilder::BuildGraph(RenderGraph& graph, std::shared_ptr<Texture
     auto& upload = graph.AddPass("TextureUpload", CommandType::Copy);
     upload.writes.push_back({ texRes, RGAccess::CopyDest});
     upload.gpuExecute = [this, asset, generateMips, texRes](CommandList& cmd, TaskContext& ctx) {
-        auto& uploadCtx = std::get<UploadContext>(ctx.passData);
-        auto resource = m_uploader->UploadTexture(cmd, *asset, generateMips, uploadCtx.uploadBuffer);
+        //auto& uploadCtx = std::get<UploadContext>(ctx.passData);
+        UploadBuffer uploadBuffer;
+        auto resource = m_uploader->UploadTexture(cmd, *asset, generateMips, uploadBuffer);
         ctx.SetResource(texRes, std::move(resource));
+        ctx.SetPassContext(std::move(uploadBuffer));
         };
 
     return;

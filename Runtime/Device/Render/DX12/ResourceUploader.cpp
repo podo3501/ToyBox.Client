@@ -1,7 +1,8 @@
-#include "pch.h"
+Ôªø#include "pch.h"
 #include "ResourceUploader.h"
 #include "CommandScheduler.h"
 #include "CommandList.h"
+#include "GameClient/Service/Asset/Assets/MeshAsset.h"
 #include "GameClient/Service/Asset/Assets/TextureAsset.h"
 
 ResourceUploader::~ResourceUploader() = default;
@@ -13,7 +14,7 @@ static DXGI_FORMAT GetFormat(PixelFormat format)
 {
     switch (format)
     {
-    case PixelFormat::RGB8: return DXGI_FORMAT_R8G8B8A8_UNORM; //3√§≥Œ¿∫ ¡ˆø¯«œ¡ˆ æ ¥¬¥Ÿ. ¿œ¥‹ ¿Ã∞…∑Œ.
+    case PixelFormat::RGB8: return DXGI_FORMAT_R8G8B8A8_UNORM; //3Ï±ÑÎÑêÏùÄ ÏßÄÏõêÌïòÏßÄ ÏïäÎäîÎã§. ÏùºÎã® Ïù¥Í±∏Î°ú.
     case PixelFormat::RGBA8: return DXGI_FORMAT_R8G8B8A8_UNORM;
     }
 
@@ -89,7 +90,7 @@ ComPtr<ID3D12Resource> ResourceUploader::UploadTexture(
     CommandList& uploadCmd,
     const TextureAsset& asset,
     bool generateMips,
-    ComPtr<ID3D12Resource>& outUploadBuffer)
+    UploadBuffer& outUploadBuffer)
 {
     auto texDesc = CreateTexture2DDesc(asset, generateMips);
     ApplyMipSettings(texDesc, generateMips);
@@ -100,7 +101,7 @@ ComPtr<ID3D12Resource> ResourceUploader::UploadTexture(
     m_device->GetCopyableFootprints(&texDesc, 0, numSubresources, 0,
         nullptr, nullptr, nullptr, &uploadSize);
 
-    outUploadBuffer = CreateResource(
+    outUploadBuffer.resource = CreateResource(
         CreateBufferDesc(uploadSize),
         D3D12_HEAP_TYPE_UPLOAD,
         D3D12_RESOURCE_STATE_GENERIC_READ);
@@ -109,7 +110,7 @@ ComPtr<ID3D12Resource> ResourceUploader::UploadTexture(
     subresource.pData = asset.pixels.data();
     subresource.RowPitch = asset.stride;
     subresource.SlicePitch = asset.stride * asset.height;
-    UploadSubresource(uploadCmd, texture.Get(), outUploadBuffer.Get(), subresource);
+    UploadSubresource(uploadCmd, texture.Get(), outUploadBuffer.resource.Get(), subresource);
 
     return texture;
 }
@@ -137,6 +138,69 @@ ComPtr<ID3D12Resource> ResourceUploader::UploadVertexBuffer(
     UploadSubresource(cmd, vertexBuffer.Get(), outUploadBuffer.Get(), subresource);
 
     return vertexBuffer;
+}
+
+MeshBundle ResourceUploader::UploadMesh(
+    CommandList& uploadCmd,
+    const MeshAsset& asset,
+    UploadBuffer& outUploadBuffer)
+{
+    using Vertex = MeshAsset::Vertex;
+
+    UINT vbSize = (UINT)(sizeof(Vertex) * asset.vertices.size());
+    UINT ibSize = (UINT)(sizeof(uint32_t) * asset.indices.size());
+
+    UINT vbOffset = 0;
+    UINT ibOffset = (vbSize + 255) & ~255; // align
+    UINT totalSize = ibOffset + ibSize; //total sizeÎ•º Íµ¨Ìï¥ÏÑú uploadbufferÎ•º ÎßåÎì†Îã§.
+
+    auto vb = CreateResource(
+        CreateBufferDesc(vbSize),
+        D3D12_HEAP_TYPE_DEFAULT,
+        D3D12_RESOURCE_STATE_COPY_DEST);
+
+    auto ib = CreateResource(
+        CreateBufferDesc(ibSize),
+        D3D12_HEAP_TYPE_DEFAULT,
+        D3D12_RESOURCE_STATE_COPY_DEST);
+
+    outUploadBuffer.resource = CreateResource(
+        CreateBufferDesc(totalSize),
+        D3D12_HEAP_TYPE_UPLOAD,
+        D3D12_RESOURCE_STATE_GENERIC_READ);
+
+    void* mapped = nullptr;
+    outUploadBuffer.resource->Map(0, nullptr, &mapped);
+    memcpy((uint8_t*)mapped + vbOffset, asset.vertices.data(), vbSize);
+    memcpy((uint8_t*)mapped + ibOffset, asset.indices.data(), ibSize);
+    outUploadBuffer.resource->Unmap(0, nullptr);
+
+    uploadCmd->CopyBufferRegion(vb.Get(), 0, outUploadBuffer.resource.Get(), vbOffset, vbSize);
+    uploadCmd->CopyBufferRegion(ib.Get(), 0, outUploadBuffer.resource.Get(), ibOffset, ibSize);
+
+    return { vb, ib };
+    //// 6. Transition
+    //CommandUtils::Transition(uploadCmd, vb.Get(),
+    //    D3D12_RESOURCE_STATE_COPY_DEST,
+    //    D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
+
+    //CommandUtils::Transition(uploadCmd, ib.Get(),
+    //    D3D12_RESOURCE_STATE_COPY_DEST,
+    //    D3D12_RESOURCE_STATE_INDEX_BUFFER);
+
+    //// ----------------------------
+    //// 7. MeshResource ÏÑ∏ÌåÖ
+    //// ----------------------------
+    //mesh.SetMesh(
+    //    vb,
+    //    vbSize,
+    //    sizeof(Vertex),   // ‚≠ê ÌïµÏã¨ (stride)
+    //    ib,
+    //    (UINT)asset.indices.size(),
+    //    DXGI_FORMAT_R32_UINT
+    //);
+
+    //return mesh;
 }
 
 ComPtr<ID3D12Resource> ResourceUploader::CreateResource(

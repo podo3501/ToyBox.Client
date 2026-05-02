@@ -229,6 +229,9 @@
     <ClInclude Include="Render\DX12\MeshRenderer.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
+    <ClInclude Include="Render\DX12\MeshRegistry.h">
+      <Filter>Render\DX12</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -371,6 +374,9 @@
       <Filter>Render\DX12</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\MeshResource.cpp">
+      <Filter>Render\DX12</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\MeshRegistry.cpp">
       <Filter>Render\DX12</Filter>
     </ClCompile>
   </ItemGroup>

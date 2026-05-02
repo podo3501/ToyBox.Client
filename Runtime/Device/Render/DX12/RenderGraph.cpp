@@ -101,7 +101,7 @@ static Task CreateBarrierTask(const std::vector<BarrierPlan>& barriers, TaskSche
     barrierTask.gpuExecute = [barriers](CommandList& cmd, TaskContext& ctx) {
         for (auto& b : barriers)
         {
-            auto res = ctx.GetResource(b.res).Get();
+            auto res = ctx.GetResource<ComPtr<ID3D12Resource>>(b.res).Get();
             CommandUtils::Transition(cmd, res, b.before, b.after);
         }
         };

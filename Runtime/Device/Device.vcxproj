@@ -58,6 +58,7 @@
     <ClInclude Include="Render\DX12\DX12Core.h" />
     <ClInclude Include="Render\DX12\FenceTypes.h" />
     <ClInclude Include="Render\DX12\MeshGraphBuilder.h" />
+    <ClInclude Include="Render\DX12\MeshRegistry.h" />
     <ClInclude Include="Render\DX12\MeshRenderer.h" />
     <ClInclude Include="Render\DX12\MeshResource.h" />
     <ClInclude Include="Render\DX12\MeshSystem.h" />
@@ -121,6 +122,7 @@
     <ClCompile Include="Render\DX12\DX12Core.cpp" />
     <ClCompile Include="Render\DX12\DX12Link.cpp" />
     <ClCompile Include="Render\DX12\MeshGraphBuilder.cpp" />
+    <ClCompile Include="Render\DX12\MeshRegistry.cpp" />
     <ClCompile Include="Render\DX12\MeshRenderer.cpp" />
     <ClCompile Include="Render\DX12\MeshResource.cpp" />
     <ClCompile Include="Render\DX12\MeshSystem.cpp" />

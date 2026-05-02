@@ -8,32 +8,72 @@
 #include "TaskHandle.h"
 #include "DescriptorAllocation.h"
 #include "RGTypes.h"
+#include <utility>
+#include <memory>
 
 class CommandList;
 
 using Microsoft::WRL::ComPtr;
 
-struct ResourceContext
-{
-    std::unordered_map<uint32_t, ComPtr<ID3D12Resource>> resources;
+struct IInternalData { virtual ~IInternalData() = default; };
 
-    void SetResource(RGResource h, ComPtr<ID3D12Resource>&& res) { resources[h.id] = std::move(res); }
-    ComPtr<ID3D12Resource>& GetResource(RGResource h) { return resources[h.id]; }
+template<typename T>
+struct DataWrapper : public IInternalData //다양한 타입을 넣을수 있도록(variant나 void*를 쓰면 코드 짜기가 불편하다)
+{
+    T data;
+    template<typename U>
+    DataWrapper(U&& val) : data(std::forward<U>(val)) {}
 };
 
-struct UploadContext
+struct ResourceContext
 {
-    ComPtr<ID3D12Resource> uploadBuffer;
-    //다른 리소스들이 붙을수 있다. 간단하게 구현하기 위해서 variant를 했지만, 나중에는 variant를 제거하는게 목적이다.
+    std::unordered_map<uint32_t, std::unique_ptr<IInternalData>> resources;
+
+    template<typename T>
+    void SetResource(RGResource h, T&& res) 
+    {
+        resources[h.id] = std::make_unique<DataWrapper<T>>(std::forward<T>(res));
+    }
+
+    template<typename T>
+    T& GetResource(RGResource h) 
+    {
+        auto* wrapper = static_cast<DataWrapper<T>*>(resources[h.id].get());
+        return wrapper->data;
+    }
+};
+
+struct PassContext {
+    std::unique_ptr<IInternalData> data;
+
+    template<typename T>
+    void Set(T&& val) 
+    {
+        data = std::make_unique<DataWrapper<T>>(std::forward<T>(val));
+    }
+
+    template<typename T>
+    T& Get() 
+    {
+        auto* wrapper = static_cast<DataWrapper<T>*>(data.get());
+        return wrapper->data;
+    }
 };
 
 struct TaskContext
 {
-    shared_ptr<ResourceContext> resources;
-    std::variant<UploadContext> passData;
+    shared_ptr<ResourceContext> resources; //중요한 리소스
+    PassContext passContext; //pass가 실행되면서 임시로 생겼다가 사라지는 것들.
 
-    void SetResource(RGResource h, ComPtr<ID3D12Resource>&& res) { resources->SetResource(h, std::move(res)); }
-    ComPtr<ID3D12Resource>& GetResource(RGResource h) { return resources->GetResource(h); }
+    template<typename T>
+    void SetResource(RGResource h, T&& res) { resources->SetResource<T>(h, std::forward<T>(res)); }
+    template<typename T>
+    T& GetResource(RGResource h) { return resources->GetResource<T>(h); }
+
+    template<typename T>
+    void SetPassContext(T&& data) { passContext.Set<T>(std::forward<T>(data)); }
+    template<typename T>
+    T& GetPassContext() { return passContext.Get<T>(); }
 };
 
 struct Task
