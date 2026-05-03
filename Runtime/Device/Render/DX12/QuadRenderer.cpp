@@ -4,7 +4,7 @@
 #include "CommandUtils.h"
 #include "DescriptorAllocation.h"
 #include <d3dcompiler.h>
-#include "Vertex.h"
+#include "TempVertex.h"
 
 struct QuadTransform
 {
@@ -117,7 +117,7 @@ bool QuadRenderer::Initialize(ID3D12Device* device, const Size& screenSize)
     return true;
 }
 
-vector<Vertex> QuadRenderer::CreateQuadVertices() noexcept
+vector<TempVertex> QuadRenderer::CreateQuadVertices() noexcept
 {
     return {
         { -0.5f, -0.5f, 0, 1,1,1,1, 0,1 },
@@ -136,7 +136,7 @@ void QuadRenderer::SetVertexBuffer(ComPtr<ID3D12Resource> vb, UINT size) noexcep
 
     m_vertexView.BufferLocation = m_vertexBuffer->GetGPUVirtualAddress();
     m_vertexView.SizeInBytes = size;
-    m_vertexView.StrideInBytes = sizeof(Vertex);
+    m_vertexView.StrideInBytes = sizeof(TempVertex);
 }
 
 void QuadRenderer::BindPipeline(CommandList& cmd)

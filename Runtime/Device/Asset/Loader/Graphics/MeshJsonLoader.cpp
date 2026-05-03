@@ -52,7 +52,7 @@ struct JsonMesh
     }
 };
 
-static MeshAsset::Vertex ConvertToVertex(const JsonVertex& v)
+static Vertex ConvertToVertex(const JsonVertex& v)
 {
     return {
         v.position.x, v.position.y, v.position.z,

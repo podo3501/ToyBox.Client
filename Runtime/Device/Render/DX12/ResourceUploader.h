@@ -15,6 +15,7 @@ struct UploadBuffer
 
 struct TextureAsset;
 struct MeshAsset;
+struct Vertex;
 class CommandList;
 
 using Microsoft::WRL::ComPtr;
@@ -41,6 +42,16 @@ public:
     MeshBundle UploadMesh(
         CommandList& uploadCmd,
         const MeshAsset& asset,
+        UploadBuffer& outUploadBuffer);
+
+    ComPtr<ID3D12Resource> UploadVertexBuffer(
+        CommandList& cmd,
+        const std::vector<Vertex>& vertices,
+        UploadBuffer& outUploadBuffer);
+
+    ComPtr<ID3D12Resource> UploadIndexBuffer(
+        CommandList& cmd,
+        const std::vector<uint32_t>& indices,
         UploadBuffer& outUploadBuffer);
 
 private:

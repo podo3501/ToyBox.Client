@@ -16,7 +16,7 @@ public:
     bool Initialize(ID3D12Device* device);
     void BindPipeline(CommandList& cmd);
     void SetFrameCB(const FrameCB& frame);
-    void Draw(CommandList& cmd, MeshResource& mesh, DescriptorAllocation& srv, const ObjectCB& obj);
+    void Draw(CommandList& cmd, MeshResource& mesh, DescriptorAllocation& textureSrv, const ObjectCB& obj);
 
 private:
     void CreateRootSignature(ID3D12Device* device);

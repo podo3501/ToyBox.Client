@@ -54,7 +54,7 @@ void TextureGraphBuilder::BuildGraph(RenderGraph& graph, std::shared_ptr<Texture
     finalize.writes.push_back({ texRes, RGAccess::SRV });
     finalize.cpuExecute = [this, texRes, desc, generateMips](TaskContext& ctx) {
         auto& res = ctx.GetResource<ComPtr<ID3D12Resource>>(texRes);
-        auto allocation = m_descriptorFactory->CreateSRV(res.Get(), desc, generateMips);
+        auto allocation = m_descriptorFactory->CreateTextureSRV(res.Get(), desc, generateMips);
         m_registry->FinalizeTexture(texRes.id, res, std::move(allocation));
         };
 

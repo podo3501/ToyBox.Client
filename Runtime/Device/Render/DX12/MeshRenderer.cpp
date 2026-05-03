@@ -27,14 +27,17 @@ bool MeshRenderer::Initialize(ID3D12Device* device)
 
 void MeshRenderer::CreateRootSignature(ID3D12Device* device)
 {
-    CD3DX12_DESCRIPTOR_RANGE range;
-    range.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0); // t0
+    CD3DX12_DESCRIPTOR_RANGE rangeMesh;
+    rangeMesh.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 2, 0); // vb, ib
 
-    CD3DX12_ROOT_PARAMETER params[3];
+    CD3DX12_DESCRIPTOR_RANGE rangeTex;
+    rangeTex.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 2); // vb, ib
 
-    params[0].InitAsDescriptorTable(1, &range); // texture
-    params[1].InitAsConstantBufferView(0);      // object
-    params[2].InitAsConstantBufferView(1);      // frame
+    CD3DX12_ROOT_PARAMETER params[4];
+    params[0].InitAsDescriptorTable(1, &rangeMesh); // Mesh Table (t0-t1)
+    params[1].InitAsDescriptorTable(1, &rangeTex);  // Texture Table (t2)
+    params[2].InitAsConstantBufferView(0);      // object
+    params[3].InitAsConstantBufferView(1);      // frame
 
     CD3DX12_STATIC_SAMPLER_DESC sampler(
         0,
@@ -78,15 +81,8 @@ void MeshRenderer::CreatePipeline(ID3D12Device* device)
     D3DCompileFromFile(shaderFile.c_str(), nullptr, nullptr, "VSMain", "vs_5_0", 0, 0, &vs, &err);
     D3DCompileFromFile(shaderFile.c_str(), nullptr, nullptr, "PSMain", "ps_5_0", 0, 0, &ps, &err);
 
-    D3D12_INPUT_ELEMENT_DESC layout[] =
-    {
-        { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-        { "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-        { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 24, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-    };
-
     D3D12_GRAPHICS_PIPELINE_STATE_DESC pso{};
-    pso.InputLayout = { layout, _countof(layout) };
+    pso.InputLayout = { nullptr, 0 };
     pso.pRootSignature = m_rootSignature.Get();
 
     pso.VS = { vs->GetBufferPointer(), vs->GetBufferSize() };
@@ -154,20 +150,24 @@ void MeshRenderer::SetFrameCB(const FrameCB& frame)
     *m_frameData = frame;
 }
 
-void MeshRenderer::Draw(CommandList& cmd, MeshResource& mesh, DescriptorAllocation& srv, const ObjectCB& obj)
+void MeshRenderer::Draw(CommandList& cmd, MeshResource& mesh, DescriptorAllocation& textureSrv, const ObjectCB& obj)
 {
     *m_objectData = obj;
 
-    auto handle = srv.GetGpuHandle();
-    cmd->SetGraphicsRootDescriptorTable(0, handle);
-    srv.MarkUsed(cmd.GetType(), cmd.GetFence());
+    auto& vbSrv = mesh.GetVBSrv();
+    auto& ibSrv = mesh.GetIBSrv();
+    
+    cmd->SetGraphicsRootDescriptorTable(0, vbSrv.GetGpuHandle());
+    cmd->SetGraphicsRootDescriptorTable(1, textureSrv.GetGpuHandle());
 
-    cmd->SetGraphicsRootConstantBufferView(1, m_objectCB->GetGPUVirtualAddress());
-    cmd->SetGraphicsRootConstantBufferView(2, m_frameCB->GetGPUVirtualAddress());
+    cmd->SetGraphicsRootConstantBufferView(2, m_objectCB->GetGPUVirtualAddress());
+    cmd->SetGraphicsRootConstantBufferView(3, m_frameCB->GetGPUVirtualAddress());
 
     cmd->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-    cmd->IASetVertexBuffers(0, 1, &mesh.GetVBView());
-    cmd->IASetIndexBuffer(&mesh.GetIBView());
 
     cmd->DrawIndexedInstanced(mesh.GetIndexCount(), 1, 0, 0, 0);
+
+    vbSrv.MarkUsed(cmd.GetType(), cmd.GetFence());
+    ibSrv.MarkUsed(cmd.GetType(), cmd.GetFence());
+    textureSrv.MarkUsed(cmd.GetType(), cmd.GetFence());
 }

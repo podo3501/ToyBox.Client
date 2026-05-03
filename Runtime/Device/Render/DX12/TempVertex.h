@@ -1,6 +1,6 @@
 #pragma once
 
-struct Vertex
+struct TempVertex
 {
     float x, y, z;
     float r, g, b, a;

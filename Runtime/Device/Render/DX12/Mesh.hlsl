@@ -9,15 +9,18 @@ cbuffer FrameCB : register(b1)
     float4x4 proj;
 };
 
+struct Vertex
+{
+    float3 pos;
+    float3 normal;
+    float2 uv;
+};
+
+StructuredBuffer<Vertex> VertexBuffer : register(t0);
+StructuredBuffer<uint>   IndexBuffer  : register(t1);
+
 Texture2D gTexture : register(t0);
 SamplerState gSampler : register(s0);
-
-struct VSInput
-{
-    float3 pos     : POSITION;
-    float3 normal  : NORMAL;
-    float2 uv      : TEXCOORD0;
-};
 
 struct PSInput
 {
@@ -25,9 +28,12 @@ struct PSInput
     float2 uv  : TEXCOORD0;
 };
 
-PSInput VSMain(VSInput input)
+PSInput VSMain(uint vID : SV_VertexID)
 {
     PSInput output;
+
+    uint vertexIndex = IndexBuffer[vID];
+    Vertex input = VertexBuffer[vertexIndex];
 
     float4 worldPos = mul(float4(input.pos, 1.0f), world);
     float4 viewPos  = mul(worldPos, view);

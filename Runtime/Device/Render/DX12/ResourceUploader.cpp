@@ -145,8 +145,6 @@ MeshBundle ResourceUploader::UploadMesh(
     const MeshAsset& asset,
     UploadBuffer& outUploadBuffer)
 {
-    using Vertex = MeshAsset::Vertex;
-
     UINT vbSize = (UINT)(sizeof(Vertex) * asset.vertices.size());
     UINT ibSize = (UINT)(sizeof(uint32_t) * asset.indices.size());
 
@@ -201,6 +199,56 @@ MeshBundle ResourceUploader::UploadMesh(
     //);
 
     //return mesh;
+}
+
+ComPtr<ID3D12Resource> ResourceUploader::UploadVertexBuffer(
+    CommandList& cmd, const std::vector<Vertex>& vertices, UploadBuffer& outUploadBuffer)
+{
+    UINT size = static_cast<UINT>(sizeof(Vertex) * vertices.size());
+
+    auto vb = CreateResource(
+        CreateBufferDesc(size), 
+        D3D12_HEAP_TYPE_DEFAULT, 
+        D3D12_RESOURCE_STATE_COPY_DEST);
+
+    outUploadBuffer.resource = CreateResource(
+        CreateBufferDesc(size), 
+        D3D12_HEAP_TYPE_UPLOAD, 
+        D3D12_RESOURCE_STATE_GENERIC_READ);
+
+    void* mapped = nullptr;
+    outUploadBuffer.resource->Map(0, nullptr, &mapped);
+    memcpy(mapped, vertices.data(), size);
+    outUploadBuffer.resource->Unmap(0, nullptr);
+
+    cmd->CopyBufferRegion(vb.Get(), 0, outUploadBuffer.resource.Get(), 0, size);
+
+    return vb;
+}
+
+ComPtr<ID3D12Resource> ResourceUploader::UploadIndexBuffer(
+    CommandList& cmd, const std::vector<uint32_t>& indices, UploadBuffer& outUploadBuffer)
+{
+    UINT size = static_cast<UINT>(sizeof(uint32_t) * indices.size());
+
+    auto ib = CreateResource(
+        CreateBufferDesc(size), 
+        D3D12_HEAP_TYPE_DEFAULT, 
+        D3D12_RESOURCE_STATE_COPY_DEST);
+
+    outUploadBuffer.resource = CreateResource(
+        CreateBufferDesc(size), 
+        D3D12_HEAP_TYPE_UPLOAD, 
+        D3D12_RESOURCE_STATE_GENERIC_READ);
+
+    void* mapped = nullptr;
+    outUploadBuffer.resource->Map(0, nullptr, &mapped);
+    memcpy(mapped, indices.data(), size);
+    outUploadBuffer.resource->Unmap(0, nullptr);
+
+    cmd->CopyBufferRegion(ib.Get(), 0, outUploadBuffer.resource.Get(), 0, size);
+
+    return ib;
 }
 
 ComPtr<ID3D12Resource> ResourceUploader::CreateResource(

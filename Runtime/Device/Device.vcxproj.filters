@@ -118,7 +118,7 @@
     <ClInclude Include="Render\DX12\ResourceUploader.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\Vertex.h">
+    <ClInclude Include="Render\DX12\TempVertex.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
     <ClInclude Include="Render\DX12\CommandUtils.h">

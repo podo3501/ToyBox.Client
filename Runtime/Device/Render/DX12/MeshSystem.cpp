@@ -13,7 +13,7 @@ MeshSystem::MeshSystem(ID3D12Device* device, DescriptorAllocator* srvAllocator,
     TaskScheduler* taskScheduler, ResourceUploader* uploader) :
     m_descriptorFactory{ make_unique<DescriptorFactory>(device, srvAllocator) },
     m_registry{ make_unique<MeshRegistry>() },
-    m_builder{ make_unique<MeshGraphBuilder>(taskScheduler, uploader) }
+    m_builder{ make_unique<MeshGraphBuilder>(taskScheduler, uploader, m_descriptorFactory.get(), m_registry.get()) }
 {}
 
 shared_ptr<IMeshResource> MeshSystem::CreateMeshResource()

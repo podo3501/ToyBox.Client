@@ -14,7 +14,7 @@
 #include "CommandList.h"
 #include "CommandUtils.h"
 #include <dxgi1_6.h>
-#include "Vertex.h"
+#include "TempVertex.h"
 
 using Microsoft::WRL::ComPtr;
 
@@ -56,6 +56,7 @@ bool RenderBackend::Initialize(HWND hwnd, const Size& wndSize, const RenderConfi
 
     m_taskScheduler = make_unique<TaskScheduler>(m_command.get());
     m_uploader = make_unique<ResourceUploader>(device);
+    m_meshSystem = make_unique<MeshSystem>(device, m_srvAllocator.get(), m_taskScheduler.get(), m_uploader.get());
     m_texSystem = make_unique<TextureSystem>(device, m_srvAllocator.get(), m_taskScheduler.get(), m_uploader.get());
     ReturnIfFalse(m_texSystem->Initialize());
 
@@ -72,11 +73,11 @@ bool RenderBackend::Initialize(HWND hwnd, const Size& wndSize, const RenderConfi
     auto vb = m_uploader->UploadVertexBuffer(
         *copyCmd,
         vertices.data(),
-        static_cast<UINT>(vertices.size() * sizeof(Vertex)),
+        static_cast<UINT>(vertices.size() * sizeof(TempVertex)),
         uploadBuffer
     );
     m_command->End({ move(uploadBuffer) }); // 업로드 완료까지 대기
-    m_quadRenderer->SetVertexBuffer(vb, static_cast<UINT>(vertices.size() * sizeof(Vertex)));
+    m_quadRenderer->SetVertexBuffer(vb, static_cast<UINT>(vertices.size() * sizeof(TempVertex)));
     m_meshes.push_back({ vb });
 
     return true;

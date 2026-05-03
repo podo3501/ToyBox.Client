@@ -68,18 +68,6 @@ static std::vector<BarrierPlan> BuildBarriers(CommandType cmdType, const RenderP
     std::vector<BarrierPlan> barriers;
 
     auto& state = resStateTracker.state;
-    for (auto& use : pass.reads)
-    {
-        auto desired = AccessToState(cmdType, use.access);
-        
-        if (state != desired)
-        {
-            auto type = ResolveCommandType(cmdType, state, desired);
-            barriers.push_back({ use.tex, type, state, desired });
-            state = desired;
-        }
-    }
-
     for (auto& use : pass.writes)
     {
         auto desired = AccessToState(cmdType, use.access);

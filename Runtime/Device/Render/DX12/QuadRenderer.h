@@ -4,7 +4,7 @@
 #include "Core/Foundation/Geometry2D.h"
 
 struct CD3DX12_GPU_DESCRIPTOR_HANDLE;
-struct Vertex;
+struct TempVertex;
 struct QuadTransform;
 class CommandList;
 class DescriptorAllocation;
@@ -15,7 +15,7 @@ public:
     ~QuadRenderer();
     QuadRenderer();
     bool Initialize(ID3D12Device* device, const Size& screenSize);
-    vector<Vertex> CreateQuadVertices() noexcept;
+    vector<TempVertex> CreateQuadVertices() noexcept;
     void SetVertexBuffer(Microsoft::WRL::ComPtr<ID3D12Resource> vb, UINT size) noexcept;
     void SetSRVHeap(ID3D12DescriptorHeap* heap);
 

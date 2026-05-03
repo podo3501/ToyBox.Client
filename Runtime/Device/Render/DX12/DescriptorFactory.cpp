@@ -22,7 +22,7 @@ static DXGI_FORMAT MakeSRGBFormat(DXGI_FORMAT format)
     }
 }
 
-DescriptorAllocation DescriptorFactory::CreateSRV(ID3D12Resource* res, const TextureDesc& desc, bool generateMips)
+DescriptorAllocation DescriptorFactory::CreateTextureSRV(ID3D12Resource* res, const TextureDesc& desc, bool generateMips)
 {
     const auto& resDesc = res->GetDesc();
     D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
@@ -37,5 +37,23 @@ DescriptorAllocation DescriptorFactory::CreateSRV(ID3D12Resource* res, const Tex
     if (!allocation.IsValid()) return {};
 
     m_device->CreateShaderResourceView(res, &srvDesc, allocation.GetCpuHandle());
+    return allocation;
+}
+
+DescriptorAllocation DescriptorFactory::CreateBufferSRV(ID3D12Resource* res, uint32_t numElements, uint32_t stride)
+{
+    D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
+    srvDesc.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
+    srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+
+    srvDesc.Format = DXGI_FORMAT_UNKNOWN; // StructuredBuffer로 인식시키기 위해 Format은 UNKNOWN으로 설정
+    srvDesc.Buffer.FirstElement = 0;
+    srvDesc.Buffer.NumElements = numElements;
+    srvDesc.Buffer.StructureByteStride = stride; // 구조체(Vertex 등)의 크기
+    srvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
+
+    auto allocation = m_srvAllocator->Allocate();
+    m_device->CreateShaderResourceView(res, &srvDesc, allocation.GetCpuHandle());
+
     return allocation;
 }

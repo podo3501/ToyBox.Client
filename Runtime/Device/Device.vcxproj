@@ -80,7 +80,7 @@
     <ClInclude Include="Render\DX12\TextureRegistry.h" />
     <ClInclude Include="Render\DX12\TextureResource.h" />
     <ClInclude Include="Render\DX12\TextureSystem.h" />
-    <ClInclude Include="Render\DX12\Vertex.h" />
+    <ClInclude Include="Render\DX12\TempVertex.h" />
     <ClInclude Include="Storage\JsonObjectIO.h" />
   </ItemGroup>
   <ItemGroup>
