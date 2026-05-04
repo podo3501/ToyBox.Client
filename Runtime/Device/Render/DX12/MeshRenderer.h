@@ -15,8 +15,10 @@ class MeshRenderer
 public:
     bool Initialize(ID3D12Device* device);
     void BindPipeline(CommandList& cmd);
+    void BindDescriptorHeap(CommandList& cmd);
     void SetFrameCB(const FrameCB& frame);
-    void Draw(CommandList& cmd, MeshResource& mesh, DescriptorAllocation& textureSrv, const ObjectCB& obj);
+    void SetSRVHeap(ID3D12DescriptorHeap* heap) { m_srvHeap = heap; }
+    void Draw(CommandList& cmd, MeshResource& mesh, DescriptorAllocation& textureSrv);
 
 private:
     void CreateRootSignature(ID3D12Device* device);
@@ -24,12 +26,18 @@ private:
     void CreateConstantBuffers(ID3D12Device* device);
 
 private:
+    void UpdateFrameCB();
+    void UpdateObjectCB();
+
     ComPtr<ID3D12RootSignature> m_rootSignature;
     ComPtr<ID3D12PipelineState> m_pipelineState;
 
     ComPtr<ID3D12Resource> m_objectCB;
     ComPtr<ID3D12Resource> m_frameCB;
 
+    ID3D12DescriptorHeap* m_srvHeap{ nullptr };
     ObjectCB* m_objectData{ nullptr };
     FrameCB* m_frameData{ nullptr };
+
+    float m_objectAngle{ 0.f };
 };

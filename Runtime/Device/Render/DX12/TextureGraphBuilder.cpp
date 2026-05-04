@@ -23,12 +23,11 @@ RGResource TextureGraphBuilder::LoadTexture(std::shared_ptr<TextureAsset> asset,
 {
     RenderGraph graph;
     RGResource tex = graph.CreateResource();
-    auto resources = std::make_shared<ResourceContext>();
-
+    
     BuildGraph(graph, asset, desc, tex); //?!? graph를 주면 texture graph가 pass를 만들어서 주는식인데 이게 TextureGraphBuiler 안에서 이루어 지는게 아니라 이 위에 클래스에서 해야할 것 같다.
 
     auto compiledTasks = graph.Compile(*m_taskScheduler);
-    m_taskScheduler->Submit(compiledTasks, resources);
+    m_taskScheduler->Submit(compiledTasks, std::make_shared<ResourceContext>());
 
     return tex;
 }

@@ -17,7 +17,8 @@ public:
         DescriptorFactory* descriptorFactory, MeshRegistry* registry);
 
 private:
-    void BuildGraph(RenderGraph& graph, std::shared_ptr<MeshAsset> asset, RGResource texRes);
+    void BuildGraph(RenderGraph& graph, std::shared_ptr<MeshAsset> asset, 
+        RGResource vbRes, RGResource ibRes, RGResource meshRes);
 
     TaskScheduler* m_taskScheduler{ nullptr };
     ResourceUploader* m_uploader{ nullptr };

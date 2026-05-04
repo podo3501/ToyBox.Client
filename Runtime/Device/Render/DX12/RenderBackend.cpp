@@ -11,6 +11,7 @@
 #include "QuadRenderer.h"
 #include "TextureSystem.h"
 #include "MeshSystem.h"
+#include "MeshResource.h"
 #include "CommandList.h"
 #include "CommandUtils.h"
 #include <dxgi1_6.h>
@@ -62,6 +63,7 @@ bool RenderBackend::Initialize(HWND hwnd, const Size& wndSize, const RenderConfi
 
     m_meshRenderer = make_unique<MeshRenderer>();
     ReturnIfFalse(m_meshRenderer->Initialize(device));
+    m_meshRenderer->SetSRVHeap(m_srvAllocator->GetHeap());
 
     m_quadRenderer = make_unique<QuadRenderer>();
     ReturnIfFalse(m_quadRenderer->Initialize(device, wndSize));
@@ -122,6 +124,19 @@ void RenderBackend::Draw(ITextureResource* texRes, const Rect& dest, const Rect*
 
     m_quadRenderer->BindTexture(*m_cmd, texResource->GetSrv());
     m_quadRenderer->Draw(*m_cmd, dest);
+}
+
+void RenderBackend::DrawMesh(IMeshResource* meshRes)
+{
+    if (!m_cmd) return;
+
+    auto meshResource = static_cast<MeshResource*>(meshRes);
+
+    m_meshRenderer->BindDescriptorHeap(*m_cmd);
+    m_meshRenderer->BindPipeline(*m_cmd);
+
+    DescriptorAllocation dummy{};
+    m_meshRenderer->Draw(*m_cmd, *meshResource, dummy);
 }
 
 void RenderBackend::Resize(const Size& size)

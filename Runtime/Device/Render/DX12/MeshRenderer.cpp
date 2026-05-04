@@ -88,10 +88,16 @@ void MeshRenderer::CreatePipeline(ID3D12Device* device)
     pso.VS = { vs->GetBufferPointer(), vs->GetBufferSize() };
     pso.PS = { ps->GetBufferPointer(), ps->GetBufferSize() };
 
-    pso.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+    //pso.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+    CD3DX12_RASTERIZER_DESC raster(D3D12_DEFAULT);
+    raster.FillMode = D3D12_FILL_MODE_WIREFRAME;
+    raster.CullMode = D3D12_CULL_MODE_NONE; // 안 보이는 문제 방지
+
+    pso.RasterizerState = raster;
     pso.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
 
-    pso.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
+    //pso.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
+    pso.DepthStencilState.DepthEnable = FALSE;
 
     pso.SampleMask = UINT_MAX;
     pso.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
@@ -99,7 +105,8 @@ void MeshRenderer::CreatePipeline(ID3D12Device* device)
     pso.NumRenderTargets = 1;
     pso.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
 
-    pso.DSVFormat = DXGI_FORMAT_D32_FLOAT;
+    pso.DSVFormat = DXGI_FORMAT_UNKNOWN;
+    //pso.DSVFormat = DXGI_FORMAT_D32_FLOAT;
 
     pso.SampleDesc.Count = 1;
 
@@ -145,29 +152,74 @@ void MeshRenderer::BindPipeline(CommandList& cmd)
     cmd->SetPipelineState(m_pipelineState.Get());
 }
 
+void MeshRenderer::BindDescriptorHeap(CommandList& cmd)
+{
+    ID3D12DescriptorHeap* heaps[] = { m_srvHeap };
+    cmd->SetDescriptorHeaps(1, heaps);
+}
+
 void MeshRenderer::SetFrameCB(const FrameCB& frame)
 {
     *m_frameData = frame;
 }
 
-void MeshRenderer::Draw(CommandList& cmd, MeshResource& mesh, DescriptorAllocation& textureSrv, const ObjectCB& obj)
+void MeshRenderer::Draw(CommandList& cmd, MeshResource& mesh, DescriptorAllocation& textureSrv)
 {
-    *m_objectData = obj;
+    UpdateFrameCB();
+    UpdateObjectCB();
 
     auto& vbSrv = mesh.GetVBSrv();
     auto& ibSrv = mesh.GetIBSrv();
     
     cmd->SetGraphicsRootDescriptorTable(0, vbSrv.GetGpuHandle());
-    cmd->SetGraphicsRootDescriptorTable(1, textureSrv.GetGpuHandle());
+    //cmd->SetGraphicsRootDescriptorTable(1, textureSrv.GetGpuHandle());
 
     cmd->SetGraphicsRootConstantBufferView(2, m_objectCB->GetGPUVirtualAddress());
     cmd->SetGraphicsRootConstantBufferView(3, m_frameCB->GetGPUVirtualAddress());
 
     cmd->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-    cmd->DrawIndexedInstanced(mesh.GetIndexCount(), 1, 0, 0, 0);
+    cmd->DrawInstanced(mesh.GetIndexCount(), 1, 0, 0);
+    //cmd->DrawIndexedInstanced(mesh.GetIndexCount(), 1, 0, 0, 0);
 
     vbSrv.MarkUsed(cmd.GetType(), cmd.GetFence());
     ibSrv.MarkUsed(cmd.GetType(), cmd.GetFence());
-    textureSrv.MarkUsed(cmd.GetType(), cmd.GetFence());
+    //textureSrv.MarkUsed(cmd.GetType(), cmd.GetFence());
+}
+
+void MeshRenderer::UpdateFrameCB()
+{
+    FrameCB frame{};
+
+    XMMATRIX view =
+        XMMatrixLookAtLH(
+            XMVectorSet(0.0f, 0.0f, -5.0f, 1.0f),
+            XMVectorZero(),
+            XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f)
+        );
+
+    XMMATRIX proj =
+        XMMatrixPerspectiveFovLH(
+            XM_PIDIV4,
+            1024.0f / 768.0f,
+            0.1f,
+            1000.0f
+        );
+
+    XMStoreFloat4x4((XMFLOAT4X4*)frame.view, XMMatrixTranspose(view));
+    XMStoreFloat4x4((XMFLOAT4X4*)frame.proj, XMMatrixTranspose(proj));
+
+    *m_frameData = frame;
+}
+
+void MeshRenderer::UpdateObjectCB()
+{
+    ObjectCB obj{};
+
+    m_objectAngle += 0.0001f;
+
+    XMMATRIX world = XMMatrixRotationY(m_objectAngle);
+    XMStoreFloat4x4((XMFLOAT4X4*)obj.world, XMMatrixTranspose(world));
+
+    *m_objectData = obj;
 }

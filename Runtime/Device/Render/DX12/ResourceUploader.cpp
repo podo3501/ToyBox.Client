@@ -209,7 +209,7 @@ ComPtr<ID3D12Resource> ResourceUploader::UploadVertexBuffer(
     auto vb = CreateResource(
         CreateBufferDesc(size), 
         D3D12_HEAP_TYPE_DEFAULT, 
-        D3D12_RESOURCE_STATE_COPY_DEST);
+        D3D12_RESOURCE_STATE_COMMON);
 
     outUploadBuffer.resource = CreateResource(
         CreateBufferDesc(size), 
@@ -234,7 +234,7 @@ ComPtr<ID3D12Resource> ResourceUploader::UploadIndexBuffer(
     auto ib = CreateResource(
         CreateBufferDesc(size), 
         D3D12_HEAP_TYPE_DEFAULT, 
-        D3D12_RESOURCE_STATE_COPY_DEST);
+        D3D12_RESOURCE_STATE_COMMON);
 
     outUploadBuffer.resource = CreateResource(
         CreateBufferDesc(size), 

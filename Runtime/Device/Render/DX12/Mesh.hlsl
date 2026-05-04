@@ -19,7 +19,7 @@ struct Vertex
 StructuredBuffer<Vertex> VertexBuffer : register(t0);
 StructuredBuffer<uint>   IndexBuffer  : register(t1);
 
-Texture2D gTexture : register(t0);
+Texture2D gTexture : register(t2);
 SamplerState gSampler : register(s0);
 
 struct PSInput
@@ -47,6 +47,7 @@ PSInput VSMain(uint vID : SV_VertexID)
 
 float4 PSMain(PSInput input) : SV_TARGET
 {
-    float4 color = gTexture.Sample(gSampler, input.uv);
-    return color;
+//    float4 color = gTexture.Sample(gSampler, input.uv);
+//    return color;
+     return float4(1,1,1,1);
 }

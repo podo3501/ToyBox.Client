@@ -30,13 +30,13 @@ struct ResourceContext
     std::unordered_map<uint32_t, std::unique_ptr<IInternalData>> resources;
 
     template<typename T>
-    void SetResource(RGResource h, T&& res) 
+    void Set(RGResource h, T&& res) 
     {
         resources[h.id] = std::make_unique<DataWrapper<T>>(std::forward<T>(res));
     }
 
     template<typename T>
-    T& GetResource(RGResource h) 
+    T& Get(RGResource h) 
     {
         auto* wrapper = static_cast<DataWrapper<T>*>(resources[h.id].get());
         return wrapper->data;
@@ -62,13 +62,13 @@ struct PassContext {
 
 struct TaskContext
 {
-    shared_ptr<ResourceContext> resources; //중요한 리소스
-    PassContext passContext; //pass가 실행되면서 임시로 생겼다가 사라지는 것들.
+    shared_ptr<ResourceContext> resources; //중요한 리소스. 공유됨.
+    PassContext passContext; //pass가 실행되면서 임시로 생겼다가 사라지는 것들. 공유 안됨.
 
     template<typename T>
-    void SetResource(RGResource h, T&& res) { resources->SetResource<T>(h, std::forward<T>(res)); }
+    void SetResource(RGResource h, T&& res) { resources->Set<T>(h, std::forward<T>(res)); }
     template<typename T>
-    T& GetResource(RGResource h) { return resources->GetResource<T>(h); }
+    T& GetResource(RGResource h) { return resources->Get<T>(h); }
 
     template<typename T>
     void SetPassContext(T&& data) { passContext.Set<T>(std::forward<T>(data)); }

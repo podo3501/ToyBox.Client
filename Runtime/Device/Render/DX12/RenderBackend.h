@@ -25,6 +25,7 @@ public:
 	virtual void BeginFrame() override;
 	virtual void EndFrame() override;
 	virtual void Draw(ITextureResource* texRes, const Rect& dest, const Rect* source) override;
+	virtual void DrawMesh(IMeshResource* meshRes) override;
 	virtual void Resize(const Size& size) override;
 	virtual void Update() override;
 	virtual ITextureSystem* GetTextureSystem() override;

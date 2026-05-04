@@ -2,6 +2,7 @@
 #include "RenderService.h"
 #include "IRenderBackend.h"
 #include "Repository/ITextureResource.h"
+#include "Repository/MeshRepository.h"
 #include "Repository/TextureRepository.h"
 #include "Repository/MaterialRepository.h"
 #include "Core/Foundation/Geometry2D.h"
@@ -13,6 +14,11 @@ struct DrawCommand
 	Rect dest{};
 	Rect source{};
 	bool hasSource{ false };
+};
+
+struct DrawMeshCommand
+{
+	IMeshResource* meshRes{ nullptr };
 };
 
 RenderService::~RenderService() = default;
@@ -46,6 +52,18 @@ void RenderService::Draw(TextureHandle th, const Rect& dest, const Rect* source)
 	m_drawQueue.push_back(std::move(cmd));
 }
 
+void RenderService::DrawMesh(MeshHandle mh)
+{
+	auto entry = m_repository->Get(mh);
+	if (!entry || entry->state != LoadState::Ready)
+		return;
+
+	DrawMeshCommand cmd;
+	cmd.meshRes = entry->meshRes.get();
+
+	m_drawMeshQueue.push_back(std::move(cmd));
+}
+
 void RenderService::Update()
 {
 	m_repository->Update();
@@ -58,6 +76,9 @@ void RenderService::Render()
 
 	for (auto& cmd : m_drawQueue)
 		m_backend->Draw(cmd.texRes, cmd.dest, cmd.hasSource ? &cmd.source : nullptr);
+
+	for (auto& cmd : m_drawMeshQueue)
+		m_backend->DrawMesh(cmd.meshRes);
 
 	m_backend->EndFrame();
 

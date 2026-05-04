@@ -20,104 +20,54 @@ MeshGraphBuilder::MeshGraphBuilder(TaskScheduler* taskScheduler, ResourceUploade
 RGResource MeshGraphBuilder::LoadMesh(std::shared_ptr<MeshAsset> asset)
 {
 	RenderGraph graph;
-	RGResource mesh = graph.CreateResource();
-	auto resources = std::make_shared<ResourceContext>();
 
-	BuildGraph(graph, asset, mesh);
+    RGResource vb = graph.CreateResource();
+    RGResource ib = graph.CreateResource();
+	RGResource mesh = graph.CreateResource();
+	
+	BuildGraph(graph, asset, vb, ib, mesh);
 
     auto compiledTasks = graph.Compile(*m_taskScheduler);
-    m_taskScheduler->Submit(compiledTasks, resources);
+    m_taskScheduler->Submit(compiledTasks, std::make_shared<ResourceContext>());
 
 	return mesh;
 }
 
-void MeshGraphBuilder::BuildGraph(RenderGraph& graph, std::shared_ptr<MeshAsset> asset, RGResource meshRes)
+void MeshGraphBuilder::BuildGraph(RenderGraph& graph, std::shared_ptr<MeshAsset> asset, 
+    RGResource vbRes, RGResource ibRes, RGResource meshRes)
 {
     auto& vbUpload = graph.AddPass("VBUpload", CommandType::Copy);
-    vbUpload.writes.push_back({ meshRes, RGAccess::CopyDest });
-    vbUpload.gpuExecute = [this, asset, meshRes](CommandList& cmd, TaskContext& ctx) {
+    vbUpload.writes.push_back({ vbRes, RGAccess::CopyDest });
+    vbUpload.gpuExecute = [this, asset, vbRes](CommandList& cmd, TaskContext& ctx) {
         UploadBuffer uploadBuffer;
          auto resource = m_uploader->UploadVertexBuffer(cmd, asset->vertices, uploadBuffer);
-        ctx.SetResource(meshRes, std::move(resource));
+        ctx.SetResource(vbRes, std::move(resource));
         ctx.SetPassContext(std::move(uploadBuffer));
         };
 
     auto& ibUpload = graph.AddPass("IBUpload", CommandType::Copy);
-    ibUpload.writes.push_back({ meshRes, RGAccess::CopyDest });
-    ibUpload.gpuExecute = [this, asset, meshRes](CommandList& cmd, TaskContext& ctx) {
+    ibUpload.writes.push_back({ ibRes, RGAccess::CopyDest });
+    ibUpload.gpuExecute = [this, asset, ibRes](CommandList& cmd, TaskContext& ctx) {
         UploadBuffer uploadBuffer;
         auto resource = m_uploader->UploadIndexBuffer(cmd, asset->indices, uploadBuffer);
-        ctx.SetResource(meshRes, std::move(resource));
+        ctx.SetResource(ibRes, std::move(resource));
         ctx.SetPassContext(std::move(uploadBuffer));
         };
 
     auto& finalize = graph.AddPass("FinalizeMesh", CommandType::None);
-    // 두 업로드 패스가 모두 완료된 후 실행되도록 의존성 연결
-    finalize.reads.push_back({ meshRes, RGAccess::CopyDest });
-    finalize.writes.push_back({ meshRes, RGAccess::SRV });
+    finalize.reads.push_back({ vbRes, RGAccess::CopyDest });
+    finalize.reads.push_back({ ibRes, RGAccess::CopyDest });
+    finalize.writes.push_back({ vbRes, RGAccess::SRV });
+    finalize.writes.push_back({ ibRes, RGAccess::SRV });
+    finalize.cpuExecute = [this, asset, vbRes, ibRes, meshRes](TaskContext& ctx) {
+        auto& vb = ctx.GetResource<ComPtr<ID3D12Resource>>(vbRes);
+        auto& ib = ctx.GetResource<ComPtr<ID3D12Resource>>(ibRes);
 
-    //finalize.cpuExecute = [this, asset, meshRes](TaskContext& ctx) {
-    //    auto& res = ctx.GetResource<ComPtr<ID3D12Resource>>(meshRes);
+        auto vertexCount = static_cast<uint32_t>(asset->vertices.size());
+        auto indexCount = static_cast<uint32_t>(asset->indices.size());
+        auto vbAlloc = m_descriptorFactory->CreateBufferSRV(vb.Get(), vertexCount, sizeof(Vertex));
+        auto ibAlloc = m_descriptorFactory->CreateBufferSRV(ib.Get(), indexCount, sizeof(uint32_t));
 
-    //    auto vb = ctx.GetResource<Microsoft::WRL::ComPtr<ID3D12Resource>>("TempVB");
-    //    auto ib = ctx.GetResource<Microsoft::WRL::ComPtr<ID3D12Resource>>("TempIB");
-
-    //    MeshBundle bundle{ vb, ib };
-
-    //    auto indexCount = static_cast<uint32_t>(asset->indices.size());
-    //    auto vbAlloc = m_descriptorFactory->CreateBufferSRV(bundle.vb.Get(),
-    //        static_cast<uint32_t>(asset->vertices.size()), sizeof(MeshAsset::Vertex));
-    //    auto ibAlloc = m_descriptorFactory->CreateBufferSRV(bundle.ib.Get(), indexCount, sizeof(uint32_t));
-
-    //    // 최종적으로 Registry에 등록
-    //    m_registry->FinalizeMesh(meshRes.id, bundle.vb, std::move(vbAlloc), bundle.ib, std::move(ibAlloc), indexCount);
-
-    //    // 최종 번들을 리소스 핸들에 할당
-    //    ctx.SetResource(meshRes, std::move(bundle));
-    //    };
+        m_registry->FinalizeMesh(meshRes.id, vb, std::move(vbAlloc), ib, std::move(ibAlloc), indexCount);
+        };
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//void MeshGraphBuilder::BuildGraph(RenderGraph& graph, std::shared_ptr<MeshAsset> asset,
-//	RGResource meshRes)
-//{
-//    auto& upload = graph.AddPass("MeshUpload", CommandType::Copy);
-//    upload.writes.push_back({ meshRes, RGAccess::CopyDest });
-//    upload.gpuExecute = [this, asset, meshRes](CommandList& cmd, TaskContext& ctx) {
-//        UploadBuffer uploadBuffer;
-//        auto resource = m_uploader->UploadMesh(cmd, *asset, uploadBuffer);
-//        ctx.SetResource(meshRes, std::move(resource));
-//        ctx.SetPassContext(std::move(uploadBuffer));
-//        };
-//
-//    auto& finalize = graph.AddPass("FinalizeMesh", CommandType::None);
-//    finalize.reads.push_back({ meshRes, RGAccess::CopyDest });
-//    finalize.writes.push_back({ meshRes, RGAccess::SRV });
-//    finalize.cpuExecute = [this, asset, meshRes](TaskContext& ctx) {
-//        auto& res = ctx.GetResource<MeshBundle>(meshRes);
-//        auto& vbRes = res.vb;
-//        auto& ibRes = res.ib;
-//        auto indexCount = static_cast<uint32_t>(asset->indices.size());
-//        auto vbAlloc = m_descriptorFactory->CreateBufferSRV(vbRes.Get(),
-//            static_cast<uint32_t>(asset->vertices.size()), sizeof(MeshAsset::Vertex));
-//        auto ibAlloc = m_descriptorFactory->CreateBufferSRV(ibRes.Get(), indexCount, sizeof(uint32_t));
-//        m_registry->FinalizeMesh(meshRes.id, vbRes, std::move(vbAlloc), ibRes, std::move(ibAlloc), indexCount);
-//        };
-//}

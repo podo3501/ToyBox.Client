@@ -15,6 +15,6 @@ enum class RGAccess
 
 struct RGUsage
 {
-    RGResource tex;
+    RGResource resource;
     RGAccess access;
 };

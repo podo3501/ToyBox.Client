@@ -63,38 +63,25 @@ static CommandType ResolveCommandType(CommandType type,
     return type;
 }
 
-static std::vector<BarrierPlan> BuildBarriers(CommandType cmdType, const RenderPass& pass, ResourceStateTracker& resStateTracker)
+static std::vector<BarrierPlan> BuildBarriers(CommandType cmdType, const RenderPass& pass, 
+    std::unordered_map<uint32_t, ResourceStateTracker>& resStateTracker)
 {
     std::vector<BarrierPlan> barriers;
 
-    auto& state = resStateTracker.state;
     for (auto& use : pass.writes)
     {
+        auto& state = resStateTracker[use.resource.id].state;
         auto desired = AccessToState(cmdType, use.access);
 
         if (state != desired)
         {
             auto type = ResolveCommandType(cmdType, state, desired);
-            barriers.push_back({ use.tex, type, state, desired });
+            barriers.push_back({ use.resource, type, state, desired });
             state = desired;
         }
     }
 
     return barriers;
-}
-
-static Task CreateBarrierTask(const std::vector<BarrierPlan>& barriers, TaskScheduler& scheduler)
-{
-    Task barrierTask{};
-    barrierTask.gpuExecute = [barriers](CommandList& cmd, TaskContext& ctx) {
-        for (auto& b : barriers)
-        {
-            auto res = ctx.GetResource<ComPtr<ID3D12Resource>>(b.res).Get();
-            CommandUtils::Transition(cmd, res, b.before, b.after);
-        }
-        };
-
-    return barrierTask;
 }
 
 static void BuildDependents(std::vector<CompiledTask>& tasks)
@@ -146,13 +133,13 @@ std::vector<PassNode> RenderGraph::BuildDependencyGraph()
         auto& pass = m_passes[i];
         for (auto& w : pass.writes)
         {
-            auto key = getKey(w.tex);
+            auto key = getKey(w.resource);
             usageMap[key].writers.push_back({ i, w.access });
         }
 
         for (auto& r : pass.reads)
         {
-            auto key = getKey(r.tex);
+            auto key = getKey(r.resource);
             usageMap[key].readers.push_back({ i, r.access });
         }
     }
@@ -228,9 +215,27 @@ std::vector<int> RenderGraph::TopologicalSort(const std::vector<PassNode>& graph
     return result;
 }
 
+static vector<Task> CreateBarrierTask(const std::vector<BarrierPlan>& barriers, TaskScheduler& scheduler)
+{
+    vector<Task> barrierTasks;
+    for (auto& barrier : barriers)
+    {
+        Task barrierTask{};
+        barrierTask.type = barrier.cmdType;
+        barrierTask.gpuExecute = [barrier](CommandList& cmd, TaskContext& ctx) {
+            auto res = ctx.GetResource<ComPtr<ID3D12Resource>>(barrier.res).Get();
+            CommandUtils::Transition(cmd, res, barrier.before, barrier.after);
+            };
+
+        barrierTasks.push_back(barrierTask);
+    }
+
+    return barrierTasks;
+}
+
 std::vector<CompiledTask> RenderGraph::Compile(TaskScheduler& scheduler)
 {
-    ResourceStateTracker statesTracker;
+    std::unordered_map<uint32_t, ResourceStateTracker> statesTracker;
     std::unordered_map<uint32_t, TaskHandle> lastWriter;
     std::vector<CompiledTask> compiledTasks;
 
@@ -245,27 +250,31 @@ std::vector<CompiledTask> RenderGraph::Compile(TaskScheduler& scheduler)
         
         for (auto& use : pass.reads)
         {
-            if (lastWriter.contains(use.tex.id))
-                task.dependencies.push_back(lastWriter[use.tex.id]);
+            if (lastWriter.contains(use.resource.id))
+                task.dependencies.push_back(lastWriter[use.resource.id]);
         }
 
         for (auto& use : pass.writes)
         {
-            if (lastWriter.contains(use.tex.id))
-                task.dependencies.push_back(lastWriter[use.tex.id]);
+            if (lastWriter.contains(use.resource.id))
+                task.dependencies.push_back(lastWriter[use.resource.id]);
         }
 
         auto barriers = BuildBarriers(task.type, pass, statesTracker); //barrier가 필요하면 task를 만든다.
         if (!barriers.empty())
         {
-            TaskHandle barrierHandle = scheduler.AllocateHandle();
-            auto barrierTask = CreateBarrierTask(barriers, scheduler);
-
-            barrierTask.dependencies = std::move(task.dependencies);
-            compiledTasks.push_back({ barrierHandle, std::move(barrierTask) });
-
+            auto taskDependencies = task.dependencies;
             task.dependencies.clear();
-            task.dependencies.push_back(barrierHandle);
+
+            auto barrierTasks = CreateBarrierTask(barriers, scheduler);
+            for (auto& barrierTask : barrierTasks)
+            {
+                barrierTask.dependencies = taskDependencies;
+
+                TaskHandle barrierHandle = scheduler.AllocateHandle();
+                compiledTasks.push_back({ barrierHandle, std::move(barrierTask) });
+                task.dependencies.push_back(barrierHandle);
+            }
         }
 
         task.gpuExecute = pass.gpuExecute;
@@ -274,7 +283,7 @@ std::vector<CompiledTask> RenderGraph::Compile(TaskScheduler& scheduler)
         TaskHandle handle = scheduler.AllocateHandle();
         compiledTasks.push_back({ handle, std::move(task) });
         for (auto& use : pass.writes)
-            lastWriter[use.tex.id] = handle;
+            lastWriter[use.resource.id] = handle;
     }
 
     BuildDependents(compiledTasks);
