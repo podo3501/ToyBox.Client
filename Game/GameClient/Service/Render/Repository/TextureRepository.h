@@ -7,7 +7,8 @@
 struct ITextureSystem;
 struct ITextureResource;
 struct TextureAsset;
-struct TexturePendingRequest;
+struct CpuPendingTextureRequest;
+struct GpuPendingTextureRequest;
 
 struct TextureKey
 {
@@ -51,7 +52,8 @@ public:
     const TextureEntry* Get(TextureHandle h) const noexcept { return m_loadedTextures.Find(h); }
 
 private:
-    void ProcessPending();
+    void ProcessCpuPending();
+    void ProcessGpuPending();
     void ProcessLoading();
 
 private:
@@ -59,7 +61,8 @@ private:
     unordered_map<TextureKey, TextureHandle, TextureKeyHash> m_cache;
     HandlePool<TextureEntry, TextureTag> m_loadedTextures;
 
-    vector<TexturePendingRequest> m_pending;
+    vector<CpuPendingTextureRequest> m_cpuPending;
+    vector<GpuPendingTextureRequest> m_gpuPending;
     vector<TextureHandle> m_loadingList;
 };
 

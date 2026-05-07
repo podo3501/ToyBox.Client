@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 
-struct RGResource
+struct RGHandle
 {
     uint32_t id{ 0 };
 };
@@ -15,6 +15,6 @@ enum class RGAccess
 
 struct RGUsage
 {
-    RGResource resource;
+    RGHandle handle;
     RGAccess access;
 };

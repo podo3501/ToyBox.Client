@@ -12,12 +12,19 @@ class TextureResource : public ITextureResource
 public:
 	~TextureResource();
 	TextureResource() = default;
-	virtual bool IsReady() const noexcept { return m_ready; }
+	virtual bool IsReady() const noexcept 
+	{ 
+		return m_ready; 
+	}
 
 	void SetResource(ComPtr<ID3D12Resource> resource) { m_texture = std::move(resource); }
 	void SetSRV(DescriptorAllocation allocation) { m_srv = std::move(allocation); }
 	DescriptorAllocation& GetSrv() { return m_srv; }
-	void MarkReady() { m_ready = true; }
+	void MarkReady() 
+	{ 
+		m_ready = true; 
+	}
+
 	ID3D12Resource* Get() const { return m_texture.Get(); }
 	void Set(ComPtr<ID3D12Resource> tex) { m_texture = tex; }
 

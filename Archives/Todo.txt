@@ -281,8 +281,14 @@
 --큐브 하나만 띄우기
 --barrier가 texture와 다르기 때문에 코드 수정이 필요
 
+@텍스쳐 렌더링
+    @복수개의 텍스쳐 로딩
+        @texSystem에서 gpu 로딩하는 부분 구현
+    @복수개의 텍스쳐 draw
+
 @큐브 렌더링
-    @큐브 두개 이상 띄우기.
+    @복수개의 큐브 로딩
+    @복수개의 큐브 draw
     @텍스춰 연결해서 화면에 띄우기
     
 @기존의 quad 부분을 mesh로 바꾸기.
@@ -292,13 +298,12 @@
 @shadow pass 할지 말지 생각해 보자.
 
 @렌더러 만들기    
-    @간단한 사각형 mesh 렌더링
+    @간단한 ui 텍스쳐 사각형 mesh 형식으로 렌더링
     @RGTexture 핸들값이 항상 1만 나오는건 이상한거다.
     @Backend Draw쪽 정리
     @Resize 되는지 확인
     @코드 정리 및 폴더 만들어서 정리
     @Material Repository가 지금은 Texture wrapper 수준인데 옵션 넣어서 동작하게끔.
-    @ui 사각형 만들기(mesh랑 종류가 다름)
     @vram에 upload 중에 렌더링이 걸리면 어떻게 되는지 테스트
     @texture batching
     @화면 배경색깔 지정하게끔

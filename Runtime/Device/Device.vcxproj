@@ -57,6 +57,7 @@
     <ClInclude Include="Render\DX12\DescriptorFactory.h" />
     <ClInclude Include="Render\DX12\DX12Core.h" />
     <ClInclude Include="Render\DX12\FenceTypes.h" />
+    <ClInclude Include="Render\DX12\GPUProfiler.h" />
     <ClInclude Include="Render\DX12\MeshGraphBuilder.h" />
     <ClInclude Include="Render\DX12\MeshRegistry.h" />
     <ClInclude Include="Render\DX12\MeshRenderer.h" />
@@ -67,7 +68,7 @@
     <ClInclude Include="Render\DX12\PendingTransition.h" />
     <ClInclude Include="Render\DX12\RenderGraph.h" />
     <ClInclude Include="Render\DX12\RenderPass.h" />
-    <ClInclude Include="Render\DX12\ResourceUploader.h" />
+    <ClInclude Include="Render\DX12\ResourceLoader.h" />
     <ClInclude Include="Render\DX12\RGTypes.h" />
     <ClInclude Include="Render\DX12\SwapChainPresenter.h" />
     <ClInclude Include="Render\DX12\QuadRenderer.h" />
@@ -77,6 +78,7 @@
     <ClInclude Include="Render\DX12\TaskNode.h" />
     <ClInclude Include="Render\DX12\TaskScheduler.h" />
     <ClInclude Include="Render\DX12\TextureGraphBuilder.h" />
+    <ClInclude Include="Render\DX12\TextureLoadRequest.h" />
     <ClInclude Include="Render\DX12\TextureRegistry.h" />
     <ClInclude Include="Render\DX12\TextureResource.h" />
     <ClInclude Include="Render\DX12\TextureSystem.h" />
@@ -121,6 +123,7 @@
     <ClCompile Include="Render\DX12\DescriptorFactory.cpp" />
     <ClCompile Include="Render\DX12\DX12Core.cpp" />
     <ClCompile Include="Render\DX12\DX12Link.cpp" />
+    <ClCompile Include="Render\DX12\GPUProfiler.cpp" />
     <ClCompile Include="Render\DX12\MeshGraphBuilder.cpp" />
     <ClCompile Include="Render\DX12\MeshRegistry.cpp" />
     <ClCompile Include="Render\DX12\MeshRenderer.cpp" />
@@ -129,7 +132,7 @@
     <ClCompile Include="Render\DX12\MipGenerator.cpp" />
     <ClCompile Include="Render\DX12\MipTask.cpp" />
     <ClCompile Include="Render\DX12\RenderGraph.cpp" />
-    <ClCompile Include="Render\DX12\ResourceUploader.cpp" />
+    <ClCompile Include="Render\DX12\ResourceLoader.cpp" />
     <ClCompile Include="Render\DX12\SwapChainPresenter.cpp" />
     <ClCompile Include="Render\DX12\QuadRenderer.cpp" />
     <ClCompile Include="Render\DX12\RenderBackend.cpp" />

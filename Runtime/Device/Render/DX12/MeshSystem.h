@@ -7,13 +7,13 @@ class DescriptorFactory;
 class MeshGraphBuilder;
 class MeshRegistry;
 class TaskScheduler;
-class ResourceUploader;
+class ResourceLoader;
 
 class MeshSystem : public IMeshSystem
 {
 public:
     ~MeshSystem();
-    MeshSystem(ID3D12Device* device, DescriptorAllocator* srvAllocator, TaskScheduler* taskScheduler, ResourceUploader* uploader);
+    MeshSystem(ID3D12Device* device, DescriptorAllocator* srvAllocator, TaskScheduler* taskScheduler, ResourceLoader* loader);
     virtual shared_ptr<IMeshResource> CreateMeshResource() override;
     virtual bool LoadFromAsset(std::shared_ptr<IMeshResource> resource, std::shared_ptr<MeshAsset> asset) override;
 

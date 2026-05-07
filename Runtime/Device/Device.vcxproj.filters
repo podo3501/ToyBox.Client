@@ -115,7 +115,7 @@
     <ClInclude Include="Render\DX12\QuadRenderer.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\ResourceUploader.h">
+    <ClInclude Include="Render\DX12\ResourceLoader.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
     <ClInclude Include="Render\DX12\TempVertex.h">
@@ -232,6 +232,12 @@
     <ClInclude Include="Render\DX12\MeshRegistry.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
+    <ClInclude Include="Render\DX12\GPUProfiler.h">
+      <Filter>Render\DX12</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\TextureLoadRequest.h">
+      <Filter>Render\DX12</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -289,7 +295,7 @@
     <ClCompile Include="Render\DX12\QuadRenderer.cpp">
       <Filter>Render\DX12</Filter>
     </ClCompile>
-    <ClCompile Include="Render\DX12\ResourceUploader.cpp">
+    <ClCompile Include="Render\DX12\ResourceLoader.cpp">
       <Filter>Render\DX12</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\CommandList.cpp">
@@ -377,6 +383,9 @@
       <Filter>Render\DX12</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\MeshRegistry.cpp">
+      <Filter>Render\DX12</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\GPUProfiler.cpp">
       <Filter>Render\DX12</Filter>
     </ClCompile>
   </ItemGroup>

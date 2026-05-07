@@ -25,12 +25,10 @@ public:
     ~RenderGraph();
     RenderPass& AddPass(const std::string& name, CommandType type);
     std::vector<CompiledTask> Compile(TaskScheduler& scheduler);
-    RGResource CreateResource();
 
 private:
     std::vector<PassNode> BuildDependencyGraph();
     std::vector<int> TopologicalSort(const std::vector<PassNode>& graph);
 
-    uint32_t m_nextId{ 1 };
     std::vector<RenderPass> m_passes;
 };

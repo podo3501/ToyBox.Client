@@ -3,7 +3,8 @@
 enum class LoadState
 {
     Pending,
-    Loading,
+    CpuLoading,
+    GpuLoading,
     Ready,
     Failed
 };

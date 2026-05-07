@@ -3,12 +3,19 @@
 #include "ITextureSystem.h"
 #include "ITextureResource.h"
 
-struct TexturePendingRequest
+struct CpuPendingTextureRequest
 {
 	filesystem::path path;
 	TextureDesc desc;
 	function<std::shared_ptr<TextureAsset>(const filesystem::path&)> loader;
 	TextureHandle handle;
+};
+
+struct GpuPendingTextureRequest
+{
+	TextureHandle handle;
+	TextureDesc desc;
+	std::shared_ptr<TextureAsset> asset;
 };
 
 TextureRepository::~TextureRepository() = default;
@@ -35,7 +42,7 @@ TextureHandle TextureRepository::GetOrCreate( const filesystem::path& path, cons
 
 	auto handle = m_loadedTextures.Emplace(move(entry));
 	m_cache[key] = handle;
-	m_pending.push_back(TexturePendingRequest{ path, desc, loader, handle });
+	m_cpuPending.push_back(CpuPendingTextureRequest{ path, desc, loader, handle });
 
 	return handle;
 }
@@ -52,18 +59,20 @@ bool TextureRepository::Release(TextureHandle h)
 
 void TextureRepository::Update()
 {
-	ProcessPending();
+	ProcessCpuPending();
+	ProcessGpuPending();
 	ProcessLoading();
 }
 
-void TextureRepository::ProcessPending()
+void TextureRepository::ProcessCpuPending()
 {
-	for (auto& req : m_pending)
+	for (auto& req : m_cpuPending)
 	{
 		auto entry = m_loadedTextures.Find(req.handle);
 		if (!entry) continue;
 		if (entry->state != LoadState::Pending) continue; // 중복으로 들어온 경우 이미 Loading/Ready 라면 처리안함.
 
+		entry->state = LoadState::CpuLoading;
 		auto asset = req.loader(req.path);
 		if (!asset)
 		{
@@ -71,19 +80,32 @@ void TextureRepository::ProcessPending()
 			continue;
 		}
 
-		entry->state = LoadState::Loading;
+		m_gpuPending.push_back(GpuPendingTextureRequest{ req.handle, req.desc, asset });
+	}
 
-		auto& texRes = entry->texRes;
-		if (!m_texSystem->LoadFromAsset(texRes, asset, req.desc))
+	m_cpuPending.clear();
+}
+
+void TextureRepository::ProcessGpuPending()
+{
+	for(auto& work : m_gpuPending)
+	{
+		if (!work.asset) continue;
+
+		auto entry = m_loadedTextures.Find(work.handle);
+		if (!entry || !entry->texRes) continue;
+
+		if (!m_texSystem->LoadFromAsset(entry->texRes, work.asset, work.desc))
 		{
 			entry->state = LoadState::Failed;
 			continue;
 		}
+		entry->state = LoadState::GpuLoading;
 
-		m_loadingList.push_back(req.handle);
+		m_loadingList.push_back(work.handle);
 	}
 
-	m_pending.clear();
+	m_gpuPending.clear();
 }
 
 void TextureRepository::ProcessLoading()
@@ -107,6 +129,3 @@ void TextureRepository::ProcessLoading()
 			++it;
 	}
 }
-
-
-

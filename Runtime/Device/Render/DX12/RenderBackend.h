@@ -10,7 +10,8 @@ class CommandList;
 class CommandScheduler;
 class DescriptorAllocator;
 class TaskScheduler;
-class ResourceUploader;
+class ResourceLoader;
+class GPUProfiler;
 class TextureSystem;
 class MeshSystem;
 class MeshRenderer;
@@ -33,13 +34,15 @@ public:
 
 private:
 	void Clear(CommandList& cmd, float r, float g, float b, float a);
+	size_t ComputeTextureBudget(float gpuMs);
 
 	unique_ptr<DX12Core> m_core;
 	unique_ptr<CommandScheduler> m_command;
 	unique_ptr<SwapChainPresenter> m_swapChain;
 	unique_ptr<DescriptorAllocator> m_srvAllocator;
 	unique_ptr<TaskScheduler> m_taskScheduler;
-	unique_ptr<ResourceUploader> m_uploader;
+	unique_ptr<ResourceLoader> m_loader;
+	unique_ptr<GPUProfiler> m_profiler;
 	
 	unique_ptr<TextureSystem> m_texSystem;
 	unique_ptr<MeshSystem> m_meshSystem;

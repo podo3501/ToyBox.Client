@@ -70,13 +70,13 @@ static std::vector<BarrierPlan> BuildBarriers(CommandType cmdType, const RenderP
 
     for (auto& use : pass.writes)
     {
-        auto& state = resStateTracker[use.resource.id].state;
+        auto& state = resStateTracker[use.handle.id].state;
         auto desired = AccessToState(cmdType, use.access);
 
         if (state != desired)
         {
             auto type = ResolveCommandType(cmdType, state, desired);
-            barriers.push_back({ use.resource, type, state, desired });
+            barriers.push_back({ use.handle, type, state, desired });
             state = desired;
         }
     }
@@ -119,7 +119,7 @@ std::vector<PassNode> RenderGraph::BuildDependencyGraph()
     for (int i = 0; i < n; ++i)
         nodes[i].index = i;
 
-    auto getKey = [](const RGResource& res) { return res.id; };
+    auto getKey = [](const RGHandle& res) { return res.id; };
 
     struct ResourceUsage // 2. resource usage 수집 (WRITE / READ 분리)
     {
@@ -133,13 +133,13 @@ std::vector<PassNode> RenderGraph::BuildDependencyGraph()
         auto& pass = m_passes[i];
         for (auto& w : pass.writes)
         {
-            auto key = getKey(w.resource);
+            auto key = getKey(w.handle);
             usageMap[key].writers.push_back({ i, w.access });
         }
 
         for (auto& r : pass.reads)
         {
-            auto key = getKey(r.resource);
+            auto key = getKey(r.handle);
             usageMap[key].readers.push_back({ i, r.access });
         }
     }
@@ -223,7 +223,7 @@ static vector<Task> CreateBarrierTask(const std::vector<BarrierPlan>& barriers, 
         Task barrierTask{};
         barrierTask.type = barrier.cmdType;
         barrierTask.gpuExecute = [barrier](CommandList& cmd, TaskContext& ctx) {
-            auto res = ctx.GetResource<ComPtr<ID3D12Resource>>(barrier.res).Get();
+            auto res = ctx.GetResource<ComPtr<ID3D12Resource>>(barrier.handle).Get();
             CommandUtils::Transition(cmd, res, barrier.before, barrier.after);
             };
 
@@ -250,14 +250,14 @@ std::vector<CompiledTask> RenderGraph::Compile(TaskScheduler& scheduler)
         
         for (auto& use : pass.reads)
         {
-            if (lastWriter.contains(use.resource.id))
-                task.dependencies.push_back(lastWriter[use.resource.id]);
+            if (lastWriter.contains(use.handle.id))
+                task.dependencies.push_back(lastWriter[use.handle.id]);
         }
 
         for (auto& use : pass.writes)
         {
-            if (lastWriter.contains(use.resource.id))
-                task.dependencies.push_back(lastWriter[use.resource.id]);
+            if (lastWriter.contains(use.handle.id))
+                task.dependencies.push_back(lastWriter[use.handle.id]);
         }
 
         auto barriers = BuildBarriers(task.type, pass, statesTracker); //barrier가 필요하면 task를 만든다.
@@ -283,16 +283,10 @@ std::vector<CompiledTask> RenderGraph::Compile(TaskScheduler& scheduler)
         TaskHandle handle = scheduler.AllocateHandle();
         compiledTasks.push_back({ handle, std::move(task) });
         for (auto& use : pass.writes)
-            lastWriter[use.resource.id] = handle;
+            lastWriter[use.handle.id] = handle;
     }
 
     BuildDependents(compiledTasks);
 
     return compiledTasks;
-}
-
-RGResource RenderGraph::CreateResource()
-{
-    RGResource handle{ m_nextId++ };
-    return handle;
 }

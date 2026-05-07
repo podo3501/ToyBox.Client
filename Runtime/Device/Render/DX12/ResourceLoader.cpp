@@ -1,12 +1,12 @@
 ﻿#include "pch.h"
-#include "ResourceUploader.h"
+#include "ResourceLoader.h"
 #include "CommandScheduler.h"
 #include "CommandList.h"
 #include "GameClient/Service/Asset/Assets/MeshAsset.h"
 #include "GameClient/Service/Asset/Assets/TextureAsset.h"
 
-ResourceUploader::~ResourceUploader() = default;
-ResourceUploader::ResourceUploader(ID3D12Device* device) :
+ResourceLoader::~ResourceLoader() = default;
+ResourceLoader::ResourceLoader(ID3D12Device* device) :
     m_device{ device }
 {}
 
@@ -43,7 +43,7 @@ static bool IsUAVCompatibleFormat(DXGI_FORMAT format)
     }
 }
 
-static D3D12_RESOURCE_DESC CreateTexture2DDesc(const TextureAsset& asset, bool generateMips)
+static D3D12_RESOURCE_DESC CreateTexture2DDescriptor(const TextureAsset& asset)
 {
     D3D12_RESOURCE_DESC desc{};
     desc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
@@ -80,42 +80,107 @@ static void UploadSubresource(
     UpdateSubresources(cmd.Get(), dest, upload, 0, 0, 1, &subresource);
 }
 
-bool ResourceUploader::ShouldGenerateMips(const TextureAsset& asset, bool generateMips)
+bool ResourceLoader::ShouldGenerateMips(const TextureAsset& asset, bool generateMips)
 {
     DXGI_FORMAT format = GetFormat(asset.format);
     return generateMips && IsUAVCompatibleFormat(format);
 }
 
-ComPtr<ID3D12Resource> ResourceUploader::UploadTexture(
-    CommandList& uploadCmd,
-    const TextureAsset& asset,
-    bool generateMips,
-    UploadBuffer& outUploadBuffer)
+ComPtr<ID3D12Resource> ResourceLoader::CreateUploadResource(size_t size)
 {
-    auto texDesc = CreateTexture2DDesc(asset, generateMips);
-    ApplyMipSettings(texDesc, generateMips);
-    auto texture = CreateResource(texDesc, D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_STATE_COMMON);
+    auto alignSize = (size + 511) & ~511; // 512 align
+
+    return CreateResource(
+        CreateBufferDesc(alignSize),
+        D3D12_HEAP_TYPE_UPLOAD,
+        D3D12_RESOURCE_STATE_GENERIC_READ);
+}
+
+D3D12_RESOURCE_DESC ResourceLoader::CreateTexture2DDesc(const TextureAsset& asset, bool mips)
+{
+    auto texDesc = CreateTexture2DDescriptor(asset);
+    ApplyMipSettings(texDesc, mips);
+
+    return texDesc;
+}
+
+ComPtr<ID3D12Resource> ResourceLoader::CreateTextureResource(const D3D12_RESOURCE_DESC& desc)
+{
+    return CreateResource(desc,
+        D3D12_HEAP_TYPE_DEFAULT,
+        D3D12_RESOURCE_STATE_COMMON);
+}
+
+UINT64 ResourceLoader::GetTextureUploadLayout(const D3D12_RESOURCE_DESC& texDesc, size_t offset)
+{
+    UINT64 requiredSize = 0;
+    UINT numSubresources = 1; // only mip0 uploaded. 원본만 올린다 mip1 부터 mipmap 시작. 지금은 gpu가 밉맵을 만들고 있기 때문.
+    m_device->GetCopyableFootprints(&texDesc, 0, numSubresources, offset,
+        nullptr, nullptr, nullptr, &requiredSize);
+
+    return requiredSize;
+}
+
+std::pair<UploadableResource, bool> ResourceLoader::CreateUploadableTexture(const TextureAsset& asset, bool generateMips)
+{
+    bool mips = ShouldGenerateMips(asset, generateMips);
+
+    auto texDesc = CreateTexture2DDescriptor(asset);
+    ApplyMipSettings(texDesc, mips);
+
+    auto res = CreateResource(texDesc, 
+        D3D12_HEAP_TYPE_DEFAULT, 
+        D3D12_RESOURCE_STATE_COMMON);
 
     UINT64 uploadSize = 0;
-    UINT numSubresources = 1; // only mip0 uploaded
+    UINT numSubresources = 1; // only mip0 uploaded. 원본만 올린다 mip1 부터 mipmap 시작. 지금은 gpu가 밉맵을 만들고 있기 때문.
     m_device->GetCopyableFootprints(&texDesc, 0, numSubresources, 0,
         nullptr, nullptr, nullptr, &uploadSize);
 
-    outUploadBuffer.resource = CreateResource(
+    auto upload = CreateResource(
         CreateBufferDesc(uploadSize),
         D3D12_HEAP_TYPE_UPLOAD,
         D3D12_RESOURCE_STATE_GENERIC_READ);
 
+    return { UploadableResource{ res, upload }, mips };
+}
+
+void ResourceLoader::UploadTexture(
+    CommandList& uploadCmd,
+    const TextureAsset& asset,
+    UploadableResource uploadableRes)
+{
     D3D12_SUBRESOURCE_DATA subresource{};
     subresource.pData = asset.pixels.data();
     subresource.RowPitch = asset.stride;
     subresource.SlicePitch = asset.stride * asset.height;
-    UploadSubresource(uploadCmd, texture.Get(), outUploadBuffer.resource.Get(), subresource);
-
-    return texture;
+    UploadSubresource(uploadCmd, uploadableRes.res.Get(), uploadableRes.upload.Get(), subresource);
 }
 
-ComPtr<ID3D12Resource> ResourceUploader::UploadVertexBuffer(
+void ResourceLoader::UploadTexture(
+    CommandList& uploadCmd,
+    const TextureAsset& asset,
+    ID3D12Resource* texRes,
+    ID3D12Resource* uploadRes,
+    UINT64 offset)
+{
+    D3D12_SUBRESOURCE_DATA subresource{};
+    subresource.pData = asset.pixels.data();
+    subresource.RowPitch = asset.stride;
+    subresource.SlicePitch = asset.stride * asset.height;
+
+    UpdateSubresources(
+        uploadCmd.Get(),
+        texRes,
+        uploadRes,
+        offset,
+        0,
+        1,
+        &subresource
+    );
+}
+
+ComPtr<ID3D12Resource> ResourceLoader::UploadVertexBuffer(
     CommandList& cmd,
     const void* data,
     UINT bufferSize,
@@ -140,7 +205,7 @@ ComPtr<ID3D12Resource> ResourceUploader::UploadVertexBuffer(
     return vertexBuffer;
 }
 
-MeshBundle ResourceUploader::UploadMesh(
+MeshBundle ResourceLoader::UploadMesh(
     CommandList& uploadCmd,
     const MeshAsset& asset,
     UploadBuffer& outUploadBuffer)
@@ -201,7 +266,7 @@ MeshBundle ResourceUploader::UploadMesh(
     //return mesh;
 }
 
-ComPtr<ID3D12Resource> ResourceUploader::UploadVertexBuffer(
+ComPtr<ID3D12Resource> ResourceLoader::UploadVertexBuffer(
     CommandList& cmd, const std::vector<Vertex>& vertices, UploadBuffer& outUploadBuffer)
 {
     UINT size = static_cast<UINT>(sizeof(Vertex) * vertices.size());
@@ -226,7 +291,7 @@ ComPtr<ID3D12Resource> ResourceUploader::UploadVertexBuffer(
     return vb;
 }
 
-ComPtr<ID3D12Resource> ResourceUploader::UploadIndexBuffer(
+ComPtr<ID3D12Resource> ResourceLoader::UploadIndexBuffer(
     CommandList& cmd, const std::vector<uint32_t>& indices, UploadBuffer& outUploadBuffer)
 {
     UINT size = static_cast<UINT>(sizeof(uint32_t) * indices.size());
@@ -251,7 +316,7 @@ ComPtr<ID3D12Resource> ResourceUploader::UploadIndexBuffer(
     return ib;
 }
 
-ComPtr<ID3D12Resource> ResourceUploader::CreateResource(
+ComPtr<ID3D12Resource> ResourceLoader::CreateResource(
     const D3D12_RESOURCE_DESC& desc,
     D3D12_HEAP_TYPE heapType,
     D3D12_RESOURCE_STATES state)

@@ -6,7 +6,8 @@
 #include "DescriptorAllocator.h"
 #include "TaskScheduler.h"
 #include "TextureResource.h"
-#include "ResourceUploader.h"
+#include "ResourceLoader.h"
+#include "GPUProfiler.h"
 #include "MeshRenderer.h"
 #include "QuadRenderer.h"
 #include "TextureSystem.h"
@@ -56,9 +57,12 @@ bool RenderBackend::Initialize(HWND hwnd, const Size& wndSize, const RenderConfi
     ReturnIfFalse(m_srvAllocator->Initialize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, config.srvDescriptorCount, true));
 
     m_taskScheduler = make_unique<TaskScheduler>(m_command.get());
-    m_uploader = make_unique<ResourceUploader>(device);
-    m_meshSystem = make_unique<MeshSystem>(device, m_srvAllocator.get(), m_taskScheduler.get(), m_uploader.get());
-    m_texSystem = make_unique<TextureSystem>(device, m_srvAllocator.get(), m_taskScheduler.get(), m_uploader.get());
+    m_loader = make_unique<ResourceLoader>(device);
+    m_profiler = make_unique<GPUProfiler>();
+    ReturnIfFalse(m_profiler->Initialize(device, m_command.get()));
+
+    m_meshSystem = make_unique<MeshSystem>(device, m_srvAllocator.get(), m_taskScheduler.get(), m_loader.get());
+    m_texSystem = make_unique<TextureSystem>(device, m_srvAllocator.get(), m_taskScheduler.get(), m_loader.get());
     ReturnIfFalse(m_texSystem->Initialize());
 
     m_meshRenderer = make_unique<MeshRenderer>();
@@ -72,7 +76,7 @@ bool RenderBackend::Initialize(HWND hwnd, const Size& wndSize, const RenderConfi
     auto vertices = m_quadRenderer->CreateQuadVertices();
     auto copyCmd = m_command->Begin(CommandType::Copy); // 업로드 전용 커맨드 리스트 생성
     ComPtr<ID3D12Resource> uploadBuffer;
-    auto vb = m_uploader->UploadVertexBuffer(
+    auto vb = m_loader->UploadVertexBuffer(
         *copyCmd,
         vertices.data(),
         static_cast<UINT>(vertices.size() * sizeof(TempVertex)),
@@ -90,6 +94,7 @@ void RenderBackend::BeginFrame()
     m_cmd = m_command->Begin(CommandType::Direct);
     if (!m_cmd) return;
 
+    m_profiler->BeginFrame(*m_cmd);
     m_swapChain->TransitionToRenderTarget(*m_cmd);
     m_swapChain->SetRenderTarget(*m_cmd);
     Clear(*m_cmd, 0.13f, 0.13f, 0.16f, 1.0f); //눈이 적당히 덜 피곤하면서 비어있는 영역 확인 가능한 색깔.
@@ -99,6 +104,7 @@ void RenderBackend::EndFrame()
 {
     if (!m_cmd) return;
 
+    m_profiler->EndFrame(*m_cmd);
     m_swapChain->TransitionToPresent(*m_cmd);
     m_command->End();
     m_swapChain->Present(false);
@@ -150,6 +156,12 @@ void RenderBackend::Update()
     m_srvAllocator->ProcessDeferredFree(m_command->GetCompletedFences());
 
     m_taskScheduler->Execute();
+
+    m_profiler->Update();
+    float gpuMs = m_profiler->GetGpuFrameTimeMs();
+    size_t budget = ComputeTextureBudget(gpuMs);
+
+    m_texSystem->Update(budget);
 }
 
 void RenderBackend::Clear(CommandList& cmd, float r, float g, float b, float a)
@@ -158,6 +170,22 @@ void RenderBackend::Clear(CommandList& cmd, float r, float g, float b, float a)
 
     float color[4] = { r, g, b, a };
     CommandUtils::ClearRTV(cmd, rtv, color);
+}
+
+size_t RenderBackend::ComputeTextureBudget(float gpuMs)
+{
+    size_t baseBudget = 8 * 1024 * 1024;
+
+    if (gpuMs > 10.0f)
+        baseBudget = size_t(baseBudget * 0.7f);
+    else if (gpuMs < 5.0f)
+        baseBudget = size_t(baseBudget * 1.2f);
+
+    return std::clamp<size_t>(
+        baseBudget,
+        4 * 1024 * 1024,
+        32 * 1024 * 1024
+    );
 }
 
 ITextureSystem* RenderBackend::GetTextureSystem() 

@@ -1,5 +1,7 @@
 #pragma once
 #include "GameClient/Service/Render/Repository/ITextureSystem.h"
+#include "TextureLoadRequest.h"
+#include <queue>
 
 struct ID3D12Device;
 class DescriptorAllocator;
@@ -8,21 +10,26 @@ class DescriptorFactory;
 class TextureGraphBuilder;
 class TextureRegistry;
 class TaskScheduler;
-class ResourceUploader;
+class ResourceLoader;
 
 class TextureSystem : public ITextureSystem
 {
 public:
     ~TextureSystem();
-    TextureSystem(ID3D12Device* device, DescriptorAllocator* srvAllocator, TaskScheduler* taskScheduler, ResourceUploader* uploader);
+    TextureSystem(ID3D12Device* device, DescriptorAllocator* srvAllocator, TaskScheduler* taskScheduler, ResourceLoader* loader);
     virtual shared_ptr<ITextureResource> CreateTextureResource() override;
     virtual bool LoadFromAsset(std::shared_ptr<ITextureResource> resource, std::shared_ptr<TextureAsset> asset, const TextureDesc& desc) override;
 
     bool Initialize();
+    void Update(size_t uploadBudgetBytes);
 
 private:
+    size_t EstimateBytes(const TextureAsset& asset, const TextureDesc& desc);
+
     unique_ptr<MipGenerator> m_mipGenerator;
     unique_ptr<DescriptorFactory> m_descriptorFactory;
     unique_ptr<TextureRegistry> m_registry;
     unique_ptr<TextureGraphBuilder> m_builder;
+
+    std::queue<TextureLoadRequest> m_pending;
 };

@@ -3,44 +3,48 @@
 #include "RenderGraph.h"
 #include "RenderPass.h"
 #include "TaskScheduler.h"
-#include "ResourceUploader.h"
+#include "ResourceLoader.h"
 #include "DescriptorFactory.h"
 #include "MeshRegistry.h"
 #include "GameClient/Service/Asset/Assets/MeshAsset.h"
 
 MeshGraphBuilder::~MeshGraphBuilder() = default;
-MeshGraphBuilder::MeshGraphBuilder(TaskScheduler* taskScheduler, ResourceUploader* uploader,
+MeshGraphBuilder::MeshGraphBuilder(TaskScheduler* taskScheduler, ResourceLoader* loader,
     DescriptorFactory* descriptorFactory, MeshRegistry* registry) :
     m_taskScheduler{ taskScheduler },
-    m_uploader{ uploader },
+    m_loader{ loader },
     m_descriptorFactory{ descriptorFactory },
     m_registry{ registry }
 {}
 
-RGResource MeshGraphBuilder::LoadMesh(std::shared_ptr<MeshAsset> asset)
+RGHandle MeshGraphBuilder::LoadMesh(std::shared_ptr<MeshAsset> asset)
 {
 	RenderGraph graph;
 
-    RGResource vb = graph.CreateResource();
-    RGResource ib = graph.CreateResource();
-	RGResource mesh = graph.CreateResource();
+    RGHandle vb = CreateRGHandle();
+    RGHandle ib = CreateRGHandle();
+    RGHandle mesh = CreateRGHandle();
 	
 	BuildGraph(graph, asset, vb, ib, mesh);
 
     auto compiledTasks = graph.Compile(*m_taskScheduler);
-    m_taskScheduler->Submit(compiledTasks, std::make_shared<ResourceContext>());
+
+    m_taskScheduler->Submit(
+        compiledTasks, 
+        std::make_shared<ResourceContext>(), 
+        std::make_shared<UploadContext>());
 
 	return mesh;
 }
 
 void MeshGraphBuilder::BuildGraph(RenderGraph& graph, std::shared_ptr<MeshAsset> asset, 
-    RGResource vbRes, RGResource ibRes, RGResource meshRes)
+    RGHandle vbRes, RGHandle ibRes, RGHandle meshRes)
 {
     auto& vbUpload = graph.AddPass("VBUpload", CommandType::Copy);
     vbUpload.writes.push_back({ vbRes, RGAccess::CopyDest });
     vbUpload.gpuExecute = [this, asset, vbRes](CommandList& cmd, TaskContext& ctx) {
         UploadBuffer uploadBuffer;
-         auto resource = m_uploader->UploadVertexBuffer(cmd, asset->vertices, uploadBuffer);
+         auto resource = m_loader->UploadVertexBuffer(cmd, asset->vertices, uploadBuffer);
         ctx.SetResource(vbRes, std::move(resource));
         ctx.SetPassContext(std::move(uploadBuffer));
         };
@@ -49,7 +53,7 @@ void MeshGraphBuilder::BuildGraph(RenderGraph& graph, std::shared_ptr<MeshAsset>
     ibUpload.writes.push_back({ ibRes, RGAccess::CopyDest });
     ibUpload.gpuExecute = [this, asset, ibRes](CommandList& cmd, TaskContext& ctx) {
         UploadBuffer uploadBuffer;
-        auto resource = m_uploader->UploadIndexBuffer(cmd, asset->indices, uploadBuffer);
+        auto resource = m_loader->UploadIndexBuffer(cmd, asset->indices, uploadBuffer);
         ctx.SetResource(ibRes, std::move(resource));
         ctx.SetPassContext(std::move(uploadBuffer));
         };
@@ -70,4 +74,10 @@ void MeshGraphBuilder::BuildGraph(RenderGraph& graph, std::shared_ptr<MeshAsset>
 
         m_registry->FinalizeMesh(meshRes.id, vb, std::move(vbAlloc), ib, std::move(ibAlloc), indexCount);
         };
+}
+
+RGHandle MeshGraphBuilder::CreateRGHandle()
+{
+    RGHandle handle{ m_nextId++ };
+    return handle;
 }

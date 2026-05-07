@@ -12,7 +12,10 @@ TaskHandle TaskScheduler::AllocateHandle()
     return m_tasks.Emplace(TaskEntry{});
 }
 
-void TaskScheduler::Submit(const std::vector<CompiledTask>& compiledTasks, std::shared_ptr<ResourceContext> resources)
+void TaskScheduler::Submit(
+    const std::vector<CompiledTask>& compiledTasks, 
+    std::shared_ptr<ResourceContext> resources,
+    std::shared_ptr<UploadContext> upload)
 {
     for (const auto& compiled : compiledTasks)
     {
@@ -23,6 +26,7 @@ void TaskScheduler::Submit(const std::vector<CompiledTask>& compiledTasks, std::
         entry->task = compiled.task;
         entry->dependents = compiled.dependents;
         entry->context.resources = resources;
+        entry->context.upload = upload;
         entry->submitted = true;
     }
 }

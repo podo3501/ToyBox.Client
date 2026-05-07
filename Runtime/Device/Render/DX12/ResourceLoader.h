@@ -13,6 +13,18 @@ struct UploadBuffer
     Microsoft::WRL::ComPtr<ID3D12Resource> resource{ nullptr };
 };
 
+struct UploadableResource
+{
+    Microsoft::WRL::ComPtr<ID3D12Resource> res;
+    Microsoft::WRL::ComPtr<ID3D12Resource> upload;
+};
+
+struct UploadLayout 
+{
+    UINT64 totalBytes;
+    UINT64 alignedTotalBytes;
+};
+
 struct TextureAsset;
 struct MeshAsset;
 struct Vertex;
@@ -20,18 +32,33 @@ class CommandList;
 
 using Microsoft::WRL::ComPtr;
 
-class ResourceUploader
+class ResourceLoader
 {
 public:
-    ~ResourceUploader();
-    ResourceUploader(ID3D12Device* device);
-    bool ShouldGenerateMips(const TextureAsset& asset, bool generateMips);
+    ~ResourceLoader();
+    ResourceLoader(ID3D12Device* device);
 
-    ComPtr<ID3D12Resource> UploadTexture(
+    std::pair<UploadableResource, bool> CreateUploadableTexture(
+        const TextureAsset& asset, 
+        bool generateMips);
+
+    ComPtr<ID3D12Resource> CreateUploadResource(size_t size);
+    bool ShouldGenerateMips(const TextureAsset& asset, bool generateMips);
+    D3D12_RESOURCE_DESC CreateTexture2DDesc(const TextureAsset& asset, bool mips);
+    ComPtr<ID3D12Resource> CreateTextureResource(const D3D12_RESOURCE_DESC& desc);
+    UINT64 GetTextureUploadLayout(const D3D12_RESOURCE_DESC& texDesc, size_t offset);
+
+    void UploadTexture(
         CommandList& uploadCmd,
         const TextureAsset& asset,
-        bool generateMips,
-        UploadBuffer& outUploadBuffer);
+        ID3D12Resource* texRes,
+        ID3D12Resource* uploadRes,
+        UINT64 offset);
+
+    void UploadTexture(
+        CommandList& uploadCmd, 
+        const TextureAsset& asset, 
+        UploadableResource uploadableRes);
 
     ComPtr<ID3D12Resource> UploadVertexBuffer(
         CommandList& cmd,

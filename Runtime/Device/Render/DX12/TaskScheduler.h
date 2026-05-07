@@ -23,7 +23,8 @@ public:
     ~TaskScheduler();
 
     TaskHandle AllocateHandle();
-    void Submit(const std::vector<CompiledTask>& compiledTasks, std::shared_ptr<ResourceContext> resources);
+    void Submit(const std::vector<CompiledTask>& compiledTasks, 
+        std::shared_ptr<ResourceContext> resources, std::shared_ptr<UploadContext> upload);
     void Execute();
     void Cancel(TaskHandle handle);
     void Clear();

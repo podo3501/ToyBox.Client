@@ -11,7 +11,7 @@ class CommandList;
 
 struct BarrierPlan
 {
-    RGResource res;
+    RGHandle handle;
     CommandType cmdType{ CommandType::Direct };
     D3D12_RESOURCE_STATES before;
     D3D12_RESOURCE_STATES after;

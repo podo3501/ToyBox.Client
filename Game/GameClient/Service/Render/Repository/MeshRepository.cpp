@@ -66,7 +66,7 @@ void MeshRepository::ProcessPending()
 			continue;
 		}
 
-		entry->state = LoadState::Loading;
+		entry->state = LoadState::CpuLoading;
 
 		auto& meshRes = entry->meshRes;
 		if (!m_meshSystem->LoadFromAsset(meshRes, asset))

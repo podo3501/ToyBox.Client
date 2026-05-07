@@ -1,0 +1,28 @@
+#pragma once
+#include "d3dx12.h"
+#include <wrl/client.h>
+
+class CommandList;
+class CommandScheduler;
+
+using Microsoft::WRL::ComPtr;
+
+class GPUProfiler
+{
+public:
+    bool Initialize(ID3D12Device* device, CommandScheduler* scheduler, uint32_t frameCount = 2);
+
+    void BeginFrame(CommandList& cmd);
+    void EndFrame(CommandList& cmd);
+    void Update();
+    float GetGpuFrameTimeMs() const { return m_gpuFrameTimeMs; }
+
+private:
+    ComPtr<ID3D12QueryHeap> m_queryHeap;
+    ComPtr<ID3D12Resource>  m_readbackBuffer;
+
+    uint64_t m_timestampFreq = 0;
+
+    uint32_t m_frameIndex = 0;
+    float m_gpuFrameTimeMs = 0.0f;
+};
