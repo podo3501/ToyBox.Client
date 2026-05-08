@@ -56,9 +56,11 @@
     <ClInclude Include="Render\DX12\DescriptorAllocator.h" />
     <ClInclude Include="Render\DX12\DescriptorFactory.h" />
     <ClInclude Include="Render\DX12\DX12Core.h" />
+    <ClInclude Include="Render\DX12\DX12Utils.h" />
     <ClInclude Include="Render\DX12\FenceTypes.h" />
     <ClInclude Include="Render\DX12\GPUProfiler.h" />
     <ClInclude Include="Render\DX12\MeshGraphBuilder.h" />
+    <ClInclude Include="Render\DX12\MeshLoadRequest.h" />
     <ClInclude Include="Render\DX12\MeshRegistry.h" />
     <ClInclude Include="Render\DX12\MeshRenderer.h" />
     <ClInclude Include="Render\DX12\MeshResource.h" />
@@ -123,6 +125,7 @@
     <ClCompile Include="Render\DX12\DescriptorFactory.cpp" />
     <ClCompile Include="Render\DX12\DX12Core.cpp" />
     <ClCompile Include="Render\DX12\DX12Link.cpp" />
+    <ClCompile Include="Render\DX12\DX12Utils.cpp" />
     <ClCompile Include="Render\DX12\GPUProfiler.cpp" />
     <ClCompile Include="Render\DX12\MeshGraphBuilder.cpp" />
     <ClCompile Include="Render\DX12\MeshRegistry.cpp" />

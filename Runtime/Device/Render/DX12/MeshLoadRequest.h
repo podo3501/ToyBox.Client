@@ -1,0 +1,15 @@
+#pragma once
+#include <memory>
+#include "GameClient/Service/Asset/Assets/MeshAsset.h"
+
+struct IMeshResource;
+
+struct MeshLoadRequest
+{
+    std::shared_ptr<IMeshResource> resource;
+    std::shared_ptr<MeshAsset> asset;
+
+    size_t vbBytes{ 0 };
+    size_t ibBytes{ 0 };
+    size_t estimatedBytes{ 0 };
+};

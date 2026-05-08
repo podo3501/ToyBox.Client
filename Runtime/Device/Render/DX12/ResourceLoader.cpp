@@ -88,10 +88,8 @@ bool ResourceLoader::ShouldGenerateMips(const TextureAsset& asset, bool generate
 
 ComPtr<ID3D12Resource> ResourceLoader::CreateUploadResource(size_t size)
 {
-    auto alignSize = (size + 511) & ~511; // 512 align
-
     return CreateResource(
-        CreateBufferDesc(alignSize),
+        CreateBufferDesc(size),
         D3D12_HEAP_TYPE_UPLOAD,
         D3D12_RESOURCE_STATE_GENERIC_READ);
 }
@@ -120,6 +118,42 @@ UINT64 ResourceLoader::GetTextureUploadLayout(const D3D12_RESOURCE_DESC& texDesc
 
     return requiredSize;
 }
+
+ComPtr<ID3D12Resource> ResourceLoader::CreateBufferResource(UINT64 size)
+{
+    return CreateResource(
+        CreateBufferDesc(size), 
+        D3D12_HEAP_TYPE_DEFAULT, 
+        D3D12_RESOURCE_STATE_COMMON);
+}
+
+void ResourceLoader::UploadBufferRegion(
+    CommandList& cmd,
+    ID3D12Resource* uploadRes,
+    const UploadRegion& region)
+{
+    uint8_t* mapped = nullptr;
+    uploadRes->Map(0, nullptr, reinterpret_cast<void**>(&mapped));
+    memcpy(mapped + region.srcOffset, region.data, region.size);
+    uploadRes->Unmap(0, nullptr);
+
+    cmd->CopyBufferRegion(
+        region.dstBuffer,
+        0,
+        uploadRes,
+        region.srcOffset,
+        region.size
+    );
+}
+
+
+
+
+
+
+
+
+
 
 std::pair<UploadableResource, bool> ResourceLoader::CreateUploadableTexture(const TextureAsset& asset, bool generateMips)
 {

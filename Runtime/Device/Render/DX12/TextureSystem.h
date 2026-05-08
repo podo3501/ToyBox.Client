@@ -8,7 +8,6 @@ class DescriptorAllocator;
 class MipGenerator;
 class DescriptorFactory;
 class TextureGraphBuilder;
-class TextureRegistry;
 class TaskScheduler;
 class ResourceLoader;
 
@@ -24,11 +23,8 @@ public:
     void Update(size_t uploadBudgetBytes);
 
 private:
-    size_t EstimateBytes(const TextureAsset& asset, const TextureDesc& desc);
-
     unique_ptr<MipGenerator> m_mipGenerator;
     unique_ptr<DescriptorFactory> m_descriptorFactory;
-    unique_ptr<TextureRegistry> m_registry;
     unique_ptr<TextureGraphBuilder> m_builder;
 
     std::queue<TextureLoadRequest> m_pending;

@@ -238,6 +238,12 @@
     <ClInclude Include="Render\DX12\TextureLoadRequest.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
+    <ClInclude Include="Render\DX12\DX12Utils.h">
+      <Filter>Render\DX12</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\MeshLoadRequest.h">
+      <Filter>Render\DX12</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -386,6 +392,9 @@
       <Filter>Render\DX12</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\GPUProfiler.cpp">
+      <Filter>Render\DX12</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\DX12Utils.cpp">
       <Filter>Render\DX12</Filter>
     </ClCompile>
   </ItemGroup>

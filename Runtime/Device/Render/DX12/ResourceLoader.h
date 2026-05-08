@@ -25,6 +25,14 @@ struct UploadLayout
     UINT64 alignedTotalBytes;
 };
 
+struct UploadRegion
+{
+    const void* data{ nullptr }; //보낼 정보
+    UINT64 size{ 0 };
+    UINT64 srcOffset{ 0 }; //upload 안에 offset
+    ID3D12Resource* dstBuffer{ nullptr };
+};
+
 struct TextureAsset;
 struct MeshAsset;
 struct Vertex;
@@ -47,6 +55,11 @@ public:
     D3D12_RESOURCE_DESC CreateTexture2DDesc(const TextureAsset& asset, bool mips);
     ComPtr<ID3D12Resource> CreateTextureResource(const D3D12_RESOURCE_DESC& desc);
     UINT64 GetTextureUploadLayout(const D3D12_RESOURCE_DESC& texDesc, size_t offset);
+    ComPtr<ID3D12Resource> CreateBufferResource(UINT64 size);
+    void UploadBufferRegion(CommandList& cmd, ID3D12Resource* uploadRes, const UploadRegion& region);
+
+
+
 
     void UploadTexture(
         CommandList& uploadCmd,

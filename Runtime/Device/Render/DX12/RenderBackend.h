@@ -35,6 +35,7 @@ public:
 private:
 	void Clear(CommandList& cmd, float r, float g, float b, float a);
 	size_t ComputeTextureBudget(float gpuMs);
+	size_t ComputeMeshBudget(float gpuMs);
 
 	unique_ptr<DX12Core> m_core;
 	unique_ptr<CommandScheduler> m_command;

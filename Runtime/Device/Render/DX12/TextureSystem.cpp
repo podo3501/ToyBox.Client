@@ -9,9 +9,8 @@ TextureSystem::~TextureSystem() = default;
 TextureSystem::TextureSystem(ID3D12Device* device, DescriptorAllocator* srvAllocator, TaskScheduler* taskScheduler, ResourceLoader* loader) :
     m_mipGenerator{ make_unique<MipGenerator>(device, srvAllocator) },
     m_descriptorFactory{ make_unique<DescriptorFactory>(device, srvAllocator) },
-    m_registry{ make_unique<TextureRegistry>() },
     m_builder{ make_unique<TextureGraphBuilder>(taskScheduler, loader, 
-        m_mipGenerator.get(), m_descriptorFactory.get(), m_registry.get()) }
+        m_mipGenerator.get(), m_descriptorFactory.get()) }
 {}
 
 bool TextureSystem::Initialize()
@@ -22,6 +21,15 @@ bool TextureSystem::Initialize()
 shared_ptr<ITextureResource> TextureSystem::CreateTextureResource()
 {
     return make_shared<TextureResource>();
+}
+
+static size_t EstimateBytes(const TextureAsset& asset, const TextureDesc& desc)
+{
+    size_t baseBytes = asset.pixels.size();
+    if (!desc.generateMips)
+        return baseBytes;
+
+    return static_cast<size_t>(baseBytes * 4 / 3); //mip 비용은 정확 계산 대신 안정적인 근사 (1.33x)
 }
 
 bool TextureSystem::LoadFromAsset(std::shared_ptr<ITextureResource> resource, std::shared_ptr<TextureAsset> asset, const TextureDesc& desc)
@@ -87,12 +95,3 @@ void TextureSystem::Update(size_t uploadBudgetBytes)
 //        m_pending.pop();
 //    }
 //}
-
-size_t TextureSystem::EstimateBytes(const TextureAsset& asset, const TextureDesc& desc)
-{
-    size_t baseBytes = asset.pixels.size();
-    if (!desc.generateMips)
-        return baseBytes;
-
-    return static_cast<size_t>(baseBytes * 4 / 3); //mip 비용은 정확 계산 대신 안정적인 근사 (1.33x)
-}

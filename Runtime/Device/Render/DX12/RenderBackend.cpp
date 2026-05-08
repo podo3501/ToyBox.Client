@@ -159,9 +159,9 @@ void RenderBackend::Update()
 
     m_profiler->Update();
     float gpuMs = m_profiler->GetGpuFrameTimeMs();
-    size_t budget = ComputeTextureBudget(gpuMs);
 
-    m_texSystem->Update(budget);
+    m_texSystem->Update(ComputeTextureBudget(gpuMs));
+    m_meshSystem->Update(ComputeMeshBudget(gpuMs));
 }
 
 void RenderBackend::Clear(CommandList& cmd, float r, float g, float b, float a)
@@ -185,6 +185,22 @@ size_t RenderBackend::ComputeTextureBudget(float gpuMs)
         baseBudget,
         4 * 1024 * 1024,
         32 * 1024 * 1024
+    );
+}
+
+size_t RenderBackend::ComputeMeshBudget(float gpuMs)
+{
+    size_t baseBudget = 4 * 1024 * 1024; // 4MB
+
+    if (gpuMs > 10.0f)
+        baseBudget = size_t(baseBudget * 0.8f);
+    else if (gpuMs < 5.0f)
+        baseBudget = size_t(baseBudget * 1.25f);
+
+    return std::clamp<size_t>(
+        baseBudget,
+        2 * 1024 * 1024,   // min 2MB
+        16 * 1024 * 1024   // max 16MB
     );
 }
 
