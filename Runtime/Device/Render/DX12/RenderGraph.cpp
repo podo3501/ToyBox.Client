@@ -1,28 +1,35 @@
 #include "pch.h"
 #include "RenderGraph.h"
 #include "RenderPass.h"
-#include "TaskScheduler.h"
 #include "CommandUtils.h"
 #include "CommandList.h"
 #include <unordered_set>
 
-static D3D12_RESOURCE_STATES AccessToState(CommandType cmdType, RGAccess access)
+static D3D12_RESOURCE_STATES AccessToState(RGAccess access)
 {
-    if (access == RGAccess::CopyDest)
-    {
-        if (cmdType == CommandType::Copy) return D3D12_RESOURCE_STATE_COMMON; //copy queue 일때에는 common에서 처리하기 때문이다.
-        return D3D12_RESOURCE_STATE_COPY_DEST;
-    }
-
     switch (access)
     {
     case RGAccess::SRV: return D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
     case RGAccess::UAV: return D3D12_RESOURCE_STATE_UNORDERED_ACCESS;
     //case RGAccess::CopySrc: return D3D12_RESOURCE_STATE_COPY_SOURCE;
     //case RGAccess::CopyDst: return D3D12_RESOURCE_STATE_COPY_DEST;
-    //case RGAccess::RTV: return D3D12_RESOURCE_STATE_RENDER_TARGET;
+    case RGAccess::RTV: return D3D12_RESOURCE_STATE_RENDER_TARGET;
+    case RGAccess::Present: return D3D12_RESOURCE_STATE_PRESENT;
     default: return D3D12_RESOURCE_STATE_COMMON;
     }
+}
+
+static D3D12_RESOURCE_STATES AccessToState(CommandType cmdType, RGAccess access)
+{
+    if (access == RGAccess::CopyDest)
+    {
+        if (cmdType == CommandType::Copy) 
+            return D3D12_RESOURCE_STATE_COMMON; //copy queue 일때에는 common에서 처리하기 때문이다.
+
+        return D3D12_RESOURCE_STATE_COPY_DEST;
+    }
+
+    return AccessToState(access);
 }
 
 RenderGraph::~RenderGraph() = default;
@@ -86,19 +93,19 @@ static std::vector<BarrierPlan> BuildBarriers(CommandType cmdType, const RenderP
 
 static void BuildDependents(std::vector<CompiledTask>& tasks)
 {
-    std::unordered_map<TaskHandle, size_t> indexMap;
+    std::unordered_map<uint32_t, size_t> indexMap;
 
     for (size_t i = 0; i < tasks.size(); ++i)
-        indexMap[tasks[i].handle] = i;
+        indexMap[tasks[i].localId] = i;
 
     for (const auto& task : tasks)
     {
-        for (const auto& dep : task.task.dependencies)
+        for (const auto& dep : task.dependencies)
         {
             auto it = indexMap.find(dep);
             if (it == indexMap.end()) continue;
 
-            tasks[it->second].dependents.push_back(task.handle);
+            tasks[it->second].dependents.push_back(task.localId);
         }
     }
 }
@@ -109,6 +116,16 @@ struct PassNode
     std::vector<int> dependencies;
     int indegree{ 0 };
 };
+
+int RenderGraph::FindPassIndex(const std::string& name)
+{
+    for (int i = 0; i < m_passes.size(); ++i)
+    {
+        if (m_passes[i].name == name)
+            return i;
+    }
+    return -1;
+}
 
 std::vector<PassNode> RenderGraph::BuildDependencyGraph()
 {
@@ -156,6 +173,20 @@ std::vector<PassNode> RenderGraph::BuildDependencyGraph()
                 if (w != r && rAccess == wAccess)
                     nodes[r].dependencies.push_back(w); // w는 이전 r는 이후 ResourceState가 동일할때 넣는다.
             }
+        }
+    }
+
+    // 3. dependsOn 으로 강제로 순서 만들기.
+    for (int i = 0; i < n; ++i)
+    {
+        auto& pass = m_passes[i];
+
+        for (auto& depName : pass.dependsOn)
+        {
+            int depIndex = FindPassIndex(depName);
+            if (depIndex < 0) continue;
+
+            nodes[i].dependencies.push_back(depIndex);
         }
     }
 
@@ -215,7 +246,7 @@ std::vector<int> RenderGraph::TopologicalSort(const std::vector<PassNode>& graph
     return result;
 }
 
-static vector<Task> CreateBarrierTask(const std::vector<BarrierPlan>& barriers, TaskScheduler& scheduler)
+static vector<Task> CreateBarrierTask(const std::vector<BarrierPlan>& barriers)
 {
     vector<Task> barrierTasks;
     for (auto& barrier : barriers)
@@ -233,10 +264,9 @@ static vector<Task> CreateBarrierTask(const std::vector<BarrierPlan>& barriers, 
     return barrierTasks;
 }
 
-std::vector<CompiledTask> RenderGraph::Compile(TaskScheduler& scheduler)
+std::vector<CompiledTask> RenderGraph::Compile()
 {
-    std::unordered_map<uint32_t, ResourceStateTracker> statesTracker;
-    std::unordered_map<uint32_t, TaskHandle> lastWriter;
+    std::unordered_map<uint32_t, uint32_t> lastWriter;
     std::vector<CompiledTask> compiledTasks;
 
     auto passNode = BuildDependencyGraph();
@@ -247,46 +277,80 @@ std::vector<CompiledTask> RenderGraph::Compile(TaskScheduler& scheduler)
 
         Task task{};
         task.type = pass.type;
+        vector<uint32_t> dependencies;
         
         for (auto& use : pass.reads)
         {
             if (lastWriter.contains(use.handle.id))
-                task.dependencies.push_back(lastWriter[use.handle.id]);
+                dependencies.push_back(lastWriter[use.handle.id]);
         }
 
         for (auto& use : pass.writes)
         {
             if (lastWriter.contains(use.handle.id))
-                task.dependencies.push_back(lastWriter[use.handle.id]);
+                dependencies.push_back(lastWriter[use.handle.id]);
         }
 
-        auto barriers = BuildBarriers(task.type, pass, statesTracker); //barrier가 필요하면 task를 만든다.
+        auto barriers = BuildBarriers(task.type, pass, m_statesTracker); //barrier가 필요하면 task를 만든다.
         if (!barriers.empty())
         {
-            auto taskDependencies = task.dependencies;
-            task.dependencies.clear();
-
-            auto barrierTasks = CreateBarrierTask(barriers, scheduler);
+            auto barrierTasks = CreateBarrierTask(barriers);
             for (auto& barrierTask : barrierTasks)
             {
-                barrierTask.dependencies = taskDependencies;
+                auto barrierID = CreateLocalTaskID();
+                compiledTasks.push_back({ barrierID, std::move(barrierTask), dependencies });
 
-                TaskHandle barrierHandle = scheduler.AllocateHandle();
-                compiledTasks.push_back({ barrierHandle, std::move(barrierTask) });
-                task.dependencies.push_back(barrierHandle);
+                dependencies.clear(); //barrier가 중간에 들어가기 때문에 barrier id로 연결을 다시 한다.
+                dependencies.push_back(barrierID);
             }
         }
+
+        if (!pass.cpuExecute && !pass.gpuExecute)
+            continue; // barrier를 생성하기 위해서 아무것도 없는 task를 만들때가 있다. 생성되고 나면 task로 만들지는 않게 한다.
 
         task.gpuExecute = pass.gpuExecute;
         task.cpuExecute = pass.cpuExecute;
 
-        TaskHandle handle = scheduler.AllocateHandle();
-        compiledTasks.push_back({ handle, std::move(task) });
+        auto taskID = CreateLocalTaskID();
+        compiledTasks.push_back({ taskID, std::move(task), dependencies });
         for (auto& use : pass.writes)
-            lastWriter[use.handle.id] = handle;
+            lastWriter[use.handle.id] = taskID;
     }
-
     BuildDependents(compiledTasks);
 
     return compiledTasks;
 }
+
+RGHandle RenderGraph::CreateRGHandle()
+{
+    RGHandle handle{ m_nextId++ };
+    return handle;
+}
+
+uint32_t RenderGraph::CreateLocalTaskID()
+{
+    return m_nextTaskId++;
+}
+
+void RenderGraph::ImportResource(RGHandle h, RGAccess access)
+{
+    m_statesTracker[h.id].state = AccessToState(access);
+}
+
+void RenderGraph::Excute(CommandList& cmd, const vector<CompiledTask>& compiledTasks, TaskContext& ctx)
+{
+    for (auto& compiled : compiledTasks)
+    {
+        auto& task = compiled.task;
+        if (task.type == CommandType::None) // CPU TASK
+        {
+            if (!task.cpuExecute) continue;
+            task.cpuExecute(ctx);
+            continue;
+        }
+
+        if (!task.gpuExecute) continue;
+        task.gpuExecute(cmd, ctx);
+    }
+}
+

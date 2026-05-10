@@ -1,7 +1,11 @@
 #include "pch.h"
 #include "MeshResource.h"
 
-MeshResource::~MeshResource() = default;
+MeshResource::~MeshResource()
+{
+    int a = 1;
+}
+
 MeshResource::MeshResource() = default;
 
 void MeshResource::SetResource(ComPtr<ID3D12Resource> vb, ComPtr<ID3D12Resource> ib, UINT indexCount)

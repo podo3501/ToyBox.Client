@@ -3,8 +3,8 @@
 #include "CommandList.h"
 #include "CommandUtils.h"
 #include "DescriptorAllocation.h"
+#include "MeshResource.h"
 #include <d3dcompiler.h>
-#include "TempVertex.h"
 
 struct QuadTransform
 {
@@ -14,22 +14,23 @@ struct QuadTransform
 
 using Microsoft::WRL::ComPtr;
 
-QuadRenderer::~QuadRenderer()
-{
-    int a = 1;
-}
+QuadRenderer::~QuadRenderer() = default;
 QuadRenderer::QuadRenderer() = default;
 
 bool QuadRenderer::Initialize(ID3D12Device* device, const Size& screenSize)
 {
     m_screenSize = screenSize;
 
-    CD3DX12_DESCRIPTOR_RANGE range;
-    range.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0); // t0
+    CD3DX12_DESCRIPTOR_RANGE rangeMesh;
+    rangeMesh.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 2, 0); // t0 vertex, t1 index
 
-    CD3DX12_ROOT_PARAMETER params[2] = {};
-    params[0].InitAsDescriptorTable(1, &range);
-    params[1].InitAsConstantBufferView(0);
+    CD3DX12_DESCRIPTOR_RANGE rangeTex;
+    rangeTex.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 2); //t2 texture
+
+    CD3DX12_ROOT_PARAMETER params[3] = {};
+    params[0].InitAsDescriptorTable(1, &rangeMesh);
+    params[1].InitAsDescriptorTable(1, &rangeTex);
+    params[2].InitAsConstantBufferView(0);
 
     CD3DX12_STATIC_SAMPLER_DESC sampler(
         0, // s0
@@ -37,7 +38,7 @@ bool QuadRenderer::Initialize(ID3D12Device* device, const Size& screenSize)
     );
 
     CD3DX12_ROOT_SIGNATURE_DESC rsDesc;
-    rsDesc.Init(2, params, 1, &sampler,
+    rsDesc.Init(3, params, 1, &sampler,
         D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
     ComPtr<ID3DBlob> sig{ nullptr };
@@ -63,20 +64,8 @@ bool QuadRenderer::Initialize(ID3D12Device* device, const Size& screenSize)
     hr = D3DCompileFromFile(shaderFile.c_str(), nullptr, nullptr, "PSMain", "ps_5_0", 0, 0, &ps, &err);
     if (FAILED(hr)) return false;
 
-    D3D12_INPUT_ELEMENT_DESC layout[] =
-    {
-        { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,
-            D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-
-        { "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12,
-            D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-
-        { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 28,
-            D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-    }; // Input Layout
-
     D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc{};
-    psoDesc.InputLayout = { layout, _countof(layout) };
+    psoDesc.InputLayout = { nullptr, 0 };
     psoDesc.pRootSignature = m_rootSignature.Get();
     psoDesc.VS = { vs->GetBufferPointer(), vs->GetBufferSize() };
     psoDesc.PS = { ps->GetBufferPointer(), ps->GetBufferSize() };
@@ -117,39 +106,15 @@ bool QuadRenderer::Initialize(ID3D12Device* device, const Size& screenSize)
     return true;
 }
 
-vector<TempVertex> QuadRenderer::CreateQuadVertices() noexcept
+void QuadRenderer::SetUIQuadMesh(std::shared_ptr<MeshResource> mesh)
 {
-    return {
-        { -0.5f, -0.5f, 0, 1,1,1,1, 0,1 },
-        { -0.5f,  0.5f, 0, 1,1,1,1, 0,0 },
-        {  0.5f, -0.5f, 0, 1,1,1,1, 1,1 },
-
-        {  0.5f, -0.5f, 0, 1,1,1,1, 1,1 },
-        { -0.5f,  0.5f, 0, 1,1,1,1, 0,0 },
-        {  0.5f,  0.5f, 0, 1,1,1,1, 1,0 },
-    };
-}
-
-void QuadRenderer::SetVertexBuffer(ComPtr<ID3D12Resource> vb, UINT size) noexcept
-{
-    m_vertexBuffer = vb;
-
-    m_vertexView.BufferLocation = m_vertexBuffer->GetGPUVirtualAddress();
-    m_vertexView.SizeInBytes = size;
-    m_vertexView.StrideInBytes = sizeof(TempVertex);
+    m_uiQuadMesh = std::move(mesh);
 }
 
 void QuadRenderer::BindPipeline(CommandList& cmd)
 {
     cmd->SetGraphicsRootSignature(m_rootSignature.Get());
     cmd->SetPipelineState(m_pipelineState.Get());
-}
-
-void QuadRenderer::TransitionToRenderState(CommandList& cmd)
-{
-    CommandUtils::Transition(cmd, m_vertexBuffer.Get(),
-        D3D12_RESOURCE_STATE_COPY_DEST,
-        D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
 }
 
 void QuadRenderer::BindDescriptorHeap(CommandList& cmd)
@@ -161,12 +126,15 @@ void QuadRenderer::BindDescriptorHeap(CommandList& cmd)
 void QuadRenderer::BindTexture(CommandList& cmd, DescriptorAllocation& srv)
 {
     auto handle = srv.GetGpuHandle();
-    cmd->SetGraphicsRootDescriptorTable(0, handle);
+    cmd->SetGraphicsRootDescriptorTable(1, handle);
     srv.MarkUsed(cmd.GetType(), cmd.GetFence());
 }
 
 void QuadRenderer::Draw(CommandList& cmd, const Rect& dest)
 {
+    if (!m_uiQuadMesh->IsReady()) 
+        return;
+
     float left = (dest.Left() / (float)m_screenSize.width) * 2.0f - 1.0f;
     float right = (dest.Right() / (float)m_screenSize.width) * 2.0f - 1.0f;
     float top = 1.0f - (dest.Top() / (float)m_screenSize.height) * 2.0f;
@@ -181,10 +149,16 @@ void QuadRenderer::Draw(CommandList& cmd, const Rect& dest)
     m_cbvData->offset[0] = (left + right) * 0.5f;
     m_cbvData->offset[1] = (top + bottom) * 0.5f;
 
-    cmd->SetGraphicsRootConstantBufferView(1, m_constantBuffer->GetGPUVirtualAddress());
+    auto& vbSrv = m_uiQuadMesh->GetVBSrv();
+    auto& ibSrv = m_uiQuadMesh->GetIBSrv();
+
+    cmd->SetGraphicsRootDescriptorTable(0, vbSrv.GetGpuHandle());
+    cmd->SetGraphicsRootConstantBufferView(2, m_constantBuffer->GetGPUVirtualAddress());
     cmd->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-    cmd->IASetVertexBuffers(0, 1, &m_vertexView);
-    cmd->DrawInstanced(6, 1, 0, 0);
+    cmd->DrawInstanced(m_uiQuadMesh->GetIndexCount(), 1, 0, 0);
+
+    vbSrv.MarkUsed(cmd.GetType(), cmd.GetFence());
+    ibSrv.MarkUsed(cmd.GetType(), cmd.GetFence());
 }
 
 void QuadRenderer::SetSRVHeap(ID3D12DescriptorHeap* heap)

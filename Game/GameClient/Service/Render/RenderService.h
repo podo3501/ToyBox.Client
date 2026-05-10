@@ -14,7 +14,7 @@ public:
 	~RenderService();
 	RenderService() = delete;
 	static unique_ptr<RenderService> Create(unique_ptr<IRenderBackend> backend) noexcept;
-	void Draw(TextureHandle th, const Rect& dest, const Rect* source);
+	void DrawUI(TextureHandle th, const Rect& dest, const Rect* source);
 	void DrawMesh(MeshHandle mh);
 	void Update();
 	void Render();
@@ -27,7 +27,4 @@ private:
 
 	unique_ptr<IRenderBackend> m_backend;
 	unique_ptr<RenderRepository> m_repository;
-
-	vector<DrawCommand> m_drawQueue;
-	vector<DrawMeshCommand> m_drawMeshQueue;
 };

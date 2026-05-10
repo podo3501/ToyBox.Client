@@ -1,4 +1,7 @@
 #include "pch.h"
 #include "TextureResource.h"
 
-TextureResource::~TextureResource() = default;
+TextureResource::~TextureResource()
+{
+	int a = 1;
+}

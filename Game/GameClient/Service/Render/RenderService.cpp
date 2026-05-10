@@ -21,7 +21,11 @@ struct DrawMeshCommand
 	IMeshResource* meshRes{ nullptr };
 };
 
-RenderService::~RenderService() = default;
+RenderService::~RenderService()
+{
+	m_backend->WaitIdle(); //리소스를 RenderService가 들고 있기 때문에 gpu의 활동을 중지 시키고 리소스 삭제->backend 순으로 된다.
+}
+
 RenderService::RenderService(unique_ptr<IRenderBackend> backend) :
 	m_backend{ move(backend) },
 	m_repository{ make_unique<RenderRepository>(m_backend.get()) }
@@ -33,23 +37,13 @@ unique_ptr<RenderService> RenderService::Create(unique_ptr<IRenderBackend> backe
 	return service;
 }
 
-void RenderService::Draw(TextureHandle th, const Rect& dest, const Rect* source)
+void RenderService::DrawUI(TextureHandle th, const Rect& dest, const Rect* source)
 {
 	auto entry = m_repository->Get(th);
 	if (!entry || entry->state != LoadState::Ready)
 		return; //일단 ready가 안됐으면 리턴. 가짜 텍스춰를 보여주기도 한다.
 
-	DrawCommand cmd;
-	cmd.texRes = entry->texRes.get();
-	cmd.dest = dest;
-
-	if (source)
-	{
-		cmd.source = *source;
-		cmd.hasSource = true;
-	}
-
-	m_drawQueue.push_back(std::move(cmd));
+	m_backend->DrawUI(entry->texRes.get(), dest, source);
 }
 
 void RenderService::DrawMesh(MeshHandle mh)
@@ -58,10 +52,7 @@ void RenderService::DrawMesh(MeshHandle mh)
 	if (!entry || entry->state != LoadState::Ready)
 		return;
 
-	DrawMeshCommand cmd;
-	cmd.meshRes = entry->meshRes.get();
-
-	m_drawMeshQueue.push_back(std::move(cmd));
+	m_backend->DrawMesh(entry->meshRes.get());
 }
 
 void RenderService::Update()
@@ -72,17 +63,7 @@ void RenderService::Update()
 
 void RenderService::Render()
 {
-	m_backend->BeginFrame();
-
-	for (auto& cmd : m_drawQueue)
-		m_backend->Draw(cmd.texRes, cmd.dest, cmd.hasSource ? &cmd.source : nullptr);
-
-	for (auto& cmd : m_drawMeshQueue)
-		m_backend->DrawMesh(cmd.meshRes);
-
-	m_backend->EndFrame();
-
-	m_drawQueue.clear();
+	m_backend->Render();
 }
 
 void RenderService::Resize(const Size& size)

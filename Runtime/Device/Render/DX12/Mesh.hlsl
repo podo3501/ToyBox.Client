@@ -9,14 +9,14 @@ cbuffer FrameCB : register(b1)
     float4x4 proj;
 };
 
-struct Vertex
+struct MeshVertex
 {
     float3 pos;
     float3 normal;
     float2 uv;
 };
 
-StructuredBuffer<Vertex> VertexBuffer : register(t0);
+StructuredBuffer<MeshVertex> VertexBuffer : register(t0);
 StructuredBuffer<uint>   IndexBuffer  : register(t1);
 
 Texture2D gTexture : register(t2);
@@ -33,7 +33,7 @@ PSInput VSMain(uint vID : SV_VertexID)
     PSInput output;
 
     uint vertexIndex = IndexBuffer[vID];
-    Vertex input = VertexBuffer[vertexIndex];
+    MeshVertex input = VertexBuffer[vertexIndex];
 
     float4 worldPos = mul(float4(input.pos, 1.0f), world);
     float4 viewPos  = mul(worldPos, view);

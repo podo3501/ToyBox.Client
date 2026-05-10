@@ -16,6 +16,7 @@ class TextureSystem;
 class MeshSystem;
 class MeshRenderer;
 class QuadRenderer;
+class RenderScene;
 
 class RenderBackend : public IRenderBackend
 {
@@ -23,16 +24,18 @@ public:
 	~RenderBackend();
 	RenderBackend();
 	virtual bool Initialize(HWND hwnd, const Size& wndSize, const RenderConfig& renderConfig) override;
-	virtual void BeginFrame() override;
-	virtual void EndFrame() override;
-	virtual void Draw(ITextureResource* texRes, const Rect& dest, const Rect* source) override;
+	virtual void DrawUI(ITextureResource* texRes, const Rect& dest, const Rect* source) override;
 	virtual void DrawMesh(IMeshResource* meshRes) override;
 	virtual void Resize(const Size& size) override;
 	virtual void Update() override;
+	virtual void Render() override;
+	virtual void WaitIdle() override;
 	virtual ITextureSystem* GetTextureSystem() override;
 	virtual IMeshSystem* GetMeshSystem() override;
 
 private:
+	bool BeginFrame();
+	void EndFrame();
 	void Clear(CommandList& cmd, float r, float g, float b, float a);
 	size_t ComputeTextureBudget(float gpuMs);
 	size_t ComputeMeshBudget(float gpuMs);
@@ -47,6 +50,7 @@ private:
 	
 	unique_ptr<TextureSystem> m_texSystem;
 	unique_ptr<MeshSystem> m_meshSystem;
+	unique_ptr<RenderScene> m_scene;
 
 	unique_ptr<MeshRenderer> m_meshRenderer;
 	unique_ptr<QuadRenderer> m_quadRenderer;
@@ -54,6 +58,4 @@ private:
 	CommandList* m_cmd{ nullptr }; //direct command юс.
 
 	Size m_size{};
-	vector<MeshBuffer> m_meshes;
-	bool m_ready{ false };
 };

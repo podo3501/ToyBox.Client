@@ -17,14 +17,26 @@ void TaskScheduler::Submit(
     std::shared_ptr<ResourceContext> resources,
     std::shared_ptr<UploadContext> upload)
 {
+    std::unordered_map<uint32_t, TaskHandle> remap; //RenderGraph에서 만든 일시적인 handle을 실제 사용가능한 task handle로 바꾼다.
+    for (auto& compiled : compiledTasks)
+    {
+        TaskHandle realHandle = AllocateHandle();
+        remap[compiled.localId] = realHandle;
+    }
+
     for (const auto& compiled : compiledTasks)
     {
-        TaskEntry* entry = m_tasks.Find(compiled.handle);
+        TaskHandle handle = remap[compiled.localId];
+        TaskEntry* entry = m_tasks.Find(handle);
         if (!entry) continue;
+
         assert(!entry->submitted);
 
         entry->task = compiled.task;
-        entry->dependents = compiled.dependents;
+        for (auto& depLocalId : compiled.dependencies)
+            entry->task.dependencies.push_back(remap[depLocalId]);
+        for (auto& depLocalId : compiled.dependents)
+            entry->dependents.push_back(remap[depLocalId]);
         entry->context.resources = resources;
         entry->context.upload = upload;
         entry->submitted = true;
@@ -64,7 +76,7 @@ void TaskScheduler::Execute()
 //        Task* task = Find(handle); 
 //        if (!task) continue; 
 //
-//        if (AreDependenciesDone(*task)) // dependency 체크
+//        if (AreDependenciesDone(*task)) // dependency 
 //            ExecuteTask(*task); 
 //    } 
 //}

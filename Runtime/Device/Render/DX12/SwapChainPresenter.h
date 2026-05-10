@@ -37,6 +37,7 @@ public:
     bool Resize(ID3D12Device* device, const Size& size);
 
     D3D12_CPU_DESCRIPTOR_HANDLE GetCurrentRTV() const;
+    ID3D12Resource* GetCurrentBackbuffer() { return m_renderTargets[m_frameIndex].Get(); }
 
 private:
     bool CreateSwapChain(ID3D12Device* device, IDXGIFactory4* factory,

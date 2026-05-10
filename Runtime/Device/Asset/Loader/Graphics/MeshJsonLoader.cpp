@@ -26,7 +26,7 @@ struct JsonVec3
     }
 };
 
-struct JsonVertex
+struct JsonMeshVertex
 {
     JsonVec3 position;
     JsonVec3 normal;
@@ -42,7 +42,7 @@ struct JsonVertex
 
 struct JsonMesh
 {
-    std::vector<JsonVertex> vertices;
+    std::vector<JsonMeshVertex> vertices;
     std::vector<uint32_t> indices;
 
     void Serialize(Serializer& serializer)
@@ -52,7 +52,7 @@ struct JsonMesh
     }
 };
 
-static Vertex ConvertToVertex(const JsonVertex& v)
+static MeshVertex ConvertToVertex(const JsonMeshVertex& v)
 {
     return {
         v.position.x, v.position.y, v.position.z,
@@ -68,10 +68,12 @@ shared_ptr<Asset> MeshJsonLoader::LoadFromMemory(const Core::ByteBuffer& buffer)
 	DeserializeClass(rData, jsonMesh);
 
     auto mesh = std::make_shared<MeshAsset>();
-    mesh->vertices.reserve(jsonMesh.vertices.size());
+    std::vector<MeshVertex> vertices;
+    vertices.reserve(jsonMesh.vertices.size());
 
     for (const auto& v : jsonMesh.vertices)
-        mesh->vertices.push_back(ConvertToVertex(v));
+        vertices.push_back(ConvertToVertex(v));
+    mesh->SetVertices(vertices);
     mesh->indices = std::move(jsonMesh.indices);
 
 	return mesh;

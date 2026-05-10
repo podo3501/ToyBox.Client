@@ -4,12 +4,18 @@ cbuffer TransformBuffer : register(b0)
     float2 offset;
 };
 
-struct VSInput
+struct UIVertex
 {
-    float3 pos : POSITION;
-    float4 color : COLOR;
-    float2 uv : TEXCOORD;
+    float3 pos;
+    float4 color;
+    float2 uv;
 };
+
+StructuredBuffer<UIVertex> VertexBuffer : register(t0);
+StructuredBuffer<uint> IndexBuffer : register(t1);
+
+Texture2D tex : register(t2);
+SamplerState samp : register(s0);
 
 struct PSInput
 {
@@ -18,9 +24,13 @@ struct PSInput
     float2 uv : TEXCOORD;
 };
 
-PSInput VSMain(VSInput input)
+PSInput VSMain(uint vID : SV_VertexID)
 {
     PSInput output;
+
+    uint vertexIndex = IndexBuffer[vID];
+    UIVertex input = VertexBuffer[vertexIndex];
+
     float2 pos = input.pos.xy;
 
     pos *= scale;
@@ -32,9 +42,6 @@ PSInput VSMain(VSInput input)
 
     return output;
 }
-
-Texture2D tex : register(t0);
-SamplerState samp : register(s0);
 
 float4 PSMain(PSInput input) : SV_TARGET
 {

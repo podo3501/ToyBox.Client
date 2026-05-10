@@ -12,7 +12,15 @@
 #include "QuadRenderer.h"
 #include "TextureSystem.h"
 #include "MeshSystem.h"
+#include "RenderScene.h"
+#include "RenderGraph.h"
+#include "RenderPass.h"
+#include "PrepareGraphBuilder.h"
+#include "OpaqueGraphBuilder.h"
+#include "PresentGraphBuilder.h"
+#include "UIGraphBuilder.h"
 #include "MeshResource.h"
+#include "PrimitiveMeshFactory.h"
 #include "CommandList.h"
 #include "CommandUtils.h"
 #include <dxgi1_6.h>
@@ -36,6 +44,11 @@ RenderBackend::~RenderBackend() = default;
 RenderBackend::RenderBackend() :
     m_core{ make_unique<DX12Core>() }
 {}
+
+void RenderBackend::WaitIdle()
+{
+    m_command->WaitForAllGPU();
+}
 
 bool RenderBackend::Initialize(HWND hwnd, const Size& wndSize, const RenderConfig& config)
 {
@@ -64,6 +77,7 @@ bool RenderBackend::Initialize(HWND hwnd, const Size& wndSize, const RenderConfi
     m_meshSystem = make_unique<MeshSystem>(device, m_srvAllocator.get(), m_taskScheduler.get(), m_loader.get());
     m_texSystem = make_unique<TextureSystem>(device, m_srvAllocator.get(), m_taskScheduler.get(), m_loader.get());
     ReturnIfFalse(m_texSystem->Initialize());
+    m_scene = make_unique<RenderScene>();
 
     m_meshRenderer = make_unique<MeshRenderer>();
     ReturnIfFalse(m_meshRenderer->Initialize(device));
@@ -73,76 +87,50 @@ bool RenderBackend::Initialize(HWND hwnd, const Size& wndSize, const RenderConfi
     ReturnIfFalse(m_quadRenderer->Initialize(device, wndSize));
     m_quadRenderer->SetSRVHeap(m_srvAllocator->GetHeap());
 
-    auto vertices = m_quadRenderer->CreateQuadVertices();
-    auto copyCmd = m_command->Begin(CommandType::Copy); // 업로드 전용 커맨드 리스트 생성
-    ComPtr<ID3D12Resource> uploadBuffer;
-    auto vb = m_loader->UploadVertexBuffer(
-        *copyCmd,
-        vertices.data(),
-        static_cast<UINT>(vertices.size() * sizeof(TempVertex)),
-        uploadBuffer
-    );
-    m_command->End({ move(uploadBuffer) }); // 업로드 완료까지 대기
-    m_quadRenderer->SetVertexBuffer(vb, static_cast<UINT>(vertices.size() * sizeof(TempVertex)));
-    m_meshes.push_back({ vb });
+    auto uiMesh = make_shared<MeshResource>();
+    auto uiQuadAsset = PrimitiveMeshFactory::CreateUIQuad();
+    ReturnIfFalse(m_meshSystem->LoadFromAsset(uiMesh, uiQuadAsset));
+    m_quadRenderer->SetUIQuadMesh(uiMesh);
 
     return true;
 }
 
-void RenderBackend::BeginFrame()
+bool RenderBackend::BeginFrame()
 {
     m_cmd = m_command->Begin(CommandType::Direct);
-    if (!m_cmd) return;
-
-    m_profiler->BeginFrame(*m_cmd);
-    m_swapChain->TransitionToRenderTarget(*m_cmd);
-    m_swapChain->SetRenderTarget(*m_cmd);
-    Clear(*m_cmd, 0.13f, 0.13f, 0.16f, 1.0f); //눈이 적당히 덜 피곤하면서 비어있는 영역 확인 가능한 색깔.
+    return m_cmd != nullptr;
 }
 
 void RenderBackend::EndFrame()
 {
-    if (!m_cmd) return;
+    assert(m_cmd);
 
-    m_profiler->EndFrame(*m_cmd);
-    m_swapChain->TransitionToPresent(*m_cmd);
     m_command->End();
     m_swapChain->Present(false);
 
     m_cmd = nullptr;
 }
 
-void RenderBackend::Draw(ITextureResource* texRes, const Rect& dest, const Rect* source)
+void RenderBackend::DrawUI(ITextureResource* texRes, const Rect& dest, const Rect* source)
 {
-    if (!m_cmd) return;
+    UIDrawItem item;
+    item.texture = static_cast<TextureResource*>(texRes);
+    item.dest = dest;
 
-    auto texResource = static_cast<TextureResource*>(texRes);
-    // 처음 Flush 시 한 번만 상태 전환
-    static bool ready = false;
-    if (!ready)
-    {
-        m_quadRenderer->TransitionToRenderState(*m_cmd);
-        ready = true;
-    }
+    if (source)
+        item.src = *source;
 
-    m_quadRenderer->BindDescriptorHeap(*m_cmd);
-    m_quadRenderer->BindPipeline(*m_cmd);
-
-    m_quadRenderer->BindTexture(*m_cmd, texResource->GetSrv());
-    m_quadRenderer->Draw(*m_cmd, dest);
+    m_scene->AddUI(item);
 }
 
 void RenderBackend::DrawMesh(IMeshResource* meshRes)
 {
-    if (!m_cmd) return;
+    auto mesh = static_cast<MeshResource*>(meshRes);
 
-    auto meshResource = static_cast<MeshResource*>(meshRes);
+    DrawItem item;
+    item.mesh = mesh;
 
-    m_meshRenderer->BindDescriptorHeap(*m_cmd);
-    m_meshRenderer->BindPipeline(*m_cmd);
-
-    DescriptorAllocation dummy{};
-    m_meshRenderer->Draw(*m_cmd, *meshResource, dummy);
+    m_scene->AddOpaque(item);
 }
 
 void RenderBackend::Resize(const Size& size)
@@ -162,6 +150,38 @@ void RenderBackend::Update()
 
     m_texSystem->Update(ComputeTextureBudget(gpuMs));
     m_meshSystem->Update(ComputeMeshBudget(gpuMs));
+}
+
+void RenderBackend::Render()
+{
+    if (!BeginFrame())
+        return;
+
+    RenderGraph graph;
+    auto hBb = graph.CreateRGHandle();
+    graph.ImportResource(hBb, RGAccess::Present); //backbuffer가 present에서 시작한다고 알려준다.
+
+    PrepareGraphBuilder prepare(m_swapChain.get(), hBb);
+    OpaqueGraphBuilder opaque(m_scene.get(), m_meshRenderer.get(), hBb);
+    UIGraphBuilder ui(m_scene.get(), m_quadRenderer.get(), hBb);
+    PresentGraphBuilder present(hBb);
+
+    prepare.Build(graph);
+    opaque.Build(graph);
+    ui.Build(graph);
+    present.Build(graph);
+
+    auto compiledTasks = graph.Compile();
+
+    TaskContext taskCtx;
+    taskCtx.resources = std::make_shared<ResourceContext>();
+    taskCtx.resources->Set(hBb, std::move(ComPtr<ID3D12Resource>(m_swapChain->GetCurrentBackbuffer())));
+
+    m_profiler->BeginFrame(*m_cmd);
+    graph.Excute(*m_cmd, compiledTasks, taskCtx);
+    m_profiler->EndFrame(*m_cmd);
+
+    EndFrame();
 }
 
 void RenderBackend::Clear(CommandList& cmd, float r, float g, float b, float a)

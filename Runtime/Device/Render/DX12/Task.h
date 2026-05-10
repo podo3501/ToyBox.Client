@@ -86,13 +86,14 @@ struct Task
 {
     CommandType type;
     std::vector<TaskHandle> dependencies; //앞에 Task에 의존하는지. Task의 시작지점을 알게 해 준다.
-    std::function<void(CommandList&, TaskContext&)> gpuExecute = [](CommandList&, const TaskContext&) {};
-    std::function<void(TaskContext&)> cpuExecute = [](const TaskContext&) {};
+    std::function<void(CommandList&, TaskContext&)> gpuExecute{ nullptr };
+    std::function<void(TaskContext&)> cpuExecute{ nullptr };
 };
 
 struct CompiledTask //RenderGraph에서 pass를 가지고 계산해서 tasks로 만든 결과물.
 {
-    TaskHandle handle;
+    uint32_t localId{ 0 };
     Task task;
-    std::vector<TaskHandle> dependents;
+    std::vector<uint32_t> dependencies;
+    std::vector<uint32_t> dependents;
 };

@@ -43,7 +43,7 @@ void TextureGraphBuilder::LoadTextures(const std::vector<TextureLoadRequest>& re
         offset += requiredSize;
     }
 
-    auto compiledTasks = graph.Compile(*m_taskScheduler);
+    auto compiledTasks = graph.Compile();
     
     size_t totalUploadSize = AlignSize(offset, AlignTexture);
     auto uploadCtx = std::make_shared<UploadContext>();

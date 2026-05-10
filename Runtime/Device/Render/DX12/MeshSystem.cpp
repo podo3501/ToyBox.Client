@@ -22,7 +22,7 @@ shared_ptr<IMeshResource> MeshSystem::CreateMeshResource()
 
 static std::pair<size_t, size_t> EstimateBytes(const MeshAsset& mesh)
 {
-    size_t vb = mesh.vertices.size() * sizeof(Vertex);
+    size_t vb = mesh.vertices.size();
     size_t ib = mesh.indices.size() * sizeof(uint32_t);
 
     vb = AlignSize(vb, AlignVertexIndex);

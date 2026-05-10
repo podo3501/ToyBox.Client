@@ -58,6 +58,7 @@
     <ClInclude Include="Render\DX12\DX12Core.h" />
     <ClInclude Include="Render\DX12\DX12Utils.h" />
     <ClInclude Include="Render\DX12\FenceTypes.h" />
+    <ClInclude Include="Render\DX12\OpaqueGraphBuilder.h" />
     <ClInclude Include="Render\DX12\GPUProfiler.h" />
     <ClInclude Include="Render\DX12\MeshGraphBuilder.h" />
     <ClInclude Include="Render\DX12\MeshLoadRequest.h" />
@@ -68,8 +69,12 @@
     <ClInclude Include="Render\DX12\MipGenerator.h" />
     <ClInclude Include="Render\DX12\MipTask.h" />
     <ClInclude Include="Render\DX12\PendingTransition.h" />
+    <ClInclude Include="Render\DX12\PrepareGraphBuilder.h" />
+    <ClInclude Include="Render\DX12\PresentGraphBuilder.h" />
+    <ClInclude Include="Render\DX12\PrimitiveMeshFactory.h" />
     <ClInclude Include="Render\DX12\RenderGraph.h" />
     <ClInclude Include="Render\DX12\RenderPass.h" />
+    <ClInclude Include="Render\DX12\RenderScene.h" />
     <ClInclude Include="Render\DX12\ResourceLoader.h" />
     <ClInclude Include="Render\DX12\RGTypes.h" />
     <ClInclude Include="Render\DX12\SwapChainPresenter.h" />
@@ -85,6 +90,7 @@
     <ClInclude Include="Render\DX12\TextureResource.h" />
     <ClInclude Include="Render\DX12\TextureSystem.h" />
     <ClInclude Include="Render\DX12\TempVertex.h" />
+    <ClInclude Include="Render\DX12\UIGraphBuilder.h" />
     <ClInclude Include="Storage\JsonObjectIO.h" />
   </ItemGroup>
   <ItemGroup>
@@ -126,6 +132,7 @@
     <ClCompile Include="Render\DX12\DX12Core.cpp" />
     <ClCompile Include="Render\DX12\DX12Link.cpp" />
     <ClCompile Include="Render\DX12\DX12Utils.cpp" />
+    <ClCompile Include="Render\DX12\OpaqueGraphBuilder.cpp" />
     <ClCompile Include="Render\DX12\GPUProfiler.cpp" />
     <ClCompile Include="Render\DX12\MeshGraphBuilder.cpp" />
     <ClCompile Include="Render\DX12\MeshRegistry.cpp" />
@@ -134,7 +141,11 @@
     <ClCompile Include="Render\DX12\MeshSystem.cpp" />
     <ClCompile Include="Render\DX12\MipGenerator.cpp" />
     <ClCompile Include="Render\DX12\MipTask.cpp" />
+    <ClCompile Include="Render\DX12\PrepareGraphBuilder.cpp" />
+    <ClCompile Include="Render\DX12\PresentGraphBuilder.cpp" />
+    <ClCompile Include="Render\DX12\PrimitiveMeshFactory.cpp" />
     <ClCompile Include="Render\DX12\RenderGraph.cpp" />
+    <ClCompile Include="Render\DX12\RenderScene.cpp" />
     <ClCompile Include="Render\DX12\ResourceLoader.cpp" />
     <ClCompile Include="Render\DX12\SwapChainPresenter.cpp" />
     <ClCompile Include="Render\DX12\QuadRenderer.cpp" />
@@ -144,6 +155,7 @@
     <ClCompile Include="Render\DX12\TextureRegistry.cpp" />
     <ClCompile Include="Render\DX12\TextureResource.cpp" />
     <ClCompile Include="Render\DX12\TextureSystem.cpp" />
+    <ClCompile Include="Render\DX12\UIGraphBuilder.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Platform\Platform.vcxproj">

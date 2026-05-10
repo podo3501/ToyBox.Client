@@ -24,6 +24,7 @@ struct RenderPass
 
     std::vector<RGUsage> reads;
     std::vector<RGUsage> writes;
+    std::vector<std::string> dependsOn;
     std::vector<BarrierPlan> barriers;
 
     std::function<void(CommandList&, TaskContext&)> gpuExecute;

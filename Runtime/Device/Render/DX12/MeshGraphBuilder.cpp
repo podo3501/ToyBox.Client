@@ -42,7 +42,7 @@ void MeshGraphBuilder::LoadMeshes(const std::vector<MeshLoadRequest>& requests)
         offset += req.vbBytes + req.ibBytes;
     }
 
-    auto compiledTasks = graph.Compile(*m_taskScheduler);
+    auto compiledTasks = graph.Compile();
 
     size_t totalUploadSize = AlignSize(offset, AlignVertexIndex);
     auto uploadCtx = std::make_shared<UploadContext>();
@@ -63,7 +63,7 @@ void MeshGraphBuilder::BuildGraph(
     vbUpload.gpuExecute = [this, asset, hVb, vbRes, vbOffset](CommandList& cmd, TaskContext& ctx) {
         UploadRegion vbRegion;
         vbRegion.data = asset->vertices.data();
-        vbRegion.size = asset->vertices.size() * sizeof(Vertex);
+        vbRegion.size = asset->vertices.size();
         vbRegion.srcOffset = static_cast<UINT64>(vbOffset);
         vbRegion.dstBuffer = vbRes.Get();
 
@@ -93,9 +93,8 @@ void MeshGraphBuilder::BuildGraph(
         auto& vb = ctx.GetResource<ComPtr<ID3D12Resource>>(hVb);
         auto& ib = ctx.GetResource<ComPtr<ID3D12Resource>>(hIb);
 
-        auto vertexCount = static_cast<uint32_t>(asset->vertices.size());
         auto indexCount = static_cast<uint32_t>(asset->indices.size());
-        auto vbAlloc = m_descriptorFactory->CreateBufferSRV(vb.Get(), vertexCount, sizeof(Vertex));
+        auto vbAlloc = m_descriptorFactory->CreateBufferSRV(vb.Get(), asset->vertexCount, asset->vertexStride);
         auto ibAlloc = m_descriptorFactory->CreateBufferSRV(ib.Get(), indexCount, sizeof(uint32_t));
 
         m_registry->FinalizeMesh(hMesh.id, vb, std::move(vbAlloc), ib, std::move(ibAlloc), indexCount);

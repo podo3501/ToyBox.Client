@@ -244,6 +244,24 @@
     <ClInclude Include="Render\DX12\MeshLoadRequest.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
+    <ClInclude Include="Render\DX12\RenderScene.h">
+      <Filter>Render\DX12</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\OpaqueGraphBuilder.h">
+      <Filter>Render\DX12</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\PrepareGraphBuilder.h">
+      <Filter>Render\DX12</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\PresentGraphBuilder.h">
+      <Filter>Render\DX12</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\PrimitiveMeshFactory.h">
+      <Filter>Render\DX12</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\UIGraphBuilder.h">
+      <Filter>Render\DX12</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -395,6 +413,24 @@
       <Filter>Render\DX12</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\DX12Utils.cpp">
+      <Filter>Render\DX12</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\RenderScene.cpp">
+      <Filter>Render\DX12</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\OpaqueGraphBuilder.cpp">
+      <Filter>Render\DX12</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\PrepareGraphBuilder.cpp">
+      <Filter>Render\DX12</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\PresentGraphBuilder.cpp">
+      <Filter>Render\DX12</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\PrimitiveMeshFactory.cpp">
+      <Filter>Render\DX12</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\UIGraphBuilder.cpp">
       <Filter>Render\DX12</Filter>
     </ClCompile>
   </ItemGroup>

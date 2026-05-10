@@ -13,12 +13,12 @@ struct IRenderBackend
 {
 	virtual ~IRenderBackend() = default;
 	virtual bool Initialize(HWND hwnd, const Size& wndSize, const RenderConfig& config) = 0;
-	virtual void BeginFrame() = 0;
-	virtual void EndFrame() = 0;
-	virtual void Draw(ITextureResource* texRes, const Rect& dest, const Rect* source) = 0;
+	virtual void DrawUI(ITextureResource* texRes, const Rect& dest, const Rect* source) = 0;
 	virtual void DrawMesh(IMeshResource* meshRes) = 0;
 	virtual void Resize(const Size& size) = 0;
 	virtual void Update() = 0;
+	virtual void Render() = 0;
+	virtual void WaitIdle() = 0;
 	virtual ITextureSystem* GetTextureSystem() = 0;
 	virtual IMeshSystem* GetMeshSystem() = 0;
 };

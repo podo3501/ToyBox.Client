@@ -146,51 +146,6 @@ void ResourceLoader::UploadBufferRegion(
     );
 }
 
-
-
-
-
-
-
-
-
-
-std::pair<UploadableResource, bool> ResourceLoader::CreateUploadableTexture(const TextureAsset& asset, bool generateMips)
-{
-    bool mips = ShouldGenerateMips(asset, generateMips);
-
-    auto texDesc = CreateTexture2DDescriptor(asset);
-    ApplyMipSettings(texDesc, mips);
-
-    auto res = CreateResource(texDesc, 
-        D3D12_HEAP_TYPE_DEFAULT, 
-        D3D12_RESOURCE_STATE_COMMON);
-
-    UINT64 uploadSize = 0;
-    UINT numSubresources = 1; // only mip0 uploaded. 원본만 올린다 mip1 부터 mipmap 시작. 지금은 gpu가 밉맵을 만들고 있기 때문.
-    m_device->GetCopyableFootprints(&texDesc, 0, numSubresources, 0,
-        nullptr, nullptr, nullptr, &uploadSize);
-
-    auto upload = CreateResource(
-        CreateBufferDesc(uploadSize),
-        D3D12_HEAP_TYPE_UPLOAD,
-        D3D12_RESOURCE_STATE_GENERIC_READ);
-
-    return { UploadableResource{ res, upload }, mips };
-}
-
-void ResourceLoader::UploadTexture(
-    CommandList& uploadCmd,
-    const TextureAsset& asset,
-    UploadableResource uploadableRes)
-{
-    D3D12_SUBRESOURCE_DATA subresource{};
-    subresource.pData = asset.pixels.data();
-    subresource.RowPitch = asset.stride;
-    subresource.SlicePitch = asset.stride * asset.height;
-    UploadSubresource(uploadCmd, uploadableRes.res.Get(), uploadableRes.upload.Get(), subresource);
-}
-
 void ResourceLoader::UploadTexture(
     CommandList& uploadCmd,
     const TextureAsset& asset,
@@ -213,7 +168,7 @@ void ResourceLoader::UploadTexture(
         &subresource
     );
 }
-
+//
 ComPtr<ID3D12Resource> ResourceLoader::UploadVertexBuffer(
     CommandList& cmd,
     const void* data,
@@ -237,117 +192,6 @@ ComPtr<ID3D12Resource> ResourceLoader::UploadVertexBuffer(
     UploadSubresource(cmd, vertexBuffer.Get(), outUploadBuffer.Get(), subresource);
 
     return vertexBuffer;
-}
-
-MeshBundle ResourceLoader::UploadMesh(
-    CommandList& uploadCmd,
-    const MeshAsset& asset,
-    UploadBuffer& outUploadBuffer)
-{
-    UINT vbSize = (UINT)(sizeof(Vertex) * asset.vertices.size());
-    UINT ibSize = (UINT)(sizeof(uint32_t) * asset.indices.size());
-
-    UINT vbOffset = 0;
-    UINT ibOffset = (vbSize + 255) & ~255; // align
-    UINT totalSize = ibOffset + ibSize; //total size를 구해서 uploadbuffer를 만든다.
-
-    auto vb = CreateResource(
-        CreateBufferDesc(vbSize),
-        D3D12_HEAP_TYPE_DEFAULT,
-        D3D12_RESOURCE_STATE_COPY_DEST);
-
-    auto ib = CreateResource(
-        CreateBufferDesc(ibSize),
-        D3D12_HEAP_TYPE_DEFAULT,
-        D3D12_RESOURCE_STATE_COPY_DEST);
-
-    outUploadBuffer.resource = CreateResource(
-        CreateBufferDesc(totalSize),
-        D3D12_HEAP_TYPE_UPLOAD,
-        D3D12_RESOURCE_STATE_GENERIC_READ);
-
-    void* mapped = nullptr;
-    outUploadBuffer.resource->Map(0, nullptr, &mapped);
-    memcpy((uint8_t*)mapped + vbOffset, asset.vertices.data(), vbSize);
-    memcpy((uint8_t*)mapped + ibOffset, asset.indices.data(), ibSize);
-    outUploadBuffer.resource->Unmap(0, nullptr);
-
-    uploadCmd->CopyBufferRegion(vb.Get(), 0, outUploadBuffer.resource.Get(), vbOffset, vbSize);
-    uploadCmd->CopyBufferRegion(ib.Get(), 0, outUploadBuffer.resource.Get(), ibOffset, ibSize);
-
-    return { vb, ib };
-    //// 6. Transition
-    //CommandUtils::Transition(uploadCmd, vb.Get(),
-    //    D3D12_RESOURCE_STATE_COPY_DEST,
-    //    D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
-
-    //CommandUtils::Transition(uploadCmd, ib.Get(),
-    //    D3D12_RESOURCE_STATE_COPY_DEST,
-    //    D3D12_RESOURCE_STATE_INDEX_BUFFER);
-
-    //// ----------------------------
-    //// 7. MeshResource 세팅
-    //// ----------------------------
-    //mesh.SetMesh(
-    //    vb,
-    //    vbSize,
-    //    sizeof(Vertex),   // ⭐ 핵심 (stride)
-    //    ib,
-    //    (UINT)asset.indices.size(),
-    //    DXGI_FORMAT_R32_UINT
-    //);
-
-    //return mesh;
-}
-
-ComPtr<ID3D12Resource> ResourceLoader::UploadVertexBuffer(
-    CommandList& cmd, const std::vector<Vertex>& vertices, UploadBuffer& outUploadBuffer)
-{
-    UINT size = static_cast<UINT>(sizeof(Vertex) * vertices.size());
-
-    auto vb = CreateResource(
-        CreateBufferDesc(size), 
-        D3D12_HEAP_TYPE_DEFAULT, 
-        D3D12_RESOURCE_STATE_COMMON);
-
-    outUploadBuffer.resource = CreateResource(
-        CreateBufferDesc(size), 
-        D3D12_HEAP_TYPE_UPLOAD, 
-        D3D12_RESOURCE_STATE_GENERIC_READ);
-
-    void* mapped = nullptr;
-    outUploadBuffer.resource->Map(0, nullptr, &mapped);
-    memcpy(mapped, vertices.data(), size);
-    outUploadBuffer.resource->Unmap(0, nullptr);
-
-    cmd->CopyBufferRegion(vb.Get(), 0, outUploadBuffer.resource.Get(), 0, size);
-
-    return vb;
-}
-
-ComPtr<ID3D12Resource> ResourceLoader::UploadIndexBuffer(
-    CommandList& cmd, const std::vector<uint32_t>& indices, UploadBuffer& outUploadBuffer)
-{
-    UINT size = static_cast<UINT>(sizeof(uint32_t) * indices.size());
-
-    auto ib = CreateResource(
-        CreateBufferDesc(size), 
-        D3D12_HEAP_TYPE_DEFAULT, 
-        D3D12_RESOURCE_STATE_COMMON);
-
-    outUploadBuffer.resource = CreateResource(
-        CreateBufferDesc(size), 
-        D3D12_HEAP_TYPE_UPLOAD, 
-        D3D12_RESOURCE_STATE_GENERIC_READ);
-
-    void* mapped = nullptr;
-    outUploadBuffer.resource->Map(0, nullptr, &mapped);
-    memcpy(mapped, indices.data(), size);
-    outUploadBuffer.resource->Unmap(0, nullptr);
-
-    cmd->CopyBufferRegion(ib.Get(), 0, outUploadBuffer.resource.Get(), 0, size);
-
-    return ib;
 }
 
 ComPtr<ID3D12Resource> ResourceLoader::CreateResource(
