@@ -9,7 +9,7 @@ struct MeshPendingRequest
 	MeshHandle handle;
 };
 
-MeshRepository::~MeshRepository() = default;
+MeshRepository::~MeshRepository() { ReleaseAll(); }
 MeshRepository::MeshRepository(IMeshSystem* meshSystem) :
 	m_meshSystem{ meshSystem }
 {}
@@ -101,4 +101,13 @@ void MeshRepository::ProcessLoading()
 		else
 			++it;
 	}
+}
+
+void MeshRepository::ReleaseAll()
+{
+	m_pending.clear();
+	m_loadingList.clear();
+
+	m_cache.clear();
+	m_loadedMeshes.Clear();
 }

@@ -21,11 +21,7 @@ struct DrawMeshCommand
 	IMeshResource* meshRes{ nullptr };
 };
 
-RenderService::~RenderService()
-{
-	m_backend->WaitIdle(); //리소스를 RenderService가 들고 있기 때문에 gpu의 활동을 중지 시키고 리소스 삭제->backend 순으로 된다.
-}
-
+RenderService::~RenderService() = default;
 RenderService::RenderService(unique_ptr<IRenderBackend> backend) :
 	m_backend{ move(backend) },
 	m_repository{ make_unique<RenderRepository>(m_backend.get()) }
@@ -43,7 +39,7 @@ void RenderService::DrawUI(TextureHandle th, const Rect& dest, const Rect* sourc
 	if (!entry || entry->state != LoadState::Ready)
 		return; //일단 ready가 안됐으면 리턴. 가짜 텍스춰를 보여주기도 한다.
 
-	m_backend->DrawUI(entry->texRes.get(), dest, source);
+	m_backend->DrawUI(entry->texRes, dest, source);
 }
 
 void RenderService::DrawMesh(MeshHandle mh)
@@ -52,7 +48,7 @@ void RenderService::DrawMesh(MeshHandle mh)
 	if (!entry || entry->state != LoadState::Ready)
 		return;
 
-	m_backend->DrawMesh(entry->meshRes.get());
+	m_backend->DrawMesh(entry->meshRes);
 }
 
 void RenderService::Update()

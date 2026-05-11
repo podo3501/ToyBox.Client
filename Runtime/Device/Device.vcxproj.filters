@@ -118,9 +118,6 @@
     <ClInclude Include="Render\DX12\ResourceLoader.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\TempVertex.h">
-      <Filter>Render\DX12</Filter>
-    </ClInclude>
     <ClInclude Include="Render\DX12\CommandUtils.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>

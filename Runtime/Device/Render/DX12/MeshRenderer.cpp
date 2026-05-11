@@ -216,7 +216,7 @@ void MeshRenderer::UpdateObjectCB()
 {
     ObjectCB obj{};
 
-    m_objectAngle += 0.0001f;
+    m_objectAngle += 0.01f;
 
     XMMATRIX world = XMMatrixRotationY(m_objectAngle);
     XMStoreFloat4x4((XMFLOAT4X4*)obj.world, XMMatrixTranspose(world));

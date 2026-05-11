@@ -13,8 +13,8 @@ struct IRenderBackend
 {
 	virtual ~IRenderBackend() = default;
 	virtual bool Initialize(HWND hwnd, const Size& wndSize, const RenderConfig& config) = 0;
-	virtual void DrawUI(ITextureResource* texRes, const Rect& dest, const Rect* source) = 0;
-	virtual void DrawMesh(IMeshResource* meshRes) = 0;
+	virtual void DrawUI(std::shared_ptr<ITextureResource> texRes, const Rect& dest, const Rect* source) = 0;
+	virtual void DrawMesh(std::shared_ptr<IMeshResource> meshRes) = 0;
 	virtual void Resize(const Size& size) = 0;
 	virtual void Update() = 0;
 	virtual void Render() = 0;

@@ -15,23 +15,14 @@ public:
 
     bool Initialize(ID3D12Device* device, CommandType type, uint32_t poolSize);
     CommandList* Begin();
-    uint64_t End(vector<ComPtr<ID3D12Resource>>&& resources);
+    uint64_t End();
 
     uint64_t Signal();
     void WaitIdle();
-    void ReleaseCompletedResources();
-    void WaitForGPU();
 
     ID3D12CommandQueue* GetQueue() const { return m_queue.Get(); }
     uint64_t GetLastSubmittedFence() const noexcept { return m_lastSubmittedFence; }
     uint64_t GetCompletedFence() const noexcept { return m_fence->GetCompletedValue(); }
-
-private:
-    struct PendingRelease
-    {
-        uint64_t fenceValue{ 0 };
-        std::vector<ComPtr<ID3D12Resource>> resources;
-    };
 
 private:
     bool CreateQueue(ID3D12Device* device, CommandType type);
@@ -50,7 +41,5 @@ private:
     uint64_t m_lastSubmittedFence{ 0 }; //여기까지 명령어가 들어가 있는 펜스값. GetCompletedValue() 값은 실제로 다 끝난 펜스값.
 
     CommandList* m_currentCmdEntry{ nullptr };
-
-    queue<PendingRelease> m_pendingReleases;
 };
 

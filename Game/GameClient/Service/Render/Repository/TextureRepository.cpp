@@ -18,7 +18,7 @@ struct GpuPendingTextureRequest
 	std::shared_ptr<TextureAsset> asset;
 };
 
-TextureRepository::~TextureRepository() = default;
+TextureRepository::~TextureRepository() { ReleaseAll(); }
 TextureRepository::TextureRepository(ITextureSystem* texSystem) :
 	m_texSystem{ texSystem }
 {}
@@ -128,4 +128,14 @@ void TextureRepository::ProcessLoading()
 		else
 			++it;
 	}
+}
+
+void TextureRepository::ReleaseAll()
+{
+	m_cpuPending.clear();
+	m_gpuPending.clear();
+	m_loadingList.clear();
+
+	m_cache.clear();
+	m_loadedTextures.Clear();
 }

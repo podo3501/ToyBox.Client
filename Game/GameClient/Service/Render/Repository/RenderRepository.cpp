@@ -5,7 +5,7 @@
 #include "MeshRepository.h"
 #include "../IRenderBackend.h"
 
-RenderRepository::~RenderRepository() = default;
+RenderRepository::~RenderRepository() { m_backend->WaitIdle(); } //리소스를 RenderService가 들고 있기 때문에 gpu의 활동을 중지 시키고 리소스 삭제->backend 순으로 된다.
 RenderRepository::RenderRepository(IRenderBackend* backend) :
 	m_backend{ backend },
 	m_texRepository{ make_unique<TextureRepository>(m_backend->GetTextureSystem()) },
@@ -44,6 +44,12 @@ void RenderRepository::Update()
 	m_meshRepository->Update();
 	m_texRepository->Update();
 	m_matRepository->Update();
+}
+
+void RenderRepository::ReleaseAll()
+{
+	m_meshRepository->ReleaseAll();
+	m_texRepository->ReleaseAll();
 }
 
 const TextureEntry* RenderRepository::Get(TextureHandle handle) const noexcept 

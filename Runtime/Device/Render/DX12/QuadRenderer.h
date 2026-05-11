@@ -31,8 +31,8 @@ private:
     UINT m_srvDescriptorSize{ 0 };
     Size m_screenSize{};
 
-    Microsoft::WRL::ComPtr<ID3D12Resource> m_constantBuffer;
-    QuadTransform* m_cbvData{ nullptr };
+    //Microsoft::WRL::ComPtr<ID3D12Resource> m_constantBuffer;
+    //QuadTransform* m_cbvData{ nullptr };
 
     std::shared_ptr<MeshResource> m_uiQuadMesh;
 };

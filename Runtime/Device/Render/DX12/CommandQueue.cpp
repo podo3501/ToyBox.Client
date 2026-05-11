@@ -44,7 +44,7 @@ CommandList* CommandQueue::Begin()
     return entry;
 }
 
-uint64_t CommandQueue::End(vector<ComPtr<ID3D12Resource>>&& resources)
+uint64_t CommandQueue::End()
 {
     Assert(m_currentCmdEntry);
 
@@ -57,8 +57,6 @@ uint64_t CommandQueue::End(vector<ComPtr<ID3D12Resource>>&& resources)
     m_lastSubmittedFence = fenceValue;
 
     m_currentCmdEntry->SetFence(m_fence.Get(), fenceValue); // 재사용하기 위해서 fence 기록
-    if (!resources.empty())
-        m_pendingReleases.push({ fenceValue, std::move(resources) });
 
     m_currentCmdEntry = nullptr;
     return fenceValue;
@@ -75,23 +73,6 @@ void CommandQueue::WaitIdle()
 {
     if (m_fenceValue > 1)
         WaitFence(m_fenceValue - 1);
-}
-
-void CommandQueue::ReleaseCompletedResources()
-{
-    while (!m_pendingReleases.empty())
-    {
-        auto& front = m_pendingReleases.front();
-        if (m_fence->GetCompletedValue() < front.fenceValue) break;
-
-        m_pendingReleases.pop();
-    }
-}
-
-void CommandQueue::WaitForGPU()
-{
-    WaitIdle();
-    ReleaseCompletedResources();
 }
 
 bool CommandQueue::CreateQueue(ID3D12Device* device, CommandType type)

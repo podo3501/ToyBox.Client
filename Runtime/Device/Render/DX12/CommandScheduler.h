@@ -17,13 +17,12 @@ public:
     CommandScheduler();
     bool Initialize(ID3D12Device* device, uint32_t directPoolSize, uint32_t copyPoolSize, uint32_t computePoolSize);
     CommandList* Begin(CommandType type);
-    uint64_t End(vector<ComPtr<ID3D12Resource>>&& resources = {});
+    uint64_t End();
     
     // End -> Close + Signal, PendingRelease 등록
     uint64_t SignalQueue(CommandType type);
-    void WaitQueueIdle(CommandType type);
-    void ReleaseCompletedResources(); // Pending release 체크 후 리소스 해제
-    void WaitForAllGPU();
+    void WaitIdle(CommandType type);
+    void WaitIdle();
     bool IsFenceComplete(CommandType type, uint64_t fenceValue);
 
     ID3D12CommandQueue* GetCommandQueue(CommandType type);

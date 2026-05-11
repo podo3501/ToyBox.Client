@@ -24,8 +24,8 @@ public:
 	~RenderBackend();
 	RenderBackend();
 	virtual bool Initialize(HWND hwnd, const Size& wndSize, const RenderConfig& renderConfig) override;
-	virtual void DrawUI(ITextureResource* texRes, const Rect& dest, const Rect* source) override;
-	virtual void DrawMesh(IMeshResource* meshRes) override;
+	virtual void DrawUI(std::shared_ptr<ITextureResource> texRes, const Rect& dest, const Rect* source) override;
+	virtual void DrawMesh(std::shared_ptr<IMeshResource> meshRes) override;
 	virtual void Resize(const Size& size) override;
 	virtual void Update() override;
 	virtual void Render() override;

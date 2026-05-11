@@ -48,6 +48,7 @@ public:
     TextureHandle GetOrCreate(const filesystem::path& path, const TextureDesc& desc,
         function<shared_ptr<TextureAsset>(const filesystem::path&)> loader);
     bool Release(TextureHandle h);
+    void ReleaseAll();
     void Update();
     const TextureEntry* Get(TextureHandle h) const noexcept { return m_loadedTextures.Find(h); }
 
@@ -56,7 +57,6 @@ private:
     void ProcessGpuPending();
     void ProcessLoading();
 
-private:
     ITextureSystem* m_texSystem{ nullptr };
     unordered_map<TextureKey, TextureHandle, TextureKeyHash> m_cache;
     HandlePool<TextureEntry, TextureTag> m_loadedTextures;

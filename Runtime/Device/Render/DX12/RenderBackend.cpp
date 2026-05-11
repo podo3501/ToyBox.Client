@@ -5,7 +5,6 @@
 #include "CommandScheduler.h"
 #include "DescriptorAllocator.h"
 #include "TaskScheduler.h"
-#include "TextureResource.h"
 #include "ResourceLoader.h"
 #include "GPUProfiler.h"
 #include "MeshRenderer.h"
@@ -24,7 +23,6 @@
 #include "CommandList.h"
 #include "CommandUtils.h"
 #include <dxgi1_6.h>
-#include "TempVertex.h"
 
 using Microsoft::WRL::ComPtr;
 
@@ -47,7 +45,7 @@ RenderBackend::RenderBackend() :
 
 void RenderBackend::WaitIdle()
 {
-    m_command->WaitForAllGPU();
+    m_command->WaitIdle();
 }
 
 bool RenderBackend::Initialize(HWND hwnd, const Size& wndSize, const RenderConfig& config)
@@ -111,10 +109,10 @@ void RenderBackend::EndFrame()
     m_cmd = nullptr;
 }
 
-void RenderBackend::DrawUI(ITextureResource* texRes, const Rect& dest, const Rect* source)
+void RenderBackend::DrawUI(std::shared_ptr<ITextureResource> texRes, const Rect& dest, const Rect* source)
 {
     UIDrawItem item;
-    item.texture = static_cast<TextureResource*>(texRes);
+    item.texture = texRes;
     item.dest = dest;
 
     if (source)
@@ -123,12 +121,10 @@ void RenderBackend::DrawUI(ITextureResource* texRes, const Rect& dest, const Rec
     m_scene->AddUI(item);
 }
 
-void RenderBackend::DrawMesh(IMeshResource* meshRes)
+void RenderBackend::DrawMesh(std::shared_ptr<IMeshResource> meshRes)
 {
-    auto mesh = static_cast<MeshResource*>(meshRes);
-
     DrawItem item;
-    item.mesh = mesh;
+    item.mesh = meshRes;
 
     m_scene->AddOpaque(item);
 }
@@ -140,7 +136,6 @@ void RenderBackend::Resize(const Size& size)
 
 void RenderBackend::Update()
 {
-    m_command->ReleaseCompletedResources();
     m_srvAllocator->ProcessDeferredFree(m_command->GetCompletedFences());
 
     m_taskScheduler->Execute();
@@ -182,6 +177,8 @@ void RenderBackend::Render()
     m_profiler->EndFrame(*m_cmd);
 
     EndFrame();
+
+    m_scene->Clear();
 }
 
 void RenderBackend::Clear(CommandList& cmd, float r, float g, float b, float a)

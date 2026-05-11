@@ -1,18 +1,17 @@
 #pragma once
 #include "Core/Foundation/Geometry2D.h"
 
-class MeshResource;
-class TextureResource;
+struct ITextureResource;
+struct IMeshResource;
 
 struct DrawItem
 {
-    MeshResource* mesh{ nullptr };
+    std::shared_ptr<IMeshResource> mesh;
 };
 
 struct UIDrawItem
 {
-    TextureResource* texture{ nullptr };
-
+    std::shared_ptr<ITextureResource> texture;
     Rect dest;
     Rect src;
 };
@@ -21,15 +20,17 @@ class RenderScene
 {
 public:
     void AddOpaque(const DrawItem& item);
-    void OpaqueClear();
     const std::vector<DrawItem>& GetOpaqueDraws() { return m_opaqueDraws; }
     
     void AddUI(const UIDrawItem& item);
-    void UIClear();
     const std::vector<UIDrawItem>& GetUIDraws() { return m_uiDraws; }
 
+    void Clear();
 
 private:
+    void OpaqueClear();
+    void UIClear();
+
     std::vector<DrawItem> m_opaqueDraws;
     std::vector<UIDrawItem> m_uiDraws;
 };

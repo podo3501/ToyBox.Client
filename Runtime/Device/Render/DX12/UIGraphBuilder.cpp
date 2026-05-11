@@ -22,7 +22,8 @@ void UIGraphBuilder::Build(RenderGraph& graph)
 
         for (auto& item : m_scene->GetUIDraws())
         {
-            m_quadRenderer->BindTexture(cmd, item.texture->GetSrv());
+            auto texRes = static_cast<TextureResource*>(item.texture.get());
+            m_quadRenderer->BindTexture(cmd, texRes->GetSrv());
             m_quadRenderer->Draw(cmd, item.dest);
         }
         };

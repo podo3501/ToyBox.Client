@@ -94,7 +94,8 @@ void TaskScheduler::ExecuteTask(TaskEntry& entry)
 
     // GPU TASK
     auto cmd = m_cmdScheduler->Begin(entry.task.type);
-    if (!cmd) return;
+    if (!cmd) 
+        return;
 
     entry.task.gpuExecute(*cmd, entry.context);
     entry.fenceValue = m_cmdScheduler->End();

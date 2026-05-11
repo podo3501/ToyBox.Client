@@ -27,9 +27,11 @@ public:
 		function<shared_ptr<TextureAsset>(const filesystem::path&)> loader);
 	bool ReleaseTexture(TextureHandle th);
 
+
 	MaterialHandle CreateMaterial(TextureHandle th);
 
 	void Update();
+	void ReleaseAll();
 	const TextureEntry* Get(TextureHandle handle) const noexcept;
 	const MeshEntry* Get(MeshHandle handle) const noexcept;
 

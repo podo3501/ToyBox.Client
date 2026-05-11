@@ -8,7 +8,7 @@ using Microsoft::WRL::ComPtr;
 
 CommandScheduler::~CommandScheduler()
 {
-    WaitForAllGPU();
+    WaitIdle();
 }
 CommandScheduler::CommandScheduler() = default;
 
@@ -39,11 +39,11 @@ CommandList* CommandScheduler::Begin(CommandType type)
     return cmd;
 }
 
-uint64_t CommandScheduler::End(vector<ComPtr<ID3D12Resource>>&& resources)
+uint64_t CommandScheduler::End()
 {
     Assert(m_currentQueue);
 
-    auto fenceValue = m_currentQueue->End(move(resources));
+    auto fenceValue = m_currentQueue->End();
     m_currentQueue = nullptr;
     return fenceValue;
 }
@@ -53,23 +53,16 @@ uint64_t CommandScheduler::SignalQueue(CommandType type)
     return GetQueue(type)->Signal();
 }
 
-void CommandScheduler::WaitQueueIdle(CommandType type)
+void CommandScheduler::WaitIdle(CommandType type)
 {
     GetQueue(type)->WaitIdle();
 }
 
-void CommandScheduler::ReleaseCompletedResources()
+void CommandScheduler::WaitIdle()
 {
-    m_directQueue->ReleaseCompletedResources();
-    m_copyQueue->ReleaseCompletedResources();
-    m_computeQueue->ReleaseCompletedResources();
-}
-
-void CommandScheduler::WaitForAllGPU()
-{
-    m_directQueue->WaitForGPU();
-    m_copyQueue->WaitForGPU();
-    m_computeQueue->WaitForGPU();
+    m_directQueue->WaitIdle();
+    m_copyQueue->WaitIdle();
+    m_computeQueue->WaitIdle();
 }
 
 bool CommandScheduler::IsFenceComplete(CommandType type, uint64_t fenceValue)

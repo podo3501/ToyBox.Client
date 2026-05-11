@@ -4,6 +4,7 @@
 #include "RenderGraph.h"
 #include "RenderScene.h"
 #include "MeshRenderer.h"
+#include "MeshResource.h"
 
 OpaqueGraphBuilder::~OpaqueGraphBuilder() = default;
 OpaqueGraphBuilder::OpaqueGraphBuilder(RenderScene* scene, MeshRenderer* meshRenderer, RGHandle hBb) :
@@ -22,7 +23,8 @@ void OpaqueGraphBuilder::Build(RenderGraph& graph)
         for (auto& item : m_scene->GetOpaqueDraws())
         {
             DescriptorAllocation dummy{};
-            m_meshRenderer->Draw(cmd, *item.mesh, dummy);
+            auto mesh = static_cast<MeshResource*>(item.mesh.get());
+            m_meshRenderer->Draw(cmd, *mesh, dummy);
         }
         };
 }

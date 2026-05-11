@@ -252,6 +252,7 @@ static vector<Task> CreateBarrierTask(const std::vector<BarrierPlan>& barriers)
     for (auto& barrier : barriers)
     {
         Task barrierTask{};
+        barrierTask.passName = "barrier";
         barrierTask.type = barrier.cmdType;
         barrierTask.gpuExecute = [barrier](CommandList& cmd, TaskContext& ctx) {
             auto res = ctx.GetResource<ComPtr<ID3D12Resource>>(barrier.handle).Get();
@@ -276,6 +277,7 @@ std::vector<CompiledTask> RenderGraph::Compile()
         auto& pass = m_passes[i];
 
         Task task{};
+        task.passName = pass.name;
         task.type = pass.type;
         vector<uint32_t> dependencies;
         
