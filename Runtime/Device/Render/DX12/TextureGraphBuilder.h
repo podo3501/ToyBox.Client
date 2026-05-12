@@ -7,6 +7,8 @@ struct TextureDesc;
 struct TextureLoadRequest;
 struct UploadableResource;
 struct ID3D12Resource;
+struct TextureUploadEntry;
+struct TextureFinalizeEntry;
 class TextureRegistry;
 class TaskScheduler;
 class ResourceLoader;
@@ -23,11 +25,14 @@ public:
     TextureGraphBuilder() = delete;
     TextureGraphBuilder(TaskScheduler* taskScheduler, ResourceLoader* loader,
         MipGenerator* mipGenerator, DescriptorFactory* descriptorFactory);
+
     void LoadTextures(const std::vector<TextureLoadRequest>& requests);
 
 private:
-    void BuildGraph(RenderGraph& graph, std::shared_ptr<TextureAsset> asset, const TextureDesc& desc, 
-        RGHandle hTex, ComPtr<ID3D12Resource> texRes, size_t offset, bool generateMips);
+    void BuildUploadPass(RenderGraph& graph, std::vector<TextureUploadEntry>& textureUploads);
+    void BuildMipPass(RenderGraph& graph, std::vector<TextureUploadEntry>& textureUploads);
+    void BuildFinalizePass(RenderGraph& graph, std::vector<TextureFinalizeEntry>& finalizeEntries);
+
     RGHandle CreateRGHandle();
 
     TaskScheduler* m_taskScheduler{ nullptr };

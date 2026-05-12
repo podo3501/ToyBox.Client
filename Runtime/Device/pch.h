@@ -65,4 +65,15 @@ do { \
         std::terminate(); \
     } \
 } while(0)
+
+#ifdef _DEBUG
+    #define DX_LOG(...) \
+        do { \
+            auto text = std::format(__VA_ARGS__); \
+            _CrtDbgReport(_CRT_WARN, nullptr, 0, nullptr, "%s\n", text.c_str()); \
+        } while(false)
+#else
+    #define DX_LOG(...) do {} while(false)
+#endif
+
 #endif

@@ -4,6 +4,8 @@
 
 struct MeshAsset;
 struct MeshLoadRequest;
+struct MeshUploadEntry;
+struct MeshFinalizeEntry;
 class RenderGraph;
 class TaskScheduler;
 class ResourceLoader;
@@ -16,18 +18,15 @@ class MeshGraphBuilder
 {
 public:
     ~MeshGraphBuilder();
-    void LoadMeshes(const std::vector<MeshLoadRequest>& requests);
+    MeshGraphBuilder() = delete;
     MeshGraphBuilder(TaskScheduler* taskScheduler, ResourceLoader* uploader,
         DescriptorFactory* descriptorFactory);
 
+    void LoadMeshes(const std::vector<MeshLoadRequest>& requests);
+
 private:
-    void BuildGraph(
-        RenderGraph& graph,
-        std::shared_ptr<MeshAsset> asset,
-        RGHandle hMesh,
-        RGHandle hVb, ComPtr<ID3D12Resource> vbRes,
-        RGHandle hIb, ComPtr<ID3D12Resource> ibRes,
-        size_t vbOffset, size_t ibOffset);
+    void BuildUploadPass(RenderGraph& graph, std::vector<MeshUploadEntry>& meshUploads);
+    void BuildFinalizePass(RenderGraph& graph, std::vector<MeshFinalizeEntry>& finalizes);
 
     RGHandle CreateRGHandle();
 

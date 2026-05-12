@@ -10,6 +10,22 @@
 #include "DX12Utils.h"
 #include "GameClient/Service/Asset/Assets/MeshAsset.h"
 
+struct MeshUploadEntry
+{
+    RGHandle handle;
+    ComPtr<ID3D12Resource> resource;
+    UploadRegion region;
+};
+
+struct MeshFinalizeEntry
+{
+    std::shared_ptr<MeshAsset> asset;
+
+    RGHandle hMesh;
+    RGHandle hVb;
+    RGHandle hIb;
+};
+
 MeshGraphBuilder::~MeshGraphBuilder() = default;
 MeshGraphBuilder::MeshGraphBuilder(TaskScheduler* taskScheduler, ResourceLoader* loader,
     DescriptorFactory* descriptorFactory) :
@@ -19,16 +35,22 @@ MeshGraphBuilder::MeshGraphBuilder(TaskScheduler* taskScheduler, ResourceLoader*
     m_registry{ make_unique<MeshRegistry>() }
 {}
 
-void MeshGraphBuilder::LoadMeshes(const std::vector<MeshLoadRequest>& requests)
+void MeshGraphBuilder::LoadMeshes(
+    const std::vector<MeshLoadRequest>& requests)
 {
     RenderGraph graph;
 
+    std::vector<MeshUploadEntry> uploads;
+    std::vector<MeshFinalizeEntry> finalizes;
+
     size_t offset = 0;
+
     for (const auto& req : requests)
     {
         RGHandle hVb = CreateRGHandle();
         RGHandle hIb = CreateRGHandle();
         RGHandle hMesh = CreateRGHandle();
+
         m_registry->Register(hMesh.id, req.resource);
 
         auto vbRes = m_loader->CreateBufferResource(static_cast<UINT64>(req.vbBytes));
@@ -36,68 +58,92 @@ void MeshGraphBuilder::LoadMeshes(const std::vector<MeshLoadRequest>& requests)
 
         size_t vbOffset = offset;
         size_t ibOffset = offset + req.vbBytes;
-        
-        BuildGraph(graph, req.asset, hMesh, hVb, vbRes, hIb, ibRes, vbOffset, ibOffset);
+
+        uploads.push_back({
+            hVb, vbRes,
+            req.asset->vertices.data(),
+            req.asset->vertices.size(),
+            static_cast<UINT64>(vbOffset),
+            vbRes.Get()
+            });
+
+        uploads.push_back({
+            hIb, ibRes,
+            req.asset->indices.data(),
+            req.asset->indices.size() * sizeof(uint32_t),
+            static_cast<UINT64>(ibOffset),
+            ibRes.Get()
+            });
+
+        finalizes.push_back({ req.asset, hMesh, hVb, hIb });
 
         offset += req.vbBytes + req.ibBytes;
     }
 
-    auto compiledTasks = graph.Compile();
+    BuildUploadPass(graph, uploads);
+    BuildFinalizePass(graph, finalizes);
 
+    auto compiledTasks = graph.Compile();
     size_t totalUploadSize = AlignSize(offset, AlignVertexIndex);
+
     auto uploadCtx = std::make_shared<UploadContext>();
     uploadCtx->resource = m_loader->CreateUploadResource(totalUploadSize);
+
     m_taskScheduler->Submit(compiledTasks, std::make_shared<ResourceContext>(), uploadCtx);
 }
 
-void MeshGraphBuilder::BuildGraph(
-    RenderGraph& graph, 
-    std::shared_ptr<MeshAsset> asset, 
-    RGHandle hMesh,
-    RGHandle hVb, ComPtr<ID3D12Resource> vbRes, 
-    RGHandle hIb, ComPtr<ID3D12Resource> ibRes, 
-    size_t vbOffset, size_t ibOffset)
+void MeshGraphBuilder::BuildUploadPass(RenderGraph& graph, std::vector<MeshUploadEntry>& meshUploads)
 {
-    auto& vbUpload = graph.AddPass("VBUpload", CommandType::Copy);
-    vbUpload.writes.push_back({ hVb, RGAccess::CopyDest });
-    vbUpload.gpuExecute = [this, asset, hVb, vbRes, vbOffset](CommandList& cmd, TaskContext& ctx) {
-        UploadRegion vbRegion;
-        vbRegion.data = asset->vertices.data();
-        vbRegion.size = asset->vertices.size();
-        vbRegion.srcOffset = static_cast<UINT64>(vbOffset);
-        vbRegion.dstBuffer = vbRes.Get();
+    auto& pass = graph.AddPass("MeshUpload", CommandType::Copy);
 
-        m_loader->UploadBufferRegion(cmd, ctx.upload->resource.Get(), vbRegion);
-        ctx.SetResource(hVb, std::move(vbRes));
+    for (auto& mesh : meshUploads)
+        pass.writes.push_back({ mesh.handle, RGAccess::CopyDest });
+    
+    pass.gpuExecute = [this, meshUploads](CommandList& cmd, TaskContext& ctx) mutable {
+        for (auto& mesh : meshUploads)
+        {
+            m_loader->UploadBufferRegion(cmd, ctx.upload->resource.Get(), mesh.region);
+            ctx.SetResource(mesh.handle, std::move(mesh.resource));
+        }
         };
+}
 
-    auto& ibUpload = graph.AddPass("IBUpload", CommandType::Copy);
-    ibUpload.writes.push_back({ hIb, RGAccess::CopyDest });
-    ibUpload.gpuExecute = [this, asset, hIb, ibRes, ibOffset](CommandList& cmd, TaskContext& ctx) {
-        UploadRegion ibRegion;
-        ibRegion.data = asset->indices.data();
-        ibRegion.size = asset->indices.size() * sizeof(uint32_t);
-        ibRegion.srcOffset = static_cast<UINT64>(ibOffset);
-        ibRegion.dstBuffer = ibRes.Get();
+void MeshGraphBuilder::BuildFinalizePass(RenderGraph& graph, std::vector<MeshFinalizeEntry>& finalizes)
+{
+    auto& finalize = graph.AddPass("FinalizeMeshes", CommandType::None);
 
-        m_loader->UploadBufferRegion(cmd, ctx.upload->resource.Get(), ibRegion);
-        ctx.SetResource(hIb, std::move(ibRes));
-        };
+    for (auto& mesh : finalizes)
+    {
+        finalize.reads.push_back({ mesh.hVb, RGAccess::CopyDest });
+        finalize.reads.push_back({ mesh.hIb, RGAccess::CopyDest });
+        finalize.writes.push_back({ mesh.hVb, RGAccess::SRV });
+        finalize.writes.push_back({ mesh.hIb, RGAccess::SRV });
+    }
 
-    auto& finalize = graph.AddPass("FinalizeMesh", CommandType::None);
-    finalize.reads.push_back({ hVb, RGAccess::CopyDest });
-    finalize.reads.push_back({ hIb, RGAccess::CopyDest });
-    finalize.writes.push_back({ hVb, RGAccess::SRV });
-    finalize.writes.push_back({ hIb, RGAccess::SRV });
-    finalize.cpuExecute = [this, asset, hVb, hIb, hMesh](TaskContext& ctx) {
-        auto& vb = ctx.GetResource<ComPtr<ID3D12Resource>>(hVb);
-        auto& ib = ctx.GetResource<ComPtr<ID3D12Resource>>(hIb);
+    finalize.cpuExecute = [this, finalizes](TaskContext& ctx) {
+        for (auto& mesh : finalizes)
+        {
+            auto& vb = ctx.GetResource<ComPtr<ID3D12Resource>>(mesh.hVb);
+            auto& ib = ctx.GetResource<ComPtr<ID3D12Resource>>(mesh.hIb);
 
-        auto indexCount = static_cast<uint32_t>(asset->indices.size());
-        auto vbAlloc = m_descriptorFactory->CreateBufferSRV(vb.Get(), asset->vertexCount, asset->vertexStride);
-        auto ibAlloc = m_descriptorFactory->CreateBufferSRV(ib.Get(), indexCount, sizeof(uint32_t));
+            auto indexCount = static_cast<uint32_t>(mesh.asset->indices.size());
 
-        m_registry->FinalizeMesh(hMesh.id, vb, std::move(vbAlloc), ib, std::move(ibAlloc), indexCount);
+            auto vbAlloc = m_descriptorFactory->CreateBufferSRV(
+                    vb.Get(),
+                    mesh.asset->vertexCount,
+                    mesh.asset->vertexStride);
+
+            auto ibAlloc = m_descriptorFactory->CreateBufferSRV(
+                    ib.Get(),
+                    indexCount,
+                    sizeof(uint32_t));
+
+            m_registry->FinalizeMesh(
+                mesh.hMesh.id,
+                vb, std::move(vbAlloc),
+                ib, std::move(ibAlloc),
+                indexCount);
+        }
         };
 }
 

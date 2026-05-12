@@ -23,8 +23,18 @@ bool CommandList::Initialize(ID3D12Device* device, CommandType type)
 
 void CommandList::Reset()
 {
+    Assert(!m_recording);
+
+    if (m_lastFenceValue != 0)
+    {
+        Assert(m_fence);
+        Assert(m_fence->GetCompletedValue() >= m_lastFenceValue); //이전 gpu 작업이 끝났는지 확인.
+    }
+
     DxCheck(m_allocator->Reset());
     DxCheck(m_command->Reset(m_allocator.Get(), nullptr));
+
+    m_recording = true;
 }
 
 void CommandList::Close()
@@ -32,19 +42,28 @@ void CommandList::Close()
     DxCheck(m_command->Close());
 }
 
-bool CommandList::IsAvailable() const
-{
-    if (!m_fence) return true; // 아직 한 번도 안 쓴 경우
-    if (m_inUse) return false;
-
-    return m_fence->GetCompletedValue() >= m_lastFenceValue;
-}
-
 void CommandList::SetFence(ID3D12Fence* fence, uint64_t value)
 {
+    Assert(value != 0);
+
     m_fence = fence;
     m_lastFenceValue = value;
-    m_inUse = false;
+
+    m_recording = false;
+}
+
+bool CommandList::IsAvailable() const
+{
+    if (m_recording)
+        return false;
+
+    if (m_lastFenceValue == 0) //한번도 쓴적이 없다면
+        return true;
+
+    Assert(m_fence);
+
+    bool completed = m_fence->GetCompletedValue() >= m_lastFenceValue; //시킨 일이 끝나 있는지
+    return completed;
 }
 
 void CommandList::DependOn(CommandType type, uint64_t fenceValue)

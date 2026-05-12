@@ -10,6 +10,17 @@ concept CommandListLike = requires(T t)
 
 namespace CommandUtils
 {
+    inline D3D12_RESOURCE_BARRIER CreateTransitionBarrier(
+        ID3D12Resource* resource,
+        D3D12_RESOURCE_STATES before,
+        D3D12_RESOURCE_STATES after) noexcept
+    {
+        return CD3DX12_RESOURCE_BARRIER::Transition(
+            resource,
+            before,
+            after);
+    }
+
     template<CommandListLike T>
     inline void Transition(T& cmd, ID3D12Resource* resource,
         D3D12_RESOURCE_STATES before,
@@ -18,8 +29,21 @@ namespace CommandUtils
         if (before == after)
             return;
 
-        auto barrier = CD3DX12_RESOURCE_BARRIER::Transition(resource, before, after);
+        auto barrier = CreateTransitionBarrier(resource, before, after);
         cmd.Get()->ResourceBarrier(1, &barrier);
+    }
+
+    template<CommandListLike T>
+    inline void Transition(
+        T& cmd,
+        const std::vector<D3D12_RESOURCE_BARRIER>& barriers) noexcept
+    {
+        if (barriers.empty())
+            return;
+
+        cmd.Get()->ResourceBarrier(
+            static_cast<UINT>(barriers.size()),
+            barriers.data());
     }
 
     template<CommandListLike T>

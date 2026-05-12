@@ -70,27 +70,6 @@ static CommandType ResolveCommandType(CommandType type,
     return type;
 }
 
-static std::vector<BarrierPlan> BuildBarriers(CommandType cmdType, const RenderPass& pass, 
-    std::unordered_map<uint32_t, ResourceStateTracker>& resStateTracker)
-{
-    std::vector<BarrierPlan> barriers;
-
-    for (auto& use : pass.writes)
-    {
-        auto& state = resStateTracker[use.handle.id].state;
-        auto desired = AccessToState(cmdType, use.access);
-
-        if (state != desired)
-        {
-            auto type = ResolveCommandType(cmdType, state, desired);
-            barriers.push_back({ use.handle, type, state, desired });
-            state = desired;
-        }
-    }
-
-    return barriers;
-}
-
 static void BuildDependents(std::vector<CompiledTask>& tasks)
 {
     std::unordered_map<uint32_t, size_t> indexMap;
@@ -246,23 +225,57 @@ std::vector<int> RenderGraph::TopologicalSort(const std::vector<PassNode>& graph
     return result;
 }
 
-static vector<Task> CreateBarrierTask(const std::vector<BarrierPlan>& barriers)
-{
-    vector<Task> barrierTasks;
-    for (auto& barrier : barriers)
-    {
-        Task barrierTask{};
-        barrierTask.passName = "barrier";
-        barrierTask.type = barrier.cmdType;
-        barrierTask.gpuExecute = [barrier](CommandList& cmd, TaskContext& ctx) {
-            auto res = ctx.GetResource<ComPtr<ID3D12Resource>>(barrier.handle).Get();
-            CommandUtils::Transition(cmd, res, barrier.before, barrier.after);
-            };
+using BarrierGroups = std::unordered_map<CommandType, std::vector<BarrierPlan>>;
 
-        barrierTasks.push_back(barrierTask);
+static BarrierGroups BuildBarriers(
+    CommandType cmdType, 
+    const RenderPass& pass,
+    std::unordered_map<uint32_t, 
+    ResourceStateTracker>& resStateTracker)
+{
+    BarrierGroups groups;
+
+    for (auto& use : pass.writes)
+    {
+        auto& state = resStateTracker[use.handle.id].state;
+        auto desired = AccessToState(cmdType, use.access);
+
+        if (state != desired)
+        {
+            auto type = ResolveCommandType(cmdType, state, desired);
+            groups[type].push_back({ use.handle, state, desired });
+
+            state = desired;
+        }
     }
 
-    return barrierTasks;
+    return groups;
+}
+
+static Task CreateBarrierTask(CommandType type, const std::vector<BarrierPlan>& barriers)
+{
+    Task task{};
+    task.passName = "barrier";
+    task.type = type;
+    task.gpuExecute = [barriers](CommandList& cmd, TaskContext& ctx) {
+        std::vector<D3D12_RESOURCE_BARRIER> nativeBarriers;
+        nativeBarriers.reserve(barriers.size());
+
+        for (auto& barrier : barriers)
+        {
+            auto res = ctx.GetResource<ComPtr<ID3D12Resource>>(barrier.handle).Get();
+
+            nativeBarriers.push_back(
+                CommandUtils::CreateTransitionBarrier(res, barrier.before, barrier.after));
+
+            DX_LOG("[Barrier] handle={} {} -> {}", barrier.handle.id, (uint32_t)barrier.before, (uint32_t)barrier.after);
+        }
+
+        DX_LOG("[BarrierBatch] count={}", nativeBarriers.size());
+        CommandUtils::Transition(cmd, nativeBarriers);
+        };
+
+    return task;
 }
 
 std::vector<CompiledTask> RenderGraph::Compile()
@@ -293,18 +306,16 @@ std::vector<CompiledTask> RenderGraph::Compile()
                 dependencies.push_back(lastWriter[use.handle.id]);
         }
 
-        auto barriers = BuildBarriers(task.type, pass, m_statesTracker); //barrier가 필요하면 task를 만든다.
-        if (!barriers.empty())
+        auto barrierGroups = BuildBarriers(task.type, pass, m_statesTracker);
+        for (auto& [type, barriers] : barrierGroups)
         {
-            auto barrierTasks = CreateBarrierTask(barriers);
-            for (auto& barrierTask : barrierTasks)
-            {
-                auto barrierID = CreateLocalTaskID();
-                compiledTasks.push_back({ barrierID, std::move(barrierTask), dependencies });
+            auto barrierTask = CreateBarrierTask(type, barriers);
+            auto barrierID = CreateLocalTaskID();
 
-                dependencies.clear(); //barrier가 중간에 들어가기 때문에 barrier id로 연결을 다시 한다.
-                dependencies.push_back(barrierID);
-            }
+            compiledTasks.push_back({ barrierID, std::move(barrierTask), dependencies });
+
+            dependencies.clear();
+            dependencies.push_back(barrierID);
         }
 
         if (!pass.cpuExecute && !pass.gpuExecute)

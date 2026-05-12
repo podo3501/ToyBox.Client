@@ -91,9 +91,10 @@ void TaskScheduler::ExecuteTask(TaskEntry& entry)
         entry.started = true;
         return;
     }
-
+    
     // GPU TASK
     auto cmd = m_cmdScheduler->Begin(entry.task.type);
+    AssertMsg(cmd, "해당 CommandList 가 없음. 할당을 못 받았거나 사용 가능한 것이 없거나 등등");
     if (!cmd) 
         return;
 
