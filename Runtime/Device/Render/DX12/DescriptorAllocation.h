@@ -10,7 +10,7 @@ class DescriptorAllocation
 public:
     ~DescriptorAllocation();
     DescriptorAllocation() = default;
-    DescriptorAllocation(DescriptorAllocator* allocator, UINT index);
+    DescriptorAllocation(DescriptorAllocator* allocator, UINT index, UINT count);
 
     DescriptorAllocation(const DescriptorAllocation&) = delete;
     DescriptorAllocation& operator=(const DescriptorAllocation&) = delete;
@@ -22,7 +22,9 @@ public:
     void MarkUsed(CommandType type, uint64_t fence);
     
     D3D12_CPU_DESCRIPTOR_HANDLE GetCpuHandle() const;
+    D3D12_CPU_DESCRIPTOR_HANDLE GetCpuHandle(UINT offset) const;
     D3D12_GPU_DESCRIPTOR_HANDLE GetGpuHandle() const;
+    D3D12_GPU_DESCRIPTOR_HANDLE GetGpuHandle(UINT offset) const;
 
 private:
     void MoveFrom(DescriptorAllocation& other);
@@ -31,6 +33,7 @@ private:
 private:
     DescriptorAllocator* m_allocator{ nullptr };
     UINT m_index{ UINT_MAX };
+    UINT m_count{ 0 };
 
     QueueFences m_fences{};
     bool m_deferred{ false };

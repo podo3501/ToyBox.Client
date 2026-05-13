@@ -82,23 +82,6 @@ bool QuadRenderer::Initialize(ID3D12Device* device, const Size& screenSize)
     hr = device->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&m_pipelineState));
     if (FAILED(hr)) return false;
 
-    //// Constant Buffer 생성
-    //CD3DX12_HEAP_PROPERTIES heap(D3D12_HEAP_TYPE_UPLOAD);
-    //CD3DX12_RESOURCE_DESC desc = CD3DX12_RESOURCE_DESC::Buffer(256); // 256 align 필수
-
-    //HRESULT hrCB = device->CreateCommittedResource(
-    //    &heap,
-    //    D3D12_HEAP_FLAG_NONE,
-    //    &desc,
-    //    D3D12_RESOURCE_STATE_GENERIC_READ,
-    //    nullptr,
-    //    IID_PPV_ARGS(&m_constantBuffer)
-    //);
-    //if (FAILED(hrCB)) return false;
-
-    //// Map은 한 번만 (평생 유지)
-    //m_constantBuffer->Map(0, nullptr, (void**)&m_cbvData);
-
     return true;
 }
 
@@ -145,10 +128,9 @@ void QuadRenderer::Draw(CommandList& cmd, const Rect& dest)
     transform.offset[0] = (left + right) * 0.5f;
     transform.offset[1] = (top + bottom) * 0.5f;
 
-    auto& vbSrv = m_uiQuadMesh->GetVBSrv();
-    auto& ibSrv = m_uiQuadMesh->GetIBSrv();
+    auto& meshTable = m_uiQuadMesh->GetMeshTable();
 
-    cmd->SetGraphicsRootDescriptorTable(0, vbSrv.GetGpuHandle());
+    cmd->SetGraphicsRootDescriptorTable(0, meshTable.GetGpuHandle());
     cmd->SetGraphicsRoot32BitConstants(
         2,          // root parameter index
         4,          // 32bit value count
@@ -159,11 +141,15 @@ void QuadRenderer::Draw(CommandList& cmd, const Rect& dest)
     cmd->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     cmd->DrawInstanced(m_uiQuadMesh->GetIndexCount(), 1, 0, 0);
 
-    vbSrv.MarkUsed(cmd.GetType(), cmd.GetFence());
-    ibSrv.MarkUsed(cmd.GetType(), cmd.GetFence());
+    meshTable.MarkUsed(cmd.GetType(), cmd.GetFence());
 }
 
 void QuadRenderer::SetSRVHeap(ID3D12DescriptorHeap* heap)
 {
     m_srvHeap = heap;
+}
+
+void QuadRenderer::Resize(const Size& size)
+{
+    m_screenSize = size;
 }

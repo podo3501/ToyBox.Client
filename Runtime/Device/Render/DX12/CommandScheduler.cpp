@@ -13,15 +13,15 @@ CommandScheduler::~CommandScheduler()
 CommandScheduler::CommandScheduler() = default;
 
 bool CommandScheduler::Initialize(ID3D12Device* device, 
-    uint32_t directPoolSize, uint32_t copyPoolSize, uint32_t computePoolSize)
+    uint32_t directCmdPoolSize, uint32_t copyCmdPoolSize, uint32_t computeCmdPoolSize)
 {
     m_directQueue = make_unique<CommandQueue>();
     m_copyQueue = make_unique<CommandQueue>();
     m_computeQueue = make_unique<CommandQueue>();
 
-    ReturnIfFalse(m_directQueue->Initialize(device, CommandType::Direct, directPoolSize));
-    ReturnIfFalse(m_copyQueue->Initialize(device, CommandType::Copy, copyPoolSize));
-    ReturnIfFalse(m_computeQueue->Initialize(device, CommandType::Compute, computePoolSize));
+    ReturnIfFalse(m_directQueue->Initialize(device, CommandType::Direct, directCmdPoolSize));
+    ReturnIfFalse(m_copyQueue->Initialize(device, CommandType::Copy, copyCmdPoolSize));
+    ReturnIfFalse(m_computeQueue->Initialize(device, CommandType::Compute, computeCmdPoolSize));
     
     return true;
 }

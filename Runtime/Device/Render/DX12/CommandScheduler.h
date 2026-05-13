@@ -15,7 +15,11 @@ class CommandScheduler
 public:
     ~CommandScheduler();
     CommandScheduler();
-    bool Initialize(ID3D12Device* device, uint32_t directPoolSize, uint32_t copyPoolSize, uint32_t computePoolSize);
+    bool Initialize(ID3D12Device* device, 
+        uint32_t directCmdPoolSize, 
+        uint32_t copyCmdPoolSize, 
+        uint32_t computeCmdPoolSize);
+
     CommandList* Begin(CommandType type);
     uint64_t End();
     

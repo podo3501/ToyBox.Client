@@ -12,15 +12,15 @@ CommandQueue::~CommandQueue()
 }
 CommandQueue::CommandQueue() = default;
 
-bool CommandQueue::Initialize(ID3D12Device* device, CommandType type, uint32_t poolSize)
+bool CommandQueue::Initialize(ID3D12Device* device, CommandType type, uint32_t cmdPoolSize)
 {
-    if (!device || poolSize <= 0) return false;
+    if (!device || cmdPoolSize <= 0) return false;
 
     ReturnIfFalse(CreateQueue(device, type));
     ReturnIfFalse(CreateFence(device));
 
-    m_pool.reserve(poolSize);
-    for (uint32_t i = 0; i < poolSize; ++i)
+    m_pool.reserve(cmdPoolSize);
+    for (uint32_t i = 0; i < cmdPoolSize; ++i)
     {
         auto context = make_unique<CommandList>();
         ReturnIfFalse(context->Initialize(device, type));

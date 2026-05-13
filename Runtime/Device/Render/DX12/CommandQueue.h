@@ -13,7 +13,7 @@ public:
     ~CommandQueue();
     CommandQueue();
 
-    bool Initialize(ID3D12Device* device, CommandType type, uint32_t poolSize);
+    bool Initialize(ID3D12Device* device, CommandType type, uint32_t cmdPoolSize);
     CommandList* Begin();
     uint64_t End();
 

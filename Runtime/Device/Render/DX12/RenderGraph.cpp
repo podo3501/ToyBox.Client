@@ -268,10 +268,10 @@ static Task CreateBarrierTask(CommandType type, const std::vector<BarrierPlan>& 
             nativeBarriers.push_back(
                 CommandUtils::CreateTransitionBarrier(res, barrier.before, barrier.after));
 
-            DX_LOG("[Barrier] handle={} {} -> {}", barrier.handle.id, (uint32_t)barrier.before, (uint32_t)barrier.after);
+            //DX_LOG("[Barrier] handle={} {} -> {}", barrier.handle.id, (uint32_t)barrier.before, (uint32_t)barrier.after);
         }
 
-        DX_LOG("[BarrierBatch] count={}", nativeBarriers.size());
+        //DX_LOG("[BarrierBatch] count={}", nativeBarriers.size()); //?!? 이렇게 로그를 찍지만 tdd로 테스트를 해서 값이 제대로 나오는지 테스트 하는게 정석이다. 언제 하게 될지는 미정이다.
         CommandUtils::Transition(cmd, nativeBarriers);
         };
 

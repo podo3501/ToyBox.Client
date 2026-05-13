@@ -280,33 +280,26 @@
 --task 리스트를 들고 있는 구조로 되면 task를 보고 중간에 barrier를 끼워 넣을 수 있게 만들 수 있다.
 --큐브 하나만 띄우기
 --barrier가 texture와 다르기 때문에 코드 수정이 필요
-
-@텍스쳐 렌더링
-    @command 에 end 할때 upload buffer 넣는 부분 삭제
-    @복수개의 텍스쳐 로딩
-        @texSystem에서 gpu 로딩하는 부분 구현
-    @복수개의 텍스쳐 draw
+--command 에 end 할때 upload buffer 넣는 부분 삭제
+--복수개의 텍스쳐 로딩
+--texSystem에서 gpu 로딩하는 부분 구현
+--복수개의 텍스쳐 draw    
+--복수개의 큐브 로딩
+--복수개의 큐브 draw
+--기존의 quad 부분을 mesh로 바꾸기.
 
 @큐브 렌더링
-    @복수개의 큐브 로딩
-    @복수개의 큐브 draw
     @텍스춰 연결해서 화면에 띄우기
     
-@기존의 quad 부분을 mesh로 바꾸기.
-@2개 텍스쳐 띄워지는지 확인
-@2개 메쉬 띄워지는지 확인
 @리팩토링.
 @shadow pass 할지 말지 생각해 보자.
 
 @렌더러 만들기    
-    @간단한 ui 텍스쳐 사각형 mesh 형식으로 렌더링
-    @RGTexture 핸들값이 항상 1만 나오는건 이상한거다.
     @Backend Draw쪽 정리
     @Resize 되는지 확인
     @코드 정리 및 폴더 만들어서 정리
     @Material Repository가 지금은 Texture wrapper 수준인데 옵션 넣어서 동작하게끔.
     @vram에 upload 중에 렌더링이 걸리면 어떻게 되는지 테스트
-    @texture batching
     @화면 배경색깔 지정하게끔
     
 @	m_uiModule = CreateUIModule("Demo", layout, "Main", move(storage), move(resBinderOwner));

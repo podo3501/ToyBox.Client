@@ -8,7 +8,9 @@
 
 UIGraphBuilder::~UIGraphBuilder() = default;
 UIGraphBuilder::UIGraphBuilder(RenderScene* scene, QuadRenderer* quadRenderer, RGHandle hBb) :
-    m_scene{ scene }, m_quadRenderer{ quadRenderer }, m_hBb{ hBb }
+    m_scene{ scene }, 
+    m_quadRenderer{ quadRenderer }, 
+    m_hBb{ hBb }
 {}
 
 void UIGraphBuilder::Build(RenderGraph& graph)

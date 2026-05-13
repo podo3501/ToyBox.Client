@@ -8,7 +8,9 @@
 
 OpaqueGraphBuilder::~OpaqueGraphBuilder() = default;
 OpaqueGraphBuilder::OpaqueGraphBuilder(RenderScene* scene, MeshRenderer* meshRenderer, RGHandle hBb) :
-    m_scene{ scene }, m_meshRenderer{ meshRenderer }, m_hBb{ hBb }
+    m_scene{ scene }, 
+    m_meshRenderer{ meshRenderer }, 
+    m_hBb { hBb }
 {}
 
 void OpaqueGraphBuilder::Build(RenderGraph& graph)

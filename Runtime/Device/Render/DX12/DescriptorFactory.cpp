@@ -40,20 +40,34 @@ DescriptorAllocation DescriptorFactory::CreateTextureSRV(ID3D12Resource* res, co
     return allocation;
 }
 
-DescriptorAllocation DescriptorFactory::CreateBufferSRV(ID3D12Resource* res, uint32_t numElements, uint32_t stride)
+DescriptorAllocation DescriptorFactory::CreateMeshTable(
+    ID3D12Resource* vb, UINT vertexCount, UINT vertexStride,
+    ID3D12Resource* ib, UINT indexCount, UINT indexStride)
 {
-    D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
-    srvDesc.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
-    srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+    auto vbDesc = CreateStructuredBufferSRVDesc(vertexCount, vertexStride);
+    auto ibDesc = CreateStructuredBufferSRVDesc(indexCount, indexStride);
 
-    srvDesc.Format = DXGI_FORMAT_UNKNOWN; // StructuredBuffer로 인식시키기 위해 Format은 UNKNOWN으로 설정
-    srvDesc.Buffer.FirstElement = 0;
-    srvDesc.Buffer.NumElements = numElements;
-    srvDesc.Buffer.StructureByteStride = stride; // 구조체(Vertex 등)의 크기
-    srvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
+    auto table = m_srvAllocator->Allocate(2); // t0 = VB, t1 = IB
 
-    auto allocation = m_srvAllocator->Allocate();
-    m_device->CreateShaderResourceView(res, &srvDesc, allocation.GetCpuHandle());
+    m_device->CreateShaderResourceView(vb, &vbDesc, table.GetCpuHandle(0));
+    m_device->CreateShaderResourceView(ib, &ibDesc, table.GetCpuHandle(1));
 
-    return allocation;
+    return table;
+}
+
+D3D12_SHADER_RESOURCE_VIEW_DESC DescriptorFactory::CreateStructuredBufferSRVDesc(
+    UINT numElements, UINT stride) const
+{
+    D3D12_SHADER_RESOURCE_VIEW_DESC desc{};
+
+    desc.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
+    desc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+    desc.Format = DXGI_FORMAT_UNKNOWN; // StructuredBuffer로 인식시키기 위해 Format은 UNKNOWN으로 설정
+
+    desc.Buffer.FirstElement = 0;
+    desc.Buffer.NumElements = numElements;
+    desc.Buffer.StructureByteStride = stride; // 구조체(Vertex 등)의 크기
+    desc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
+
+    return desc;
 }

@@ -57,7 +57,9 @@ bool RenderBackend::Initialize(HWND hwnd, const Size& wndSize, const RenderConfi
 
     m_command = make_unique<CommandScheduler>();
     ReturnIfFalse(m_command->Initialize(device, 
-        config.directQueuePoolSize, config.copyQueuePoolSize, config.computeQueuePoolSize));
+        config.directCommandListPoolSize, 
+        config.copyCommandListPoolSize,
+        config.computeCommandListPoolSize));
 
     auto queue = m_command->GetCommandQueue(CommandType::Direct);
     SwapChainDesc desc{ hwnd, wndSize, config.allowTearing };
@@ -78,7 +80,7 @@ bool RenderBackend::Initialize(HWND hwnd, const Size& wndSize, const RenderConfi
     m_scene = make_unique<RenderScene>();
 
     m_meshRenderer = make_unique<MeshRenderer>();
-    ReturnIfFalse(m_meshRenderer->Initialize(device));
+    ReturnIfFalse(m_meshRenderer->Initialize(device, wndSize));
     m_meshRenderer->SetSRVHeap(m_srvAllocator->GetHeap());
 
     m_quadRenderer = make_unique<QuadRenderer>();
@@ -131,6 +133,8 @@ void RenderBackend::DrawMesh(std::shared_ptr<IMeshResource> meshRes)
 
 void RenderBackend::Resize(const Size& size)
 {
+    m_meshRenderer->Resize(size);
+    m_quadRenderer->Resize(size);
     m_swapChain->Resize(m_core->GetDevice(), size);
 }
 

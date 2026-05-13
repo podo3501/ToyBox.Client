@@ -22,6 +22,7 @@ public:
     void BindPipeline(CommandList& cmd);
     void BindTexture(CommandList& cmd, DescriptorAllocation& srv);
     void Draw(CommandList& cmd, const Rect& dest);
+    void Resize(const Size& size);
 
 private:
     Microsoft::WRL::ComPtr<ID3D12RootSignature> m_rootSignature;
@@ -30,9 +31,6 @@ private:
     ID3D12DescriptorHeap* m_srvHeap{ nullptr };
     UINT m_srvDescriptorSize{ 0 };
     Size m_screenSize{};
-
-    //Microsoft::WRL::ComPtr<ID3D12Resource> m_constantBuffer;
-    //QuadTransform* m_cbvData{ nullptr };
 
     std::shared_ptr<MeshResource> m_uiQuadMesh;
 };

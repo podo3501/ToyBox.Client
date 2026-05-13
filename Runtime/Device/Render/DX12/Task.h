@@ -15,7 +15,11 @@ class CommandList;
 
 using Microsoft::WRL::ComPtr;
 
-struct IInternalData { virtual ~IInternalData() = default; };
+struct IInternalData 
+{ 
+    virtual ~IInternalData() = default; 
+    virtual const std::type_info& Type() const = 0;
+};
 
 template<typename T>
 struct DataWrapper : public IInternalData //다양한 타입을 넣을수 있도록(variant나 void*를 쓰면 코드 짜기가 불편하다)
@@ -23,6 +27,8 @@ struct DataWrapper : public IInternalData //다양한 타입을 넣을수 있도록(variant�
     T data;
     template<typename U>
     DataWrapper(U&& val) : data(std::forward<U>(val)) {}
+
+    const std::type_info& Type() const override { return typeid(T); }
 };
 
 struct ResourceContext
@@ -60,6 +66,9 @@ struct PassContext {
     template<typename T>
     T& Get() 
     {
+        Assert(data);
+        Assert(data->Type() == typeid(T));
+
         auto* wrapper = static_cast<DataWrapper<T>*>(data.get());
         return wrapper->data;
     }

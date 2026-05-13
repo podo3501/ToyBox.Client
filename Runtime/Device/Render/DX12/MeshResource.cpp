@@ -1,11 +1,7 @@
 #include "pch.h"
 #include "MeshResource.h"
 
-MeshResource::~MeshResource()
-{
-    int a = 1;
-}
-
+MeshResource::~MeshResource() = default;
 MeshResource::MeshResource() = default;
 
 void MeshResource::SetResource(ComPtr<ID3D12Resource> vb, ComPtr<ID3D12Resource> ib, UINT indexCount)
@@ -15,9 +11,8 @@ void MeshResource::SetResource(ComPtr<ID3D12Resource> vb, ComPtr<ID3D12Resource>
     m_indexCount = indexCount;
 }
 
-void MeshResource::SetSRV(DescriptorAllocation vbAlloc, DescriptorAllocation ibAlloc)
+void MeshResource::SetMeshTable(DescriptorAllocation table)
 {
-    m_vbSrv = std::move(vbAlloc);
-    m_ibSrv = std::move(ibAlloc);
+    m_meshTable = std::move(table);
 }
    

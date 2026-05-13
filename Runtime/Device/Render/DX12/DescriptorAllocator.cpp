@@ -5,13 +5,18 @@
 struct PendingFree
 {
     UINT index;
+    UINT count;
+
     QueueFences required;
 };
 
-DescriptorAllocator::~DescriptorAllocator()
+struct FreeBlock
 {
-    int a = 1;
-}
+    UINT index;
+    UINT count;
+};
+
+DescriptorAllocator::~DescriptorAllocator() = default;
 DescriptorAllocator::DescriptorAllocator(ID3D12Device* device) noexcept :
     m_device{ device }
 {}
@@ -40,34 +45,44 @@ bool DescriptorAllocator::Initialize(D3D12_DESCRIPTOR_HEAP_TYPE type, UINT maxCo
     return true;
 }
 
-DescriptorAllocation DescriptorAllocator::Allocate() noexcept
+DescriptorAllocation DescriptorAllocator::Allocate(UINT count) noexcept
 {
-    UINT index;
+    Assert(count > 0);
 
-    if (!m_freeList.empty())
+    for (size_t i = 0; i < m_freeList.size(); ++i)
     {
-        index = m_freeList.back();
-        m_freeList.pop_back();
-    }
-    else
-    {
-        if (m_allocated >= m_capacity)
-            return {}; // invalid
+        auto& block = m_freeList[i];
+        if (block.count < count)
+            continue;
 
-        index = m_allocated++;
+        UINT index = block.index;
+
+        block.index += count; 
+        block.count -= count; //block을 소비한다.
+
+        if (block.count == 0)
+            m_freeList.erase(m_freeList.begin() + i); // 완전히 사용한 경우 제거
+
+        return DescriptorAllocation(this, index, count);
     }
 
-    return DescriptorAllocation(this, index);
+    if (m_allocated + count > m_capacity)
+        return {}; // invalid
+
+    UINT index = m_allocated;
+    m_allocated += count;
+
+    return DescriptorAllocation(this, index, count);
 }
 
-void DescriptorAllocator::DeferredFree(UINT index, const QueueFences& fences)
+void DescriptorAllocator::DeferredFree(UINT index, UINT count, const QueueFences& fences)
 {
-    m_pendingFrees.push_back({ index, fences }); //double free 방지 없음(현재 구조) 나중에 추가할 예정.
+    m_pendingFrees.push_back({ index, count, fences }); //double free 방지 없음(현재 구조) 나중에 추가할 예정.
 }
 
-void DescriptorAllocator::Free(UINT index)
+void DescriptorAllocator::Free(UINT index, UINT count)
 {
-    m_freeList.push_back(index);
+    m_freeList.push_back({ index, count });
 }
 
 void DescriptorAllocator::ProcessDeferredFree(const QueueFences& completed)
@@ -78,11 +93,14 @@ void DescriptorAllocator::ProcessDeferredFree(const QueueFences& completed)
     {
         auto& e = m_pendingFrees[read];
 
-        if (completed.direct >= e.required.direct &&
-            completed.copy >= e.required.copy)
-            m_freeList.push_back(e.index);
+        bool done =
+            completed.direct >= e.required.direct &&
+            completed.copy >= e.required.copy;
+
+        if (done)
+            Free(e.index, e.count);
         else
-            m_pendingFrees[write++] = e; //쓸것은 앞으로 복사하고 안쓸것은 뒤로 보낸후 resize 한다.
+            m_pendingFrees[write++] = e; //쓸것은 앞으로 복사하고 안쓸것은 뒤로 보낸후 resize 하는 전형적인 알고리즘.
     }
 
     m_pendingFrees.resize(write);

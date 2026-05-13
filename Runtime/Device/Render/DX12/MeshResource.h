@@ -14,18 +14,16 @@ public:
 	virtual bool IsReady() const noexcept { return m_ready; }
 
 	void SetResource(ComPtr<ID3D12Resource> vb, ComPtr<ID3D12Resource> ib, UINT indexCount);
-	void SetSRV(DescriptorAllocation vbAlloc, DescriptorAllocation ibAlloc);
+	void SetMeshTable(DescriptorAllocation table);
 	void MarkReady() { m_ready = true; }
 	UINT GetIndexCount() const { return m_indexCount; }
-	DescriptorAllocation& GetVBSrv() { return m_vbSrv; }
-	DescriptorAllocation& GetIBSrv() { return m_ibSrv; }
+	DescriptorAllocation& GetMeshTable() { return m_meshTable; }
 
 private:
 	ComPtr<ID3D12Resource> m_vb;
 	ComPtr<ID3D12Resource> m_ib;
 
-	DescriptorAllocation m_vbSrv;
-	DescriptorAllocation m_ibSrv;
+	DescriptorAllocation m_meshTable;
 
 	UINT m_indexCount{ 0 };
 	bool m_ready{ false };

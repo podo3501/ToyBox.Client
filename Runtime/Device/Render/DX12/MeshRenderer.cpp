@@ -17,8 +17,10 @@ struct FrameCB
     float proj[16];
 };
 
-bool MeshRenderer::Initialize(ID3D12Device* device)
+bool MeshRenderer::Initialize(ID3D12Device* device, const Size& size)
 {
+    m_screenSize = size;
+
     CreateRootSignature(device);
     CreatePipeline(device);
     CreateConstantBuffers(device);
@@ -168,10 +170,9 @@ void MeshRenderer::Draw(CommandList& cmd, MeshResource& mesh, DescriptorAllocati
     UpdateFrameCB();
     UpdateObjectCB();
 
-    auto& vbSrv = mesh.GetVBSrv();
-    auto& ibSrv = mesh.GetIBSrv();
+    auto& meshTable = mesh.GetMeshTable();
     
-    cmd->SetGraphicsRootDescriptorTable(0, vbSrv.GetGpuHandle());
+    cmd->SetGraphicsRootDescriptorTable(0, meshTable.GetGpuHandle());
     //cmd->SetGraphicsRootDescriptorTable(1, textureSrv.GetGpuHandle());
 
     cmd->SetGraphicsRootConstantBufferView(2, m_objectCB->GetGPUVirtualAddress());
@@ -182,8 +183,7 @@ void MeshRenderer::Draw(CommandList& cmd, MeshResource& mesh, DescriptorAllocati
     cmd->DrawInstanced(mesh.GetIndexCount(), 1, 0, 0);
     //cmd->DrawIndexedInstanced(mesh.GetIndexCount(), 1, 0, 0, 0);
 
-    vbSrv.MarkUsed(cmd.GetType(), cmd.GetFence());
-    ibSrv.MarkUsed(cmd.GetType(), cmd.GetFence());
+    meshTable.MarkUsed(cmd.GetType(), cmd.GetFence());
     //textureSrv.MarkUsed(cmd.GetType(), cmd.GetFence());
 }
 
@@ -198,10 +198,12 @@ void MeshRenderer::UpdateFrameCB()
             XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f)
         );
 
+    float aspect = (m_screenSize.height == 0) ? 1.0f : (float)m_screenSize.width / (float)m_screenSize.height;
+
     XMMATRIX proj =
         XMMatrixPerspectiveFovLH(
             XM_PIDIV4,
-            1024.0f / 768.0f,
+            aspect,
             0.1f,
             1000.0f
         );
@@ -222,4 +224,9 @@ void MeshRenderer::UpdateObjectCB()
     XMStoreFloat4x4((XMFLOAT4X4*)obj.world, XMMatrixTranspose(world));
 
     *m_objectData = obj;
+}
+
+void MeshRenderer::Resize(const Size& size)
+{
+    m_screenSize = size;
 }
