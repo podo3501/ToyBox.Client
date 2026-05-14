@@ -56,8 +56,11 @@
     <ClInclude Include="Render\DX12\DescriptorAllocator.h" />
     <ClInclude Include="Render\DX12\DescriptorFactory.h" />
     <ClInclude Include="Render\DX12\DX12Core.h" />
+    <ClInclude Include="Render\DX12\DX12MathUtils.h" />
     <ClInclude Include="Render\DX12\DX12Utils.h" />
     <ClInclude Include="Render\DX12\FenceTypes.h" />
+    <ClInclude Include="Render\DX12\MaterialResource.h" />
+    <ClInclude Include="Render\DX12\MaterialSystem.h" />
     <ClInclude Include="Render\DX12\OpaqueGraphBuilder.h" />
     <ClInclude Include="Render\DX12\GPUProfiler.h" />
     <ClInclude Include="Render\DX12\MeshGraphBuilder.h" />
@@ -130,7 +133,10 @@
     <ClCompile Include="Render\DX12\DescriptorFactory.cpp" />
     <ClCompile Include="Render\DX12\DX12Core.cpp" />
     <ClCompile Include="Render\DX12\DX12Link.cpp" />
+    <ClCompile Include="Render\DX12\DX12MathUtils.cpp" />
     <ClCompile Include="Render\DX12\DX12Utils.cpp" />
+    <ClCompile Include="Render\DX12\MaterialResource.cpp" />
+    <ClCompile Include="Render\DX12\MaterialSystem.cpp" />
     <ClCompile Include="Render\DX12\OpaqueGraphBuilder.cpp" />
     <ClCompile Include="Render\DX12\GPUProfiler.cpp" />
     <ClCompile Include="Render\DX12\MeshGraphBuilder.cpp" />

@@ -5,6 +5,9 @@
 #include <d3dcompiler.h>
 #include "CommandList.h"
 #include "DescriptorAllocation.h"
+#include "DX12MathUtils.h"
+
+namespace cm = Core::Math;
 
 struct ObjectCB
 {
@@ -17,17 +20,101 @@ struct FrameCB
     float proj[16];
 };
 
-bool MeshRenderer::Initialize(ID3D12Device* device, const Size& size)
+MeshRenderer::~MeshRenderer() = default;
+MeshRenderer::MeshRenderer(ID3D12Device* device) :
+    m_device{ device }
+{}
+
+bool MeshRenderer::Initialize(const Size& size)
 {
     m_screenSize = size;
 
-    CreateRootSignature(device);
-    CreatePipeline(device);
-    CreateConstantBuffers(device);
+    CreateRootSignature();
+    CreateDefaultPSOs();
+    CreateConstantBuffers();
+
     return true;
 }
 
-void MeshRenderer::CreateRootSignature(ID3D12Device* device)
+void MeshRenderer::SetRasterState(const RasterState& rasterState)
+{
+    m_rasterState = rasterState;
+}
+
+void MeshRenderer::CreateDefaultPSOs()
+{
+    CreatePipeline({ FillMode::Solid, CullMode::Back });
+    CreatePipeline({ FillMode::Solid, CullMode::None });
+    CreatePipeline({ FillMode::Wireframe, CullMode::None });
+}
+
+ID3D12PipelineState* MeshRenderer::GetPipeline(const PSOKey& key)
+{
+    auto it = m_psoCache.find(key);
+    if (it != m_psoCache.end())
+        return it->second.Get();
+
+    CreatePipeline(key);
+
+    return m_psoCache[key].Get();
+}
+
+void MeshRenderer::CreatePipeline(const PSOKey& key)
+{
+    ComPtr<ID3DBlob> vs;
+    ComPtr<ID3DBlob> ps;
+    ComPtr<ID3DBlob> err;
+
+    std::wstring shaderFile = L"D:\\ProgrammingStudy\\ToyBox\\Runtime\\Device\\Render\\DX12\\Mesh.hlsl";
+    D3DCompileFromFile(shaderFile.c_str(), nullptr, nullptr, "VSMain", "vs_5_0", 0, 0, &vs, &err);
+    D3DCompileFromFile(shaderFile.c_str(), nullptr, nullptr, "PSMain", "ps_5_0", 0, 0, &ps, &err);
+
+    D3D12_GRAPHICS_PIPELINE_STATE_DESC pso{};
+    pso.InputLayout = { nullptr, 0 };
+    pso.pRootSignature = m_rootSignature.Get();
+
+    pso.VS = { vs->GetBufferPointer(), vs->GetBufferSize() };
+    pso.PS = { ps->GetBufferPointer(), ps->GetBufferSize() };
+
+    //pso.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+    CD3DX12_RASTERIZER_DESC raster(D3D12_DEFAULT);
+
+    raster.FillMode =
+        key.fillMode == FillMode::Wireframe
+        ? D3D12_FILL_MODE_WIREFRAME
+        : D3D12_FILL_MODE_SOLID;
+
+    switch (key.cullMode)
+    {
+    case CullMode::None: raster.CullMode = D3D12_CULL_MODE_NONE; break;
+    case CullMode::Front: raster.CullMode = D3D12_CULL_MODE_FRONT; break;
+    case CullMode::Back: raster.CullMode = D3D12_CULL_MODE_BACK; break;
+    }
+
+    pso.RasterizerState = raster;
+    pso.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
+
+    //pso.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
+    pso.DepthStencilState.DepthEnable = FALSE;
+
+    pso.SampleMask = UINT_MAX;
+    pso.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+
+    pso.NumRenderTargets = 1;
+    pso.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+
+    pso.DSVFormat = DXGI_FORMAT_UNKNOWN;
+    //pso.DSVFormat = DXGI_FORMAT_D32_FLOAT;
+
+    pso.SampleDesc.Count = 1;
+
+    ComPtr<ID3D12PipelineState> pipeline;
+    m_device->CreateGraphicsPipelineState(&pso, IID_PPV_ARGS(&pipeline));
+
+    m_psoCache[key] = pipeline;
+}
+
+void MeshRenderer::CreateRootSignature()
 {
     CD3DX12_DESCRIPTOR_RANGE rangeMesh;
     rangeMesh.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 2, 0); // vb, ib
@@ -65,7 +152,7 @@ void MeshRenderer::CreateRootSignature(ID3D12Device* device)
         &err
     );
 
-    device->CreateRootSignature(
+    m_device->CreateRootSignature(
         0,
         sig->GetBufferPointer(),
         sig->GetBufferSize(),
@@ -73,70 +160,28 @@ void MeshRenderer::CreateRootSignature(ID3D12Device* device)
     );
 }
 
-void MeshRenderer::CreatePipeline(ID3D12Device* device)
-{
-    ComPtr<ID3DBlob> vs;
-    ComPtr<ID3DBlob> ps;
-    ComPtr<ID3DBlob> err;
-
-    std::wstring shaderFile = L"D:\\ProgrammingStudy\\ToyBox\\Runtime\\Device\\Render\\DX12\\Mesh.hlsl";
-    D3DCompileFromFile(shaderFile.c_str(), nullptr, nullptr, "VSMain", "vs_5_0", 0, 0, &vs, &err);
-    D3DCompileFromFile(shaderFile.c_str(), nullptr, nullptr, "PSMain", "ps_5_0", 0, 0, &ps, &err);
-
-    D3D12_GRAPHICS_PIPELINE_STATE_DESC pso{};
-    pso.InputLayout = { nullptr, 0 };
-    pso.pRootSignature = m_rootSignature.Get();
-
-    pso.VS = { vs->GetBufferPointer(), vs->GetBufferSize() };
-    pso.PS = { ps->GetBufferPointer(), ps->GetBufferSize() };
-
-    //pso.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
-    CD3DX12_RASTERIZER_DESC raster(D3D12_DEFAULT);
-    raster.FillMode = D3D12_FILL_MODE_WIREFRAME;
-    raster.CullMode = D3D12_CULL_MODE_NONE; // 안 보이는 문제 방지
-
-    pso.RasterizerState = raster;
-    pso.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
-
-    //pso.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
-    pso.DepthStencilState.DepthEnable = FALSE;
-
-    pso.SampleMask = UINT_MAX;
-    pso.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-
-    pso.NumRenderTargets = 1;
-    pso.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-
-    pso.DSVFormat = DXGI_FORMAT_UNKNOWN;
-    //pso.DSVFormat = DXGI_FORMAT_D32_FLOAT;
-
-    pso.SampleDesc.Count = 1;
-
-    device->CreateGraphicsPipelineState(
-        &pso,
-        IID_PPV_ARGS(&m_pipelineState)
-    );
-}
-
-void MeshRenderer::CreateConstantBuffers(ID3D12Device* device)
+void MeshRenderer::CreateConstantBuffers()
 {
     CD3DX12_HEAP_PROPERTIES heap(D3D12_HEAP_TYPE_UPLOAD);
     auto desc = CD3DX12_RESOURCE_DESC::Buffer(256);
 
     // Object CB
-    device->CreateCommittedResource(
-        &heap,
-        D3D12_HEAP_FLAG_NONE,
-        &desc,
-        D3D12_RESOURCE_STATE_GENERIC_READ,
-        nullptr,
-        IID_PPV_ARGS(&m_objectCB)
-    );
+    for (uint32_t i = 0; i < kMaxObjectCount; ++i)
+    {
+        m_device->CreateCommittedResource(
+            &heap,
+            D3D12_HEAP_FLAG_NONE,
+            &desc,
+            D3D12_RESOURCE_STATE_GENERIC_READ,
+            nullptr,
+            IID_PPV_ARGS(&m_objectCBs[i])
+        );
 
-    m_objectCB->Map(0, nullptr, (void**)&m_objectData);
+        m_objectCBs[i]->Map(0, nullptr, reinterpret_cast<void**>(&m_objectDatas[i]));
+    }
 
     // Frame CB
-    device->CreateCommittedResource(
+    m_device->CreateCommittedResource(
         &heap,
         D3D12_HEAP_FLAG_NONE,
         &desc,
@@ -150,8 +195,15 @@ void MeshRenderer::CreateConstantBuffers(ID3D12Device* device)
 
 void MeshRenderer::BindPipeline(CommandList& cmd)
 {
-    cmd->SetGraphicsRootSignature(m_rootSignature.Get());
-    cmd->SetPipelineState(m_pipelineState.Get());
+    cmd->SetGraphicsRootSignature(
+        m_rootSignature.Get());
+
+    PSOKey key;
+    key.fillMode = m_rasterState.fillMode;
+    key.cullMode = m_rasterState.cullMode;
+
+    auto* pso = GetPipeline(key);
+    cmd->SetPipelineState(pso);
 }
 
 void MeshRenderer::BindDescriptorHeap(CommandList& cmd)
@@ -165,17 +217,21 @@ void MeshRenderer::SetFrameCB(const FrameCB& frame)
     *m_frameData = frame;
 }
 
-void MeshRenderer::Draw(CommandList& cmd, MeshResource& mesh, DescriptorAllocation& textureSrv)
+void MeshRenderer::BeginFrame()
+{
+    m_objectIndex = 0;
+}
+
+void MeshRenderer::Draw(CommandList& cmd, MeshResource& mesh, const cm::Matrix& world, DescriptorAllocation& textureSrv)
 {
     UpdateFrameCB();
-    UpdateObjectCB();
-
+    auto objectCBAddress = UpdateObjectCB(world);
     auto& meshTable = mesh.GetMeshTable();
     
     cmd->SetGraphicsRootDescriptorTable(0, meshTable.GetGpuHandle());
     //cmd->SetGraphicsRootDescriptorTable(1, textureSrv.GetGpuHandle());
 
-    cmd->SetGraphicsRootConstantBufferView(2, m_objectCB->GetGPUVirtualAddress());
+    cmd->SetGraphicsRootConstantBufferView(2, objectCBAddress);
     cmd->SetGraphicsRootConstantBufferView(3, m_frameCB->GetGPUVirtualAddress());
 
     cmd->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -214,16 +270,22 @@ void MeshRenderer::UpdateFrameCB()
     *m_frameData = frame;
 }
 
-void MeshRenderer::UpdateObjectCB()
+D3D12_GPU_VIRTUAL_ADDRESS MeshRenderer::UpdateObjectCB(const cm::Matrix& world)
 {
+    Assert(m_objectIndex < kMaxObjectCount);
+
     ObjectCB obj{};
 
-    m_objectAngle += 0.01f;
+    DirectX::XMMATRIX xmWorld = ToDXMatrix(world);
+    DirectX::XMStoreFloat4x4(
+        reinterpret_cast<DirectX::XMFLOAT4X4*>(obj.world),
+        DirectX::XMMatrixTranspose(xmWorld));
 
-    XMMATRIX world = XMMatrixRotationY(m_objectAngle);
-    XMStoreFloat4x4((XMFLOAT4X4*)obj.world, XMMatrixTranspose(world));
+    *m_objectDatas[m_objectIndex] = obj;
+    auto gpuAddress = m_objectCBs[m_objectIndex]->GetGPUVirtualAddress();
 
-    *m_objectData = obj;
+    ++m_objectIndex;
+    return gpuAddress;
 }
 
 void MeshRenderer::Resize(const Size& size)

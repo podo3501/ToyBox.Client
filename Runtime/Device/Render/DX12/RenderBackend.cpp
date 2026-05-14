@@ -11,6 +11,7 @@
 #include "QuadRenderer.h"
 #include "TextureSystem.h"
 #include "MeshSystem.h"
+#include "MaterialSystem.h"
 #include "RenderScene.h"
 #include "RenderGraph.h"
 #include "RenderPass.h"
@@ -74,13 +75,14 @@ bool RenderBackend::Initialize(HWND hwnd, const Size& wndSize, const RenderConfi
     m_profiler = make_unique<GPUProfiler>();
     ReturnIfFalse(m_profiler->Initialize(device, m_command.get()));
 
-    m_meshSystem = make_unique<MeshSystem>(device, m_srvAllocator.get(), m_taskScheduler.get(), m_loader.get());
     m_texSystem = make_unique<TextureSystem>(device, m_srvAllocator.get(), m_taskScheduler.get(), m_loader.get());
     ReturnIfFalse(m_texSystem->Initialize());
+    m_meshSystem = make_unique<MeshSystem>(device, m_srvAllocator.get(), m_taskScheduler.get(), m_loader.get());
+    m_matSystem = make_unique<MaterialSystem>(device);
     m_scene = make_unique<RenderScene>();
 
-    m_meshRenderer = make_unique<MeshRenderer>();
-    ReturnIfFalse(m_meshRenderer->Initialize(device, wndSize));
+    m_meshRenderer = make_unique<MeshRenderer>(device);
+    ReturnIfFalse(m_meshRenderer->Initialize(wndSize));
     m_meshRenderer->SetSRVHeap(m_srvAllocator->GetHeap());
 
     m_quadRenderer = make_unique<QuadRenderer>();
@@ -95,10 +97,18 @@ bool RenderBackend::Initialize(HWND hwnd, const Size& wndSize, const RenderConfi
     return true;
 }
 
+void RenderBackend::SetRasterState(const RasterState& rasterState)
+{
+    m_meshRenderer->SetRasterState(rasterState);
+}
+
 bool RenderBackend::BeginFrame()
 {
     m_cmd = m_command->Begin(CommandType::Direct);
-    return m_cmd != nullptr;
+    if (m_cmd == nullptr) return false;
+
+    m_meshRenderer->BeginFrame();
+    return true;
 }
 
 void RenderBackend::EndFrame()
@@ -123,10 +133,11 @@ void RenderBackend::DrawUI(std::shared_ptr<ITextureResource> texRes, const Rect&
     m_scene->AddUI(item);
 }
 
-void RenderBackend::DrawMesh(std::shared_ptr<IMeshResource> meshRes)
+void RenderBackend::DrawMesh(std::shared_ptr<IMeshResource> meshRes, const Core::Math::Matrix& world)
 {
     DrawItem item;
     item.mesh = meshRes;
+    item.world = world;
 
     m_scene->AddOpaque(item);
 }
@@ -233,6 +244,11 @@ ITextureSystem* RenderBackend::GetTextureSystem()
 IMeshSystem* RenderBackend::GetMeshSystem()
 {
     return m_meshSystem.get();
+}
+
+IMaterialSystem* RenderBackend::GetMaterialSystem()
+{
+    return m_matSystem.get();
 }
 
 //////////////////////////////////////////////////////

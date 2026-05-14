@@ -14,6 +14,7 @@ class ResourceLoader;
 class GPUProfiler;
 class TextureSystem;
 class MeshSystem;
+class MaterialSystem;
 class MeshRenderer;
 class QuadRenderer;
 class RenderScene;
@@ -24,14 +25,16 @@ public:
 	~RenderBackend();
 	RenderBackend();
 	virtual bool Initialize(HWND hwnd, const Size& wndSize, const RenderConfig& renderConfig) override;
+	virtual void SetRasterState(const RasterState& rasterState) override;
 	virtual void DrawUI(std::shared_ptr<ITextureResource> texRes, const Rect& dest, const Rect* source) override;
-	virtual void DrawMesh(std::shared_ptr<IMeshResource> meshRes) override;
+	virtual void DrawMesh(std::shared_ptr<IMeshResource> meshRes, const Core::Math::Matrix& world) override;
 	virtual void Resize(const Size& size) override;
 	virtual void Update() override;
 	virtual void Render() override;
 	virtual void WaitIdle() override;
 	virtual ITextureSystem* GetTextureSystem() override;
 	virtual IMeshSystem* GetMeshSystem() override;
+	virtual IMaterialSystem* GetMaterialSystem() override;
 
 private:
 	bool BeginFrame();
@@ -50,6 +53,7 @@ private:
 	
 	unique_ptr<TextureSystem> m_texSystem;
 	unique_ptr<MeshSystem> m_meshSystem;
+	unique_ptr<MaterialSystem> m_matSystem;
 	unique_ptr<RenderScene> m_scene;
 
 	unique_ptr<MeshRenderer> m_meshRenderer;

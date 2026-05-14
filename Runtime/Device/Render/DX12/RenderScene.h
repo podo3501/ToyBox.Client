@@ -1,5 +1,6 @@
 #pragma once
 #include "Core/Foundation/Geometry2D.h"
+#include "Core/Math/Matrix.h"
 
 struct ITextureResource;
 struct IMeshResource;
@@ -7,6 +8,7 @@ struct IMeshResource;
 struct DrawItem
 {
     std::shared_ptr<IMeshResource> mesh;
+    Core::Math::Matrix world;
 };
 
 struct UIDrawItem

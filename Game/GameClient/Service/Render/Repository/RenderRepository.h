@@ -6,6 +6,7 @@
 
 struct TextureEntry;
 struct MeshEntry;
+struct MaterialEntry;
 struct TextureAsset;
 struct IRenderBackend;
 struct MeshAsset;
@@ -27,13 +28,14 @@ public:
 		function<shared_ptr<TextureAsset>(const filesystem::path&)> loader);
 	bool ReleaseTexture(TextureHandle th);
 
-
-	MaterialHandle CreateMaterial(TextureHandle th);
+	MaterialHandle LoadMaterial(const filesystem::path& path, const TextureDesc& desc,
+		function<shared_ptr<TextureAsset>(const filesystem::path&)> loader);
 
 	void Update();
 	void ReleaseAll();
 	const TextureEntry* Get(TextureHandle handle) const noexcept;
 	const MeshEntry* Get(MeshHandle handle) const noexcept;
+	const MaterialEntry* Get(MaterialHandle handle) const noexcept;
 
 private:
 	IRenderBackend* m_backend{ nullptr };

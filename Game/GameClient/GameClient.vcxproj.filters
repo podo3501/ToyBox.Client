@@ -213,6 +213,9 @@
     <ClCompile Include="Service\Render\Repository\TextureRepository.cpp">
       <Filter>Service\Render\Repository</Filter>
     </ClCompile>
+    <ClCompile Include="World\Transform.cpp">
+      <Filter>World</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameLoop.h" />
@@ -550,6 +553,18 @@
     <ClInclude Include="Service\Render\Repository\ResourceTypes.h">
       <Filter>Service\Render\Repository</Filter>
     </ClInclude>
+    <ClInclude Include="World\Transform.h">
+      <Filter>World</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\RenderState.h">
+      <Filter>Service\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Repository\IMaterialResource.h">
+      <Filter>Service\Render\Repository</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Repository\IMaterialSystem.h">
+      <Filter>Service\Render\Repository</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Locator">
@@ -626,6 +641,9 @@
     </Filter>
     <Filter Include="Service\Render\Repository">
       <UniqueIdentifier>{30138ba1-74c3-45a6-8dc3-a9d6068fb07c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="World">
+      <UniqueIdentifier>{136cc698-2d02-494d-8c8d-8c9dffbddd9b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -33,6 +33,11 @@ unique_ptr<RenderService> RenderService::Create(unique_ptr<IRenderBackend> backe
 	return service;
 }
 
+void RenderService::SetRasterState(const RasterState& rasterState)
+{
+	m_backend->SetRasterState(rasterState);
+}
+
 void RenderService::DrawUI(TextureHandle th, const Rect& dest, const Rect* source)
 {
 	auto entry = m_repository->Get(th);
@@ -42,14 +47,27 @@ void RenderService::DrawUI(TextureHandle th, const Rect& dest, const Rect* sourc
 	m_backend->DrawUI(entry->texRes, dest, source);
 }
 
-void RenderService::DrawMesh(MeshHandle mh)
+void RenderService::DrawMesh(MeshHandle hM, const Core::Math::Matrix& world)
 {
-	auto entry = m_repository->Get(mh);
-	if (!entry || entry->state != LoadState::Ready)
+	auto mesh = m_repository->Get(hM);
+	if (!mesh || mesh->state != LoadState::Ready)
 		return;
 
-	m_backend->DrawMesh(entry->meshRes);
+	m_backend->DrawMesh(mesh->meshRes, world);
 }
+
+//void RenderService::DrawMesh(MeshHandle hM, MaterialHandle hMtl, const Core::Math::Matrix& world)
+//{
+//	auto mesh = m_repository->Get(hM);
+//	if (!mesh || mesh->state != LoadState::Ready)
+//		return;
+//
+//	auto material = m_repository->Get(hMtl);
+//	if (!material || material->state != LoadState::Ready)
+//		return;
+//
+//	m_backend->DrawMesh(mesh->meshRes, world);
+//}
 
 void RenderService::Update()
 {

@@ -47,16 +47,6 @@ TextureHandle TextureRepository::GetOrCreate( const filesystem::path& path, cons
 	return handle;
 }
 
-bool TextureRepository::Release(TextureHandle h)
-{
-	auto entry = m_loadedTextures.Find(h);
-	if (!entry) return false;
-
-	m_cache.erase(entry->key);
-	std::erase(m_loadingList, h);
-	return m_loadedTextures.Remove(h);
-}
-
 void TextureRepository::Update()
 {
 	ProcessCpuPending();
@@ -128,6 +118,16 @@ void TextureRepository::ProcessLoading()
 		else
 			++it;
 	}
+}
+
+bool TextureRepository::Release(TextureHandle h)
+{
+	auto entry = m_loadedTextures.Find(h);
+	if (!entry) return false;
+
+	m_cache.erase(entry->key);
+	std::erase(m_loadingList, h);
+	return m_loadedTextures.Remove(h);
 }
 
 void TextureRepository::ReleaseAll()

@@ -9,8 +9,8 @@ RenderRepository::~RenderRepository() { m_backend->WaitIdle(); } //리소스를 Rend
 RenderRepository::RenderRepository(IRenderBackend* backend) :
 	m_backend{ backend },
 	m_texRepository{ make_unique<TextureRepository>(m_backend->GetTextureSystem()) },
-	m_matRepository{ make_unique<MaterialRepository>(m_texRepository.get()) },
-	m_meshRepository{ make_unique<MeshRepository>(m_backend->GetMeshSystem()) }
+	m_meshRepository{ make_unique<MeshRepository>(m_backend->GetMeshSystem()) },
+	m_matRepository{ make_unique<MaterialRepository>(m_backend->GetMaterialSystem(), m_backend->GetTextureSystem()) }
 {}
 
 MeshHandle RenderRepository::LoadMesh(const filesystem::path& path, function<shared_ptr<MeshAsset>(const filesystem::path&)> loader)
@@ -34,9 +34,10 @@ bool RenderRepository::ReleaseTexture(TextureHandle th)
 	return m_texRepository->Release(th);
 }
 
-MaterialHandle RenderRepository::CreateMaterial(TextureHandle th)
+MaterialHandle RenderRepository::LoadMaterial(const filesystem::path& path, const TextureDesc& desc,
+	function<shared_ptr<TextureAsset>(const filesystem::path&)> loader)
 {
-	return m_matRepository->Create(th);
+	return m_matRepository->GetOrCreate(path, desc, loader);
 }
 
 void RenderRepository::Update()
@@ -50,6 +51,7 @@ void RenderRepository::ReleaseAll()
 {
 	m_meshRepository->ReleaseAll();
 	m_texRepository->ReleaseAll();
+	m_matRepository->ReleaseAll();
 }
 
 const TextureEntry* RenderRepository::Get(TextureHandle handle) const noexcept 
@@ -60,4 +62,9 @@ const TextureEntry* RenderRepository::Get(TextureHandle handle) const noexcept
 const MeshEntry* RenderRepository::Get(MeshHandle handle) const noexcept
 {
 	return m_meshRepository->Get(handle);
+}
+
+const MaterialEntry* RenderRepository::Get(MaterialHandle handle) const noexcept
+{
+	return m_matRepository->Get(handle);
 }

@@ -101,6 +101,7 @@
     <ClCompile Include="UserInterface\UINameGenerator\AutoNamer.cpp" />
     <ClCompile Include="UserInterface\UINameGenerator\ComponentNameGenerator.cpp" />
     <ClCompile Include="UserInterface\UINameGenerator\UINameGenerator.cpp" />
+    <ClCompile Include="World\Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameLoop.h" />
@@ -145,6 +146,9 @@
     <ClInclude Include="Service\Render\IRenderBackend.h" />
     <ClInclude Include="Service\Render\RenderConfig.h" />
     <ClInclude Include="Service\Render\RenderService.h" />
+    <ClInclude Include="Service\Render\RenderState.h" />
+    <ClInclude Include="Service\Render\Repository\IMaterialResource.h" />
+    <ClInclude Include="Service\Render\Repository\IMaterialSystem.h" />
     <ClInclude Include="Service\Render\Repository\IMeshResource.h" />
     <ClInclude Include="Service\Render\Repository\IMeshSystem.h" />
     <ClInclude Include="Service\Render\Repository\ITextureResource.h" />
@@ -221,6 +225,7 @@
     <ClInclude Include="UserInterface\UINameGenerator\AutoNamer.h" />
     <ClInclude Include="UserInterface\UINameGenerator\ComponentNameGenerator.h" />
     <ClInclude Include="UserInterface\UINameGenerator\UINameGenerator.h" />
+    <ClInclude Include="World\Transform.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Runtime\Renderer\Renderer.vcxproj">

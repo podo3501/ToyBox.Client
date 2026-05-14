@@ -26,7 +26,7 @@ void OpaqueGraphBuilder::Build(RenderGraph& graph)
         {
             DescriptorAllocation dummy{};
             auto mesh = static_cast<MeshResource*>(item.mesh.get());
-            m_meshRenderer->Draw(cmd, *mesh, dummy);
+            m_meshRenderer->Draw(cmd, *mesh, item.world, dummy);
         }
         };
 }
