@@ -25,10 +25,17 @@ namespace Core::Math
         float Length() const;
         float LengthSq() const;
 
+        float Dot(const Vector3& rhs) const;
+        Vector3 Cross(const Vector3& rhs) const;
+
         Vector3 Normalized() const;
         void Normalize();
 
-        static float Dot(const Vector3& a, const Vector3& b);
-        static Vector3 Cross(const Vector3& a, const Vector3& b);
+        static Vector3 Zero();
+        static Vector3 One();
+
+        static Vector3 Up();
+        static Vector3 Right();
+        static Vector3 Forward();
     };
 }

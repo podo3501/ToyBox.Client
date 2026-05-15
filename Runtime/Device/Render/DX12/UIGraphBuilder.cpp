@@ -7,9 +7,9 @@
 #include "TextureResource.h"
 
 UIGraphBuilder::~UIGraphBuilder() = default;
-UIGraphBuilder::UIGraphBuilder(RenderScene* scene, QuadRenderer* quadRenderer, RGHandle hBb) :
+UIGraphBuilder::UIGraphBuilder(QuadRenderer* quadRenderer, RenderScene* scene, RGHandle hBb) :
+    m_quadRenderer{ quadRenderer },
     m_scene{ scene }, 
-    m_quadRenderer{ quadRenderer }, 
     m_hBb{ hBb }
 {}
 

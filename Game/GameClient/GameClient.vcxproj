@@ -20,6 +20,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameLoop.cpp" />
+    <ClCompile Include="Graphics\World\Camera.cpp" />
+    <ClCompile Include="Graphics\World\Transform.cpp" />
     <ClCompile Include="Locator\UIComponentLocator.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -101,10 +103,12 @@
     <ClCompile Include="UserInterface\UINameGenerator\AutoNamer.cpp" />
     <ClCompile Include="UserInterface\UINameGenerator\ComponentNameGenerator.cpp" />
     <ClCompile Include="UserInterface\UINameGenerator\UINameGenerator.cpp" />
-    <ClCompile Include="World\Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameLoop.h" />
+    <ClInclude Include="Graphics\RenderData\CameraData.h" />
+    <ClInclude Include="Graphics\World\Camera.h" />
+    <ClInclude Include="Graphics\World\Transform.h" />
     <ClInclude Include="Locator\InputLocator.h" />
     <ClInclude Include="Locator\UIComponentLocator.h" />
     <ClInclude Include="pch.h" />
@@ -225,7 +229,6 @@
     <ClInclude Include="UserInterface\UINameGenerator\AutoNamer.h" />
     <ClInclude Include="UserInterface\UINameGenerator\ComponentNameGenerator.h" />
     <ClInclude Include="UserInterface\UINameGenerator\UINameGenerator.h" />
-    <ClInclude Include="World\Transform.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Runtime\Renderer\Renderer.vcxproj">

@@ -213,8 +213,11 @@
     <ClCompile Include="Service\Render\Repository\TextureRepository.cpp">
       <Filter>Service\Render\Repository</Filter>
     </ClCompile>
-    <ClCompile Include="World\Transform.cpp">
-      <Filter>World</Filter>
+    <ClCompile Include="Graphics\World\Transform.cpp">
+      <Filter>Graphics\World</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\World\Camera.cpp">
+      <Filter>Graphics\World</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -553,9 +556,6 @@
     <ClInclude Include="Service\Render\Repository\ResourceTypes.h">
       <Filter>Service\Render\Repository</Filter>
     </ClInclude>
-    <ClInclude Include="World\Transform.h">
-      <Filter>World</Filter>
-    </ClInclude>
     <ClInclude Include="Service\Render\RenderState.h">
       <Filter>Service\Render</Filter>
     </ClInclude>
@@ -564,6 +564,15 @@
     </ClInclude>
     <ClInclude Include="Service\Render\Repository\IMaterialSystem.h">
       <Filter>Service\Render\Repository</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\World\Transform.h">
+      <Filter>Graphics\World</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\World\Camera.h">
+      <Filter>Graphics\World</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\RenderData\CameraData.h">
+      <Filter>Graphics\RenderData</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -642,8 +651,14 @@
     <Filter Include="Service\Render\Repository">
       <UniqueIdentifier>{30138ba1-74c3-45a6-8dc3-a9d6068fb07c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="World">
-      <UniqueIdentifier>{136cc698-2d02-494d-8c8d-8c9dffbddd9b}</UniqueIdentifier>
+    <Filter Include="Graphics">
+      <UniqueIdentifier>{8e028934-2bab-47b5-af5c-26abc7844cbb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\World">
+      <UniqueIdentifier>{7fa898bb-d675-4106-8a75-e5d0bc5a670e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\RenderData">
+      <UniqueIdentifier>{cdb37372-33c8-4520-a51d-cde086b380c5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

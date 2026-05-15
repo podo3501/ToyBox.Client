@@ -38,6 +38,11 @@ void RenderService::SetRasterState(const RasterState& rasterState)
 	m_backend->SetRasterState(rasterState);
 }
 
+void RenderService::SetCamera(const CameraData& camera)
+{
+	m_backend->SetCamera(camera);
+}
+
 void RenderService::DrawUI(TextureHandle th, const Rect& dest, const Rect* source)
 {
 	auto entry = m_repository->Get(th);
@@ -47,27 +52,26 @@ void RenderService::DrawUI(TextureHandle th, const Rect& dest, const Rect* sourc
 	m_backend->DrawUI(entry->texRes, dest, source);
 }
 
-void RenderService::DrawMesh(MeshHandle hM, const Core::Math::Matrix& world)
+void RenderService::DrawMesh(MeshHandle hM, MaterialHandle hMtl, const Core::Math::Matrix& world)
 {
 	auto mesh = m_repository->Get(hM);
 	if (!mesh || mesh->state != LoadState::Ready)
 		return;
 
-	m_backend->DrawMesh(mesh->meshRes, world);
-}
+	std::shared_ptr<IMaterialResource> matRes;
+	if (hMtl)
+	{
+		auto material = m_repository->Get(hMtl);
+		if (!material || material->state != LoadState::Ready)
+			return;
 
-//void RenderService::DrawMesh(MeshHandle hM, MaterialHandle hMtl, const Core::Math::Matrix& world)
-//{
-//	auto mesh = m_repository->Get(hM);
-//	if (!mesh || mesh->state != LoadState::Ready)
-//		return;
-//
-//	auto material = m_repository->Get(hMtl);
-//	if (!material || material->state != LoadState::Ready)
-//		return;
-//
-//	m_backend->DrawMesh(mesh->meshRes, world);
-//}
+		matRes = material->matRes;
+	}
+	else 
+		matRes = nullptr;
+
+	m_backend->DrawMesh(mesh->meshRes, matRes, world);
+}
 
 void RenderService::Update()
 {

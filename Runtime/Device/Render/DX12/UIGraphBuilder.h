@@ -10,11 +10,11 @@ class UIGraphBuilder
 public:
     ~UIGraphBuilder();
     UIGraphBuilder() = delete;
-    UIGraphBuilder(RenderScene* scene, QuadRenderer* quadRenderer, RGHandle hBb);
+    UIGraphBuilder(QuadRenderer* quadRenderer, RenderScene* scene, RGHandle hBb);
     void Build(RenderGraph& graph);
 
 private:
-    RenderScene* m_scene{ nullptr };
     QuadRenderer* m_quadRenderer{ nullptr };
+    RenderScene* m_scene{ nullptr };
     RGHandle m_hBb;
 };

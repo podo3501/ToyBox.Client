@@ -79,17 +79,22 @@ namespace Core::Math
         z /= len;
     }
 
-    float Vector3::Dot(const Vector3& a, const Vector3& b)
+    float Vector3::Dot(const Vector3& rhs) const
     {
-        return a.x * b.x + a.y * b.y + a.z * b.z;
+        return x * rhs.x + y * rhs.y + z * rhs.z;
     }
 
-    Vector3 Vector3::Cross(const Vector3& a, const Vector3& b)
+    Vector3 Vector3::Cross(const Vector3& rhs) const
     {
         return Vector3(
-            a.y * b.z - a.z * b.y,
-            a.z * b.x - a.x * b.z,
-            a.x * b.y - a.y * b.x
-        );
+            y * rhs.z - z * rhs.y,
+            z * rhs.x - x * rhs.z,
+            x * rhs.y - y * rhs.x);
     }
+
+    Vector3 Vector3::Zero() { return Vector3(0.0f, 0.0f, 0.0f); }
+    Vector3 Vector3::One() { return Vector3(1.0f, 1.0f, 1.0f); }
+    Vector3 Vector3::Up() { return Vector3(0.0f, 1.0f, 0.0f); }
+    Vector3 Vector3::Right() { return Vector3(1.0f, 0.0f, 0.0f); }
+    Vector3 Vector3::Forward() { return Vector3(0.0f, 0.0f, 1.0f); }
 }

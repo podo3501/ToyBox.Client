@@ -20,9 +20,8 @@ struct GpuPendingMaterialRequest
 };
 
 MaterialRepository::~MaterialRepository() = default;
-MaterialRepository::MaterialRepository(IMaterialSystem* matSystem, ITextureSystem* texSystem) :
-    m_matSystem{ matSystem },
-    m_texSystem{ texSystem }
+MaterialRepository::MaterialRepository(IMaterialSystem* matSystem) :
+    m_matSystem{ matSystem }
 {}
 
 MaterialHandle MaterialRepository::GetOrCreate(const filesystem::path& path, const TextureDesc& desc,
@@ -34,16 +33,12 @@ MaterialHandle MaterialRepository::GetOrCreate(const filesystem::path& path, con
     if (it != m_cache.end())
         return it->second;
 
-    auto texRes = m_texSystem->CreateTextureResource();
-    if (!texRes) return MaterialHandle::Invalid();
-
-    auto matRes = m_matSystem->CreateMaterialResource(texRes);
+    auto matRes = m_matSystem->CreateMaterialResource();
     if (!matRes) return MaterialHandle::Invalid();
 
     MaterialEntry entry;
     entry.key = key;
     entry.matRes = move(matRes);
-    entry.texRes = move(texRes);
     entry.state = LoadState::Pending;
 
     auto handle = m_loadedMaterials.Emplace(move(entry));
@@ -91,7 +86,7 @@ void MaterialRepository::ProcessGpuPending()
         auto entry = m_loadedMaterials.Find(work.handle);
         if (!entry || !entry->matRes) continue;
 
-        if (!m_texSystem->LoadFromAsset(entry->texRes, work.asset, work.desc))
+        if (!m_matSystem->LoadFromAsset(entry->matRes, work.asset, work.desc))
         {
             entry->state = LoadState::Failed;
             continue;
@@ -115,14 +110,8 @@ void MaterialRepository::ProcessLoading()
             continue;
         }
 
-        if (!entry->texRes)
-        {
-            it = m_loadingList.erase(it);
-            continue;
-        }
-
-        auto& tex = entry->texRes;
-        if (tex->IsReady()) //일단 머터리얼 내에 텍스쳐를 기준잡고 됐는지 확인한다.
+        auto& material = entry->matRes;
+        if (material->IsReady()) //일단 머터리얼 내에 텍스쳐를 기준잡고 됐는지 확인한다.
         {
             entry->state = LoadState::Ready;
             it = m_loadingList.erase(it);

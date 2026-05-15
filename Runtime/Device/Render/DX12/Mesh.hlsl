@@ -47,7 +47,7 @@ PSInput VSMain(uint vID : SV_VertexID)
 
 float4 PSMain(PSInput input) : SV_TARGET
 {
-//    float4 color = gTexture.Sample(gSampler, input.uv);
-//    return color;
-     return float4(1,1,1,1);
+    float4 color = gTexture.Sample(gSampler, input.uv);
+    return color;
+    //return float4(1,1,1,1);
 }

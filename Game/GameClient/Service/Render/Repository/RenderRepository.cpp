@@ -10,7 +10,7 @@ RenderRepository::RenderRepository(IRenderBackend* backend) :
 	m_backend{ backend },
 	m_texRepository{ make_unique<TextureRepository>(m_backend->GetTextureSystem()) },
 	m_meshRepository{ make_unique<MeshRepository>(m_backend->GetMeshSystem()) },
-	m_matRepository{ make_unique<MaterialRepository>(m_backend->GetMaterialSystem(), m_backend->GetTextureSystem()) }
+	m_matRepository{ make_unique<MaterialRepository>(m_backend->GetMaterialSystem()) }
 {}
 
 MeshHandle RenderRepository::LoadMesh(const filesystem::path& path, function<shared_ptr<MeshAsset>(const filesystem::path&)> loader)

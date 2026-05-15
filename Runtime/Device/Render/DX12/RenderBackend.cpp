@@ -78,7 +78,7 @@ bool RenderBackend::Initialize(HWND hwnd, const Size& wndSize, const RenderConfi
     m_texSystem = make_unique<TextureSystem>(device, m_srvAllocator.get(), m_taskScheduler.get(), m_loader.get());
     ReturnIfFalse(m_texSystem->Initialize());
     m_meshSystem = make_unique<MeshSystem>(device, m_srvAllocator.get(), m_taskScheduler.get(), m_loader.get());
-    m_matSystem = make_unique<MaterialSystem>(device);
+    m_matSystem = make_unique<MaterialSystem>(m_texSystem.get());
     m_scene = make_unique<RenderScene>();
 
     m_meshRenderer = make_unique<MeshRenderer>(device);
@@ -102,12 +102,16 @@ void RenderBackend::SetRasterState(const RasterState& rasterState)
     m_meshRenderer->SetRasterState(rasterState);
 }
 
+void RenderBackend::SetCamera(const CameraData& camera)
+{
+    m_cameraData = camera;
+}
+
 bool RenderBackend::BeginFrame()
 {
     m_cmd = m_command->Begin(CommandType::Direct);
     if (m_cmd == nullptr) return false;
 
-    m_meshRenderer->BeginFrame();
     return true;
 }
 
@@ -133,10 +137,14 @@ void RenderBackend::DrawUI(std::shared_ptr<ITextureResource> texRes, const Rect&
     m_scene->AddUI(item);
 }
 
-void RenderBackend::DrawMesh(std::shared_ptr<IMeshResource> meshRes, const Core::Math::Matrix& world)
+void RenderBackend::DrawMesh(
+    std::shared_ptr<IMeshResource> meshRes, 
+    std::shared_ptr<IMaterialResource> matRes,
+    const Core::Math::Matrix& world)
 {
     DrawItem item;
     item.mesh = meshRes;
+    item.material = matRes ? matRes : m_matSystem->GetDefaultMaterial();
     item.world = world;
 
     m_scene->AddOpaque(item);
@@ -172,8 +180,8 @@ void RenderBackend::Render()
     graph.ImportResource(hBb, RGAccess::Present); //backbuffer가 present에서 시작한다고 알려준다.
 
     PrepareGraphBuilder prepare(m_swapChain.get(), hBb);
-    OpaqueGraphBuilder opaque(m_scene.get(), m_meshRenderer.get(), hBb);
-    UIGraphBuilder ui(m_scene.get(), m_quadRenderer.get(), hBb);
+    OpaqueGraphBuilder opaque(m_meshRenderer.get(), m_scene.get(), hBb);
+    UIGraphBuilder ui(m_quadRenderer.get(), m_scene.get(), hBb);
     PresentGraphBuilder present(hBb);
 
     prepare.Build(graph);
@@ -186,6 +194,7 @@ void RenderBackend::Render()
     TaskContext taskCtx;
     taskCtx.resources = std::make_shared<ResourceContext>();
     taskCtx.resources->Set(hBb, std::move(ComPtr<ID3D12Resource>(m_swapChain->GetCurrentBackbuffer())));
+    taskCtx.camera = m_cameraData;
 
     m_profiler->BeginFrame(*m_cmd);
     graph.Excute(*m_cmd, compiledTasks, taskCtx);

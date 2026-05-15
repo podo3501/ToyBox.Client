@@ -1,12 +1,38 @@
 #include "pch.h"
 #include "MaterialSystem.h"
 #include "MaterialResource.h"
+#include "TextureSystem.h"
+#include "TextureResource.h"
 
 MaterialSystem::~MaterialSystem() = default;
-MaterialSystem::MaterialSystem(ID3D12Device* device)
-{}
-
-shared_ptr<IMaterialResource> MaterialSystem::CreateMaterialResource(std::shared_ptr<ITextureResource> texRes)
+MaterialSystem::MaterialSystem(TextureSystem* texSystem) :
+	m_texSystem{ texSystem }
 {
-	return make_shared<MaterialResource>(texRes);
+    m_defaultMaterial = CreateMaterialResource();
+}
+
+shared_ptr<IMaterialResource> MaterialSystem::CreateMaterialResource()
+{
+    auto materialRes = make_shared<MaterialResource>();
+    materialRes->SetTexture(m_texSystem->GetDefaultTexture()); //기본 텍스쳐를 셋팅한다.
+
+    return materialRes;
+}
+
+bool MaterialSystem::LoadFromAsset(std::shared_ptr<IMaterialResource> resource, std::shared_ptr<TextureAsset> asset, const TextureDesc& desc)
+{
+	if (!resource || !asset)
+		return false;
+
+    auto matRes = std::static_pointer_cast<MaterialResource>(resource);
+    auto texRes = m_texSystem->CreateTextureResource();
+    if (!texRes) 
+        return false;
+
+    if (!m_texSystem->LoadFromAsset(texRes, asset, desc))
+        return false;
+
+    matRes->SetTexture(texRes);
+
+    return true;
 }

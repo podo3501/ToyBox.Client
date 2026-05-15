@@ -1,11 +1,13 @@
 #include "pch.h"
 #include "MeshRenderer.h"
 #include "MeshResource.h"
+#include "MaterialResource.h"
 #include "d3dx12.h"
 #include <d3dcompiler.h>
 #include "CommandList.h"
 #include "DescriptorAllocation.h"
 #include "DX12MathUtils.h"
+#include "GameClient/Graphics/RenderData/CameraData.h"
 
 namespace cm = Core::Math;
 
@@ -217,30 +219,48 @@ void MeshRenderer::SetFrameCB(const FrameCB& frame)
     *m_frameData = frame;
 }
 
-void MeshRenderer::BeginFrame()
+void MeshRenderer::PrepareFrame(const CameraData& camera)
 {
     m_objectIndex = 0;
+
+    FrameCB frame{};
+    DirectX::XMMATRIX view = ToDXMatrix(camera.view);
+    DirectX::XMMATRIX proj = ToDXMatrix(camera.proj);
+
+    // GPU용으로 transpose해서 저장
+    XMStoreFloat4x4(
+        reinterpret_cast<DirectX::XMFLOAT4X4*>(frame.view),
+        DirectX::XMMatrixTranspose(view));
+
+    XMStoreFloat4x4(
+        reinterpret_cast<DirectX::XMFLOAT4X4*>(frame.proj),
+        DirectX::XMMatrixTranspose(proj));
+
+    *m_frameData = frame;
 }
 
-void MeshRenderer::Draw(CommandList& cmd, MeshResource& mesh, const cm::Matrix& world, DescriptorAllocation& textureSrv)
+void MeshRenderer::Draw(
+    CommandList& cmd, 
+    MeshResource& mesh, 
+    MaterialResource& material,
+    const cm::Matrix& world)
 {
-    UpdateFrameCB();
+    ///UpdateFrameCB();
     auto objectCBAddress = UpdateObjectCB(world);
     auto& meshTable = mesh.GetMeshTable();
+    auto& textureSrv = material.GetTextureSRV();
     
     cmd->SetGraphicsRootDescriptorTable(0, meshTable.GetGpuHandle());
-    //cmd->SetGraphicsRootDescriptorTable(1, textureSrv.GetGpuHandle());
+    cmd->SetGraphicsRootDescriptorTable(1, textureSrv.GetGpuHandle());
 
     cmd->SetGraphicsRootConstantBufferView(2, objectCBAddress);
     cmd->SetGraphicsRootConstantBufferView(3, m_frameCB->GetGPUVirtualAddress());
 
     cmd->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
     cmd->DrawInstanced(mesh.GetIndexCount(), 1, 0, 0);
-    //cmd->DrawIndexedInstanced(mesh.GetIndexCount(), 1, 0, 0, 0);
 
     meshTable.MarkUsed(cmd.GetType(), cmd.GetFence());
-    //textureSrv.MarkUsed(cmd.GetType(), cmd.GetFence());
+    textureSrv.MarkUsed(cmd.GetType(), cmd.GetFence());
 }
 
 void MeshRenderer::UpdateFrameCB()

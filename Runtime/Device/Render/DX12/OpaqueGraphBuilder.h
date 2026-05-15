@@ -10,11 +10,11 @@ class OpaqueGraphBuilder
 public:
     ~OpaqueGraphBuilder();
     OpaqueGraphBuilder() = delete;
-    OpaqueGraphBuilder(RenderScene* scene, MeshRenderer* meshRenderer, RGHandle hBb);
+    OpaqueGraphBuilder(MeshRenderer* meshRenderer, RenderScene* scene, RGHandle hBb);
     void Build(RenderGraph& graph);
     
 private:
-    RenderScene* m_scene{ nullptr };
     MeshRenderer* m_meshRenderer{ nullptr };
+    RenderScene* m_scene{ nullptr };
     RGHandle m_hBb;
 };

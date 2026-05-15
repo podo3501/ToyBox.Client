@@ -21,11 +21,16 @@ public:
 
     bool Initialize();
     void Update(size_t uploadBudgetBytes);
+    std::shared_ptr<ITextureResource> GetDefaultTexture() const { return m_defaultTexture; }
 
 private:
+    bool CreateBuiltinTextures();
+
     unique_ptr<MipGenerator> m_mipGenerator;
     unique_ptr<DescriptorFactory> m_descriptorFactory;
     unique_ptr<TextureGraphBuilder> m_builder;
 
     std::queue<TextureLoadRequest> m_pending;
+
+    std::shared_ptr<ITextureResource> m_defaultTexture;
 };

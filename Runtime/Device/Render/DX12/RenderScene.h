@@ -3,11 +3,13 @@
 #include "Core/Math/Matrix.h"
 
 struct ITextureResource;
+struct IMaterialResource;
 struct IMeshResource;
 
 struct DrawItem
 {
     std::shared_ptr<IMeshResource> mesh;
+    std::shared_ptr<IMaterialResource> material;
     Core::Math::Matrix world;
 };
 

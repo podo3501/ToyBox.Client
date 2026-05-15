@@ -1,7 +1,6 @@
 #pragma once
 #include "Core/Utils/Handle/HandlePool.h"
 #include "MaterialHandle.h"
-#include "TextureHandle.h"
 #include "ResourceTypes.h"
 #include "TextureDesc.h"
 
@@ -16,8 +15,6 @@
 
 struct IMaterialSystem;
 struct IMaterialResource;
-struct ITextureSystem;
-struct ITextureResource;
 struct TextureAsset;
 struct CpuPendingMaterialRequest;
 struct GpuPendingMaterialRequest;
@@ -48,7 +45,6 @@ struct MaterialEntry
 {
     MaterialKey key;
     std::shared_ptr<IMaterialResource> matRes;
-    std::shared_ptr<ITextureResource> texRes;
     LoadState state{ LoadState::Pending };
 };
 
@@ -57,7 +53,7 @@ class MaterialRepository
 public:
     ~MaterialRepository();
     MaterialRepository() = delete;
-    MaterialRepository(IMaterialSystem* matSystem, ITextureSystem* texSystem);
+    MaterialRepository(IMaterialSystem* matSystem);
 
     MaterialHandle GetOrCreate(const std::filesystem::path& path, const TextureDesc& desc,
         function<shared_ptr<TextureAsset>(const std::filesystem::path&)> loader);
@@ -72,7 +68,6 @@ private:
     void ProcessLoading();
 
     IMaterialSystem* m_matSystem{ nullptr };
-    ITextureSystem* m_texSystem{ nullptr };
     std::unordered_map<MaterialKey, MaterialHandle, MaterialKeyHash> m_cache;
     HandlePool<MaterialEntry, MaterialTag> m_loadedMaterials;
 

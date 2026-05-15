@@ -1,12 +1,20 @@
 #pragma once
 #include "GameClient/Service/Render/Repository/IMaterialSystem.h"
 
-struct ID3D12Device;
+class TextureSystem;
 
 class MaterialSystem : public IMaterialSystem
 {
 public:
 	~MaterialSystem();
-	MaterialSystem(ID3D12Device* device);
-	virtual shared_ptr<IMaterialResource> CreateMaterialResource(std::shared_ptr<ITextureResource> texRes) override;
+	MaterialSystem(TextureSystem* texSystem);
+	virtual shared_ptr<IMaterialResource> CreateMaterialResource() override;
+	virtual bool LoadFromAsset(std::shared_ptr<IMaterialResource> resource, std::shared_ptr<TextureAsset> asset, const TextureDesc& desc) override;
+
+	shared_ptr<IMaterialResource> GetDefaultMaterial() { return m_defaultMaterial; }
+
+private:
+	TextureSystem* m_texSystem{ nullptr };
+
+	shared_ptr<IMaterialResource> m_defaultMaterial;
 };

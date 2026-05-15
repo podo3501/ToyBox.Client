@@ -7,8 +7,10 @@
 
 struct ObjectCB;
 struct FrameCB;
+struct CameraData;
 class CommandList;
 class MeshResource;
+class MaterialResource;
 class DescriptorAllocation;
 
 struct PSOKey
@@ -50,8 +52,8 @@ public:
     void BindDescriptorHeap(CommandList& cmd);
     void SetFrameCB(const FrameCB& frame);
     void SetSRVHeap(ID3D12DescriptorHeap* heap) { m_srvHeap = heap; }
-    void BeginFrame();
-    void Draw(CommandList& cmd, MeshResource& mesh, const Core::Math::Matrix& world, DescriptorAllocation& textureSrv);
+    void PrepareFrame(const CameraData& camera);
+    void Draw(CommandList& cmd, MeshResource& mesh, MaterialResource& material, const Core::Math::Matrix& world);
     void Resize(const Size& size);
     
 private:

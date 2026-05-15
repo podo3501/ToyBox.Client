@@ -15,12 +15,40 @@ TextureSystem::TextureSystem(ID3D12Device* device, DescriptorAllocator* srvAlloc
 
 bool TextureSystem::Initialize()
 {
-    return m_mipGenerator->Initialize();
+    ReturnIfFalse(CreateBuiltinTextures());
+    ReturnIfFalse(m_mipGenerator->Initialize());
+
+    return true;
 }
 
 shared_ptr<ITextureResource> TextureSystem::CreateTextureResource()
 {
     return make_shared<TextureResource>();
+}
+
+bool TextureSystem::CreateBuiltinTextures()
+{
+    auto texRes = CreateTextureResource();
+    if (!texRes)
+        return false;
+
+    auto asset = std::make_shared<TextureAsset>();
+
+    asset->width = 1;
+    asset->height = 1;
+    asset->pixels.resize(sizeof(uint32_t));
+
+    uint32_t white = 0xffffffff;
+
+    memcpy(asset->pixels.data(), &white, sizeof(uint32_t));
+
+    TextureDesc desc{ true, false };
+    if (!LoadFromAsset(texRes, asset, desc))
+        return false;
+
+    m_defaultTexture = texRes;
+
+    return true;
 }
 
 static size_t EstimateBytes(const TextureAsset& asset, const TextureDesc& desc)

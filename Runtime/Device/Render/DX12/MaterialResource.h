@@ -1,5 +1,6 @@
 #pragma once
 #include "GameClient/Service/Render/Repository/IMaterialResource.h"
+#include "DescriptorAllocation.h"
 
 struct ITextureResource;
 
@@ -7,20 +8,12 @@ class MaterialResource : public IMaterialResource
 {
 public:
 	~MaterialResource();
-	MaterialResource() = delete;
-	explicit MaterialResource(std::shared_ptr<ITextureResource> texRes);
-	virtual bool IsReady() const noexcept
-	{
-		return m_ready;
-	}
+	MaterialResource();
+	virtual bool IsReady() const noexcept override;
 
-	void MarkReady()
-	{
-		m_ready = true;
-	}
+	void SetTexture(std::shared_ptr<ITextureResource> texRes);
+	DescriptorAllocation& GetTextureSRV();
 
 private:
 	shared_ptr<ITextureResource> m_texRes;
-
-	bool m_ready{ false };
 };

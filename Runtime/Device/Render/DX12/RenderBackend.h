@@ -26,8 +26,10 @@ public:
 	RenderBackend();
 	virtual bool Initialize(HWND hwnd, const Size& wndSize, const RenderConfig& renderConfig) override;
 	virtual void SetRasterState(const RasterState& rasterState) override;
+	virtual void SetCamera(const CameraData& camera) override;
 	virtual void DrawUI(std::shared_ptr<ITextureResource> texRes, const Rect& dest, const Rect* source) override;
-	virtual void DrawMesh(std::shared_ptr<IMeshResource> meshRes, const Core::Math::Matrix& world) override;
+	virtual void DrawMesh(std::shared_ptr<IMeshResource> meshRes, std::shared_ptr<IMaterialResource> matRes,
+		const Core::Math::Matrix& world) override;
 	virtual void Resize(const Size& size) override;
 	virtual void Update() override;
 	virtual void Render() override;
@@ -62,4 +64,5 @@ private:
 	CommandList* m_cmd{ nullptr }; //direct command юс.
 
 	Size m_size{};
+	CameraData m_cameraData;
 };

@@ -5,11 +5,12 @@
 #include "RenderScene.h"
 #include "MeshRenderer.h"
 #include "MeshResource.h"
+#include "MaterialResource.h"
 
 OpaqueGraphBuilder::~OpaqueGraphBuilder() = default;
-OpaqueGraphBuilder::OpaqueGraphBuilder(RenderScene* scene, MeshRenderer* meshRenderer, RGHandle hBb) :
+OpaqueGraphBuilder::OpaqueGraphBuilder(MeshRenderer* meshRenderer, RenderScene* scene, RGHandle hBb) :
+    m_meshRenderer{ meshRenderer },
     m_scene{ scene }, 
-    m_meshRenderer{ meshRenderer }, 
     m_hBb { hBb }
 {}
 
@@ -21,12 +22,13 @@ void OpaqueGraphBuilder::Build(RenderGraph& graph)
     opaque.gpuExecute = [this](CommandList& cmd, TaskContext& ctx) {
         m_meshRenderer->BindDescriptorHeap(cmd);
         m_meshRenderer->BindPipeline(cmd);
+        m_meshRenderer->PrepareFrame(ctx.camera);
 
         for (auto& item : m_scene->GetOpaqueDraws())
         {
-            DescriptorAllocation dummy{};
             auto mesh = static_cast<MeshResource*>(item.mesh.get());
-            m_meshRenderer->Draw(cmd, *mesh, item.world, dummy);
+            auto material = static_cast<MaterialResource*>(item.material.get());
+            m_meshRenderer->Draw(cmd, *mesh, *material, item.world);
         }
         };
 }
