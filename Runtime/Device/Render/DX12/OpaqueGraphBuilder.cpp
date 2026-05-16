@@ -22,7 +22,7 @@ void OpaqueGraphBuilder::Build(RenderGraph& graph)
     opaque.gpuExecute = [this](CommandList& cmd, TaskContext& ctx) {
         m_meshRenderer->BindDescriptorHeap(cmd);
         m_meshRenderer->BindPipeline(cmd);
-        m_meshRenderer->PrepareFrame(ctx.camera);
+        m_meshRenderer->PrepareFrame(ctx.frame.light, ctx.frame.camera);
 
         for (auto& item : m_scene->GetOpaqueDraws())
         {

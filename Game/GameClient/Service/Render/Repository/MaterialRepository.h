@@ -3,15 +3,7 @@
 #include "MaterialHandle.h"
 #include "ResourceTypes.h"
 #include "TextureDesc.h"
-
-//struct ITextureResource;
-
-//struct MaterialEntry
-//{
-//    ITextureResource* texRes{ nullptr };
-//    TextureHandle sourceTextureHandle;
-//    LoadState state{ LoadState::Pending };
-//};
+#include "MaterialDesc.h"
 
 struct IMaterialSystem;
 struct IMaterialResource;
@@ -21,8 +13,8 @@ struct GpuPendingMaterialRequest;
 
 struct MaterialKey
 {
-    std::filesystem::path path;
-    TextureDesc desc;
+    TextureLoadDesc albedoLoadDesc;
+    MaterialSurface surface;
 
     bool operator==(const MaterialKey& rhs) const = default;
 };
@@ -31,13 +23,15 @@ struct MaterialKeyHash
 {
     size_t operator()(const MaterialKey& k) const
     {
-        size_t h1 = std::hash<std::string>()(k.path.string());
+        size_t h = 0;
 
-        size_t h2 = 0;
-        h2 ^= std::hash<bool>()(k.desc.srgb) << 1;
-        h2 ^= std::hash<bool>()(k.desc.generateMips) << 2;
+        h ^= std::hash<std::string>()(k.albedoLoadDesc.path.string());
+        h ^= std::hash<bool>()(k.albedoLoadDesc.texDesc.srgb) << 1;
+        h ^= std::hash<bool>()(k.albedoLoadDesc.texDesc.generateMips) << 2;
+        h ^= std::hash<float>()(k.surface.roughness) << 3;
+        h ^= std::hash<float>()(k.surface.metallic) << 4;
 
-        return h1 ^ (h2 << 1);
+        return h;
     }
 };
 
@@ -55,8 +49,8 @@ public:
     MaterialRepository() = delete;
     MaterialRepository(IMaterialSystem* matSystem);
 
-    MaterialHandle GetOrCreate(const std::filesystem::path& path, const TextureDesc& desc,
-        function<shared_ptr<TextureAsset>(const std::filesystem::path&)> loader);
+    MaterialHandle GetOrCreate(const MaterialLoadDesc& loadDesc,
+        function<shared_ptr<TextureAsset>(const filesystem::path&)> loader);
     bool Release(MaterialHandle h);
     void ReleaseAll();
     void Update();

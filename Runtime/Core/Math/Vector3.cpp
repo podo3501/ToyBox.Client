@@ -62,8 +62,19 @@ namespace Core::Math
     Vector3 Vector3::Normalized() const
     {
         float len = Length();
-        if (len == 0.0f)
-            return Vector3(0, 0, 0);
+
+        if (len <= 0.00001f)
+            return Vector3(0.0f, 0.0f, 0.0f);
+
+        return *this / len;
+    }
+
+    Vector3 Vector3::NormalizedOr(const Vector3& fallback) const
+    {
+        float len = Length();
+
+        if (len <= 0.00001f)
+            return fallback;
 
         return *this / len;
     }
@@ -73,6 +84,21 @@ namespace Core::Math
         float len = Length();
         if (len == 0.0f)
             return;
+
+        x /= len;
+        y /= len;
+        z /= len;
+    }
+
+    void Vector3::NormalizeOr(const Vector3& fallback)
+    {
+        float len = Length();
+
+        if (len <= 0.00001f)
+        {
+            *this = fallback;
+            return;
+        }
 
         x /= len;
         y /= len;

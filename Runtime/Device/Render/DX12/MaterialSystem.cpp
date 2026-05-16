@@ -14,12 +14,15 @@ MaterialSystem::MaterialSystem(TextureSystem* texSystem) :
 shared_ptr<IMaterialResource> MaterialSystem::CreateMaterialResource()
 {
     auto materialRes = make_shared<MaterialResource>();
-    materialRes->SetTexture(m_texSystem->GetDefaultTexture()); //기본 텍스쳐를 셋팅한다.
+    materialRes->SetAlbedoTexture(m_texSystem->GetDefaultTexture()); //기본 텍스쳐를 셋팅한다.
 
     return materialRes;
 }
 
-bool MaterialSystem::LoadFromAsset(std::shared_ptr<IMaterialResource> resource, std::shared_ptr<TextureAsset> asset, const TextureDesc& desc)
+bool MaterialSystem::LoadFromAsset(
+    std::shared_ptr<IMaterialResource> resource, 
+    std::shared_ptr<TextureAsset> asset, 
+    const MaterialDesc& matDesc)
 {
 	if (!resource || !asset)
 		return false;
@@ -29,10 +32,11 @@ bool MaterialSystem::LoadFromAsset(std::shared_ptr<IMaterialResource> resource, 
     if (!texRes) 
         return false;
 
-    if (!m_texSystem->LoadFromAsset(texRes, asset, desc))
+    if (!m_texSystem->LoadFromAsset(texRes, asset, matDesc.albedoDesc))
         return false;
 
-    matRes->SetTexture(texRes);
+    matRes->SetAlbedoTexture(texRes);
+    matRes->SetSurface(matDesc.surface);
 
     return true;
 }

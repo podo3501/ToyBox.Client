@@ -107,6 +107,11 @@ void RenderBackend::SetCamera(const CameraData& camera)
     m_cameraData = camera;
 }
 
+void RenderBackend::SetDirectionalLight(const DirectionalLightData& light)
+{
+    m_lightData = light;
+}
+
 bool RenderBackend::BeginFrame()
 {
     m_cmd = m_command->Begin(CommandType::Direct);
@@ -194,7 +199,12 @@ void RenderBackend::Render()
     TaskContext taskCtx;
     taskCtx.resources = std::make_shared<ResourceContext>();
     taskCtx.resources->Set(hBb, std::move(ComPtr<ID3D12Resource>(m_swapChain->GetCurrentBackbuffer())));
-    taskCtx.camera = m_cameraData;
+
+    FrameData frame;
+    frame.light = m_lightData;
+    frame.camera = m_cameraData;
+
+    taskCtx.frame = frame;
 
     m_profiler->BeginFrame(*m_cmd);
     graph.Excute(*m_cmd, compiledTasks, taskCtx);

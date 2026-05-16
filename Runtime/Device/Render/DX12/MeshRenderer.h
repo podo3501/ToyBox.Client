@@ -7,7 +7,10 @@
 
 struct ObjectCB;
 struct FrameCB;
+struct MaterialCB;
+struct DirectionalLightData;
 struct CameraData;
+struct MaterialSurface;
 class CommandList;
 class MeshResource;
 class MaterialResource;
@@ -50,9 +53,8 @@ public:
     void SetRasterState(const RasterState& rasterState);
     void BindPipeline(CommandList& cmd);
     void BindDescriptorHeap(CommandList& cmd);
-    void SetFrameCB(const FrameCB& frame);
     void SetSRVHeap(ID3D12DescriptorHeap* heap) { m_srvHeap = heap; }
-    void PrepareFrame(const CameraData& camera);
+    void PrepareFrame(const DirectionalLightData& light, const CameraData& camera);
     void Draw(CommandList& cmd, MeshResource& mesh, MaterialResource& material, const Core::Math::Matrix& world);
     void Resize(const Size& size);
     
@@ -63,9 +65,8 @@ private:
     void CreateConstantBuffers();
     ID3D12PipelineState* GetPipeline(const PSOKey& key);
 
-private:
-    void UpdateFrameCB();
     D3D12_GPU_VIRTUAL_ADDRESS UpdateObjectCB(const Core::Math::Matrix& world);
+    D3D12_GPU_VIRTUAL_ADDRESS UpdateMaterialCB(const MaterialSurface& surface);
 
     static constexpr uint32_t kMaxObjectCount{ 1024 }; //추후에 링버퍼로 수정할 계획
 
@@ -83,7 +84,12 @@ private:
 
     ComPtr<ID3D12Resource> m_objectCBs[kMaxObjectCount];
     ObjectCB* m_objectDatas[kMaxObjectCount]{};
-    uint32_t m_objectIndex = 0;
+
+    ComPtr<ID3D12Resource> m_materialCBs[kMaxObjectCount];
+    MaterialCB* m_materialDatas[kMaxObjectCount]{};
+
+    uint32_t m_objectCBIndex{ 0 };
+    uint32_t m_materialCBIndex{ 0 };
 
     float m_objectAngle{ 0.f };
 };

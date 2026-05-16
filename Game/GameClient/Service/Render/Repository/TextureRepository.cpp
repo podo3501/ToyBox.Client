@@ -5,8 +5,7 @@
 
 struct CpuPendingTextureRequest
 {
-	filesystem::path path;
-	TextureDesc desc;
+	TextureLoadDesc loadDesc;
 	function<std::shared_ptr<TextureAsset>(const filesystem::path&)> loader;
 	TextureHandle handle;
 };
@@ -23,10 +22,9 @@ TextureRepository::TextureRepository(ITextureSystem* texSystem) :
 	m_texSystem{ texSystem }
 {}
 
-TextureHandle TextureRepository::GetOrCreate( const filesystem::path& path, const TextureDesc& desc,
-	function<shared_ptr<TextureAsset>(const filesystem::path&)> loader)
+TextureHandle TextureRepository::GetOrCreate( const TextureLoadDesc& loadDesc, function<shared_ptr<TextureAsset>(const filesystem::path&)> loader)
 {
-	TextureKey key{ path, desc };
+	TextureKey key{ loadDesc.path, loadDesc.texDesc };
 
 	auto it = m_cache.find(key);
 	if (it != m_cache.end())
@@ -42,7 +40,7 @@ TextureHandle TextureRepository::GetOrCreate( const filesystem::path& path, cons
 
 	auto handle = m_loadedTextures.Emplace(move(entry));
 	m_cache[key] = handle;
-	m_cpuPending.push_back(CpuPendingTextureRequest{ path, desc, loader, handle });
+	m_cpuPending.push_back(CpuPendingTextureRequest{ loadDesc, loader, handle });
 
 	return handle;
 }
@@ -63,14 +61,15 @@ void TextureRepository::ProcessCpuPending()
 		if (entry->state != LoadState::Pending) continue; // 중복으로 들어온 경우 이미 Loading/Ready 라면 처리안함.
 
 		entry->state = LoadState::CpuLoading;
-		auto asset = req.loader(req.path);
+		auto asset = req.loader(req.loadDesc.path);
 		if (!asset)
 		{
 			entry->state = LoadState::Failed;
 			continue;
 		}
 
-		m_gpuPending.push_back(GpuPendingTextureRequest{ req.handle, req.desc, asset });
+		auto texDesc = req.loadDesc.ToCreateDesc();
+		m_gpuPending.push_back(GpuPendingTextureRequest{ req.handle, texDesc, asset });
 	}
 
 	m_cpuPending.clear();

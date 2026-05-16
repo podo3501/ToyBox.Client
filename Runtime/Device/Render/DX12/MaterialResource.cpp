@@ -13,12 +13,12 @@ bool MaterialResource::IsReady() const noexcept
     return m_texRes->IsReady();
 }
 
-void MaterialResource::SetTexture(std::shared_ptr<ITextureResource> texRes)
+void MaterialResource::SetAlbedoTexture(std::shared_ptr<ITextureResource> texRes)
 {
     m_texRes = texRes;
 }
 
-DescriptorAllocation& MaterialResource::GetTextureSRV()
+DescriptorAllocation& MaterialResource::GetAlbedoTextureSRV()
 {
     auto texRes = static_cast<TextureResource*>(m_texRes.get());
     return texRes->GetSrv();

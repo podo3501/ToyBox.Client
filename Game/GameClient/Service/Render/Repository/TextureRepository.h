@@ -45,8 +45,7 @@ public:
     ~TextureRepository();
     explicit TextureRepository(ITextureSystem* texSystem);
 
-    TextureHandle GetOrCreate(const filesystem::path& path, const TextureDesc& desc,
-        function<shared_ptr<TextureAsset>(const filesystem::path&)> loader);
+    TextureHandle GetOrCreate(const TextureLoadDesc& desc, function<shared_ptr<TextureAsset>(const filesystem::path&)> loader);
     bool Release(TextureHandle h);
     void ReleaseAll();
     void Update();

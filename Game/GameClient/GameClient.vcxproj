@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClCompile Include="GameLoop.cpp" />
     <ClCompile Include="Graphics\World\Camera.cpp" />
+    <ClCompile Include="Graphics\World\DirectionalLight.cpp" />
     <ClCompile Include="Graphics\World\Transform.cpp" />
     <ClCompile Include="Locator\UIComponentLocator.cpp" />
     <ClCompile Include="pch.cpp">
@@ -107,7 +108,9 @@
   <ItemGroup>
     <ClInclude Include="GameLoop.h" />
     <ClInclude Include="Graphics\RenderData\CameraData.h" />
+    <ClInclude Include="Graphics\RenderData\DirectionalLightData.h" />
     <ClInclude Include="Graphics\World\Camera.h" />
+    <ClInclude Include="Graphics\World\DirectionalLight.h" />
     <ClInclude Include="Graphics\World\Transform.h" />
     <ClInclude Include="Locator\InputLocator.h" />
     <ClInclude Include="Locator\UIComponentLocator.h" />
@@ -157,6 +160,7 @@
     <ClInclude Include="Service\Render\Repository\IMeshSystem.h" />
     <ClInclude Include="Service\Render\Repository\ITextureResource.h" />
     <ClInclude Include="Service\Render\Repository\ITextureSystem.h" />
+    <ClInclude Include="Service\Render\Repository\MaterialDesc.h" />
     <ClInclude Include="Service\Render\Repository\MaterialHandle.h" />
     <ClInclude Include="Service\Render\Repository\MaterialRepository.h" />
     <ClInclude Include="Service\Render\Repository\MeshHandle.h" />

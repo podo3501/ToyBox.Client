@@ -29,7 +29,10 @@ namespace Core::Math
         Vector3 Cross(const Vector3& rhs) const;
 
         Vector3 Normalized() const;
+        Vector3 NormalizedOr(const Vector3& fallback) const;
+
         void Normalize();
+        void NormalizeOr(const Vector3& fallback);
 
         static Vector3 Zero();
         static Vector3 One();

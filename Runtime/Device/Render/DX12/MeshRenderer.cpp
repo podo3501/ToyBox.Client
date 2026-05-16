@@ -7,6 +7,7 @@
 #include "CommandList.h"
 #include "DescriptorAllocation.h"
 #include "DX12MathUtils.h"
+#include "GameClient/Graphics/RenderData/DirectionalLightData.h"
 #include "GameClient/Graphics/RenderData/CameraData.h"
 
 namespace cm = Core::Math;
@@ -20,6 +21,20 @@ struct FrameCB
 {
     float view[16];
     float proj[16];
+
+    float lightDirection[3];
+    float lightIntensity;
+
+    float lightColor[3];
+    float padding;
+};
+
+struct MaterialCB
+{
+    float roughness;
+    float metallic;
+
+    float padding[2];
 };
 
 MeshRenderer::~MeshRenderer() = default;
@@ -67,9 +82,15 @@ void MeshRenderer::CreatePipeline(const PSOKey& key)
     ComPtr<ID3DBlob> ps;
     ComPtr<ID3DBlob> err;
 
+    //SURFACE_DEBUG
+    //SPECULAR_DEBUG
+    //DIFFUSE_DEBUG
+
+    D3D_SHADER_MACRO defines[] = { "", "1", nullptr, nullptr };
+
     std::wstring shaderFile = L"D:\\ProgrammingStudy\\ToyBox\\Runtime\\Device\\Render\\DX12\\Mesh.hlsl";
     D3DCompileFromFile(shaderFile.c_str(), nullptr, nullptr, "VSMain", "vs_5_0", 0, 0, &vs, &err);
-    D3DCompileFromFile(shaderFile.c_str(), nullptr, nullptr, "PSMain", "ps_5_0", 0, 0, &ps, &err);
+    D3DCompileFromFile(shaderFile.c_str(), defines, nullptr, "PSMain", "ps_5_0", 0, 0, &ps, &err);
 
     D3D12_GRAPHICS_PIPELINE_STATE_DESC pso{};
     pso.InputLayout = { nullptr, 0 };
@@ -124,11 +145,12 @@ void MeshRenderer::CreateRootSignature()
     CD3DX12_DESCRIPTOR_RANGE rangeTex;
     rangeTex.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 2); // vb, ib
 
-    CD3DX12_ROOT_PARAMETER params[4];
+    CD3DX12_ROOT_PARAMETER params[5];
     params[0].InitAsDescriptorTable(1, &rangeMesh); // Mesh Table (t0-t1)
     params[1].InitAsDescriptorTable(1, &rangeTex);  // Texture Table (t2)
     params[2].InitAsConstantBufferView(0);      // object
     params[3].InitAsConstantBufferView(1);      // frame
+    params[4].InitAsConstantBufferView(2);      // materialCB
 
     CD3DX12_STATIC_SAMPLER_DESC sampler(
         0,
@@ -165,7 +187,7 @@ void MeshRenderer::CreateRootSignature()
 void MeshRenderer::CreateConstantBuffers()
 {
     CD3DX12_HEAP_PROPERTIES heap(D3D12_HEAP_TYPE_UPLOAD);
-    auto desc = CD3DX12_RESOURCE_DESC::Buffer(256);
+    auto cbDesc = CD3DX12_RESOURCE_DESC::Buffer(256);
 
     // Object CB
     for (uint32_t i = 0; i < kMaxObjectCount; ++i)
@@ -173,7 +195,7 @@ void MeshRenderer::CreateConstantBuffers()
         m_device->CreateCommittedResource(
             &heap,
             D3D12_HEAP_FLAG_NONE,
-            &desc,
+            &cbDesc,
             D3D12_RESOURCE_STATE_GENERIC_READ,
             nullptr,
             IID_PPV_ARGS(&m_objectCBs[i])
@@ -186,13 +208,28 @@ void MeshRenderer::CreateConstantBuffers()
     m_device->CreateCommittedResource(
         &heap,
         D3D12_HEAP_FLAG_NONE,
-        &desc,
+        &cbDesc,
         D3D12_RESOURCE_STATE_GENERIC_READ,
         nullptr,
         IID_PPV_ARGS(&m_frameCB)
     );
 
     m_frameCB->Map(0, nullptr, (void**)&m_frameData);
+
+    // Material CB
+    for (uint32_t i = 0; i < kMaxObjectCount; ++i)
+    {
+        m_device->CreateCommittedResource(
+            &heap,
+            D3D12_HEAP_FLAG_NONE,
+            &cbDesc,
+            D3D12_RESOURCE_STATE_GENERIC_READ,
+            nullptr,
+            IID_PPV_ARGS(&m_materialCBs[i])
+        );
+
+        m_materialCBs[i]->Map(0, nullptr, reinterpret_cast<void**>(&m_materialDatas[i]));
+    }
 }
 
 void MeshRenderer::BindPipeline(CommandList& cmd)
@@ -214,14 +251,10 @@ void MeshRenderer::BindDescriptorHeap(CommandList& cmd)
     cmd->SetDescriptorHeaps(1, heaps);
 }
 
-void MeshRenderer::SetFrameCB(const FrameCB& frame)
+void MeshRenderer::PrepareFrame(const DirectionalLightData& light, const CameraData& camera)
 {
-    *m_frameData = frame;
-}
-
-void MeshRenderer::PrepareFrame(const CameraData& camera)
-{
-    m_objectIndex = 0;
+    m_objectCBIndex = 0;
+    m_materialCBIndex = 0;
 
     FrameCB frame{};
     DirectX::XMMATRIX view = ToDXMatrix(camera.view);
@@ -236,6 +269,17 @@ void MeshRenderer::PrepareFrame(const CameraData& camera)
         reinterpret_cast<DirectX::XMFLOAT4X4*>(frame.proj),
         DirectX::XMMatrixTranspose(proj));
 
+    // Directional Light
+    frame.lightDirection[0] = light.direction.x;
+    frame.lightDirection[1] = light.direction.y;
+    frame.lightDirection[2] = light.direction.z;
+
+    frame.lightColor[0] = light.color.x;
+    frame.lightColor[1] = light.color.y;
+    frame.lightColor[2] = light.color.z;
+
+    frame.lightIntensity = light.intensity;
+
     *m_frameData = frame;
 }
 
@@ -245,16 +289,17 @@ void MeshRenderer::Draw(
     MaterialResource& material,
     const cm::Matrix& world)
 {
-    ///UpdateFrameCB();
     auto objectCBAddress = UpdateObjectCB(world);
+    auto materialCBAddress = UpdateMaterialCB(material.GetSurface());
     auto& meshTable = mesh.GetMeshTable();
-    auto& textureSrv = material.GetTextureSRV();
+    auto& textureSrv = material.GetAlbedoTextureSRV();
     
     cmd->SetGraphicsRootDescriptorTable(0, meshTable.GetGpuHandle());
     cmd->SetGraphicsRootDescriptorTable(1, textureSrv.GetGpuHandle());
 
     cmd->SetGraphicsRootConstantBufferView(2, objectCBAddress);
     cmd->SetGraphicsRootConstantBufferView(3, m_frameCB->GetGPUVirtualAddress());
+    cmd->SetGraphicsRootConstantBufferView(4, materialCBAddress);
 
     cmd->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     cmd->DrawInstanced(mesh.GetIndexCount(), 1, 0, 0);
@@ -263,36 +308,9 @@ void MeshRenderer::Draw(
     textureSrv.MarkUsed(cmd.GetType(), cmd.GetFence());
 }
 
-void MeshRenderer::UpdateFrameCB()
-{
-    FrameCB frame{};
-
-    XMMATRIX view =
-        XMMatrixLookAtLH(
-            XMVectorSet(0.0f, 0.0f, -5.0f, 1.0f),
-            XMVectorZero(),
-            XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f)
-        );
-
-    float aspect = (m_screenSize.height == 0) ? 1.0f : (float)m_screenSize.width / (float)m_screenSize.height;
-
-    XMMATRIX proj =
-        XMMatrixPerspectiveFovLH(
-            XM_PIDIV4,
-            aspect,
-            0.1f,
-            1000.0f
-        );
-
-    XMStoreFloat4x4((XMFLOAT4X4*)frame.view, XMMatrixTranspose(view));
-    XMStoreFloat4x4((XMFLOAT4X4*)frame.proj, XMMatrixTranspose(proj));
-
-    *m_frameData = frame;
-}
-
 D3D12_GPU_VIRTUAL_ADDRESS MeshRenderer::UpdateObjectCB(const cm::Matrix& world)
 {
-    Assert(m_objectIndex < kMaxObjectCount);
+    Assert(m_objectCBIndex < kMaxObjectCount);
 
     ObjectCB obj{};
 
@@ -301,10 +319,26 @@ D3D12_GPU_VIRTUAL_ADDRESS MeshRenderer::UpdateObjectCB(const cm::Matrix& world)
         reinterpret_cast<DirectX::XMFLOAT4X4*>(obj.world),
         DirectX::XMMatrixTranspose(xmWorld));
 
-    *m_objectDatas[m_objectIndex] = obj;
-    auto gpuAddress = m_objectCBs[m_objectIndex]->GetGPUVirtualAddress();
+    *m_objectDatas[m_objectCBIndex] = obj;
+    auto gpuAddress = m_objectCBs[m_objectCBIndex]->GetGPUVirtualAddress();
 
-    ++m_objectIndex;
+    ++m_objectCBIndex;
+    return gpuAddress;
+}
+
+D3D12_GPU_VIRTUAL_ADDRESS MeshRenderer::UpdateMaterialCB(const MaterialSurface& surface)
+{
+    Assert(m_materialCBIndex < kMaxObjectCount);
+
+    MaterialCB cb{};
+
+    cb.roughness = surface.roughness;
+    cb.metallic = surface.metallic;
+
+    *m_materialDatas[m_materialCBIndex] = cb;
+    auto gpuAddress = m_materialCBs[m_materialCBIndex]->GetGPUVirtualAddress();
+
+    ++m_materialCBIndex;
     return gpuAddress;
 }
 

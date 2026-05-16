@@ -10,6 +10,7 @@
 #include "RGTypes.h"
 #include <utility>
 #include <memory>
+#include "GameClient/Graphics/RenderData/DirectionalLightData.h"
 #include "GameClient/Graphics/RenderData/CameraData.h"
 
 class CommandList;
@@ -75,12 +76,19 @@ struct PassContext {
     }
 };
 
+struct FrameData
+{
+    DirectionalLightData light;
+    CameraData camera;
+};
+
 struct TaskContext
 {
     shared_ptr<ResourceContext> resources; //중요한 리소스. 공유됨.
     shared_ptr<UploadContext> upload; //중요한 리소스. 공유됨.
     PassContext passContext; //pass가 실행되면서 임시로 생겼다가 사라지는 것들. 공유 안됨.
-    CameraData camera;
+
+    FrameData frame;
 
     template<typename T>
     void SetResource(RGHandle h, T&& res) { resources->Set<T>(h, std::forward<T>(res)); }

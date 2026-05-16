@@ -61,7 +61,7 @@ void Transform::RebuildMatrix() const
     cm::Matrix Rz = cm::Matrix::RotationZ(rotation.z);
     cm::Matrix S = cm::Matrix::Scale(scale.x, scale.y, scale.z);
 
-    m_worldMatrix = T * Rx * Ry * Rz * S;
+    m_worldMatrix = S * Rx * Ry * Rz * T;
 
     m_dirty = false;
 }

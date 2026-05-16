@@ -23,10 +23,10 @@ bool RenderRepository::ReleaseMesh(MeshHandle mh)
 	return m_meshRepository->Release(mh);
 }
 
-TextureHandle RenderRepository::LoadTexture(const filesystem::path& path, const TextureDesc& desc,
+TextureHandle RenderRepository::LoadTexture(const TextureLoadDesc& desc,
 	function<shared_ptr<TextureAsset>(const filesystem::path&)> loader)
 {
-	return m_texRepository->GetOrCreate(path, desc, loader);
+	return m_texRepository->GetOrCreate(desc, loader);
 }
 
 bool RenderRepository::ReleaseTexture(TextureHandle th)
@@ -34,10 +34,10 @@ bool RenderRepository::ReleaseTexture(TextureHandle th)
 	return m_texRepository->Release(th);
 }
 
-MaterialHandle RenderRepository::LoadMaterial(const filesystem::path& path, const TextureDesc& desc,
+MaterialHandle RenderRepository::LoadMaterial(const MaterialLoadDesc& desc, 
 	function<shared_ptr<TextureAsset>(const filesystem::path&)> loader)
 {
-	return m_matRepository->GetOrCreate(path, desc, loader);
+	return m_matRepository->GetOrCreate(desc, loader);
 }
 
 void RenderRepository::Update()

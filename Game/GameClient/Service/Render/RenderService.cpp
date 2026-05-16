@@ -43,6 +43,11 @@ void RenderService::SetCamera(const CameraData& camera)
 	m_backend->SetCamera(camera);
 }
 
+void RenderService::SetDirectionalLight(const DirectionalLightData& light)
+{
+	m_backend->SetDirectionalLight(light);
+}
+
 void RenderService::DrawUI(TextureHandle th, const Rect& dest, const Rect* source)
 {
 	auto entry = m_repository->Get(th);

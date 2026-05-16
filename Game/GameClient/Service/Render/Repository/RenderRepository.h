@@ -2,6 +2,7 @@
 #include "TextureHandle.h"
 #include "MaterialHandle.h"
 #include "MeshHandle.h"
+#include "MaterialDesc.h"
 #include "TextureDesc.h"
 
 struct TextureEntry;
@@ -24,12 +25,11 @@ public:
 	MeshHandle LoadMesh(const filesystem::path& path, function<shared_ptr<MeshAsset>(const filesystem::path&)> loader);
 	bool ReleaseMesh(MeshHandle mh);
 
-	TextureHandle LoadTexture(const filesystem::path& path, const TextureDesc& desc,
-		function<shared_ptr<TextureAsset>(const filesystem::path&)> loader);
+	TextureHandle LoadTexture(const TextureLoadDesc& desc, function<shared_ptr<TextureAsset>(const filesystem::path&)> loader);
+
 	bool ReleaseTexture(TextureHandle th);
 
-	MaterialHandle LoadMaterial(const filesystem::path& path, const TextureDesc& desc,
-		function<shared_ptr<TextureAsset>(const filesystem::path&)> loader);
+	MaterialHandle LoadMaterial(const MaterialLoadDesc& desc, function<shared_ptr<TextureAsset>(const filesystem::path&)> loader);
 
 	void Update();
 	void ReleaseAll();

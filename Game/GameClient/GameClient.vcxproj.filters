@@ -219,6 +219,9 @@
     <ClCompile Include="Graphics\World\Camera.cpp">
       <Filter>Graphics\World</Filter>
     </ClCompile>
+    <ClCompile Include="Graphics\World\DirectionalLight.cpp">
+      <Filter>Graphics\World</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameLoop.h" />
@@ -573,6 +576,15 @@
     </ClInclude>
     <ClInclude Include="Graphics\RenderData\CameraData.h">
       <Filter>Graphics\RenderData</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\World\DirectionalLight.h">
+      <Filter>Graphics\World</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\RenderData\DirectionalLightData.h">
+      <Filter>Graphics\RenderData</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Repository\MaterialDesc.h">
+      <Filter>Service\Render\Repository</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

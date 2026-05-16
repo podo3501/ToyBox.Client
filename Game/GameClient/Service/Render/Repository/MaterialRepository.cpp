@@ -6,8 +6,7 @@
 
 struct CpuPendingMaterialRequest
 {
-    filesystem::path path;
-    TextureDesc desc;
+    MaterialLoadDesc loadDesc;
     function<std::shared_ptr<TextureAsset>(const filesystem::path&)> loader;
     MaterialHandle handle;
 };
@@ -15,7 +14,7 @@ struct CpuPendingMaterialRequest
 struct GpuPendingMaterialRequest
 {
     MaterialHandle handle;
-    TextureDesc desc;
+    MaterialDesc desc;
     std::shared_ptr<TextureAsset> asset;
 };
 
@@ -24,10 +23,10 @@ MaterialRepository::MaterialRepository(IMaterialSystem* matSystem) :
     m_matSystem{ matSystem }
 {}
 
-MaterialHandle MaterialRepository::GetOrCreate(const filesystem::path& path, const TextureDesc& desc,
+MaterialHandle MaterialRepository::GetOrCreate(const MaterialLoadDesc& loadDesc,
     function<shared_ptr<TextureAsset>(const filesystem::path&)> loader)
 {
-    MaterialKey key{ path, desc };
+    MaterialKey key{ loadDesc.albedoLoadDesc, loadDesc.surface };
 
     auto it = m_cache.find(key);
     if (it != m_cache.end())
@@ -43,7 +42,7 @@ MaterialHandle MaterialRepository::GetOrCreate(const filesystem::path& path, con
 
     auto handle = m_loadedMaterials.Emplace(move(entry));
     m_cache[key] = handle;
-    m_cpuPending.push_back(CpuPendingMaterialRequest{ path, desc, loader, handle });
+    m_cpuPending.push_back(CpuPendingMaterialRequest{ loadDesc, loader, handle });
 
     return handle;
 }
@@ -64,14 +63,15 @@ void MaterialRepository::ProcessCpuPending()
         if (entry->state != LoadState::Pending) continue; // 중복으로 들어온 경우 이미 Loading/Ready 라면 처리안함.
 
         entry->state = LoadState::CpuLoading;
-        auto asset = req.loader(req.path);
+        auto asset = req.loader(req.loadDesc.albedoLoadDesc.path);
         if (!asset)
         {
             entry->state = LoadState::Failed;
             continue;
         }
 
-        m_gpuPending.push_back(GpuPendingMaterialRequest{ req.handle, req.desc, asset });
+        auto matDesc = req.loadDesc.ToCreateDesc();
+        m_gpuPending.push_back(GpuPendingMaterialRequest{ req.handle, matDesc, asset });
     }
 
     m_cpuPending.clear();
