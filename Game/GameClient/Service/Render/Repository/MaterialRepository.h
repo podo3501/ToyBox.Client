@@ -13,7 +13,8 @@ struct GpuPendingMaterialRequest;
 
 struct MaterialKey
 {
-    TextureLoadDesc albedoLoadDesc;
+    ResourceKey resourceKey;
+    TextureDesc albedoTexDesc;
     MaterialSurface surface;
 
     bool operator==(const MaterialKey& rhs) const = default;
@@ -25,9 +26,9 @@ struct MaterialKeyHash
     {
         size_t h = 0;
 
-        h ^= std::hash<std::string>()(k.albedoLoadDesc.path.string());
-        h ^= std::hash<bool>()(k.albedoLoadDesc.texDesc.srgb) << 1;
-        h ^= std::hash<bool>()(k.albedoLoadDesc.texDesc.generateMips) << 2;
+        h ^= ResourceKeyHash{}(k.resourceKey);
+        h ^= std::hash<bool>()(k.albedoTexDesc.srgb) << 1;
+        h ^= std::hash<bool>()(k.albedoTexDesc.generateMips) << 2;
         h ^= std::hash<float>()(k.surface.roughness) << 3;
         h ^= std::hash<float>()(k.surface.metallic) << 4;
 
@@ -51,6 +52,7 @@ public:
 
     MaterialHandle GetOrCreate(const MaterialLoadDesc& loadDesc,
         function<shared_ptr<TextureAsset>(const filesystem::path&)> loader);
+    MaterialHandle GetOrCreate(const std::string& runtimeKey, const MaterialDesc& desc);
     bool Release(MaterialHandle h);
     void ReleaseAll();
     void Update();

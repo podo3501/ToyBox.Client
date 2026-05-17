@@ -23,6 +23,7 @@ public:
 	explicit RenderRepository(IRenderBackend* backend);
 
 	MeshHandle LoadMesh(const filesystem::path& path, function<shared_ptr<MeshAsset>(const filesystem::path&)> loader);
+	MeshHandle LoadMesh(const std::string& runtimeKey, shared_ptr<MeshAsset> meshAsset);
 	bool ReleaseMesh(MeshHandle mh);
 
 	TextureHandle LoadTexture(const TextureLoadDesc& desc, function<shared_ptr<TextureAsset>(const filesystem::path&)> loader);
@@ -30,6 +31,7 @@ public:
 	bool ReleaseTexture(TextureHandle th);
 
 	MaterialHandle LoadMaterial(const MaterialLoadDesc& desc, function<shared_ptr<TextureAsset>(const filesystem::path&)> loader);
+	MaterialHandle LoadMaterial(const std::string& runtimeKey, const MaterialDesc& desc = {});
 
 	void Update();
 	void ReleaseAll();

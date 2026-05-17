@@ -33,9 +33,9 @@ unique_ptr<RenderService> RenderService::Create(unique_ptr<IRenderBackend> backe
 	return service;
 }
 
-void RenderService::SetRasterState(const RasterState& rasterState)
+void RenderService::SetPipelineState(const PipelineState& pipelineState)
 {
-	m_backend->SetRasterState(rasterState);
+	m_backend->SetPipelineState(pipelineState);
 }
 
 void RenderService::SetCamera(const CameraData& camera)

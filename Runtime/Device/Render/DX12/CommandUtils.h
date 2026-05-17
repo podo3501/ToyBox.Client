@@ -79,8 +79,22 @@ namespace CommandUtils
     }
 
     template<CommandListLike T>
-    inline void SetRenderTarget(T& cmd, D3D12_CPU_DESCRIPTOR_HANDLE rtv) noexcept
+    inline void ClearDSV(
+        T& cmd,
+        D3D12_CPU_DESCRIPTOR_HANDLE dsv,
+        float depth = 1.0f,
+        UINT8 stencil = 0,
+        D3D12_CLEAR_FLAGS flags = D3D12_CLEAR_FLAG_DEPTH) noexcept
     {
-        cmd.Get()->OMSetRenderTargets(1, &rtv, FALSE, nullptr);
+        cmd.Get()->ClearDepthStencilView(dsv, flags, depth, stencil, 0, nullptr);
+    }
+
+    template<CommandListLike T>
+    inline void SetRenderTarget(
+        T& cmd, 
+        D3D12_CPU_DESCRIPTOR_HANDLE rtv,
+        D3D12_CPU_DESCRIPTOR_HANDLE dsv) noexcept
+    {
+        cmd.Get()->OMSetRenderTargets(1, &rtv, FALSE, &dsv);
     }
 }

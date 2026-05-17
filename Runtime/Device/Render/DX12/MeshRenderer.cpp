@@ -53,16 +53,26 @@ bool MeshRenderer::Initialize(const Size& size)
     return true;
 }
 
-void MeshRenderer::SetRasterState(const RasterState& rasterState)
+void MeshRenderer::SetPipelineState(const PipelineState& pipelineState)
 {
-    m_rasterState = rasterState;
+    m_pipelineState = pipelineState;
+}
+
+void MeshRenderer::CreatePipeline(const PipelineState& pipelineState)
+{
+    PSOKey key{};
+    key.pipelineState = pipelineState;
+
+    CreatePipeline(key);
 }
 
 void MeshRenderer::CreateDefaultPSOs()
 {
-    CreatePipeline({ FillMode::Solid, CullMode::Back });
-    CreatePipeline({ FillMode::Solid, CullMode::None });
-    CreatePipeline({ FillMode::Wireframe, CullMode::None });
+    CreatePipeline(PipelineLibrary::Get(RasterPreset::Default));
+    CreatePipeline(PipelineLibrary::Get(RasterPreset::NoCull));
+    CreatePipeline(PipelineLibrary::Get(RasterPreset::Wireframe));
+    CreatePipeline(PipelineLibrary::Get(RasterPreset::WireframeNoCull));
+    CreatePipeline(PipelineLibrary::Get(RasterPreset::Default, PrimitiveTopologyType::Line));
 }
 
 ID3D12PipelineState* MeshRenderer::GetPipeline(const PSOKey& key)
@@ -103,11 +113,11 @@ void MeshRenderer::CreatePipeline(const PSOKey& key)
     CD3DX12_RASTERIZER_DESC raster(D3D12_DEFAULT);
 
     raster.FillMode =
-        key.fillMode == FillMode::Wireframe
+        key.pipelineState.rasterState.fillMode == FillMode::Wireframe
         ? D3D12_FILL_MODE_WIREFRAME
         : D3D12_FILL_MODE_SOLID;
 
-    switch (key.cullMode)
+    switch (key.pipelineState.rasterState.cullMode)
     {
     case CullMode::None: raster.CullMode = D3D12_CULL_MODE_NONE; break;
     case CullMode::Front: raster.CullMode = D3D12_CULL_MODE_FRONT; break;
@@ -117,17 +127,29 @@ void MeshRenderer::CreatePipeline(const PSOKey& key)
     pso.RasterizerState = raster;
     pso.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
 
-    //pso.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
-    pso.DepthStencilState.DepthEnable = FALSE;
+    pso.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
+    pso.DepthStencilState.DepthEnable = TRUE;
+    pso.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
+    pso.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS;
 
     pso.SampleMask = UINT_MAX;
-    pso.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+
+    switch (key.pipelineState.topologyType)
+    {
+    case PrimitiveTopologyType::Triangle:
+        pso.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+        break;
+
+    case PrimitiveTopologyType::Line:
+        pso.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE;
+        break;
+    }
 
     pso.NumRenderTargets = 1;
     pso.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
 
-    pso.DSVFormat = DXGI_FORMAT_UNKNOWN;
-    //pso.DSVFormat = DXGI_FORMAT_D32_FLOAT;
+    //pso.DSVFormat = DXGI_FORMAT_UNKNOWN;
+    pso.DSVFormat = DXGI_FORMAT_D32_FLOAT;
 
     pso.SampleDesc.Count = 1;
 
@@ -238,8 +260,7 @@ void MeshRenderer::BindPipeline(CommandList& cmd)
         m_rootSignature.Get());
 
     PSOKey key;
-    key.fillMode = m_rasterState.fillMode;
-    key.cullMode = m_rasterState.cullMode;
+    key.pipelineState = m_pipelineState;
 
     auto* pso = GetPipeline(key);
     cmd->SetPipelineState(pso);
@@ -301,7 +322,17 @@ void MeshRenderer::Draw(
     cmd->SetGraphicsRootConstantBufferView(3, m_frameCB->GetGPUVirtualAddress());
     cmd->SetGraphicsRootConstantBufferView(4, materialCBAddress);
 
-    cmd->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    switch (m_pipelineState.topologyType)
+    {
+    case PrimitiveTopologyType::Triangle:
+        cmd->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+        break;
+
+    case PrimitiveTopologyType::Line:
+        cmd->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
+        break;
+    }
+
     cmd->DrawInstanced(mesh.GetIndexCount(), 1, 0, 0);
 
     meshTable.MarkUsed(cmd.GetType(), cmd.GetFence());

@@ -24,7 +24,7 @@ bool MaterialSystem::LoadFromAsset(
     std::shared_ptr<TextureAsset> asset, 
     const MaterialDesc& matDesc)
 {
-	if (!resource || !asset)
+	if (!resource)
 		return false;
 
     auto matRes = std::static_pointer_cast<MaterialResource>(resource);

@@ -25,6 +25,7 @@ public:
 
 private:
     bool CreateBuiltinTextures();
+    std::shared_ptr<TextureAsset> CreateDefaultTextureAsset();
 
     unique_ptr<MipGenerator> m_mipGenerator;
     unique_ptr<DescriptorFactory> m_descriptorFactory;
@@ -33,4 +34,5 @@ private:
     std::queue<TextureLoadRequest> m_pending;
 
     std::shared_ptr<ITextureResource> m_defaultTexture;
+    std::shared_ptr<TextureAsset> m_defaultAsset;
 };

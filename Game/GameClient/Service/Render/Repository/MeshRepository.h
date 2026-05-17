@@ -22,6 +22,7 @@ public:
     explicit MeshRepository(IMeshSystem* meshSystem);
     
     MeshHandle GetOrCreate(const filesystem::path& path, function<shared_ptr <MeshAsset > (const filesystem::path&) > loader);
+    MeshHandle GetOrCreate(const std::string& runtimeKey, std::shared_ptr<MeshAsset> asset);
     bool Release(MeshHandle mh);
     void ReleaseAll();
     void Update();
@@ -32,7 +33,7 @@ private:
     void ProcessLoading();
 
     IMeshSystem* m_meshSystem{ nullptr };
-    unordered_map<filesystem::path, MeshHandle> m_cache;
+    std::unordered_map<ResourceKey, MeshHandle, ResourceKeyHash> m_cache;
     HandlePool<MeshEntry, MeshTag> m_loadedMeshes;
 
     vector<MeshPendingRequest> m_pending;

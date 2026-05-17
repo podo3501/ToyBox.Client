@@ -2,6 +2,8 @@
 #include <filesystem>
 #include "TextureDesc.h"
 
+struct TextureAsset;
+
 struct MaterialSurface
 {
     float roughness{ 0.5f };
@@ -12,6 +14,7 @@ struct MaterialSurface
 
 struct MaterialDesc
 {
+    std::shared_ptr<TextureAsset> albedoAsset{ nullptr };
     TextureDesc albedoDesc;
     MaterialSurface surface;
 };

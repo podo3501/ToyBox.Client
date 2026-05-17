@@ -14,8 +14,6 @@ public:
     void Build(RenderGraph& graph);
 
 private:
-    void Clear(CommandList& cmd, float r, float g, float b, float a);
-
     SwapChainPresenter* m_swapChain{ nullptr };
     RGHandle m_hBb;
 };

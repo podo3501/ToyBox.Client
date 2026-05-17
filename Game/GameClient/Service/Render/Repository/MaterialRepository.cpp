@@ -15,7 +15,6 @@ struct GpuPendingMaterialRequest
 {
     MaterialHandle handle;
     MaterialDesc desc;
-    std::shared_ptr<TextureAsset> asset;
 };
 
 MaterialRepository::~MaterialRepository() = default;
@@ -26,7 +25,14 @@ MaterialRepository::MaterialRepository(IMaterialSystem* matSystem) :
 MaterialHandle MaterialRepository::GetOrCreate(const MaterialLoadDesc& loadDesc,
     function<shared_ptr<TextureAsset>(const filesystem::path&)> loader)
 {
-    MaterialKey key{ loadDesc.albedoLoadDesc, loadDesc.surface };
+    std::string id;
+    id = loadDesc.albedoLoadDesc.path.string();
+
+    MaterialKey key{
+        ResourceKey{ id, ResourceKey::Type::File },
+        loadDesc.albedoLoadDesc.texDesc,
+        loadDesc.surface
+    };
 
     auto it = m_cache.find(key);
     if (it != m_cache.end())
@@ -46,6 +52,36 @@ MaterialHandle MaterialRepository::GetOrCreate(const MaterialLoadDesc& loadDesc,
 
     return handle;
 }
+
+MaterialHandle MaterialRepository::GetOrCreate(
+    const std::string& runtimeKey,
+    const MaterialDesc& desc)
+{
+    MaterialKey key{
+        ResourceKey{ runtimeKey, ResourceKey::Type::Runtime },
+        desc.albedoDesc,
+        desc.surface
+    };
+
+    auto it = m_cache.find(key);
+    if (it != m_cache.end())
+        return it->second;
+
+    auto matRes = m_matSystem->CreateMaterialResource();
+    if (!matRes) return MaterialHandle::Invalid();
+
+    MaterialEntry entry;
+    entry.key = key;
+    entry.matRes = std::move(matRes);
+    entry.state = LoadState::Pending;
+
+    auto handle = m_loadedMaterials.Emplace(std::move(entry));
+    m_cache[key] = handle;
+    m_gpuPending.push_back(GpuPendingMaterialRequest{ handle, desc });
+
+    return handle;
+}
+
 
 void MaterialRepository::Update()
 {
@@ -71,7 +107,8 @@ void MaterialRepository::ProcessCpuPending()
         }
 
         auto matDesc = req.loadDesc.ToCreateDesc();
-        m_gpuPending.push_back(GpuPendingMaterialRequest{ req.handle, matDesc, asset });
+        matDesc.albedoAsset = asset;
+        m_gpuPending.push_back(GpuPendingMaterialRequest{ req.handle, matDesc });
     }
 
     m_cpuPending.clear();
@@ -81,12 +118,10 @@ void MaterialRepository::ProcessGpuPending()
 {
     for (auto& work : m_gpuPending)
     {
-        if (!work.asset) continue;
-
         auto entry = m_loadedMaterials.Find(work.handle);
         if (!entry || !entry->matRes) continue;
 
-        if (!m_matSystem->LoadFromAsset(entry->matRes, work.asset, work.desc))
+        if (!m_matSystem->LoadFromAsset(entry->matRes, work.desc.albedoAsset, work.desc))
         {
             entry->state = LoadState::Failed;
             continue;

@@ -18,7 +18,7 @@ public:
 	~RenderService();
 	RenderService() = delete;
 	static unique_ptr<RenderService> Create(unique_ptr<IRenderBackend> backend) noexcept;
-	void SetRasterState(const RasterState& rasterState);
+	void SetPipelineState(const PipelineState& pipelineState);
 	void SetCamera(const CameraData& camera);
 	void SetDirectionalLight(const DirectionalLightData& light);
 	void DrawUI(TextureHandle th, const Rect& dest, const Rect* source);

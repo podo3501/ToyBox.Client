@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameLoop.cpp" />
+    <ClCompile Include="Graphics\Geometry\MeshFactory.cpp" />
     <ClCompile Include="Graphics\World\Camera.cpp" />
     <ClCompile Include="Graphics\World\DirectionalLight.cpp" />
     <ClCompile Include="Graphics\World\Transform.cpp" />
@@ -107,6 +108,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameLoop.h" />
+    <ClInclude Include="Graphics\Geometry\MeshFactory.h" />
     <ClInclude Include="Graphics\RenderData\CameraData.h" />
     <ClInclude Include="Graphics\RenderData\DirectionalLightData.h" />
     <ClInclude Include="Graphics\World\Camera.h" />

@@ -18,6 +18,11 @@ MeshHandle RenderRepository::LoadMesh(const filesystem::path& path, function<sha
 	return m_meshRepository->GetOrCreate(path, loader);
 }
 
+MeshHandle RenderRepository::LoadMesh(const std::string& runtimeKey, shared_ptr<MeshAsset> meshAsset)
+{
+	return m_meshRepository->GetOrCreate(runtimeKey, meshAsset);
+}
+
 bool RenderRepository::ReleaseMesh(MeshHandle mh)
 {
 	return m_meshRepository->Release(mh);
@@ -38,6 +43,11 @@ MaterialHandle RenderRepository::LoadMaterial(const MaterialLoadDesc& desc,
 	function<shared_ptr<TextureAsset>(const filesystem::path&)> loader)
 {
 	return m_matRepository->GetOrCreate(desc, loader);
+}
+
+MaterialHandle RenderRepository::LoadMaterial(const std::string& runtimeKey, const MaterialDesc& desc)
+{
+	return m_matRepository->GetOrCreate(runtimeKey, desc);
 }
 
 void RenderRepository::Update()

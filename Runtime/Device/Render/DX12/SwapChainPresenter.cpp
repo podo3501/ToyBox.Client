@@ -20,25 +20,30 @@ bool SwapChainPresenter::Initialize(ID3D12Device* device, IDXGIFactory4* factory
     m_frameCount = desc.frameCount;
     m_renderTargets.resize(m_frameCount);
 
-    auto queue = scheduler->GetCommandQueue(CommandType::Direct);
-    ReturnIfFalse(CreateSwapChain(device, factory, queue, desc));
-    ReturnIfFalse(CreateRTV(device));
-
     m_scheduler = scheduler;
     m_size = desc.size;
     m_tearing = desc.allowTearing;
+
+    auto queue = scheduler->GetCommandQueue(CommandType::Direct);
+    ReturnIfFalse(CreateSwapChain(device, factory, queue, desc));
+    ReturnIfFalse(CreateRTV(device));
+    ReturnIfFalse(CreateDepthBuffer(device));
+
     m_frameIndex = m_swapChain->GetCurrentBackBufferIndex();
 
     return true;
 }
 
+void SwapChainPresenter::Clear(CommandList& cmd, float r, float g, float b, float a)
+{
+    float color[4] = { r, g, b, a };
+    CommandUtils::ClearRTV(cmd, GetCurrentRTV(), color);
+    CommandUtils::ClearDSV(cmd, GetDSV());
+}
+
 void SwapChainPresenter::SetRenderTarget(CommandList& cmd)
 {
-    CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(
-        m_rtvHeap->GetCPUDescriptorHandleForHeapStart(),
-        m_frameIndex,
-        m_rtvDescriptorSize);
-    CommandUtils::SetRenderTarget(cmd, rtvHandle);
+    CommandUtils::SetRenderTarget(cmd, GetCurrentRTV(), GetDSV());
     CommandUtils::SetViewport(cmd, static_cast<float>(m_size.width), static_cast<float>(m_size.height));
     CommandUtils::SetScissor(cmd, m_size.width, m_size.height);
 }
@@ -77,6 +82,8 @@ bool SwapChainPresenter::Resize(ID3D12Device* device, const Size& size)
 
     for (UINT i = 0; i < m_frameCount; ++i)
         m_renderTargets[i].Reset(); //기존 RTV 리소스 해제
+    m_depthBuffer.Reset();
+    m_dsvHeap.Reset();
 
     DXGI_SWAP_CHAIN_DESC desc{}; //SwapChain Resize
     if (FAILED(m_swapChain->GetDesc(&desc)))
@@ -99,7 +106,10 @@ bool SwapChainPresenter::Resize(ID3D12Device* device, const Size& size)
     m_size = size;
     m_frameIndex = m_swapChain->GetCurrentBackBufferIndex();
 
-    return CreateFrameRTVs(device);
+    ReturnIfFalse(CreateFrameRTVs(device));
+    ReturnIfFalse(CreateDepthBuffer(device));
+
+    return true;
 }
 
 D3D12_CPU_DESCRIPTOR_HANDLE SwapChainPresenter::GetCurrentRTV() const
@@ -107,6 +117,11 @@ D3D12_CPU_DESCRIPTOR_HANDLE SwapChainPresenter::GetCurrentRTV() const
     CD3DX12_CPU_DESCRIPTOR_HANDLE handle(
         m_rtvHeap->GetCPUDescriptorHandleForHeapStart(), m_frameIndex, m_rtvDescriptorSize);
     return handle;
+}
+
+D3D12_CPU_DESCRIPTOR_HANDLE SwapChainPresenter::GetDSV() const
+{
+    return m_dsvHeap->GetCPUDescriptorHandleForHeapStart();
 }
 
 bool SwapChainPresenter::CreateSwapChain(ID3D12Device* device, IDXGIFactory4* factory,
@@ -169,6 +184,61 @@ bool SwapChainPresenter::CreateFrameRTVs(ID3D12Device* device)
         device->CreateRenderTargetView(m_renderTargets[i].Get(), &rtvDesc, handle);
         handle.Offset(1, m_rtvDescriptorSize);
     }
+
+    return true;
+}
+
+bool SwapChainPresenter::CreateDepthBuffer(ID3D12Device* device)
+{
+    Assert(m_size.width > 0);
+    Assert(m_size.height > 0);
+
+    D3D12_RESOURCE_DESC desc =
+        CD3DX12_RESOURCE_DESC::Tex2D(
+            m_depthFormat,
+            m_size.width,
+            m_size.height,
+            1,
+            0,
+            1,
+            0,
+            D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL);
+
+    D3D12_CLEAR_VALUE clear{};
+    clear.Format = m_depthFormat;
+    clear.DepthStencil.Depth = 1.0f;
+    clear.DepthStencil.Stencil = 0;
+
+    CD3DX12_HEAP_PROPERTIES heap(
+        D3D12_HEAP_TYPE_DEFAULT);
+
+    if (FAILED(device->CreateCommittedResource(
+        &heap,
+        D3D12_HEAP_FLAG_NONE,
+        &desc,
+        D3D12_RESOURCE_STATE_DEPTH_WRITE,
+        &clear,
+        IID_PPV_ARGS(&m_depthBuffer))))
+        return false;
+
+    D3D12_DESCRIPTOR_HEAP_DESC heapDesc{};
+    heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
+    heapDesc.NumDescriptors = 1;
+    heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+
+    if (FAILED(device->CreateDescriptorHeap(
+        &heapDesc,
+        IID_PPV_ARGS(&m_dsvHeap))))
+        return false;
+
+    auto dsvHandle = m_dsvHeap->GetCPUDescriptorHandleForHeapStart();
+
+    D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc{};
+    dsvDesc.Format = m_depthFormat;
+    dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
+    dsvDesc.Flags = D3D12_DSV_FLAG_NONE;
+
+    device->CreateDepthStencilView(m_depthBuffer.Get(), &dsvDesc, dsvHandle);
 
     return true;
 }

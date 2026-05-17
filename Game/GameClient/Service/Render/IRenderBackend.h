@@ -19,7 +19,7 @@ struct IRenderBackend
 {
 	virtual ~IRenderBackend() = default;
 	virtual bool Initialize(HWND hwnd, const Size& wndSize, const RenderConfig& config) = 0;
-	virtual void SetRasterState(const RasterState& rasterState) = 0;
+	virtual void SetPipelineState(const PipelineState& pipelineState) = 0;
 	virtual void SetDirectionalLight(const DirectionalLightData& light) = 0;
 	virtual void SetCamera(const CameraData& camera) = 0;
 	virtual void DrawUI(std::shared_ptr<ITextureResource> texRes, const Rect& dest, const Rect* source) = 0;

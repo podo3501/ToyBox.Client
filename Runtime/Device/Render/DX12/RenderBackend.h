@@ -25,7 +25,7 @@ public:
 	~RenderBackend();
 	RenderBackend();
 	virtual bool Initialize(HWND hwnd, const Size& wndSize, const RenderConfig& renderConfig) override;
-	virtual void SetRasterState(const RasterState& rasterState) override;
+	virtual void SetPipelineState(const PipelineState& pipelineState) override;
 	virtual void SetDirectionalLight(const DirectionalLightData& light) override;
 	virtual void SetCamera(const CameraData& camera) override;
 	virtual void DrawUI(std::shared_ptr<ITextureResource> texRes, const Rect& dest, const Rect* source) override;

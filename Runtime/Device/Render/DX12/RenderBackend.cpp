@@ -97,9 +97,9 @@ bool RenderBackend::Initialize(HWND hwnd, const Size& wndSize, const RenderConfi
     return true;
 }
 
-void RenderBackend::SetRasterState(const RasterState& rasterState)
+void RenderBackend::SetPipelineState(const PipelineState& pipelineState)
 {
-    m_meshRenderer->SetRasterState(rasterState);
+    m_meshRenderer->SetPipelineState(pipelineState);
 }
 
 void RenderBackend::SetCamera(const CameraData& camera)

@@ -222,6 +222,9 @@
     <ClCompile Include="Graphics\World\DirectionalLight.cpp">
       <Filter>Graphics\World</Filter>
     </ClCompile>
+    <ClCompile Include="Graphics\Geometry\MeshFactory.cpp">
+      <Filter>Graphics\Geometry</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameLoop.h" />
@@ -586,6 +589,9 @@
     <ClInclude Include="Service\Render\Repository\MaterialDesc.h">
       <Filter>Service\Render\Repository</Filter>
     </ClInclude>
+    <ClInclude Include="Graphics\Geometry\MeshFactory.h">
+      <Filter>Graphics\Geometry</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Locator">
@@ -671,6 +677,9 @@
     </Filter>
     <Filter Include="Graphics\RenderData">
       <UniqueIdentifier>{cdb37372-33c8-4520-a51d-cde086b380c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Geometry">
+      <UniqueIdentifier>{b4178773-53bf-4082-975f-e735da036e26}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -18,23 +18,16 @@ class DescriptorAllocation;
 
 struct PSOKey
 {
-    FillMode fillMode{ FillMode::Solid };
-    CullMode cullMode{ CullMode::Back };
-
-    bool operator==(const PSOKey& rhs) const
-    {
-        return
-            fillMode == rhs.fillMode &&
-            cullMode == rhs.cullMode;
-    }
+    PipelineState pipelineState;
+    bool operator==(const PSOKey& rhs) const = default;
 };
 
 struct PSOKeyHasher
 {
     size_t operator()(const PSOKey& key) const
     {
-        size_t h1 = std::hash<int>()((int)key.fillMode);
-        size_t h2 = std::hash<int>()((int)key.cullMode);
+        size_t h1 = std::hash<int>()((int)key.pipelineState.rasterState.fillMode);
+        size_t h2 = std::hash<int>()((int)key.pipelineState.rasterState.cullMode);
 
         return h1 ^ (h2 << 1);
     }
@@ -50,7 +43,7 @@ public:
     explicit MeshRenderer(ID3D12Device* device);
 
     bool Initialize(const Size& screenSize);
-    void SetRasterState(const RasterState& rasterState);
+    void SetPipelineState(const PipelineState& pipelineState);
     void BindPipeline(CommandList& cmd);
     void BindDescriptorHeap(CommandList& cmd);
     void SetSRVHeap(ID3D12DescriptorHeap* heap) { m_srvHeap = heap; }
@@ -63,6 +56,7 @@ private:
     void CreateDefaultPSOs();
     void CreatePipeline(const PSOKey& key);
     void CreateConstantBuffers();
+    void CreatePipeline(const PipelineState& pipelineState);
     ID3D12PipelineState* GetPipeline(const PSOKey& key);
 
     D3D12_GPU_VIRTUAL_ADDRESS UpdateObjectCB(const Core::Math::Matrix& world);
@@ -76,7 +70,7 @@ private:
     ComPtr<ID3D12RootSignature> m_rootSignature;
     ID3D12DescriptorHeap* m_srvHeap{ nullptr };
 
-    RasterState m_rasterState;
+    PipelineState m_pipelineState;
     std::unordered_map<PSOKey, Microsoft::WRL::ComPtr<ID3D12PipelineState>, PSOKeyHasher> m_psoCache;
 
     ComPtr<ID3D12Resource> m_frameCB;

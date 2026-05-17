@@ -30,6 +30,7 @@ public:
     SwapChainPresenter();
 
     bool Initialize(ID3D12Device* device, IDXGIFactory4* factory, CommandScheduler* scheduler, const SwapChainDesc& desc);
+    void Clear(CommandList& cmd, float r, float g, float b, float a);
     void TransitionToRenderTarget(CommandList& cmd);
     void SetRenderTarget(CommandList& cmd);
     void TransitionToPresent(CommandList& cmd);
@@ -38,6 +39,7 @@ public:
     const Size& GetSize() { return m_size; }
 
     D3D12_CPU_DESCRIPTOR_HANDLE GetCurrentRTV() const;
+    D3D12_CPU_DESCRIPTOR_HANDLE GetDSV() const;
     ID3D12Resource* GetCurrentBackbuffer() { return m_renderTargets[m_frameIndex].Get(); }
 
 private:
@@ -45,10 +47,16 @@ private:
         ID3D12CommandQueue* queue, const SwapChainDesc& desc);
     bool CreateRTV(ID3D12Device* device);
     bool CreateFrameRTVs(ID3D12Device* device);
+    bool CreateDepthBuffer(ID3D12Device* device);
 
     Microsoft::WRL::ComPtr<IDXGISwapChain4> m_swapChain;
     Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> m_rtvHeap;
     vector<Microsoft::WRL::ComPtr<ID3D12Resource>> m_renderTargets;
+
+    Microsoft::WRL::ComPtr<ID3D12Resource> m_depthBuffer;
+    Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> m_dsvHeap;
+    DXGI_FORMAT m_depthFormat{ DXGI_FORMAT_D32_FLOAT };
+
     CommandScheduler* m_scheduler{ nullptr };
 
     Size m_size{};
