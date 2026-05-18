@@ -1,6 +1,7 @@
 #pragma once
 #include <filesystem>
 #include "TextureDesc.h"
+#include "RenderState.h"
 
 struct TextureAsset;
 
@@ -10,26 +11,26 @@ struct MaterialSurface
     float metallic{ 0.0f };
 
     bool operator==(const MaterialSurface&) const = default;
+
+    size_t GetHash() const
+    {
+        return Core::HashOf(roughness, metallic);
+    }
 };
 
 struct MaterialDesc
 {
-    std::shared_ptr<TextureAsset> albedoAsset{ nullptr };
     TextureDesc albedoDesc;
     MaterialSurface surface;
-};
+    PipelineState pipelineState{ PipelineLibrary::Get(RasterPreset::Default) };
 
-struct MaterialLoadDesc
-{
-    TextureLoadDesc albedoLoadDesc;
-    MaterialSurface surface;
+    bool operator==(const MaterialDesc&) const = default;
 
-    MaterialDesc ToCreateDesc() const
+    size_t GetHash() const
     {
-        MaterialDesc desc;
-        desc.albedoDesc = albedoLoadDesc.ToCreateDesc();
-        desc.surface = surface;
-
-        return desc;
+        return Core::HashOf(
+            albedoDesc.GetHash(),
+            surface.GetHash(),
+            pipelineState.GetHash());
     }
 };

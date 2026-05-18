@@ -26,12 +26,22 @@ public:
 	MeshHandle LoadMesh(const std::string& runtimeKey, shared_ptr<MeshAsset> meshAsset);
 	bool ReleaseMesh(MeshHandle mh);
 
-	TextureHandle LoadTexture(const TextureLoadDesc& desc, function<shared_ptr<TextureAsset>(const filesystem::path&)> loader);
+	TextureHandle LoadTexture(
+		std::filesystem::path path,
+		const TextureDesc& desc, 
+		function<shared_ptr<TextureAsset>(const filesystem::path&)> loader);
 
 	bool ReleaseTexture(TextureHandle th);
 
-	MaterialHandle LoadMaterial(const MaterialLoadDesc& desc, function<shared_ptr<TextureAsset>(const filesystem::path&)> loader);
-	MaterialHandle LoadMaterial(const std::string& runtimeKey, const MaterialDesc& desc = {});
+	MaterialHandle LoadMaterial(
+		std::filesystem::path path,
+		const MaterialDesc& desc, 
+		function<shared_ptr<TextureAsset>(const filesystem::path&)> loader);
+
+	MaterialHandle LoadMaterial(
+		const std::string& runtimeKey, 
+		shared_ptr<TextureAsset> albedoAsset = nullptr,
+		const MaterialDesc& desc = {});
 
 	void Update();
 	void ReleaseAll();

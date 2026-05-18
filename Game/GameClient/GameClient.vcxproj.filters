@@ -225,6 +225,9 @@
     <ClCompile Include="Graphics\Geometry\MeshFactory.cpp">
       <Filter>Graphics\Geometry</Filter>
     </ClCompile>
+    <ClCompile Include="Graphics\Geometry\MaterialFactory.cpp">
+      <Filter>Graphics\Geometry</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameLoop.h" />
@@ -562,9 +565,6 @@
     <ClInclude Include="Service\Render\Repository\ResourceTypes.h">
       <Filter>Service\Render\Repository</Filter>
     </ClInclude>
-    <ClInclude Include="Service\Render\RenderState.h">
-      <Filter>Service\Render</Filter>
-    </ClInclude>
     <ClInclude Include="Service\Render\Repository\IMaterialResource.h">
       <Filter>Service\Render\Repository</Filter>
     </ClInclude>
@@ -590,6 +590,12 @@
       <Filter>Service\Render\Repository</Filter>
     </ClInclude>
     <ClInclude Include="Graphics\Geometry\MeshFactory.h">
+      <Filter>Graphics\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Repository\RenderState.h">
+      <Filter>Service\Render\Repository</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Geometry\MaterialFactory.h">
       <Filter>Graphics\Geometry</Filter>
     </ClInclude>
   </ItemGroup>

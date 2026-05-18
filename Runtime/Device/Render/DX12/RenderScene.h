@@ -11,6 +11,8 @@ struct DrawItem
     std::shared_ptr<IMeshResource> mesh;
     std::shared_ptr<IMaterialResource> material;
     Core::Math::Matrix world;
+
+    uint64_t sortKey{ 0 };
 };
 
 struct UIDrawItem
@@ -29,6 +31,7 @@ public:
     void AddUI(const UIDrawItem& item);
     const std::vector<UIDrawItem>& GetUIDraws() { return m_uiDraws; }
 
+    void SortDraws();
     void Clear();
 
 private:

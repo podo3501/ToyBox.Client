@@ -8,8 +8,8 @@ struct IMaterialSystem
 {
     virtual ~IMaterialSystem() = default;
     virtual std::shared_ptr<IMaterialResource> CreateMaterialResource() = 0;
-    virtual bool LoadFromAsset(
-        std::shared_ptr<IMaterialResource> resource,
-        std::shared_ptr<TextureAsset> asset,
-        const MaterialDesc& matDesc) = 0;
+	virtual bool LoadFromAsset(
+		std::shared_ptr<IMaterialResource> resource,
+		std::shared_ptr<TextureAsset> albedoAsset,
+		const MaterialDesc& matDesc) = 0;
 };

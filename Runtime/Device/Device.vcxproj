@@ -78,6 +78,7 @@
     <ClInclude Include="Render\DX12\RenderGraph.h" />
     <ClInclude Include="Render\DX12\RenderPass.h" />
     <ClInclude Include="Render\DX12\RenderScene.h" />
+    <ClInclude Include="Render\DX12\RenderSortKey.h" />
     <ClInclude Include="Render\DX12\ResourceLoader.h" />
     <ClInclude Include="Render\DX12\RGTypes.h" />
     <ClInclude Include="Render\DX12\SwapChainPresenter.h" />
@@ -151,6 +152,7 @@
     <ClCompile Include="Render\DX12\PrimitiveMeshFactory.cpp" />
     <ClCompile Include="Render\DX12\RenderGraph.cpp" />
     <ClCompile Include="Render\DX12\RenderScene.cpp" />
+    <ClCompile Include="Render\DX12\RenderSortKey.cpp" />
     <ClCompile Include="Render\DX12\ResourceLoader.cpp" />
     <ClCompile Include="Render\DX12\SwapChainPresenter.cpp" />
     <ClCompile Include="Render\DX12\QuadRenderer.cpp" />

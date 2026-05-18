@@ -53,19 +53,6 @@ bool MeshRenderer::Initialize(const Size& size)
     return true;
 }
 
-void MeshRenderer::SetPipelineState(const PipelineState& pipelineState)
-{
-    m_pipelineState = pipelineState;
-}
-
-void MeshRenderer::CreatePipeline(const PipelineState& pipelineState)
-{
-    PSOKey key{};
-    key.pipelineState = pipelineState;
-
-    CreatePipeline(key);
-}
-
 void MeshRenderer::CreateDefaultPSOs()
 {
     CreatePipeline(PipelineLibrary::Get(RasterPreset::Default));
@@ -75,18 +62,18 @@ void MeshRenderer::CreateDefaultPSOs()
     CreatePipeline(PipelineLibrary::Get(RasterPreset::Default, PrimitiveTopologyType::Line));
 }
 
-ID3D12PipelineState* MeshRenderer::GetPipeline(const PSOKey& key)
+ID3D12PipelineState* MeshRenderer::GetPipeline(const PipelineState& pipelineState)
 {
-    auto it = m_psoCache.find(key);
+    auto it = m_psoCache.find(pipelineState);
     if (it != m_psoCache.end())
         return it->second.Get();
 
-    CreatePipeline(key);
+    CreatePipeline(pipelineState);
 
-    return m_psoCache[key].Get();
+    return m_psoCache[pipelineState].Get();
 }
 
-void MeshRenderer::CreatePipeline(const PSOKey& key)
+void MeshRenderer::CreatePipeline(const PipelineState& pipelineState)
 {
     ComPtr<ID3DBlob> vs;
     ComPtr<ID3DBlob> ps;
@@ -113,11 +100,11 @@ void MeshRenderer::CreatePipeline(const PSOKey& key)
     CD3DX12_RASTERIZER_DESC raster(D3D12_DEFAULT);
 
     raster.FillMode =
-        key.pipelineState.rasterState.fillMode == FillMode::Wireframe
+        pipelineState.rasterState.fillMode == FillMode::Wireframe
         ? D3D12_FILL_MODE_WIREFRAME
         : D3D12_FILL_MODE_SOLID;
 
-    switch (key.pipelineState.rasterState.cullMode)
+    switch (pipelineState.rasterState.cullMode)
     {
     case CullMode::None: raster.CullMode = D3D12_CULL_MODE_NONE; break;
     case CullMode::Front: raster.CullMode = D3D12_CULL_MODE_FRONT; break;
@@ -134,7 +121,7 @@ void MeshRenderer::CreatePipeline(const PSOKey& key)
 
     pso.SampleMask = UINT_MAX;
 
-    switch (key.pipelineState.topologyType)
+    switch (pipelineState.topologyType)
     {
     case PrimitiveTopologyType::Triangle:
         pso.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
@@ -156,7 +143,7 @@ void MeshRenderer::CreatePipeline(const PSOKey& key)
     ComPtr<ID3D12PipelineState> pipeline;
     m_device->CreateGraphicsPipelineState(&pso, IID_PPV_ARGS(&pipeline));
 
-    m_psoCache[key] = pipeline;
+    m_psoCache[pipelineState] = pipeline;
 }
 
 void MeshRenderer::CreateRootSignature()
@@ -254,22 +241,19 @@ void MeshRenderer::CreateConstantBuffers()
     }
 }
 
-void MeshRenderer::BindPipeline(CommandList& cmd)
+void MeshRenderer::BindCommonState(CommandList& cmd)
 {
     cmd->SetGraphicsRootSignature(
         m_rootSignature.Get());
 
-    PSOKey key;
-    key.pipelineState = m_pipelineState;
-
-    auto* pso = GetPipeline(key);
-    cmd->SetPipelineState(pso);
-}
-
-void MeshRenderer::BindDescriptorHeap(CommandList& cmd)
-{
     ID3D12DescriptorHeap* heaps[] = { m_srvHeap };
     cmd->SetDescriptorHeaps(1, heaps);
+}
+
+void MeshRenderer::BindPipeline(CommandList& cmd, const PipelineState& pipelineState)
+{
+    cmd->SetPipelineState(GetPipeline(pipelineState));
+    m_pipelineState = pipelineState;
 }
 
 void MeshRenderer::PrepareFrame(const DirectionalLightData& light, const CameraData& camera)

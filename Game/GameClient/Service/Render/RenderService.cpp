@@ -33,11 +33,6 @@ unique_ptr<RenderService> RenderService::Create(unique_ptr<IRenderBackend> backe
 	return service;
 }
 
-void RenderService::SetPipelineState(const PipelineState& pipelineState)
-{
-	m_backend->SetPipelineState(pipelineState);
-}
-
 void RenderService::SetCamera(const CameraData& camera)
 {
 	m_backend->SetCamera(camera);

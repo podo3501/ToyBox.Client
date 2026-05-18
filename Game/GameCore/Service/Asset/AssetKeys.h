@@ -2,6 +2,7 @@
 #include <string>
 #include <typeindex>
 #include <filesystem>
+#include "Core/Utils/Hash.h"
 
 inline size_t HashCombine(size_t h1, size_t h2)
 {
@@ -20,10 +21,7 @@ struct LoaderKeyHasher
 {
 	size_t operator()(const LoaderKey& k) const
 	{
-		return HashCombine(
-			std::hash<Core::TypeId>()(k.type),
-			std::hash<std::string>()(k.ext)
-		);
+		return Core::HashOf(k.type, k.ext);
 	}
 };
 
@@ -39,9 +37,6 @@ struct CacheKeyHasher
 {
 	size_t operator()(const CacheKey& k) const
 	{
-		return HashCombine(
-			std::hash<std::filesystem::path>()(k.path),
-			std::hash<Core::TypeId>()(k.type)
-		);
+		return Core::HashOf(k.path, k.type);
 	}
 };

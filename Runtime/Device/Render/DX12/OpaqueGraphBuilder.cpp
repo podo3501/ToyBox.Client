@@ -20,14 +20,22 @@ void OpaqueGraphBuilder::Build(RenderGraph& graph)
     opaque.dependsOn.push_back("Prepare");
     opaque.writes.push_back({ m_hBb, RGAccess::RTV });
     opaque.gpuExecute = [this](CommandList& cmd, TaskContext& ctx) {
-        m_meshRenderer->BindDescriptorHeap(cmd);
-        m_meshRenderer->BindPipeline(cmd);
+        m_meshRenderer->BindCommonState(cmd);
         m_meshRenderer->PrepareFrame(ctx.frame.light, ctx.frame.camera);
 
+        std::optional<PipelineState> currentPSO;
         for (auto& item : m_scene->GetOpaqueDraws())
         {
             auto mesh = static_cast<MeshResource*>(item.mesh.get());
             auto material = static_cast<MaterialResource*>(item.material.get());
+
+            const PipelineState& nextPSO = material->GetPipelineState();
+            if (!currentPSO || *currentPSO != nextPSO)
+            {
+                m_meshRenderer->BindPipeline(cmd, nextPSO);
+                currentPSO = nextPSO;
+            }
+
             m_meshRenderer->Draw(cmd, *mesh, *material, item.world);
         }
         };

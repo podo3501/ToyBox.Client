@@ -268,6 +268,9 @@
     <ClInclude Include="Render\DX12\MaterialResource.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
+    <ClInclude Include="Render\DX12\RenderSortKey.h">
+      <Filter>Render\DX12</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -446,6 +449,9 @@
       <Filter>Render\DX12</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\MaterialResource.cpp">
+      <Filter>Render\DX12</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\RenderSortKey.cpp">
       <Filter>Render\DX12</Filter>
     </ClCompile>
   </ItemGroup>

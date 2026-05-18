@@ -28,10 +28,12 @@ bool RenderRepository::ReleaseMesh(MeshHandle mh)
 	return m_meshRepository->Release(mh);
 }
 
-TextureHandle RenderRepository::LoadTexture(const TextureLoadDesc& desc,
+TextureHandle RenderRepository::LoadTexture(
+	std::filesystem::path path,
+	const TextureDesc& desc,
 	function<shared_ptr<TextureAsset>(const filesystem::path&)> loader)
 {
-	return m_texRepository->GetOrCreate(desc, loader);
+	return m_texRepository->GetOrCreate(path, desc, loader);
 }
 
 bool RenderRepository::ReleaseTexture(TextureHandle th)
@@ -39,15 +41,20 @@ bool RenderRepository::ReleaseTexture(TextureHandle th)
 	return m_texRepository->Release(th);
 }
 
-MaterialHandle RenderRepository::LoadMaterial(const MaterialLoadDesc& desc, 
+MaterialHandle RenderRepository::LoadMaterial(
+	std::filesystem::path path,
+	const MaterialDesc& desc, 
 	function<shared_ptr<TextureAsset>(const filesystem::path&)> loader)
 {
-	return m_matRepository->GetOrCreate(desc, loader);
+	return m_matRepository->GetOrCreate(path, desc, loader);
 }
 
-MaterialHandle RenderRepository::LoadMaterial(const std::string& runtimeKey, const MaterialDesc& desc)
+MaterialHandle RenderRepository::LoadMaterial(
+	const std::string& runtimeKey, 
+	shared_ptr<TextureAsset> albedoAsset,
+	const MaterialDesc& desc)
 {
-	return m_matRepository->GetOrCreate(runtimeKey, desc);
+	return m_matRepository->GetOrCreate(runtimeKey, albedoAsset, desc);
 }
 
 void RenderRepository::Update()

@@ -1,5 +1,6 @@
 #pragma once
 #include "Core/Utils/Handle/HandlePool.h"
+#include "Core/Utils/Hash.h"
 #include "TextureHandle.h"
 #include "TextureDesc.h"
 #include "ResourceTypes.h"
@@ -12,7 +13,7 @@ struct GpuPendingTextureRequest;
 
 struct TextureKey
 {
-    filesystem::path path;
+    ResourceKey resourceKey;
     TextureDesc desc;
 
     bool operator==(const TextureKey& rhs) const = default;
@@ -22,13 +23,9 @@ struct TextureKeyHash
 {
     size_t operator()(const TextureKey& k) const
     {
-        size_t h1 = std::hash<std::string>()(k.path.string());
-
-        size_t h2 = 0;
-        h2 ^= std::hash<bool>()(k.desc.srgb) << 1;
-        h2 ^= std::hash<bool>()(k.desc.generateMips) << 2;
-
-        return h1 ^ (h2 << 1);
+        return Core::HashOf(
+            k.resourceKey.GetHash(),
+            k.desc.GetHash());
     }
 };
 
@@ -45,7 +42,16 @@ public:
     ~TextureRepository();
     explicit TextureRepository(ITextureSystem* texSystem);
 
-    TextureHandle GetOrCreate(const TextureLoadDesc& desc, function<shared_ptr<TextureAsset>(const filesystem::path&)> loader);
+    TextureHandle GetOrCreate(
+        std::filesystem::path path,
+        const TextureDesc& desc,
+        function<shared_ptr<TextureAsset>(const filesystem::path&)> loader);
+
+    TextureHandle GetOrCreate(
+        const std::string& runtimeKey,
+        std::shared_ptr<TextureAsset> asset,
+        const TextureDesc& desc);
+
     bool Release(TextureHandle h);
     void ReleaseAll();
     void Update();

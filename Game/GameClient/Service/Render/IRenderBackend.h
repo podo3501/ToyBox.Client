@@ -3,7 +3,6 @@
 #include "GameClient/Service/Render/Repository/ITextureSystem.h"
 #include "GameClient/Service/Render/Repository/IMeshSystem.h"
 #include "GameClient/Service/Render/Repository/IMaterialSystem.h"
-#include "GameClient/Service/Render/RenderState.h"
 #include "GameClient/Graphics/RenderData/DirectionalLightData.h"
 #include "GameClient/Graphics/RenderData/CameraData.h"
 #include "Core/Math/Matrix.h"
@@ -19,7 +18,6 @@ struct IRenderBackend
 {
 	virtual ~IRenderBackend() = default;
 	virtual bool Initialize(HWND hwnd, const Size& wndSize, const RenderConfig& config) = 0;
-	virtual void SetPipelineState(const PipelineState& pipelineState) = 0;
 	virtual void SetDirectionalLight(const DirectionalLightData& light) = 0;
 	virtual void SetCamera(const CameraData& camera) = 0;
 	virtual void DrawUI(std::shared_ptr<ITextureResource> texRes, const Rect& dest, const Rect* source) = 0;

@@ -66,9 +66,12 @@ static size_t EstimateBytes(const TextureAsset& asset, const TextureDesc& desc)
     return static_cast<size_t>(baseBytes * 4 / 3); //mip 비용은 정확 계산 대신 안정적인 근사 (1.33x)
 }
 
-bool TextureSystem::LoadFromAsset(std::shared_ptr<ITextureResource> resource, std::shared_ptr<TextureAsset> asset, const TextureDesc& desc)
+bool TextureSystem::LoadFromAsset(
+    std::shared_ptr<ITextureResource> resource, 
+    std::shared_ptr<TextureAsset> asset,
+    const TextureDesc& desc)
 {
-    if (!asset) asset = m_defaultAsset;
+    if(!asset) asset = m_defaultAsset;
 
     TextureLoadRequest req;
     req.resource = resource;

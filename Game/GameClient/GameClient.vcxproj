@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameLoop.cpp" />
+    <ClCompile Include="Graphics\Geometry\MaterialFactory.cpp" />
     <ClCompile Include="Graphics\Geometry\MeshFactory.cpp" />
     <ClCompile Include="Graphics\World\Camera.cpp" />
     <ClCompile Include="Graphics\World\DirectionalLight.cpp" />
@@ -108,6 +109,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameLoop.h" />
+    <ClInclude Include="Graphics\Geometry\MaterialFactory.h" />
     <ClInclude Include="Graphics\Geometry\MeshFactory.h" />
     <ClInclude Include="Graphics\RenderData\CameraData.h" />
     <ClInclude Include="Graphics\RenderData\DirectionalLightData.h" />
@@ -155,7 +157,6 @@
     <ClInclude Include="Service\Render\IRenderBackend.h" />
     <ClInclude Include="Service\Render\RenderConfig.h" />
     <ClInclude Include="Service\Render\RenderService.h" />
-    <ClInclude Include="Service\Render\RenderState.h" />
     <ClInclude Include="Service\Render\Repository\IMaterialResource.h" />
     <ClInclude Include="Service\Render\Repository\IMaterialSystem.h" />
     <ClInclude Include="Service\Render\Repository\IMeshResource.h" />
@@ -168,6 +169,7 @@
     <ClInclude Include="Service\Render\Repository\MeshHandle.h" />
     <ClInclude Include="Service\Render\Repository\MeshRepository.h" />
     <ClInclude Include="Service\Render\Repository\RenderRepository.h" />
+    <ClInclude Include="Service\Render\Repository\RenderState.h" />
     <ClInclude Include="Service\Render\Repository\ResourceTypes.h" />
     <ClInclude Include="Service\Render\Repository\TextureDesc.h" />
     <ClInclude Include="Service\Render\Repository\TextureHandle.h" />

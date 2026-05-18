@@ -21,22 +21,22 @@ shared_ptr<IMaterialResource> MaterialSystem::CreateMaterialResource()
 
 bool MaterialSystem::LoadFromAsset(
     std::shared_ptr<IMaterialResource> resource, 
-    std::shared_ptr<TextureAsset> asset, 
+    std::shared_ptr<TextureAsset> albedoAsset,
     const MaterialDesc& matDesc)
 {
-	if (!resource)
-		return false;
+    if (!resource)
+        return false;
 
     auto matRes = std::static_pointer_cast<MaterialResource>(resource);
     auto texRes = m_texSystem->CreateTextureResource();
-    if (!texRes) 
+    if (!texRes)
         return false;
 
-    if (!m_texSystem->LoadFromAsset(texRes, asset, matDesc.albedoDesc))
+    if (!m_texSystem->LoadFromAsset(texRes, albedoAsset, matDesc.albedoDesc))
         return false;
 
     matRes->SetAlbedoTexture(texRes);
-    matRes->SetSurface(matDesc.surface);
+    matRes->SetMaterialDesc(matDesc);
 
     return true;
 }

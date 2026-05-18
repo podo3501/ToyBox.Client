@@ -98,3 +98,13 @@ namespace EnumUtil
 #define ASSERT_ENUM_COUNT(EnumType) \
     static_assert(EnumUtil::EnumToStringMap<EnumType>.size() == EnumUtil::EnumSize<EnumType>(), "EnumToStringMap size mismatch")
 }
+
+namespace Core
+{
+	template<typename T>
+		requires std::is_enum_v<T>
+	constexpr auto ToUnderlying(T value) noexcept //count 가 없는 일반 enum 값에 대한 정수값 반환
+	{
+		return static_cast<std::underlying_type_t<T>>(value);
+	}
+}

@@ -3,7 +3,8 @@
 #include <wrl.h>
 #include "Core/Foundation/Geometry2D.h"
 #include "Core/Math/Matrix.h"
-#include "GameClient/Service/Render/RenderState.h"
+#include "Core/Utils/Hash.h"
+#include "GameClient/Service/Render/Repository/RenderState.h"
 
 struct ObjectCB;
 struct FrameCB;
@@ -16,23 +17,6 @@ class MeshResource;
 class MaterialResource;
 class DescriptorAllocation;
 
-struct PSOKey
-{
-    PipelineState pipelineState;
-    bool operator==(const PSOKey& rhs) const = default;
-};
-
-struct PSOKeyHasher
-{
-    size_t operator()(const PSOKey& key) const
-    {
-        size_t h1 = std::hash<int>()((int)key.pipelineState.rasterState.fillMode);
-        size_t h2 = std::hash<int>()((int)key.pipelineState.rasterState.cullMode);
-
-        return h1 ^ (h2 << 1);
-    }
-};
-
 using Microsoft::WRL::ComPtr;
 
 class MeshRenderer
@@ -43,9 +27,8 @@ public:
     explicit MeshRenderer(ID3D12Device* device);
 
     bool Initialize(const Size& screenSize);
-    void SetPipelineState(const PipelineState& pipelineState);
-    void BindPipeline(CommandList& cmd);
-    void BindDescriptorHeap(CommandList& cmd);
+    void BindCommonState(CommandList& cmd);
+    void BindPipeline(CommandList& cmd, const PipelineState& pipelineState);
     void SetSRVHeap(ID3D12DescriptorHeap* heap) { m_srvHeap = heap; }
     void PrepareFrame(const DirectionalLightData& light, const CameraData& camera);
     void Draw(CommandList& cmd, MeshResource& mesh, MaterialResource& material, const Core::Math::Matrix& world);
@@ -54,10 +37,9 @@ public:
 private:
     void CreateRootSignature();
     void CreateDefaultPSOs();
-    void CreatePipeline(const PSOKey& key);
-    void CreateConstantBuffers();
     void CreatePipeline(const PipelineState& pipelineState);
-    ID3D12PipelineState* GetPipeline(const PSOKey& key);
+    void CreateConstantBuffers();
+    ID3D12PipelineState* GetPipeline(const PipelineState& pipelineState);
 
     D3D12_GPU_VIRTUAL_ADDRESS UpdateObjectCB(const Core::Math::Matrix& world);
     D3D12_GPU_VIRTUAL_ADDRESS UpdateMaterialCB(const MaterialSurface& surface);
@@ -71,7 +53,7 @@ private:
     ID3D12DescriptorHeap* m_srvHeap{ nullptr };
 
     PipelineState m_pipelineState;
-    std::unordered_map<PSOKey, Microsoft::WRL::ComPtr<ID3D12PipelineState>, PSOKeyHasher> m_psoCache;
+    std::unordered_map<PipelineState, Microsoft::WRL::ComPtr<ID3D12PipelineState>, PipelineStateHasher> m_psoCache;
 
     ComPtr<ID3D12Resource> m_frameCB;
     FrameCB* m_frameData{ nullptr };

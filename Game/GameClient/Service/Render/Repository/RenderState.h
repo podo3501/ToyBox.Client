@@ -1,4 +1,5 @@
 #pragma once
+#include "Core/Utils/Hash.h"
 
 enum class FillMode
 {
@@ -77,6 +78,22 @@ struct PipelineState
     PrimitiveTopologyType topologyType{ PrimitiveTopologyType::Triangle };
 
     bool operator==(const PipelineState&) const = default;
+
+    size_t GetHash() const
+    {
+        return Core::HashOf(
+            rasterState.fillMode,
+            rasterState.cullMode,
+            topologyType);
+    }
+};
+
+struct PipelineStateHasher
+{
+    size_t operator()(const PipelineState& state) const
+    {
+        return state.GetHash();
+    }
 };
 
 class PipelineLibrary

@@ -97,11 +97,6 @@ bool RenderBackend::Initialize(HWND hwnd, const Size& wndSize, const RenderConfi
     return true;
 }
 
-void RenderBackend::SetPipelineState(const PipelineState& pipelineState)
-{
-    m_meshRenderer->SetPipelineState(pipelineState);
-}
-
 void RenderBackend::SetCamera(const CameraData& camera)
 {
     m_cameraData = camera;
@@ -193,6 +188,8 @@ void RenderBackend::Render()
     opaque.Build(graph);
     ui.Build(graph);
     present.Build(graph);
+
+    m_scene->SortDraws();
 
     auto compiledTasks = graph.Compile();
 

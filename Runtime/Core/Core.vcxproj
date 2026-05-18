@@ -28,7 +28,9 @@
     <ClInclude Include="Foundation\Geometry2D.h" />
     <ClInclude Include="Foundation\Types.h" />
     <ClInclude Include="Math\CameraMatrices.h" />
+    <ClInclude Include="Math\Constants.h" />
     <ClInclude Include="Math\Matrix.h" />
+    <ClInclude Include="Math\Utils.h" />
     <ClInclude Include="Math\Vector3.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Service\Locator.h" />
@@ -39,6 +41,7 @@
     <ClInclude Include="Utils\Handle\GenerationalHandle.h" />
     <ClInclude Include="Utils\Handle\HandlePool.h" />
     <ClInclude Include="Utils\Handle\IDHandle.h" />
+    <ClInclude Include="Utils\Hash.h" />
     <ClInclude Include="Utils\Memory.h" />
     <ClInclude Include="Utils\StlExt.h" />
     <ClInclude Include="Utils\StlExtTraitsConcepts.hpp" />

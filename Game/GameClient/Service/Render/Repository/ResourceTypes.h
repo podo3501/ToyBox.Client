@@ -1,4 +1,6 @@
 #pragma once
+#include "Core/Utils/Hash.h"
+#include "Core/Utils/EnumHelpers.h"
 
 enum class LoadState
 {
@@ -24,12 +26,17 @@ struct ResourceKey
     {
         return type == other.type && id == other.id;
     }
+
+    size_t GetHash() const
+    {
+        return Core::HashOf(id, type);
+    }
 };
 
 struct ResourceKeyHash
 {
     size_t operator()(const ResourceKey& k) const
     {
-        return std::hash<std::string>{}(k.id) ^ (size_t)k.type;
+        return k.GetHash();
     }
 };

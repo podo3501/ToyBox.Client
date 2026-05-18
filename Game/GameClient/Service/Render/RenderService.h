@@ -1,7 +1,6 @@
 #pragma once
 #include "Repository/RenderRepository.h"
 #include "Core/Math/Matrix.h"
-#include "RenderState.h"
 
 struct IRenderBackend;
 struct Rect;
@@ -18,7 +17,6 @@ public:
 	~RenderService();
 	RenderService() = delete;
 	static unique_ptr<RenderService> Create(unique_ptr<IRenderBackend> backend) noexcept;
-	void SetPipelineState(const PipelineState& pipelineState);
 	void SetCamera(const CameraData& camera);
 	void SetDirectionalLight(const DirectionalLightData& light);
 	void DrawUI(TextureHandle th, const Rect& dest, const Rect* source);

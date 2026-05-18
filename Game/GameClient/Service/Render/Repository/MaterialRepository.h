@@ -1,5 +1,6 @@
 #pragma once
 #include "Core/Utils/Handle/HandlePool.h"
+#include "Core/Utils/Hash.h"
 #include "MaterialHandle.h"
 #include "ResourceTypes.h"
 #include "TextureDesc.h"
@@ -14,8 +15,7 @@ struct GpuPendingMaterialRequest;
 struct MaterialKey
 {
     ResourceKey resourceKey;
-    TextureDesc albedoTexDesc;
-    MaterialSurface surface;
+    MaterialDesc matDesc;
 
     bool operator==(const MaterialKey& rhs) const = default;
 };
@@ -24,15 +24,9 @@ struct MaterialKeyHash
 {
     size_t operator()(const MaterialKey& k) const
     {
-        size_t h = 0;
-
-        h ^= ResourceKeyHash{}(k.resourceKey);
-        h ^= std::hash<bool>()(k.albedoTexDesc.srgb) << 1;
-        h ^= std::hash<bool>()(k.albedoTexDesc.generateMips) << 2;
-        h ^= std::hash<float>()(k.surface.roughness) << 3;
-        h ^= std::hash<float>()(k.surface.metallic) << 4;
-
-        return h;
+        return Core::HashOf(
+            k.resourceKey.GetHash(),
+            k.matDesc.GetHash());
     }
 };
 
@@ -50,9 +44,16 @@ public:
     MaterialRepository() = delete;
     MaterialRepository(IMaterialSystem* matSystem);
 
-    MaterialHandle GetOrCreate(const MaterialLoadDesc& loadDesc,
+    MaterialHandle GetOrCreate(
+        std::filesystem::path path,
+        const MaterialDesc& desc,
         function<shared_ptr<TextureAsset>(const filesystem::path&)> loader);
-    MaterialHandle GetOrCreate(const std::string& runtimeKey, const MaterialDesc& desc);
+
+    MaterialHandle GetOrCreate(
+        const std::string& runtimeKey, 
+        shared_ptr<TextureAsset> albedoAsset, 
+        const MaterialDesc& desc);
+
     bool Release(MaterialHandle h);
     void ReleaseAll();
     void Update();
