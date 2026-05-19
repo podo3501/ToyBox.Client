@@ -1,5 +1,4 @@
 #pragma once
-#include <filesystem>
 #include "TextureDesc.h"
 #include "RenderState.h"
 
@@ -22,7 +21,7 @@ struct MaterialDesc
 {
     TextureDesc albedoDesc;
     MaterialSurface surface;
-    PipelineState pipelineState{ PipelineLibrary::Get(RasterPreset::Default) };
+    PipelineState pipelineState{ PipelineLibrary::Get( ShaderID::Mesh, RasterPreset::Default) };
 
     bool operator==(const MaterialDesc&) const = default;
 

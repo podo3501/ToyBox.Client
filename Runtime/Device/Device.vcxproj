@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Asset\Loader\Graphics\HLSLShaderLoader.h" />
     <ClInclude Include="Asset\Loader\Graphics\MeshJsonLoader.h" />
     <ClInclude Include="Asset\Loader\Graphics\PngTextureLoader.h" />
     <ClInclude Include="Asset\Loader\JsonLoader.h" />
@@ -81,6 +82,7 @@
     <ClInclude Include="Render\DX12\RenderSortKey.h" />
     <ClInclude Include="Render\DX12\ResourceLoader.h" />
     <ClInclude Include="Render\DX12\RGTypes.h" />
+    <ClInclude Include="Render\DX12\ShaderSystem.h" />
     <ClInclude Include="Render\DX12\SwapChainPresenter.h" />
     <ClInclude Include="Render\DX12\QuadRenderer.h" />
     <ClInclude Include="Render\DX12\RenderBackend.h" />
@@ -97,6 +99,7 @@
     <ClInclude Include="Storage\JsonObjectIO.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Asset\Loader\Graphics\HLSLShaderLoader.cpp" />
     <ClCompile Include="Asset\Loader\Graphics\MeshJsonLoader.cpp" />
     <ClCompile Include="Asset\Loader\Graphics\PngTextureLoader.cpp" />
     <ClCompile Include="Asset\Loader\SoundDesc.cpp" />
@@ -154,6 +157,7 @@
     <ClCompile Include="Render\DX12\RenderScene.cpp" />
     <ClCompile Include="Render\DX12\RenderSortKey.cpp" />
     <ClCompile Include="Render\DX12\ResourceLoader.cpp" />
+    <ClCompile Include="Render\DX12\ShaderSystem.cpp" />
     <ClCompile Include="Render\DX12\SwapChainPresenter.cpp" />
     <ClCompile Include="Render\DX12\QuadRenderer.cpp" />
     <ClCompile Include="Render\DX12\RenderBackend.cpp" />

@@ -8,13 +8,14 @@ struct QuadTransform;
 class CommandList;
 class DescriptorAllocation;
 class MeshResource;
+class ShaderSystem;
 
 class QuadRenderer
 {
 public:
     ~QuadRenderer();
-    QuadRenderer();
-    bool Initialize(ID3D12Device* device, const Size& screenSize);
+    QuadRenderer(ID3D12Device* device, ShaderSystem* shaderSystem);
+    bool Initialize(const Size& screenSize);
     void SetUIQuadMesh(std::shared_ptr<MeshResource> mesh);
     void SetSRVHeap(ID3D12DescriptorHeap* heap);
 
@@ -25,6 +26,9 @@ public:
     void Resize(const Size& size);
 
 private:
+    ID3D12Device* m_device{ nullptr };
+    ShaderSystem* m_shaderSystem{ nullptr };
+
     Microsoft::WRL::ComPtr<ID3D12RootSignature> m_rootSignature;
     Microsoft::WRL::ComPtr<ID3D12PipelineState> m_pipelineState;
 

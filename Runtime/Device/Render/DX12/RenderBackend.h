@@ -15,6 +15,7 @@ class GPUProfiler;
 class TextureSystem;
 class MeshSystem;
 class MaterialSystem;
+class ShaderSystem;
 class MeshRenderer;
 class QuadRenderer;
 class RenderScene;
@@ -37,6 +38,7 @@ public:
 	virtual ITextureSystem* GetTextureSystem() override;
 	virtual IMeshSystem* GetMeshSystem() override;
 	virtual IMaterialSystem* GetMaterialSystem() override;
+	virtual IShaderSystem* GetShaderSystem() override;
 
 private:
 	bool BeginFrame();
@@ -56,6 +58,7 @@ private:
 	unique_ptr<TextureSystem> m_texSystem;
 	unique_ptr<MeshSystem> m_meshSystem;
 	unique_ptr<MaterialSystem> m_matSystem;
+	unique_ptr<ShaderSystem> m_shaderSystem;
 	unique_ptr<RenderScene> m_scene;
 
 	unique_ptr<MeshRenderer> m_meshRenderer;

@@ -66,6 +66,44 @@ public:
     }
 };
 
+enum class ShaderID
+{
+    Mesh,
+    Grid,
+    UI
+};
+
+enum class ShaderDefine : uint32_t
+{
+    None = 0,
+    DiffuseDebug = 1 << 0,
+    SpecularDebug = 1 << 1,
+    SurfaceDebug = 1 << 2
+};
+
+struct ShaderVariant
+{
+    ShaderID shaderID{ ShaderID::Mesh };
+    ShaderDefine defines{ ShaderDefine::None };
+
+    bool operator==(const ShaderVariant&) const = default;
+
+    size_t GetHash() const
+    {
+        return Core::HashOf(
+            shaderID,
+            static_cast<uint32_t>(defines));
+    }
+};
+
+struct ShaderVariantHasher
+{
+    size_t operator()(const ShaderVariant& variant) const
+    {
+        return variant.GetHash();
+    }
+};
+
 enum class PrimitiveTopologyType
 {
     Triangle,
@@ -74,6 +112,7 @@ enum class PrimitiveTopologyType
 
 struct PipelineState
 {
+    ShaderVariant shaderVariant{};
     RasterState rasterState{};
     PrimitiveTopologyType topologyType{ PrimitiveTopologyType::Triangle };
 
@@ -82,6 +121,7 @@ struct PipelineState
     size_t GetHash() const
     {
         return Core::HashOf(
+            shaderVariant.GetHash(),
             rasterState.fillMode,
             rasterState.cullMode,
             topologyType);
@@ -100,12 +140,29 @@ class PipelineLibrary
 {
 public:
     static PipelineState Get(
+        ShaderID shaderID,
         RasterPreset rasterPreset,
         PrimitiveTopologyType topologyType =
         PrimitiveTopologyType::Triangle)
     {
         PipelineState state{};
 
+        state.shaderVariant.shaderID = shaderID;
+        state.rasterState = RasterLibrary::Get(rasterPreset);
+        state.topologyType = topologyType;
+
+        return state;
+    }
+
+    static PipelineState Get(
+        ShaderVariant shaderVariant,
+        RasterPreset rasterPreset,
+        PrimitiveTopologyType topologyType =
+        PrimitiveTopologyType::Triangle)
+    {
+        PipelineState state{};
+
+        state.shaderVariant = shaderVariant;      
         state.rasterState = RasterLibrary::Get(rasterPreset);
         state.topologyType = topologyType;
 

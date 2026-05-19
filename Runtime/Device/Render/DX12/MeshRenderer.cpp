@@ -6,6 +6,7 @@
 #include <d3dcompiler.h>
 #include "CommandList.h"
 #include "DescriptorAllocation.h"
+#include "ShaderSystem.h"
 #include "DX12MathUtils.h"
 #include "GameClient/Graphics/RenderData/DirectionalLightData.h"
 #include "GameClient/Graphics/RenderData/CameraData.h"
@@ -38,8 +39,9 @@ struct MaterialCB
 };
 
 MeshRenderer::~MeshRenderer() = default;
-MeshRenderer::MeshRenderer(ID3D12Device* device) :
-    m_device{ device }
+MeshRenderer::MeshRenderer(ID3D12Device* device, ShaderSystem* shaderSystem) :
+    m_device{ device },
+    m_shaderSystem{ shaderSystem }
 {}
 
 bool MeshRenderer::Initialize(const Size& size)
@@ -55,11 +57,11 @@ bool MeshRenderer::Initialize(const Size& size)
 
 void MeshRenderer::CreateDefaultPSOs()
 {
-    CreatePipeline(PipelineLibrary::Get(RasterPreset::Default));
-    CreatePipeline(PipelineLibrary::Get(RasterPreset::NoCull));
-    CreatePipeline(PipelineLibrary::Get(RasterPreset::Wireframe));
-    CreatePipeline(PipelineLibrary::Get(RasterPreset::WireframeNoCull));
-    CreatePipeline(PipelineLibrary::Get(RasterPreset::Default, PrimitiveTopologyType::Line));
+    CreatePipeline(PipelineLibrary::Get(ShaderID::Mesh, RasterPreset::Default));
+    CreatePipeline(PipelineLibrary::Get(ShaderID::Mesh, RasterPreset::NoCull));
+    CreatePipeline(PipelineLibrary::Get(ShaderID::Mesh, RasterPreset::Wireframe));
+    CreatePipeline(PipelineLibrary::Get(ShaderID::Mesh, RasterPreset::WireframeNoCull));
+    CreatePipeline(PipelineLibrary::Get(ShaderID::Mesh, RasterPreset::Default, PrimitiveTopologyType::Line));
 }
 
 ID3D12PipelineState* MeshRenderer::GetPipeline(const PipelineState& pipelineState)
@@ -75,26 +77,16 @@ ID3D12PipelineState* MeshRenderer::GetPipeline(const PipelineState& pipelineStat
 
 void MeshRenderer::CreatePipeline(const PipelineState& pipelineState)
 {
-    ComPtr<ID3DBlob> vs;
-    ComPtr<ID3DBlob> ps;
-    ComPtr<ID3DBlob> err;
-
-    //SURFACE_DEBUG
-    //SPECULAR_DEBUG
-    //DIFFUSE_DEBUG
-
-    D3D_SHADER_MACRO defines[] = { "", "1", nullptr, nullptr };
-
-    std::wstring shaderFile = L"D:\\ProgrammingStudy\\ToyBox\\Runtime\\Device\\Render\\DX12\\Mesh.hlsl";
-    D3DCompileFromFile(shaderFile.c_str(), nullptr, nullptr, "VSMain", "vs_5_0", 0, 0, &vs, &err);
-    D3DCompileFromFile(shaderFile.c_str(), defines, nullptr, "PSMain", "ps_5_0", 0, 0, &ps, &err);
+    const ShaderEntry* shaderEntry = m_shaderSystem->Find(pipelineState.shaderVariant);
+    if (!shaderEntry)
+        return;
 
     D3D12_GRAPHICS_PIPELINE_STATE_DESC pso{};
     pso.InputLayout = { nullptr, 0 };
     pso.pRootSignature = m_rootSignature.Get();
 
-    pso.VS = { vs->GetBufferPointer(), vs->GetBufferSize() };
-    pso.PS = { ps->GetBufferPointer(), ps->GetBufferSize() };
+    pso.VS = { shaderEntry->vs->GetBufferPointer(), shaderEntry->vs->GetBufferSize() };
+    pso.PS = { shaderEntry->ps->GetBufferPointer(), shaderEntry->ps->GetBufferSize() };
 
     //pso.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
     CD3DX12_RASTERIZER_DESC raster(D3D12_DEFAULT);

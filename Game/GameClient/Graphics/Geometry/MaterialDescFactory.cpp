@@ -1,33 +1,36 @@
 #include "pch.h"
-#include "MaterialFactory.h"
+#include "MaterialDescFactory.h"
 
-MaterialDesc MaterialFactory::CreateLit()
+MaterialDesc MaterialDescFactory::CreateLit()
 {
     MaterialDesc desc;
     desc.pipelineState =
         PipelineLibrary::Get(
+            ShaderID::Mesh,
             RasterPreset::Default,
             PrimitiveTopologyType::Triangle);
 
     return desc;
 }
 
-MaterialDesc MaterialFactory::CreateGrid()
+MaterialDesc MaterialDescFactory::CreateGrid()
 {
     MaterialDesc desc;
     desc.pipelineState =
         PipelineLibrary::Get(
+            ShaderID::Mesh,
             RasterPreset::Default,
             PrimitiveTopologyType::Line);
 
     return desc;
 }
 
-MaterialDesc MaterialFactory::CreateWireframe()
+MaterialDesc MaterialDescFactory::CreateWireframe()
 {
     MaterialDesc desc;
     desc.pipelineState =
         PipelineLibrary::Get(
+            ShaderID::Mesh,
             RasterPreset::Wireframe,
             PrimitiveTopologyType::Triangle);
 

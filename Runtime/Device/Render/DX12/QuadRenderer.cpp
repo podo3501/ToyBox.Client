@@ -4,6 +4,7 @@
 #include "CommandUtils.h"
 #include "DescriptorAllocation.h"
 #include "MeshResource.h"
+#include "ShaderSystem.h"
 #include <d3dcompiler.h>
 
 struct QuadTransform
@@ -15,9 +16,12 @@ struct QuadTransform
 using Microsoft::WRL::ComPtr;
 
 QuadRenderer::~QuadRenderer() = default;
-QuadRenderer::QuadRenderer() = default;
+QuadRenderer::QuadRenderer(ID3D12Device* device, ShaderSystem* shaderSystem) :
+    m_device{ device },
+    m_shaderSystem{ shaderSystem }
+{}
 
-bool QuadRenderer::Initialize(ID3D12Device* device, const Size& screenSize)
+bool QuadRenderer::Initialize(const Size& screenSize)
 {
     m_screenSize = screenSize;
 
@@ -42,7 +46,7 @@ bool QuadRenderer::Initialize(ID3D12Device* device, const Size& screenSize)
 
     D3D12SerializeRootSignature(&rsDesc, D3D_ROOT_SIGNATURE_VERSION_1, &sig, &err);
 
-    device->CreateRootSignature(
+    m_device->CreateRootSignature(
         0,
         sig->GetBufferPointer(),
         sig->GetBufferSize(),
@@ -60,26 +64,26 @@ bool QuadRenderer::Initialize(ID3D12Device* device, const Size& screenSize)
     hr = D3DCompileFromFile(shaderFile.c_str(), nullptr, nullptr, "PSMain", "ps_5_0", 0, 0, &ps, &err);
     if (FAILED(hr)) return false;
 
-    D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc{};
-    psoDesc.InputLayout = { nullptr, 0 };
-    psoDesc.pRootSignature = m_rootSignature.Get();
-    psoDesc.VS = { vs->GetBufferPointer(), vs->GetBufferSize() };
-    psoDesc.PS = { ps->GetBufferPointer(), ps->GetBufferSize() };
+    D3D12_GRAPHICS_PIPELINE_STATE_DESC pso{};
+    pso.InputLayout = { nullptr, 0 };
+    pso.pRootSignature = m_rootSignature.Get();
+    pso.VS = { vs->GetBufferPointer(), vs->GetBufferSize() };
+    pso.PS = { ps->GetBufferPointer(), ps->GetBufferSize() };
 
-    psoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
-    psoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
+    pso.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+    pso.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
 
-    psoDesc.DepthStencilState.DepthEnable = FALSE;
-    psoDesc.DepthStencilState.StencilEnable = FALSE;
+    pso.DepthStencilState.DepthEnable = FALSE;
+    pso.DepthStencilState.StencilEnable = FALSE;
 
-    psoDesc.SampleMask = UINT_MAX;
-    psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+    pso.SampleMask = UINT_MAX;
+    pso.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 
-    psoDesc.NumRenderTargets = 1;
-    psoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-    psoDesc.SampleDesc.Count = 1;
+    pso.NumRenderTargets = 1;
+    pso.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+    pso.SampleDesc.Count = 1;
 
-    hr = device->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&m_pipelineState));
+    hr = m_device->CreateGraphicsPipelineState(&pso, IID_PPV_ARGS(&m_pipelineState));
     if (FAILED(hr)) return false;
 
     return true;

@@ -3,6 +3,7 @@
 #include "GameClient/Service/Render/Repository/ITextureSystem.h"
 #include "GameClient/Service/Render/Repository/IMeshSystem.h"
 #include "GameClient/Service/Render/Repository/IMaterialSystem.h"
+#include "GameClient/Service/Render/Repository/IShaderSystem.h"
 #include "GameClient/Graphics/RenderData/DirectionalLightData.h"
 #include "GameClient/Graphics/RenderData/CameraData.h"
 #include "Core/Math/Matrix.h"
@@ -30,6 +31,7 @@ struct IRenderBackend
 	virtual ITextureSystem* GetTextureSystem() = 0;
 	virtual IMeshSystem* GetMeshSystem() = 0;
 	virtual IMaterialSystem* GetMaterialSystem() = 0;
+	virtual IShaderSystem* GetShaderSystem() = 0;
 };
 
 std::unique_ptr<IRenderBackend> CreateRenderBackend();

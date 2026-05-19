@@ -8,3 +8,4 @@ std::unique_ptr<IAssetLoader> CreateWavStaticLoader();
 std::unique_ptr<IAssetLoader> CreateStaticSoundTableLoader();
 std::unique_ptr<IAssetLoader> CreateStreamSoundTableLoader();
 std::unique_ptr<IAssetLoader> CreateOggStreamLoader();
+std::unique_ptr<IAssetLoader> CreateHLSLShaderLoader();

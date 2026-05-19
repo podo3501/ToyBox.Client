@@ -1,7 +1,7 @@
 #pragma once
 #include "GameClient/Service/Render/Repository/MaterialDesc.h"
 
-class MaterialFactory
+class MaterialDescFactory
 {
 public:
     static MaterialDesc CreateLit();

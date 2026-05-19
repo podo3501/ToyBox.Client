@@ -11,9 +11,11 @@ struct MaterialEntry;
 struct TextureAsset;
 struct IRenderBackend;
 struct MeshAsset;
+struct ShaderAsset;
 class TextureRepository;
 class MaterialRepository;
 class MeshRepository;
+class ShaderRepository;
 
 class RenderRepository
 {
@@ -34,7 +36,7 @@ public:
 	bool ReleaseTexture(TextureHandle th);
 
 	MaterialHandle LoadMaterial(
-		std::filesystem::path path,
+		const std::filesystem::path& path,
 		const MaterialDesc& desc, 
 		function<shared_ptr<TextureAsset>(const filesystem::path&)> loader);
 
@@ -42,6 +44,11 @@ public:
 		const std::string& runtimeKey, 
 		shared_ptr<TextureAsset> albedoAsset = nullptr,
 		const MaterialDesc& desc = {});
+
+	bool RegisterShader(
+		const std::filesystem::path& path, 
+		ShaderID shaderID,
+		std::function<shared_ptr<ShaderAsset>(const filesystem::path&)> loader);
 
 	void Update();
 	void ReleaseAll();
@@ -54,4 +61,5 @@ private:
 	unique_ptr<MeshRepository> m_meshRepository;
 	unique_ptr<TextureRepository> m_texRepository;
 	unique_ptr<MaterialRepository> m_matRepository;
+	unique_ptr<ShaderRepository> m_shaderRepository;
 };

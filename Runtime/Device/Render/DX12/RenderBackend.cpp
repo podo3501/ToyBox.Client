@@ -12,6 +12,7 @@
 #include "TextureSystem.h"
 #include "MeshSystem.h"
 #include "MaterialSystem.h"
+#include "ShaderSystem.h"
 #include "RenderScene.h"
 #include "RenderGraph.h"
 #include "RenderPass.h"
@@ -79,14 +80,15 @@ bool RenderBackend::Initialize(HWND hwnd, const Size& wndSize, const RenderConfi
     ReturnIfFalse(m_texSystem->Initialize());
     m_meshSystem = make_unique<MeshSystem>(device, m_srvAllocator.get(), m_taskScheduler.get(), m_loader.get());
     m_matSystem = make_unique<MaterialSystem>(m_texSystem.get());
+    m_shaderSystem = make_unique<ShaderSystem>();
     m_scene = make_unique<RenderScene>();
 
-    m_meshRenderer = make_unique<MeshRenderer>(device);
+    m_meshRenderer = make_unique<MeshRenderer>(device, m_shaderSystem.get());
     ReturnIfFalse(m_meshRenderer->Initialize(wndSize));
     m_meshRenderer->SetSRVHeap(m_srvAllocator->GetHeap());
 
-    m_quadRenderer = make_unique<QuadRenderer>();
-    ReturnIfFalse(m_quadRenderer->Initialize(device, wndSize));
+    m_quadRenderer = make_unique<QuadRenderer>(device, m_shaderSystem.get());
+    ReturnIfFalse(m_quadRenderer->Initialize(wndSize));
     m_quadRenderer->SetSRVHeap(m_srvAllocator->GetHeap());
 
     auto uiMesh = make_shared<MeshResource>();
@@ -265,6 +267,11 @@ IMeshSystem* RenderBackend::GetMeshSystem()
 IMaterialSystem* RenderBackend::GetMaterialSystem()
 {
     return m_matSystem.get();
+}
+
+IShaderSystem* RenderBackend::GetShaderSystem()
+{
+    return m_shaderSystem.get();
 }
 
 //////////////////////////////////////////////////////

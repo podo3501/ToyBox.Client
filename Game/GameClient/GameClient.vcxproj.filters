@@ -225,8 +225,11 @@
     <ClCompile Include="Graphics\Geometry\MeshFactory.cpp">
       <Filter>Graphics\Geometry</Filter>
     </ClCompile>
-    <ClCompile Include="Graphics\Geometry\MaterialFactory.cpp">
+    <ClCompile Include="Graphics\Geometry\MaterialDescFactory.cpp">
       <Filter>Graphics\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Service\Render\Repository\ShaderRepository.cpp">
+      <Filter>Service\Render\Repository</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -595,8 +598,20 @@
     <ClInclude Include="Service\Render\Repository\RenderState.h">
       <Filter>Service\Render\Repository</Filter>
     </ClInclude>
-    <ClInclude Include="Graphics\Geometry\MaterialFactory.h">
+    <ClInclude Include="Graphics\Geometry\MaterialDescFactory.h">
       <Filter>Graphics\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Asset\Assets\ShaderAsset.h">
+      <Filter>Service\Asset\Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Repository\ShaderRepository.h">
+      <Filter>Service\Render\Repository</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Repository\IShaderSystem.h">
+      <Filter>Service\Render\Repository</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Repository\UIMaterialDesc.h">
+      <Filter>Service\Render\Repository</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

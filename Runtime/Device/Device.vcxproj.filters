@@ -271,6 +271,12 @@
     <ClInclude Include="Render\DX12\RenderSortKey.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
+    <ClInclude Include="Asset\Loader\Graphics\HLSLShaderLoader.h">
+      <Filter>Asset\Loader\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\ShaderSystem.h">
+      <Filter>Render\DX12</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -452,6 +458,12 @@
       <Filter>Render\DX12</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\RenderSortKey.cpp">
+      <Filter>Render\DX12</Filter>
+    </ClCompile>
+    <ClCompile Include="Asset\Loader\Graphics\HLSLShaderLoader.cpp">
+      <Filter>Asset\Loader\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\ShaderSystem.cpp">
       <Filter>Render\DX12</Filter>
     </ClCompile>
   </ItemGroup>

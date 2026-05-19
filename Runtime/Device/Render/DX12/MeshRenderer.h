@@ -16,6 +16,7 @@ class CommandList;
 class MeshResource;
 class MaterialResource;
 class DescriptorAllocation;
+class ShaderSystem;
 
 using Microsoft::WRL::ComPtr;
 
@@ -24,7 +25,7 @@ class MeshRenderer
 public:
     ~MeshRenderer();
     MeshRenderer() = delete;
-    explicit MeshRenderer(ID3D12Device* device);
+    explicit MeshRenderer(ID3D12Device* device, ShaderSystem* shaderSystem);
 
     bool Initialize(const Size& screenSize);
     void BindCommonState(CommandList& cmd);
@@ -47,6 +48,8 @@ private:
     static constexpr uint32_t kMaxObjectCount{ 1024 }; //추후에 링버퍼로 수정할 계획
 
     ID3D12Device* m_device{ nullptr };
+    ShaderSystem* m_shaderSystem{ nullptr };
+
     Size m_screenSize{};
 
     ComPtr<ID3D12RootSignature> m_rootSignature;

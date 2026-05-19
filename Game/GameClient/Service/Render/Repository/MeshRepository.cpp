@@ -15,7 +15,7 @@ MeshRepository::MeshRepository(IMeshSystem* meshSystem) :
 	m_meshSystem{ meshSystem }
 {}
 
-MeshHandle MeshRepository::GetOrCreate(const filesystem::path& path, function<shared_ptr <MeshAsset >(const filesystem::path&) > loader)
+MeshHandle MeshRepository::GetOrCreate(const filesystem::path& path, function<shared_ptr<MeshAsset >(const filesystem::path&)> loader)
 {
 	ResourceKey key{ path.string(), ResourceKey::Type::File };
 
