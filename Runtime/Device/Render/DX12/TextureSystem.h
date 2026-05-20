@@ -1,5 +1,5 @@
 #pragma once
-#include "GameClient/Service/Render/Repository/ITextureSystem.h"
+#include "GameClient/Service/Render/Repository/Texture/ITextureSystem.h"
 #include "TextureLoadRequest.h"
 #include <queue>
 

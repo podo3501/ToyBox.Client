@@ -1,5 +1,5 @@
 #pragma once
-#include "GameClient/Service/Render/Repository/IMeshSystem.h"
+#include "GameClient/Service/Render/Repository/Mesh/IMeshSystem.h"
 #include "MeshLoadRequest.h"
 #include <queue>
 

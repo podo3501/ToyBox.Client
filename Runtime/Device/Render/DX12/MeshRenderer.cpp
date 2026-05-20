@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "MeshRenderer.h"
 #include "MeshResource.h"
-#include "MaterialResource.h"
+#include "MeshMaterialResource.h"
 #include "d3dx12.h"
 #include <d3dcompiler.h>
 #include "CommandList.h"
@@ -283,7 +283,7 @@ void MeshRenderer::PrepareFrame(const DirectionalLightData& light, const CameraD
 void MeshRenderer::Draw(
     CommandList& cmd, 
     MeshResource& mesh, 
-    MaterialResource& material,
+    MeshMaterialResource& material,
     const cm::Matrix& world)
 {
     auto objectCBAddress = UpdateObjectCB(world);

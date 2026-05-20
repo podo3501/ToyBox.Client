@@ -1,13 +1,13 @@
 #include "pch.h"
 #include "MaterialRepository.h"
 #include "IMaterialSystem.h"
-#include "IMaterialResource.h"
-#include "ITextureSystem.h"
+#include "Service/Render/Resource/IMaterialResource.h"
+#include "../Texture/ITextureSystem.h"
 
 struct CpuPendingMaterialRequest
 {
     std::filesystem::path path;
-    MaterialDesc desc;
+    std::unique_ptr<MaterialDesc> desc;
     function<std::shared_ptr<TextureAsset>(const filesystem::path&)> loader;
     MaterialHandle handle;
 };
@@ -15,8 +15,8 @@ struct CpuPendingMaterialRequest
 struct GpuPendingMaterialRequest
 {
     MaterialHandle handle;
-    std::shared_ptr<TextureAsset> albedoAsset;
-    MaterialDesc desc;
+    std::shared_ptr<TextureAsset> texAsset;
+    std::unique_ptr<MaterialDesc> desc;
 };
 
 MaterialRepository::~MaterialRepository() = default;
@@ -26,17 +26,17 @@ MaterialRepository::MaterialRepository(IMaterialSystem* matSystem) :
 
 MaterialHandle MaterialRepository::GetOrCreate(
     std::filesystem::path path,
-    const MaterialDesc& desc,
+    std::unique_ptr<MaterialDesc> desc,
     function<shared_ptr<TextureAsset>(const filesystem::path&)> loader)
 {
     auto keyPath = std::filesystem::weakly_canonical(path);
-    MaterialKey key{ ResourceKey{ keyPath.string(), ResourceKey::Type::File}, desc };
+    MaterialKey key{ ResourceKey{ keyPath.string(), ResourceKey::Type::File}, desc->GetHash() };
 
     auto it = m_cache.find(key);
     if (it != m_cache.end())
         return it->second;
 
-    auto matRes = m_matSystem->CreateMaterialResource();
+    auto matRes = m_matSystem->CreateMaterialResource(desc->type);
     if (!matRes) return MaterialHandle::Invalid();
 
     MaterialEntry entry;
@@ -46,23 +46,23 @@ MaterialHandle MaterialRepository::GetOrCreate(
 
     auto handle = m_loadedMaterials.Emplace(move(entry));
     m_cache[key] = handle;
-    m_cpuPending.push_back(CpuPendingMaterialRequest{ path, desc, loader, handle });
+    m_cpuPending.push_back(CpuPendingMaterialRequest{ path, std::move(desc), loader, handle });
 
     return handle;
 }
 
 MaterialHandle MaterialRepository::GetOrCreate(
     const std::string& runtimeKey,
-    shared_ptr<TextureAsset> albedoAsset,
-    const MaterialDesc& desc)
+    shared_ptr<TextureAsset> texAsset,
+    std::unique_ptr<MaterialDesc> desc)
 {
-    MaterialKey key{ ResourceKey{ runtimeKey, ResourceKey::Type::Runtime }, desc };
+    MaterialKey key{ ResourceKey{ runtimeKey, ResourceKey::Type::Runtime }, desc->GetHash()};
 
     auto it = m_cache.find(key);
     if (it != m_cache.end())
         return it->second;
 
-    auto matRes = m_matSystem->CreateMaterialResource();
+    auto matRes = m_matSystem->CreateMaterialResource(desc->type);
     if (!matRes) return MaterialHandle::Invalid();
 
     MaterialEntry entry;
@@ -72,11 +72,10 @@ MaterialHandle MaterialRepository::GetOrCreate(
 
     auto handle = m_loadedMaterials.Emplace(std::move(entry));
     m_cache[key] = handle;
-    m_gpuPending.push_back(GpuPendingMaterialRequest{ handle, albedoAsset, desc });
+    m_gpuPending.push_back(GpuPendingMaterialRequest{ handle, texAsset, std::move(desc) });
 
     return handle;
 }
-
 
 void MaterialRepository::Update()
 {
@@ -101,7 +100,7 @@ void MaterialRepository::ProcessCpuPending()
             continue;
         }
 
-        m_gpuPending.push_back(GpuPendingMaterialRequest{ req.handle, asset, req.desc });
+        m_gpuPending.push_back(GpuPendingMaterialRequest{ req.handle, asset, std::move(req.desc) });
     }
 
     m_cpuPending.clear();
@@ -114,7 +113,7 @@ void MaterialRepository::ProcessGpuPending()
         auto entry = m_loadedMaterials.Find(work.handle);
         if (!entry || !entry->matRes) continue;
 
-        if (!m_matSystem->LoadFromAsset(entry->matRes, work.albedoAsset, work.desc))
+        if (!m_matSystem->LoadFromAsset(entry->matRes, work.texAsset, std::move(work.desc)))
         {
             entry->state = LoadState::Failed;
             continue;

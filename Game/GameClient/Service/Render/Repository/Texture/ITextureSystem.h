@@ -1,7 +1,7 @@
 #pragma once
 #include "GameClient/Service/Asset/Assets/TextureAsset.h"
-#include "GameClient/Service/Render/Repository/TextureDesc.h"
-#include "ITextureResource.h"
+#include "GameClient/Service/Render/Desc/TextureDesc.h"
+#include "GameClient/Service/Render/Resource/ITextureResource.h"
 
 struct ITextureSystem
 {

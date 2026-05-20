@@ -146,7 +146,7 @@ void RenderBackend::DrawMesh(
 {
     DrawItem item;
     item.mesh = meshRes;
-    item.material = matRes ? matRes : m_matSystem->GetDefaultMaterial();
+    item.material = matRes ? matRes : m_matSystem->GetDefaultMeshMaterial();
     item.world = world;
 
     m_scene->AddOpaque(item);

@@ -1,10 +1,10 @@
 #pragma once
 #include "Core/Utils/Handle/HandlePool.h"
 #include "Core/Utils/Hash.h"
-#include "MaterialHandle.h"
-#include "ResourceTypes.h"
-#include "TextureDesc.h"
-#include "MaterialDesc.h"
+#include "../ResourceTypes.h"
+#include "Service/Render/Handle/MaterialHandle.h"
+#include "Service/Render/Desc/TextureDesc.h"
+#include "Service/Render/Desc/MaterialDesc.h"
 
 struct IMaterialSystem;
 struct IMaterialResource;
@@ -15,7 +15,7 @@ struct GpuPendingMaterialRequest;
 struct MaterialKey
 {
     ResourceKey resourceKey;
-    MaterialDesc matDesc;
+    size_t descHash{};
 
     bool operator==(const MaterialKey& rhs) const = default;
 };
@@ -26,7 +26,7 @@ struct MaterialKeyHash
     {
         return Core::HashOf(
             k.resourceKey.GetHash(),
-            k.matDesc.GetHash());
+            k.descHash);
     }
 };
 
@@ -46,17 +46,17 @@ public:
 
     MaterialHandle GetOrCreate(
         std::filesystem::path path,
-        const MaterialDesc& desc,
+        std::unique_ptr<MaterialDesc> desc,
         function<shared_ptr<TextureAsset>(const filesystem::path&)> loader);
 
     MaterialHandle GetOrCreate(
         const std::string& runtimeKey, 
         shared_ptr<TextureAsset> albedoAsset, 
-        const MaterialDesc& desc);
+        std::unique_ptr<MaterialDesc> desc);
 
+    void Update();
     bool Release(MaterialHandle h);
     void ReleaseAll();
-    void Update();
     const MaterialEntry* Get(MaterialHandle h) const noexcept { return m_loadedMaterials.Find(h); }
 
 private:

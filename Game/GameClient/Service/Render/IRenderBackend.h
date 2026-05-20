@@ -1,9 +1,5 @@
 #pragma once
 #include "RenderConfig.h"
-#include "GameClient/Service/Render/Repository/ITextureSystem.h"
-#include "GameClient/Service/Render/Repository/IMeshSystem.h"
-#include "GameClient/Service/Render/Repository/IMaterialSystem.h"
-#include "GameClient/Service/Render/Repository/IShaderSystem.h"
 #include "GameClient/Graphics/RenderData/DirectionalLightData.h"
 #include "GameClient/Graphics/RenderData/CameraData.h"
 #include "Core/Math/Matrix.h"
@@ -14,6 +10,10 @@ struct IMaterialResource;
 struct TextureAsset;
 struct Size;
 struct Rect;
+struct ITextureSystem;
+struct IMeshSystem;
+struct IMaterialSystem;
+struct IShaderSystem;
 
 struct IRenderBackend
 {

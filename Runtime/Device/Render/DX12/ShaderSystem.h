@@ -1,6 +1,6 @@
 #pragma once
-#include "GameClient/Service/Render/Repository/IShaderSystem.h"
-#include "GameClient/Service/Render/Repository/RenderState.h"
+#include "GameClient/Service/Render/Repository/Shader/IShaderSystem.h"
+#include "GameClient/Service/Render/Desc/RenderState.h"
 #include <d3dcompiler.h>
 #include <wrl.h>
 

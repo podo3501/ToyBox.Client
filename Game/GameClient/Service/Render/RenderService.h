@@ -1,5 +1,5 @@
 #pragma once
-#include "Repository/RenderRepository.h"
+#include "RenderContext.h"
 #include "Core/Math/Matrix.h"
 
 struct IRenderBackend;
@@ -9,7 +9,7 @@ struct DrawCommand;
 struct DrawMeshCommand;
 struct DirectionalLightData;
 struct CameraData;
-class RenderRepository;
+class RenderContext;
 
 class RenderService
 {
@@ -25,11 +25,11 @@ public:
 	void Render();
 	void Resize(const Size& size);
 
-	RenderRepository* GetRepository();
+	RenderContext* GetContext();
 
 private:
 	RenderService(unique_ptr<IRenderBackend> backend);
 
 	unique_ptr<IRenderBackend> m_backend;
-	unique_ptr<RenderRepository> m_repository;
+	unique_ptr<RenderContext> m_context;
 };

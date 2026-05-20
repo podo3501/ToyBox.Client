@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "TextureRepository.h"
 #include "ITextureSystem.h"
-#include "ITextureResource.h"
+#include "Service/Render/Resource/ITextureResource.h"
 
 struct CpuPendingTextureRequest
 {

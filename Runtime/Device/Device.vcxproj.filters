@@ -265,7 +265,7 @@
     <ClInclude Include="Render\DX12\MaterialSystem.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\MaterialResource.h">
+    <ClInclude Include="Render\DX12\MeshMaterialResource.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
     <ClInclude Include="Render\DX12\RenderSortKey.h">
@@ -275,6 +275,9 @@
       <Filter>Asset\Loader\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Render\DX12\ShaderSystem.h">
+      <Filter>Render\DX12</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\UIMaterialResource.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
   </ItemGroup>
@@ -454,7 +457,7 @@
     <ClCompile Include="Render\DX12\MaterialSystem.cpp">
       <Filter>Render\DX12</Filter>
     </ClCompile>
-    <ClCompile Include="Render\DX12\MaterialResource.cpp">
+    <ClCompile Include="Render\DX12\MeshMaterialResource.cpp">
       <Filter>Render\DX12</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\RenderSortKey.cpp">
@@ -464,6 +467,9 @@
       <Filter>Asset\Loader\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\ShaderSystem.cpp">
+      <Filter>Render\DX12</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\UIMaterialResource.cpp">
       <Filter>Render\DX12</Filter>
     </ClCompile>
   </ItemGroup>

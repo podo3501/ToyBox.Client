@@ -1,15 +1,15 @@
 #include "pch.h"
 #include "RenderScene.h"
 #include "RenderSortKey.h"
-#include "MaterialResource.h"
+#include "MeshMaterialResource.h"
 
 void RenderScene::AddOpaque(const DrawItem& item)
 {
     DrawItem newItem = item;
 
-    auto material = static_cast<MaterialResource*>(item.material.get());
+    auto meshMaterial = static_cast<MeshMaterialResource*>(item.material.get());
     
-    newItem.sortKey = RenderSortKey::BuildOpaque(material->GetPipelineState().GetHash());
+    newItem.sortKey = RenderSortKey::BuildOpaque(meshMaterial->GetPipelineState().GetHash());
 
     m_opaqueDraws.push_back(newItem);
 }

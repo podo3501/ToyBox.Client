@@ -1,6 +1,6 @@
 #pragma once
+#include "MaterialDesc.h"
 #include "TextureDesc.h"
-#include "RenderState.h"
 
 struct TextureAsset;
 
@@ -17,19 +17,26 @@ struct MaterialSurface
     }
 };
 
-struct MaterialDesc
+struct MeshMaterialDesc : public MaterialDesc
 {
     TextureDesc albedoDesc;
     MaterialSurface surface;
-    PipelineState pipelineState{ PipelineLibrary::Get( ShaderID::Mesh, RasterPreset::Default) };
 
-    bool operator==(const MaterialDesc&) const = default;
+    MeshMaterialDesc()
+    {
+        type = MaterialType::Mesh;
+        pipelineState = PipelineLibrary::Get(ShaderID::Mesh, RasterPreset::Default);
+        albedoDesc = { true, true };
+        surface = { 0.5f, 0.f };
+    }
+
+    bool operator==(const MeshMaterialDesc&) const = default;
 
     size_t GetHash() const
     {
         return Core::HashOf(
+            MaterialDesc::GetHash(),
             albedoDesc.GetHash(),
-            surface.GetHash(),
-            pipelineState.GetHash());
+            surface.GetHash());
     }
 };

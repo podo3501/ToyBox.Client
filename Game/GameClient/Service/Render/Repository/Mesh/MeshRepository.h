@@ -1,7 +1,7 @@
 #pragma once
 #include "Core/Utils/Handle/HandlePool.h"
-#include "MeshHandle.h"
-#include "ResourceTypes.h"
+#include "Service/Render/Handle/MeshHandle.h"
+#include "../ResourceTypes.h"
 
 struct IMeshSystem;
 struct IMeshResource;

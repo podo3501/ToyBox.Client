@@ -1,38 +1,56 @@
 #include "pch.h"
 #include "MaterialDescFactory.h"
 
-MaterialDesc MaterialDescFactory::CreateLit()
+std::unique_ptr<MeshMaterialDesc> MeshMaterialDescFactory::CreateLit()
 {
-    MaterialDesc desc;
-    desc.pipelineState =
-        PipelineLibrary::Get(
-            ShaderID::Mesh,
-            RasterPreset::Default,
-            PrimitiveTopologyType::Triangle);
+    auto desc = std::make_unique<MeshMaterialDesc>();
+    desc->pipelineState = PipelineLibrary::Get(
+        ShaderID::Mesh,
+        RasterPreset::Default,
+        PrimitiveTopologyType::Triangle);
+    desc->albedoDesc = { true, true };
+    desc->surface = { 0.5f, 0.f };
 
     return desc;
 }
 
-MaterialDesc MaterialDescFactory::CreateGrid()
+std::unique_ptr<MeshMaterialDesc> MeshMaterialDescFactory::CreateGrid()
 {
-    MaterialDesc desc;
-    desc.pipelineState =
-        PipelineLibrary::Get(
-            ShaderID::Mesh,
-            RasterPreset::Default,
-            PrimitiveTopologyType::Line);
+    auto desc = std::make_unique<MeshMaterialDesc>();
+    desc->pipelineState = PipelineLibrary::Get(
+        ShaderID::Mesh,
+        RasterPreset::Default,
+        PrimitiveTopologyType::Line);
+    desc->albedoDesc = { true, false };
+    desc->surface = { 0.5f, 0.f };
 
     return desc;
 }
 
-MaterialDesc MaterialDescFactory::CreateWireframe()
+std::unique_ptr<MeshMaterialDesc> MeshMaterialDescFactory::CreateWireframe()
 {
-    MaterialDesc desc;
-    desc.pipelineState =
+    auto desc = std::make_unique<MeshMaterialDesc>();
+    desc->pipelineState = PipelineLibrary::Get(
+        ShaderID::Mesh,
+        RasterPreset::Wireframe,
+        PrimitiveTopologyType::Triangle);
+    desc->albedoDesc = { true, false };
+    desc->surface = { 0.5f, 0.f };
+
+    return desc;
+}
+
+/////////////////////////////////////////////////////////////////
+
+std::unique_ptr<UIMaterialDesc> UIMaterialDescFactory::CreateDefault()
+{
+    auto desc = std::make_unique<UIMaterialDesc>();
+    desc->pipelineState =
         PipelineLibrary::Get(
-            ShaderID::Mesh,
-            RasterPreset::Wireframe,
+            ShaderID::UI,
+            RasterPreset::NoCull,
             PrimitiveTopologyType::Triangle);
+    desc->texDesc = { true, false };
 
     return desc;
 }

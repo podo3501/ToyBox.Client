@@ -4,7 +4,7 @@
 #include "Core/Foundation/Geometry2D.h"
 #include "Core/Math/Matrix.h"
 #include "Core/Utils/Hash.h"
-#include "GameClient/Service/Render/Repository/RenderState.h"
+#include "GameClient/Service/Render/Desc/RenderState.h"
 
 struct ObjectCB;
 struct FrameCB;
@@ -14,7 +14,7 @@ struct CameraData;
 struct MaterialSurface;
 class CommandList;
 class MeshResource;
-class MaterialResource;
+class MeshMaterialResource;
 class DescriptorAllocation;
 class ShaderSystem;
 
@@ -32,7 +32,7 @@ public:
     void BindPipeline(CommandList& cmd, const PipelineState& pipelineState);
     void SetSRVHeap(ID3D12DescriptorHeap* heap) { m_srvHeap = heap; }
     void PrepareFrame(const DirectionalLightData& light, const CameraData& camera);
-    void Draw(CommandList& cmd, MeshResource& mesh, MaterialResource& material, const Core::Math::Matrix& world);
+    void Draw(CommandList& cmd, MeshResource& mesh, MeshMaterialResource& material, const Core::Math::Matrix& world);
     void Resize(const Size& size);
     
 private:

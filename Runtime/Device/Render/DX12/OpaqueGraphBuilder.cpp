@@ -5,7 +5,7 @@
 #include "RenderScene.h"
 #include "MeshRenderer.h"
 #include "MeshResource.h"
-#include "MaterialResource.h"
+#include "MeshMaterialResource.h"
 
 OpaqueGraphBuilder::~OpaqueGraphBuilder() = default;
 OpaqueGraphBuilder::OpaqueGraphBuilder(MeshRenderer* meshRenderer, RenderScene* scene, RGHandle hBb) :
@@ -27,7 +27,7 @@ void OpaqueGraphBuilder::Build(RenderGraph& graph)
         for (auto& item : m_scene->GetOpaqueDraws())
         {
             auto mesh = static_cast<MeshResource*>(item.mesh.get());
-            auto material = static_cast<MaterialResource*>(item.material.get());
+            auto material = static_cast<MeshMaterialResource*>(item.material.get());
 
             const PipelineState& nextPSO = material->GetPipelineState();
             if (!currentPSO || *currentPSO != nextPSO)

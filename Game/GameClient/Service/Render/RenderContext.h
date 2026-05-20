@@ -1,9 +1,9 @@
 #pragma once
-#include "TextureHandle.h"
-#include "MaterialHandle.h"
-#include "MeshHandle.h"
-#include "MaterialDesc.h"
-#include "TextureDesc.h"
+#include "Handle/TextureHandle.h"
+#include "Handle/MaterialHandle.h"
+#include "Handle/MeshHandle.h"
+#include "Desc/MaterialDesc.h"
+#include "Desc/TextureDesc.h"
 
 struct TextureEntry;
 struct MeshEntry;
@@ -17,12 +17,12 @@ class MaterialRepository;
 class MeshRepository;
 class ShaderRepository;
 
-class RenderRepository
+class RenderContext
 {
 public:
-	~RenderRepository();
-	RenderRepository() = delete;
-	explicit RenderRepository(IRenderBackend* backend);
+	~RenderContext();
+	RenderContext() = delete;
+	explicit RenderContext(IRenderBackend* backend);
 
 	MeshHandle LoadMesh(const filesystem::path& path, function<shared_ptr<MeshAsset>(const filesystem::path&)> loader);
 	MeshHandle LoadMesh(const std::string& runtimeKey, shared_ptr<MeshAsset> meshAsset);
@@ -37,13 +37,18 @@ public:
 
 	MaterialHandle LoadMaterial(
 		const std::filesystem::path& path,
-		const MaterialDesc& desc, 
+		unique_ptr<MaterialDesc> desc,
 		function<shared_ptr<TextureAsset>(const filesystem::path&)> loader);
 
 	MaterialHandle LoadMaterial(
 		const std::string& runtimeKey, 
-		shared_ptr<TextureAsset> albedoAsset = nullptr,
-		const MaterialDesc& desc = {});
+		shared_ptr<TextureAsset> albedoAsset,
+		unique_ptr<MaterialDesc> desc);
+
+	MaterialHandle LoadMaterial(
+		const std::string& runtimeKey,
+		MaterialType matType,
+		shared_ptr<TextureAsset> albedoAsset = nullptr);
 
 	bool RegisterShader(
 		const std::filesystem::path& path, 

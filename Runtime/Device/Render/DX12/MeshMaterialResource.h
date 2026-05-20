@@ -1,19 +1,19 @@
 #pragma once
-#include "GameClient/Service/Render/Repository/IMaterialResource.h"
-#include "GameClient/Service/Render/Repository/MaterialDesc.h"
+#include "GameClient/Service/Render/Resource/IMaterialResource.h"
+#include "GameClient/Service/Render/Desc/MeshMaterialDesc.h"
 #include "DescriptorAllocation.h"
 
 struct ITextureResource;
 
-class MaterialResource : public IMaterialResource
+class MeshMaterialResource : public IMaterialResource
 {
 public:
-	~MaterialResource();
-	MaterialResource();
+	~MeshMaterialResource();
+	MeshMaterialResource();
 	virtual bool IsReady() const noexcept override;
 
 	void SetAlbedoTexture(std::shared_ptr<ITextureResource> texRes);
-	void SetMaterialDesc(const MaterialDesc& desc) { m_desc = desc; }
+	void SetMaterialDesc(const MeshMaterialDesc& desc) { m_desc = desc; }
 	const MaterialSurface& GetSurface() const { return m_desc.surface; }
 	const PipelineState& GetPipelineState() const { return m_desc.pipelineState; }
 
@@ -21,5 +21,5 @@ public:
 
 private:
 	shared_ptr<ITextureResource> m_texRes;
-	MaterialDesc m_desc;
+	MeshMaterialDesc m_desc;
 };

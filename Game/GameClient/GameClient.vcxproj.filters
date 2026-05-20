@@ -201,18 +201,6 @@
     <ClCompile Include="Service\Render\RenderService.cpp">
       <Filter>Service\Render</Filter>
     </ClCompile>
-    <ClCompile Include="Service\Render\Repository\MaterialRepository.cpp">
-      <Filter>Service\Render\Repository</Filter>
-    </ClCompile>
-    <ClCompile Include="Service\Render\Repository\MeshRepository.cpp">
-      <Filter>Service\Render\Repository</Filter>
-    </ClCompile>
-    <ClCompile Include="Service\Render\Repository\RenderRepository.cpp">
-      <Filter>Service\Render\Repository</Filter>
-    </ClCompile>
-    <ClCompile Include="Service\Render\Repository\TextureRepository.cpp">
-      <Filter>Service\Render\Repository</Filter>
-    </ClCompile>
     <ClCompile Include="Graphics\World\Transform.cpp">
       <Filter>Graphics\World</Filter>
     </ClCompile>
@@ -228,8 +216,20 @@
     <ClCompile Include="Graphics\Geometry\MaterialDescFactory.cpp">
       <Filter>Graphics\Geometry</Filter>
     </ClCompile>
-    <ClCompile Include="Service\Render\Repository\ShaderRepository.cpp">
-      <Filter>Service\Render\Repository</Filter>
+    <ClCompile Include="Service\Render\RenderContext.cpp">
+      <Filter>Service\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Service\Render\Repository\Material\MaterialRepository.cpp">
+      <Filter>Service\Render\Repository\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="Service\Render\Repository\Mesh\MeshRepository.cpp">
+      <Filter>Service\Render\Repository\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Service\Render\Repository\Texture\TextureRepository.cpp">
+      <Filter>Service\Render\Repository\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Service\Render\Repository\Shader\ShaderRepository.cpp">
+      <Filter>Service\Render\Repository\Shader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -529,49 +529,7 @@
     <ClInclude Include="Service\Asset\Assets\MeshAsset.h">
       <Filter>Service\Asset\Assets</Filter>
     </ClInclude>
-    <ClInclude Include="Service\Render\Repository\IMeshResource.h">
-      <Filter>Service\Render\Repository</Filter>
-    </ClInclude>
-    <ClInclude Include="Service\Render\Repository\IMeshSystem.h">
-      <Filter>Service\Render\Repository</Filter>
-    </ClInclude>
-    <ClInclude Include="Service\Render\Repository\ITextureResource.h">
-      <Filter>Service\Render\Repository</Filter>
-    </ClInclude>
-    <ClInclude Include="Service\Render\Repository\ITextureSystem.h">
-      <Filter>Service\Render\Repository</Filter>
-    </ClInclude>
-    <ClInclude Include="Service\Render\Repository\MaterialHandle.h">
-      <Filter>Service\Render\Repository</Filter>
-    </ClInclude>
-    <ClInclude Include="Service\Render\Repository\MaterialRepository.h">
-      <Filter>Service\Render\Repository</Filter>
-    </ClInclude>
-    <ClInclude Include="Service\Render\Repository\MeshHandle.h">
-      <Filter>Service\Render\Repository</Filter>
-    </ClInclude>
-    <ClInclude Include="Service\Render\Repository\MeshRepository.h">
-      <Filter>Service\Render\Repository</Filter>
-    </ClInclude>
-    <ClInclude Include="Service\Render\Repository\RenderRepository.h">
-      <Filter>Service\Render\Repository</Filter>
-    </ClInclude>
-    <ClInclude Include="Service\Render\Repository\TextureDesc.h">
-      <Filter>Service\Render\Repository</Filter>
-    </ClInclude>
-    <ClInclude Include="Service\Render\Repository\TextureHandle.h">
-      <Filter>Service\Render\Repository</Filter>
-    </ClInclude>
-    <ClInclude Include="Service\Render\Repository\TextureRepository.h">
-      <Filter>Service\Render\Repository</Filter>
-    </ClInclude>
     <ClInclude Include="Service\Render\Repository\ResourceTypes.h">
-      <Filter>Service\Render\Repository</Filter>
-    </ClInclude>
-    <ClInclude Include="Service\Render\Repository\IMaterialResource.h">
-      <Filter>Service\Render\Repository</Filter>
-    </ClInclude>
-    <ClInclude Include="Service\Render\Repository\IMaterialSystem.h">
       <Filter>Service\Render\Repository</Filter>
     </ClInclude>
     <ClInclude Include="Graphics\World\Transform.h">
@@ -589,14 +547,8 @@
     <ClInclude Include="Graphics\RenderData\DirectionalLightData.h">
       <Filter>Graphics\RenderData</Filter>
     </ClInclude>
-    <ClInclude Include="Service\Render\Repository\MaterialDesc.h">
-      <Filter>Service\Render\Repository</Filter>
-    </ClInclude>
     <ClInclude Include="Graphics\Geometry\MeshFactory.h">
       <Filter>Graphics\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="Service\Render\Repository\RenderState.h">
-      <Filter>Service\Render\Repository</Filter>
     </ClInclude>
     <ClInclude Include="Graphics\Geometry\MaterialDescFactory.h">
       <Filter>Graphics\Geometry</Filter>
@@ -604,14 +556,65 @@
     <ClInclude Include="Service\Asset\Assets\ShaderAsset.h">
       <Filter>Service\Asset\Assets</Filter>
     </ClInclude>
-    <ClInclude Include="Service\Render\Repository\ShaderRepository.h">
-      <Filter>Service\Render\Repository</Filter>
+    <ClInclude Include="Service\Render\RenderContext.h">
+      <Filter>Service\Render</Filter>
     </ClInclude>
-    <ClInclude Include="Service\Render\Repository\IShaderSystem.h">
-      <Filter>Service\Render\Repository</Filter>
+    <ClInclude Include="Service\Render\Handle\MaterialHandle.h">
+      <Filter>Service\Render\Handle</Filter>
     </ClInclude>
-    <ClInclude Include="Service\Render\Repository\UIMaterialDesc.h">
-      <Filter>Service\Render\Repository</Filter>
+    <ClInclude Include="Service\Render\Handle\MeshHandle.h">
+      <Filter>Service\Render\Handle</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Handle\TextureHandle.h">
+      <Filter>Service\Render\Handle</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Desc\MaterialDesc.h">
+      <Filter>Service\Render\Desc</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Desc\MeshMaterialDesc.h">
+      <Filter>Service\Render\Desc</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Desc\TextureDesc.h">
+      <Filter>Service\Render\Desc</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Desc\UIMaterialDesc.h">
+      <Filter>Service\Render\Desc</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Desc\RenderState.h">
+      <Filter>Service\Render\Desc</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Resource\IMaterialResource.h">
+      <Filter>Service\Render\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Resource\IMeshResource.h">
+      <Filter>Service\Render\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Resource\ITextureResource.h">
+      <Filter>Service\Render\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Repository\Material\IMaterialSystem.h">
+      <Filter>Service\Render\Repository\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Repository\Material\MaterialRepository.h">
+      <Filter>Service\Render\Repository\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Repository\Mesh\IMeshSystem.h">
+      <Filter>Service\Render\Repository\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Repository\Mesh\MeshRepository.h">
+      <Filter>Service\Render\Repository\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Repository\Texture\ITextureSystem.h">
+      <Filter>Service\Render\Repository\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Repository\Texture\TextureRepository.h">
+      <Filter>Service\Render\Repository\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Repository\Shader\IShaderSystem.h">
+      <Filter>Service\Render\Repository\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Repository\Shader\ShaderRepository.h">
+      <Filter>Service\Render\Repository\Shader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -701,6 +704,27 @@
     </Filter>
     <Filter Include="Graphics\Geometry">
       <UniqueIdentifier>{b4178773-53bf-4082-975f-e735da036e26}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Service\Render\Handle">
+      <UniqueIdentifier>{a93b329c-d95d-4962-8c97-b4c16ab6543b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Service\Render\Desc">
+      <UniqueIdentifier>{6fdcda01-0696-47fd-bb80-9684440986d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Service\Render\Resource">
+      <UniqueIdentifier>{19273d76-8193-4e8e-81a4-d928f782160e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Service\Render\Repository\Material">
+      <UniqueIdentifier>{9126813b-01da-42e8-b06d-f58a9dec5ae0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Service\Render\Repository\Mesh">
+      <UniqueIdentifier>{31a6befa-ed82-42da-b785-70ff8f4bccf6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Service\Render\Repository\Shader">
+      <UniqueIdentifier>{5f08926a-97c2-4cdc-8794-db47d12e33c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Service\Render\Repository\Texture">
+      <UniqueIdentifier>{8d2d9237-c25a-445a-8fc2-f75425938ebe}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

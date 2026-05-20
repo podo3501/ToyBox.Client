@@ -1,5 +1,5 @@
 #pragma once
-#include "GameClient/Service/Render/Repository/IMeshResource.h"
+#include "GameClient/Service/Render/Resource/IMeshResource.h"
 #include "DescriptorAllocation.h"
 #include <wrl/client.h>
 #include "d3dx12.h"

@@ -1,5 +1,5 @@
 #pragma once
-#include "GameClient/Service/Render/Repository/IMaterialSystem.h"
+#include "GameClient/Service/Render/Repository/Material/IMaterialSystem.h"
 
 class TextureSystem;
 
@@ -8,16 +8,16 @@ class MaterialSystem : public IMaterialSystem
 public:
 	~MaterialSystem();
 	MaterialSystem(TextureSystem* texSystem);
-	virtual shared_ptr<IMaterialResource> CreateMaterialResource() override;
+	virtual shared_ptr<IMaterialResource> CreateMaterialResource(MaterialType materialType) override;
 	virtual bool LoadFromAsset(
-		std::shared_ptr<IMaterialResource> resource, 
-		std::shared_ptr<TextureAsset> albedoAsset,
-		const MaterialDesc& matDesc) override;
+		std::shared_ptr<IMaterialResource> resource,
+		std::shared_ptr<TextureAsset> texAsset,
+		std::unique_ptr<MaterialDesc> matDesc) override;
 
-	shared_ptr<IMaterialResource> GetDefaultMaterial() { return m_defaultMaterial; }
+	shared_ptr<IMaterialResource> GetDefaultMeshMaterial() { return m_defaultMeshMaterial; }
 
 private:
 	TextureSystem* m_texSystem{ nullptr };
 
-	shared_ptr<IMaterialResource> m_defaultMaterial;
+	shared_ptr<IMaterialResource> m_defaultMeshMaterial;
 };

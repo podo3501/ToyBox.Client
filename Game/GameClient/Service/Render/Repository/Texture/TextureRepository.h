@@ -1,9 +1,9 @@
 #pragma once
 #include "Core/Utils/Handle/HandlePool.h"
 #include "Core/Utils/Hash.h"
-#include "TextureHandle.h"
-#include "TextureDesc.h"
-#include "ResourceTypes.h"
+#include "../ResourceTypes.h"
+#include "Service/Render/Handle/TextureHandle.h"
+#include "Service/Render/Desc/TextureDesc.h"
 
 struct ITextureSystem;
 struct ITextureResource;

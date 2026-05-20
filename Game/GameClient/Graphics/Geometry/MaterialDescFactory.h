@@ -1,10 +1,17 @@
 #pragma once
-#include "GameClient/Service/Render/Repository/MaterialDesc.h"
+#include "GameClient/Service/Render/Desc/MeshMaterialDesc.h"
+#include "GameClient/Service/Render/Desc/UIMaterialDesc.h"
 
-class MaterialDescFactory
+class MeshMaterialDescFactory
 {
 public:
-    static MaterialDesc CreateLit();
-    static MaterialDesc CreateGrid();
-    static MaterialDesc CreateWireframe();
+    static std::unique_ptr<MeshMaterialDesc> CreateLit();
+    static std::unique_ptr<MeshMaterialDesc> CreateGrid();
+    static std::unique_ptr<MeshMaterialDesc> CreateWireframe();
+};
+
+class UIMaterialDescFactory
+{
+public:
+    static std::unique_ptr<UIMaterialDesc> CreateDefault();
 };
