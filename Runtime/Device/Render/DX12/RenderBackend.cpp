@@ -21,7 +21,6 @@
 #include "PresentGraphBuilder.h"
 #include "UIGraphBuilder.h"
 #include "MeshResource.h"
-#include "PrimitiveMeshFactory.h"
 #include "CommandList.h"
 #include "CommandUtils.h"
 #include <dxgi1_6.h>
@@ -91,11 +90,6 @@ bool RenderBackend::Initialize(HWND hwnd, const Size& wndSize, const RenderConfi
     ReturnIfFalse(m_quadRenderer->Initialize(wndSize));
     m_quadRenderer->SetSRVHeap(m_srvAllocator->GetHeap());
 
-    auto uiMesh = make_shared<MeshResource>();
-    auto uiQuadAsset = PrimitiveMeshFactory::CreateUIQuad();
-    ReturnIfFalse(m_meshSystem->LoadFromAsset(uiMesh, uiQuadAsset));
-    m_quadRenderer->SetUIQuadMesh(uiMesh);
-
     return true;
 }
 
@@ -127,18 +121,6 @@ void RenderBackend::EndFrame()
     m_cmd = nullptr;
 }
 
-void RenderBackend::DrawUI(std::shared_ptr<ITextureResource> texRes, const Rect& dest, const Rect* source)
-{
-    UIDrawItem item;
-    item.texture = texRes;
-    item.dest = dest;
-
-    if (source)
-        item.src = *source;
-
-    m_scene->AddUI(item);
-}
-
 void RenderBackend::DrawMesh(
     std::shared_ptr<IMeshResource> meshRes, 
     std::shared_ptr<IMaterialResource> matRes,
@@ -152,10 +134,22 @@ void RenderBackend::DrawMesh(
     m_scene->AddOpaque(item);
 }
 
+void RenderBackend::DrawUI(
+    std::shared_ptr<IMeshResource> meshRes,
+    std::shared_ptr<IMaterialResource> matRes,
+    const Core::Math::Matrix& world)
+{
+    DrawItem item;
+    item.mesh = meshRes;
+    item.material = matRes ? matRes : m_matSystem->GetDefaultMeshMaterial();
+    item.world = world;
+
+    m_scene->AddUI(item);
+}
+
 void RenderBackend::Resize(const Size& size)
 {
-    m_meshRenderer->Resize(size);
-    m_quadRenderer->Resize(size);
+    m_quadRenderer->SetScreenSize(size);
     m_swapChain->Resize(m_core->GetDevice(), size);
 }
 

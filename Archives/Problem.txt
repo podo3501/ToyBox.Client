@@ -396,3 +396,6 @@ C/C++ -> 최적화 /GL
 
 테스트에서 case WM_DESTROY: PostQuitMessage(0); 이걸 써버리면 뒤에 테스트들도 다 종료가 돼 버리기
 때문에 PostQuitMessage를 쓰지말고 DestroyWindow(hwnd); 를 써서 끝내도록 하자
+
+ui를 그릴때 좌표가 아래에서 위로 그려지는걸 방지하기 위해서 ortho에서 방향을 바꿔주는데 이때 찍는 
+삼각형이 뒤집혀지면서 컬링되어서 화면에 ui가 안그려진다. 이것이 ui에서 컬링을 끄는 이유. 

@@ -1,12 +1,7 @@
 #pragma once
 #include "RenderContext.h"
-#include "Core/Math/Matrix.h"
 
 struct IRenderBackend;
-struct Rect;
-struct Size;
-struct DrawCommand;
-struct DrawMeshCommand;
 struct DirectionalLightData;
 struct CameraData;
 class RenderContext;
@@ -17,10 +12,9 @@ public:
 	~RenderService();
 	RenderService() = delete;
 	static unique_ptr<RenderService> Create(unique_ptr<IRenderBackend> backend) noexcept;
+	bool Initialize();
 	void SetCamera(const CameraData& camera);
 	void SetDirectionalLight(const DirectionalLightData& light);
-	void DrawUI(TextureHandle th, const Rect& dest, const Rect* source);
-	void DrawMesh(MeshHandle hM, MaterialHandle hMtl, const Core::Math::Matrix& world);
 	void Update();
 	void Render();
 	void Resize(const Size& size);

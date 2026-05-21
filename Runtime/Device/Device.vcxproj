@@ -75,7 +75,6 @@
     <ClInclude Include="Render\DX12\PendingTransition.h" />
     <ClInclude Include="Render\DX12\PrepareGraphBuilder.h" />
     <ClInclude Include="Render\DX12\PresentGraphBuilder.h" />
-    <ClInclude Include="Render\DX12\PrimitiveMeshFactory.h" />
     <ClInclude Include="Render\DX12\RenderGraph.h" />
     <ClInclude Include="Render\DX12\RenderPass.h" />
     <ClInclude Include="Render\DX12\RenderScene.h" />
@@ -153,7 +152,6 @@
     <ClCompile Include="Render\DX12\MipTask.cpp" />
     <ClCompile Include="Render\DX12\PrepareGraphBuilder.cpp" />
     <ClCompile Include="Render\DX12\PresentGraphBuilder.cpp" />
-    <ClCompile Include="Render\DX12\PrimitiveMeshFactory.cpp" />
     <ClCompile Include="Render\DX12\RenderGraph.cpp" />
     <ClCompile Include="Render\DX12\RenderScene.cpp" />
     <ClCompile Include="Render\DX12\RenderSortKey.cpp" />

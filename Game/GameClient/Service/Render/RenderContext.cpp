@@ -4,9 +4,12 @@
 #include "Repository/Texture/TextureRepository.h"
 #include "Repository/Mesh/MeshRepository.h"
 #include "Repository/Shader/ShaderRepository.h"
+#include "Service/Asset/Assets/MeshAsset.h"
 #include "Desc/MeshMaterialDesc.h"
 #include "Desc/UIMaterialDesc.h"
 #include "IRenderBackend.h"
+
+namespace cm = Core::Math;
 
 RenderContext::~RenderContext() { m_backend->WaitIdle(); } //리소스를 RenderService가 들고 있기 때문에 gpu의 활동을 중지 시키고 리소스 삭제->backend 순으로 된다.
 RenderContext::RenderContext(IRenderBackend* backend) :
@@ -16,6 +19,12 @@ RenderContext::RenderContext(IRenderBackend* backend) :
 	m_matRepository{ make_unique<MaterialRepository>(m_backend->GetMaterialSystem()) },
 	m_shaderRepository{ make_unique<ShaderRepository>(m_backend->GetShaderSystem()) }
 {}
+
+bool RenderContext::Initialize()
+{
+	m_uiQuad = m_meshRepository->GetOrCreate("builtin/ui_quad", CreateUIQuad());
+	return true;
+}
 
 MeshHandle RenderContext::LoadMesh(const filesystem::path& path, function<shared_ptr<MeshAsset>(const filesystem::path&)> loader)
 {
@@ -77,12 +86,82 @@ MaterialHandle RenderContext::LoadMaterial(
 	return LoadMaterial(runtimeKey, texAsset, std::move(desc));
 }
 
+bool RenderContext::ReleaseMaterial(MaterialHandle mh)
+{
+	return m_matRepository->Release(mh);
+}
+
 bool RenderContext::RegisterShader(
 	const std::filesystem::path& path, 
 	ShaderID shaderID, 
 	std::function<shared_ptr<ShaderAsset>(const filesystem::path&)> loader)
 {
 	return m_shaderRepository->RegisterShader(path, shaderID, loader);
+}
+
+void RenderContext::DrawMesh(MeshHandle hM, MaterialHandle hMtl, const cm::Matrix& world)
+{
+	auto mesh = m_meshRepository->Get(hM);
+	if (!mesh || mesh->state != LoadState::Ready)
+		return;
+
+	std::shared_ptr<IMaterialResource> matRes;
+	if (hMtl)
+	{
+		auto material = m_matRepository->Get(hMtl);
+		if (!material || material->state != LoadState::Ready)
+			return;
+
+		matRes = material->matRes;
+	}
+	else
+		matRes = nullptr;
+
+	m_backend->DrawMesh(mesh->meshRes, matRes, world);
+}
+
+void RenderContext::DrawUI(MaterialHandle mh, const Rect& dest, const Rect* source)
+{
+	auto mesh = m_meshRepository->Get(m_uiQuad);
+	if (!mesh || mesh->state != LoadState::Ready)
+		return;
+
+	std::shared_ptr<IMaterialResource> matRes;
+	if (mh)
+	{
+		auto material = m_matRepository->Get(mh);
+		if (!material || material->state != LoadState::Ready)
+			return;
+
+		matRes = material->matRes;
+	}
+	else
+		matRes = nullptr;
+
+	float width = static_cast<float>(dest.width);
+	float height = static_cast<float>(dest.height);
+
+	float centerX = dest.x + width * 0.5f;
+	float centerY = dest.y + height * 0.5f;
+
+	cm::Matrix translation = cm::Matrix::Translation(centerX, centerY, 0.0f);
+	cm::Matrix scale = cm::Matrix::Scale(width, height, 1.0f);
+	cm::Matrix world = scale * translation;
+	
+	if (source) // 텍스쳐의 부분을 가지고 올때 사용함. 
+	{
+		// float u0 = source->x / textureWidth;
+		// float v0 = source->y / textureHeight;
+		// float u1 = (source->x + source->w) / textureWidth;
+		// float v1 = (source->y + source->h) / textureHeight;
+		//
+		// Vector2 uvScale  = { u1 - u0, v1 - v0 };
+		// Vector2 uvOffset = { u0, v0 };
+		//
+		// matRes->SetUVTransform(uvScale, uvOffset);
+	}
+
+	m_backend->DrawUI(mesh->meshRes, matRes, world);
 }
 
 void RenderContext::Update()
@@ -99,17 +178,27 @@ void RenderContext::ReleaseAll()
 	m_matRepository->ReleaseAll();
 }
 
-const TextureEntry* RenderContext::Get(TextureHandle handle) const noexcept
-{ 
-	return m_texRepository->Get(handle); 
-}
-
-const MeshEntry* RenderContext::Get(MeshHandle handle) const noexcept
+std::shared_ptr<MeshAsset> RenderContext::CreateUIQuad()
 {
-	return m_meshRepository->Get(handle);
-}
+	auto asset = std::make_shared<MeshAsset>();
+	asset->format = VertexFormat::UI;
 
-const MaterialEntry* RenderContext::Get(MaterialHandle handle) const noexcept
-{
-	return m_matRepository->Get(handle);
+	std::vector<UIVertex> vertices =
+	{
+		{ -0.5f, -0.5f, 0, 1,1,1,1, 0,1 },
+		{ -0.5f,  0.5f, 0, 1,1,1,1, 0,0 },
+		{  0.5f, -0.5f, 0, 1,1,1,1, 1,1 },
+		{  0.5f,  0.5f, 0, 1,1,1,1, 1,0 },
+	};
+
+	std::vector<uint32_t> indices =
+	{
+		0,1,2,
+		2,1,3
+	};
+
+	asset->SetVertices(vertices);
+	asset->indices = std::move(indices);
+
+	return asset;
 }

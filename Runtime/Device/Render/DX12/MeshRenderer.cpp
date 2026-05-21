@@ -46,8 +46,6 @@ MeshRenderer::MeshRenderer(ID3D12Device* device, ShaderSystem* shaderSystem) :
 
 bool MeshRenderer::Initialize(const Size& size)
 {
-    m_screenSize = size;
-
     CreateRootSignature();
     CreateDefaultPSOs();
     CreateConstantBuffers();
@@ -112,18 +110,11 @@ void MeshRenderer::CreatePipeline(const PipelineState& pipelineState)
     pso.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS;
 
     pso.SampleMask = UINT_MAX;
-
     switch (pipelineState.topologyType)
     {
-    case PrimitiveTopologyType::Triangle:
-        pso.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-        break;
-
-    case PrimitiveTopologyType::Line:
-        pso.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE;
-        break;
+    case PrimitiveTopologyType::Triangle: pso.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE; break;
+    case PrimitiveTopologyType::Line: pso.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE; break;
     }
-
     pso.NumRenderTargets = 1;
     pso.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
 
@@ -235,8 +226,7 @@ void MeshRenderer::CreateConstantBuffers()
 
 void MeshRenderer::BindCommonState(CommandList& cmd)
 {
-    cmd->SetGraphicsRootSignature(
-        m_rootSignature.Get());
+    cmd->SetGraphicsRootSignature(m_rootSignature.Get());
 
     ID3D12DescriptorHeap* heaps[] = { m_srvHeap };
     cmd->SetDescriptorHeaps(1, heaps);
@@ -347,9 +337,4 @@ D3D12_GPU_VIRTUAL_ADDRESS MeshRenderer::UpdateMaterialCB(const MaterialSurface& 
 
     ++m_materialCBIndex;
     return gpuAddress;
-}
-
-void MeshRenderer::Resize(const Size& size)
-{
-    m_screenSize = size;
 }

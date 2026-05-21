@@ -1,25 +1,6 @@
 #include "pch.h"
 #include "RenderService.h"
 #include "IRenderBackend.h"
-#include "Resource/ITextureResource.h"
-#include "Repository/Mesh/MeshRepository.h"
-#include "Repository/Texture/TextureRepository.h"
-#include "Repository/Material/MaterialRepository.h"
-#include "Core/Foundation/Geometry2D.h"
-
-struct DrawCommand
-{
-	ITextureResource* texRes{ nullptr };
-
-	Rect dest{};
-	Rect source{};
-	bool hasSource{ false };
-};
-
-struct DrawMeshCommand
-{
-	IMeshResource* meshRes{ nullptr };
-};
 
 RenderService::~RenderService() = default;
 RenderService::RenderService(unique_ptr<IRenderBackend> backend) :
@@ -30,7 +11,14 @@ RenderService::RenderService(unique_ptr<IRenderBackend> backend) :
 unique_ptr<RenderService> RenderService::Create(unique_ptr<IRenderBackend> backend) noexcept
 {
 	unique_ptr<RenderService> service(new RenderService(move(backend)));
+	if (!service->Initialize()) return nullptr;
+
 	return service;
+}
+
+bool RenderService::Initialize()
+{
+	return m_context->Initialize();
 }
 
 void RenderService::SetCamera(const CameraData& camera)
@@ -41,36 +29,6 @@ void RenderService::SetCamera(const CameraData& camera)
 void RenderService::SetDirectionalLight(const DirectionalLightData& light)
 {
 	m_backend->SetDirectionalLight(light);
-}
-
-void RenderService::DrawUI(TextureHandle th, const Rect& dest, const Rect* source)
-{
-	auto entry = m_context->Get(th);
-	if (!entry || entry->state != LoadState::Ready)
-		return; //일단 ready가 안됐으면 리턴. 가짜 텍스춰를 보여주기도 한다.
-
-	m_backend->DrawUI(entry->texRes, dest, source);
-}
-
-void RenderService::DrawMesh(MeshHandle hM, MaterialHandle hMtl, const Core::Math::Matrix& world)
-{
-	auto mesh = m_context->Get(hM);
-	if (!mesh || mesh->state != LoadState::Ready)
-		return;
-
-	std::shared_ptr<IMaterialResource> matRes;
-	if (hMtl)
-	{
-		auto material = m_context->Get(hMtl);
-		if (!material || material->state != LoadState::Ready)
-			return;
-
-		matRes = material->matRes;
-	}
-	else 
-		matRes = nullptr;
-
-	m_backend->DrawMesh(mesh->meshRes, matRes, world);
 }
 
 void RenderService::Update()

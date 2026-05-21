@@ -253,9 +253,6 @@
     <ClInclude Include="Render\DX12\PresentGraphBuilder.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\PrimitiveMeshFactory.h">
-      <Filter>Render\DX12</Filter>
-    </ClInclude>
     <ClInclude Include="Render\DX12\UIGraphBuilder.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
@@ -443,9 +440,6 @@
       <Filter>Render\DX12</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\PresentGraphBuilder.cpp">
-      <Filter>Render\DX12</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\DX12\PrimitiveMeshFactory.cpp">
       <Filter>Render\DX12</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\UIGraphBuilder.cpp">

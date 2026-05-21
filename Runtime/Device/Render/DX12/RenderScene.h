@@ -15,21 +15,14 @@ struct DrawItem
     uint64_t sortKey{ 0 };
 };
 
-struct UIDrawItem
-{
-    std::shared_ptr<ITextureResource> texture;
-    Rect dest;
-    Rect src;
-};
-
 class RenderScene
 {
 public:
     void AddOpaque(const DrawItem& item);
     const std::vector<DrawItem>& GetOpaqueDraws() { return m_opaqueDraws; }
     
-    void AddUI(const UIDrawItem& item);
-    const std::vector<UIDrawItem>& GetUIDraws() { return m_uiDraws; }
+    void AddUI(const DrawItem& item);
+    const std::vector<DrawItem>& GetUIDraws() { return m_uiDraws; }
 
     void SortDraws();
     void Clear();
@@ -39,5 +32,5 @@ private:
     void UIClear();
 
     std::vector<DrawItem> m_opaqueDraws;
-    std::vector<UIDrawItem> m_uiDraws;
+    std::vector<DrawItem> m_uiDraws;
 };

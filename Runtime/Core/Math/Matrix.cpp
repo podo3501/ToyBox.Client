@@ -102,9 +102,29 @@ namespace Core::Math
         return r;
     }
 
-    Matrix Matrix::TRS(const Matrix& t, const Matrix& r, const Matrix& s)
+    Matrix Matrix::TRS(const Matrix& t, const Matrix& r, const Matrix& s) //행렬 곱은 오른쪽부터 적용 그래서 결과적으로 s r t로 적용됨
     {
         return t * r * s;
+    }
+
+    Matrix Matrix::OrthographicOffCenter(float left, float right, float bottom, float top, float nearZ, float farZ)
+    {
+        Matrix r;
+        r.SetIdentity();
+
+        float rl = right - left;
+        float tb = top - bottom;
+        float fn = farZ - nearZ;
+
+        r.m[0][0] = 2.0f / rl;
+        r.m[1][1] = 2.0f / tb;
+        r.m[2][2] = 1.0f / fn;
+
+        r.m[3][0] = -(left + right) / rl;
+        r.m[3][1] = -(top + bottom) / tb;
+        r.m[3][2] = -nearZ / fn;
+
+        return r;
     }
 
     Matrix Matrix::operator*(const Matrix& rhs) const

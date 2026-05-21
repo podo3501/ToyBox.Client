@@ -4,7 +4,8 @@
 #include "RenderGraph.h"
 #include "RenderScene.h"
 #include "QuadRenderer.h"
-#include "TextureResource.h"
+#include "MeshResource.h"
+#include "UIMaterialResource.h"
 
 UIGraphBuilder::~UIGraphBuilder() = default;
 UIGraphBuilder::UIGraphBuilder(QuadRenderer* quadRenderer, RenderScene* scene, RGHandle hBb) :
@@ -19,14 +20,23 @@ void UIGraphBuilder::Build(RenderGraph& graph)
     ui.dependsOn.push_back("Opaque");
     ui.writes.push_back({ m_hBb, RGAccess::RTV });
     ui.gpuExecute = [this](CommandList& cmd, TaskContext& ctx) {
-        m_quadRenderer->BindDescriptorHeap(cmd);
-        m_quadRenderer->BindPipeline(cmd);
+        m_quadRenderer->BindCommonState(cmd);
+        m_quadRenderer->PrepareFrame();
 
+        std::optional<PipelineState> currentPSO;
         for (auto& item : m_scene->GetUIDraws())
         {
-            auto texRes = static_cast<TextureResource*>(item.texture.get());
-            m_quadRenderer->BindTexture(cmd, texRes->GetSrv());
-            m_quadRenderer->Draw(cmd, item.dest);
+            auto mesh = static_cast<MeshResource*>(item.mesh.get());
+            auto material = static_cast<UIMaterialResource*>(item.material.get());
+
+            const PipelineState& nextPSO = material->GetPipelineState();
+            if (!currentPSO || *currentPSO != nextPSO)
+            {
+                m_quadRenderer->BindPipeline(cmd, nextPSO);
+                currentPSO = nextPSO;
+            }
+
+            m_quadRenderer->Draw(cmd, *mesh, *material, item.world);
         }
         };
 }

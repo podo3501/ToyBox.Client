@@ -4,6 +4,8 @@
 #include "Handle/MeshHandle.h"
 #include "Desc/MaterialDesc.h"
 #include "Desc/TextureDesc.h"
+#include "Core/Math/Matrix.h"
+#include "Core/Foundation/Geometry2D.h"
 
 struct TextureEntry;
 struct MeshEntry;
@@ -23,9 +25,16 @@ public:
 	~RenderContext();
 	RenderContext() = delete;
 	explicit RenderContext(IRenderBackend* backend);
+	bool Initialize();
 
-	MeshHandle LoadMesh(const filesystem::path& path, function<shared_ptr<MeshAsset>(const filesystem::path&)> loader);
-	MeshHandle LoadMesh(const std::string& runtimeKey, shared_ptr<MeshAsset> meshAsset);
+	MeshHandle LoadMesh(
+		const filesystem::path& path, 
+		function<shared_ptr<MeshAsset>(const filesystem::path&)> loader);
+
+	MeshHandle LoadMesh(
+		const std::string& runtimeKey, 
+		shared_ptr<MeshAsset> meshAsset);
+
 	bool ReleaseMesh(MeshHandle mh);
 
 	TextureHandle LoadTexture(
@@ -50,21 +59,34 @@ public:
 		MaterialType matType,
 		shared_ptr<TextureAsset> albedoAsset = nullptr);
 
+	bool ReleaseMaterial(MaterialHandle mh);
+
 	bool RegisterShader(
 		const std::filesystem::path& path, 
 		ShaderID shaderID,
 		std::function<shared_ptr<ShaderAsset>(const filesystem::path&)> loader);
 
+	void DrawMesh(
+		MeshHandle hM,
+		MaterialHandle hMtl,
+		const Core::Math::Matrix& world);
+
+	void DrawUI(
+		MaterialHandle mh,
+		const Rect& dest,
+		const Rect* source = nullptr);
+
 	void Update();
 	void ReleaseAll();
-	const TextureEntry* Get(TextureHandle handle) const noexcept;
-	const MeshEntry* Get(MeshHandle handle) const noexcept;
-	const MaterialEntry* Get(MaterialHandle handle) const noexcept;
 
 private:
+	std::shared_ptr<MeshAsset> CreateUIQuad();
+
 	IRenderBackend* m_backend{ nullptr };
 	unique_ptr<MeshRepository> m_meshRepository;
 	unique_ptr<TextureRepository> m_texRepository;
 	unique_ptr<MaterialRepository> m_matRepository;
 	unique_ptr<ShaderRepository> m_shaderRepository;
+
+	MeshHandle m_uiQuad;
 };

@@ -14,7 +14,7 @@ void RenderScene::AddOpaque(const DrawItem& item)
     m_opaqueDraws.push_back(newItem);
 }
 
-void RenderScene::AddUI(const UIDrawItem& item)
+void RenderScene::AddUI(const DrawItem& item)
 {
     m_uiDraws.push_back(item);
 }

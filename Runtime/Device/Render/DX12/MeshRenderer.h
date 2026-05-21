@@ -3,7 +3,6 @@
 #include <wrl.h>
 #include "Core/Foundation/Geometry2D.h"
 #include "Core/Math/Matrix.h"
-#include "Core/Utils/Hash.h"
 #include "GameClient/Service/Render/Desc/RenderState.h"
 
 struct ObjectCB;
@@ -49,8 +48,6 @@ private:
 
     ID3D12Device* m_device{ nullptr };
     ShaderSystem* m_shaderSystem{ nullptr };
-
-    Size m_screenSize{};
 
     ComPtr<ID3D12RootSignature> m_rootSignature;
     ID3D12DescriptorHeap* m_srvHeap{ nullptr };

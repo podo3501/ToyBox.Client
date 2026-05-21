@@ -1,7 +1,7 @@
-cbuffer TransformBuffer : register(b0)
+cbuffer UIFrameCB : register(b1)
 {
-    float2 scale;
-    float2 offset;
+    float4x4 world;
+    float4x4 projection;
 };
 
 struct UIVertex
@@ -31,12 +31,12 @@ PSInput VSMain(uint vID : SV_VertexID)
     uint vertexIndex = IndexBuffer[vID];
     UIVertex input = VertexBuffer[vertexIndex];
 
-    float2 pos = input.pos.xy;
+    float4 localPos = float4(input.pos, 1.0f);
+    float4 worldPos = mul(localPos, world);
+    float4 clipPos = mul(worldPos, projection);
 
-    pos *= scale;
-    pos += offset;
-
-    output.pos = float4(pos, 0.0f, 1.0f);
+    output.pos = clipPos;
+    //output.pos = worldPos;
     output.uv = input.uv;
     output.color = input.color;
 

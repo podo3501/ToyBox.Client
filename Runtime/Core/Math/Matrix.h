@@ -2,7 +2,7 @@
 
 namespace Core::Math
 {
-    class Matrix
+    class Matrix //row-major 
     {
     public:
         float m[4][4];
@@ -22,6 +22,7 @@ namespace Core::Math
         static Matrix RotationZ(float rad);
 
         static Matrix TRS(const Matrix& t, const Matrix& r, const Matrix& s);
+        static Matrix OrthographicOffCenter(float left, float right, float bottom, float top, float nearZ, float farZ);
 
         Matrix operator*(const Matrix& rhs) const;
         Matrix& operator*=(const Matrix& rhs);
