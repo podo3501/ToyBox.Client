@@ -1,13 +1,9 @@
 #include "pch.h"
 #include "ShaderSystem.h"
+#include "GameClient/Service/Asset/Assets/ShaderAsset.h"
 
 ShaderSystem::~ShaderSystem() = default;
 ShaderSystem::ShaderSystem() = default;
-
-//SURFACE_DEBUG
-//SPECULAR_DEBUG
-//DIFFUSE_DEBUG
-//D3D_SHADER_MACRO defines[] = { "", "1", nullptr, nullptr };
 
 static bool CompileStage(
     const std::string& source, 
@@ -65,22 +61,29 @@ static ComPtr<ID3DBlob> CreateBlobFromBuffer(const Core::ByteBuffer& buffer)
     return blob;
 }
 
-bool ShaderSystem::Register(ShaderID shaderID, std::shared_ptr<ShaderAsset> asset)
+bool ShaderSystem::Initialize(const std::vector<ShaderRegisterDesc>& shaders)
 {
-    if (!asset)
-        return false;
+    for (const ShaderRegisterDesc& desc : shaders)
+    {
+        if (!desc.asset)
+            return false;
 
-    auto [srcIt, inserted] = m_sources.emplace(shaderID, std::move(asset));
-    if (!inserted)
-        return true;
+        ShaderData shaderData;
+        shaderData.asset = desc.asset;
+        shaderData.stages = desc.stages;
 
-    ShaderVariant baseVariant{ shaderID, ShaderDefine::None };
+        auto [shaderIt, inserted] = m_shaders.emplace(desc.shaderID, std::move(shaderData));
+        if (!inserted)
+            continue;
 
-    ShaderEntry entry;
-    if (!CompileVariant(baseVariant, *srcIt->second, entry))
-        return false;
+        ShaderVariant baseVariant{ desc.shaderID };
+        ShaderEntry entry;
+        
+        if (!CompileVariant(baseVariant, *shaderIt->second.asset, shaderIt->second.stages, entry))
+            return false;
 
-    m_variants.emplace(baseVariant, std::move(entry));
+        m_variants.emplace(baseVariant, std::move(entry));
+    }
 
     return true;
 }
@@ -91,12 +94,13 @@ const ShaderEntry* ShaderSystem::Find(const ShaderVariant& variant) const
     if (it != m_variants.end())
         return &it->second;
 
-    auto srcIt = m_sources.find(variant.shaderID);
-    if (srcIt == m_sources.end())
+    auto shaderIt = m_shaders.find(variant.shaderID);
+    if (shaderIt == m_shaders.end())
         return nullptr; // shader가 등록이 안돼 있다.
 
+    const ShaderData& shaderData = shaderIt->second;
     ShaderEntry entry;
-    if (!CompileVariant(variant, *srcIt->second, entry))
+    if (!CompileVariant(variant, *shaderData.asset, shaderData.stages, entry))
         return nullptr;
 
     auto [iter, inserted] = m_variants.emplace(variant, std::move(entry)); //lazy cache 이기 때문에 mutable 처리.
@@ -104,38 +108,46 @@ const ShaderEntry* ShaderSystem::Find(const ShaderVariant& variant) const
     return &iter->second;
 }
 
-static bool HasFlag(ShaderDefine value, ShaderDefine flag)
+bool ShaderSystem::CompileVariant(
+    const ShaderVariant& variant,
+    const ShaderAsset& asset,
+    const std::vector<ShaderStageDesc>& stages,
+    ShaderEntry& outEntry) const
 {
-    return
-        (static_cast<uint32_t>(value) &
-            static_cast<uint32_t>(flag)) != 0;
-}
-
-bool ShaderSystem::CompileVariant(const ShaderVariant& variant, const ShaderAsset& asset, ShaderEntry& outEntry) const
-{
-    // HLSL source compile
-    if (!asset.hlslSource.empty())
-    {
-        D3D_SHADER_MACRO defines[8]{};
-
-        int idx = 0;
-
-        if (HasFlag(variant.defines, ShaderDefine::DiffuseDebug)) defines[idx++] = { "DIFFUSE_DEBUG", "1" };
-        if (HasFlag(variant.defines, ShaderDefine::SpecularDebug)) defines[idx++] = { "SPECULAR_DEBUG", "1" };
-        if (HasFlag(variant.defines, ShaderDefine::SurfaceDebug)) defines[idx++] = { "SURFACE_DEBUG", "1" };
-
-        defines[idx] = { nullptr, nullptr };
-
-        CompileStage(asset.hlslSource, defines, "VSMain", "vs_5_0", outEntry.vs);
-        CompileStage(asset.hlslSource, defines, "PSMain", "ps_5_0", outEntry.ps);
-        //CompileStage(asset.hlslSource, defines, "CSMain", "cs_5_0", outEntry.cs); //아직 cs는 없다. 디버그창에 메세지가 떠서 일단은 주석처리
-    }
-    else
+    // precompiled shader
+    if (asset.hlslSource.empty())
     {
         outEntry.vs = CreateBlobFromBuffer(asset.vs);
         outEntry.ps = CreateBlobFromBuffer(asset.ps);
-        //outEntry.cs = CreateBlobFromBuffer(asset.cs); //아직 cs는 없다. 디버그창에 메세지가 떠서 일단은 주석처리
+        outEntry.cs = CreateBlobFromBuffer(asset.cs);
+
+        return outEntry.vs || outEntry.ps || outEntry.cs;
     }
 
-    return outEntry.vs && outEntry.ps;
+    bool compiledAny = false;
+    for (const ShaderStageDesc& stage : stages)
+    {
+        D3D_SHADER_MACRO defines[32]{};
+
+        int idx = 0;
+        for (const ShaderMacroDesc& macro : variant.runtimeMacros)
+            defines[idx++] = { macro.name.c_str(), macro.value.c_str() };
+        defines[idx] = { nullptr, nullptr };
+
+        ComPtr<ID3DBlob>* targetBlob = nullptr;
+        switch (stage.stage)
+        {
+        case ShaderStage::Vertex: targetBlob = &outEntry.vs; break;
+        case ShaderStage::Pixel: targetBlob = &outEntry.ps; break;
+        case ShaderStage::Compute: targetBlob = &outEntry.cs; break;
+        default: return false;
+        }
+
+        if (!CompileStage(asset.hlslSource, defines, stage.entry.c_str(), stage.target.c_str(), *targetBlob))
+            return false;
+
+        compiledAny = true;
+    }
+
+    return compiledAny;
 }

@@ -17,7 +17,7 @@ class MeshSystem;
 class MaterialSystem;
 class ShaderSystem;
 class MeshRenderer;
-class QuadRenderer;
+class UIRenderer;
 class RenderScene;
 
 class RenderBackend : public IRenderBackend
@@ -25,7 +25,7 @@ class RenderBackend : public IRenderBackend
 public:
 	~RenderBackend();
 	RenderBackend();
-	virtual bool Initialize(HWND hwnd, const Size& wndSize, const RenderConfig& renderConfig) override;
+	virtual bool Initialize(HWND hwnd, const Size& wndSize, const RenderConfig& renderConfig, const std::vector<ShaderRegisterDesc>& shaders) override;
 	virtual void SetDirectionalLight(const DirectionalLightData& light) override;
 	virtual void SetCamera(const CameraData& camera) override;
 	virtual void DrawMesh(std::shared_ptr<IMeshResource> meshRes, std::shared_ptr<IMaterialResource> matRes,
@@ -39,7 +39,6 @@ public:
 	virtual ITextureSystem* GetTextureSystem() override;
 	virtual IMeshSystem* GetMeshSystem() override;
 	virtual IMaterialSystem* GetMaterialSystem() override;
-	virtual IShaderSystem* GetShaderSystem() override;
 
 private:
 	bool BeginFrame();
@@ -63,7 +62,7 @@ private:
 	unique_ptr<RenderScene> m_scene;
 
 	unique_ptr<MeshRenderer> m_meshRenderer;
-	unique_ptr<QuadRenderer> m_quadRenderer;
+	unique_ptr<UIRenderer> m_uiRenderer;
 
 	CommandList* m_cmd{ nullptr }; //direct command юс.
 

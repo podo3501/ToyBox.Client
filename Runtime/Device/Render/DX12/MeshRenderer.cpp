@@ -15,13 +15,13 @@ namespace cm = Core::Math;
 
 struct ObjectCB
 {
-    float world[16];
+    DirectX::XMFLOAT4X4 world;
 };
 
 struct FrameCB
 {
-    float view[16];
-    float proj[16];
+    DirectX::XMFLOAT4X4 view;
+    DirectX::XMFLOAT4X4 proj;
 
     float lightDirection[3];
     float lightIntensity;
@@ -46,6 +46,8 @@ MeshRenderer::MeshRenderer(ID3D12Device* device, ShaderSystem* shaderSystem) :
 
 bool MeshRenderer::Initialize(const Size& size)
 {
+    m_pipelineCache.Initialize(m_device, m_shaderSystem);
+
     CreateRootSignature();
     CreateDefaultPSOs();
     CreateConstantBuffers();
@@ -55,78 +57,35 @@ bool MeshRenderer::Initialize(const Size& size)
 
 void MeshRenderer::CreateDefaultPSOs()
 {
-    CreatePipeline(PipelineLibrary::Get(ShaderID::Mesh, RasterPreset::Default));
-    CreatePipeline(PipelineLibrary::Get(ShaderID::Mesh, RasterPreset::NoCull));
-    CreatePipeline(PipelineLibrary::Get(ShaderID::Mesh, RasterPreset::Wireframe));
-    CreatePipeline(PipelineLibrary::Get(ShaderID::Mesh, RasterPreset::WireframeNoCull));
-    CreatePipeline(PipelineLibrary::Get(ShaderID::Mesh, RasterPreset::Default, PrimitiveTopologyType::Line));
+    CreatePSO(PipelineLibrary::Get(ShaderID::Mesh, RasterPreset::Default));
+    CreatePSO(PipelineLibrary::Get(ShaderID::Mesh, RasterPreset::NoCull));
+    CreatePSO(PipelineLibrary::Get(ShaderID::Mesh, RasterPreset::Wireframe));
+    CreatePSO(PipelineLibrary::Get(ShaderID::Mesh, RasterPreset::WireframeNoCull));
+    CreatePSO(PipelineLibrary::Get(ShaderID::Mesh, RasterPreset::Default, PrimitiveTopologyType::Line));
+}
+
+ID3D12PipelineState* MeshRenderer::CreatePSO(const PipelineState& pipelineState)
+{
+    return m_pipelineCache.GetOrCreate(
+        pipelineState,
+        m_rootSignature.Get(),
+        [&](D3D12_GRAPHICS_PIPELINE_STATE_DESC& pso)
+        {
+            pso.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
+            pso.DepthStencilState.DepthEnable = TRUE;
+            pso.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
+            pso.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS;
+            pso.DSVFormat = DXGI_FORMAT_D32_FLOAT;
+        });
 }
 
 ID3D12PipelineState* MeshRenderer::GetPipeline(const PipelineState& pipelineState)
 {
-    auto it = m_psoCache.find(pipelineState);
-    if (it != m_psoCache.end())
-        return it->second.Get();
+    auto* pipeline = m_pipelineCache.Find(pipelineState);
+    if (pipeline)
+        return pipeline;
 
-    CreatePipeline(pipelineState);
-
-    return m_psoCache[pipelineState].Get();
-}
-
-void MeshRenderer::CreatePipeline(const PipelineState& pipelineState)
-{
-    const ShaderEntry* shaderEntry = m_shaderSystem->Find(pipelineState.shaderVariant);
-    if (!shaderEntry)
-        return;
-
-    D3D12_GRAPHICS_PIPELINE_STATE_DESC pso{};
-    pso.InputLayout = { nullptr, 0 };
-    pso.pRootSignature = m_rootSignature.Get();
-
-    pso.VS = { shaderEntry->vs->GetBufferPointer(), shaderEntry->vs->GetBufferSize() };
-    pso.PS = { shaderEntry->ps->GetBufferPointer(), shaderEntry->ps->GetBufferSize() };
-
-    //pso.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
-    CD3DX12_RASTERIZER_DESC raster(D3D12_DEFAULT);
-
-    raster.FillMode =
-        pipelineState.rasterState.fillMode == FillMode::Wireframe
-        ? D3D12_FILL_MODE_WIREFRAME
-        : D3D12_FILL_MODE_SOLID;
-
-    switch (pipelineState.rasterState.cullMode)
-    {
-    case CullMode::None: raster.CullMode = D3D12_CULL_MODE_NONE; break;
-    case CullMode::Front: raster.CullMode = D3D12_CULL_MODE_FRONT; break;
-    case CullMode::Back: raster.CullMode = D3D12_CULL_MODE_BACK; break;
-    }
-
-    pso.RasterizerState = raster;
-    pso.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
-
-    pso.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
-    pso.DepthStencilState.DepthEnable = TRUE;
-    pso.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
-    pso.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS;
-
-    pso.SampleMask = UINT_MAX;
-    switch (pipelineState.topologyType)
-    {
-    case PrimitiveTopologyType::Triangle: pso.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE; break;
-    case PrimitiveTopologyType::Line: pso.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE; break;
-    }
-    pso.NumRenderTargets = 1;
-    pso.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-
-    //pso.DSVFormat = DXGI_FORMAT_UNKNOWN;
-    pso.DSVFormat = DXGI_FORMAT_D32_FLOAT;
-
-    pso.SampleDesc.Count = 1;
-
-    ComPtr<ID3D12PipelineState> pipeline;
-    m_device->CreateGraphicsPipelineState(&pso, IID_PPV_ARGS(&pipeline));
-
-    m_psoCache[pipelineState] = pipeline;
+    return CreatePSO(pipelineState);
 }
 
 void MeshRenderer::CreateRootSignature()
@@ -178,50 +137,13 @@ void MeshRenderer::CreateRootSignature()
 
 void MeshRenderer::CreateConstantBuffers()
 {
-    CD3DX12_HEAP_PROPERTIES heap(D3D12_HEAP_TYPE_UPLOAD);
-    auto cbDesc = CD3DX12_RESOURCE_DESC::Buffer(256);
+    constexpr UINT objectBufferSize = kMaxObjectCount * kCBSize;
+    constexpr UINT materialBufferSize = kMaxObjectCount * kCBSize;
+    constexpr UINT frameBufferSize = kCBSize;
 
-    // Object CB
-    for (uint32_t i = 0; i < kMaxObjectCount; ++i)
-    {
-        m_device->CreateCommittedResource(
-            &heap,
-            D3D12_HEAP_FLAG_NONE,
-            &cbDesc,
-            D3D12_RESOURCE_STATE_GENERIC_READ,
-            nullptr,
-            IID_PPV_ARGS(&m_objectCBs[i])
-        );
-
-        m_objectCBs[i]->Map(0, nullptr, reinterpret_cast<void**>(&m_objectDatas[i]));
-    }
-
-    // Frame CB
-    m_device->CreateCommittedResource(
-        &heap,
-        D3D12_HEAP_FLAG_NONE,
-        &cbDesc,
-        D3D12_RESOURCE_STATE_GENERIC_READ,
-        nullptr,
-        IID_PPV_ARGS(&m_frameCB)
-    );
-
-    m_frameCB->Map(0, nullptr, (void**)&m_frameData);
-
-    // Material CB
-    for (uint32_t i = 0; i < kMaxObjectCount; ++i)
-    {
-        m_device->CreateCommittedResource(
-            &heap,
-            D3D12_HEAP_FLAG_NONE,
-            &cbDesc,
-            D3D12_RESOURCE_STATE_GENERIC_READ,
-            nullptr,
-            IID_PPV_ARGS(&m_materialCBs[i])
-        );
-
-        m_materialCBs[i]->Map(0, nullptr, reinterpret_cast<void**>(&m_materialDatas[i]));
-    }
+    m_objectCBAllocator.Initialize(m_device, objectBufferSize);
+    m_materialCBAllocator.Initialize(m_device, materialBufferSize);
+    m_frameCBAllocator.Initialize(m_device, frameBufferSize);
 }
 
 void MeshRenderer::BindCommonState(CommandList& cmd)
@@ -240,21 +162,17 @@ void MeshRenderer::BindPipeline(CommandList& cmd, const PipelineState& pipelineS
 
 void MeshRenderer::PrepareFrame(const DirectionalLightData& light, const CameraData& camera)
 {
-    m_objectCBIndex = 0;
-    m_materialCBIndex = 0;
+    m_objectCBAllocator.Reset();
+    m_materialCBAllocator.Reset();
+    m_frameCBAllocator.Reset();
 
     FrameCB frame{};
     DirectX::XMMATRIX view = ToDXMatrix(camera.view);
     DirectX::XMMATRIX proj = ToDXMatrix(camera.proj);
 
     // GPU용으로 transpose해서 저장
-    XMStoreFloat4x4(
-        reinterpret_cast<DirectX::XMFLOAT4X4*>(frame.view),
-        DirectX::XMMatrixTranspose(view));
-
-    XMStoreFloat4x4(
-        reinterpret_cast<DirectX::XMFLOAT4X4*>(frame.proj),
-        DirectX::XMMatrixTranspose(proj));
+    XMStoreFloat4x4(&frame.view, DirectX::XMMatrixTranspose(view));
+    XMStoreFloat4x4(&frame.proj, DirectX::XMMatrixTranspose(proj));
 
     // Directional Light
     frame.lightDirection[0] = light.direction.x;
@@ -267,7 +185,7 @@ void MeshRenderer::PrepareFrame(const DirectionalLightData& light, const CameraD
 
     frame.lightIntensity = light.intensity;
 
-    *m_frameData = frame;
+    m_frameCBAddress = m_frameCBAllocator.AllocateConstant(frame);
 }
 
 void MeshRenderer::Draw(
@@ -285,7 +203,7 @@ void MeshRenderer::Draw(
     cmd->SetGraphicsRootDescriptorTable(1, textureSrv.GetGpuHandle());
 
     cmd->SetGraphicsRootConstantBufferView(2, objectCBAddress);
-    cmd->SetGraphicsRootConstantBufferView(3, m_frameCB->GetGPUVirtualAddress());
+    cmd->SetGraphicsRootConstantBufferView(3, m_frameCBAddress);
     cmd->SetGraphicsRootConstantBufferView(4, materialCBAddress);
 
     switch (m_pipelineState.topologyType)
@@ -307,34 +225,20 @@ void MeshRenderer::Draw(
 
 D3D12_GPU_VIRTUAL_ADDRESS MeshRenderer::UpdateObjectCB(const cm::Matrix& world)
 {
-    Assert(m_objectCBIndex < kMaxObjectCount);
-
     ObjectCB obj{};
 
     DirectX::XMMATRIX xmWorld = ToDXMatrix(world);
-    DirectX::XMStoreFloat4x4(
-        reinterpret_cast<DirectX::XMFLOAT4X4*>(obj.world),
-        DirectX::XMMatrixTranspose(xmWorld));
+    XMStoreFloat4x4(&obj.world, DirectX::XMMatrixTranspose(xmWorld));
 
-    *m_objectDatas[m_objectCBIndex] = obj;
-    auto gpuAddress = m_objectCBs[m_objectCBIndex]->GetGPUVirtualAddress();
-
-    ++m_objectCBIndex;
-    return gpuAddress;
+    return m_objectCBAllocator.AllocateConstant(obj);
 }
 
 D3D12_GPU_VIRTUAL_ADDRESS MeshRenderer::UpdateMaterialCB(const MaterialSurface& surface)
 {
-    Assert(m_materialCBIndex < kMaxObjectCount);
-
     MaterialCB cb{};
 
     cb.roughness = surface.roughness;
     cb.metallic = surface.metallic;
 
-    *m_materialDatas[m_materialCBIndex] = cb;
-    auto gpuAddress = m_materialCBs[m_materialCBIndex]->GetGPUVirtualAddress();
-
-    ++m_materialCBIndex;
-    return gpuAddress;
+    return m_materialCBAllocator.AllocateConstant(cb);
 }

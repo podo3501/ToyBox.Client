@@ -13,10 +13,10 @@ TextureSystem::TextureSystem(ID3D12Device* device, DescriptorAllocator* srvAlloc
         m_mipGenerator.get(), m_descriptorFactory.get()) }
 {}
 
-bool TextureSystem::Initialize()
+bool TextureSystem::Initialize(ShaderSystem* shaderSystem)
 {
     ReturnIfFalse(CreateBuiltinTextures());
-    ReturnIfFalse(m_mipGenerator->Initialize());
+    ReturnIfFalse(m_mipGenerator->Initialize(shaderSystem));
 
     return true;
 }

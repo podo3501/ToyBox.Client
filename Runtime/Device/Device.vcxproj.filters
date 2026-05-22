@@ -112,7 +112,7 @@
     <ClInclude Include="Render\DX12\CommandScheduler.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\QuadRenderer.h">
+    <ClInclude Include="Render\DX12\UIRenderer.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
     <ClInclude Include="Render\DX12\ResourceLoader.h">
@@ -277,6 +277,12 @@
     <ClInclude Include="Render\DX12\UIMaterialResource.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
+    <ClInclude Include="Render\DX12\FrameUploadAllocator.h">
+      <Filter>Render\DX12</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\PipelineCache.h">
+      <Filter>Render\DX12</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -331,7 +337,7 @@
     <ClCompile Include="Render\DX12\CommandScheduler.cpp">
       <Filter>Render\DX12</Filter>
     </ClCompile>
-    <ClCompile Include="Render\DX12\QuadRenderer.cpp">
+    <ClCompile Include="Render\DX12\UIRenderer.cpp">
       <Filter>Render\DX12</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\ResourceLoader.cpp">
@@ -464,6 +470,12 @@
       <Filter>Render\DX12</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\UIMaterialResource.cpp">
+      <Filter>Render\DX12</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\FrameUploadAllocator.cpp">
+      <Filter>Render\DX12</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\PipelineCache.cpp">
       <Filter>Render\DX12</Filter>
     </ClCompile>
   </ItemGroup>

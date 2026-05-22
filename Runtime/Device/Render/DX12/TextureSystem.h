@@ -10,6 +10,7 @@ class DescriptorFactory;
 class TextureGraphBuilder;
 class TaskScheduler;
 class ResourceLoader;
+class ShaderSystem;
 
 class TextureSystem : public ITextureSystem
 {
@@ -22,7 +23,7 @@ public:
         std::shared_ptr<TextureAsset> asset, 
         const TextureDesc& desc) override;
 
-    bool Initialize();
+    bool Initialize(ShaderSystem* shaderSystem);
     void Update(size_t uploadBudgetBytes);
     std::shared_ptr<ITextureResource> GetDefaultTexture() const { return m_defaultTexture; }
 

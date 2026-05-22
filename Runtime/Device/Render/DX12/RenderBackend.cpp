@@ -8,7 +8,7 @@
 #include "ResourceLoader.h"
 #include "GPUProfiler.h"
 #include "MeshRenderer.h"
-#include "QuadRenderer.h"
+#include "UIRenderer.h"
 #include "TextureSystem.h"
 #include "MeshSystem.h"
 #include "MaterialSystem.h"
@@ -49,7 +49,11 @@ void RenderBackend::WaitIdle()
     m_command->WaitIdle();
 }
 
-bool RenderBackend::Initialize(HWND hwnd, const Size& wndSize, const RenderConfig& config)
+bool RenderBackend::Initialize(
+    HWND hwnd, 
+    const Size& wndSize, 
+    const RenderConfig& config,
+    const std::vector<ShaderRegisterDesc>& shaders)
 {
     m_size = wndSize;
     ReturnIfFalse(m_core->Initialize(config.enableDebugLayer));
@@ -75,20 +79,21 @@ bool RenderBackend::Initialize(HWND hwnd, const Size& wndSize, const RenderConfi
     m_profiler = make_unique<GPUProfiler>();
     ReturnIfFalse(m_profiler->Initialize(device, m_command.get()));
 
+    m_shaderSystem = make_unique<ShaderSystem>();
+    ReturnIfFalse(m_shaderSystem->Initialize(shaders));
     m_texSystem = make_unique<TextureSystem>(device, m_srvAllocator.get(), m_taskScheduler.get(), m_loader.get());
-    ReturnIfFalse(m_texSystem->Initialize());
+    ReturnIfFalse(m_texSystem->Initialize(m_shaderSystem.get()));
     m_meshSystem = make_unique<MeshSystem>(device, m_srvAllocator.get(), m_taskScheduler.get(), m_loader.get());
     m_matSystem = make_unique<MaterialSystem>(m_texSystem.get());
-    m_shaderSystem = make_unique<ShaderSystem>();
     m_scene = make_unique<RenderScene>();
 
     m_meshRenderer = make_unique<MeshRenderer>(device, m_shaderSystem.get());
     ReturnIfFalse(m_meshRenderer->Initialize(wndSize));
     m_meshRenderer->SetSRVHeap(m_srvAllocator->GetHeap());
 
-    m_quadRenderer = make_unique<QuadRenderer>(device, m_shaderSystem.get());
-    ReturnIfFalse(m_quadRenderer->Initialize(wndSize));
-    m_quadRenderer->SetSRVHeap(m_srvAllocator->GetHeap());
+    m_uiRenderer = make_unique<UIRenderer>(device, m_shaderSystem.get());
+    ReturnIfFalse(m_uiRenderer->Initialize(wndSize));
+    m_uiRenderer->SetSRVHeap(m_srvAllocator->GetHeap());
 
     return true;
 }
@@ -149,7 +154,7 @@ void RenderBackend::DrawUI(
 
 void RenderBackend::Resize(const Size& size)
 {
-    m_quadRenderer->SetScreenSize(size);
+    m_uiRenderer->SetScreenSize(size);
     m_swapChain->Resize(m_core->GetDevice(), size);
 }
 
@@ -177,7 +182,7 @@ void RenderBackend::Render()
 
     PrepareGraphBuilder prepare(m_swapChain.get(), hBb);
     OpaqueGraphBuilder opaque(m_meshRenderer.get(), m_scene.get(), hBb);
-    UIGraphBuilder ui(m_quadRenderer.get(), m_scene.get(), hBb);
+    UIGraphBuilder ui(m_uiRenderer.get(), m_scene.get(), hBb);
     PresentGraphBuilder present(hBb);
 
     prepare.Build(graph);
@@ -261,11 +266,6 @@ IMeshSystem* RenderBackend::GetMeshSystem()
 IMaterialSystem* RenderBackend::GetMaterialSystem()
 {
     return m_matSystem.get();
-}
-
-IShaderSystem* RenderBackend::GetShaderSystem()
-{
-    return m_shaderSystem.get();
 }
 
 //////////////////////////////////////////////////////

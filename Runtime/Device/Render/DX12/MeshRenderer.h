@@ -1,6 +1,8 @@
 #pragma once
 #include <d3d12.h>
 #include <wrl.h>
+#include "FrameUploadAllocator.h"
+#include "PipelineCache.h"
 #include "Core/Foundation/Geometry2D.h"
 #include "Core/Math/Matrix.h"
 #include "GameClient/Service/Render/Desc/RenderState.h"
@@ -37,6 +39,7 @@ public:
 private:
     void CreateRootSignature();
     void CreateDefaultPSOs();
+    ID3D12PipelineState* CreatePSO(const PipelineState& pipelineState);
     void CreatePipeline(const PipelineState& pipelineState);
     void CreateConstantBuffers();
     ID3D12PipelineState* GetPipeline(const PipelineState& pipelineState);
@@ -44,6 +47,7 @@ private:
     D3D12_GPU_VIRTUAL_ADDRESS UpdateObjectCB(const Core::Math::Matrix& world);
     D3D12_GPU_VIRTUAL_ADDRESS UpdateMaterialCB(const MaterialSurface& surface);
 
+    static constexpr UINT kCBSize = 256;
     static constexpr uint32_t kMaxObjectCount{ 1024 }; //추후에 링버퍼로 수정할 계획
 
     ID3D12Device* m_device{ nullptr };
@@ -53,19 +57,11 @@ private:
     ID3D12DescriptorHeap* m_srvHeap{ nullptr };
 
     PipelineState m_pipelineState;
-    std::unordered_map<PipelineState, Microsoft::WRL::ComPtr<ID3D12PipelineState>, PipelineStateHasher> m_psoCache;
+    PipelineCache m_pipelineCache;
 
-    ComPtr<ID3D12Resource> m_frameCB;
-    FrameCB* m_frameData{ nullptr };
+    FrameUploadAllocator m_objectCBAllocator;
+    FrameUploadAllocator m_materialCBAllocator;
+    FrameUploadAllocator m_frameCBAllocator;
 
-    ComPtr<ID3D12Resource> m_objectCBs[kMaxObjectCount];
-    ObjectCB* m_objectDatas[kMaxObjectCount]{};
-
-    ComPtr<ID3D12Resource> m_materialCBs[kMaxObjectCount];
-    MaterialCB* m_materialDatas[kMaxObjectCount]{};
-
-    uint32_t m_objectCBIndex{ 0 };
-    uint32_t m_materialCBIndex{ 0 };
-
-    float m_objectAngle{ 0.f };
+    D3D12_GPU_VIRTUAL_ADDRESS m_frameCBAddress{};
 };

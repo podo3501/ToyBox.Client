@@ -3,7 +3,6 @@
 #include "Repository/Material/MaterialRepository.h"
 #include "Repository/Texture/TextureRepository.h"
 #include "Repository/Mesh/MeshRepository.h"
-#include "Repository/Shader/ShaderRepository.h"
 #include "Service/Asset/Assets/MeshAsset.h"
 #include "Desc/MeshMaterialDesc.h"
 #include "Desc/UIMaterialDesc.h"
@@ -16,8 +15,7 @@ RenderContext::RenderContext(IRenderBackend* backend) :
 	m_backend{ backend },
 	m_texRepository{ make_unique<TextureRepository>(m_backend->GetTextureSystem()) },
 	m_meshRepository{ make_unique<MeshRepository>(m_backend->GetMeshSystem()) },
-	m_matRepository{ make_unique<MaterialRepository>(m_backend->GetMaterialSystem()) },
-	m_shaderRepository{ make_unique<ShaderRepository>(m_backend->GetShaderSystem()) }
+	m_matRepository{ make_unique<MaterialRepository>(m_backend->GetMaterialSystem()) }
 {}
 
 bool RenderContext::Initialize()
@@ -89,14 +87,6 @@ MaterialHandle RenderContext::LoadMaterial(
 bool RenderContext::ReleaseMaterial(MaterialHandle mh)
 {
 	return m_matRepository->Release(mh);
-}
-
-bool RenderContext::RegisterShader(
-	const std::filesystem::path& path, 
-	ShaderID shaderID, 
-	std::function<shared_ptr<ShaderAsset>(const filesystem::path&)> loader)
-{
-	return m_shaderRepository->RegisterShader(path, shaderID, loader);
 }
 
 void RenderContext::DrawMesh(MeshHandle hM, MaterialHandle hMtl, const cm::Matrix& world)

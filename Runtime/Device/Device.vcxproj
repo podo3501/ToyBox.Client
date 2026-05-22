@@ -60,6 +60,7 @@
     <ClInclude Include="Render\DX12\DX12MathUtils.h" />
     <ClInclude Include="Render\DX12\DX12Utils.h" />
     <ClInclude Include="Render\DX12\FenceTypes.h" />
+    <ClInclude Include="Render\DX12\FrameUploadAllocator.h" />
     <ClInclude Include="Render\DX12\MeshMaterialResource.h" />
     <ClInclude Include="Render\DX12\MaterialSystem.h" />
     <ClInclude Include="Render\DX12\OpaqueGraphBuilder.h" />
@@ -73,6 +74,7 @@
     <ClInclude Include="Render\DX12\MipGenerator.h" />
     <ClInclude Include="Render\DX12\MipTask.h" />
     <ClInclude Include="Render\DX12\PendingTransition.h" />
+    <ClInclude Include="Render\DX12\PipelineCache.h" />
     <ClInclude Include="Render\DX12\PrepareGraphBuilder.h" />
     <ClInclude Include="Render\DX12\PresentGraphBuilder.h" />
     <ClInclude Include="Render\DX12\RenderGraph.h" />
@@ -83,7 +85,7 @@
     <ClInclude Include="Render\DX12\RGTypes.h" />
     <ClInclude Include="Render\DX12\ShaderSystem.h" />
     <ClInclude Include="Render\DX12\SwapChainPresenter.h" />
-    <ClInclude Include="Render\DX12\QuadRenderer.h" />
+    <ClInclude Include="Render\DX12\UIRenderer.h" />
     <ClInclude Include="Render\DX12\RenderBackend.h" />
     <ClInclude Include="Render\DX12\Task.h" />
     <ClInclude Include="Render\DX12\TaskHandle.h" />
@@ -139,6 +141,7 @@
     <ClCompile Include="Render\DX12\DX12Link.cpp" />
     <ClCompile Include="Render\DX12\DX12MathUtils.cpp" />
     <ClCompile Include="Render\DX12\DX12Utils.cpp" />
+    <ClCompile Include="Render\DX12\FrameUploadAllocator.cpp" />
     <ClCompile Include="Render\DX12\MeshMaterialResource.cpp" />
     <ClCompile Include="Render\DX12\MaterialSystem.cpp" />
     <ClCompile Include="Render\DX12\OpaqueGraphBuilder.cpp" />
@@ -150,6 +153,7 @@
     <ClCompile Include="Render\DX12\MeshSystem.cpp" />
     <ClCompile Include="Render\DX12\MipGenerator.cpp" />
     <ClCompile Include="Render\DX12\MipTask.cpp" />
+    <ClCompile Include="Render\DX12\PipelineCache.cpp" />
     <ClCompile Include="Render\DX12\PrepareGraphBuilder.cpp" />
     <ClCompile Include="Render\DX12\PresentGraphBuilder.cpp" />
     <ClCompile Include="Render\DX12\RenderGraph.cpp" />
@@ -158,7 +162,7 @@
     <ClCompile Include="Render\DX12\ResourceLoader.cpp" />
     <ClCompile Include="Render\DX12\ShaderSystem.cpp" />
     <ClCompile Include="Render\DX12\SwapChainPresenter.cpp" />
-    <ClCompile Include="Render\DX12\QuadRenderer.cpp" />
+    <ClCompile Include="Render\DX12\UIRenderer.cpp" />
     <ClCompile Include="Render\DX12\RenderBackend.cpp" />
     <ClCompile Include="Render\DX12\TaskScheduler.cpp" />
     <ClCompile Include="Render\DX12\TextureGraphBuilder.cpp" />

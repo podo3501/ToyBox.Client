@@ -61,11 +61,6 @@ public:
 
 	bool ReleaseMaterial(MaterialHandle mh);
 
-	bool RegisterShader(
-		const std::filesystem::path& path, 
-		ShaderID shaderID,
-		std::function<shared_ptr<ShaderAsset>(const filesystem::path&)> loader);
-
 	void DrawMesh(
 		MeshHandle hM,
 		MaterialHandle hMtl,
@@ -86,7 +81,6 @@ private:
 	unique_ptr<MeshRepository> m_meshRepository;
 	unique_ptr<TextureRepository> m_texRepository;
 	unique_ptr<MaterialRepository> m_matRepository;
-	unique_ptr<ShaderRepository> m_shaderRepository;
 
 	MeshHandle m_uiQuad;
 };

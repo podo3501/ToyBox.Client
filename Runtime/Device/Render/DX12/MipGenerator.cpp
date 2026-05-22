@@ -1,5 +1,6 @@
 ﻿#include "pch.h"
 #include "MipGenerator.h"
+#include "ShaderSystem.h"
 #include "DescriptorAllocator.h"
 #include "CommandList.h"
 #include "d3dx12.h"
@@ -12,35 +13,23 @@ MipGenerator::MipGenerator(ID3D12Device* device, DescriptorAllocator* srvAllocat
     m_srvAllocator{ srvAllocator }
 {}
 
-bool MipGenerator::Initialize()
+bool MipGenerator::Initialize(ShaderSystem* shaderSystem)
 {
-    ReturnIfFalse(LoadShader());
+    ReturnIfFalse(LoadShader(shaderSystem));
     ReturnIfFalse(CreateRootSignature());
     ReturnIfFalse(CreatePSO());
 
     return true;
 }
 
-bool MipGenerator::LoadShader()
+bool MipGenerator::LoadShader(ShaderSystem* shaderSystem)
 {
-    ComPtr<ID3DBlob> error;
-    wstring shaderFile = L"D:\\ProgrammingStudy\\ToyBox\\Runtime\\Device\\Render\\DX12\\MipGen.hlsl";
-    HRESULT hr = D3DCompileFromFile(shaderFile.c_str(), nullptr, nullptr, "main", "cs_5_0",
-        D3DCOMPILE_OPTIMIZATION_LEVEL3, 0, &m_csBlob, &error);
-    if (FAILED(hr))
-    {
-        if (error)
-        {
-            std::string msg(
-                (char*)error->GetBufferPointer(),
-                error->GetBufferSize()
-            );
-
-            OutputDebugStringA(msg.c_str());
-        }
+    ShaderVariant variant{ ShaderID::MipGenerator };
+    const ShaderEntry* shaderEntry = shaderSystem->Find(variant);
+    if (!shaderEntry)
         return false;
-    }
 
+    m_csBlob = shaderEntry->cs;
     return true;
 }
 

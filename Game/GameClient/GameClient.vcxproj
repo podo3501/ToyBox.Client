@@ -22,6 +22,7 @@
     <ClCompile Include="GameLoop.cpp" />
     <ClCompile Include="Graphics\Geometry\MaterialDescFactory.cpp" />
     <ClCompile Include="Graphics\Geometry\MeshFactory.cpp" />
+    <ClCompile Include="Graphics\ShaderStageBuilder.cpp" />
     <ClCompile Include="Graphics\World\Camera.cpp" />
     <ClCompile Include="Graphics\World\DirectionalLight.cpp" />
     <ClCompile Include="Graphics\World\Transform.cpp" />
@@ -49,7 +50,6 @@
     <ClCompile Include="Service\Render\RenderService.cpp" />
     <ClCompile Include="Service\Render\Repository\Material\MaterialRepository.cpp" />
     <ClCompile Include="Service\Render\Repository\Mesh\MeshRepository.cpp" />
-    <ClCompile Include="Service\Render\Repository\Shader\ShaderRepository.cpp" />
     <ClCompile Include="Service\Render\Repository\Texture\TextureRepository.cpp" />
     <ClCompile Include="UserInterface\CommandHistory\TextureResource\TexResCommandHistory.cpp" />
     <ClCompile Include="UserInterface\CommandHistory\TextureResource\TexResCommandRegistry.cpp" />
@@ -114,6 +114,7 @@
     <ClInclude Include="Graphics\Geometry\MeshFactory.h" />
     <ClInclude Include="Graphics\RenderData\CameraData.h" />
     <ClInclude Include="Graphics\RenderData\DirectionalLightData.h" />
+    <ClInclude Include="Graphics\ShaderStageBuilder.h" />
     <ClInclude Include="Graphics\World\Camera.h" />
     <ClInclude Include="Graphics\World\DirectionalLight.h" />
     <ClInclude Include="Graphics\World\Transform.h" />
@@ -173,8 +174,6 @@
     <ClInclude Include="Service\Render\Repository\Mesh\IMeshSystem.h" />
     <ClInclude Include="Service\Render\Repository\Mesh\MeshRepository.h" />
     <ClInclude Include="Service\Render\Repository\ResourceTypes.h" />
-    <ClInclude Include="Service\Render\Repository\Shader\IShaderSystem.h" />
-    <ClInclude Include="Service\Render\Repository\Shader\ShaderRepository.h" />
     <ClInclude Include="Service\Render\Repository\Texture\ITextureSystem.h" />
     <ClInclude Include="Service\Render\Repository\Texture\TextureRepository.h" />
     <ClInclude Include="Service\Render\Resource\IMaterialResource.h" />

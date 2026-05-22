@@ -66,33 +66,62 @@ public:
     }
 };
 
+enum class ShaderStage
+{
+    Vertex,
+    Pixel,
+    Compute
+};
+
+struct ShaderMacroDesc
+{
+    std::string name;
+    std::string value{ "1" };
+
+    bool operator==(const ShaderMacroDesc&) const = default;
+
+    size_t GetHash() const
+    {
+        return Core::HashOf(name, value);
+    }
+};
+
+struct ShaderStageDesc
+{
+    ShaderStage stage;
+    std::string entry;
+    std::string target;
+};
+
 enum class ShaderID
 {
     Mesh,
+    UI,
     Grid,
-    UI
+    MipGenerator
 };
 
-enum class ShaderDefine : uint32_t
+struct ShaderAsset;
+struct ShaderRegisterDesc
 {
-    None = 0,
-    DiffuseDebug = 1 << 0,
-    SpecularDebug = 1 << 1,
-    SurfaceDebug = 1 << 2
+    ShaderID shaderID;
+    std::shared_ptr<ShaderAsset> asset;
+    std::vector<ShaderStageDesc> stages;
 };
 
 struct ShaderVariant
 {
-    ShaderID shaderID{ ShaderID::Mesh };
-    ShaderDefine defines{ ShaderDefine::None };
+    ShaderID shaderID;
+    std::vector<ShaderMacroDesc> runtimeMacros;
 
     bool operator==(const ShaderVariant&) const = default;
 
     size_t GetHash() const
     {
-        return Core::HashOf(
-            shaderID,
-            static_cast<uint32_t>(defines));
+        size_t h = Core::HashOf(shaderID);
+        for (const auto& macro : runtimeMacros)
+            Core::HashCombine(h, macro.GetHash());
+        return h;
     }
 };
 

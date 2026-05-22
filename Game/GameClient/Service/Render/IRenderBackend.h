@@ -7,6 +7,7 @@
 struct ITextureResource;
 struct IMeshResource;
 struct IMaterialResource;
+struct ShaderAsset;
 struct TextureAsset;
 struct Size;
 struct Rect;
@@ -14,11 +15,12 @@ struct ITextureSystem;
 struct IMeshSystem;
 struct IMaterialSystem;
 struct IShaderSystem;
+struct ShaderRegisterDesc;
 
 struct IRenderBackend
 {
 	virtual ~IRenderBackend() = default;
-	virtual bool Initialize(HWND hwnd, const Size& wndSize, const RenderConfig& config) = 0;
+	virtual bool Initialize(HWND hwnd, const Size& wndSize, const RenderConfig& config, const std::vector<ShaderRegisterDesc>& shaders) = 0;
 	virtual void SetDirectionalLight(const DirectionalLightData& light) = 0;
 	virtual void SetCamera(const CameraData& camera) = 0;
 
@@ -40,7 +42,6 @@ struct IRenderBackend
 	virtual ITextureSystem* GetTextureSystem() = 0;
 	virtual IMeshSystem* GetMeshSystem() = 0;
 	virtual IMaterialSystem* GetMaterialSystem() = 0;
-	virtual IShaderSystem* GetShaderSystem() = 0;
 };
 
 std::unique_ptr<IRenderBackend> CreateRenderBackend();
