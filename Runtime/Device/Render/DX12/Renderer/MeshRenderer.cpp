@@ -1,13 +1,14 @@
 #include "pch.h"
 #include "MeshRenderer.h"
-#include "MeshResource.h"
-#include "MeshMaterialResource.h"
-#include "d3dx12.h"
+#include "../MeshResource.h"
+#include "../MeshMaterialResource.h"
+#include "RootSignatureBuilder.h"
+#include "../d3dx12.h"
 #include <d3dcompiler.h>
-#include "CommandList.h"
-#include "DescriptorAllocation.h"
-#include "ShaderSystem.h"
-#include "DX12MathUtils.h"
+#include "../Command/CommandList.h"
+#include "../Descriptor/DescriptorAllocation.h"
+#include "../ShaderSystem.h"
+#include "../Helpers/MathHelpers.h"
 #include "GameClient/Graphics/RenderData/DirectionalLightData.h"
 #include "GameClient/Graphics/RenderData/CameraData.h"
 
@@ -44,11 +45,11 @@ MeshRenderer::MeshRenderer(ID3D12Device* device, ShaderSystem* shaderSystem) :
     m_shaderSystem{ shaderSystem }
 {}
 
-bool MeshRenderer::Initialize(const Size& size)
+bool MeshRenderer::Initialize()
 {
     m_pipelineCache.Initialize(m_device, m_shaderSystem);
 
-    CreateRootSignature();
+    ReturnIfFalse(CreateRootSignature());
     CreateDefaultPSOs();
     CreateConstantBuffers();
 
@@ -88,51 +89,21 @@ ID3D12PipelineState* MeshRenderer::GetPipeline(const PipelineState& pipelineStat
     return CreatePSO(pipelineState);
 }
 
-void MeshRenderer::CreateRootSignature()
+bool MeshRenderer::CreateRootSignature()
 {
-    CD3DX12_DESCRIPTOR_RANGE rangeMesh;
-    rangeMesh.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 2, 0); // vb, ib
+    RootSignatureBuilder builder;
 
-    CD3DX12_DESCRIPTOR_RANGE rangeTex;
-    rangeTex.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 2); // vb, ib
+    builder.AddSRVTable(2, 0); // t0-t1
+    builder.AddSRVTable(1, 2); // t2
 
-    CD3DX12_ROOT_PARAMETER params[5];
-    params[0].InitAsDescriptorTable(1, &rangeMesh); // Mesh Table (t0-t1)
-    params[1].InitAsDescriptorTable(1, &rangeTex);  // Texture Table (t2)
-    params[2].InitAsConstantBufferView(0);      // object
-    params[3].InitAsConstantBufferView(1);      // frame
-    params[4].InitAsConstantBufferView(2);      // materialCB
+    builder.AddCBV(0);
+    builder.AddCBV(1);
+    builder.AddCBV(2);
+    
+    builder.AddLinearSampler(0);
 
-    CD3DX12_STATIC_SAMPLER_DESC sampler(
-        0,
-        D3D12_FILTER_MIN_MAG_MIP_LINEAR
-    );
-
-    CD3DX12_ROOT_SIGNATURE_DESC desc;
-    desc.Init(
-        _countof(params),
-        params,
-        1,
-        &sampler,
-        D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT
-    );
-
-    ComPtr<ID3DBlob> sig;
-    ComPtr<ID3DBlob> err;
-
-    D3D12SerializeRootSignature(
-        &desc,
-        D3D_ROOT_SIGNATURE_VERSION_1,
-        &sig,
-        &err
-    );
-
-    m_device->CreateRootSignature(
-        0,
-        sig->GetBufferPointer(),
-        sig->GetBufferSize(),
-        IID_PPV_ARGS(&m_rootSignature)
-    );
+    m_rootSignature = builder.Build(m_device);
+    return m_rootSignature != nullptr;
 }
 
 void MeshRenderer::CreateConstantBuffers()

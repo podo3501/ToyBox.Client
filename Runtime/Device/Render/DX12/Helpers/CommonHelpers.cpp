@@ -1,6 +1,5 @@
 #include "pch.h"
-#include "DX12Utils.h"
-#include "d3dx12.h"
+#include "CommonHelpers.h"
 
 size_t AlignSize(size_t value, size_t alignment)
 {

@@ -16,8 +16,7 @@ class TextureSystem;
 class MeshSystem;
 class MaterialSystem;
 class ShaderSystem;
-class MeshRenderer;
-class UIRenderer;
+class Renderers;
 class RenderScene;
 
 class RenderBackend : public IRenderBackend
@@ -60,9 +59,7 @@ private:
 	unique_ptr<MaterialSystem> m_matSystem;
 	unique_ptr<ShaderSystem> m_shaderSystem;
 	unique_ptr<RenderScene> m_scene;
-
-	unique_ptr<MeshRenderer> m_meshRenderer;
-	unique_ptr<UIRenderer> m_uiRenderer;
+	unique_ptr<Renderers> m_renderers;
 
 	CommandList* m_cmd{ nullptr }; //direct command юс.
 

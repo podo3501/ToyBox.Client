@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "GPUProfiler.h"
-#include "CommandScheduler.h"
-#include "CommandList.h"
+#include "Command/CommandScheduler.h"
+#include "Command/CommandList.h"
 
 bool GPUProfiler::Initialize(ID3D12Device* device, CommandScheduler* scheduler, uint32_t frameCount)
 {

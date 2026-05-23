@@ -3,7 +3,7 @@
 #include "RenderPass.h"
 #include "RenderGraph.h"
 #include "RenderScene.h"
-#include "UIRenderer.h"
+#include "Renderer/UIRenderer.h"
 #include "MeshResource.h"
 #include "UIMaterialResource.h"
 

@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "DescriptorAllocator.h"
-#include "FenceTypes.h"
+#include "../Command/FenceTypes.h"
 
 struct PendingFree
 {

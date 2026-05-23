@@ -3,8 +3,8 @@
 #include "RenderPass.h"
 #include "RenderGraph.h"
 #include "SwapChainPresenter.h"
-#include "CommandUtils.h"
-#include "CommandList.h"
+#include "Helpers/CommandListHelpers.h"
+#include "Command/CommandList.h"
 
 PrepareGraphBuilder::PrepareGraphBuilder(SwapChainPresenter* swapChain, RGHandle hBb) :
 	m_swapChain{ swapChain },

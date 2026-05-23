@@ -1,6 +1,6 @@
 #pragma once
 #include "MeshResource.h"
-#include "DescriptorAllocation.h"
+#include "Descriptor/DescriptorAllocation.h"
 #include "RGTypes.h"
 
 class MeshRegistry

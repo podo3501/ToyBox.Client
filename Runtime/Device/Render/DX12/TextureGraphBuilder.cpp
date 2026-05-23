@@ -6,11 +6,11 @@
 #include "TaskScheduler.h"
 #include "ResourceLoader.h"
 #include "MipGenerator.h"
-#include "DescriptorFactory.h"
-#include "CommandUtils.h"
-#include "CommandList.h"
+#include "Descriptor/DescriptorFactory.h"
+#include "Helpers/CommandListHelpers.h"
+#include "Command/CommandList.h"
 #include "TextureLoadRequest.h"
-#include "DX12Utils.h"
+#include "Helpers/CommonHelpers.h"
 
 struct TextureUploadEntry
 {

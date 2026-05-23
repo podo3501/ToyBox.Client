@@ -1,5 +1,5 @@
 #pragma once
-#include "CommandType.h"
+#include "Command/CommandType.h"
 #include "RGTypes.h"
 #include "GameClient/Service/Render/Desc/TextureDesc.h"
 #include "TaskHandle.h"

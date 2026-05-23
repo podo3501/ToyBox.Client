@@ -4,10 +4,10 @@
 #include "RenderPass.h"
 #include "TaskScheduler.h"
 #include "ResourceLoader.h"
-#include "DescriptorFactory.h"
+#include "Descriptor/DescriptorFactory.h"
 #include "MeshRegistry.h"
 #include "MeshLoadRequest.h"
-#include "DX12Utils.h"
+#include "Helpers/CommonHelpers.h"
 #include "GameClient/Service/Asset/Assets/MeshAsset.h"
 
 struct MeshUploadEntry

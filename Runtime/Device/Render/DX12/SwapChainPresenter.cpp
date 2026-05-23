@@ -1,9 +1,9 @@
 #include "pch.h"
 #include "SwapChainPresenter.h"
-#include "CommandScheduler.h"
+#include "Command/CommandScheduler.h"
 #include <dxgi1_6.h>
-#include "CommandList.h"
-#include "CommandUtils.h"
+#include "Command/CommandList.h"
+#include "Helpers/CommandListHelpers.h"
 
 using Microsoft::WRL::ComPtr;
 

@@ -1,8 +1,8 @@
 #include "pch.h"
 #include "RenderGraph.h"
 #include "RenderPass.h"
-#include "CommandUtils.h"
-#include "CommandList.h"
+#include "Helpers/CommandListHelpers.h"
+#include "Command/CommandList.h"
 #include <unordered_set>
 
 static D3D12_RESOURCE_STATES AccessToState(RGAccess access)

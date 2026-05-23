@@ -300,6 +300,7 @@
 --shader registry가 늦게 되서 CreateDefaultPSOs 가 false가 되고 있다.
 --debug를 f1키 같은걸 눌러서 shader pso를 바꿔서 실시간으로 shader 디버그 확인할 수 있게끔
 
+@Renderer를 추상클래스로 묶기
 @mesh vertex에서 debug vertex 분리
 @texture asset factory 만들지 말지.
 @texture system은 service 레벨에서 안보이게 될듯.

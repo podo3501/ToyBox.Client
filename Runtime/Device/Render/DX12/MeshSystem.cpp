@@ -4,9 +4,9 @@
 #include "TaskScheduler.h"
 #include "ResourceLoader.h"
 #include "MeshGraphBuilder.h"
-#include "DescriptorFactory.h"
+#include "Descriptor/DescriptorFactory.h"
 #include "RGTypes.h"
-#include "DX12Utils.h"
+#include "Helpers/CommonHelpers.h"
 
 MeshSystem::~MeshSystem() = default;
 MeshSystem::MeshSystem(ID3D12Device* device, DescriptorAllocator* srvAllocator, 

@@ -1,8 +1,6 @@
 #include "pch.h"
 #include "CommandScheduler.h"
-#include "d3dx12.h"
 #include "CommandQueue.h"
-#include "DescriptorAllocation.h"
 
 using Microsoft::WRL::ComPtr;
 

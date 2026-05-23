@@ -1,7 +1,7 @@
 #pragma once
 #include "GameClient/Service/Render/Resource/IMaterialResource.h"
 #include "GameClient/Service/Render/Desc/UIMaterialDesc.h"
-#include "DescriptorAllocation.h"
+#include "Descriptor/DescriptorAllocation.h"
 
 struct ITextureResource;
 

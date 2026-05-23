@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "DX12MathUtils.h"
+#include "MathHelpers.h"
 
 XMMATRIX ToDXMatrix(const Core::Math::Matrix& m)
 {

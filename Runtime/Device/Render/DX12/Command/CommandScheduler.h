@@ -1,9 +1,7 @@
 #pragma once
 #include <wrl/client.h>
-#include "d3dx12.h"
 #include "CommandType.h"
 #include "FenceTypes.h"
-#include "DescriptorAllocation.h"
 
 using Microsoft::WRL::ComPtr;
 
@@ -41,5 +39,4 @@ private:
     unique_ptr<CommandQueue> m_computeQueue;
 
     CommandQueue* m_currentQueue{ nullptr };
-    vector<DescriptorAllocation> m_pendingDescriptors; //fence때까지 기다렸다 지워질 descriptors 
 };

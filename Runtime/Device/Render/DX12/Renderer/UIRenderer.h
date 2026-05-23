@@ -1,11 +1,8 @@
 #pragma once
-#include <wrl/client.h>
-#include <d3d12.h>
 #include "FrameUploadAllocator.h"
 #include "PipelineCache.h"
 #include "Core/Foundation/Geometry2D.h"
 #include "Core/Math/Matrix.h"
-#include "GameClient/Service/Render/Desc/RenderState.h"
 
 struct UIFrameCB;
 class CommandList;

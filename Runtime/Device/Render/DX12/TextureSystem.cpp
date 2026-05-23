@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "TextureSystem.h"
 #include "MipGenerator.h"
-#include "DescriptorFactory.h"
+#include "Descriptor/DescriptorFactory.h"
 #include "TextureGraphBuilder.h"
 #include "TextureResource.h"
 

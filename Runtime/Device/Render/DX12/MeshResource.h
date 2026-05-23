@@ -1,6 +1,6 @@
 #pragma once
 #include "GameClient/Service/Render/Resource/IMeshResource.h"
-#include "DescriptorAllocation.h"
+#include "Descriptor/DescriptorAllocation.h"
 #include <wrl/client.h>
 #include "d3dx12.h"
 

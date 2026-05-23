@@ -4,7 +4,6 @@
 #include "CommandType.h"
 
 struct QueueDependency;
-class DescriptorAllocation;
 
 using Microsoft::WRL::ComPtr;
 
@@ -17,7 +16,6 @@ public:
     void Reset();
     void Close();
 
-    void EnqueueDeferredDescriptors(DescriptorAllocation&& descriptor);
     bool IsAvailable() const;
     void SetFence(ID3D12Fence* fence, uint64_t value);
     void DependOn(CommandType type, uint64_t fenceValue);

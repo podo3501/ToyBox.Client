@@ -43,6 +43,18 @@
     <Filter Include="Asset\Loader\Graphics">
       <UniqueIdentifier>{b4202579-0679-47f3-9dda-6ed761bc7e62}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Render\DX12\Renderer">
+      <UniqueIdentifier>{8c965edf-0487-4ca3-bbd0-10312a9ade0d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Render\DX12\Helpers">
+      <UniqueIdentifier>{bbeb7167-9d37-4516-87de-ec5b53a6ae00}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Render\DX12\Command">
+      <UniqueIdentifier>{88253109-bbfb-44c3-94b2-f5e62414af12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Render\DX12\Descriptor">
+      <UniqueIdentifier>{cc3bb541-3b13-4277-9ea4-7b35ecc12573}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Storage\JsonObjectIO.h">
@@ -109,28 +121,10 @@
     <ClInclude Include="Render\DX12\SwapChainPresenter.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\CommandScheduler.h">
-      <Filter>Render\DX12</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\DX12\UIRenderer.h">
-      <Filter>Render\DX12</Filter>
-    </ClInclude>
     <ClInclude Include="Render\DX12\ResourceLoader.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\CommandUtils.h">
-      <Filter>Render\DX12</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\DX12\CommandList.h">
-      <Filter>Render\DX12</Filter>
-    </ClInclude>
     <ClInclude Include="Render\DX12\DebugOptions.h">
-      <Filter>Render\DX12</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\DX12\DescriptorAllocator.h">
-      <Filter>Render\DX12</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\DX12\CommandQueue.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
     <ClInclude Include="Asset\Loader\JsonLoader.h">
@@ -157,19 +151,7 @@
     <ClInclude Include="Render\DX12\TextureResource.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\FenceTypes.h">
-      <Filter>Render\DX12</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\DX12\PendingTransition.h">
-      <Filter>Render\DX12</Filter>
-    </ClInclude>
     <ClInclude Include="Render\DX12\MipGenerator.h">
-      <Filter>Render\DX12</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\DX12\DescriptorAllocation.h">
-      <Filter>Render\DX12</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\DX12\CommandType.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
     <ClInclude Include="Render\DX12\TaskScheduler.h">
@@ -205,9 +187,6 @@
     <ClInclude Include="Render\DX12\TextureSystem.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\DescriptorFactory.h">
-      <Filter>Render\DX12</Filter>
-    </ClInclude>
     <ClInclude Include="Asset\Loader\Graphics\PngTextureLoader.h">
       <Filter>Asset\Loader\Graphics</Filter>
     </ClInclude>
@@ -223,9 +202,6 @@
     <ClInclude Include="Render\DX12\MeshGraphBuilder.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\MeshRenderer.h">
-      <Filter>Render\DX12</Filter>
-    </ClInclude>
     <ClInclude Include="Render\DX12\MeshRegistry.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
@@ -233,9 +209,6 @@
       <Filter>Render\DX12</Filter>
     </ClInclude>
     <ClInclude Include="Render\DX12\TextureLoadRequest.h">
-      <Filter>Render\DX12</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\DX12\DX12Utils.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
     <ClInclude Include="Render\DX12\MeshLoadRequest.h">
@@ -256,9 +229,6 @@
     <ClInclude Include="Render\DX12\UIGraphBuilder.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\DX12MathUtils.h">
-      <Filter>Render\DX12</Filter>
-    </ClInclude>
     <ClInclude Include="Render\DX12\MaterialSystem.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
@@ -277,11 +247,56 @@
     <ClInclude Include="Render\DX12\UIMaterialResource.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\FrameUploadAllocator.h">
-      <Filter>Render\DX12</Filter>
+    <ClInclude Include="Render\DX12\Renderer\Renderers.h">
+      <Filter>Render\DX12\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\PipelineCache.h">
-      <Filter>Render\DX12</Filter>
+    <ClInclude Include="Render\DX12\Renderer\MeshRenderer.h">
+      <Filter>Render\DX12\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Renderer\UIRenderer.h">
+      <Filter>Render\DX12\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Renderer\PipelineCache.h">
+      <Filter>Render\DX12\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Renderer\FrameUploadAllocator.h">
+      <Filter>Render\DX12\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Renderer\RootSignatureBuilder.h">
+      <Filter>Render\DX12\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Helpers\CommandListHelpers.h">
+      <Filter>Render\DX12\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Helpers\MathHelpers.h">
+      <Filter>Render\DX12\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Helpers\CommonHelpers.h">
+      <Filter>Render\DX12\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Command\CommandList.h">
+      <Filter>Render\DX12\Command</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Command\CommandQueue.h">
+      <Filter>Render\DX12\Command</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Command\CommandScheduler.h">
+      <Filter>Render\DX12\Command</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Command\CommandType.h">
+      <Filter>Render\DX12\Command</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Command\FenceTypes.h">
+      <Filter>Render\DX12\Command</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Descriptor\DescriptorAllocation.h">
+      <Filter>Render\DX12\Descriptor</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Descriptor\DescriptorAllocator.h">
+      <Filter>Render\DX12\Descriptor</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Descriptor\DescriptorFactory.h">
+      <Filter>Render\DX12\Descriptor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -334,22 +349,7 @@
     <ClCompile Include="Render\DX12\SwapChainPresenter.cpp">
       <Filter>Render\DX12</Filter>
     </ClCompile>
-    <ClCompile Include="Render\DX12\CommandScheduler.cpp">
-      <Filter>Render\DX12</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\DX12\UIRenderer.cpp">
-      <Filter>Render\DX12</Filter>
-    </ClCompile>
     <ClCompile Include="Render\DX12\ResourceLoader.cpp">
-      <Filter>Render\DX12</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\DX12\CommandList.cpp">
-      <Filter>Render\DX12</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\DX12\DescriptorAllocator.cpp">
-      <Filter>Render\DX12</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\DX12\CommandQueue.cpp">
       <Filter>Render\DX12</Filter>
     </ClCompile>
     <ClCompile Include="Asset\Loader\StaticSoundTable.cpp">
@@ -385,9 +385,6 @@
     <ClCompile Include="Render\DX12\MipGenerator.cpp">
       <Filter>Render\DX12</Filter>
     </ClCompile>
-    <ClCompile Include="Render\DX12\DescriptorAllocation.cpp">
-      <Filter>Render\DX12</Filter>
-    </ClCompile>
     <ClCompile Include="Render\DX12\TaskScheduler.cpp">
       <Filter>Render\DX12</Filter>
     </ClCompile>
@@ -406,9 +403,6 @@
     <ClCompile Include="Render\DX12\TextureSystem.cpp">
       <Filter>Render\DX12</Filter>
     </ClCompile>
-    <ClCompile Include="Render\DX12\DescriptorFactory.cpp">
-      <Filter>Render\DX12</Filter>
-    </ClCompile>
     <ClCompile Include="Asset\Loader\Graphics\PngTextureLoader.cpp">
       <Filter>Asset\Loader\Graphics</Filter>
     </ClCompile>
@@ -421,9 +415,6 @@
     <ClCompile Include="Render\DX12\MeshGraphBuilder.cpp">
       <Filter>Render\DX12</Filter>
     </ClCompile>
-    <ClCompile Include="Render\DX12\MeshRenderer.cpp">
-      <Filter>Render\DX12</Filter>
-    </ClCompile>
     <ClCompile Include="Render\DX12\MeshResource.cpp">
       <Filter>Render\DX12</Filter>
     </ClCompile>
@@ -431,9 +422,6 @@
       <Filter>Render\DX12</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\GPUProfiler.cpp">
-      <Filter>Render\DX12</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\DX12\DX12Utils.cpp">
       <Filter>Render\DX12</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\RenderScene.cpp">
@@ -449,9 +437,6 @@
       <Filter>Render\DX12</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\UIGraphBuilder.cpp">
-      <Filter>Render\DX12</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\DX12\DX12MathUtils.cpp">
       <Filter>Render\DX12</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\MaterialSystem.cpp">
@@ -472,11 +457,47 @@
     <ClCompile Include="Render\DX12\UIMaterialResource.cpp">
       <Filter>Render\DX12</Filter>
     </ClCompile>
-    <ClCompile Include="Render\DX12\FrameUploadAllocator.cpp">
-      <Filter>Render\DX12</Filter>
+    <ClCompile Include="Render\DX12\Renderer\Renderers.cpp">
+      <Filter>Render\DX12\Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="Render\DX12\PipelineCache.cpp">
-      <Filter>Render\DX12</Filter>
+    <ClCompile Include="Render\DX12\Renderer\MeshRenderer.cpp">
+      <Filter>Render\DX12\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Renderer\UIRenderer.cpp">
+      <Filter>Render\DX12\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Renderer\PipelineCache.cpp">
+      <Filter>Render\DX12\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Renderer\FrameUploadAllocator.cpp">
+      <Filter>Render\DX12\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Renderer\RootSignatureBuilder.cpp">
+      <Filter>Render\DX12\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Helpers\MathHelpers.cpp">
+      <Filter>Render\DX12\Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Helpers\CommonHelpers.cpp">
+      <Filter>Render\DX12\Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Command\CommandList.cpp">
+      <Filter>Render\DX12\Command</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Command\CommandQueue.cpp">
+      <Filter>Render\DX12\Command</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Command\CommandScheduler.cpp">
+      <Filter>Render\DX12\Command</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Descriptor\DescriptorAllocation.cpp">
+      <Filter>Render\DX12\Descriptor</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Descriptor\DescriptorAllocator.cpp">
+      <Filter>Render\DX12\Descriptor</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Descriptor\DescriptorFactory.cpp">
+      <Filter>Render\DX12\Descriptor</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

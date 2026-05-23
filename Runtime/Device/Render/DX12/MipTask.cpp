@@ -1,9 +1,9 @@
 #include "pch.h"
 #include "MipTask.h"
-#include "CommandList.h"
+#include "Command/CommandList.h"
 #include "TextureResource.h"
 #include "MipGenerator.h"
-#include "CommandUtils.h"
+#include "Helpers/CommandListHelpers.h"
 
 enum class TaskState
 {

@@ -1,7 +1,7 @@
 ﻿#include "pch.h"
 #include "ResourceLoader.h"
-#include "CommandScheduler.h"
-#include "CommandList.h"
+#include "Command/CommandScheduler.h"
+#include "Command/CommandList.h"
 #include "GameClient/Service/Asset/Assets/MeshAsset.h"
 #include "GameClient/Service/Asset/Assets/TextureAsset.h"
 

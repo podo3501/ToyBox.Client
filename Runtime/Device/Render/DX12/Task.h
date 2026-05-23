@@ -4,9 +4,9 @@
 #include <functional>
 #include <variant>
 #include "d3dx12.h"
-#include "CommandType.h"
+#include "Command/CommandType.h"
 #include "TaskHandle.h"
-#include "DescriptorAllocation.h"
+#include "Descriptor/DescriptorAllocation.h"
 #include "RGTypes.h"
 #include <utility>
 #include <memory>

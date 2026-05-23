@@ -1,6 +1,6 @@
 #pragma once
-#include "FenceTypes.h"
-#include "CommandType.h"
+#include "../Command/FenceTypes.h"
+#include "../Command/CommandType.h"
 #include <d3d12.h>
 
 class DescriptorAllocator;

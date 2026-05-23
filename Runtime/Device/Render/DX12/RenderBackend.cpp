@@ -2,13 +2,12 @@
 #include "RenderBackend.h"
 #include "DX12Core.h"
 #include "SwapChainPresenter.h"
-#include "CommandScheduler.h"
-#include "DescriptorAllocator.h"
+#include "Command/CommandScheduler.h"
+#include "Descriptor/DescriptorAllocator.h"
 #include "TaskScheduler.h"
 #include "ResourceLoader.h"
 #include "GPUProfiler.h"
-#include "MeshRenderer.h"
-#include "UIRenderer.h"
+#include "Renderer/Renderers.h"
 #include "TextureSystem.h"
 #include "MeshSystem.h"
 #include "MaterialSystem.h"
@@ -21,8 +20,8 @@
 #include "PresentGraphBuilder.h"
 #include "UIGraphBuilder.h"
 #include "MeshResource.h"
-#include "CommandList.h"
-#include "CommandUtils.h"
+#include "Command/CommandList.h"
+#include "Helpers/CommandListHelpers.h"
 #include <dxgi1_6.h>
 
 using Microsoft::WRL::ComPtr;
@@ -87,14 +86,9 @@ bool RenderBackend::Initialize(
     m_matSystem = make_unique<MaterialSystem>(m_texSystem.get());
     m_scene = make_unique<RenderScene>();
 
-    m_meshRenderer = make_unique<MeshRenderer>(device, m_shaderSystem.get());
-    ReturnIfFalse(m_meshRenderer->Initialize(wndSize));
-    m_meshRenderer->SetSRVHeap(m_srvAllocator->GetHeap());
-
-    m_uiRenderer = make_unique<UIRenderer>(device, m_shaderSystem.get());
-    ReturnIfFalse(m_uiRenderer->Initialize(wndSize));
-    m_uiRenderer->SetSRVHeap(m_srvAllocator->GetHeap());
-
+    m_renderers = make_unique<Renderers>();
+    ReturnIfFalse(m_renderers->Initialize(device, m_shaderSystem.get(), wndSize, m_srvAllocator->GetHeap()));
+    
     return true;
 }
 
@@ -154,7 +148,7 @@ void RenderBackend::DrawUI(
 
 void RenderBackend::Resize(const Size& size)
 {
-    m_uiRenderer->SetScreenSize(size);
+    m_renderers->SetScreenSize(size);
     m_swapChain->Resize(m_core->GetDevice(), size);
 }
 
@@ -181,8 +175,8 @@ void RenderBackend::Render()
     graph.ImportResource(hBb, RGAccess::Present); //backbuffer가 present에서 시작한다고 알려준다.
 
     PrepareGraphBuilder prepare(m_swapChain.get(), hBb);
-    OpaqueGraphBuilder opaque(m_meshRenderer.get(), m_scene.get(), hBb);
-    UIGraphBuilder ui(m_uiRenderer.get(), m_scene.get(), hBb);
+    OpaqueGraphBuilder opaque(m_renderers->GetMeshRenderer(), m_scene.get(), hBb);
+    UIGraphBuilder ui(m_renderers->GetUIRenderer(), m_scene.get(), hBb);
     PresentGraphBuilder present(hBb);
 
     prepare.Build(graph);

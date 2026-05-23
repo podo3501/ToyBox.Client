@@ -3,7 +3,7 @@
 #include <vector>
 #include <functional>
 
-#include "CommandType.h"
+#include "Command/CommandType.h"
 #include "Task.h"
 #include "RGTypes.h"
 

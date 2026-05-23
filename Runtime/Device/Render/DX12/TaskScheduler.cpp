@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "TaskScheduler.h"
-#include "CommandScheduler.h"
+#include "Command/CommandScheduler.h"
 
 TaskScheduler::~TaskScheduler() = default;
 TaskScheduler::TaskScheduler(CommandScheduler* cmdScheduler)

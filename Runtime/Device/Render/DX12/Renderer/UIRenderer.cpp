@@ -1,13 +1,10 @@
 #include "pch.h"
 #include "UIRenderer.h"
-#include "CommandList.h"
-#include "CommandUtils.h"
-#include "DescriptorAllocation.h"
-#include "MeshResource.h"
-#include "UIMaterialResource.h"
-#include "ShaderSystem.h"
-#include "DX12MathUtils.h"
-#include <d3dcompiler.h>
+#include "RootSignatureBuilder.h"
+#include "../Command/CommandList.h"
+#include "../MeshResource.h"
+#include "../UIMaterialResource.h"
+#include "../Helpers/MathHelpers.h"
 
 namespace cm = Core::Math;
 
@@ -29,7 +26,7 @@ bool UIRenderer::Initialize(const Size& screenSize)
 {
     m_pipelineCache.Initialize(m_device, m_shaderSystem);
 
-    CreateRootSignature();
+    ReturnIfFalse(CreateRootSignature());
     CreateDefaultPSOs();
     m_uiFrameCBAllocator.Initialize(m_device, kMaxUI * kCBSize);
 
@@ -66,41 +63,15 @@ ID3D12PipelineState* UIRenderer::GetPipeline(const PipelineState& pipelineState)
 
 bool UIRenderer::CreateRootSignature()
 {
-    CD3DX12_DESCRIPTOR_RANGE rangeMesh;
-    rangeMesh.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 2, 0); // t0 vertex, t1 index
+    RootSignatureBuilder builder;
 
-    CD3DX12_DESCRIPTOR_RANGE rangeTex;
-    rangeTex.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 2); //t2 texture
+    builder.AddSRVTable(2, 0);
+    builder.AddSRVTable(1, 2);
+    builder.AddCBV(1);
+    builder.AddLinearSampler(0);
 
-    CD3DX12_ROOT_PARAMETER params[3] = {};
-    params[0].InitAsDescriptorTable(1, &rangeMesh);
-    params[1].InitAsDescriptorTable(1, &rangeTex);
-    params[2].InitAsConstantBufferView(1); //b1
-
-    CD3DX12_STATIC_SAMPLER_DESC sampler(0, D3D12_FILTER_MIN_MAG_MIP_LINEAR); // s0
-
-    CD3DX12_ROOT_SIGNATURE_DESC rsDesc;
-    rsDesc.Init(_countof(params), params, 1, &sampler, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
-
-    ComPtr<ID3DBlob> sig{ nullptr };
-    ComPtr<ID3DBlob> err{ nullptr };
-
-    HRESULT hr = D3D12SerializeRootSignature(&rsDesc, D3D_ROOT_SIGNATURE_VERSION_1, &sig, &err);
-    if (FAILED(hr))
-    {
-        if (err)
-            OutputDebugStringA(static_cast<const char*>(err->GetBufferPointer()));
-        return false;
-    }
-
-    m_device->CreateRootSignature(
-        0,
-        sig->GetBufferPointer(),
-        sig->GetBufferSize(),
-        IID_PPV_ARGS(&m_rootSignature)
-    );
-
-    return true;
+    m_rootSignature = builder.Build(m_device);
+    return m_rootSignature != nullptr;
 }
 
 void UIRenderer::BindCommonState(CommandList& cmd)

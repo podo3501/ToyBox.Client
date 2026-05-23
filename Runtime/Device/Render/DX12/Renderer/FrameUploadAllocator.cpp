@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "FrameUploadAllocator.h"
-#include "d3dx12.h"
+#include "../d3dx12.h"
 
 bool FrameUploadAllocator::Initialize(ID3D12Device* device, UINT bufferSize)
 {

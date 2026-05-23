@@ -1,5 +1,5 @@
 #pragma once
-#include "d3dx12.h"
+#include "../d3dx12.h"
 #include <concepts>
 
 template<typename T>

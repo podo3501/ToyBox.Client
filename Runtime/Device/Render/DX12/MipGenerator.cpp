@@ -1,8 +1,8 @@
 ﻿#include "pch.h"
 #include "MipGenerator.h"
 #include "ShaderSystem.h"
-#include "DescriptorAllocator.h"
-#include "CommandList.h"
+#include "Descriptor/DescriptorAllocator.h"
+#include "Command/CommandList.h"
 #include "d3dx12.h"
 #include <d3dcompiler.h>
 #include <algorithm>
