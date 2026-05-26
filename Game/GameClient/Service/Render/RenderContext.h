@@ -3,9 +3,10 @@
 #include "Handle/MaterialHandle.h"
 #include "Handle/MeshHandle.h"
 #include "Desc/MaterialDesc.h"
-#include "Desc/TextureDesc.h"
+#include "Desc/TextureBinding.h"
 #include "Core/Math/Matrix.h"
 #include "Core/Foundation/Geometry2D.h"
+#include "../AssetAsync/AssetAsyncTypes.h"
 
 struct TextureEntry;
 struct MeshEntry;
@@ -14,6 +15,7 @@ struct TextureAsset;
 struct IRenderBackend;
 struct MeshAsset;
 struct ShaderAsset;
+struct MeshMaterialDesc;
 class TextureRepository;
 class MaterialRepository;
 class MeshRepository;
@@ -24,7 +26,7 @@ class RenderContext
 public:
 	~RenderContext();
 	RenderContext() = delete;
-	explicit RenderContext(IRenderBackend* backend);
+	RenderContext(IRenderBackend* backend, AssetPipelineT* assetPipeline);
 	bool Initialize();
 
 	MeshHandle LoadMesh(
@@ -44,20 +46,28 @@ public:
 
 	bool ReleaseTexture(TextureHandle th);
 
-	MaterialHandle LoadMaterial(
-		const std::filesystem::path& path,
-		unique_ptr<MaterialDesc> desc,
-		function<shared_ptr<TextureAsset>(const filesystem::path&)> loader);
+	MaterialHandle LoadMaterial(unique_ptr<MeshMaterialDesc> desc);
 
-	MaterialHandle LoadMaterial(
-		const std::string& runtimeKey, 
-		shared_ptr<TextureAsset> albedoAsset,
-		unique_ptr<MaterialDesc> desc);
 
-	MaterialHandle LoadMaterial(
-		const std::string& runtimeKey,
-		MaterialType matType,
-		shared_ptr<TextureAsset> albedoAsset = nullptr);
+
+	//MaterialHandle LoadMaterial(
+	//	unique_ptr<MaterialDesc> desc,
+	//	function<shared_ptr<TextureAsset>(const filesystem::path&)> loader);
+
+	//MaterialHandle LoadMaterial(
+	//	const std::filesystem::path& path,
+	//	unique_ptr<MaterialDesc> desc,
+	//	function<shared_ptr<TextureAsset>(const filesystem::path&)> loader);
+
+	//MaterialHandle LoadMaterial(
+	//	const std::string& runtimeKey, 
+	//	shared_ptr<TextureAsset> albedoAsset,
+	//	unique_ptr<MaterialDesc> desc);
+
+	//MaterialHandle LoadMaterial(
+	//	const std::string& runtimeKey,
+	//	MaterialType matType,
+	//	shared_ptr<TextureAsset> albedoAsset = nullptr);
 
 	bool ReleaseMaterial(MaterialHandle mh);
 
@@ -70,6 +80,11 @@ public:
 		MaterialHandle mh,
 		const Rect& dest,
 		const Rect* source = nullptr);
+
+	//void DrawGrid(
+	//	MeshHandle hM,
+	//	MaterialHandle hMtl,
+	//	const cm::Matrix& world);
 
 	void Update();
 	void ReleaseAll();

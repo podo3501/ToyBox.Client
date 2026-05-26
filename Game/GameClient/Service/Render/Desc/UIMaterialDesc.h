@@ -1,15 +1,14 @@
 #pragma once
 #include "MaterialDesc.h"
-#include "TextureDesc.h"
+#include "TextureBinding.h"
 
 struct UIMaterialDesc : public MaterialDesc
 {
-    TextureDesc texDesc;
+    std::vector<TextureBinding> textures;
 
     UIMaterialDesc()
     {
         type = MaterialType::UI;
-        texDesc = { true, false };
         pipelineState = PipelineLibrary::Get(ShaderID::UI, RasterPreset::NoCull);
     }
 
@@ -17,8 +16,10 @@ struct UIMaterialDesc : public MaterialDesc
 
     size_t GetHash() const
     {
-        return Core::HashOf(
-            MaterialDesc::GetHash(),
-            texDesc.GetHash());
+        size_t h = MaterialDesc::GetHash();
+        for (const auto& tex : textures)
+            Core::HashCombine(h, tex.GetHash());
+
+        return h;
     }
 };

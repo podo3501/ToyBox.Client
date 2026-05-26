@@ -9,6 +9,8 @@ enum class PixelFormat
 
 struct TextureAsset : public Asset
 {
+	CORE_DECLARE_TYPE(TextureAsset)
+
 	uint32_t width{ 0 };
 	uint32_t height{ 0 };
 	uint32_t stride{ 0 };

@@ -100,6 +100,12 @@
     <ClInclude Include="Math\Constants.h">
       <Filter>Math</Filter>
     </ClInclude>
+    <ClInclude Include="Foundation\ResourceID.h">
+      <Filter>Foundation</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\Cast.hpp">
+      <Filter>Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Utils\EnumHelpers.cpp">
@@ -126,6 +132,12 @@
     </ClCompile>
     <ClCompile Include="Math\CameraMatrices.cpp">
       <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\CommonUtils.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Foundation\ResourceID.cpp">
+      <Filter>Foundation</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -1,0 +1,144 @@
+#include "pch.h"
+#include "GridRenderer.h"
+#include "../ShaderSystem.h"
+#include "RootSignatureBuilder.h"
+#include "../Command/CommandList.h"
+#include "RenderConstants.h"
+#include "../Helpers/MathHelpers.h"
+#include "GameClient/Graphics/RenderData/CameraData.h"
+#include "../MeshResource.h"
+
+namespace cm = Core::Math;
+
+GridRenderer::~GridRenderer() = default;
+GridRenderer::GridRenderer(ID3D12Device* device, ShaderSystem* shaderSystem) :
+    m_device{ device },
+    m_shaderSystem{ shaderSystem }
+{}
+
+bool GridRenderer::Initialize()
+{
+    m_pipelineCache.Initialize(m_device, m_shaderSystem);
+
+    ReturnIfFalse(CreateRootSignature());
+
+    CreateDefaultPSOs();
+    CreateConstantBuffers();
+
+    return true;
+}
+
+bool GridRenderer::CreateRootSignature()
+{
+    RootSignatureBuilder builder;
+
+    builder.AddSRVTable(1, 0); // t0
+    builder.AddCBV(0); // b0
+    builder.AddCBV(1); // b1 ObjectCB
+
+    m_rootSignature = builder.Build(m_device);
+    return m_rootSignature != nullptr;
+}
+
+void GridRenderer::CreateDefaultPSOs()
+{
+    CreatePSO(PipelineLibrary::Get(ShaderID::Grid, RasterPreset::Default, PrimitiveTopologyType::Line));
+}
+
+void GridRenderer::CreateConstantBuffers()
+{
+    constexpr UINT objectBufferSize = kMaxObjectCount * kCBSize;
+    m_objectCBAllocator.Initialize(m_device, objectBufferSize);
+
+    constexpr UINT frameBufferSize = kCBSize;
+    m_frameCBAllocator.Initialize(m_device, frameBufferSize);
+}
+
+void GridRenderer::BindCommonState(CommandList& cmd)
+{
+    cmd->SetGraphicsRootSignature(m_rootSignature.Get());
+
+    ID3D12DescriptorHeap* heaps[] = { m_srvHeap };
+    cmd->SetDescriptorHeaps(1, heaps);
+}
+
+void GridRenderer::BindPipeline(CommandList& cmd, const PipelineState& pipelineState)
+{
+    cmd->SetPipelineState(GetPipeline(pipelineState));
+    m_pipelineState = pipelineState;
+}
+
+ID3D12PipelineState* GridRenderer::GetPipeline(const PipelineState& pipelineState)
+{
+    auto* pipeline = m_pipelineCache.Find(pipelineState);
+    if (pipeline)
+        return pipeline;
+
+    return CreatePSO(pipelineState);
+}
+
+ID3D12PipelineState* GridRenderer::CreatePSO(const PipelineState& pipelineState)
+{
+    return m_pipelineCache.GetOrCreate(
+        pipelineState,
+        m_rootSignature.Get(),
+        [&](D3D12_GRAPHICS_PIPELINE_STATE_DESC& pso)
+        {
+            pso.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
+            pso.DepthStencilState.DepthEnable = TRUE;
+            pso.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
+            pso.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS;
+            pso.DSVFormat = DXGI_FORMAT_D32_FLOAT;
+        });
+}
+
+void GridRenderer::PrepareFrame(const CameraData& camera)
+{
+    m_objectCBAllocator.Reset();
+    m_frameCBAllocator.Reset();
+
+    FrameCB frame{};
+    DirectX::XMMATRIX view = ToDXMatrix(camera.view);
+    DirectX::XMMATRIX proj = ToDXMatrix(camera.proj);
+
+    // GPU용으로 transpose해서 저장
+    XMStoreFloat4x4(&frame.view, DirectX::XMMatrixTranspose(view));
+    XMStoreFloat4x4(&frame.proj, DirectX::XMMatrixTranspose(proj));
+
+    m_frameCBAddress = m_frameCBAllocator.AllocateConstant(frame);
+}
+
+void GridRenderer::Draw(CommandList& cmd, MeshResource& mesh, const cm::Matrix& world)
+{
+    auto objectCBAddress = UpdateObjectCB(world);
+    auto& meshTable = mesh.GetMeshTable();
+
+    cmd->SetGraphicsRootDescriptorTable(0, meshTable.GetGpuHandle());
+    cmd->SetGraphicsRootConstantBufferView(1, m_frameCBAddress);
+    cmd->SetGraphicsRootConstantBufferView(2, objectCBAddress);
+
+    switch (m_pipelineState.topologyType)
+    {
+    case PrimitiveTopologyType::Triangle:
+        cmd->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+        break;
+
+    case PrimitiveTopologyType::Line:
+        cmd->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
+        break;
+    }
+
+    cmd->DrawInstanced(mesh.GetVertexCount(), 1, 0, 0);
+
+    meshTable.MarkUsed(cmd.GetType(), cmd.GetFence());
+}
+
+D3D12_GPU_VIRTUAL_ADDRESS GridRenderer::UpdateObjectCB(const cm::Matrix& world)
+{
+    ObjectCB obj{};
+
+    DirectX::XMMATRIX xmWorld = ToDXMatrix(world);
+    XMStoreFloat4x4(&obj.world, DirectX::XMMatrixTranspose(xmWorld));
+
+    return m_objectCBAllocator.AllocateConstant(obj);
+}

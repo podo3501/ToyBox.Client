@@ -9,17 +9,21 @@ MaterialSystem::~MaterialSystem() = default;
 MaterialSystem::MaterialSystem(TextureSystem* texSystem) :
 	m_texSystem{ texSystem }
 {
-    m_defaultMeshMaterial = CreateMaterialResource(MaterialType::Mesh);
+    auto res = make_shared<MeshMaterialResource>();
+    res->SetTexture(TextureSlot::Albedo, m_texSystem->GetDefaultTexture());
+
+    m_defaultMeshMaterial = res;
 }
 
-shared_ptr<IMaterialResource> MaterialSystem::CreateMaterialResource(MaterialType materialType)
+shared_ptr<IMaterialResource> MaterialSystem::CreateMaterialResource(const MaterialDesc& matDesc)
 {
-    switch (materialType)
+    switch (matDesc.type)
     {
     case MaterialType::Mesh:
     {
         auto res = make_shared<MeshMaterialResource>();
-        res->SetAlbedoTexture(m_texSystem->GetDefaultTexture());
+        res->SetTexture(TextureSlot::Albedo, m_texSystem->GetDefaultTexture());
+        res->SetMaterialDesc(static_cast<const MeshMaterialDesc&>(matDesc));
         return res;
     }
 
@@ -27,6 +31,7 @@ shared_ptr<IMaterialResource> MaterialSystem::CreateMaterialResource(MaterialTyp
     {
         auto res = make_shared<UIMaterialResource>();
         res->SetTexture(m_texSystem->GetDefaultTexture());
+        res->SetMaterialDesc(static_cast<const UIMaterialDesc&>(matDesc));
         return res;
     }
     }
@@ -34,15 +39,21 @@ shared_ptr<IMaterialResource> MaterialSystem::CreateMaterialResource(MaterialTyp
     return nullptr;
 }
 
+//일단 한장으로 되게끔 하고 나중에 여러장 되게끔 하자.
+        //Asset에서 update 에서 읽어야할 파일을 읽어서 로딩하는 로직 안짰음.
+        //MaterialRepository에서 코딩 안 짰음.
+        //MaterialResource에 desc를 넣은 다음 읽을때 꺼내서 읽는 방식으로 하고 있음.
+        //여러장 로딩할때 texAsset인자에 타입값과 같이 보내서 알베도인지, normal인지 구분하는 방식으로 가는게 좋겠음.
+
 bool MaterialSystem::LoadFromAsset(
-    std::shared_ptr<IMaterialResource> resource, 
-    std::shared_ptr<TextureAsset> texAsset,
-    std::unique_ptr<MaterialDesc> matDesc)
+    std::shared_ptr<IMaterialResource> resource,
+    TextureSlot texSlot,
+    std::shared_ptr<TextureAsset> texAsset)
 {
-    if (!resource || !matDesc)
+    if (!resource)
         return false;
 
-    switch (matDesc->type)
+    switch (resource->GetType())
     {
     case MaterialType::Mesh:
     {
@@ -50,20 +61,16 @@ bool MaterialSystem::LoadFromAsset(
         if (!meshRes)
             return false;
 
-        auto* meshDesc = static_cast<MeshMaterialDesc*>(matDesc.get());
-        if (!meshDesc)
-            return false;
-
+        auto& matDesc = meshRes->GetMaterialDesc();
         auto texRes = m_texSystem->CreateTextureResource();
         if (!texRes)
             return false;
 
-        if (!m_texSystem->LoadFromAsset(texRes, texAsset, meshDesc->albedoDesc))
+        auto& slotDesc = matDesc.textures[static_cast<size_t>(texSlot)].desc;
+        if (!m_texSystem->LoadFromAsset(texRes, texAsset, slotDesc))
             return false;
 
-        meshRes->SetAlbedoTexture(texRes);
-        meshRes->SetMaterialDesc(*meshDesc);
-
+        meshRes->SetTexture(texSlot, texRes);
         return true;
     }
 
@@ -73,20 +80,16 @@ bool MaterialSystem::LoadFromAsset(
         if (!uiRes)
             return false;
 
-        auto* uiDesc = static_cast<UIMaterialDesc*>(matDesc.get());
-        if (!uiDesc)
-            return false;
-
+        auto& uiDesc = uiRes->GetMaterialDesc();
         auto texRes = m_texSystem->CreateTextureResource();
         if (!texRes)
             return false;
 
-        if (!m_texSystem->LoadFromAsset(texRes, texAsset, uiDesc->texDesc))
+        auto& slotDesc = uiDesc.textures[static_cast<size_t>(texSlot)].desc;
+        if (!m_texSystem->LoadFromAsset(texRes, texAsset, slotDesc))
             return false;
 
         uiRes->SetTexture(texRes);
-        uiRes->SetMaterialDesc(*uiDesc);
-
         return true;
     }
     }

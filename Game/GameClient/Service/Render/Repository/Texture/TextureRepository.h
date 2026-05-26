@@ -3,7 +3,7 @@
 #include "Core/Utils/Hash.h"
 #include "../ResourceTypes.h"
 #include "Service/Render/Handle/TextureHandle.h"
-#include "Service/Render/Desc/TextureDesc.h"
+#include "Service/Render/Desc/TextureBinding.h"
 
 struct ITextureSystem;
 struct ITextureResource;

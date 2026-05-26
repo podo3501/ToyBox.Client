@@ -12,5 +12,6 @@ public:
 
     static std::shared_ptr<MeshAsset> CreateGrid(
         float cellSize = 1.0f,
-        uint32_t halfExtent = 10);
+        uint32_t halfExtent = 10,
+        float r = 0.5f, float g = 0.5f, float b = 0.5f);
 };

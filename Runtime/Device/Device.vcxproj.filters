@@ -298,6 +298,15 @@
     <ClInclude Include="Render\DX12\Descriptor\DescriptorFactory.h">
       <Filter>Render\DX12\Descriptor</Filter>
     </ClInclude>
+    <ClInclude Include="Render\DX12\Renderer\GridRenderer.h">
+      <Filter>Render\DX12\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Renderer\RenderConstants.h">
+      <Filter>Render\DX12\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\GridGraphBuilder.h">
+      <Filter>Render\DX12</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -498,6 +507,12 @@
     </ClCompile>
     <ClCompile Include="Render\DX12\Descriptor\DescriptorFactory.cpp">
       <Filter>Render\DX12\Descriptor</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Renderer\GridRenderer.cpp">
+      <Filter>Render\DX12\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\GridGraphBuilder.cpp">
+      <Filter>Render\DX12</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

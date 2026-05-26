@@ -3,14 +3,14 @@
 #include "IRenderBackend.h"
 
 RenderService::~RenderService() = default;
-RenderService::RenderService(unique_ptr<IRenderBackend> backend) :
+RenderService::RenderService(unique_ptr<IRenderBackend> backend, AssetPipelineT* assetPipeline) :
 	m_backend{ move(backend) },
-	m_context{ make_unique<RenderContext>(m_backend.get()) }
+	m_context{ make_unique<RenderContext>(m_backend.get(), assetPipeline) }
 {}
 
-unique_ptr<RenderService> RenderService::Create(unique_ptr<IRenderBackend> backend) noexcept
+unique_ptr<RenderService> RenderService::Create(unique_ptr<IRenderBackend> backend, AssetPipelineT* assetPipeline) noexcept
 {
-	unique_ptr<RenderService> service(new RenderService(move(backend)));
+	unique_ptr<RenderService> service(new RenderService(move(backend), assetPipeline));
 	if (!service->Initialize()) return nullptr;
 
 	return service;

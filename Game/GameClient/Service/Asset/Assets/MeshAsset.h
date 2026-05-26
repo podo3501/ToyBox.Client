@@ -6,6 +6,7 @@ enum class VertexFormat
 {
     Mesh,
     UI,
+    Grid,
 };
 
 struct MeshVertex
@@ -22,8 +23,16 @@ struct UIVertex
     float u, v;
 };
 
+struct GridVertex
+{
+    float px, py, pz;
+    float r, g, b;
+};
+
 struct MeshAsset : public Asset
 {
+    CORE_DECLARE_TYPE(MeshAsset)
+
     VertexFormat format;
 
     uint32_t vertexStride{ 0 }; //generic하게 byte로 바뀌었기 때문에 보폭을 저장해야 한다.

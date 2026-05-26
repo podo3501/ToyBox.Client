@@ -11,20 +11,26 @@ class MeshResource : public IMeshResource
 public:
 	~MeshResource();
 	MeshResource();
-	virtual bool IsReady() const noexcept { return m_ready; }
+	virtual bool IsReady() const noexcept override { return m_ready; }
+	virtual VertexFormat GetVertexFormat() const noexcept override { return m_format; }
 
-	void SetResource(ComPtr<ID3D12Resource> vb, ComPtr<ID3D12Resource> ib, UINT indexCount);
-	void SetMeshTable(DescriptorAllocation table);
-	void MarkReady() { m_ready = true; }
-	UINT GetIndexCount() const { return m_indexCount; }
-	DescriptorAllocation& GetMeshTable() { return m_meshTable; }
+	void SetVertexFormat(VertexFormat format) noexcept { m_format = format; }
+	void SetResource(ComPtr<ID3D12Resource> vb, ComPtr<ID3D12Resource> ib, 
+		UINT vertexCount, UINT indexCount) noexcept;
+	void SetMeshTable(DescriptorAllocation table) noexcept;
+	void MarkReady() noexcept { m_ready = true; }
+	UINT GetVertexCount() const noexcept { return m_vertexCount; }
+	UINT GetIndexCount() const noexcept { return m_indexCount; }
+	DescriptorAllocation& GetMeshTable() noexcept { return m_meshTable; }
 
 private:
+	VertexFormat m_format;
 	ComPtr<ID3D12Resource> m_vb;
 	ComPtr<ID3D12Resource> m_ib;
 
 	DescriptorAllocation m_meshTable;
 
+	UINT m_vertexCount{ 0 };
 	UINT m_indexCount{ 0 };
 	bool m_ready{ false };
 };

@@ -8,7 +8,7 @@
 #include "GameClient/Service/Render/Desc/RenderState.h"
 
 struct ObjectCB;
-struct FrameCB;
+struct MeshFrameCB;
 struct MaterialCB;
 struct DirectionalLightData;
 struct CameraData;

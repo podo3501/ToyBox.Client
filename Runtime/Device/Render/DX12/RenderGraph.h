@@ -1,7 +1,7 @@
 #pragma once
 #include "Command/CommandType.h"
 #include "RGTypes.h"
-#include "GameClient/Service/Render/Desc/TextureDesc.h"
+#include "GameClient/Service/Render/Desc/TextureBinding.h"
 #include "TaskHandle.h"
 
 struct ResourceStateTracker

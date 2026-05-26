@@ -1,8 +1,6 @@
 #pragma once
-#include <filesystem>
+#include "Core/Foundation/ResourceID.h"
 #include "Core/Utils/Hash.h"
-
-struct TextureAsset;
 
 struct TextureDesc
 {
@@ -14,5 +12,27 @@ struct TextureDesc
     size_t GetHash() const
     {
         return Core::HashOf(srgb, generateMips);
+    }
+};
+
+enum class TextureSlot
+{
+    Albedo,
+    Normal,
+    Count
+};
+
+struct TextureBinding
+{
+    Core::ResourceID resID;
+    TextureDesc desc{};
+
+    bool operator==(const TextureBinding&) const = default;
+
+    size_t GetHash() const
+    {
+        return Core::HashOf(
+            resID,
+            desc.GetHash());
     }
 };

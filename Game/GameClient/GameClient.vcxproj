@@ -22,6 +22,7 @@
     <ClCompile Include="GameLoop.cpp" />
     <ClCompile Include="Graphics\Geometry\MaterialDescFactory.cpp" />
     <ClCompile Include="Graphics\Geometry\MeshFactory.cpp" />
+    <ClCompile Include="Graphics\Geometry\TextureBindingFactory.cpp" />
     <ClCompile Include="Graphics\ShaderStageBuilder.cpp" />
     <ClCompile Include="Graphics\World\Camera.cpp" />
     <ClCompile Include="Graphics\World\DirectionalLight.cpp" />
@@ -112,6 +113,7 @@
     <ClInclude Include="GameLoop.h" />
     <ClInclude Include="Graphics\Geometry\MaterialDescFactory.h" />
     <ClInclude Include="Graphics\Geometry\MeshFactory.h" />
+    <ClInclude Include="Graphics\Geometry\TextureBindingFactory.h" />
     <ClInclude Include="Graphics\RenderData\CameraData.h" />
     <ClInclude Include="Graphics\RenderData\DirectionalLightData.h" />
     <ClInclude Include="Graphics\ShaderStageBuilder.h" />
@@ -124,6 +126,9 @@
     <ClInclude Include="Scenes\Test\ComponentTestScene.h" />
     <ClInclude Include="Scenes\Test\TestScene1.h" />
     <ClInclude Include="Scenes\Test\TestScene2.h" />
+    <ClInclude Include="Service\AssetAsync\AssetAsyncTypes.h" />
+    <ClInclude Include="Service\AssetAsync\AssetPipeline.h" />
+    <ClInclude Include="Service\AssetAsync\AssetWorker.h" />
     <ClInclude Include="Service\Asset\AssetService.h" />
     <ClInclude Include="Service\Asset\Assets\AudioTypes.h" />
     <ClInclude Include="Service\Asset\Assets\MeshAsset.h" />
@@ -160,7 +165,7 @@
     <ClInclude Include="Service\Render\Desc\MaterialDesc.h" />
     <ClInclude Include="Service\Render\Desc\MeshMaterialDesc.h" />
     <ClInclude Include="Service\Render\Desc\RenderState.h" />
-    <ClInclude Include="Service\Render\Desc\TextureDesc.h" />
+    <ClInclude Include="Service\Render\Desc\TextureBinding.h" />
     <ClInclude Include="Service\Render\Desc\UIMaterialDesc.h" />
     <ClInclude Include="Service\Render\Handle\MaterialHandle.h" />
     <ClInclude Include="Service\Render\Handle\MeshHandle.h" />

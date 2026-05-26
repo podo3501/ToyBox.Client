@@ -2,6 +2,7 @@
 #include "MeshRenderer.h"
 #include "../MeshResource.h"
 #include "../MeshMaterialResource.h"
+#include "RenderConstants.h"
 #include "RootSignatureBuilder.h"
 #include "../d3dx12.h"
 #include <d3dcompiler.h>
@@ -13,23 +14,6 @@
 #include "GameClient/Graphics/RenderData/CameraData.h"
 
 namespace cm = Core::Math;
-
-struct ObjectCB
-{
-    DirectX::XMFLOAT4X4 world;
-};
-
-struct FrameCB
-{
-    DirectX::XMFLOAT4X4 view;
-    DirectX::XMFLOAT4X4 proj;
-
-    float lightDirection[3];
-    float lightIntensity;
-
-    float lightColor[3];
-    float padding;
-};
 
 struct MaterialCB
 {
@@ -137,26 +121,26 @@ void MeshRenderer::PrepareFrame(const DirectionalLightData& light, const CameraD
     m_materialCBAllocator.Reset();
     m_frameCBAllocator.Reset();
 
-    FrameCB frame{};
+    MeshFrameCB meshFrame{};
     DirectX::XMMATRIX view = ToDXMatrix(camera.view);
     DirectX::XMMATRIX proj = ToDXMatrix(camera.proj);
 
     // GPU용으로 transpose해서 저장
-    XMStoreFloat4x4(&frame.view, DirectX::XMMatrixTranspose(view));
-    XMStoreFloat4x4(&frame.proj, DirectX::XMMatrixTranspose(proj));
+    XMStoreFloat4x4(&meshFrame.frame.view, DirectX::XMMatrixTranspose(view));
+    XMStoreFloat4x4(&meshFrame.frame.proj, DirectX::XMMatrixTranspose(proj));
 
     // Directional Light
-    frame.lightDirection[0] = light.direction.x;
-    frame.lightDirection[1] = light.direction.y;
-    frame.lightDirection[2] = light.direction.z;
+    meshFrame.lighting.lightDirection[0] = light.direction.x;
+    meshFrame.lighting.lightDirection[1] = light.direction.y;
+    meshFrame.lighting.lightDirection[2] = light.direction.z;
 
-    frame.lightColor[0] = light.color.x;
-    frame.lightColor[1] = light.color.y;
-    frame.lightColor[2] = light.color.z;
+    meshFrame.lighting.lightColor[0] = light.color.x;
+    meshFrame.lighting.lightColor[1] = light.color.y;
+    meshFrame.lighting.lightColor[2] = light.color.z;
 
-    frame.lightIntensity = light.intensity;
+    meshFrame.lighting.lightIntensity = light.intensity;
 
-    m_frameCBAddress = m_frameCBAllocator.AllocateConstant(frame);
+    m_frameCBAddress = m_frameCBAllocator.AllocateConstant(meshFrame);
 }
 
 void MeshRenderer::Draw(
@@ -168,7 +152,7 @@ void MeshRenderer::Draw(
     auto objectCBAddress = UpdateObjectCB(world);
     auto materialCBAddress = UpdateMaterialCB(material.GetSurface());
     auto& meshTable = mesh.GetMeshTable();
-    auto& textureSrv = material.GetAlbedoTextureSRV();
+    auto& textureSrv = material.GetTextureSRV(TextureSlot::Albedo);
     
     cmd->SetGraphicsRootDescriptorTable(0, meshTable.GetGpuHandle());
     cmd->SetGraphicsRootDescriptorTable(1, textureSrv.GetGpuHandle());

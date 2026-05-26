@@ -3,36 +3,20 @@
 #include "Core/Utils/Hash.h"
 #include "../ResourceTypes.h"
 #include "Service/Render/Handle/MaterialHandle.h"
-#include "Service/Render/Desc/TextureDesc.h"
-#include "Service/Render/Desc/MaterialDesc.h"
+#include "Service/Render/Desc/TextureBinding.h"
+#include "Service/Render/Desc/MeshMaterialDesc.h"
+#include "Service/Render/Desc/UIMaterialDesc.h"
+#include "Service/AssetAsync/AssetAsyncTypes.h"
 
 struct IMaterialSystem;
 struct IMaterialResource;
-struct TextureAsset;
+struct Asset;
 struct CpuPendingMaterialRequest;
 struct GpuPendingMaterialRequest;
 
-struct MaterialKey
-{
-    ResourceKey resourceKey;
-    size_t descHash{};
-
-    bool operator==(const MaterialKey& rhs) const = default;
-};
-
-struct MaterialKeyHash
-{
-    size_t operator()(const MaterialKey& k) const
-    {
-        return Core::HashOf(
-            k.resourceKey.GetHash(),
-            k.descHash);
-    }
-};
-
 struct MaterialEntry
 {
-    MaterialKey key;
+    size_t key;
     std::shared_ptr<IMaterialResource> matRes;
     LoadState state{ LoadState::Pending };
 };
@@ -42,17 +26,19 @@ class MaterialRepository
 public:
     ~MaterialRepository();
     MaterialRepository() = delete;
-    MaterialRepository(IMaterialSystem* matSystem);
+    MaterialRepository(IMaterialSystem* matSystem, AssetPipelineT* assetPipeline);
 
-    MaterialHandle GetOrCreate(
-        std::filesystem::path path,
-        std::unique_ptr<MaterialDesc> desc,
-        function<shared_ptr<TextureAsset>(const filesystem::path&)> loader);
+    MaterialHandle GetOrCreate(std::unique_ptr<MeshMaterialDesc> desc);
 
-    MaterialHandle GetOrCreate(
-        const std::string& runtimeKey, 
-        shared_ptr<TextureAsset> albedoAsset, 
-        std::unique_ptr<MaterialDesc> desc);
+    //MaterialHandle GetOrCreate(
+    //    std::filesystem::path path,
+    //    std::unique_ptr<MaterialDesc> desc,
+    //    function<shared_ptr<TextureAsset>(const filesystem::path&)> loader);
+
+    //MaterialHandle GetOrCreate(
+    //    const std::string& runtimeKey, 
+    //    shared_ptr<TextureAsset> albedoAsset, 
+    //    std::unique_ptr<MaterialDesc> desc);
 
     void Update();
     bool Release(MaterialHandle h);
@@ -65,7 +51,9 @@ private:
     void ProcessLoading();
 
     IMaterialSystem* m_matSystem{ nullptr };
-    std::unordered_map<MaterialKey, MaterialHandle, MaterialKeyHash> m_cache;
+    AssetPipelineT* m_assetPipeline{ nullptr };
+
+    std::unordered_map<size_t, MaterialHandle> m_cache;
     HandlePool<MaterialEntry, MaterialTag> m_loadedMaterials;
 
     std::vector<CpuPendingMaterialRequest> m_cpuPending;

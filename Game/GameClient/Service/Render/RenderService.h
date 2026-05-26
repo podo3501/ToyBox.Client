@@ -1,9 +1,11 @@
 #pragma once
 #include "RenderContext.h"
+#include "../AssetAsync/AssetAsyncTypes.h"
 
 struct IRenderBackend;
 struct DirectionalLightData;
 struct CameraData;
+struct Asset;
 class RenderContext;
 
 class RenderService
@@ -11,7 +13,7 @@ class RenderService
 public:
 	~RenderService();
 	RenderService() = delete;
-	static unique_ptr<RenderService> Create(unique_ptr<IRenderBackend> backend) noexcept;
+	static unique_ptr<RenderService> Create(unique_ptr<IRenderBackend> backend, AssetPipelineT* assetPipeline) noexcept;
 	bool Initialize();
 	void SetCamera(const CameraData& camera);
 	void SetDirectionalLight(const DirectionalLightData& light);
@@ -22,7 +24,7 @@ public:
 	RenderContext* GetContext();
 
 private:
-	RenderService(unique_ptr<IRenderBackend> backend);
+	RenderService(unique_ptr<IRenderBackend> backend, AssetPipelineT* assetPipeline);
 
 	unique_ptr<IRenderBackend> m_backend;
 	unique_ptr<RenderContext> m_context;

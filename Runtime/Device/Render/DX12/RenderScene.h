@@ -20,6 +20,9 @@ class RenderScene
 public:
     void AddOpaque(const DrawItem& item);
     const std::vector<DrawItem>& GetOpaqueDraws() { return m_opaqueDraws; }
+
+    void AddGrid(const DrawItem& item);
+    const std::vector<DrawItem>& GetGridDraws() { return m_gridDraws; }
     
     void AddUI(const DrawItem& item);
     const std::vector<DrawItem>& GetUIDraws() { return m_uiDraws; }
@@ -32,5 +35,6 @@ private:
     void UIClear();
 
     std::vector<DrawItem> m_opaqueDraws;
+    std::vector<DrawItem> m_gridDraws;
     std::vector<DrawItem> m_uiDraws;
 };

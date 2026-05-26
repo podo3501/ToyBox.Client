@@ -10,6 +10,8 @@ enum class SampleFormat
 
 struct StaticSoundAsset : public Asset
 {
+    CORE_DECLARE_TYPE(StaticSoundAsset)
+
     int sampleRate = 0;
     int channels = 0;
     SampleFormat format = SampleFormat::Int16;

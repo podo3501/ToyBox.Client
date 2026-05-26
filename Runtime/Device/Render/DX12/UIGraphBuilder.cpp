@@ -17,7 +17,7 @@ UIGraphBuilder::UIGraphBuilder(UIRenderer* uiRenderer, RenderScene* scene, RGHan
 void UIGraphBuilder::Build(RenderGraph& graph)
 {
     auto& ui = graph.AddPass("UI", CommandType::Direct);
-    ui.dependsOn.push_back("Opaque");
+    ui.dependsOn.push_back("Grid");
     ui.writes.push_back({ m_hBb, RGAccess::RTV });
     ui.gpuExecute = [this](CommandList& cmd, TaskContext& ctx) {
         m_uiRenderer->BindCommonState(cmd);

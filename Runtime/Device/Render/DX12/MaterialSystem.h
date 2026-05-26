@@ -8,11 +8,11 @@ class MaterialSystem : public IMaterialSystem
 public:
 	~MaterialSystem();
 	MaterialSystem(TextureSystem* texSystem);
-	virtual shared_ptr<IMaterialResource> CreateMaterialResource(MaterialType materialType) override;
+	virtual shared_ptr<IMaterialResource> CreateMaterialResource(const MaterialDesc& matDesc) override;
 	virtual bool LoadFromAsset(
 		std::shared_ptr<IMaterialResource> resource,
-		std::shared_ptr<TextureAsset> texAsset,
-		std::unique_ptr<MaterialDesc> matDesc) override;
+		TextureSlot texSlot,
+		std::shared_ptr<TextureAsset> texAsset) override;
 
 	shared_ptr<IMaterialResource> GetDefaultMeshMaterial() { return m_defaultMeshMaterial; }
 

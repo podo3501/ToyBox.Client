@@ -11,9 +11,56 @@ AssetService::AssetService(IResourceManager* resManager) noexcept :
 unique_ptr<AssetService> AssetService::Create(IResourceManager* resManager) noexcept
 {
 	if (!resManager) return nullptr;
+	return std::unique_ptr<AssetService>(new AssetService(resManager));
+}
 
-	unique_ptr<AssetService> service(new AssetService(resManager));
-	return service;
+shared_ptr<Asset> AssetService::Load(Core::TypeID type, const filesystem::path& path)
+{
+	auto normalizedPath = path.lexically_normal();
+	CacheKey cacheKey{ normalizedPath, type };
+
+	{
+		std::lock_guard lock(m_cacheMutex);
+		auto it = m_cache.find(cacheKey);
+		if (it != m_cache.end())
+		{
+			if (auto cached = it->second.lock())
+				return cached;
+		}
+	}
+
+	string ext = path.extension().string();
+	string normalized = ToLowerCopy(ext);
+	
+	LoaderKey loaderKey{ type, normalized };
+
+	IAssetLoader* loader = nullptr;
+	{
+		std::lock_guard lock(m_loaderMutex);
+		auto loaderIt = m_loaders.find(loaderKey);
+
+		if (loaderIt == m_loaders.end())
+			return nullptr;
+
+		loader = loaderIt->second.get();
+	}
+
+	auto asset = LoadWithSource(loader, path);
+	if (!asset) return nullptr;
+
+	{
+		std::lock_guard lock(m_cacheMutex);
+
+		auto it = m_cache.find(cacheKey);
+		if (it != m_cache.end()) // 다른 thread가 먼저 넣었을 수도 있음
+		{
+			if (auto existing = it->second.lock())
+				return existing;
+		}
+		m_cache[cacheKey] = asset;
+	}
+
+	return asset;
 }
 
 shared_ptr<Asset> AssetService::LoadWithSource(IAssetLoader* loader, const filesystem::path& path)

@@ -3,23 +3,39 @@
 #include "TextureResource.h"
 
 MeshMaterialResource::~MeshMaterialResource() = default;
-MeshMaterialResource::MeshMaterialResource() = default;
+MeshMaterialResource::MeshMaterialResource()
+{
+    m_texResources.resize(static_cast<size_t>(TextureSlot::Count));
+}
 
 bool MeshMaterialResource::IsReady() const noexcept
 {
-    if (!m_texRes)
+    const size_t count = m_desc.textures.size();
+    if (m_texResources.size() < count)
         return false;
 
-    return m_texRes->IsReady();
+    for (size_t i = 0; i < count; ++i)
+    {
+        const auto& tex = m_texResources[i];
+        if (!tex || !tex->IsReady())
+            return false;
+    }
+    return true;
 }
 
-void MeshMaterialResource::SetAlbedoTexture(std::shared_ptr<ITextureResource> texRes)
+void MeshMaterialResource::SetTexture(TextureSlot texSlot, std::shared_ptr<ITextureResource> texRes)
 {
-    m_texRes = texRes;
+    const size_t slot = static_cast<size_t>(texSlot);
+    Assert(slot < m_texResources.size());
+
+    m_texResources[slot] = std::move(texRes);
 }
 
-DescriptorAllocation& MeshMaterialResource::GetAlbedoTextureSRV()
+DescriptorAllocation& MeshMaterialResource::GetTextureSRV(TextureSlot texSlot)
 {
-    auto texRes = static_cast<TextureResource*>(m_texRes.get());
+    const size_t slot = static_cast<size_t>(texSlot);
+    Assert(slot < m_texResources.size());
+
+    auto texRes = static_cast<TextureResource*>(m_texResources[slot].get());
     return texRes->GetSrv();
 }

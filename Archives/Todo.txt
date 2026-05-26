@@ -299,15 +299,18 @@
 --renderer(mesh, quad)에서 m_uiFrameCB같은 cb들 코드 정리.
 --shader registry가 늦게 되서 CreateDefaultPSOs 가 false가 되고 있다.
 --debug를 f1키 같은걸 눌러서 shader pso를 바꿔서 실시간으로 shader 디버그 확인할 수 있게끔
+--Renderer 폴더로 묶기
+--mesh vertex에서 debug vertex 분리
+--hlsl 로딩해서 넘기기
+--debug vertex
+--AssetQueue를 만들어 AssetService를 다른 Service에 직접 넣지 않고 중간에서 처리하는 클래스 만듦.
+--AssetWorker를 만들어 thread로 로딩처리
 
-@Renderer를 추상클래스로 묶기
-@mesh vertex에서 debug vertex 분리
+@AssetWorker에서 여러개를 로딩걸어서 죽는지 어떤지 테스트
 @texture asset factory 만들지 말지.
 @texture system은 service 레벨에서 안보이게 될듯.
 @backend는 지금 그려지는 게 ui인지 mesh인지 결과적으로는 모르게 해야 할듯. quad renderer, mesh renderer 통합도 생각해보자.
 @카메라 움직이게끔
-@hlsl 로딩해서 넘기기
-@debug vertex
 @normal map
 @shadow pass
 

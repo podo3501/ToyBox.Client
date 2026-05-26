@@ -3,5 +3,5 @@
 class RenderSortKey
 {
 public:
-    static uint64_t BuildOpaque(uint64_t pso);
+    static uint64_t Build(uint64_t pso);
 };

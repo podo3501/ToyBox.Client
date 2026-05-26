@@ -3,7 +3,7 @@ cbuffer ObjectCB : register(b0)
     float4x4 world;
 };
 
-cbuffer FrameCB : register(b1)
+cbuffer MeshFrameCB : register(b1)
 {
     float4x4 view;
     float4x4 proj;

@@ -42,15 +42,26 @@ struct JsonMeshVertex
 
 struct JsonMesh
 {
+    std::string vertexFormat;
     std::vector<JsonMeshVertex> vertices;
     std::vector<uint32_t> indices;
 
     void Serialize(Serializer& serializer)
     {
+        serializer.Process("vertexFormat", vertexFormat);
         serializer.Process("vertices", vertices);
         serializer.Process("indices", indices);
     }
 };
+
+static VertexFormat ParseVertexFormat(const std::string& str)
+{
+    if (str == "Mesh") return VertexFormat::Mesh;
+    if (str == "UI") return VertexFormat::UI;
+    if (str == "Grid") return VertexFormat::Grid;
+
+    return VertexFormat::Mesh;
+}
 
 static MeshVertex ConvertToVertex(const JsonMeshVertex& v)
 {
@@ -68,6 +79,8 @@ shared_ptr<Asset> MeshJsonLoader::LoadFromMemory(const Core::ByteBuffer& buffer)
 	DeserializeClass(rData, jsonMesh);
 
     auto mesh = std::make_shared<MeshAsset>();
+    mesh->format = ParseVertexFormat(jsonMesh.vertexFormat);
+
     std::vector<MeshVertex> vertices;
     vertices.reserve(jsonMesh.vertices.size());
 

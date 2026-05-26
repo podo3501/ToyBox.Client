@@ -1,4 +1,6 @@
 {
+  "vertexFormat": "Mesh",
+
   "vertices": [
     { "position": { "x": -0.5, "y": -0.5, "z":  0.5 }, "normal": { "x": 0, "y": 0, "z": 1 }, "uv": { "x": 0, "y": 0 } },
     { "position": { "x":  0.5, "y": -0.5, "z":  0.5 }, "normal": { "x": 0, "y": 0, "z": 1 }, "uv": { "x": 1, "y": 0 } },

@@ -7,14 +7,28 @@ namespace Core
     using ByteBuffer = std::vector<Byte>;
 
     //static 변수가 한번만 만들어진다는 것과 주소가 다르다는 성질을 이용해서 이 클래스가 어떤 클래스인지 알게끔 하는 코드.
-    using TypeId = size_t;
+    using TypeID = size_t;
+    inline constexpr TypeID InvalidTypeID = 0;
+
     template<typename T>
-    TypeId GetTypeId()
+    TypeID GetTypeID()
     {
         static const char unique;
-        return reinterpret_cast<TypeId>(&unique);
+        return reinterpret_cast<TypeID>(&unique);
     }
 }
+
+#define CORE_DECLARE_TYPE(Type)                     \
+public:                                             \
+    static Core::TypeID StaticTypeID()              \
+    {                                               \
+        return Core::GetTypeID<Type>();             \
+    }                                               \
+                                                    \
+    virtual Core::TypeID GetTypeID() const override \
+    {                                               \
+        return StaticTypeID();                      \
+    }
 
 //값과 값이 없는 표현으로 nullopt가 '꼭' 존재해야 하는 부분에만 적용해야함.
 //데이터가 큰 경우 &로 보내고 싶을때 이것을 사용. const optinalRef<data>& 이렇게 사용.

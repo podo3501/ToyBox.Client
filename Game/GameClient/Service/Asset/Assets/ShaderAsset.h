@@ -3,6 +3,8 @@
 
 struct ShaderAsset : public Asset
 {
+    CORE_DECLARE_TYPE(ShaderAsset)
+
     std::string hlslSource; // file ÀüÃ¼
 
     Core::ByteBuffer vs;

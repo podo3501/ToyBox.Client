@@ -231,6 +231,9 @@
     <ClCompile Include="Graphics\ShaderStageBuilder.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="Graphics\Geometry\TextureBindingFactory.cpp">
+      <Filter>Graphics\Geometry</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameLoop.h" />
@@ -574,7 +577,7 @@
     <ClInclude Include="Service\Render\Desc\MeshMaterialDesc.h">
       <Filter>Service\Render\Desc</Filter>
     </ClInclude>
-    <ClInclude Include="Service\Render\Desc\TextureDesc.h">
+    <ClInclude Include="Service\Render\Desc\TextureBinding.h">
       <Filter>Service\Render\Desc</Filter>
     </ClInclude>
     <ClInclude Include="Service\Render\Desc\UIMaterialDesc.h">
@@ -612,6 +615,18 @@
     </ClInclude>
     <ClInclude Include="Graphics\ShaderStageBuilder.h">
       <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Geometry\TextureBindingFactory.h">
+      <Filter>Graphics\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\AssetAsync\AssetPipeline.h">
+      <Filter>Service\AssetAsync</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\AssetAsync\AssetWorker.h">
+      <Filter>Service\AssetAsync</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\AssetAsync\AssetAsyncTypes.h">
+      <Filter>Service\AssetAsync</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -719,6 +734,9 @@
     </Filter>
     <Filter Include="Service\Render\Repository\Texture">
       <UniqueIdentifier>{8d2d9237-c25a-445a-8fc2-f75425938ebe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Service\AssetAsync">
+      <UniqueIdentifier>{c98e6e45-0e8e-4a3f-a21d-0c731a519f05}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

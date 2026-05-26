@@ -11,15 +11,17 @@ public:
 	~MeshMaterialResource();
 	MeshMaterialResource();
 	virtual bool IsReady() const noexcept override;
+	virtual MaterialType GetType() const noexcept override { return MaterialType::Mesh; }
 
-	void SetAlbedoTexture(std::shared_ptr<ITextureResource> texRes);
+	void SetTexture(TextureSlot texSlot, std::shared_ptr<ITextureResource> texRes);
 	void SetMaterialDesc(const MeshMaterialDesc& desc) { m_desc = desc; }
+	const MeshMaterialDesc& GetMaterialDesc() const noexcept { return m_desc; }
 	const MaterialSurface& GetSurface() const { return m_desc.surface; }
 	const PipelineState& GetPipelineState() const { return m_desc.pipelineState; }
 
-	DescriptorAllocation& GetAlbedoTextureSRV();
+	DescriptorAllocation& GetTextureSRV(TextureSlot texSlot);
 
 private:
-	shared_ptr<ITextureResource> m_texRes;
+	std::vector<std::shared_ptr<ITextureResource>> m_texResources;
 	MeshMaterialDesc m_desc;
 };

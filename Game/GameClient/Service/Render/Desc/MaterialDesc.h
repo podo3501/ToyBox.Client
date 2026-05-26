@@ -18,6 +18,8 @@ struct MaterialDesc
 
     virtual size_t GetHash() const
     {
-        return Core::HashOf(type, pipelineState.GetHash());
+        return Core::HashOf(
+            type, 
+            pipelineState.GetHash());
     }
 };

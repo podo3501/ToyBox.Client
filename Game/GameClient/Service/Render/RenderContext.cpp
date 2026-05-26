@@ -6,16 +6,17 @@
 #include "Service/Asset/Assets/MeshAsset.h"
 #include "Desc/MeshMaterialDesc.h"
 #include "Desc/UIMaterialDesc.h"
+#include "Resource/IMeshResource.h"
 #include "IRenderBackend.h"
 
 namespace cm = Core::Math;
 
 RenderContext::~RenderContext() { m_backend->WaitIdle(); } //리소스를 RenderService가 들고 있기 때문에 gpu의 활동을 중지 시키고 리소스 삭제->backend 순으로 된다.
-RenderContext::RenderContext(IRenderBackend* backend) :
+RenderContext::RenderContext(IRenderBackend* backend, AssetPipelineT* assetPipeline) :
 	m_backend{ backend },
 	m_texRepository{ make_unique<TextureRepository>(m_backend->GetTextureSystem()) },
 	m_meshRepository{ make_unique<MeshRepository>(m_backend->GetMeshSystem()) },
-	m_matRepository{ make_unique<MaterialRepository>(m_backend->GetMaterialSystem()) }
+	m_matRepository{ make_unique<MaterialRepository>(m_backend->GetMaterialSystem(), assetPipeline) }
 {}
 
 bool RenderContext::Initialize()
@@ -52,37 +53,52 @@ bool RenderContext::ReleaseTexture(TextureHandle th)
 	return m_texRepository->Release(th);
 }
 
-MaterialHandle RenderContext::LoadMaterial(
-	const std::filesystem::path& path,
-	unique_ptr<MaterialDesc> desc,
-	function<shared_ptr<TextureAsset>(const filesystem::path&)> loader)
+MaterialHandle RenderContext::LoadMaterial(unique_ptr<MeshMaterialDesc> desc)
 {
-	return m_matRepository->GetOrCreate(path, std::move(desc), loader);
+	return m_matRepository->GetOrCreate(std::move(desc));
 }
 
-MaterialHandle RenderContext::LoadMaterial(
-	const std::string& runtimeKey, 
-	shared_ptr<TextureAsset> texAsset,
-	unique_ptr<MaterialDesc> desc)
-{
-	return m_matRepository->GetOrCreate(runtimeKey, texAsset, std::move(desc));
-}
 
-MaterialHandle RenderContext::LoadMaterial(
-	const std::string& runtimeKey,
-	MaterialType matType,
-	shared_ptr<TextureAsset> texAsset)
-{
-	std::unique_ptr<MaterialDesc> desc;
 
-	switch (matType)
-	{
-	case MaterialType::Mesh: desc = std::make_unique<MeshMaterialDesc>(); break;
-	case MaterialType::UI: desc = std::make_unique<UIMaterialDesc>(); break;
-	}
 
-	return LoadMaterial(runtimeKey, texAsset, std::move(desc));
-}
+//MaterialHandle RenderContext::LoadMaterial(
+//	unique_ptr<MaterialDesc> desc,
+//	function<shared_ptr<TextureAsset>(const filesystem::path&)> loader)
+//{
+//	return m_matRepository->GetOrCreate(std::move(desc), loader);
+//}
+//
+//MaterialHandle RenderContext::LoadMaterial(
+//	const std::filesystem::path& path,
+//	unique_ptr<MaterialDesc> desc,
+//	function<shared_ptr<TextureAsset>(const filesystem::path&)> loader)
+//{
+//	return m_matRepository->GetOrCreate(path, std::move(desc), loader);
+//}
+
+//MaterialHandle RenderContext::LoadMaterial(
+//	const std::string& runtimeKey, 
+//	shared_ptr<TextureAsset> texAsset,
+//	unique_ptr<MaterialDesc> desc)
+//{
+//	return m_matRepository->GetOrCreate(runtimeKey, texAsset, std::move(desc));
+//}
+
+//MaterialHandle RenderContext::LoadMaterial(
+//	const std::string& runtimeKey,
+//	MaterialType matType,
+//	shared_ptr<TextureAsset> texAsset)
+//{
+//	std::unique_ptr<MaterialDesc> desc;
+//
+//	switch (matType)
+//	{
+//	case MaterialType::Mesh: desc = std::make_unique<MeshMaterialDesc>(); break;
+//	case MaterialType::UI: desc = std::make_unique<UIMaterialDesc>(); break;
+//	}
+//
+//	return LoadMaterial(runtimeKey, texAsset, std::move(desc));
+//}
 
 bool RenderContext::ReleaseMaterial(MaterialHandle mh)
 {
@@ -107,7 +123,12 @@ void RenderContext::DrawMesh(MeshHandle hM, MaterialHandle hMtl, const cm::Matri
 	else
 		matRes = nullptr;
 
-	m_backend->DrawMesh(mesh->meshRes, matRes, world);
+	auto& meshRes = mesh->meshRes;
+	switch (meshRes->GetVertexFormat())
+	{
+	case VertexFormat::Mesh: m_backend->DrawMesh(meshRes, matRes, world); break;
+	case VertexFormat::Grid: m_backend->DrawGrid(meshRes, matRes, world); break;
+	}
 }
 
 void RenderContext::DrawUI(MaterialHandle mh, const Rect& dest, const Rect* source)
@@ -153,6 +174,27 @@ void RenderContext::DrawUI(MaterialHandle mh, const Rect& dest, const Rect* sour
 
 	m_backend->DrawUI(mesh->meshRes, matRes, world);
 }
+
+//void RenderContext::DrawGrid(MeshHandle hM, MaterialHandle hMtl, const cm::Matrix& world)
+//{
+//	auto mesh = m_meshRepository->Get(hM);
+//	if (!mesh || mesh->state != LoadState::Ready)
+//		return;
+//
+//	std::shared_ptr<IMaterialResource> matRes;
+//	if (hMtl)
+//	{
+//		auto material = m_matRepository->Get(hMtl);
+//		if (!material || material->state != LoadState::Ready)
+//			return;
+//
+//		matRes = material->matRes;
+//	}
+//	else
+//		matRes = nullptr;
+//
+//	m_backend->DrawGrid(mesh->meshRes, matRes, world);
+//}
 
 void RenderContext::Update()
 {

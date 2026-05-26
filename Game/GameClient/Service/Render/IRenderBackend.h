@@ -29,6 +29,11 @@ struct IRenderBackend
 		std::shared_ptr<IMaterialResource> matRes,
 		const Core::Math::Matrix& world) = 0;
 
+	virtual void DrawGrid(
+		std::shared_ptr<IMeshResource> meshRes, 
+		std::shared_ptr<IMaterialResource> matRes,
+		const Core::Math::Matrix& world) = 0;
+
 	virtual void DrawUI(
 		std::shared_ptr<IMeshResource> meshRes, 
 		std::shared_ptr<IMaterialResource> matRes,

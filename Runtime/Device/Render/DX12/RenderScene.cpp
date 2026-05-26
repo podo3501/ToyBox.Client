@@ -6,12 +6,19 @@
 void RenderScene::AddOpaque(const DrawItem& item)
 {
     DrawItem newItem = item;
-
     auto meshMaterial = static_cast<MeshMaterialResource*>(item.material.get());
+    newItem.sortKey = RenderSortKey::Build(meshMaterial->GetPipelineState().GetHash());
     
-    newItem.sortKey = RenderSortKey::BuildOpaque(meshMaterial->GetPipelineState().GetHash());
-
     m_opaqueDraws.push_back(newItem);
+}
+
+void RenderScene::AddGrid(const DrawItem& item)
+{
+    DrawItem newItem = item;
+    auto meshMaterial = static_cast<MeshMaterialResource*>(item.material.get());
+    newItem.sortKey = RenderSortKey::Build(meshMaterial->GetPipelineState().GetHash());
+
+    m_gridDraws.push_back(newItem);
 }
 
 void RenderScene::AddUI(const DrawItem& item)

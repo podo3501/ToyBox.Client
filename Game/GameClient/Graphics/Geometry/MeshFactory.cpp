@@ -102,12 +102,13 @@ std::shared_ptr<MeshAsset> MeshFactory::CreateTorus(
 
 std::shared_ptr<MeshAsset> MeshFactory::CreateGrid(
     float cellSize,
-    uint32_t halfExtent)
+    uint32_t halfExtent,
+    float r, float g, float b)
 {
     auto mesh = std::make_shared<MeshAsset>();
-    mesh->format = VertexFormat::Mesh;
+    mesh->format = VertexFormat::Grid;
 
-    std::vector<MeshVertex> vertices;
+    std::vector<GridVertex> vertices;
     std::vector<uint32_t> indices;
 
     const uint32_t lineCount = (halfExtent * 2 + 1); // 라인 개수
@@ -125,29 +126,21 @@ std::shared_ptr<MeshAsset> MeshFactory::CreateGrid(
         float x =
             min + static_cast<float>(i) * cellSize;
 
-        MeshVertex v0{};
+        GridVertex v0{};
         v0.px = x;
         v0.py = 0.0f;
         v0.pz = min;
+        v0.r = r;
+        v0.g = g;
+        v0.b = b;
 
-        v0.nx = 0.0f;
-        v0.ny = 1.0f;
-        v0.nz = 0.0f;
-
-        v0.u = 0.0f;
-        v0.v = 0.0f;
-
-        MeshVertex v1{};
+        GridVertex v1{};
         v1.px = x;
         v1.py = 0.0f;
         v1.pz = max;
-
-        v1.nx = 0.0f;
-        v1.ny = 1.0f;
-        v1.nz = 0.0f;
-
-        v1.u = 1.0f;
-        v1.v = 1.0f;
+        v1.r = r;
+        v1.g = g;
+        v1.b = b;
 
         vertices.push_back(v0);
         vertices.push_back(v1);
@@ -159,32 +152,23 @@ std::shared_ptr<MeshAsset> MeshFactory::CreateGrid(
     // X 방향 라인 (가로줄)
     for (uint32_t i = 0; i < lineCount; ++i)
     {
-        float z =
-            min + static_cast<float>(i) * cellSize;
+        float z = min + static_cast<float>(i) * cellSize;
 
-        MeshVertex v0{};
+        GridVertex v0{};
         v0.px = min;
         v0.py = 0.0f;
         v0.pz = z;
+        v0.r = r;
+        v0.g = g;
+        v0.b = b;
 
-        v0.nx = 0.0f;
-        v0.ny = 1.0f;
-        v0.nz = 0.0f;
-
-        v0.u = 0.0f;
-        v0.v = 0.0f;
-
-        MeshVertex v1{};
+        GridVertex v1{};
         v1.px = max;
         v1.py = 0.0f;
         v1.pz = z;
-
-        v1.nx = 0.0f;
-        v1.ny = 1.0f;
-        v1.nz = 0.0f;
-
-        v1.u = 1.0f;
-        v1.v = 1.0f;
+        v1.r = r;
+        v1.g = g;
+        v1.b = b;
 
         vertices.push_back(v0);
         vertices.push_back(v1);

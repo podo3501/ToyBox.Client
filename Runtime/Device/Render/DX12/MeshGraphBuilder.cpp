@@ -126,6 +126,7 @@ void MeshGraphBuilder::BuildFinalizePass(RenderGraph& graph, std::vector<MeshFin
             auto& vb = ctx.GetResource<ComPtr<ID3D12Resource>>(mesh.hVb);
             auto& ib = ctx.GetResource<ComPtr<ID3D12Resource>>(mesh.hIb);
 
+            auto vertexCount = static_cast<uint32_t>(mesh.asset->vertices.size());
             auto indexCount = static_cast<uint32_t>(mesh.asset->indices.size());
 
             auto meshTable =
@@ -135,7 +136,9 @@ void MeshGraphBuilder::BuildFinalizePass(RenderGraph& graph, std::vector<MeshFin
 
             m_registry->FinalizeMesh(
                 mesh.hMesh.id,
+                mesh.asset->format,
                 vb, ib, std::move(meshTable),
+                vertexCount,
                 indexCount);
         }
         };

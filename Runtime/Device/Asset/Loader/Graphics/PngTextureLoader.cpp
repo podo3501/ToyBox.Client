@@ -14,7 +14,7 @@ shared_ptr<Asset> PngTextureLoader::LoadFromMemory(const Core::ByteBuffer& buffe
         &width,
         &height,
         &channels,
-        4 // RGBA 강제
+        4 // RGBA 강제. 예를들면 jpg는 3채널이라 알파(A)가 없다.
     );
 
     if (!data)
@@ -34,7 +34,18 @@ shared_ptr<Asset> PngTextureLoader::LoadFromMemory(const Core::ByteBuffer& buffe
     return asset;
 }
 
-unique_ptr<IAssetLoader> CreatePngTextureLoader()
+unique_ptr<IAssetLoader> CreateImageTextureLoader()
 {
     return make_unique<PngTextureLoader>();
+}
+
+std::vector<std::string> GetImageSupportedExtensions()
+{
+    return {
+        ".png",
+        ".jpg",
+        ".jpeg",
+        ".bmp",
+        ".tga"
+    };
 }

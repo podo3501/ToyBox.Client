@@ -17,6 +17,7 @@
 #include "RenderPass.h"
 #include "PrepareGraphBuilder.h"
 #include "OpaqueGraphBuilder.h"
+#include "GridGraphBuilder.h"
 #include "PresentGraphBuilder.h"
 #include "UIGraphBuilder.h"
 #include "MeshResource.h"
@@ -133,6 +134,19 @@ void RenderBackend::DrawMesh(
     m_scene->AddOpaque(item);
 }
 
+void RenderBackend::DrawGrid(
+    std::shared_ptr<IMeshResource> meshRes,
+    std::shared_ptr<IMaterialResource> matRes,
+    const Core::Math::Matrix& world)
+{
+    DrawItem item;
+    item.mesh = meshRes;
+    item.material = matRes ? matRes : m_matSystem->GetDefaultMeshMaterial();
+    item.world = world;
+
+    m_scene->AddGrid(item);
+}
+
 void RenderBackend::DrawUI(
     std::shared_ptr<IMeshResource> meshRes,
     std::shared_ptr<IMaterialResource> matRes,
@@ -176,11 +190,13 @@ void RenderBackend::Render()
 
     PrepareGraphBuilder prepare(m_swapChain.get(), hBb);
     OpaqueGraphBuilder opaque(m_renderers->GetMeshRenderer(), m_scene.get(), hBb);
+    GridGraphBuilder grid(m_renderers->GetGridRenderer(), m_scene.get(), hBb);
     UIGraphBuilder ui(m_renderers->GetUIRenderer(), m_scene.get(), hBb);
     PresentGraphBuilder present(hBb);
 
     prepare.Build(graph);
     opaque.Build(graph);
+    grid.Build(graph);
     ui.Build(graph);
     present.Build(graph);
 
