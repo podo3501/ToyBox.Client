@@ -4,7 +4,6 @@
 #include "AudioDevice.h"
 
 struct ISoundBuffer;
-struct IStaticSoundBuffer;
 class StaticSoundInstance;
 class StreamSoundInstance;
 class SDLAudioBackend : public IAudioBackend
@@ -13,8 +12,8 @@ public:
 	~SDLAudioBackend();
 	SDLAudioBackend();
 	virtual bool Initialize(int maxVoices, int maxStreams) noexcept override;
-	virtual unique_ptr<IStaticSoundBuffer> CreateStaticSoundBuffer() override;
-	virtual unique_ptr<IStreamSoundBuffer> CreateStreamSoundBuffer() override;
+	virtual unique_ptr<ISoundBuffer> CreateStaticSoundBuffer() override;
+	virtual unique_ptr<ISoundBuffer> CreateStreamSoundBuffer() override;
 	virtual ISoundInstance* RequestStaticInstance(ISoundBuffer* sndBuffer) override;
 	virtual ISoundInstance* RequestStreamInstance(ISoundBuffer* sndBuffer) override;
 

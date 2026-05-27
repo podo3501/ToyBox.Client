@@ -67,8 +67,6 @@ MaterialHandle MaterialRepository::GetOrCreate(std::unique_ptr<MeshMaterialDesc>
     return handle;
 }
 
-//m_cpuPending.push_back(CpuPendingMaterialRequest{ std::move(desc), loader, handle });
-
 void MaterialRepository::Update()
 {
     ProcessCpuPending();
@@ -99,28 +97,6 @@ void MaterialRepository::ProcessCpuPending()
         it = m_cpuPending.erase(it);
     }
 }
-
-//void MaterialRepository::ProcessCpuPending()
-//{
-//    for (auto& req : m_cpuPending)
-//    {
-//        auto entry = m_loadedMaterials.Find(req.handle);
-//        if (!entry) continue;
-//        if (entry->state != LoadState::Pending) continue; // 중복으로 들어온 경우 이미 Loading/Ready 라면 처리안함.
-//
-//        entry->state = LoadState::CpuLoading;
-//        auto asset = req.loader(req.path);
-//        if (!asset)
-//        {
-//            entry->state = LoadState::Failed;
-//            continue;
-//        }
-//
-//        m_gpuPending.push_back(GpuPendingMaterialRequest{ req.handle, asset, std::move(req.desc) });
-//    }
-//
-//    m_cpuPending.clear();
-//}
 
 void MaterialRepository::ProcessGpuPending()
 {

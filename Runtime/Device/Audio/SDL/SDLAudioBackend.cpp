@@ -45,12 +45,12 @@ bool SDLAudioBackend::SetupStreamInstances(int maxStreams) noexcept
 	return true;
 }
 
-unique_ptr<IStaticSoundBuffer> SDLAudioBackend::CreateStaticSoundBuffer()
+unique_ptr<ISoundBuffer> SDLAudioBackend::CreateStaticSoundBuffer()
 {
 	return make_unique<StaticSoundBuffer>(m_mixer.Get());
 }
 
-unique_ptr<IStreamSoundBuffer> SDLAudioBackend::CreateStreamSoundBuffer()
+unique_ptr<ISoundBuffer> SDLAudioBackend::CreateStreamSoundBuffer()
 {
 	return make_unique<StreamSoundBuffer>();
 }

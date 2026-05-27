@@ -3,13 +3,13 @@
 
 struct MIX_Mixer;
 struct MIX_Audio;
-class StaticSoundBuffer : public IStaticSoundBuffer
+class StaticSoundBuffer : public ISoundBuffer
 {
 public:
     ~StaticSoundBuffer();
     StaticSoundBuffer() = delete;
     explicit StaticSoundBuffer(MIX_Mixer* mixer) noexcept;
-    virtual bool LoadFromAsset(shared_ptr<StaticSoundAsset> asset) override;
+    virtual bool LoadFromAsset(shared_ptr<Asset> asset) override;
     inline MIX_Audio* GetAudio() const noexcept { return m_audio; }
 
 private:

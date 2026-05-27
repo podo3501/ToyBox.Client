@@ -85,13 +85,23 @@ public:
     T* Find(Handle h)
     {
         if (!IsValid(h)) return nullptr;
-        return &(*m_slots[h.index].data);
+
+        auto& slot = m_slots[h.index];
+        if (!slot.data.has_value())
+            return nullptr;
+
+        return &(*slot.data);
     }
 
     const T* Find(Handle h) const
     {
         if (!IsValid(h)) return nullptr;
-        return &(*m_slots[h.index].data);
+
+        const auto& slot = m_slots[h.index];
+        if (!slot.data.has_value())
+            return nullptr;
+
+        return &(*slot.data);
     }
 
     bool IsValid(Handle h) const

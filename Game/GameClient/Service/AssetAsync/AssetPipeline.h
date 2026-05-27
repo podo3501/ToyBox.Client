@@ -38,10 +38,10 @@ class AssetQueue
 public:
     AssetRequestID Push(T value)
     {
-        std::lock_guard<std::mutex> lock(m_mutex);
+        std::lock_guard<std::mutex> lock(m_entriesMutex);
 
         const AssetRequestID id = ++m_nextID;
-        m_map.emplace(id, std::move(value));
+        m_entries.emplace(id, std::move(value));
 
         return id;
     }
@@ -49,49 +49,56 @@ public:
     template<typename... Args>
     AssetRequestID Emplace(Args&&... args)
     {
-        std::lock_guard<std::mutex> lock(m_mutex);
+        std::lock_guard<std::mutex> lock(m_entriesMutex);
 
         const AssetRequestID id = ++m_nextID;
-        m_map.emplace(id, T{ std::forward<Args>(args)... });
+        m_entries.emplace(id, T{ std::forward<Args>(args)... });
 
         return id;
     }
 
+    void Insert(AssetRequestID id, T value)
+    {
+        std::lock_guard<std::mutex> lock(m_entriesMutex);
+        auto [_, inserted] = m_entries.emplace(id, std::move(value));
+        Assert(inserted); //id가 중복되어서는 안된다. result로 이 함수는 사용되는데 중복된다면 이전 아이디 값에 들고있던 로딩된 데이터가 날라간다.
+    }
+
     std::optional<T> Take(AssetRequestID id)
     {
-        std::lock_guard<std::mutex> lock(m_mutex);
+        std::lock_guard<std::mutex> lock(m_entriesMutex);
 
-        auto it = m_map.find(id);
-        if (it == m_map.end())
+        auto it = m_entries.find(id);
+        if (it == m_entries.end())
             return std::nullopt;
 
         T value = std::move(it->second);
-        m_map.erase(it);
+        m_entries.erase(it);
 
         return value;
     }
 
     bool Contains(AssetRequestID id) const
     {
-        std::lock_guard<std::mutex> lock(m_mutex);
-        return m_map.find(id) != m_map.end();
+        std::lock_guard<std::mutex> lock(m_entriesMutex);
+        return m_entries.find(id) != m_entries.end();
     }
 
     size_t Size() const
     {
-        std::lock_guard<std::mutex> lock(m_mutex);
-        return m_map.size();
+        std::lock_guard<std::mutex> lock(m_entriesMutex);
+        return m_entries.size();
     }
 
     void Clear()
     {
-        std::lock_guard<std::mutex> lock(m_mutex);
-        m_map.clear();
+        std::lock_guard<std::mutex> lock(m_entriesMutex);
+        m_entries.clear();
     }
 
 private:
-    std::unordered_map<AssetRequestID, T> m_map;
-    mutable std::mutex m_mutex;
+    std::unordered_map<AssetRequestID, T> m_entries;
+    mutable std::mutex m_entriesMutex;
 
     std::atomic<AssetRequestID> m_nextID{ InvalidAssetRequestID };
 };
@@ -131,27 +138,17 @@ public:
 
     void PushResult(AssetRequestID id, TResult result)
     {
-        std::lock_guard<std::mutex> lock(m_resultMutex);
-        m_results.emplace(id, std::move(result));
+        m_results.Insert(id, std::move(result));
     }
 
     std::optional<TResult> TakeResult(AssetRequestID id)
     {
-        std::lock_guard<std::mutex> lock(m_resultMutex);
-
-        auto it = m_results.find(id);
-        if (it == m_results.end())
-            return std::nullopt;
-
-        TResult out = std::move(it->second);
-        m_results.erase(it);
-        return out;
+        return m_results.Take(id);
     }
 
     bool HasResult(AssetRequestID id)
     {
-        std::lock_guard<std::mutex> lock(m_resultMutex);
-        return m_results.find(id) != m_results.end();
+        return m_results.Contains(id);
     }
 
 private:
@@ -160,6 +157,5 @@ private:
     std::queue<AssetRequestID> m_pending;
     std::mutex m_pendingMutex;
 
-    std::unordered_map<AssetRequestID, TResult> m_results;
-    std::mutex m_resultMutex;
+    AssetQueue<TResult> m_results;
 };

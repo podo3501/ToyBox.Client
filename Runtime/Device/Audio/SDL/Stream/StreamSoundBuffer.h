@@ -2,11 +2,11 @@
 #include "GameClient/Service/Audio/ISoundBuffer.h"
 
 struct IResourceStream;
-class StreamSoundBuffer : public IStreamSoundBuffer
+class StreamSoundBuffer : public ISoundBuffer
 {
 public:
 	StreamSoundBuffer();
-	virtual bool LoadFromAsset(shared_ptr<StreamSoundAsset> asset) override;
+	virtual bool LoadFromAsset(shared_ptr<Asset> asset) override;
 	IResourceStream* GetStream() noexcept;
 
 private:

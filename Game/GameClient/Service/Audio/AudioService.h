@@ -1,6 +1,7 @@
 #pragma once
 #include "SoundHandle.h"
 #include "VoiceHandle.h"
+#include "../AssetAsync/AssetAsyncTypes.h"
 
 struct IAudioBackend;
 struct SoundAssetView;
@@ -20,9 +21,9 @@ public:
 	~AudioService();
 	AudioService() = delete;
 	static unique_ptr<AudioService> Create(const SoundAssetView& sndAssetView, unique_ptr<IAudioBackend> backend,
-		int maxVoices, int maxStreams) noexcept;
-	SoundHandle AcquireStaticSound(string_view soundID, function<shared_ptr<StaticSoundAsset>(const filesystem::path&)> loader);
-	SoundHandle AcquireStreamSound(string_view soundID, function<shared_ptr<StreamSoundAsset>(const filesystem::path&)> loader);
+		AssetPipelineT* assetPipeline, int maxVoices, int maxStreams) noexcept;
+	SoundHandle AcquireStaticSound(string_view soundID);
+	SoundHandle AcquireStreamSound(string_view soundID);
 	VoiceHandle Play(SoundHandle sh) noexcept;
 	bool Pause(VoiceHandle vh) noexcept;
 	bool Resume(VoiceHandle vh) noexcept;
@@ -36,7 +37,10 @@ public:
 	bool SetVolume(VoiceHandle vh, float volume) noexcept;
 
 private:
-	AudioService(const SoundAssetView& sndAssetView, unique_ptr<IAudioBackend> audioBackend) noexcept;
+	AudioService(
+		const SoundAssetView& sndAssetView, 
+		unique_ptr<IAudioBackend> audioBackend, 
+		AssetPipelineT* assetPipeline) noexcept;
 	bool Initialize(int maxVoices, int maxStreams) noexcept;
 	void CreateAudioGroup() noexcept;
 	PlaybackParams GetParams(const SoundDesc* desc) noexcept;
