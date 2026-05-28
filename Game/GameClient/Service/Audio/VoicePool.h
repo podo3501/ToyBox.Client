@@ -17,7 +17,9 @@ public:
 	~VoicePool();
 	VoicePool(IAudioBackend* audioBackend);
 	bool Setup(int maxVoices, int maxStreams) noexcept;
+	VoiceHandle AcquireVoiceHandle(const SoundDesc* desc) noexcept;
 	VoiceHandle Play(SoundHandle sh, const LoadedSound* loaded, const PlaybackParams& params) noexcept;
+	bool Play(VoiceHandle vh, SoundHandle sh, const LoadedSound* loaded, const PlaybackParams& params) noexcept;
 	bool Pause(VoiceHandle vh) noexcept;
 	bool Resume(VoiceHandle vh) noexcept;
 	bool StopVoice(VoiceHandle vh) noexcept;
@@ -30,7 +32,6 @@ public:
 
 private:
 	ISoundInstance* CreateInstance(const LoadedSound* loaded);
-	VoiceHandle AcquireVoiceHandle(const SoundDesc* desc) noexcept;
 	void ActivateVoice(VoiceHandle vh, SoundHandle sh, ISoundInstance* instance, const SoundDesc* desc) noexcept;
 	VoiceHandle StealAndAcquire(const SoundDesc* desc, vector<Voice*>& stealList) noexcept;
 

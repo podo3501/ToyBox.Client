@@ -5,5 +5,5 @@ struct StreamSoundAsset : public Asset
 {
 	CORE_DECLARE_TYPE(StreamSoundAsset)
 
-	unique_ptr<IResourceStream> stream;
+	shared_ptr<IResourceStream> stream;
 };

@@ -2,7 +2,6 @@
 
 namespace Core
 {
-    using ResourceID = std::string;
     enum class ResourceIDType
     {
         Invalid,
@@ -11,12 +10,39 @@ namespace Core
         File,
     };
 
-    ResourceID MakeFileResourceID(const std::filesystem::path& path);
-    ResourceID MakeRuntimeResourceID(std::string_view name);
-    ResourceID MakeBuiltinResourceID(std::string_view name);
+    class ResourceID
+    {
+    public:
+        ResourceID() = default;
+        explicit ResourceID(const char* str) : m_value(str) {}
+        explicit ResourceID(std::string str) : m_value(std::move(str)) {}
+        explicit ResourceID(std::string_view str) : m_value(str) {}
+        auto operator<=>(const ResourceID&) const = default;
 
-    ResourceIDType GetResourceIDType(const ResourceID& id);
-    std::string_view GetResourceName(const ResourceID& id);
+        static ResourceID MakeFile(const std::filesystem::path& path);
+        static ResourceID MakeRuntime(std::string_view name);
+        static ResourceID MakeBuiltin(std::string_view name);
 
-    bool IsValid(const ResourceID& id);
+        ResourceIDType GetType() const;
+        std::string_view GetValue() const;
+        bool IsValid() const;
+
+        const std::string& String() const { return m_value; }
+        std::string& String() { return m_value; }
+        const char* c_str() const { return m_value.c_str(); }
+        bool empty() const { return m_value.empty(); }
+        void clear() { m_value.clear(); }
+
+    private:
+        std::string m_value;
+    };
 }
+
+template<>
+struct std::hash<Core::ResourceID>
+{
+    size_t operator()(const Core::ResourceID& id) const noexcept
+    {
+        return std::hash<std::string>{}(id.String());
+    }
+};

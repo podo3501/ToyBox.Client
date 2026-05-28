@@ -3,9 +3,12 @@
 #include "Platform/Serializer/Serializer.h"
 #include "Platform/Serializer/Format/TraitsHelper.hpp"
 #include "Platform/Serializer/Format/Traits.h"
+#include "Core/Foundation/ResourceID.h"
 
 DECLARE_JSON_TRAITS(SoundType)
+//DECLARE_JSON_TRAITS(Core::ResourceID)
 DECLARE_JSON_TRAITS(AudioGroup)
+
 
 using namespace EnumUtil;
 
@@ -31,6 +34,13 @@ SoundType JsonTraitsBase<SoundType>::DeserializeFromJson(const nlohmann::json& d
 	return CreateAndFill<SoundType>([&dataJ](SoundType& data) {
 		data = *StringToEnum<SoundType>(dataJ); });
 }
+
+//nlohmann::json JsonTraitsBase<Core::ResourceID>::SerializeToJson(const AudioGroup& data) { return {}; }
+//AudioGroup JsonTraitsBase<AudioGroup>::DeserializeFromJson(const nlohmann::json& dataJ)
+//{
+//	return CreateAndFill<AudioGroup>([&dataJ](AudioGroup& data) {
+//		data = *StringToEnum<AudioGroup>(dataJ); });
+//}
 
 nlohmann::json JsonTraitsBase<AudioGroup>::SerializeToJson(const AudioGroup& data) { return EnumToString(data); }
 AudioGroup JsonTraitsBase<AudioGroup>::DeserializeFromJson(const nlohmann::json& dataJ)

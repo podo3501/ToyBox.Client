@@ -32,20 +32,43 @@ bool VoicePool::Setup(int maxVoices, int maxStreams) noexcept
 	return true;
 }
 
+VoiceHandle VoicePool::AcquireVoiceHandle(const SoundDesc* desc) noexcept
+{
+	const bool isStream = (desc->sndType == SoundType::Stream);
+	auto& stealList = isStream ? m_stealStreams : m_stealStatics;
+	const size_t limit = isStream ? m_maxStreams : m_maxVoices;
+
+	VoiceHandle vh = (stealList.size() >= limit)
+		? StealAndAcquire(desc, stealList)
+		: m_voices.Emplace();
+	if (!vh) return VoiceHandle::Invalid();
+
+	return vh;
+}
+
 VoiceHandle VoicePool::Play(SoundHandle sh, const LoadedSound* loaded, const PlaybackParams& params) noexcept
 {
 	auto desc = loaded->desc;
 	auto vh = AcquireVoiceHandle(desc);
 	if (!vh) return vh;
 
-	auto instance = CreateInstance(loaded);
-	if (!instance) return VoiceHandle::Invalid();
+	if(!Play(vh, sh, loaded, params))
+		return VoiceHandle::Invalid();
 
-	if (!instance->Reset(params)) return VoiceHandle::Invalid();
-	if (!instance->Play()) return VoiceHandle::Invalid();
-
-	ActivateVoice(vh, sh, instance, desc);
 	return vh;
+}
+
+bool VoicePool::Play(VoiceHandle vh, SoundHandle sh, const LoadedSound* loaded, const PlaybackParams& params) noexcept
+{
+	auto instance = CreateInstance(loaded);
+	if (!instance) return false;
+
+	if (!instance->Reset(params)) return false;
+	if (!instance->Play()) return false;
+
+	ActivateVoice(vh, sh, instance, loaded->desc);
+
+	return true;
 }
 
 ISoundInstance* VoicePool::CreateInstance(const LoadedSound* loaded)
@@ -59,20 +82,6 @@ ISoundInstance* VoicePool::CreateInstance(const LoadedSound* loaded)
 	}
 
 	return nullptr;
-}
-
-VoiceHandle VoicePool::AcquireVoiceHandle(const SoundDesc* desc) noexcept
-{
-	const bool isStream = (desc->sndType == SoundType::Stream);
-	auto& stealList = isStream ? m_stealStreams : m_stealStatics;
-	const size_t limit = isStream ? m_maxStreams : m_maxVoices;
-
-	VoiceHandle vh = (stealList.size() >= limit)
-		? StealAndAcquire(desc, stealList)
-		: m_voices.Emplace();
-	if (!vh) return VoiceHandle::Invalid();
-
-	return vh;
 }
 
 VoiceHandle VoicePool::StealAndAcquire(const SoundDesc* desc, vector<Voice*>& stealList) noexcept
@@ -192,10 +201,14 @@ bool VoicePool::SetVolume(VoiceHandle vh, float volume) noexcept
 
 PlaybackState VoicePool::GetState(VoiceHandle vh) const noexcept
 {
-	auto instance = GetInstance(vh);
-	if (instance == nullptr) return EnumUtil::Invalid<PlaybackState>;
+	auto voice = m_voices.Get(vh);
+	if (!voice)
+		return EnumUtil::Invalid<PlaybackState>;
 
-	return instance->GetState();
+	if (!voice->instance)
+		return PlaybackState::Pending; //sh(sound handle)는 있지만 아직 데이터가 로드되지 않아서 instance가 생성되지 않았다.
+
+	return voice->instance->GetState();
 }
 
 void VoicePool::UpdateVoices() noexcept

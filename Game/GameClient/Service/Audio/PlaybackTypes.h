@@ -8,6 +8,7 @@ struct PlaybackParams
 
 enum class PlaybackState : int
 {
+	Pending,
 	Playing,
 	Paused,
 	Stopped,

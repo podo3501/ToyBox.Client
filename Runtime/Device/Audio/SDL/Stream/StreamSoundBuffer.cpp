@@ -11,7 +11,7 @@ bool StreamSoundBuffer::LoadFromAsset(shared_ptr<Asset> asset)
 	if (!streamAsset)
 		return false;
 
-	m_fileStream = move(streamAsset->stream);
+	m_fileStream = streamAsset->stream;
 	return true;
 }
 

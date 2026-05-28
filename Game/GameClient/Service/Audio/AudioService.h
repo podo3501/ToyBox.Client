@@ -10,6 +10,7 @@ struct StreamSoundAsset;
 struct GroupInfo;
 struct PlaybackParams;
 struct SoundDesc;
+struct PendingSoundPlay;
 class SoundRepository;
 class VoicePool;
 enum class PlaybackState;
@@ -44,6 +45,8 @@ private:
 	bool Initialize(int maxVoices, int maxStreams) noexcept;
 	void CreateAudioGroup() noexcept;
 	PlaybackParams GetParams(const SoundDesc* desc) noexcept;
+	VoiceHandle EnqueueDeferred(SoundHandle sh, const SoundDesc* desc);
+	void FlushPending();
 	float GetGroupVolume(AudioGroup group) const noexcept;
 	float GetInstanceVolume(AudioGroup group, float volume) const noexcept;
 
@@ -52,5 +55,6 @@ private:
 	unique_ptr<SoundRepository> m_repository;
 	unique_ptr<VoicePool> m_voicePool;
 	float m_masterVolume{ 1.0f };
-	unordered_map<AudioGroup, unique_ptr<GroupInfo>> m_groupInfos;
+	std::unordered_map<AudioGroup, unique_ptr<GroupInfo>> m_groupInfos;
+	std::vector<PendingSoundPlay> m_pendingPlay;
 };

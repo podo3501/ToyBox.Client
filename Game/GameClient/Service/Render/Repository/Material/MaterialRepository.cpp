@@ -49,13 +49,13 @@ MaterialHandle MaterialRepository::GetOrCreate(std::unique_ptr<MeshMaterialDesc>
         TextureSlot slot = static_cast<TextureSlot>(i);
         auto& tex = desc->textures[i];
 
-        auto resType = Core::GetResourceIDType(tex.resID);
+        auto resType = tex.resID.GetType();
         switch (resType)
         {
         case Core::ResourceIDType::File:
         {
             auto requestID = m_assetPipeline->PushRequest(
-                MakeAssetRequest<TextureAsset>(std::filesystem::path(Core::GetResourceName(tex.resID))));
+                MakeAssetRequest<TextureAsset>(std::filesystem::path(tex.resID.GetValue())));
             m_cpuPending.push_back({ handle, slot, requestID });
         }
         break;

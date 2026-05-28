@@ -10,5 +10,5 @@ public:
 	IResourceStream* GetStream() noexcept;
 
 private:
-	unique_ptr<IResourceStream> m_fileStream;
+	shared_ptr<IResourceStream> m_fileStream;
 };

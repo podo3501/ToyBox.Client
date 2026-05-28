@@ -11,6 +11,12 @@ struct GroupInfo //지금은 볼륨 하나지만 조금씩 확장될 가능성이 크다.
 	float volume{ 1.f };
 };
 
+struct PendingSoundPlay
+{
+	VoiceHandle voice;
+	SoundHandle sound;
+};
+
 unique_ptr<AudioService> AudioService::Create(const SoundAssetView& sndAssetView, unique_ptr<IAudioBackend> backend,
 	AssetPipelineT* assetPipeline, int maxVoices, int maxStreams) noexcept
 {
@@ -99,8 +105,14 @@ VoiceHandle AudioService::Play(SoundHandle sh) noexcept
 	auto loaded = m_repository->Find(sh);
 	if (!loaded) return VoiceHandle::Invalid();
 
-	if(loaded->state != SoundLoadState::Ready)
+	if (loaded->state != SoundLoadState::Ready)
+	{
+		auto desc = loaded->desc;
+		if (desc->sndType == SoundType::Stream)
+			return EnqueueDeferred(sh, desc);
+
 		return VoiceHandle::Invalid();
+	}
 
 	return m_voicePool->Play(sh, loaded, GetParams(loaded->desc));
 }
@@ -144,17 +156,59 @@ PlaybackState AudioService::GetState(VoiceHandle vh) const noexcept
 
 void AudioService::Update() noexcept
 {
+	FlushPending();
 	m_repository->Update();
 	m_voicePool->UpdateVoices();
+}
+
+VoiceHandle AudioService::EnqueueDeferred(SoundHandle sh, const SoundDesc* desc)
+{
+	auto vh = m_voicePool->AcquireVoiceHandle(desc);
+	if (!vh) return vh;
+
+	m_pendingPlay.push_back({ vh, sh });
+	return vh;
+}
+
+void AudioService::FlushPending()
+{
+	for (auto it = m_pendingPlay.begin(); it != m_pendingPlay.end(); )
+	{
+		auto& p = *it;
+		auto loaded = m_repository->Find(p.sound);
+		if (!loaded)
+		{
+			it = m_pendingPlay.erase(it);
+			continue;
+		}
+
+		if (loaded->state == SoundLoadState::Pending)
+		{
+			++it;
+			continue;
+		}
+
+		if (loaded->state == SoundLoadState::Failed)
+		{
+			m_voicePool->StopVoice(p.voice);
+			it = m_pendingPlay.erase(it);
+			continue;
+		}
+
+		m_voicePool->Play(p.voice, p.sound, loaded, GetParams(loaded->desc));
+		it = m_pendingPlay.erase(it);
+	}
 }
 
 bool AudioService::SetVolume(VoiceHandle vh, float volume) noexcept
 { 
 	auto desc = m_voicePool->GetDesc(vh);
-	if (!desc) return false;
+	if (!desc) 
+		return false;
 	
 	auto group = desc->group; 
-	if (group == EnumUtil::Invalid<AudioGroup>) return false; 
+	if (group == EnumUtil::Invalid<AudioGroup>) 
+		return false; 
 	
 	float curVolume = GetInstanceVolume(group, volume); 
 	return m_voicePool->SetVolume(vh, curVolume);
