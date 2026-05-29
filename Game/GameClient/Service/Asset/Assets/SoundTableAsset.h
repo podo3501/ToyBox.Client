@@ -1,4 +1,5 @@
 #pragma once
+#include "Core/Foundation/ResourceID.h"
 #include "GameCore/Service/Asset/Asset.h"
 #include "AudioTypes.h"
 #include <filesystem>
@@ -14,7 +15,7 @@ struct SoundDesc
 	void Serialize(Serializer& serializer);
 
 	SoundType sndType;
-	std::filesystem::path filename{};
+	Core::ResourceID resID{};
 	AudioGroup group;
 	int priority{ 0 };
 	float volume{ 0.f };

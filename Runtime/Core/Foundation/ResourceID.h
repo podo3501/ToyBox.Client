@@ -7,7 +7,7 @@ namespace Core
         Invalid,
         Builtin,
         Runtime,
-        File,
+        Path,
     };
 
     class ResourceID
@@ -16,10 +16,9 @@ namespace Core
         ResourceID() = default;
         explicit ResourceID(const char* str) : m_value(str) {}
         explicit ResourceID(std::string str) : m_value(std::move(str)) {}
-        explicit ResourceID(std::string_view str) : m_value(str) {}
         auto operator<=>(const ResourceID&) const = default;
 
-        static ResourceID MakeFile(const std::filesystem::path& path);
+        static ResourceID MakePath(const std::filesystem::path& path);
         static ResourceID MakeRuntime(std::string_view name);
         static ResourceID MakeBuiltin(std::string_view name);
 

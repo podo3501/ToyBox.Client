@@ -21,8 +21,9 @@
   <ItemGroup>
     <ClCompile Include="GameLoop.cpp" />
     <ClCompile Include="Graphics\Geometry\MaterialDescFactory.cpp" />
+    <ClCompile Include="Graphics\Geometry\MeshDescFactory.cpp" />
     <ClCompile Include="Graphics\Geometry\MeshFactory.cpp" />
-    <ClCompile Include="Graphics\Geometry\TextureBindingFactory.cpp" />
+    <ClCompile Include="Graphics\Geometry\TextureDescFactory.cpp" />
     <ClCompile Include="Graphics\ShaderStageBuilder.cpp" />
     <ClCompile Include="Graphics\World\Camera.cpp" />
     <ClCompile Include="Graphics\World\DirectionalLight.cpp" />
@@ -112,8 +113,9 @@
   <ItemGroup>
     <ClInclude Include="GameLoop.h" />
     <ClInclude Include="Graphics\Geometry\MaterialDescFactory.h" />
+    <ClInclude Include="Graphics\Geometry\MeshDescFactory.h" />
     <ClInclude Include="Graphics\Geometry\MeshFactory.h" />
-    <ClInclude Include="Graphics\Geometry\TextureBindingFactory.h" />
+    <ClInclude Include="Graphics\Geometry\TextureDescFactory.h" />
     <ClInclude Include="Graphics\RenderData\CameraData.h" />
     <ClInclude Include="Graphics\RenderData\DirectionalLightData.h" />
     <ClInclude Include="Graphics\ShaderStageBuilder.h" />
@@ -163,9 +165,10 @@
     <ClInclude Include="Service\Input\MouseButton.h" />
     <ClInclude Include="Service\Input\MouseState.h" />
     <ClInclude Include="Service\Render\Desc\MaterialDesc.h" />
+    <ClInclude Include="Service\Render\Desc\MeshDesc.h" />
     <ClInclude Include="Service\Render\Desc\MeshMaterialDesc.h" />
     <ClInclude Include="Service\Render\Desc\RenderState.h" />
-    <ClInclude Include="Service\Render\Desc\TextureBinding.h" />
+    <ClInclude Include="Service\Render\Desc\TextureDesc.h" />
     <ClInclude Include="Service\Render\Desc\UIMaterialDesc.h" />
     <ClInclude Include="Service\Render\Handle\MaterialHandle.h" />
     <ClInclude Include="Service\Render\Handle\MeshHandle.h" />

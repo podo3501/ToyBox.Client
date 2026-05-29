@@ -1,6 +1,6 @@
 #pragma once
-
 #include <memory>
+#include "Core/Foundation/ResourceID.h"
 
 struct Asset;
 struct AssetRequest;
@@ -16,11 +16,17 @@ using AssetPipelineT = AssetPipeline<AssetRequest, AssetPtr>;
 using AssetWorkerT = AssetWorker<AssetRequest, AssetPtr>;
 
 template<typename T>
-AssetRequest MakeAssetRequest(std::filesystem::path path)
+AssetRequest MakeAssetRequest(Core::ResourceID resID)
 {
     return
     {
-        .path = std::move(path),
+        .resID = std::move(resID),
         .type = Core::GetTypeID<T>()
     };
+}
+
+template<typename T>
+AssetRequest MakeAssetRequest(const std::filesystem::path& path)
+{
+    return MakeAssetRequest<T>(Core::ResourceID::MakePath(path));
 }

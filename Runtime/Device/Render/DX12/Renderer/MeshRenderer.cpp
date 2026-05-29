@@ -152,7 +152,7 @@ void MeshRenderer::Draw(
     auto objectCBAddress = UpdateObjectCB(world);
     auto materialCBAddress = UpdateMaterialCB(material.GetSurface());
     auto& meshTable = mesh.GetMeshTable();
-    auto& textureSrv = material.GetTextureSRV(TextureSlot::Albedo);
+    auto& textureSrv = material.GetTextureSRV(MeshTextureSlot::Albedo);
     
     cmd->SetGraphicsRootDescriptorTable(0, meshTable.GetGpuHandle());
     cmd->SetGraphicsRootDescriptorTable(1, textureSrv.GetGpuHandle());

@@ -10,7 +10,7 @@ MaterialSystem::MaterialSystem(TextureSystem* texSystem) :
 	m_texSystem{ texSystem }
 {
     auto res = make_shared<MeshMaterialResource>();
-    res->SetTexture(TextureSlot::Albedo, m_texSystem->GetDefaultTexture());
+    res->SetTexture(MeshTextureSlot::Albedo, m_texSystem->GetDefaultTexture());
 
     m_defaultMeshMaterial = res;
 }
@@ -22,7 +22,7 @@ shared_ptr<IMaterialResource> MaterialSystem::CreateMaterialResource(const Mater
     case MaterialType::Mesh:
     {
         auto res = make_shared<MeshMaterialResource>();
-        res->SetTexture(TextureSlot::Albedo, m_texSystem->GetDefaultTexture());
+        res->SetTexture(MeshTextureSlot::Albedo, m_texSystem->GetDefaultTexture());
         res->SetMaterialDesc(static_cast<const MeshMaterialDesc&>(matDesc));
         return res;
     }
@@ -66,11 +66,11 @@ bool MaterialSystem::LoadFromAsset(
         if (!texRes)
             return false;
 
-        auto& slotDesc = matDesc.textures[static_cast<size_t>(texSlot)].desc;
+        auto& slotDesc = matDesc.textures[texSlot];
         if (!m_texSystem->LoadFromAsset(texRes, texAsset, slotDesc))
             return false;
 
-        meshRes->SetTexture(texSlot, texRes);
+        meshRes->SetTexture(static_cast<MeshTextureSlot>(texSlot), texRes);
         return true;
     }
 
@@ -85,7 +85,7 @@ bool MaterialSystem::LoadFromAsset(
         if (!texRes)
             return false;
 
-        auto& slotDesc = uiDesc.textures[static_cast<size_t>(texSlot)].desc;
+        auto& slotDesc = uiDesc.textures[static_cast<size_t>(texSlot)];
         if (!m_texSystem->LoadFromAsset(texRes, texAsset, slotDesc))
             return false;
 

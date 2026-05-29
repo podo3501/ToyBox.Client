@@ -3,7 +3,8 @@
 #include "Core/Utils/Hash.h"
 #include "../ResourceTypes.h"
 #include "Service/Render/Handle/TextureHandle.h"
-#include "Service/Render/Desc/TextureBinding.h"
+#include "Service/Render/Desc/TextureDesc.h"
+#include "Service/AssetAsync/AssetAsyncTypes.h"
 
 struct ITextureSystem;
 struct ITextureResource;
@@ -11,27 +12,8 @@ struct TextureAsset;
 struct CpuPendingTextureRequest;
 struct GpuPendingTextureRequest;
 
-struct TextureKey
-{
-    ResourceKey resourceKey;
-    TextureDesc desc;
-
-    bool operator==(const TextureKey& rhs) const = default;
-};
-
-struct TextureKeyHash
-{
-    size_t operator()(const TextureKey& k) const
-    {
-        return Core::HashOf(
-            k.resourceKey.GetHash(),
-            k.desc.GetHash());
-    }
-};
-
 struct TextureEntry
 {
-    TextureKey key;
     shared_ptr<ITextureResource> texRes;
     LoadState state{ LoadState::Pending };
 };
@@ -40,7 +22,9 @@ class TextureRepository
 {
 public:
     ~TextureRepository();
-    explicit TextureRepository(ITextureSystem* texSystem);
+    TextureRepository(ITextureSystem* texSystem, AssetPipelineT* assetPipeline);
+
+    TextureHandle GetOrCreate(const TextureDesc& desc, std::shared_ptr<TextureAsset> asset = nullptr);
 
     TextureHandle GetOrCreate(
         std::filesystem::path path,
@@ -63,7 +47,9 @@ private:
     void ProcessLoading();
 
     ITextureSystem* m_texSystem{ nullptr };
-    unordered_map<TextureKey, TextureHandle, TextureKeyHash> m_cache;
+    AssetPipelineT* m_assetPipeline{ nullptr };
+
+    unordered_map<size_t, TextureHandle> m_cache;
     HandlePool<TextureEntry, TextureTag> m_loadedTextures;
 
     vector<CpuPendingTextureRequest> m_cpuPending;

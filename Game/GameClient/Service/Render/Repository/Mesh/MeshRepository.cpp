@@ -1,25 +1,31 @@
 #include "pch.h"
 #include "MeshRepository.h"
 #include "IMeshSystem.h"
+#include "Service/Render/Desc/MeshDesc.h"
+#include "Service/AssetAsync/AssetPipeline.h"
 
-struct MeshPendingRequest
+struct CpuPendingMeshRequest
 {
-	ResourceKey key;
-	std::shared_ptr<MeshAsset> asset;
-	function<std::shared_ptr<MeshAsset>(const filesystem::path&)> loader;
 	MeshHandle handle;
+	AssetRequestID requestId;
+};
+
+struct GpuPendingMeshRequest
+{
+	MeshHandle handle;
+	std::shared_ptr<MeshAsset> meshAsset;
 };
 
 MeshRepository::~MeshRepository() { ReleaseAll(); }
-MeshRepository::MeshRepository(IMeshSystem* meshSystem) :
-	m_meshSystem{ meshSystem }
+MeshRepository::MeshRepository(IMeshSystem* meshSystem, AssetPipelineT* assetPipeline) :
+	m_meshSystem{ meshSystem },
+	m_assetPipeline{ assetPipeline }
 {}
 
-MeshHandle MeshRepository::GetOrCreate(const filesystem::path& path, function<shared_ptr<MeshAsset >(const filesystem::path&)> loader)
+MeshHandle MeshRepository::GetOrCreate(const MeshDesc& desc, std::shared_ptr<MeshAsset> asset)
 {
-	ResourceKey key{ path.string(), ResourceKey::Type::File };
-
-	auto it = m_cache.find(key);
+	auto& resID = desc.resID;
+	auto it = m_cache.find(resID);
 	if (it != m_cache.end())
 		return it->second;
 
@@ -27,38 +33,77 @@ MeshHandle MeshRepository::GetOrCreate(const filesystem::path& path, function<sh
 	if (!meshRes) return MeshHandle::Invalid();
 
 	MeshEntry entry;
-	entry.path = path;
 	entry.meshRes = move(meshRes);
 	entry.state = LoadState::Pending;
 
 	auto handle = m_loadedMeshes.Emplace(move(entry));
-	m_cache[key] = handle;
-	m_pending.push_back(MeshPendingRequest{ key, nullptr, loader, handle });
+	m_cache[resID] = handle;
+
+	auto resType = resID.GetType();
+	switch (resType)
+	{
+	case Core::ResourceIDType::Path:
+	{
+		auto requestID = m_assetPipeline->PushRequest(MakeAssetRequest<MeshAsset>(resID));
+		m_cpuPending.push_back({ handle, requestID });
+	}
+	break;
+	case Core::ResourceIDType::Runtime:
+	case Core::ResourceIDType::Builtin:
+	{
+		if(!asset) return MeshHandle::Invalid();
+		m_gpuPending.push_back({ handle, asset });
+	}
+	break;
+	default:
+		return MeshHandle::Invalid();
+	}
 
 	return handle;
 }
 
-MeshHandle MeshRepository::GetOrCreate(const std::string& runtimeKey, std::shared_ptr<MeshAsset> asset)
+void MeshRepository::ProcessCpuPending()
 {
-	ResourceKey key{ runtimeKey, ResourceKey::Type::Runtime };
+	if (m_cpuPending.empty()) return;
 
-	auto it = m_cache.find(key);
-	if (it != m_cache.end())
-		return it->second;
+	for (auto it = m_cpuPending.begin(); it != m_cpuPending.end(); )
+	{
+		auto& req = *it;
+		auto asset = m_assetPipeline->TakeResult(req.requestId);
+		if (!asset.has_value())
+		{
+			++it;
+			continue;
+		}
 
-	auto meshRes = m_meshSystem->CreateMeshResource();
-	if (!meshRes)
-		return MeshHandle::Invalid();
+		GpuPendingMeshRequest gpuReq;
+		gpuReq.handle = req.handle;
+		gpuReq.meshAsset = std::static_pointer_cast<MeshAsset>(*asset);
+		m_gpuPending.push_back(std::move(gpuReq));
 
-	MeshEntry entry;
-	entry.meshRes = std::move(meshRes);
-	entry.state = LoadState::Pending;
+		it = m_cpuPending.erase(it);
+	}
+}
 
-	auto handle = m_loadedMeshes.Emplace(std::move(entry));
-	m_cache[key] = handle;
-	m_pending.push_back(MeshPendingRequest{ key, asset, nullptr, handle });
+void MeshRepository::ProcessGpuPending()
+{
+	for (auto& work : m_gpuPending)
+	{
+		auto entry = m_loadedMeshes.Find(work.handle);
+		if (!entry || !entry->meshRes) continue;
+		if (entry->state != LoadState::Pending) continue; // 중복으로 들어온 경우 이미 Loading/Ready 라면 처리안함.
 
-	return handle;
+		if (!m_meshSystem->LoadFromAsset(entry->meshRes, work.meshAsset))
+		{
+			entry->state = LoadState::Failed;
+			continue;
+		}
+		entry->state = LoadState::GpuLoading;
+
+		m_loadingList.push_back(work.handle);
+	}
+
+	m_gpuPending.clear();
 }
 
 bool MeshRepository::Release(MeshHandle h)
@@ -79,41 +124,9 @@ bool MeshRepository::Release(MeshHandle h)
 
 void MeshRepository::Update()
 {
-	ProcessPending();
+	ProcessCpuPending();
+	ProcessGpuPending();
 	ProcessLoading();
-}
-
-void MeshRepository::ProcessPending()
-{
-	for (auto& req : m_pending)
-	{
-		auto entry = m_loadedMeshes.Find(req.handle);
-		if (!entry) continue;
-		if (entry->state != LoadState::Pending) continue; // 중복으로 들어온 경우 이미 Loading/Ready 라면 처리안함.
-
-		std::shared_ptr<MeshAsset> asset = req.asset;
-		if (!asset)
-		{
-			asset = req.loader(req.key.id);
-			if (!asset)
-			{
-				entry->state = LoadState::Failed;
-				continue;
-			}
-		}
-		entry->state = LoadState::CpuLoading;
-
-		auto& meshRes = entry->meshRes;
-		if (!m_meshSystem->LoadFromAsset(meshRes, asset))
-		{
-			entry->state = LoadState::Failed;
-			continue;
-		}
-
-		m_loadingList.push_back(req.handle);
-	}
-
-	m_pending.clear();
 }
 
 void MeshRepository::ProcessLoading()
@@ -140,7 +153,8 @@ void MeshRepository::ProcessLoading()
 
 void MeshRepository::ReleaseAll()
 {
-	m_pending.clear();
+	m_cpuPending.clear();
+	m_gpuPending.clear();
 	m_loadingList.clear();
 
 	m_cache.clear();

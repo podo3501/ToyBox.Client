@@ -4,7 +4,6 @@
 #include "GameClient/Service/Render/Resource/IMaterialResource.h"
 #include <memory>
 
-enum class TextureSlot;
 struct IMaterialSystem
 {
     virtual ~IMaterialSystem() = default;

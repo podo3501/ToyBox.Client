@@ -1,56 +1,54 @@
 #include "pch.h"
 #include "MaterialDescFactory.h"
 
-std::unique_ptr<MeshMaterialDesc> MeshMaterialDescFactory::CreateLit(std::vector<TextureBinding> textures)
+MeshMaterialDesc MeshMaterialDescFactory::CreateLit(std::vector<TextureDesc> textures)
 {
-    auto desc = std::make_unique<MeshMaterialDesc>();
+    MeshMaterialDesc desc;
 
-    desc->textures = std::move(textures);
-    desc->pipelineState = PipelineLibrary::Get(
+    desc.textures = std::move(textures);
+    desc.pipelineState = PipelineLibrary::Get(
         ShaderID::Mesh,
         RasterPreset::Default,
         PrimitiveTopologyType::Triangle);
-    desc->surface = { 0.5f, 0.f };
+    desc.surface = { 0.5f, 0.f };
 
     return desc;
 }
 
-std::unique_ptr<MeshMaterialDesc> MeshMaterialDescFactory::CreateGrid(std::vector<TextureBinding> textures)
+MeshMaterialDesc MeshMaterialDescFactory::CreateGrid()
 {
-    auto desc = std::make_unique<MeshMaterialDesc>();
+    MeshMaterialDesc desc;
 
-    desc->textures = std::move(textures);
-    desc->pipelineState = PipelineLibrary::Get(
+    desc.pipelineState = PipelineLibrary::Get(
         ShaderID::Grid,
         RasterPreset::Default,
         PrimitiveTopologyType::Line);
-    desc->surface = { 0.5f, 0.f };
+    desc.surface = { 0.5f, 0.f };
 
     return desc;
 }
 
-std::unique_ptr<MeshMaterialDesc> MeshMaterialDescFactory::CreateWireframe(std::vector<TextureBinding> textures)
+MeshMaterialDesc MeshMaterialDescFactory::CreateWireframe()
 {
-    auto desc = std::make_unique<MeshMaterialDesc>();
+    MeshMaterialDesc desc;
 
-    desc->textures = std::move(textures);
-    desc->pipelineState = PipelineLibrary::Get(
+    desc.pipelineState = PipelineLibrary::Get(
         ShaderID::Mesh,
         RasterPreset::Wireframe,
         PrimitiveTopologyType::Triangle);
-    desc->surface = { 0.5f, 0.f };
+    desc.surface = { 0.5f, 0.f };
 
     return desc;
 }
 
 /////////////////////////////////////////////////////////////////
 
-std::unique_ptr<UIMaterialDesc> UIMaterialDescFactory::CreateDefault(std::vector<TextureBinding> textures)
+UIMaterialDesc UIMaterialDescFactory::CreateDefault(std::vector<TextureDesc> textures)
 {
-    auto desc = std::make_unique<UIMaterialDesc>();
+    UIMaterialDesc desc;
 
-    desc->textures = std::move(textures);
-    desc->pipelineState =
+    desc.textures = std::move(textures);
+    desc.pipelineState =
         PipelineLibrary::Get(
             ShaderID::UI,
             RasterPreset::NoCull,

@@ -5,6 +5,7 @@
 #include "Repository/Mesh/MeshRepository.h"
 #include "Service/Asset/Assets/MeshAsset.h"
 #include "Desc/MeshMaterialDesc.h"
+#include "Desc/MeshDesc.h"
 #include "Desc/UIMaterialDesc.h"
 #include "Resource/IMeshResource.h"
 #include "IRenderBackend.h"
@@ -14,25 +15,21 @@ namespace cm = Core::Math;
 RenderContext::~RenderContext() { m_backend->WaitIdle(); } //리소스를 RenderService가 들고 있기 때문에 gpu의 활동을 중지 시키고 리소스 삭제->backend 순으로 된다.
 RenderContext::RenderContext(IRenderBackend* backend, AssetPipelineT* assetPipeline) :
 	m_backend{ backend },
-	m_texRepository{ make_unique<TextureRepository>(m_backend->GetTextureSystem()) },
-	m_meshRepository{ make_unique<MeshRepository>(m_backend->GetMeshSystem()) },
+	m_texRepository{ make_unique<TextureRepository>(m_backend->GetTextureSystem(), assetPipeline) },
+	m_meshRepository{ make_unique<MeshRepository>(m_backend->GetMeshSystem(), assetPipeline) },
 	m_matRepository{ make_unique<MaterialRepository>(m_backend->GetMaterialSystem(), assetPipeline) }
 {}
 
 bool RenderContext::Initialize()
 {
-	m_uiQuad = m_meshRepository->GetOrCreate("builtin/ui_quad", CreateUIQuad());
+	MeshDesc meshDesc{ Core::ResourceID::MakeBuiltin("ui_quad") };
+	m_uiQuad = m_meshRepository->GetOrCreate(meshDesc, CreateUIQuad());
 	return true;
 }
 
-MeshHandle RenderContext::LoadMesh(const filesystem::path& path, function<shared_ptr<MeshAsset>(const filesystem::path&)> loader)
+MeshHandle RenderContext::LoadMesh(const MeshDesc& desc, std::shared_ptr<MeshAsset> asset)
 {
-	return m_meshRepository->GetOrCreate(path, loader);
-}
-
-MeshHandle RenderContext::LoadMesh(const std::string& runtimeKey, shared_ptr<MeshAsset> meshAsset)
-{
-	return m_meshRepository->GetOrCreate(runtimeKey, meshAsset);
+	return m_meshRepository->GetOrCreate(desc, asset);
 }
 
 bool RenderContext::ReleaseMesh(MeshHandle mh)
@@ -40,12 +37,9 @@ bool RenderContext::ReleaseMesh(MeshHandle mh)
 	return m_meshRepository->Release(mh);
 }
 
-TextureHandle RenderContext::LoadTexture(
-	std::filesystem::path path,
-	const TextureDesc& desc,
-	function<shared_ptr<TextureAsset>(const filesystem::path&)> loader)
+TextureHandle RenderContext::LoadTexture(const TextureDesc& desc)
 {
-	return m_texRepository->GetOrCreate(path, desc, loader);
+	return m_texRepository->GetOrCreate(desc);
 }
 
 bool RenderContext::ReleaseTexture(TextureHandle th)
@@ -53,9 +47,9 @@ bool RenderContext::ReleaseTexture(TextureHandle th)
 	return m_texRepository->Release(th);
 }
 
-MaterialHandle RenderContext::LoadMaterial(unique_ptr<MeshMaterialDesc> desc)
+MaterialHandle RenderContext::LoadMaterial(const MaterialDesc& desc)
 {
-	return m_matRepository->GetOrCreate(std::move(desc));
+	return m_matRepository->GetOrCreate(desc);
 }
 
 

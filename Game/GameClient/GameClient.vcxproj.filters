@@ -231,7 +231,10 @@
     <ClCompile Include="Graphics\ShaderStageBuilder.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Graphics\Geometry\TextureBindingFactory.cpp">
+    <ClCompile Include="Graphics\Geometry\TextureDescFactory.cpp">
+      <Filter>Graphics\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Geometry\MeshDescFactory.cpp">
       <Filter>Graphics\Geometry</Filter>
     </ClCompile>
   </ItemGroup>
@@ -577,7 +580,7 @@
     <ClInclude Include="Service\Render\Desc\MeshMaterialDesc.h">
       <Filter>Service\Render\Desc</Filter>
     </ClInclude>
-    <ClInclude Include="Service\Render\Desc\TextureBinding.h">
+    <ClInclude Include="Service\Render\Desc\TextureDesc.h">
       <Filter>Service\Render\Desc</Filter>
     </ClInclude>
     <ClInclude Include="Service\Render\Desc\UIMaterialDesc.h">
@@ -616,7 +619,7 @@
     <ClInclude Include="Graphics\ShaderStageBuilder.h">
       <Filter>Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Graphics\Geometry\TextureBindingFactory.h">
+    <ClInclude Include="Graphics\Geometry\TextureDescFactory.h">
       <Filter>Graphics\Geometry</Filter>
     </ClInclude>
     <ClInclude Include="Service\AssetAsync\AssetPipeline.h">
@@ -627,6 +630,12 @@
     </ClInclude>
     <ClInclude Include="Service\AssetAsync\AssetAsyncTypes.h">
       <Filter>Service\AssetAsync</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Desc\MeshDesc.h">
+      <Filter>Service\Render\Desc</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Geometry\MeshDescFactory.h">
+      <Filter>Graphics\Geometry</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

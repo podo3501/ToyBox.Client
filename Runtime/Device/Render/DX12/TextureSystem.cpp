@@ -48,7 +48,7 @@ bool TextureSystem::CreateBuiltinTextures()
 
     m_defaultAsset = CreateDefaultTextureAsset();
 
-    TextureDesc desc{ true, false };
+    TextureDesc desc{ Core::ResourceID::MakeBuiltin("DefaultTexture"), true, false};
     if (!LoadFromAsset(texRes, m_defaultAsset, desc))
         return false;
 

@@ -1,6 +1,6 @@
 #pragma once
 #include "GameClient/Service/Render/Resource/ITextureResource.h"
-#include "GameClient/Service/Render/Desc/TextureBinding.h"
+#include "GameClient/Service/Render/Desc/TextureDesc.h"
 #include "Descriptor/DescriptorAllocation.h"
 #include <wrl/client.h>
 #include "d3dx12.h"

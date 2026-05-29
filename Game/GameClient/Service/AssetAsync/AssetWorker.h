@@ -74,7 +74,7 @@ private:
 
     TResult Process(const TRequest& req)
     {
-        auto asset = m_service->Load(req.type, req.path); //TResult가 shared_ptr<Asset> 같은 경우를 가정
+        auto asset = m_service->Load(req.type, req.resID); //TResult가 shared_ptr<Asset> 같은 경우를 가정
         return std::static_pointer_cast<typename TResult::element_type>(asset);
     }
 

@@ -3,7 +3,7 @@
 #include "Handle/MaterialHandle.h"
 #include "Handle/MeshHandle.h"
 #include "Desc/MaterialDesc.h"
-#include "Desc/TextureBinding.h"
+#include "Desc/TextureDesc.h"
 #include "Core/Math/Matrix.h"
 #include "Core/Foundation/Geometry2D.h"
 #include "../AssetAsync/AssetAsyncTypes.h"
@@ -15,6 +15,7 @@ struct TextureAsset;
 struct IRenderBackend;
 struct MeshAsset;
 struct ShaderAsset;
+struct MeshDesc;
 struct MeshMaterialDesc;
 class TextureRepository;
 class MaterialRepository;
@@ -29,24 +30,13 @@ public:
 	RenderContext(IRenderBackend* backend, AssetPipelineT* assetPipeline);
 	bool Initialize();
 
-	MeshHandle LoadMesh(
-		const filesystem::path& path, 
-		function<shared_ptr<MeshAsset>(const filesystem::path&)> loader);
-
-	MeshHandle LoadMesh(
-		const std::string& runtimeKey, 
-		shared_ptr<MeshAsset> meshAsset);
-
+	MeshHandle LoadMesh(const MeshDesc& desc, std::shared_ptr<MeshAsset> asset = nullptr);
 	bool ReleaseMesh(MeshHandle mh);
 
-	TextureHandle LoadTexture(
-		std::filesystem::path path,
-		const TextureDesc& desc, 
-		function<shared_ptr<TextureAsset>(const filesystem::path&)> loader);
-
+	TextureHandle LoadTexture(const TextureDesc& desc);
 	bool ReleaseTexture(TextureHandle th);
 
-	MaterialHandle LoadMaterial(unique_ptr<MeshMaterialDesc> desc);
+	MaterialHandle LoadMaterial(const MaterialDesc& desc);
 
 
 

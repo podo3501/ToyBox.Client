@@ -25,7 +25,7 @@ SoundHandle SoundRepository::AcquireStaticSound(const StaticSoundDesc* desc)
 {
     shared_ptr<ISoundBuffer> sndBuffer;
 
-    auto it = m_buffers.find(desc->filename);
+    auto it = m_buffers.find(desc->resID);
     if (it != m_buffers.end())
         sndBuffer = it->second.lock();
 
@@ -37,7 +37,7 @@ SoundHandle SoundRepository::AcquireStaticSound(const StaticSoundDesc* desc)
     }
 
     auto handle = m_loadedSounds.Emplace(desc, sndBuffer, SoundLoadState::Pending);
-    auto reqID = m_assetPipeline->PushRequest(MakeAssetRequest<StaticSoundAsset>(desc->filename));
+    auto reqID = m_assetPipeline->PushRequest(MakeAssetRequest<StaticSoundAsset>(desc->resID));
     m_pending.push_back({ handle, reqID });
 
     return handle;
@@ -47,7 +47,7 @@ SoundHandle SoundRepository::AcquireStreamSound(const StreamSoundDesc* desc)
 {
     shared_ptr<ISoundBuffer> sndBuffer;
 
-    auto it = m_buffers.find(desc->filename);
+    auto it = m_buffers.find(desc->resID);
     if (it != m_buffers.end())
         sndBuffer = it->second.lock();
 
@@ -59,7 +59,7 @@ SoundHandle SoundRepository::AcquireStreamSound(const StreamSoundDesc* desc)
     }
 
     auto handle = m_loadedSounds.Emplace(desc, sndBuffer, SoundLoadState::Pending);
-    auto reqID = m_assetPipeline->PushRequest(MakeAssetRequest<StreamSoundAsset>(desc->filename));
+    auto reqID = m_assetPipeline->PushRequest(MakeAssetRequest<StreamSoundAsset>(desc->resID));
     m_pending.push_back({ handle, reqID });
 
     return handle;

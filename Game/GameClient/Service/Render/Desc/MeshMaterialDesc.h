@@ -1,6 +1,5 @@
 #pragma once
 #include "MaterialDesc.h"
-#include "TextureBinding.h"
 
 struct MaterialSurface
 {
@@ -15,15 +14,19 @@ struct MaterialSurface
     }
 };
 
+enum class MeshTextureSlot : uint32_t
+{
+    Albedo,
+    Normal,
+    Count
+};
+
 struct MeshMaterialDesc : public MaterialDesc
 {
-    std::vector<TextureBinding> textures;
     MaterialSurface surface;
 
     MeshMaterialDesc()
     {
-        textures.resize(static_cast<size_t>(TextureSlot::Count));
-
         type = MaterialType::Mesh;
         pipelineState = PipelineLibrary::Get(ShaderID::Mesh, RasterPreset::Default);
         surface = { 0.5f, 0.f };
@@ -33,11 +36,8 @@ struct MeshMaterialDesc : public MaterialDesc
 
     size_t GetHash() const
     {
-        size_t h = MaterialDesc::GetHash();
-        for (const auto& tex : textures)
-            Core::HashCombine(h, tex.GetHash());
-        Core::HashCombine(h, surface.GetHash());
-
-        return h;
+        return Core::HashOf(
+            MaterialDesc::GetHash(),
+            surface.GetHash());
     }
 };

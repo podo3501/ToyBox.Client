@@ -1,11 +1,15 @@
 #pragma once
 #include "MaterialDesc.h"
-#include "TextureBinding.h"
+#include "TextureDesc.h"
+
+enum class UITextureSlot : uint32_t
+{
+    Normal,
+    Count
+};
 
 struct UIMaterialDesc : public MaterialDesc
 {
-    std::vector<TextureBinding> textures;
-
     UIMaterialDesc()
     {
         type = MaterialType::UI;
@@ -16,10 +20,7 @@ struct UIMaterialDesc : public MaterialDesc
 
     size_t GetHash() const
     {
-        size_t h = MaterialDesc::GetHash();
-        for (const auto& tex : textures)
-            Core::HashCombine(h, tex.GetHash());
-
-        return h;
+        return Core::HashOf(
+            MaterialDesc::GetHash());
     }
 };

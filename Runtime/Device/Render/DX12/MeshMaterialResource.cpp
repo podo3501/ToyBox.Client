@@ -5,7 +5,7 @@
 MeshMaterialResource::~MeshMaterialResource() = default;
 MeshMaterialResource::MeshMaterialResource()
 {
-    m_texResources.resize(static_cast<size_t>(TextureSlot::Count));
+    m_texResources.resize(static_cast<size_t>(MeshTextureSlot::Count));
 }
 
 bool MeshMaterialResource::IsReady() const noexcept
@@ -23,17 +23,17 @@ bool MeshMaterialResource::IsReady() const noexcept
     return true;
 }
 
-void MeshMaterialResource::SetTexture(TextureSlot texSlot, std::shared_ptr<ITextureResource> texRes)
+void MeshMaterialResource::SetTexture(MeshTextureSlot texSlot, std::shared_ptr<ITextureResource> texRes)
 {
-    const size_t slot = static_cast<size_t>(texSlot);
+    auto slot = static_cast<TextureSlot>(texSlot);
     Assert(slot < m_texResources.size());
 
     m_texResources[slot] = std::move(texRes);
 }
 
-DescriptorAllocation& MeshMaterialResource::GetTextureSRV(TextureSlot texSlot)
+DescriptorAllocation& MeshMaterialResource::GetTextureSRV(MeshTextureSlot texSlot)
 {
-    const size_t slot = static_cast<size_t>(texSlot);
+    auto slot = static_cast<TextureSlot>(texSlot);
     Assert(slot < m_texResources.size());
 
     auto texRes = static_cast<TextureResource*>(m_texResources[slot].get());

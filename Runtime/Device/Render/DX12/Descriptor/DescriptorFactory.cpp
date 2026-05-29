@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "DescriptorFactory.h"
 #include "DescriptorAllocator.h"
-#include "GameClient/Service/Render/Desc/TextureBinding.h"
+#include "GameClient/Service/Render/Desc/TextureDesc.h"
 
 DescriptorFactory::~DescriptorFactory() = default;
 DescriptorFactory::DescriptorFactory(ID3D12Device* device, DescriptorAllocator* srvAllocator) :

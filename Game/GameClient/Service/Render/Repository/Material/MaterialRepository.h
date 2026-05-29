@@ -3,7 +3,7 @@
 #include "Core/Utils/Hash.h"
 #include "../ResourceTypes.h"
 #include "Service/Render/Handle/MaterialHandle.h"
-#include "Service/Render/Desc/TextureBinding.h"
+#include "Service/Render/Desc/TextureDesc.h"
 #include "Service/Render/Desc/MeshMaterialDesc.h"
 #include "Service/Render/Desc/UIMaterialDesc.h"
 #include "Service/AssetAsync/AssetAsyncTypes.h"
@@ -28,7 +28,7 @@ public:
     MaterialRepository() = delete;
     MaterialRepository(IMaterialSystem* matSystem, AssetPipelineT* assetPipeline);
 
-    MaterialHandle GetOrCreate(std::unique_ptr<MeshMaterialDesc> desc);
+    MaterialHandle GetOrCreate(const MaterialDesc& desc);
 
     //MaterialHandle GetOrCreate(
     //    std::filesystem::path path,

@@ -14,7 +14,7 @@ inline constexpr AssetRequestID InvalidAssetRequestID = 0;
 
 struct AssetRequest
 {
-    std::filesystem::path path;
+    Core::ResourceID resID;
     Core::TypeID type{ Core::InvalidTypeID };
 };
 

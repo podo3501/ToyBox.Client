@@ -25,14 +25,14 @@ MaterialRepository::MaterialRepository(IMaterialSystem* matSystem, AssetPipeline
     m_assetPipeline{ assetPipeline }
 {}
 
-MaterialHandle MaterialRepository::GetOrCreate(std::unique_ptr<MeshMaterialDesc> desc) //?!? desc에 ownership 제거
+MaterialHandle MaterialRepository::GetOrCreate(const MaterialDesc& desc)
 {
-    const size_t key = desc->GetHash();
+    const size_t key = desc.GetHash();
     auto it = m_cache.find(key);
     if (it != m_cache.end())
         return it->second;
 
-    auto matRes = m_matSystem->CreateMaterialResource(*desc);
+    auto matRes = m_matSystem->CreateMaterialResource(desc);
     if (!matRes)
         return MaterialHandle::Invalid();
 
@@ -44,18 +44,17 @@ MaterialHandle MaterialRepository::GetOrCreate(std::unique_ptr<MeshMaterialDesc>
     auto handle = m_loadedMaterials.Emplace(std::move(entry));
     m_cache[key] = handle;
 
-    for (uint32_t i = 0; i < desc->textures.size(); ++i)
+    for (uint32_t i = 0; i < desc.textures.size(); ++i)
     {
         TextureSlot slot = static_cast<TextureSlot>(i);
-        auto& tex = desc->textures[i];
+        auto& tex = desc.textures[i];
 
         auto resType = tex.resID.GetType();
         switch (resType)
         {
-        case Core::ResourceIDType::File:
+        case Core::ResourceIDType::Path:
         {
-            auto requestID = m_assetPipeline->PushRequest(
-                MakeAssetRequest<TextureAsset>(std::filesystem::path(tex.resID.GetValue())));
+            auto requestID = m_assetPipeline->PushRequest(MakeAssetRequest<TextureAsset>(tex.resID));
             m_cpuPending.push_back({ handle, slot, requestID });
         }
         break;
@@ -63,6 +62,9 @@ MaterialHandle MaterialRepository::GetOrCreate(std::unique_ptr<MeshMaterialDesc>
             return MaterialHandle::Invalid();
         }
     }
+
+    if (desc.textures.empty()) //텍스쳐가 없을때에는 로딩로직을 할 필요가 없이 바로 마지막 단계로.
+        m_loadingList.push_back(handle);
 
     return handle;
 }

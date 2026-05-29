@@ -14,10 +14,9 @@ unique_ptr<AssetService> AssetService::Create(IResourceManager* resManager) noex
 	return std::unique_ptr<AssetService>(new AssetService(resManager));
 }
 
-shared_ptr<Asset> AssetService::Load(Core::TypeID type, const filesystem::path& path)
+shared_ptr<Asset> AssetService::Load(Core::TypeID type, const Core::ResourceID& resID)
 {
-	auto normalizedPath = path.lexically_normal();
-	CacheKey cacheKey{ normalizedPath, type };
+	CacheKey cacheKey{ resID, type };
 
 	{
 		std::lock_guard lock(m_cacheMutex);
@@ -29,23 +28,21 @@ shared_ptr<Asset> AssetService::Load(Core::TypeID type, const filesystem::path& 
 		}
 	}
 
-	string ext = path.extension().string();
-	string normalized = ToLowerCopy(ext);
-	
+	auto ext = string(Core::GetExtension(resID.GetValue()));
+	string normalized = Core::ToLowerCopy(ext);
 	LoaderKey loaderKey{ type, normalized };
 
 	IAssetLoader* loader = nullptr;
 	{
 		std::lock_guard lock(m_loaderMutex);
 		auto loaderIt = m_loaders.find(loaderKey);
-
 		if (loaderIt == m_loaders.end())
 			return nullptr;
 
 		loader = loaderIt->second.get();
 	}
 
-	auto asset = LoadWithSource(loader, path);
+	auto asset = LoadWithSource(loader, resID);
 	if (!asset) return nullptr;
 
 	{
@@ -63,8 +60,12 @@ shared_ptr<Asset> AssetService::Load(Core::TypeID type, const filesystem::path& 
 	return asset;
 }
 
-shared_ptr<Asset> AssetService::LoadWithSource(IAssetLoader* loader, const filesystem::path& path)
+shared_ptr<Asset> AssetService::LoadWithSource(IAssetLoader* loader, const Core::ResourceID& resID)
 {
+	if (resID.GetType() != Core::ResourceIDType::Path) 
+		return nullptr;
+
+	const auto path = std::filesystem::path(resID.GetValue());
     if (loader->PreferStream())
     {
         auto stream = m_resManager->CreateReadStream(path);

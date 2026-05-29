@@ -3,10 +3,9 @@
 #include "Platform/Serializer/Serializer.h"
 #include "Platform/Serializer/Format/TraitsHelper.hpp"
 #include "Platform/Serializer/Format/Traits.h"
-#include "Core/Foundation/ResourceID.h"
 
 DECLARE_JSON_TRAITS(SoundType)
-//DECLARE_JSON_TRAITS(Core::ResourceID)
+DECLARE_JSON_TRAITS(Core::ResourceID)
 DECLARE_JSON_TRAITS(AudioGroup)
 
 
@@ -35,12 +34,11 @@ SoundType JsonTraitsBase<SoundType>::DeserializeFromJson(const nlohmann::json& d
 		data = *StringToEnum<SoundType>(dataJ); });
 }
 
-//nlohmann::json JsonTraitsBase<Core::ResourceID>::SerializeToJson(const AudioGroup& data) { return {}; }
-//AudioGroup JsonTraitsBase<AudioGroup>::DeserializeFromJson(const nlohmann::json& dataJ)
-//{
-//	return CreateAndFill<AudioGroup>([&dataJ](AudioGroup& data) {
-//		data = *StringToEnum<AudioGroup>(dataJ); });
-//}
+nlohmann::json JsonTraitsBase<Core::ResourceID>::SerializeToJson(const Core::ResourceID& data) { return data.GetValue(); }
+Core::ResourceID JsonTraitsBase<Core::ResourceID>::DeserializeFromJson(const nlohmann::json& dataJ)
+{
+	return Core::ResourceID::MakePath(dataJ.get<string>());
+}
 
 nlohmann::json JsonTraitsBase<AudioGroup>::SerializeToJson(const AudioGroup& data) { return EnumToString(data); }
 AudioGroup JsonTraitsBase<AudioGroup>::DeserializeFromJson(const nlohmann::json& dataJ)
@@ -63,7 +61,7 @@ SoundDesc::SoundDesc(SoundType _sndType) :
 
 void SoundDesc::Serialize(Serializer& serializer)
 {
-	serializer.Process("Filename", filename);
+	serializer.Process("Filename", resID);
 	serializer.Process("Group", group);
 	serializer.Process("Priority", priority);
 	serializer.Process("Volume", volume);

@@ -2,35 +2,31 @@
 #include "TextureRepository.h"
 #include "ITextureSystem.h"
 #include "Service/Render/Resource/ITextureResource.h"
+#include "Service/AssetAsync/AssetPipeline.h"
 
 struct CpuPendingTextureRequest
 {
-	std::filesystem::path path;
-	TextureDesc desc;
-	function<std::shared_ptr<TextureAsset>(const filesystem::path&)> loader;
 	TextureHandle handle;
+	AssetRequestID requestId;
+	TextureDesc desc;
 };
 
 struct GpuPendingTextureRequest
 {
 	TextureHandle handle;
-	std::shared_ptr<TextureAsset> asset;
+	std::shared_ptr<TextureAsset> texAsset;
 	TextureDesc desc;
 };
 
 TextureRepository::~TextureRepository() { ReleaseAll(); }
-TextureRepository::TextureRepository(ITextureSystem* texSystem) :
-	m_texSystem{ texSystem }
+TextureRepository::TextureRepository(ITextureSystem* texSystem, AssetPipelineT* assetPipeline) :
+	m_texSystem{ texSystem },
+	m_assetPipeline{ assetPipeline }
 {}
 
-TextureHandle TextureRepository::GetOrCreate( 
-	std::filesystem::path path,
-	const TextureDesc& desc, 
-	function<shared_ptr<TextureAsset>(const filesystem::path&)> loader)
+TextureHandle TextureRepository::GetOrCreate(const TextureDesc& desc, std::shared_ptr<TextureAsset> asset)
 {
-	auto keyPath = std::filesystem::weakly_canonical(path);
-	TextureKey key{ ResourceKey{ keyPath.string(), ResourceKey::Type::File}, desc };
-
+	const auto& key = desc.GetHash();
 	auto it = m_cache.find(key);
 	if (it != m_cache.end())
 		return it->second;
@@ -39,39 +35,32 @@ TextureHandle TextureRepository::GetOrCreate(
 	if (!texRes) return TextureHandle::Invalid();
 
 	TextureEntry entry;
-	entry.key = key;
 	entry.texRes = move(texRes);
 	entry.state = LoadState::Pending;
 
 	auto handle = m_loadedTextures.Emplace(move(entry));
 	m_cache[key] = handle;
-	m_cpuPending.push_back(CpuPendingTextureRequest{ path, desc, loader, handle });
 
-	return handle;
-}
-
-TextureHandle TextureRepository::GetOrCreate(
-	const std::string& runtimeKey, 
-	std::shared_ptr<TextureAsset> asset, 
-	const TextureDesc& desc)
-{
-	TextureKey key{ ResourceKey{ runtimeKey, ResourceKey::Type::Runtime }, desc };
-
-	auto it = m_cache.find(key);
-	if (it != m_cache.end())
-		return it->second;
-
-	auto texRes = m_texSystem->CreateTextureResource();
-	if (!texRes) return TextureHandle::Invalid();
-
-	TextureEntry entry;
-	entry.key = key;
-	entry.texRes = move(texRes);
-	entry.state = LoadState::Pending;
-
-	auto handle = m_loadedTextures.Emplace(move(entry));
-	m_cache[key] = handle;
-	m_gpuPending.push_back(GpuPendingTextureRequest{ handle, asset, desc });
+	auto& resID = desc.resID;
+	auto resType = resID.GetType();
+	switch (resType)
+	{
+	case Core::ResourceIDType::Path:
+	{
+		auto requestID = m_assetPipeline->PushRequest(MakeAssetRequest<TextureAsset>(resID));
+		m_cpuPending.push_back({ handle, requestID, desc });
+	}
+	break;
+	case Core::ResourceIDType::Runtime:
+	case Core::ResourceIDType::Builtin:
+	{
+		if (!asset) return TextureHandle::Invalid();
+		m_gpuPending.push_back({ handle, asset, desc });
+	}
+	break;
+	default:
+		return TextureHandle::Invalid();
+	}
 
 	return handle;
 }
@@ -85,24 +74,26 @@ void TextureRepository::Update()
 
 void TextureRepository::ProcessCpuPending()
 {
-	for (auto& req : m_cpuPending)
-	{
-		auto entry = m_loadedTextures.Find(req.handle);
-		if (!entry) continue;
-		if (entry->state != LoadState::Pending) continue; // 중복으로 들어온 경우 이미 Loading/Ready 라면 처리안함.
+	if (m_cpuPending.empty()) return;
 
-		entry->state = LoadState::CpuLoading;
-		auto asset = req.loader(req.path);
-		if (!asset)
+	for (auto it = m_cpuPending.begin(); it != m_cpuPending.end(); )
+	{
+		auto& req = *it;
+		auto asset = m_assetPipeline->TakeResult(req.requestId);
+		if (!asset.has_value())
 		{
-			entry->state = LoadState::Failed;
+			++it;
 			continue;
 		}
 
-		m_gpuPending.push_back(GpuPendingTextureRequest{ req.handle, asset, req.desc });
-	}
+		GpuPendingTextureRequest gpuReq;
+		gpuReq.handle = req.handle;
+		gpuReq.texAsset = std::static_pointer_cast<TextureAsset>(*asset);
+		gpuReq.desc = req.desc;
+		m_gpuPending.push_back(std::move(gpuReq));
 
-	m_cpuPending.clear();
+		it = m_cpuPending.erase(it);
+	}
 }
 
 void TextureRepository::ProcessGpuPending()
@@ -111,8 +102,9 @@ void TextureRepository::ProcessGpuPending()
 	{
 		auto entry = m_loadedTextures.Find(work.handle);
 		if (!entry || !entry->texRes) continue;
+		if (entry->state != LoadState::Pending) continue; // 중복으로 들어온 경우 이미 Loading/Ready 라면 처리안함.
 
-		if (!m_texSystem->LoadFromAsset(entry->texRes, work.asset, work.desc))
+		if (!m_texSystem->LoadFromAsset(entry->texRes, work.texAsset, work.desc))
 		{
 			entry->state = LoadState::Failed;
 			continue;
@@ -152,7 +144,13 @@ bool TextureRepository::Release(TextureHandle h)
 	auto entry = m_loadedTextures.Find(h);
 	if (!entry) return false;
 
-	m_cache.erase(entry->key);
+	for (auto it = m_cache.begin(); it != m_cache.end();)
+	{
+		if (it->second == h)
+			it = m_cache.erase(it);
+		else
+			++it;
+	}
 	std::erase(m_loadingList, h);
 	return m_loadedTextures.Remove(h);
 }

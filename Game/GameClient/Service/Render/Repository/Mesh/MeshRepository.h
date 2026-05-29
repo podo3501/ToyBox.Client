@@ -2,15 +2,17 @@
 #include "Core/Utils/Handle/HandlePool.h"
 #include "Service/Render/Handle/MeshHandle.h"
 #include "../ResourceTypes.h"
+#include "Service/AssetAsync/AssetAsyncTypes.h"
 
 struct IMeshSystem;
 struct IMeshResource;
 struct MeshAsset;
-struct MeshPendingRequest;
+struct MeshDesc;
+struct CpuPendingMeshRequest;
+struct GpuPendingMeshRequest;
 
 struct MeshEntry
 {
-    filesystem::path path;
     shared_ptr<IMeshResource> meshRes;
     LoadState state{ LoadState::Pending };
 };
@@ -19,23 +21,27 @@ class MeshRepository
 {
 public:
     ~MeshRepository();
-    explicit MeshRepository(IMeshSystem* meshSystem);
+    MeshRepository(IMeshSystem* meshSystem, AssetPipelineT* assetPipeline);
     
-    MeshHandle GetOrCreate(const filesystem::path& path, function<shared_ptr <MeshAsset > (const filesystem::path&) > loader);
-    MeshHandle GetOrCreate(const std::string& runtimeKey, std::shared_ptr<MeshAsset> asset);
+    MeshHandle GetOrCreate(const MeshDesc& desc, std::shared_ptr<MeshAsset> asset = nullptr);
     bool Release(MeshHandle mh);
     void ReleaseAll();
     void Update();
     const MeshEntry* Get(MeshHandle h) const noexcept { return m_loadedMeshes.Find(h); }
 
 private:
-    void ProcessPending();
+    void ProcessCpuPending();
+    void ProcessGpuPending();
     void ProcessLoading();
 
     IMeshSystem* m_meshSystem{ nullptr };
-    std::unordered_map<ResourceKey, MeshHandle, ResourceKeyHash> m_cache;
+    AssetPipelineT* m_assetPipeline{ nullptr };
+
+    std::unordered_map<Core::ResourceID, MeshHandle> m_cache;
     HandlePool<MeshEntry, MeshTag> m_loadedMeshes;
 
-    vector<MeshPendingRequest> m_pending;
+    std::vector<CpuPendingMeshRequest> m_cpuPending;
+    std::vector<GpuPendingMeshRequest> m_gpuPending;
+
     vector<MeshHandle> m_loadingList;
 };

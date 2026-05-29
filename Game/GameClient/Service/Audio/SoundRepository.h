@@ -1,5 +1,6 @@
 #pragma once
 #include "Core/Utils/Handle/HandlePool.h"
+#include "Core/Foundation/ResourceID.h"
 #include "SoundHandle.h"
 #include "../AssetAsync/AssetAsyncTypes.h"
 
@@ -29,7 +30,7 @@ public:
 private:
 	IAudioBackend* m_audioBackend{ nullptr };
 	AssetPipelineT* m_assetPipeline{ nullptr };
-	unordered_map<filesystem::path, weak_ptr<ISoundBuffer>> m_buffers;
+	unordered_map<Core::ResourceID, weak_ptr<ISoundBuffer>> m_buffers;
 	HandlePool<LoadedSound, SoundTag> m_loadedSounds; //빈 SoundTag 스트럭쳐를 넣어서 handle의 타입을 만든다.
 
 	std::vector<PendingSoundRequest> m_pending;
