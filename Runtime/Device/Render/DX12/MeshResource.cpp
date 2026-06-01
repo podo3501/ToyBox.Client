@@ -12,9 +12,3 @@ void MeshResource::SetResource(ComPtr<ID3D12Resource> vb, ComPtr<ID3D12Resource>
     m_vertexCount = vertexCount;
     m_indexCount = indexCount;
 }
-
-void MeshResource::SetMeshTable(DescriptorAllocation table) noexcept
-{
-    m_meshTable = std::move(table);
-}
-   

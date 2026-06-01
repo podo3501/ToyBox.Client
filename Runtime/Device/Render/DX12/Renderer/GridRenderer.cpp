@@ -32,9 +32,9 @@ bool GridRenderer::CreateRootSignature()
 {
     RootSignatureBuilder builder;
 
-    builder.AddSRVTable(1, 0); // t0
-    builder.AddCBV(0); // b0
-    builder.AddCBV(1); // b1 ObjectCB
+    builder.Add32BitConstants(0, 1); // GridIndicesCB (b0)
+    builder.AddCBV(1); // b1
+    builder.AddCBV(2); // b2 ObjectCB
 
     m_rootSignature = builder.Build(m_device);
     return m_rootSignature != nullptr;
@@ -56,10 +56,10 @@ void GridRenderer::CreateConstantBuffers()
 
 void GridRenderer::BindCommonState(CommandList& cmd)
 {
-    cmd->SetGraphicsRootSignature(m_rootSignature.Get());
-
     ID3D12DescriptorHeap* heaps[] = { m_srvHeap };
     cmd->SetDescriptorHeaps(1, heaps);
+
+    cmd->SetGraphicsRootSignature(m_rootSignature.Get());
 }
 
 void GridRenderer::BindPipeline(CommandList& cmd, const PipelineState& pipelineState)
@@ -111,9 +111,9 @@ void GridRenderer::PrepareFrame(const CameraData& camera)
 void GridRenderer::Draw(CommandList& cmd, MeshResource& mesh, const cm::Matrix& world)
 {
     auto objectCBAddress = UpdateObjectCB(world);
-    auto& meshTable = mesh.GetMeshTable();
+    uint32_t vbIndex = mesh.GetVertexHeapIndex();
 
-    cmd->SetGraphicsRootDescriptorTable(0, meshTable.GetGpuHandle());
+    cmd->SetGraphicsRoot32BitConstants(0, 1, &vbIndex, 0);
     cmd->SetGraphicsRootConstantBufferView(1, m_frameCBAddress);
     cmd->SetGraphicsRootConstantBufferView(2, objectCBAddress);
 
@@ -129,8 +129,6 @@ void GridRenderer::Draw(CommandList& cmd, MeshResource& mesh, const cm::Matrix& 
     }
 
     cmd->DrawInstanced(mesh.GetVertexCount(), 1, 0, 0);
-
-    meshTable.MarkUsed(cmd.GetType(), cmd.GetFence());
 }
 
 D3D12_GPU_VIRTUAL_ADDRESS GridRenderer::UpdateObjectCB(const cm::Matrix& world)

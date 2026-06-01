@@ -1,6 +1,5 @@
 #pragma once
 #include "GameClient/Service/Render/Resource/IMeshResource.h"
-#include "Descriptor/DescriptorAllocation.h"
 #include <wrl/client.h>
 #include "d3dx12.h"
 
@@ -17,20 +16,26 @@ public:
 	void SetVertexFormat(VertexFormat format) noexcept { m_format = format; }
 	void SetResource(ComPtr<ID3D12Resource> vb, ComPtr<ID3D12Resource> ib, 
 		UINT vertexCount, UINT indexCount) noexcept;
-	void SetMeshTable(DescriptorAllocation table) noexcept;
+
+	void SetVertexHeapIndex(UINT heapIndex) noexcept { m_vertexHeapIndex = heapIndex; }
+	void SetIndexHeapIndex(UINT heapIndex) noexcept { m_indexHeapIndex = heapIndex; }
+	UINT GetVertexHeapIndex() const noexcept { return m_vertexHeapIndex; }
+	UINT GetIndexHeapIndex() const noexcept { return m_indexHeapIndex; }
+
 	void MarkReady() noexcept { m_ready = true; }
 	UINT GetVertexCount() const noexcept { return m_vertexCount; }
 	UINT GetIndexCount() const noexcept { return m_indexCount; }
-	DescriptorAllocation& GetMeshTable() noexcept { return m_meshTable; }
 
 private:
 	VertexFormat m_format;
 	ComPtr<ID3D12Resource> m_vb;
 	ComPtr<ID3D12Resource> m_ib;
 
-	DescriptorAllocation m_meshTable;
-
 	UINT m_vertexCount{ 0 };
 	UINT m_indexCount{ 0 };
+
+	UINT m_vertexHeapIndex{ UINT_MAX };
+	UINT m_indexHeapIndex{ UINT_MAX };
+
 	bool m_ready{ false };
 };

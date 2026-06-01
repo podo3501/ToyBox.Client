@@ -1,11 +1,12 @@
 #pragma once
 #include <d3d12.h>
 #include <wrl/client.h>
+#include <dxcapi.h>
 
 class ShaderSystem;
 class CommandList;
 class DescriptorAllocator;
-class DescriptorAllocation;
+class TextureResource;
 
 using Microsoft::WRL::ComPtr;
 
@@ -15,7 +16,7 @@ public:
     ~MipGenerator();
     MipGenerator(ID3D12Device* device, DescriptorAllocator* srvAllocator);
     bool Initialize(ShaderSystem* shaderSystem);
-    void GenerateMips(CommandList& cmd, ID3D12Resource* texture);
+    void GenerateMips(CommandList& cmd, TextureResource* texResource);
 
 private:
     bool LoadShader(ShaderSystem* shaderSystem);
@@ -28,5 +29,5 @@ private:
 
     ComPtr<ID3D12RootSignature> m_rootSignature;
     ComPtr<ID3D12PipelineState> m_pso;
-    ComPtr<ID3DBlob> m_csBlob;
+    ComPtr<IDxcBlob> m_csBlob;
 };

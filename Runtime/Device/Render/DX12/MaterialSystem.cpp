@@ -1,98 +1,93 @@
 #include "pch.h"
 #include "MaterialSystem.h"
 #include "MeshMaterialResource.h"
+#include "Descriptor/DescriptorFactory.h"
 #include "UIMaterialResource.h"
 #include "TextureSystem.h"
 #include "TextureResource.h"
 
 MaterialSystem::~MaterialSystem() = default;
-MaterialSystem::MaterialSystem(TextureSystem* texSystem) :
+MaterialSystem::MaterialSystem(ID3D12Device* device, DescriptorAllocator* srvAllocator, TextureSystem* texSystem) :
+    m_descriptorFactory{ make_unique<DescriptorFactory>(device, srvAllocator) },
 	m_texSystem{ texSystem }
 {
     auto res = make_shared<MeshMaterialResource>();
-    res->SetTexture(MeshTextureSlot::Albedo, m_texSystem->GetDefaultTexture());
+    res->SetTexture(0, m_texSystem->GetDefaultTexture()); //0번 슬롯은 mesh는 albedo, ui는 기본 텍스쳐
 
     m_defaultMeshMaterial = res;
 }
 
 shared_ptr<IMaterialResource> MaterialSystem::CreateMaterialResource(const MaterialDesc& matDesc)
 {
+    size_t texSlotCount{ 0 };
+    shared_ptr<MaterialResource> matRes{ nullptr };
     switch (matDesc.type)
     {
-    case MaterialType::Mesh:
-    {
-        auto res = make_shared<MeshMaterialResource>();
-        res->SetTexture(MeshTextureSlot::Albedo, m_texSystem->GetDefaultTexture());
-        res->SetMaterialDesc(static_cast<const MeshMaterialDesc&>(matDesc));
-        return res;
+    case MaterialType::Mesh: 
+        matRes = make_shared<MeshMaterialResource>(); 
+        texSlotCount = static_cast<size_t>(MeshTextureSlot::Count);
+        break;
+    case MaterialType::UI: 
+        matRes = make_shared<UIMaterialResource>(); 
+        texSlotCount = static_cast<size_t>(UITextureSlot::Count);
+        break;
     }
+    if (!matRes)
+        return nullptr;
 
-    case MaterialType::UI:
-    {
-        auto res = make_shared<UIMaterialResource>();
-        res->SetTexture(m_texSystem->GetDefaultTexture());
-        res->SetMaterialDesc(static_cast<const UIMaterialDesc&>(matDesc));
-        return res;
-    }
-    }
-
-    return nullptr;
+    for (size_t i = 0; i < texSlotCount; ++i)
+        matRes->SetTexture(static_cast<TextureSlot>(i), m_texSystem->GetDefaultTexture()); //빈 슬롯은 일단 기본 텍스쳐로.
+    matRes->SetMaterialDesc(matDesc);
+    return matRes;
 }
 
-//일단 한장으로 되게끔 하고 나중에 여러장 되게끔 하자.
-        //Asset에서 update 에서 읽어야할 파일을 읽어서 로딩하는 로직 안짰음.
-        //MaterialRepository에서 코딩 안 짰음.
-        //MaterialResource에 desc를 넣은 다음 읽을때 꺼내서 읽는 방식으로 하고 있음.
-        //여러장 로딩할때 texAsset인자에 타입값과 같이 보내서 알베도인지, normal인지 구분하는 방식으로 가는게 좋겠음.
-
 bool MaterialSystem::LoadFromAsset(
-    std::shared_ptr<IMaterialResource> resource,
-    TextureSlot texSlot,
-    std::shared_ptr<TextureAsset> texAsset)
+    std::shared_ptr<IMaterialResource> res,
+    std::vector<std::shared_ptr<TextureAsset>> texAssets)
 {
-    if (!resource)
+    auto matRes = static_pointer_cast<MaterialResource>(res);
+    if (!matRes)
         return false;
 
-    switch (resource->GetType())
+    auto& matDesc = matRes->GetMaterialDesc();
+    for (size_t i = 0; i < texAssets.size(); ++i)
     {
-    case MaterialType::Mesh:
-    {
-        auto meshRes = std::static_pointer_cast<MeshMaterialResource>(resource);
-        if (!meshRes)
-            return false;
+        auto& texAsset = texAssets[i];
+        if (!texAsset)
+            continue;
 
-        auto& matDesc = meshRes->GetMaterialDesc();
         auto texRes = m_texSystem->CreateTextureResource();
         if (!texRes)
             return false;
 
-        auto& slotDesc = matDesc.textures[texSlot];
+        auto& slotDesc = matDesc.textures[i];
         if (!m_texSystem->LoadFromAsset(texRes, texAsset, slotDesc))
             return false;
 
-        meshRes->SetTexture(static_cast<MeshTextureSlot>(texSlot), texRes);
-        return true;
+        matRes->SetTexture(static_cast<TextureSlot>(i), texRes);
     }
+    m_pendingMaterials.push_back(matRes);
 
-    case MaterialType::UI:
+    return true;
+}
+
+void MaterialSystem::Update()
+{
+    for (auto it = m_pendingMaterials.begin(); it != m_pendingMaterials.end();)
     {
-        auto uiRes = std::static_pointer_cast<UIMaterialResource>(resource);
-        if (!uiRes)
-            return false;
+        auto& matRes = *it;
+        if(!matRes->IsTextureReady())
+        {
+            ++it;
+            continue;
+        }
 
-        auto& uiDesc = uiRes->GetMaterialDesc();
-        auto texRes = m_texSystem->CreateTextureResource();
-        if (!texRes)
-            return false;
-
-        auto& slotDesc = uiDesc.textures[static_cast<size_t>(texSlot)];
-        if (!m_texSystem->LoadFromAsset(texRes, texAsset, slotDesc))
-            return false;
-
-        uiRes->SetTexture(texRes);
-        return true;
+        matRes->MarkReady();
+        it = m_pendingMaterials.erase(it);
     }
-    }
+}
 
-    return false;
+shared_ptr<IMaterialResource> MaterialSystem::GetDefaultMeshMaterial() 
+{ 
+    return m_defaultMeshMaterial; 
 }

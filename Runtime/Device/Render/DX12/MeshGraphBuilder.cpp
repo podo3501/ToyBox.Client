@@ -129,17 +129,14 @@ void MeshGraphBuilder::BuildFinalizePass(RenderGraph& graph, std::vector<MeshFin
             auto vertexCount = static_cast<uint32_t>(mesh.asset->vertices.size());
             auto indexCount = static_cast<uint32_t>(mesh.asset->indices.size());
 
-            auto meshTable =
-                m_descriptorFactory->CreateMeshTable(
-                    vb.Get(), mesh.asset->vertexCount, mesh.asset->vertexStride,
-                    ib.Get(), indexCount, sizeof(uint32_t));
+            auto vbHeapIndex = m_descriptorFactory->CreateBufferSRV(vb.Get(), mesh.asset->vertexCount, mesh.asset->vertexStride);
+            auto ibHeapIndex = m_descriptorFactory->CreateBufferSRV(ib.Get(), indexCount, sizeof(uint32_t));
 
             m_registry->FinalizeMesh(
                 mesh.hMesh.id,
                 mesh.asset->format,
-                vb, ib, std::move(meshTable),
-                vertexCount,
-                indexCount);
+                vb, vbHeapIndex, vertexCount,
+                ib, ibHeapIndex, indexCount);
         }
         };
 }

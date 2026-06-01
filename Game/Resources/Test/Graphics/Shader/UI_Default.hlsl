@@ -1,9 +1,3 @@
-cbuffer UIFrameCB : register(b1)
-{
-    float4x4 world;
-    float4x4 projection;
-};
-
 struct UIVertex
 {
     float3 pos;
@@ -11,11 +5,20 @@ struct UIVertex
     float2 uv;
 };
 
-StructuredBuffer<UIVertex> VertexBuffer : register(t0);
-StructuredBuffer<uint> IndexBuffer : register(t1);
-
-Texture2D tex : register(t2);
 SamplerState samp : register(s0);
+
+cbuffer UIIndicesCB : register(b0)
+{
+    uint g_vbIndex;
+    uint g_ibIndex;
+    uint g_textureIndex;
+};
+
+cbuffer UIFrameCB : register(b1)
+{
+    float4x4 world;
+    float4x4 projection;
+};
 
 struct PSInput
 {
@@ -28,15 +31,17 @@ PSInput VSMain(uint vID : SV_VertexID)
 {
     PSInput output;
 
-    uint vertexIndex = IndexBuffer[vID];
-    UIVertex input = VertexBuffer[vertexIndex];
+    StructuredBuffer<uint> ib = ResourceDescriptorHeap[g_ibIndex];
+    uint vertexIndex = ib[vID];
+
+    StructuredBuffer<UIVertex> vb = ResourceDescriptorHeap[g_vbIndex];
+    UIVertex input = vb[vertexIndex];
 
     float4 localPos = float4(input.pos, 1.0f);
     float4 worldPos = mul(localPos, world);
     float4 clipPos = mul(worldPos, projection);
 
     output.pos = clipPos;
-    //output.pos = worldPos;
     output.uv = input.uv;
     output.color = input.color;
 
@@ -45,6 +50,8 @@ PSInput VSMain(uint vID : SV_VertexID)
 
 float4 PSMain(PSInput input) : SV_TARGET
 {
-    float4 texColor = tex.Sample(samp, input.uv);
+    Texture2D uiTex = ResourceDescriptorHeap[g_textureIndex];
+    float4 texColor = uiTex.Sample(samp, input.uv);
+
     return texColor * input.color; // 색 곱해서 tint 가능
 }

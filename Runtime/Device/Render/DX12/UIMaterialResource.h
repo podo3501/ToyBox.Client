@@ -1,26 +1,30 @@
 #pragma once
-#include "GameClient/Service/Render/Resource/IMaterialResource.h"
+#include "MaterialResource.h"
 #include "GameClient/Service/Render/Desc/UIMaterialDesc.h"
-#include "Descriptor/DescriptorAllocation.h"
 
 struct ITextureResource;
 
-class UIMaterialResource : public IMaterialResource
+class UIMaterialResource : public MaterialResource
 {
 public:
 	~UIMaterialResource();
 	UIMaterialResource();
-	virtual bool IsReady() const noexcept override;
-	virtual MaterialType GetType() const noexcept override { return MaterialType::UI; }
+	virtual bool IsReady() const noexcept override { return m_ready; }
 
-	void SetTexture(std::shared_ptr<ITextureResource> texRes);
-	void SetMaterialDesc(const UIMaterialDesc& desc) { m_desc = desc; }
-	const UIMaterialDesc& GetMaterialDesc() const noexcept { return m_desc; }
+	virtual void MarkReady() noexcept override { m_ready = true; }
+	virtual bool IsTextureReady() const noexcept override;
+	virtual MaterialType GetType() const noexcept override { return MaterialType::UI; }
+	virtual void SetMaterialDesc(const MaterialDesc& desc) noexcept override { m_desc = static_cast<const UIMaterialDesc&>(desc); }
+	virtual const MaterialDesc& GetMaterialDesc() const noexcept override { return m_desc; }
+	virtual void SetTexture(TextureSlot texSlot, std::shared_ptr<ITextureResource> texRes) noexcept override;
+	virtual std::vector<std::shared_ptr<ITextureResource>> GetTextures() const noexcept override { return { m_texResource }; }
+
+	UINT GetTextureHeapIndex() const noexcept;
 	const PipelineState& GetPipelineState() const { return m_desc.pipelineState; }
 
-	DescriptorAllocation& GetTextureSRV();
-
 private:
-	shared_ptr<ITextureResource> m_texRes;
+	shared_ptr<ITextureResource> m_texResource;
 	UIMaterialDesc m_desc;
+
+	bool m_ready{ false };
 };

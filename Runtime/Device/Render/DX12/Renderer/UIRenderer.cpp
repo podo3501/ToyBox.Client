@@ -65,8 +65,7 @@ bool UIRenderer::CreateRootSignature()
 {
     RootSignatureBuilder builder;
 
-    builder.AddSRVTable(2, 0);
-    builder.AddSRVTable(1, 2);
+    builder.Add32BitConstants(0, 3); // [0]: 버텍스 버퍼 인덱스, [1]: 인덱스 버퍼 인덱스, [2]: UI 텍스처 인덱스
     builder.AddCBV(1);
     builder.AddLinearSampler(0);
 
@@ -76,10 +75,10 @@ bool UIRenderer::CreateRootSignature()
 
 void UIRenderer::BindCommonState(CommandList& cmd)
 {
-    cmd->SetGraphicsRootSignature(m_rootSignature.Get());
-
     ID3D12DescriptorHeap* heaps[] = { m_srvHeap };
     cmd->SetDescriptorHeaps(1, heaps);
+
+    cmd->SetGraphicsRootSignature(m_rootSignature.Get());
 }
 
 void UIRenderer::BindPipeline(CommandList& cmd, const PipelineState& pipelineState)
@@ -99,11 +98,13 @@ void UIRenderer::Draw(
     UIMaterialResource& material,
     const cm::Matrix& quadWorld)
 {
-    auto& meshTable = mesh.GetMeshTable();
-    auto& textureSrv = material.GetTextureSRV();
+    uint32_t uiIndices[3] = {
+        mesh.GetVertexHeapIndex(),
+        mesh.GetIndexHeapIndex(),
+        material.GetTextureHeapIndex()
+    };
 
-    cmd->SetGraphicsRootDescriptorTable(0, meshTable.GetGpuHandle());
-    cmd->SetGraphicsRootDescriptorTable(1, textureSrv.GetGpuHandle());
+    cmd->SetGraphicsRoot32BitConstants(0, 3, uiIndices, 0);
 
     DirectX::XMMATRIX world = ToDXMatrix(quadWorld);
     DirectX::XMMATRIX proj = ToDXMatrix(m_projection);
@@ -114,7 +115,7 @@ void UIRenderer::Draw(
     XMStoreFloat4x4(&frameCB.projection, DirectX::XMMatrixTranspose(proj));
 
     auto gpuAddress = m_uiFrameCBAllocator.AllocateConstant(frameCB);
-    cmd->SetGraphicsRootConstantBufferView(2, gpuAddress);
+    cmd->SetGraphicsRootConstantBufferView(1, gpuAddress);
 
     switch (m_pipelineState.topologyType)
     {
@@ -127,10 +128,7 @@ void UIRenderer::Draw(
         break;
     }
 
-    cmd->DrawInstanced(mesh.GetIndexCount(), 1, 0, 0);
-
-    meshTable.MarkUsed(cmd.GetType(), cmd.GetFence());
-    textureSrv.MarkUsed(cmd.GetType(), cmd.GetFence());
+    cmd->DrawIndexedInstanced(mesh.GetIndexCount(), 1, 0, 0, 0);
 }
 
 void UIRenderer::SetScreenSize(const Size& size)

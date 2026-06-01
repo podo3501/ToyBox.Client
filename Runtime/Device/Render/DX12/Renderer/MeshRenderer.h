@@ -16,7 +16,6 @@ struct MaterialSurface;
 class CommandList;
 class MeshResource;
 class MeshMaterialResource;
-class DescriptorAllocation;
 class ShaderSystem;
 
 using Microsoft::WRL::ComPtr;
@@ -44,7 +43,7 @@ private:
     ID3D12PipelineState* GetPipeline(const PipelineState& pipelineState);
 
     D3D12_GPU_VIRTUAL_ADDRESS UpdateObjectCB(const Core::Math::Matrix& world);
-    D3D12_GPU_VIRTUAL_ADDRESS UpdateMaterialCB(const MaterialSurface& surface);
+    D3D12_GPU_VIRTUAL_ADDRESS UpdateMaterialCB(const MaterialSurface& surface, std::vector<UINT> textureIndices);
 
     static constexpr UINT kCBSize = 256;
     static constexpr uint32_t kMaxObjectCount{ 1024 }; //추후에 링버퍼로 수정할 계획

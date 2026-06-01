@@ -12,11 +12,20 @@ struct CpuPendingMaterialRequest
     AssetRequestID requestId;
 };
 
+struct PendingMaterialTextures
+{
+    MaterialHandle handle;
+
+    uint32_t expectedCount{ 0 };
+    uint32_t loadedCount{ 0 };
+
+    std::vector<std::shared_ptr<TextureAsset>> textures;
+};
+
 struct GpuPendingMaterialRequest
 {
     MaterialHandle handle;
-    TextureSlot slot;
-    std::shared_ptr<TextureAsset> texAsset;
+    std::vector<std::shared_ptr<TextureAsset>> textures;
 };
 
 MaterialRepository::~MaterialRepository() = default;
@@ -44,27 +53,34 @@ MaterialHandle MaterialRepository::GetOrCreate(const MaterialDesc& desc)
     auto handle = m_loadedMaterials.Emplace(std::move(entry));
     m_cache[key] = handle;
 
+    if (desc.textures.empty()) //텍스쳐가 없을때에는 로딩로직을 할 필요가 없이 바로 마지막 단계로.
+    {
+        m_loadingList.push_back(handle);
+        return handle;
+    }
+
+    PendingMaterialTextures pending;
+    pending.handle = handle;
+    pending.expectedCount = static_cast<uint32_t>(desc.textures.size());
+    pending.textures.resize(desc.textures.size());
+    m_pendingTextures.emplace(handle, std::move(pending));
+
     for (uint32_t i = 0; i < desc.textures.size(); ++i)
     {
-        TextureSlot slot = static_cast<TextureSlot>(i);
         auto& tex = desc.textures[i];
-
         auto resType = tex.resID.GetType();
         switch (resType)
         {
         case Core::ResourceIDType::Path:
         {
             auto requestID = m_assetPipeline->PushRequest(MakeAssetRequest<TextureAsset>(tex.resID));
-            m_cpuPending.push_back({ handle, slot, requestID });
+            m_cpuPending.push_back({ handle, static_cast<TextureSlot>(i), requestID });
         }
         break;
         default: //runtime이면 인자에 asset이 있어야 한다. builtin은 아직 없음.
             return MaterialHandle::Invalid();
         }
     }
-
-    if (desc.textures.empty()) //텍스쳐가 없을때에는 로딩로직을 할 필요가 없이 바로 마지막 단계로.
-        m_loadingList.push_back(handle);
 
     return handle;
 }
@@ -78,9 +94,10 @@ void MaterialRepository::Update()
 
 void MaterialRepository::ProcessCpuPending()
 {
-    if (m_cpuPending.empty()) return;
+    if (m_cpuPending.empty())
+        return;
 
-    for (auto it = m_cpuPending.begin(); it != m_cpuPending.end(); )
+    for (auto it = m_cpuPending.begin(); it != m_cpuPending.end();)
     {
         auto& req = *it;
         auto asset = m_assetPipeline->TakeResult(req.requestId);
@@ -90,15 +107,52 @@ void MaterialRepository::ProcessCpuPending()
             continue;
         }
 
-        GpuPendingMaterialRequest gpuReq;
-        gpuReq.handle = req.handle;
-        gpuReq.slot = req.slot;
-        gpuReq.texAsset = std::static_pointer_cast<TextureAsset>(*asset);
-        m_gpuPending.push_back(std::move(gpuReq));
+        auto pendingIt = m_pendingTextures.find(req.handle);
+        if (pendingIt != m_pendingTextures.end())
+        {
+            auto& pending = pendingIt->second;
+            auto slot = static_cast<size_t>(req.slot);
+            pending.textures[slot] = std::static_pointer_cast<TextureAsset>(*asset);
+            pending.loadedCount++;
+
+            if (pending.loadedCount == pending.expectedCount)
+            {
+                GpuPendingMaterialRequest gpuReq;
+                gpuReq.handle = pending.handle;
+                gpuReq.textures = std::move(pending.textures);
+                m_gpuPending.push_back(std::move(gpuReq));
+
+                m_pendingTextures.erase(pendingIt);
+            }
+        }
 
         it = m_cpuPending.erase(it);
     }
 }
+
+//void MaterialRepository::ProcessCpuPending()
+//{
+//    if (m_cpuPending.empty()) return;
+//
+//    for (auto it = m_cpuPending.begin(); it != m_cpuPending.end(); )
+//    {
+//        auto& req = *it;
+//        auto asset = m_assetPipeline->TakeResult(req.requestId);
+//        if (!asset.has_value())
+//        {
+//            ++it;
+//            continue;
+//        }
+//
+//        GpuPendingMaterialRequest gpuReq;
+//        gpuReq.handle = req.handle;
+//        gpuReq.slot = req.slot;
+//        gpuReq.texAsset = std::static_pointer_cast<TextureAsset>(*asset);
+//        m_gpuPending.push_back(std::move(gpuReq));
+//
+//        it = m_cpuPending.erase(it);
+//    }
+//}
 
 void MaterialRepository::ProcessGpuPending()
 {
@@ -107,7 +161,7 @@ void MaterialRepository::ProcessGpuPending()
         auto entry = m_loadedMaterials.Find(work.handle);
         if (!entry || !entry->matRes) continue;
 
-        if (!m_matSystem->LoadFromAsset(entry->matRes, work.slot, work.texAsset))
+        if (!m_matSystem->LoadFromAsset(entry->matRes, work.textures))
         {
             entry->state = LoadState::Failed;
             continue;

@@ -7,6 +7,7 @@
 #include "ResourceLoader.h"
 #include "MipGenerator.h"
 #include "Descriptor/DescriptorFactory.h"
+#include "Descriptor/DescriptorAllocator.h"
 #include "Helpers/CommandListHelpers.h"
 #include "Command/CommandList.h"
 #include "TextureLoadRequest.h"
@@ -59,6 +60,10 @@ void TextureGraphBuilder::LoadTextures(const std::vector<TextureLoadRequest>& re
         auto mips = m_loader->ShouldGenerateMips(*req.asset, req.desc.generateMips);
         auto texDesc = m_loader->CreateTexture2DDesc(*req.asset, mips);
         auto texRes = m_loader->CreateTextureResource(texDesc);
+
+        auto textureResource = std::static_pointer_cast<TextureResource>(req.resource);
+        textureResource->SetResource(texRes);
+        m_descriptorFactory->CreateTextureViews(textureResource.get(), req.desc, mips);
 
         hasMipTask |= mips;
         offset = AlignSize(offset, AlignTexture);
@@ -115,8 +120,8 @@ void TextureGraphBuilder::BuildMipPass(RenderGraph& graph, std::vector<TextureUp
         {
             if (!tex.generateMips) continue;
 
-            auto& res = ctx.GetResource<ComPtr<ID3D12Resource>>(tex.handle);
-            m_mipGenerator->GenerateMips(cmd, res.Get());
+            auto texRes = m_registry->GetTextureResource(tex.handle.id);
+            m_mipGenerator->GenerateMips(cmd, texRes);
         }
         };
 }
@@ -134,11 +139,9 @@ void TextureGraphBuilder::BuildFinalizePass(RenderGraph& graph, std::vector<Text
     finalize.cpuExecute = [this, finalizeEntries](TaskContext& ctx) {
         for (auto& tex : finalizeEntries)
         {
-            auto& res = ctx.GetResource<ComPtr<ID3D12Resource>>(tex.handle);
-            auto allocation = m_descriptorFactory->CreateTextureSRV(res.Get(), tex.desc, tex.generateMips);
-
-            m_registry->FinalizeTexture(tex.handle.id, res, std::move(allocation));
+            m_registry->FinalizeTexture(tex.handle.id);
         }
+        m_descriptorFactory->GetDescriptorAllocator()->ResetTransient(); //mipmap때 임시로 만든 srv/uav 정리.
         };
 }
 

@@ -8,7 +8,7 @@ MeshMaterialResource::MeshMaterialResource()
     m_texResources.resize(static_cast<size_t>(MeshTextureSlot::Count));
 }
 
-bool MeshMaterialResource::IsReady() const noexcept
+bool MeshMaterialResource::IsTextureReady() const noexcept
 {
     const size_t count = m_desc.textures.size();
     if (m_texResources.size() < count)
@@ -23,19 +23,26 @@ bool MeshMaterialResource::IsReady() const noexcept
     return true;
 }
 
-void MeshMaterialResource::SetTexture(MeshTextureSlot texSlot, std::shared_ptr<ITextureResource> texRes)
+void MeshMaterialResource::SetTexture(TextureSlot texSlot, std::shared_ptr<ITextureResource> texRes) noexcept
 {
-    auto slot = static_cast<TextureSlot>(texSlot);
-    Assert(slot < m_texResources.size());
-
-    m_texResources[slot] = std::move(texRes);
+    Assert(texSlot < m_texResources.size());
+    m_texResources[texSlot] = std::move(texRes);
 }
 
-DescriptorAllocation& MeshMaterialResource::GetTextureSRV(MeshTextureSlot texSlot)
-{
-    auto slot = static_cast<TextureSlot>(texSlot);
-    Assert(slot < m_texResources.size());
+std::vector<std::shared_ptr<ITextureResource>> MeshMaterialResource::GetTextures() const noexcept
+{ 
+    return m_texResources; 
+}
 
-    auto texRes = static_cast<TextureResource*>(m_texResources[slot].get());
-    return texRes->GetSrv();
+std::vector<UINT> MeshMaterialResource::GetTextureIndices() const noexcept
+{
+    std::vector<UINT> indices;
+
+    for (auto& tex : m_texResources)
+    {
+        auto t = std::static_pointer_cast<TextureResource>(tex);
+        indices.push_back(t->GetHeapIndex());
+    }
+
+    return indices;
 }

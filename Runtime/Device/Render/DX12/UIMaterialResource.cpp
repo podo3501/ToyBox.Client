@@ -5,21 +5,19 @@
 UIMaterialResource::~UIMaterialResource() = default;
 UIMaterialResource::UIMaterialResource() = default;
 
-bool UIMaterialResource::IsReady() const noexcept
+bool UIMaterialResource::IsTextureReady() const noexcept
 {
-    if (!m_texRes)
-        return false;
-
-    return m_texRes->IsReady();
+    return m_texResource->IsReady();
 }
 
-void UIMaterialResource::SetTexture(std::shared_ptr<ITextureResource> texRes)
+void UIMaterialResource::SetTexture(TextureSlot texSlot, std::shared_ptr<ITextureResource> texRes) noexcept
 {
-    m_texRes = texRes;
+    Assert(texSlot == 0); //일단은 지금은 하나만 들어온다.
+    m_texResource = texRes;
 }
 
-DescriptorAllocation& UIMaterialResource::GetTextureSRV()
+UINT UIMaterialResource::GetTextureHeapIndex() const noexcept
 {
-    auto texRes = static_cast<TextureResource*>(m_texRes.get());
-    return texRes->GetSrv();
+    auto t = std::static_pointer_cast<TextureResource>(m_texResource);
+    return t->GetHeapIndex();
 }

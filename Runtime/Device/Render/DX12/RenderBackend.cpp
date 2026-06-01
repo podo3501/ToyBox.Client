@@ -72,7 +72,7 @@ bool RenderBackend::Initialize(
     ReturnIfFalse(m_swapChain->Initialize(device, factory, m_command.get(), desc));
 
     m_srvAllocator = make_unique<DescriptorAllocator>(device);
-    ReturnIfFalse(m_srvAllocator->Initialize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, config.srvDescriptorCount, true));
+    ReturnIfFalse(m_srvAllocator->Initialize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, config.srvDescriptorCount));
 
     m_taskScheduler = make_unique<TaskScheduler>(m_command.get());
     m_loader = make_unique<ResourceLoader>(device);
@@ -84,7 +84,7 @@ bool RenderBackend::Initialize(
     m_texSystem = make_unique<TextureSystem>(device, m_srvAllocator.get(), m_taskScheduler.get(), m_loader.get());
     ReturnIfFalse(m_texSystem->Initialize(m_shaderSystem.get()));
     m_meshSystem = make_unique<MeshSystem>(device, m_srvAllocator.get(), m_taskScheduler.get(), m_loader.get());
-    m_matSystem = make_unique<MaterialSystem>(m_texSystem.get());
+    m_matSystem = make_unique<MaterialSystem>(device, m_srvAllocator.get(), m_texSystem.get());
     m_scene = make_unique<RenderScene>();
 
     m_renderers = make_unique<Renderers>();
@@ -168,19 +168,20 @@ void RenderBackend::Resize(const Size& size)
 
 void RenderBackend::Update()
 {
-    m_srvAllocator->ProcessDeferredFree(m_command->GetCompletedFences());
-
     m_taskScheduler->Execute();
 
     m_profiler->Update();
     float gpuMs = m_profiler->GetGpuFrameTimeMs();
 
     m_texSystem->Update(ComputeTextureBudget(gpuMs));
+    m_matSystem->Update();
     m_meshSystem->Update(ComputeMeshBudget(gpuMs));
 }
 
 void RenderBackend::Render()
 {
+    return;
+
     if (!BeginFrame())
         return;
 

@@ -1,9 +1,24 @@
-cbuffer ObjectCB : register(b0)
+struct MeshVertex
+{
+    float3 pos;
+    float3 normal;
+    float2 uv;
+};
+
+SamplerState gSampler : register(s0);
+
+cbuffer MeshIndicesCB : register(b0)
+{
+    uint g_vbIndex;
+    uint g_ibIndex;
+};
+
+cbuffer ObjectCB : register(b1)
 {
     float4x4 world;
 };
 
-cbuffer MeshFrameCB : register(b1)
+cbuffer MeshFrameCB : register(b2)
 {
     float4x4 view;
     float4x4 proj;
@@ -15,26 +30,13 @@ cbuffer MeshFrameCB : register(b1)
     float  padding;
 };
 
-cbuffer MaterialCB : register(b2)
+cbuffer MaterialCB : register(b3)
 {
     float roughness;
     float metallic;
-
-    float2 materialPadding;
+    uint  albedoTextureIndex;
+    uint  normalTextureIndex;
 };
-
-struct MeshVertex
-{
-    float3 pos;
-    float3 normal;
-    float2 uv;
-};
-
-StructuredBuffer<MeshVertex> VertexBuffer : register(t0);
-StructuredBuffer<uint>   IndexBuffer  : register(t1);
-
-Texture2D gTexture : register(t2);
-SamplerState gSampler : register(s0);
 
 struct PSInput
 {
@@ -48,8 +50,11 @@ PSInput VSMain(uint vID : SV_VertexID)
 {
     PSInput output;
 
-    uint vertexIndex = IndexBuffer[vID];
-    MeshVertex input = VertexBuffer[vertexIndex];
+    StructuredBuffer<uint> ib = ResourceDescriptorHeap[g_ibIndex];
+    uint vertexIndex = ib[vID];
+
+    StructuredBuffer<MeshVertex> vb = ResourceDescriptorHeap[g_vbIndex];
+    MeshVertex input = vb[vertexIndex];
 
     float4 worldPos = mul(float4(input.pos, 1.0f), world);
     float4 viewPos = mul(worldPos, view);
@@ -68,7 +73,8 @@ PSInput VSMain(uint vID : SV_VertexID)
 
 float4 PSMain(PSInput input) : SV_TARGET
 {
-    float4 albedo = gTexture.Sample(gSampler, input.uv);
+    Texture2D albedoTex = ResourceDescriptorHeap[albedoTextureIndex];
+    float4 albedo = albedoTex.Sample(gSampler, input.uv);
 
     // normal / light setup
     float3 N = normalize(input.normal);

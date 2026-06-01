@@ -53,7 +53,12 @@
     <ClInclude Include="Render\DX12\Debug.h" />
     <ClInclude Include="Render\DX12\DebugHelper.h" />
     <ClInclude Include="Render\DX12\DebugOptions.h" />
-    <ClInclude Include="Render\DX12\Descriptor\DescriptorAllocation.h" />
+    <ClInclude Include="Render\DX12\Descriptor\DescriptorAllocation.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="Render\DX12\Descriptor\DescriptorAllocator.h" />
     <ClInclude Include="Render\DX12\Descriptor\DescriptorFactory.h" />
     <ClInclude Include="Render\DX12\DX12Core.h" />
@@ -61,6 +66,7 @@
     <ClInclude Include="Render\DX12\Helpers\CommandListHelpers.h" />
     <ClInclude Include="Render\DX12\Helpers\CommonHelpers.h" />
     <ClInclude Include="Render\DX12\Helpers\MathHelpers.h" />
+    <ClInclude Include="Render\DX12\MaterialResource.h" />
     <ClInclude Include="Render\DX12\MeshMaterialResource.h" />
     <ClInclude Include="Render\DX12\MaterialSystem.h" />
     <ClInclude Include="Render\DX12\OpaqueGraphBuilder.h" />
@@ -71,7 +77,12 @@
     <ClInclude Include="Render\DX12\MeshResource.h" />
     <ClInclude Include="Render\DX12\MeshSystem.h" />
     <ClInclude Include="Render\DX12\MipGenerator.h" />
-    <ClInclude Include="Render\DX12\MipTask.h" />
+    <ClInclude Include="Render\DX12\MipTask.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="Render\DX12\PrepareGraphBuilder.h" />
     <ClInclude Include="Render\DX12\PresentGraphBuilder.h" />
     <ClInclude Include="Render\DX12\Renderer\FrameUploadAllocator.h" />
@@ -138,7 +149,12 @@
     <ClCompile Include="Render\DX12\Command\CommandQueue.cpp" />
     <ClCompile Include="Render\DX12\Command\CommandScheduler.cpp" />
     <ClCompile Include="Render\DX12\DebugHelper.cpp" />
-    <ClCompile Include="Render\DX12\Descriptor\DescriptorAllocation.cpp" />
+    <ClCompile Include="Render\DX12\Descriptor\DescriptorAllocation.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="Render\DX12\Descriptor\DescriptorAllocator.cpp" />
     <ClCompile Include="Render\DX12\Descriptor\DescriptorFactory.cpp" />
     <ClCompile Include="Render\DX12\DX12Core.cpp" />
@@ -155,7 +171,12 @@
     <ClCompile Include="Render\DX12\MeshResource.cpp" />
     <ClCompile Include="Render\DX12\MeshSystem.cpp" />
     <ClCompile Include="Render\DX12\MipGenerator.cpp" />
-    <ClCompile Include="Render\DX12\MipTask.cpp" />
+    <ClCompile Include="Render\DX12\MipTask.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="Render\DX12\PrepareGraphBuilder.cpp" />
     <ClCompile Include="Render\DX12\PresentGraphBuilder.cpp" />
     <ClCompile Include="Render\DX12\Renderer\FrameUploadAllocator.cpp" />

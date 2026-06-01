@@ -2,108 +2,70 @@
 #include "DescriptorAllocator.h"
 #include "../Command/FenceTypes.h"
 
-struct PendingFree
-{
-    UINT index;
-    UINT count;
-
-    QueueFences required;
-};
-
-struct FreeBlock
-{
-    UINT index;
-    UINT count;
-};
-
 DescriptorAllocator::~DescriptorAllocator() = default;
 DescriptorAllocator::DescriptorAllocator(ID3D12Device* device) noexcept :
     m_device{ device }
 {}
 
-bool DescriptorAllocator::Initialize(D3D12_DESCRIPTOR_HEAP_TYPE type, UINT maxCount, bool shaderVisible) noexcept
+bool DescriptorAllocator::Initialize(D3D12_DESCRIPTOR_HEAP_TYPE type, UINT maxCount) noexcept
 {
     m_capacity = maxCount;
     m_allocated = 0;
-    m_shaderVisible = shaderVisible;
 
     D3D12_DESCRIPTOR_HEAP_DESC desc = {};
     desc.NumDescriptors = maxCount;
     desc.Type = type;
-    desc.Flags = shaderVisible
-        ? D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE
-        : D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+    desc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 
     if (FAILED(m_device->CreateDescriptorHeap(&desc, IID_PPV_ARGS(&m_heap))))
         return false;
 
     m_descriptorSize = m_device->GetDescriptorHandleIncrementSize(type);
     m_cpuStart = m_heap->GetCPUDescriptorHandleForHeapStart();
-    if (shaderVisible)
-        m_gpuStart = m_heap->GetGPUDescriptorHandleForHeapStart();
+    m_gpuStart = m_heap->GetGPUDescriptorHandleForHeapStart();
 
     return true;
 }
 
-DescriptorAllocation DescriptorAllocator::Allocate(UINT count) noexcept
+UINT DescriptorAllocator::Allocate() noexcept
 {
-    Assert(count > 0);
-
-    for (size_t i = 0; i < m_freeList.size(); ++i)
+    if (m_allocated + m_allocatedTransient + 1 > m_capacity)
     {
-        auto& block = m_freeList[i];
-        if (block.count < count)
-            continue;
-
-        UINT index = block.index;
-
-        block.index += count; 
-        block.count -= count; //block을 소비한다.
-
-        if (block.count == 0)
-            m_freeList.erase(m_freeList.begin() + i); // 완전히 사용한 경우 제거
-
-        return DescriptorAllocation(this, index, count);
+        Assert(false); //디스크립터 힙이 가득 참. 지워서 새로 만들던지, 힙을 늘리던지.
+        return UINT_MAX;
     }
-
-    if (m_allocated + count > m_capacity)
-        return {}; // invalid
 
     UINT index = m_allocated;
-    m_allocated += count;
+    m_allocated += 1;
 
-    return DescriptorAllocation(this, index, count);
+    return index;
 }
 
-void DescriptorAllocator::DeferredFree(UINT index, UINT count, const QueueFences& fences)
+UINT DescriptorAllocator::AllocateTransient(UINT count) noexcept
 {
-    m_pendingFrees.push_back({ index, count, fences }); //double free 방지 없음(현재 구조) 나중에 추가할 예정.
-}
-
-void DescriptorAllocator::Free(UINT index, UINT count)
-{
-    m_freeList.push_back({ index, count });
-}
-
-void DescriptorAllocator::ProcessDeferredFree(const QueueFences& completed)
-{
-    size_t write = 0;
-
-    for (size_t read = 0; read < m_pendingFrees.size(); ++read)
+    std::lock_guard<std::mutex> lock(m_allocTransientMutex);
+    if (m_allocated + m_allocatedTransient + count > m_capacity) // 두 영역이 충돌했는지 체크
     {
-        auto& e = m_pendingFrees[read];
-
-        bool done =
-            completed.direct >= e.required.direct &&
-            completed.copy >= e.required.copy;
-
-        if (done)
-            Free(e.index, e.count);
-        else
-            m_pendingFrees[write++] = e; //쓸것은 앞으로 복사하고 안쓸것은 뒤로 보낸후 resize 하는 전형적인 알고리즘.
+        Assert(false);
+        return UINT_MAX;
     }
 
-    m_pendingFrees.resize(write);
+    m_allocatedTransient += count; //count만큼 방을 확보
+    UINT index = m_capacity - m_allocatedTransient; // 예: capacity가 1000이고 1개 요청했다면 -> m_allocatedTransient는 1이 됨 -> index는 999번 방 반환
+
+    return index;
+}
+
+void DescriptorAllocator::Reset() noexcept
+{
+    m_allocated = 0;
+    ResetTransient();
+}
+
+void DescriptorAllocator::ResetTransient() noexcept
+{
+    std::lock_guard<std::mutex> lock(m_allocTransientMutex);
+    m_allocatedTransient = 0;
 }
 
 D3D12_CPU_DESCRIPTOR_HANDLE DescriptorAllocator::GetCpuHandle(UINT index) const noexcept

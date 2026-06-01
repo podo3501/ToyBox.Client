@@ -37,45 +37,10 @@ public:
 	bool ReleaseTexture(TextureHandle th);
 
 	MaterialHandle LoadMaterial(const MaterialDesc& desc);
-
-
-
-	//MaterialHandle LoadMaterial(
-	//	unique_ptr<MaterialDesc> desc,
-	//	function<shared_ptr<TextureAsset>(const filesystem::path&)> loader);
-
-	//MaterialHandle LoadMaterial(
-	//	const std::filesystem::path& path,
-	//	unique_ptr<MaterialDesc> desc,
-	//	function<shared_ptr<TextureAsset>(const filesystem::path&)> loader);
-
-	//MaterialHandle LoadMaterial(
-	//	const std::string& runtimeKey, 
-	//	shared_ptr<TextureAsset> albedoAsset,
-	//	unique_ptr<MaterialDesc> desc);
-
-	//MaterialHandle LoadMaterial(
-	//	const std::string& runtimeKey,
-	//	MaterialType matType,
-	//	shared_ptr<TextureAsset> albedoAsset = nullptr);
-
 	bool ReleaseMaterial(MaterialHandle mh);
 
-	void DrawMesh(
-		MeshHandle hM,
-		MaterialHandle hMtl,
-		const Core::Math::Matrix& world);
-
-	void DrawUI(
-		MaterialHandle mh,
-		const Rect& dest,
-		const Rect* source = nullptr);
-
-	//void DrawGrid(
-	//	MeshHandle hM,
-	//	MaterialHandle hMtl,
-	//	const cm::Matrix& world);
-
+	void DrawMesh(MeshHandle hM, MaterialHandle hMtl, const Core::Math::Matrix& world);
+	void DrawUI(MaterialHandle mh, const Rect& dest, const Rect* source = nullptr);
 	void Update();
 	void ReleaseAll();
 

@@ -7,7 +7,6 @@
 #include "../d3dx12.h"
 #include <d3dcompiler.h>
 #include "../Command/CommandList.h"
-#include "../Descriptor/DescriptorAllocation.h"
 #include "../ShaderSystem.h"
 #include "../Helpers/MathHelpers.h"
 #include "GameClient/Graphics/RenderData/DirectionalLightData.h"
@@ -19,8 +18,8 @@ struct MaterialCB
 {
     float roughness;
     float metallic;
-
-    float padding[2];
+    uint32_t albedoTextureIndex;
+    uint32_t normalTextureIndex;
 };
 
 MeshRenderer::~MeshRenderer() = default;
@@ -77,12 +76,11 @@ bool MeshRenderer::CreateRootSignature()
 {
     RootSignatureBuilder builder;
 
-    builder.AddSRVTable(2, 0); // t0-t1
-    builder.AddSRVTable(1, 2); // t2
+    builder.Add32BitConstants(0, 2); // b0
 
-    builder.AddCBV(0);
-    builder.AddCBV(1);
-    builder.AddCBV(2);
+    builder.AddCBV(1); //objectCB
+    builder.AddCBV(2); //meshFrameCB
+    builder.AddCBV(3); //materialCB
     
     builder.AddLinearSampler(0);
 
@@ -103,10 +101,10 @@ void MeshRenderer::CreateConstantBuffers()
 
 void MeshRenderer::BindCommonState(CommandList& cmd)
 {
-    cmd->SetGraphicsRootSignature(m_rootSignature.Get());
-
     ID3D12DescriptorHeap* heaps[] = { m_srvHeap };
     cmd->SetDescriptorHeaps(1, heaps);
+
+    cmd->SetGraphicsRootSignature(m_rootSignature.Get());
 }
 
 void MeshRenderer::BindPipeline(CommandList& cmd, const PipelineState& pipelineState)
@@ -150,16 +148,13 @@ void MeshRenderer::Draw(
     const cm::Matrix& world)
 {
     auto objectCBAddress = UpdateObjectCB(world);
-    auto materialCBAddress = UpdateMaterialCB(material.GetSurface());
-    auto& meshTable = mesh.GetMeshTable();
-    auto& textureSrv = material.GetTextureSRV(MeshTextureSlot::Albedo);
+    auto materialCBAddress = UpdateMaterialCB(material.GetSurface(), material.GetTextureIndices());
+    uint32_t meshIndices[2] = { mesh.GetVertexHeapIndex(), mesh.GetIndexHeapIndex() };
     
-    cmd->SetGraphicsRootDescriptorTable(0, meshTable.GetGpuHandle());
-    cmd->SetGraphicsRootDescriptorTable(1, textureSrv.GetGpuHandle());
-
-    cmd->SetGraphicsRootConstantBufferView(2, objectCBAddress);
-    cmd->SetGraphicsRootConstantBufferView(3, m_frameCBAddress);
-    cmd->SetGraphicsRootConstantBufferView(4, materialCBAddress);
+    cmd->SetGraphicsRoot32BitConstants(0, 2, meshIndices, 0);
+    cmd->SetGraphicsRootConstantBufferView(1, objectCBAddress);
+    cmd->SetGraphicsRootConstantBufferView(2, m_frameCBAddress);
+    cmd->SetGraphicsRootConstantBufferView(3, materialCBAddress);
 
     switch (m_pipelineState.topologyType)
     {
@@ -172,10 +167,7 @@ void MeshRenderer::Draw(
         break;
     }
 
-    cmd->DrawInstanced(mesh.GetIndexCount(), 1, 0, 0);
-
-    meshTable.MarkUsed(cmd.GetType(), cmd.GetFence());
-    textureSrv.MarkUsed(cmd.GetType(), cmd.GetFence());
+    cmd->DrawIndexedInstanced(mesh.GetIndexCount(), 1, 0, 0, 0);
 }
 
 D3D12_GPU_VIRTUAL_ADDRESS MeshRenderer::UpdateObjectCB(const cm::Matrix& world)
@@ -188,12 +180,15 @@ D3D12_GPU_VIRTUAL_ADDRESS MeshRenderer::UpdateObjectCB(const cm::Matrix& world)
     return m_objectCBAllocator.AllocateConstant(obj);
 }
 
-D3D12_GPU_VIRTUAL_ADDRESS MeshRenderer::UpdateMaterialCB(const MaterialSurface& surface)
+D3D12_GPU_VIRTUAL_ADDRESS MeshRenderer::UpdateMaterialCB(
+    const MaterialSurface& surface, std::vector<UINT> textureIndices)
 {
     MaterialCB cb{};
 
     cb.roughness = surface.roughness;
     cb.metallic = surface.metallic;
+    cb.albedoTextureIndex = textureIndices[static_cast<int>(MeshTextureSlot::Albedo)];
+    cb.normalTextureIndex = textureIndices[static_cast<int>(MeshTextureSlot::Normal)];
 
     return m_materialCBAllocator.AllocateConstant(cb);
 }

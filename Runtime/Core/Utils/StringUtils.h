@@ -12,5 +12,6 @@ namespace Core
 	std::string ToUpper(std::string_view s);
 
 	std::string_view GetExtension(std::string_view path);
+	std::wstring ToWString(const std::string& str);
 }
 

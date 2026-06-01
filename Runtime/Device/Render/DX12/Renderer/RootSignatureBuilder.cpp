@@ -1,9 +1,10 @@
 #include "pch.h"
 #include "RootSignatureBuilder.h"
+#include <dxcapi.h>
 
-void RootSignatureBuilder::AddSRVTable(UINT numDescriptors, UINT baseRegister)
+void RootSignatureBuilder::Add32BitConstants(UINT shaderRegister, UINT numConstants)
 {
-    m_srvTables.push_back({ numDescriptors, baseRegister });
+    m_constants.push_back({ shaderRegister, numConstants });
 }
 
 void RootSignatureBuilder::AddCBV(UINT shaderRegister)
@@ -11,9 +12,24 @@ void RootSignatureBuilder::AddCBV(UINT shaderRegister)
     m_cbvs.push_back({ shaderRegister });
 }
 
+void RootSignatureBuilder::AddSRV(UINT shaderRegister, UINT registerSpace)
+{
+    m_srvs.push_back({ shaderRegister, registerSpace });
+}
+
+void RootSignatureBuilder::AddBindlessSRVTable(UINT numDescriptors, UINT baseRegister, UINT registerSpace)
+{
+    m_srvTables.push_back({ numDescriptors, baseRegister, registerSpace });
+}
+
 void RootSignatureBuilder::AddLinearSampler(UINT shaderRegister)
 {
     m_samplers.push_back({ shaderRegister });
+}
+
+void RootSignatureBuilder::AddFlags(D3D12_ROOT_SIGNATURE_FLAGS flags)
+{
+    m_flags |= flags;
 }
 
 ComPtr<ID3D12RootSignature> RootSignatureBuilder::Build(ID3D12Device* device)
@@ -23,21 +39,17 @@ ComPtr<ID3D12RootSignature> RootSignatureBuilder::Build(ID3D12Device* device)
     std::vector<CD3DX12_STATIC_SAMPLER_DESC> samplers;
 
     ranges.reserve(m_srvTables.size());
-    params.reserve(m_srvTables.size() + m_cbvs.size());
+    params.reserve(m_constants.size() + m_cbvs.size() + m_srvs.size() + m_srvTables.size());
     samplers.reserve(m_samplers.size());
 
-    // 1. SRV Tables
-    for (const auto& t : m_srvTables)
+    // 일반적으로 가장 자주 바뀌는 루트 상수를 앞쪽 파라미터 색인에 두는 것이 성능상 유리.
+    for (const auto& c : m_constants)
     {
-        ranges.emplace_back();
-        ranges.back().Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, t.numDescriptors, t.baseRegister);
-
         CD3DX12_ROOT_PARAMETER param;
-        param.InitAsDescriptorTable(1, &ranges.back());
+        param.InitAsConstants(c.numConstants, c.shaderRegister);
         params.push_back(param);
     }
 
-    // 2. CBVs
     for (const auto& c : m_cbvs)
     {
         CD3DX12_ROOT_PARAMETER param;
@@ -45,9 +57,37 @@ ComPtr<ID3D12RootSignature> RootSignatureBuilder::Build(ID3D12Device* device)
         params.push_back(param);
     }
 
-    // 3. Samplers
+    for (const auto& s : m_srvs) // 힙을 거치지 않고 가상 주소를 다이렉트로 던질 버퍼들을 위한 통로. 주의! srvTable이랑 다름
+    {
+        CD3DX12_ROOT_PARAMETER param;
+        param.InitAsShaderResourceView(s.shaderRegister, s.registerSpace);
+        params.push_back(param);
+    }
+
+    for (const auto& t : m_srvTables) //6.6 이전에 쓰던 방식. 만약에 안쓰인다면 없애도 무방하다.
+    {
+        ranges.emplace_back();
+        ranges.back().Init(
+            D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 
+            t.numDescriptors, 
+            t.baseRegister, 
+            t.registerSpace);
+    }
+
+    for (size_t i = 0; i < m_srvTables.size(); ++i)
+    {
+        CD3DX12_ROOT_PARAMETER param{};
+        param.InitAsDescriptorTable(1, &ranges[i]);
+        params.push_back(param);
+    }
+
     for (const auto& s : m_samplers)
         samplers.emplace_back(s.shaderRegister, D3D12_FILTER_MIN_MAG_MIP_LINEAR);
+
+    D3D12_ROOT_SIGNATURE_FLAGS finalFlags =
+        D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT |
+        D3D12_ROOT_SIGNATURE_FLAG_CBV_SRV_UAV_HEAP_DIRECTLY_INDEXED;
+    finalFlags |= m_flags;
 
     CD3DX12_ROOT_SIGNATURE_DESC desc;
     desc.Init(
@@ -55,12 +95,17 @@ ComPtr<ID3D12RootSignature> RootSignatureBuilder::Build(ID3D12Device* device)
         params.data(),
         static_cast<UINT>(samplers.size()),
         samplers.empty() ? nullptr : samplers.data(),
-        D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+        finalFlags);
 
-    ComPtr<ID3DBlob> sig;
-    ComPtr<ID3DBlob> err;
+    ComPtr<IDxcBlob> sig;
+    ComPtr<IDxcBlob> err;
 
-    HRESULT hr = D3D12SerializeRootSignature(&desc, D3D_ROOT_SIGNATURE_VERSION_1, &sig, &err);
+    HRESULT hr = D3D12SerializeRootSignature(
+        &desc,
+        D3D_ROOT_SIGNATURE_VERSION_1,
+        reinterpret_cast<ID3DBlob**>(sig.GetAddressOf()),
+        reinterpret_cast<ID3DBlob**>(err.GetAddressOf())
+    );
     if (FAILED(hr))
     {
         if (err)

@@ -289,9 +289,6 @@
     <ClInclude Include="Render\DX12\Command\FenceTypes.h">
       <Filter>Render\DX12\Command</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\Descriptor\DescriptorAllocation.h">
-      <Filter>Render\DX12\Descriptor</Filter>
-    </ClInclude>
     <ClInclude Include="Render\DX12\Descriptor\DescriptorAllocator.h">
       <Filter>Render\DX12\Descriptor</Filter>
     </ClInclude>
@@ -306,6 +303,12 @@
     </ClInclude>
     <ClInclude Include="Render\DX12\GridGraphBuilder.h">
       <Filter>Render\DX12</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\MaterialResource.h">
+      <Filter>Render\DX12</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Descriptor\DescriptorAllocation.h">
+      <Filter>Render\DX12\Descriptor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -499,9 +502,6 @@
     <ClCompile Include="Render\DX12\Command\CommandScheduler.cpp">
       <Filter>Render\DX12\Command</Filter>
     </ClCompile>
-    <ClCompile Include="Render\DX12\Descriptor\DescriptorAllocation.cpp">
-      <Filter>Render\DX12\Descriptor</Filter>
-    </ClCompile>
     <ClCompile Include="Render\DX12\Descriptor\DescriptorAllocator.cpp">
       <Filter>Render\DX12\Descriptor</Filter>
     </ClCompile>
@@ -513,6 +513,9 @@
     </ClCompile>
     <ClCompile Include="Render\DX12\GridGraphBuilder.cpp">
       <Filter>Render\DX12</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Descriptor\DescriptorAllocation.cpp">
+      <Filter>Render\DX12\Descriptor</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

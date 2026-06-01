@@ -7,7 +7,7 @@ ShaderStageDesc ShaderStageBuilder::VS(std::string entry)
     {
         ShaderStage::Vertex,
         std::move(entry),
-        "vs_5_0"
+        "vs_6_6"
     };
 }
 
@@ -17,7 +17,7 @@ ShaderStageDesc ShaderStageBuilder::PS(std::string entry)
     {
         ShaderStage::Pixel,
         std::move(entry),
-        "ps_5_0"
+        "ps_6_6"
     };
 }
 
@@ -27,7 +27,7 @@ ShaderStageDesc ShaderStageBuilder::CS(std::string entry)
     {
         ShaderStage::Compute,
         std::move(entry),
-        "cs_5_0"
+        "cs_6_6"
     };
 }
 

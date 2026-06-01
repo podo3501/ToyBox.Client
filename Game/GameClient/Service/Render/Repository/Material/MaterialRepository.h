@@ -12,6 +12,7 @@ struct IMaterialSystem;
 struct IMaterialResource;
 struct Asset;
 struct CpuPendingMaterialRequest;
+struct PendingMaterialTextures;
 struct GpuPendingMaterialRequest;
 
 struct MaterialEntry
@@ -57,6 +58,7 @@ private:
     HandlePool<MaterialEntry, MaterialTag> m_loadedMaterials;
 
     std::vector<CpuPendingMaterialRequest> m_cpuPending;
+    std::unordered_map<MaterialHandle, PendingMaterialTextures> m_pendingTextures;
     std::vector<GpuPendingMaterialRequest> m_gpuPending;
     std::vector<MaterialHandle> m_loadingList;
 };
