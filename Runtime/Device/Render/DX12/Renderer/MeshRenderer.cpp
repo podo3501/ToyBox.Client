@@ -167,7 +167,7 @@ void MeshRenderer::Draw(
         break;
     }
 
-    cmd->DrawIndexedInstanced(mesh.GetIndexCount(), 1, 0, 0, 0);
+    cmd->DrawInstanced(mesh.GetIndexCount(), 1, 0, 0);
 }
 
 D3D12_GPU_VIRTUAL_ADDRESS MeshRenderer::UpdateObjectCB(const cm::Matrix& world)

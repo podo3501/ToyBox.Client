@@ -5,6 +5,7 @@
 enum class MaterialType
 {
     Mesh,
+    Grid,
     UI
 };
 

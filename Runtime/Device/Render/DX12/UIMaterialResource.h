@@ -8,13 +8,13 @@ class UIMaterialResource : public MaterialResource
 {
 public:
 	~UIMaterialResource();
-	UIMaterialResource();
+	UIMaterialResource() = delete;
+	UIMaterialResource(const MaterialDesc& desc);
 	virtual bool IsReady() const noexcept override { return m_ready; }
 
 	virtual void MarkReady() noexcept override { m_ready = true; }
 	virtual bool IsTextureReady() const noexcept override;
-	virtual MaterialType GetType() const noexcept override { return MaterialType::UI; }
-	virtual void SetMaterialDesc(const MaterialDesc& desc) noexcept override { m_desc = static_cast<const UIMaterialDesc&>(desc); }
+	virtual MaterialType GetType() const noexcept override { return m_desc.type; }
 	virtual const MaterialDesc& GetMaterialDesc() const noexcept override { return m_desc; }
 	virtual void SetTexture(TextureSlot texSlot, std::shared_ptr<ITextureResource> texRes) noexcept override;
 	virtual std::vector<std::shared_ptr<ITextureResource>> GetTextures() const noexcept override { return { m_texResource }; }

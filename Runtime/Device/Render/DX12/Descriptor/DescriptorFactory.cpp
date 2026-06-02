@@ -23,7 +23,7 @@ static DXGI_FORMAT MakeSRGBFormat(DXGI_FORMAT format)
     }
 }
 
-bool DescriptorFactory::CreateTextureViews(TextureResource* texRes, const TextureDesc& desc, bool generateMips)
+bool DescriptorFactory::CreateTextureViews(TextureResource* texRes, bool generateMips)
 {
     if (!texRes) return false;
 
@@ -31,7 +31,7 @@ bool DescriptorFactory::CreateTextureViews(TextureResource* texRes, const Textur
     const auto& resDesc = res->GetDesc();
     const UINT mipCount = resDesc.MipLevels;
 
-    DXGI_FORMAT srvFormat = desc.srgb ? MakeSRGBFormat(resDesc.Format) : resDesc.Format;
+    DXGI_FORMAT srvFormat = texRes->GetDesc().srgb ? MakeSRGBFormat(resDesc.Format) : resDesc.Format;
 
     UINT mainMipLevels = generateMips ? mipCount : 1;
     UINT mainIndex = CreateTextureSRV(res, srvFormat, mainMipLevels);
@@ -88,9 +88,9 @@ UINT DescriptorFactory::CreateMipSRV(ID3D12Resource* res, DXGI_FORMAT format, UI
     srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
     srvDesc.Format = format;
     srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-    srvDesc.Texture2D.MipLevels = 1;  // 무조건 1개 밉 레벨 영역만 타겟팅
     srvDesc.Texture2D.MostDetailedMip = mipLevel;  // 인자로 넘어온 타겟 밉슬라이스 고정
-    srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
+    srvDesc.Texture2D.MipLevels = 1;  // 무조건 1개 밉 레벨 영역만 타겟팅
+    //srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
 
     UINT index = m_srvAllocator->AllocateTransient();
     if (index == UINT_MAX) return UINT_MAX;

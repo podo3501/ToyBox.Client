@@ -25,22 +25,17 @@ bool MipGenerator::Initialize(ShaderSystem* shaderSystem)
 
 bool MipGenerator::LoadShader(ShaderSystem* shaderSystem)
 {
-    ShaderVariant variant{ ShaderID::MipGenerator };
-    const ShaderEntry* shaderEntry = shaderSystem->Find(variant);
-    if (!shaderEntry)
-        return false;
+    ShaderVariant sRGBVariant{ ShaderID::MipGenerator };
+    if (const auto* entry = shaderSystem->Find(sRGBVariant))
+        m_csSRGBBlob = entry->cs;
 
-    m_csBlob = shaderEntry->cs;
-    return true;
+    ShaderVariant srgbVariant{ ShaderID::MipGenerator };
+    srgbVariant.runtimeMacros.push_back({ "IS_DATA_MAP" });
+    if (const auto* entry = shaderSystem->Find(srgbVariant))
+        m_csDataBlob = entry->cs;
+
+    return (m_csSRGBBlob && m_csDataBlob);
 }
-
-CD3DX12_STATIC_SAMPLER_DESC sampler(
-    0, // s0
-    D3D12_FILTER_MIN_MAG_MIP_LINEAR,
-    D3D12_TEXTURE_ADDRESS_MODE_CLAMP,
-    D3D12_TEXTURE_ADDRESS_MODE_CLAMP,
-    D3D12_TEXTURE_ADDRESS_MODE_CLAMP
-);
 
 bool MipGenerator::CreateRootSignature()
 {
@@ -54,7 +49,7 @@ bool MipGenerator::CreateRootSignature()
     params[0].InitAsConstants(4, 0); // b0 등록
 
     CD3DX12_ROOT_SIGNATURE_DESC desc{};
-    desc.Init(1, params, 1, &sampler, D3D12_ROOT_SIGNATURE_FLAG_CBV_SRV_UAV_HEAP_DIRECTLY_INDEXED); //SM 6.6+ Bindless 힙 직접 인덱싱을 사용하기 위해 플래그를 명시
+    desc.Init(1, params, 0, nullptr, D3D12_ROOT_SIGNATURE_FLAG_CBV_SRV_UAV_HEAP_DIRECTLY_INDEXED); //SM 6.6+ Bindless 힙 직접 인덱싱을 사용하기 위해 플래그를 명시
     
     ComPtr<ID3DBlob> sig;
     ComPtr<ID3DBlob> err;
@@ -73,8 +68,11 @@ bool MipGenerator::CreatePSO()
     D3D12_COMPUTE_PIPELINE_STATE_DESC desc{};
     desc.pRootSignature = m_rootSignature.Get();
 
-    desc.CS = { m_csBlob->GetBufferPointer(), m_csBlob->GetBufferSize() };
-    ReturnIfFailed(m_device->CreateComputePipelineState(&desc, IID_PPV_ARGS(&m_pso)));
+    desc.CS = { m_csSRGBBlob->GetBufferPointer(), m_csSRGBBlob->GetBufferSize() };
+    ReturnIfFailed(m_device->CreateComputePipelineState(&desc, IID_PPV_ARGS(&m_psoSRGB)));
+
+    desc.CS = { m_csDataBlob->GetBufferPointer(), m_csDataBlob->GetBufferSize() };
+    ReturnIfFailed(m_device->CreateComputePipelineState(&desc, IID_PPV_ARGS(&m_psoData)));
 
     return true;
 }
@@ -95,7 +93,10 @@ void MipGenerator::GenerateMips(CommandList& cmd, TextureResource* texResource)
 
     cmd->SetDescriptorHeaps(1, heaps);
     cmd->SetComputeRootSignature(m_rootSignature.Get());
-    cmd->SetPipelineState(m_pso.Get());
+    if(texResource->GetDesc().srgb)
+        cmd->SetPipelineState(m_psoSRGB.Get());
+    else
+        cmd->SetPipelineState(m_psoData.Get());
 
     for (UINT srcMip = 0; srcMip < mipCount - 1; ++srcMip)
     {

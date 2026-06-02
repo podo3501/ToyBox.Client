@@ -1,7 +1,9 @@
 #include "pch.h"
 #include "TextureResource.h"
 
-TextureResource::~TextureResource()
+TextureResource::~TextureResource() = default;
+TextureResource::TextureResource(const TextureDesc& desc)
 {
-	int a = 1;
+	m_desc = desc;
 }
+

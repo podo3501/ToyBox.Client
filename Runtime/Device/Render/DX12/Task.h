@@ -6,7 +6,6 @@
 #include "d3dx12.h"
 #include "Command/CommandType.h"
 #include "TaskHandle.h"
-#include "Descriptor/DescriptorAllocation.h"
 #include "RGTypes.h"
 #include <utility>
 #include <memory>

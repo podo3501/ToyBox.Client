@@ -8,7 +8,6 @@ struct MaterialResource : public IMaterialResource //?!? backend¿ë material reso
 	virtual void MarkReady() noexcept = 0;
 	virtual bool IsTextureReady() const noexcept = 0;
 	virtual MaterialType GetType() const noexcept = 0;
-	virtual void SetMaterialDesc(const MaterialDesc& desc) noexcept = 0;
 	virtual const MaterialDesc& GetMaterialDesc() const noexcept = 0;
 	virtual void SetTexture(TextureSlot texSlot, std::shared_ptr<ITextureResource> texRes) noexcept = 0;
 	virtual std::vector<std::shared_ptr<ITextureResource>> GetTextures() const noexcept = 0;

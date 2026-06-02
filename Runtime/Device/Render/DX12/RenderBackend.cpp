@@ -128,7 +128,7 @@ void RenderBackend::DrawMesh(
 {
     DrawItem item;
     item.mesh = meshRes;
-    item.material = matRes ? matRes : m_matSystem->GetDefaultMeshMaterial();
+    item.material = matRes ? matRes : m_matSystem->GetDefaultMaterial(MaterialType::Mesh);
     item.world = world;
 
     m_scene->AddOpaque(item);
@@ -141,7 +141,7 @@ void RenderBackend::DrawGrid(
 {
     DrawItem item;
     item.mesh = meshRes;
-    item.material = matRes ? matRes : m_matSystem->GetDefaultMeshMaterial();
+    item.material = matRes ? matRes : m_matSystem->GetDefaultMaterial(MaterialType::Grid);
     item.world = world;
 
     m_scene->AddGrid(item);
@@ -154,7 +154,7 @@ void RenderBackend::DrawUI(
 {
     DrawItem item;
     item.mesh = meshRes;
-    item.material = matRes ? matRes : m_matSystem->GetDefaultMeshMaterial();
+    item.material = matRes ? matRes : m_matSystem->GetDefaultMaterial(MaterialType::UI);
     item.world = world;
 
     m_scene->AddUI(item);
@@ -180,8 +180,6 @@ void RenderBackend::Update()
 
 void RenderBackend::Render()
 {
-    return;
-
     if (!BeginFrame())
         return;
 

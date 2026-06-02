@@ -1,6 +1,5 @@
 #pragma once
 #include "MeshResource.h"
-#include "Descriptor/DescriptorAllocation.h"
 #include "RGTypes.h"
 #include "GameClient/Service/Asset/Assets/MeshAsset.h"
 

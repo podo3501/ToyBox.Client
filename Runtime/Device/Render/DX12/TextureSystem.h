@@ -17,11 +17,8 @@ class TextureSystem : public ITextureSystem
 public:
     ~TextureSystem();
     TextureSystem(ID3D12Device* device, DescriptorAllocator* srvAllocator, TaskScheduler* taskScheduler, ResourceLoader* loader);
-    virtual shared_ptr<ITextureResource> CreateTextureResource() override;
-    virtual bool LoadFromAsset(
-        std::shared_ptr<ITextureResource> resource, 
-        std::shared_ptr<TextureAsset> asset, 
-        const TextureDesc& desc) override;
+    virtual shared_ptr<ITextureResource> CreateTextureResource(const TextureDesc& desc) override;
+    virtual bool LoadFromAsset(std::shared_ptr<ITextureResource> resource, std::shared_ptr<TextureAsset> asset) override;
 
     bool Initialize(ShaderSystem* shaderSystem);
     void Update(size_t uploadBudgetBytes);

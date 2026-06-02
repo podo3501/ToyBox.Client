@@ -3,7 +3,11 @@
 #include "TextureResource.h"
 
 UIMaterialResource::~UIMaterialResource() = default;
-UIMaterialResource::UIMaterialResource() = default;
+UIMaterialResource::UIMaterialResource(const MaterialDesc& desc)
+{
+    Assert(desc.type == MaterialType::UI);
+    m_desc = static_cast<const UIMaterialDesc&>(desc);
+}
 
 bool UIMaterialResource::IsTextureReady() const noexcept
 {

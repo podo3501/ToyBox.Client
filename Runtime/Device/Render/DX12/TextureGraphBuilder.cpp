@@ -17,9 +17,7 @@ struct TextureUploadEntry
 {
     RGHandle handle;
     ComPtr<ID3D12Resource> resource;
-
     std::shared_ptr<TextureAsset> asset;
-    TextureDesc desc;
 
     size_t offset{ 0 };
     bool generateMips{ false };
@@ -28,8 +26,6 @@ struct TextureUploadEntry
 struct TextureFinalizeEntry
 {
     RGHandle handle;
-
-    TextureDesc desc;
     bool generateMips{ false };
 };
 
@@ -57,21 +53,22 @@ void TextureGraphBuilder::LoadTextures(const std::vector<TextureLoadRequest>& re
         RGHandle hTex = CreateRGHandle();
         m_registry->Register(hTex.id, req.resource);
 
-        auto mips = m_loader->ShouldGenerateMips(*req.asset, req.desc.generateMips);
-        auto texDesc = m_loader->CreateTexture2DDesc(*req.asset, mips);
-        auto texRes = m_loader->CreateTextureResource(texDesc);
+        auto& texDesc = req.resource->GetDesc();
+        auto mips = m_loader->ShouldGenerateMips(*req.asset, texDesc.generateMips);
+        auto resDesc = m_loader->CreateTexture2DDesc(*req.asset, mips);
+        auto texRes = m_loader->CreateTextureResource(resDesc);
 
         auto textureResource = std::static_pointer_cast<TextureResource>(req.resource);
         textureResource->SetResource(texRes);
-        m_descriptorFactory->CreateTextureViews(textureResource.get(), req.desc, mips);
+        m_descriptorFactory->CreateTextureViews(textureResource.get(), mips);
 
         hasMipTask |= mips;
         offset = AlignSize(offset, AlignTexture);
 
-        textureUploads.push_back({ hTex, texRes, req.asset, req.desc, offset, mips });
-        finalizeEntries.push_back({ hTex, req.desc, mips });
+        textureUploads.push_back({ hTex, texRes, req.asset, offset, mips });
+        finalizeEntries.push_back({ hTex, mips });
 
-        auto requiredSize = m_loader->GetTextureUploadLayout(texDesc, offset);
+        auto requiredSize = m_loader->GetTextureUploadLayout(resDesc, offset);
         offset += requiredSize;
     }
 

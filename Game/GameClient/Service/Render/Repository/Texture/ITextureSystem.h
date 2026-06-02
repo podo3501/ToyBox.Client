@@ -6,9 +6,6 @@
 struct ITextureSystem
 {
     virtual ~ITextureSystem() = default;
-    virtual shared_ptr<ITextureResource> CreateTextureResource() = 0;
-    virtual bool LoadFromAsset(
-        std::shared_ptr<ITextureResource> resource,
-        std::shared_ptr<TextureAsset> asset,
-        const TextureDesc& desc) = 0;
+    virtual shared_ptr<ITextureResource> CreateTextureResource(const TextureDesc& desc) = 0;
+    virtual bool LoadFromAsset(std::shared_ptr<ITextureResource> resource, std::shared_ptr<TextureAsset> asset) = 0;
 };

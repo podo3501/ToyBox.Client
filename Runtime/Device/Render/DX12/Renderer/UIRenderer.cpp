@@ -128,7 +128,7 @@ void UIRenderer::Draw(
         break;
     }
 
-    cmd->DrawIndexedInstanced(mesh.GetIndexCount(), 1, 0, 0, 0);
+    cmd->DrawInstanced(mesh.GetIndexCount(), 1, 0, 0);
 }
 
 void UIRenderer::SetScreenSize(const Size& size)

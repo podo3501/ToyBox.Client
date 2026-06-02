@@ -53,9 +53,12 @@ MaterialHandle MaterialRepository::GetOrCreate(const MaterialDesc& desc)
     auto handle = m_loadedMaterials.Emplace(std::move(entry));
     m_cache[key] = handle;
 
-    if (desc.textures.empty()) //텍스쳐가 없을때에는 로딩로직을 할 필요가 없이 바로 마지막 단계로.
+    if (desc.textures.empty()) //텍스쳐가 없을때에는 로딩로직을 할 필요가 없어 gpu 로직으로 보내는데 텍스쳐 없이 보낸다.
     {
-        m_loadingList.push_back(handle);
+        GpuPendingMaterialRequest gpuReq;
+        gpuReq.handle = handle;
+        m_gpuPending.push_back(std::move(gpuReq));
+
         return handle;
     }
 

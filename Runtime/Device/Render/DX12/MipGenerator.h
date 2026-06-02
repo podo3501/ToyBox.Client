@@ -28,6 +28,9 @@ private:
     DescriptorAllocator* m_srvAllocator{ nullptr };
 
     ComPtr<ID3D12RootSignature> m_rootSignature;
-    ComPtr<ID3D12PipelineState> m_pso;
-    ComPtr<IDxcBlob> m_csBlob;
+    ComPtr<ID3D12PipelineState> m_psoSRGB;
+    ComPtr<ID3D12PipelineState> m_psoData;
+
+    ComPtr<IDxcBlob> m_csSRGBBlob;
+    ComPtr<IDxcBlob> m_csDataBlob;
 };

@@ -8,14 +8,12 @@ struct CpuPendingTextureRequest
 {
 	TextureHandle handle;
 	AssetRequestID requestId;
-	TextureDesc desc;
 };
 
 struct GpuPendingTextureRequest
 {
 	TextureHandle handle;
 	std::shared_ptr<TextureAsset> texAsset;
-	TextureDesc desc;
 };
 
 TextureRepository::~TextureRepository() { ReleaseAll(); }
@@ -31,7 +29,7 @@ TextureHandle TextureRepository::GetOrCreate(const TextureDesc& desc, std::share
 	if (it != m_cache.end())
 		return it->second;
 
-	auto texRes = m_texSystem->CreateTextureResource();
+	auto texRes = m_texSystem->CreateTextureResource(desc);
 	if (!texRes) return TextureHandle::Invalid();
 
 	TextureEntry entry;
@@ -48,14 +46,14 @@ TextureHandle TextureRepository::GetOrCreate(const TextureDesc& desc, std::share
 	case Core::ResourceIDType::Path:
 	{
 		auto requestID = m_assetPipeline->PushRequest(MakeAssetRequest<TextureAsset>(resID));
-		m_cpuPending.push_back({ handle, requestID, desc });
+		m_cpuPending.push_back({ handle, requestID });
 	}
 	break;
 	case Core::ResourceIDType::Runtime:
 	case Core::ResourceIDType::Builtin:
 	{
 		if (!asset) return TextureHandle::Invalid();
-		m_gpuPending.push_back({ handle, asset, desc });
+		m_gpuPending.push_back({ handle, asset });
 	}
 	break;
 	default:
@@ -89,7 +87,6 @@ void TextureRepository::ProcessCpuPending()
 		GpuPendingTextureRequest gpuReq;
 		gpuReq.handle = req.handle;
 		gpuReq.texAsset = std::static_pointer_cast<TextureAsset>(*asset);
-		gpuReq.desc = req.desc;
 		m_gpuPending.push_back(std::move(gpuReq));
 
 		it = m_cpuPending.erase(it);
@@ -104,7 +101,7 @@ void TextureRepository::ProcessGpuPending()
 		if (!entry || !entry->texRes) continue;
 		if (entry->state != LoadState::Pending) continue; // 중복으로 들어온 경우 이미 Loading/Ready 라면 처리안함.
 
-		if (!m_texSystem->LoadFromAsset(entry->texRes, work.texAsset, work.desc))
+		if (!m_texSystem->LoadFromAsset(entry->texRes, work.texAsset))
 		{
 			entry->state = LoadState::Failed;
 			continue;

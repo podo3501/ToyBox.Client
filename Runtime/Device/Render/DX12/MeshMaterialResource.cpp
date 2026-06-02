@@ -3,9 +3,12 @@
 #include "TextureResource.h"
 
 MeshMaterialResource::~MeshMaterialResource() = default;
-MeshMaterialResource::MeshMaterialResource()
+MeshMaterialResource::MeshMaterialResource(const MaterialDesc& desc)
 {
     m_texResources.resize(static_cast<size_t>(MeshTextureSlot::Count));
+
+    Assert(desc.type == MaterialType::Mesh || desc.type == MaterialType::Grid);
+    m_desc = static_cast<const MeshMaterialDesc&>(desc);
 }
 
 bool MeshMaterialResource::IsTextureReady() const noexcept
@@ -26,7 +29,7 @@ bool MeshMaterialResource::IsTextureReady() const noexcept
 void MeshMaterialResource::SetTexture(TextureSlot texSlot, std::shared_ptr<ITextureResource> texRes) noexcept
 {
     Assert(texSlot < m_texResources.size());
-    m_texResources[texSlot] = std::move(texRes);
+    m_texResources[texSlot] = texRes;
 }
 
 std::vector<std::shared_ptr<ITextureResource>> MeshMaterialResource::GetTextures() const noexcept
@@ -40,6 +43,7 @@ std::vector<UINT> MeshMaterialResource::GetTextureIndices() const noexcept
 
     for (auto& tex : m_texResources)
     {
+        
         auto t = std::static_pointer_cast<TextureResource>(tex);
         indices.push_back(t->GetHeapIndex());
     }

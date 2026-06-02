@@ -21,9 +21,9 @@ bool TextureSystem::Initialize(ShaderSystem* shaderSystem)
     return true;
 }
 
-shared_ptr<ITextureResource> TextureSystem::CreateTextureResource()
+shared_ptr<ITextureResource> TextureSystem::CreateTextureResource(const TextureDesc& desc)
 {
-    return make_shared<TextureResource>();
+    return make_shared<TextureResource>(desc);
 }
 
 std::shared_ptr<TextureAsset> TextureSystem::CreateDefaultTextureAsset()
@@ -42,14 +42,13 @@ std::shared_ptr<TextureAsset> TextureSystem::CreateDefaultTextureAsset()
 
 bool TextureSystem::CreateBuiltinTextures()
 {
-    auto texRes = CreateTextureResource();
+    TextureDesc desc{ Core::ResourceID::MakeBuiltin("DefaultTexture"), true, false };
+    auto texRes = CreateTextureResource(desc);
     if (!texRes)
         return false;
 
     m_defaultAsset = CreateDefaultTextureAsset();
-
-    TextureDesc desc{ Core::ResourceID::MakeBuiltin("DefaultTexture"), true, false};
-    if (!LoadFromAsset(texRes, m_defaultAsset, desc))
+    if (!LoadFromAsset(texRes, m_defaultAsset))
         return false;
 
     m_defaultTexture = texRes;
@@ -68,16 +67,15 @@ static size_t EstimateBytes(const TextureAsset& asset, const TextureDesc& desc)
 
 bool TextureSystem::LoadFromAsset(
     std::shared_ptr<ITextureResource> resource, 
-    std::shared_ptr<TextureAsset> asset,
-    const TextureDesc& desc)
+    std::shared_ptr<TextureAsset> asset)
 {
     if(!asset) asset = m_defaultAsset;
-
+    
+    auto res = std::static_pointer_cast<TextureResource>(resource);
     TextureLoadRequest req;
-    req.resource = resource;
+    req.resource = res;
     req.asset = asset;
-    req.desc = desc;
-    req.estimatedBytes = EstimateBytes(*asset, desc);
+    req.estimatedBytes = EstimateBytes(*asset, res->GetDesc());
 
     m_pending.push(req);
     return true;

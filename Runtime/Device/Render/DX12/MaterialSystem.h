@@ -16,14 +16,15 @@ public:
 	virtual bool LoadFromAsset(std::shared_ptr<IMaterialResource> resource, std::vector<std::shared_ptr<TextureAsset>> texAssets) override;
 
 	void Update();
-	shared_ptr<IMaterialResource> GetDefaultMeshMaterial();
+	shared_ptr<IMaterialResource> GetDefaultMaterial(MaterialType type);
 
 private:
-	void FinalizeMaterial(const std::shared_ptr<MaterialResource>& material);
+	void SetDefaultTextures(MaterialResource* matRes, size_t slotCount);
+	size_t GetTextureSlotCount(MaterialType type) const noexcept;
 
 	unique_ptr<DescriptorFactory> m_descriptorFactory;
 	TextureSystem* m_texSystem{ nullptr };
 
-	shared_ptr<MaterialResource> m_defaultMeshMaterial;
+	std::unordered_map<MaterialType, std::shared_ptr<IMaterialResource>> m_defaultMaterials;
 	std::vector<std::shared_ptr<MaterialResource>> m_pendingMaterials;
 };

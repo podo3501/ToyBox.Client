@@ -11,34 +11,69 @@ MaterialSystem::MaterialSystem(ID3D12Device* device, DescriptorAllocator* srvAll
     m_descriptorFactory{ make_unique<DescriptorFactory>(device, srvAllocator) },
 	m_texSystem{ texSystem }
 {
-    auto res = make_shared<MeshMaterialResource>();
-    res->SetTexture(0, m_texSystem->GetDefaultTexture()); //0번 슬롯은 mesh는 albedo, ui는 기본 텍스쳐
+    MaterialDesc desc;
 
-    m_defaultMeshMaterial = res;
+    desc.type = MaterialType::Mesh;
+    auto meshRes = make_shared<MeshMaterialResource>(desc);
+    SetDefaultTextures(meshRes.get(), GetTextureSlotCount(MaterialType::Mesh));
+    m_defaultMaterials[MaterialType::Mesh] = meshRes;
+
+    desc.type = MaterialType::Grid;
+    auto gridRes = make_shared<MeshMaterialResource>(desc);
+    SetDefaultTextures(gridRes.get(), GetTextureSlotCount(MaterialType::Grid));
+    m_defaultMaterials[MaterialType::Grid] = gridRes;
+
+    desc.type = MaterialType::UI;
+    auto uiRes = make_shared<UIMaterialResource>(desc);
+    SetDefaultTextures(uiRes.get(), GetTextureSlotCount(MaterialType::UI));
+    m_defaultMaterials[MaterialType::UI] = uiRes;
 }
 
 shared_ptr<IMaterialResource> MaterialSystem::CreateMaterialResource(const MaterialDesc& matDesc)
 {
-    size_t texSlotCount{ 0 };
     shared_ptr<MaterialResource> matRes{ nullptr };
+
     switch (matDesc.type)
     {
-    case MaterialType::Mesh: 
-        matRes = make_shared<MeshMaterialResource>(); 
-        texSlotCount = static_cast<size_t>(MeshTextureSlot::Count);
+    case MaterialType::Mesh:
+    case MaterialType::Grid:
+        matRes = make_shared<MeshMaterialResource>(matDesc);
         break;
-    case MaterialType::UI: 
-        matRes = make_shared<UIMaterialResource>(); 
-        texSlotCount = static_cast<size_t>(UITextureSlot::Count);
+    case MaterialType::UI:
+        matRes = make_shared<UIMaterialResource>(matDesc);
         break;
     }
+
     if (!matRes)
         return nullptr;
 
-    for (size_t i = 0; i < texSlotCount; ++i)
-        matRes->SetTexture(static_cast<TextureSlot>(i), m_texSystem->GetDefaultTexture()); //빈 슬롯은 일단 기본 텍스쳐로.
-    matRes->SetMaterialDesc(matDesc);
+    size_t texSlotCount = GetTextureSlotCount(matDesc.type);
+    SetDefaultTextures(matRes.get(), texSlotCount);
+
     return matRes;
+}
+
+void MaterialSystem::SetDefaultTextures(MaterialResource* matRes, size_t slotCount)
+{
+    if (!matRes) return;
+
+    auto defaultTex = m_texSystem->GetDefaultTexture();
+    for (size_t i = 0; i < slotCount; ++i) //빈 슬롯은 일단 기본 텍스쳐로.
+    {
+        matRes->SetTexture(static_cast<TextureSlot>(i), defaultTex);
+    }
+}
+
+size_t MaterialSystem::GetTextureSlotCount(MaterialType type) const noexcept
+{
+    switch (type)
+    {
+    case MaterialType::Mesh: return static_cast<size_t>(MeshTextureSlot::Count);
+    case MaterialType::Grid: return 0;
+    case MaterialType::UI: return static_cast<size_t>(UITextureSlot::Count);
+    }
+
+    return 0;
 }
 
 bool MaterialSystem::LoadFromAsset(
@@ -56,12 +91,12 @@ bool MaterialSystem::LoadFromAsset(
         if (!texAsset)
             continue;
 
-        auto texRes = m_texSystem->CreateTextureResource();
+        auto& texDesc = matDesc.textures[i];
+        auto texRes = m_texSystem->CreateTextureResource(texDesc);
         if (!texRes)
             return false;
 
-        auto& slotDesc = matDesc.textures[i];
-        if (!m_texSystem->LoadFromAsset(texRes, texAsset, slotDesc))
+        if (!m_texSystem->LoadFromAsset(texRes, texAsset))
             return false;
 
         matRes->SetTexture(static_cast<TextureSlot>(i), texRes);
@@ -87,7 +122,11 @@ void MaterialSystem::Update()
     }
 }
 
-shared_ptr<IMaterialResource> MaterialSystem::GetDefaultMeshMaterial() 
-{ 
-    return m_defaultMeshMaterial; 
+shared_ptr<IMaterialResource> MaterialSystem::GetDefaultMaterial(MaterialType type)
+{
+    auto it = m_defaultMaterials.find(type);
+    if (it != m_defaultMaterials.end())
+        return it->second;
+
+    return m_defaultMaterials[MaterialType::Mesh]; //기본은 Mesh를 리턴.
 }

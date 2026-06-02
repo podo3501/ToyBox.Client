@@ -11,7 +11,7 @@ public:
     ~DescriptorFactory();
     DescriptorFactory() = delete;
     DescriptorFactory(ID3D12Device* device, DescriptorAllocator* srvAllocator);
-    bool CreateTextureViews(TextureResource* texRes, const TextureDesc& desc, bool generateMips);
+    bool CreateTextureViews(TextureResource* texRes, bool generateMips);
     UINT CreateBufferSRV(ID3D12Resource* buffer, UINT elementCount, UINT elementStride);
     DescriptorAllocator* GetDescriptorAllocator() { return m_srvAllocator; }
 

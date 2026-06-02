@@ -39,6 +39,9 @@ static bool CompileStage(
 
     for (const auto& macro : runtimeMacros) // 런타임 매크로 인자 전개 (-D 이름=값)
     {
+        if (macro.name.empty())
+            continue;
+
         std::wstring macroStr = Core::ToWString(macro.name) + L"=" + Core::ToWString(macro.value);
         args.push_back(L"-D");
         args.push_back(macroStr);
