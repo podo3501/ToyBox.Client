@@ -62,6 +62,23 @@ std::shared_ptr<MeshAsset> MeshFactory::CreateTorus(
             vert.ny = ny;
             vert.nz = nz;
 
+            // Tangent 계산: U(theta)가 증가하는 방향으로의 편미분 벡터
+            float tx = -sinTheta * cosPhi;
+            float ty = -sinTheta * sinPhi;
+            float tz = cosTheta;
+
+            float tLen = sqrtf(tx * tx + ty * ty + tz * tz);
+            if (tLen > 0.00001f)
+            {
+                tx /= tLen;
+                ty /= tLen;
+                tz /= tLen;
+            }
+
+            vert.tx = tx;
+            vert.ty = ty;
+            vert.tz = tz;
+
             vert.u = u;
             vert.v = v;
 

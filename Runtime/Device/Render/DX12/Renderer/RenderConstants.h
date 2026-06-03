@@ -16,7 +16,7 @@ struct LightingCB
     float lightDirection[3];
     float lightIntensity;
     float lightColor[3];
-    float padding;
+    float lightPadding;
 };
 
 struct MeshFrameCB 

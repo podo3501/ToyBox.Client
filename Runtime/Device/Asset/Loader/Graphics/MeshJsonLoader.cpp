@@ -31,12 +31,14 @@ struct JsonMeshVertex
     JsonVec3 position;
     JsonVec3 normal;
     JsonVec2 uv;
+    JsonVec3 tangent;
 
     void Serialize(Serializer& serializer)
     {
         serializer.Process("position", position);
         serializer.Process("normal", normal);
         serializer.Process("uv", uv);
+        serializer.Process("tangent", tangent);
     }
 };
 
@@ -68,7 +70,8 @@ static MeshVertex ConvertToVertex(const JsonMeshVertex& v)
     return {
         v.position.x, v.position.y, v.position.z,
         v.normal.x, v.normal.y, v.normal.z,
-        v.uv.x, v.uv.y };
+        v.uv.x, v.uv.y,
+        v.tangent.x, v.tangent.y, v.tangent.z };
 }
 
 shared_ptr<Asset> MeshJsonLoader::LoadFromMemory(const Core::ByteBuffer& buffer)

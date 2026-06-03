@@ -3,6 +3,7 @@ struct MeshVertex
     float3 pos;
     float3 normal;
     float2 uv;
+    float3 tangent;
 };
 
 SamplerState gSampler : register(s0);
@@ -27,15 +28,17 @@ cbuffer MeshFrameCB : register(b2)
     float  lightIntensity;
 
     float3 lightColor;
-    float  padding;
+    float  lightPadding;
 };
 
 cbuffer MaterialCB : register(b3)
 {
-    float roughness;
-    float metallic;
     uint  albedoTextureIndex;
     uint  normalTextureIndex;
+    float normalIntensity;
+    float roughnessIntensity;
+    float metallic;
+    float3 matPadding;
 };
 
 struct PSInput
@@ -44,6 +47,7 @@ struct PSInput
     float3 worldPos : POSITION0;
     float3 normal : NORMAL;
     float2 uv : TEXCOORD0;
+    float3 tangent  : TANGENT;
 };
 
 PSInput VSMain(uint vID : SV_VertexID)
@@ -62,10 +66,12 @@ PSInput VSMain(uint vID : SV_VertexID)
 
     // normal transform
     float3 worldNormal = normalize(mul(float4(input.normal, 0.0f), world).xyz);
+    float3 worldTangent = normalize(mul(float4(input.tangent, 0.0f), world).xyz);
 
     output.pos = clipPos;
     output.worldPos = worldPos.xyz;
     output.normal = worldNormal;
+    output.tangent  = worldTangent;
     output.uv = input.uv;
 
     return output;
@@ -76,8 +82,25 @@ float4 PSMain(PSInput input) : SV_TARGET
     Texture2D albedoTex = ResourceDescriptorHeap[albedoTextureIndex];
     float4 albedo = albedoTex.Sample(gSampler, input.uv);
 
+return float4(albedo.rgb, albedo.a); //테스트용 알베도만 출력
+
     // normal / light setup
     float3 N = normalize(input.normal);
+    float3 T = normalize(input.tangent);
+    float3 B = normalize(cross(N, T));
+    float3x3 TBN = float3x3(T, B, N); // 탄젠트 공간 -> 월드 공간 변환 행렬 완성
+
+    Texture2D normalTex = ResourceDescriptorHeap[normalTextureIndex];
+    float3 localNormal = normalTex.Sample(gSampler, input.uv).xyz;
+    localNormal = localNormal * 2.0f - 1.0f;
+
+    // 굴곡 부스팅 (X, Y 축의 변화량을 강제로 10배 키우고 재정렬)
+    localNormal.xy *= normalIntensity; 
+    localNormal = normalize(localNormal);
+
+    // 탄젠트 공간에 있던 노멀 값을 실제 월드 공간 노멀로 최종 변환!
+    N = normalize(mul(localNormal, TBN));
+
     float3 L = normalize(-lightDirection);
     float3 V = normalize(-input.worldPos);
     float3 H = normalize(L + V);
@@ -85,7 +108,7 @@ float4 PSMain(PSInput input) : SV_TARGET
     float NdotL = saturate(dot(N, L));
     float NdotH = saturate(dot(N, H));
 
-    float shininess = lerp(128.0f, 2.0f, roughness);
+    float shininess = lerp(128.0f, 2.0f, roughnessIntensity);
     float specularPower = pow(NdotH, shininess);
     float specularStrength = lerp(0.04f, 1.0f, metallic); // metallic가 높을수록 specular 강하게
 

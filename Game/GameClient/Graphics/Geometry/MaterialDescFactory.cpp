@@ -1,16 +1,20 @@
 #include "pch.h"
 #include "MaterialDescFactory.h"
 
-MeshMaterialDesc MeshMaterialDescFactory::CreateLit(std::vector<TextureDesc> textures)
+MeshMaterialDesc MeshMaterialDescFactory::CreateLit(const MeshTextureArgs& texArgs)
 {
     MeshMaterialDesc desc;
 
-    desc.textures = std::move(textures);
+    desc.textures.resize(3);
+    desc.textures[0] = texArgs.albedo;
+    desc.textures[1] = texArgs.normal;
+    desc.textures[2] = texArgs.roughness;
+
     desc.pipelineState = PipelineLibrary::Get(
         ShaderID::Mesh,
         RasterPreset::Default,
         PrimitiveTopologyType::Triangle);
-    desc.surface = { 0.5f, 0.f };
+    desc.surface = { 1.f, 0.5f, 0.f };
 
     return desc;
 }
@@ -23,7 +27,7 @@ MeshMaterialDesc MeshMaterialDescFactory::CreateGrid()
         ShaderID::Grid,
         RasterPreset::Default,
         PrimitiveTopologyType::Line);
-    desc.surface = { 0.5f, 0.f };
+    desc.surface = { 1.f, 0.5f, 0.f };
 
     return desc;
 }
@@ -36,18 +40,20 @@ MeshMaterialDesc MeshMaterialDescFactory::CreateWireframe()
         ShaderID::Mesh,
         RasterPreset::Wireframe,
         PrimitiveTopologyType::Triangle);
-    desc.surface = { 0.5f, 0.f };
+    desc.surface = { 1.f, 0.5f, 0.f };
 
     return desc;
 }
 
 /////////////////////////////////////////////////////////////////
 
-UIMaterialDesc UIMaterialDescFactory::CreateDefault(std::vector<TextureDesc> textures)
+UIMaterialDesc UIMaterialDescFactory::CreateDefault(const UITextureArgs& texArgs)
 {
     UIMaterialDesc desc;
 
-    desc.textures = std::move(textures);
+    desc.textures.resize(1);
+    desc.textures[0] = texArgs.normal;
+
     desc.pipelineState =
         PipelineLibrary::Get(
             ShaderID::UI,

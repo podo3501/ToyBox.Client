@@ -3,14 +3,15 @@
 
 struct MaterialSurface
 {
-    float roughness{ 0.5f };
+    float normalIntensity{ 1.f };
+    float roughnessIntensity{ 1.f };
     float metallic{ 0.0f };
 
     bool operator==(const MaterialSurface&) const = default;
 
     size_t GetHash() const
     {
-        return Core::HashOf(roughness, metallic);
+        return Core::HashOf(normalIntensity, roughnessIntensity, metallic);
     }
 };
 
@@ -18,6 +19,7 @@ enum class MeshTextureSlot : uint32_t
 {
     Albedo,
     Normal,
+    Roughness,
     Count
 };
 

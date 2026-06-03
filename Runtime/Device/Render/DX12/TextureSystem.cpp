@@ -26,7 +26,7 @@ shared_ptr<ITextureResource> TextureSystem::CreateTextureResource(const TextureD
     return make_shared<TextureResource>(desc);
 }
 
-std::shared_ptr<TextureAsset> TextureSystem::CreateDefaultTextureAsset()
+std::shared_ptr<TextureAsset> TextureSystem::CreateColorAsset(uint32_t pixelColor)
 {
     auto asset = std::make_shared<TextureAsset>();
 
@@ -34,26 +34,57 @@ std::shared_ptr<TextureAsset> TextureSystem::CreateDefaultTextureAsset()
     asset->height = 1;
     asset->pixels.resize(sizeof(uint32_t));
 
-    uint32_t white = 0xffffffff;
-    memcpy(asset->pixels.data(), &white, sizeof(uint32_t));
+    std::memcpy(asset->pixels.data(), &pixelColor, sizeof(uint32_t));
 
     return asset;
 }
 
 bool TextureSystem::CreateBuiltinTextures()
 {
-    TextureDesc desc{ Core::ResourceID::MakeBuiltin("DefaultTexture"), true, false };
-    auto texRes = CreateTextureResource(desc);
-    if (!texRes)
-        return false;
+    m_defaultAssets[DefaultTextureType::White] = CreateColorAsset(0xFFFFFFFF); // 흰색
+    m_defaultAssets[DefaultTextureType::FlatNormal] = CreateColorAsset(0xFFFF8080); // 평평한 노멀 (128, 128, 255)
+    m_defaultAssets[DefaultTextureType::Gray] = CreateColorAsset(0xFF808080);
 
-    m_defaultAsset = CreateDefaultTextureAsset();
-    if (!LoadFromAsset(texRes, m_defaultAsset))
-        return false;
+    struct BuiltinConfig { DefaultTextureType type; const char* name; bool srgb; };
+    BuiltinConfig configs[] = {
+        { DefaultTextureType::White, "DefaultTexture_White", true },
+        { DefaultTextureType::FlatNormal, "DefaultTexture_FlatNormal", false },
+        { DefaultTextureType::Gray, "DefaultTexture_Gray", false }
+    };
 
-    m_defaultTexture = texRes;
+    for (const auto& config : configs)
+    {
+        TextureDesc desc{ Core::ResourceID::MakeBuiltin(config.name), config.srgb, false };
+        auto tex = CreateDefaultTexture(desc, m_defaultAssets[config.type]);
+        if (!tex) return false;
+
+        m_defaultTextures[config.type] = tex;
+    }
 
     return true;
+}
+
+std::shared_ptr<ITextureResource> TextureSystem::CreateDefaultTexture(
+    const TextureDesc& desc,
+    std::shared_ptr<TextureAsset> asset)
+{
+    auto texRes = CreateTextureResource(desc);
+    if (!texRes)
+        return nullptr;
+
+    if (!LoadFromAsset(texRes, asset))
+        return nullptr;
+
+    return texRes;
+}
+
+std::shared_ptr<ITextureResource> TextureSystem::GetDefaultTexture(DefaultTextureType type) const
+{
+    auto it = m_defaultTextures.find(type);
+    if (it != m_defaultTextures.end())
+        return it->second;
+
+    return nullptr; // 혹은 시스템 전체 폴백(Albedo) 리턴
 }
 
 static size_t EstimateBytes(const TextureAsset& asset, const TextureDesc& desc)
@@ -69,13 +100,16 @@ bool TextureSystem::LoadFromAsset(
     std::shared_ptr<ITextureResource> resource, 
     std::shared_ptr<TextureAsset> asset)
 {
-    if(!asset) asset = m_defaultAsset;
-    
     auto res = std::static_pointer_cast<TextureResource>(resource);
+    auto& texDesc = res->GetDesc();
+
+    if(!asset) 
+        asset = texDesc.srgb ? m_defaultAssets[DefaultTextureType::White] : m_defaultAssets[DefaultTextureType::FlatNormal]; //?!? 지금은 이렇게 하고 나중에는 이 윗단에서 default를 넣어줘야 한다.
+    
     TextureLoadRequest req;
     req.resource = res;
     req.asset = asset;
-    req.estimatedBytes = EstimateBytes(*asset, res->GetDesc());
+    req.estimatedBytes = EstimateBytes(*asset, texDesc);
 
     m_pending.push(req);
     return true;

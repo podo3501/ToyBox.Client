@@ -57,9 +57,34 @@ void MaterialSystem::SetDefaultTextures(MaterialResource* matRes, size_t slotCou
 {
     if (!matRes) return;
 
-    auto defaultTex = m_texSystem->GetDefaultTexture();
-    for (size_t i = 0; i < slotCount; ++i) //빈 슬롯은 일단 기본 텍스쳐로.
+    const auto& matDesc = matRes->GetMaterialDesc();
+    MaterialType matType = matDesc.type;
+
+    for (size_t i = 0; i < slotCount; ++i)
     {
+        DefaultTextureType targetDefaultType = DefaultTextureType::White; // 기본 폴백은 흰색
+        switch (matType)
+        {
+        case MaterialType::Mesh:
+        {
+            auto meshSlot = static_cast<MeshTextureSlot>(i);
+            if (meshSlot == MeshTextureSlot::Normal)
+                targetDefaultType = DefaultTextureType::FlatNormal;
+            if (meshSlot == MeshTextureSlot::Roughness)
+                targetDefaultType = DefaultTextureType::Gray;
+        }
+        break;
+        case MaterialType::UI:
+        {
+            auto uiSlot = static_cast<UITextureSlot>(i);
+            if (uiSlot == UITextureSlot::Normal) // UI에서의 Normal은 '일반 이미지(컬러)'를 뜻함
+                targetDefaultType = DefaultTextureType::White;
+        }
+        break;
+        case MaterialType::Grid: break;
+        }
+
+        auto defaultTex = m_texSystem->GetDefaultTexture(targetDefaultType);
         matRes->SetTexture(static_cast<TextureSlot>(i), defaultTex);
     }
 }

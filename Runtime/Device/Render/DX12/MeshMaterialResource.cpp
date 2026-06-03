@@ -7,7 +7,7 @@ MeshMaterialResource::MeshMaterialResource(const MaterialDesc& desc)
 {
     m_texResources.resize(static_cast<size_t>(MeshTextureSlot::Count));
 
-    Assert(desc.type == MaterialType::Mesh || desc.type == MaterialType::Grid);
+    Assert(desc.type == MaterialType::Mesh ||desc.type == MaterialType::Grid);
     m_desc = static_cast<const MeshMaterialDesc&>(desc);
 }
 

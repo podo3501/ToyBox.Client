@@ -16,11 +16,14 @@ namespace cm = Core::Math;
 
 struct MaterialCB
 {
-    float roughness;
-    float metallic;
     uint32_t albedoTextureIndex;
     uint32_t normalTextureIndex;
+    float normalIntensity;
+    float roughnessIntensity;
+    float metallic;
+    float matPadding[3];
 };
+CHECK_ALIGN16(MaterialCB);
 
 MeshRenderer::~MeshRenderer() = default;
 MeshRenderer::MeshRenderer(ID3D12Device* device, ShaderSystem* shaderSystem) :
@@ -185,10 +188,13 @@ D3D12_GPU_VIRTUAL_ADDRESS MeshRenderer::UpdateMaterialCB(
 {
     MaterialCB cb{};
 
-    cb.roughness = surface.roughness;
-    cb.metallic = surface.metallic;
     cb.albedoTextureIndex = textureIndices[static_cast<int>(MeshTextureSlot::Albedo)];
     cb.normalTextureIndex = textureIndices[static_cast<int>(MeshTextureSlot::Normal)];
+    cb.normalIntensity = surface.normalIntensity;
+    cb.roughnessIntensity = surface.roughnessIntensity;
+    cb.metallic = surface.metallic;
 
     return m_materialCBAllocator.AllocateConstant(cb);
 }
+
+//텍스쳐가 뭔가 잘못 올라간거 같다. 왠지는 모르겠고.. 찾아봐야 할듯. 일단 hlsl 문제는 아닌듯.

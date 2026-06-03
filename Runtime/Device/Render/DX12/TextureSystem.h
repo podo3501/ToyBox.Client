@@ -12,6 +12,15 @@ class TaskScheduler;
 class ResourceLoader;
 class ShaderSystem;
 
+enum class DefaultTextureType
+{
+    White,  // 일반 컬러/알베도용 (1,1,1,1)
+    FlatNormal, // 노멀 맵용 (0.5, 0.5, 1.0)
+    Gray, //roughness용 회색 (0.5, 0.5, 0.5) (ex 0이면 거울 1이면 거친상태. 그래서 중간값)
+    Black, // 필요시 (0,0,0,1)
+    Count
+};
+
 class TextureSystem : public ITextureSystem
 {
 public:
@@ -22,11 +31,13 @@ public:
 
     bool Initialize(ShaderSystem* shaderSystem);
     void Update(size_t uploadBudgetBytes);
-    std::shared_ptr<ITextureResource> GetDefaultTexture() const { return m_defaultTexture; }
+    std::shared_ptr<ITextureResource> GetDefaultTexture(DefaultTextureType type) const;
 
 private:
     bool CreateBuiltinTextures();
-    std::shared_ptr<TextureAsset> CreateDefaultTextureAsset();
+    std::shared_ptr<ITextureResource> CreateDefaultTexture(const TextureDesc& desc, std::shared_ptr<TextureAsset> asset);
+    std::shared_ptr<TextureAsset> CreateColorAsset(uint32_t pixelColor);
+    
 
     unique_ptr<MipGenerator> m_mipGenerator;
     unique_ptr<DescriptorFactory> m_descriptorFactory;
@@ -34,6 +45,6 @@ private:
 
     std::queue<TextureLoadRequest> m_pending;
 
-    std::shared_ptr<ITextureResource> m_defaultTexture;
-    std::shared_ptr<TextureAsset> m_defaultAsset;
+    std::unordered_map<DefaultTextureType, std::shared_ptr<TextureAsset>> m_defaultAssets;
+    std::unordered_map<DefaultTextureType, std::shared_ptr<ITextureResource>> m_defaultTextures;
 };
