@@ -5,10 +5,11 @@ MeshMaterialDesc MeshMaterialDescFactory::CreateLit(const MeshTextureArgs& texAr
 {
     MeshMaterialDesc desc;
 
-    desc.textures.resize(3);
+    desc.textures.resize(4);
     desc.textures[0] = texArgs.albedo;
     desc.textures[1] = texArgs.normal;
     desc.textures[2] = texArgs.roughness;
+    desc.textures[3] = texArgs.ambientOcclusion;
 
     desc.pipelineState = PipelineLibrary::Get(
         ShaderID::Mesh,

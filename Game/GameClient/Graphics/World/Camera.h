@@ -11,9 +11,6 @@ public:
 
     void SetRotation(float pitch, float yaw);
     
-    float GetPitch() const { return m_pitch; }
-    float GetYaw() const { return m_yaw; }
-
     void SetFov(float fovDeg);
     void SetAspect(float aspect);
     void SetNearFar(float nearZ, float farZ);
@@ -22,6 +19,13 @@ public:
     void MoveForward(float distance);
     void MoveRight(float distance);
     void MoveUp(float distance);
+
+    Core::Math::Vector3 GetForward() const { return m_forward; }
+    Core::Math::Vector3 GetRight() const { return m_right; }
+    Core::Math::Vector3 GetUp() const { return m_up; }
+
+    float GetPitch() const { return m_pitch; }
+    float GetYaw()   const { return m_yaw; }
 
     const Core::Math::Matrix& GetView() const;
     const Core::Math::Matrix& GetProj() const;
@@ -40,6 +44,10 @@ private:
     float m_aspect = 16.0f / 9.0f;
     float m_nearZ = 0.1f;
     float m_farZ = 1000.0f;
+
+    mutable Core::Math::Vector3 m_forward = { 0.0f, 0.0f, 1.0f };
+    mutable Core::Math::Vector3 m_right = { 1.0f, 0.0f, 0.0f };
+    mutable Core::Math::Vector3 m_up = { 0.0f, 1.0f, 0.0f };
 
     mutable Core::Math::Matrix m_view; //cached
     mutable Core::Math::Matrix m_proj; //cached

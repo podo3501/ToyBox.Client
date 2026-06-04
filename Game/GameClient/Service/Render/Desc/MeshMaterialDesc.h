@@ -5,6 +5,7 @@ struct MaterialSurface
 {
     float normalIntensity{ 1.f };
     float roughnessIntensity{ 1.f };
+    float ambientOcclusionIntensity{ 1.f };
     float metallic{ 0.0f };
 
     bool operator==(const MaterialSurface&) const = default;
@@ -20,6 +21,7 @@ enum class MeshTextureSlot : uint32_t
     Albedo,
     Normal,
     Roughness,
+    AmbientOcclusion,
     Count
 };
 

@@ -64,7 +64,8 @@ ID3D12PipelineState* PipelineCache::GetOrCreate(
 
     Microsoft::WRL::ComPtr<ID3D12PipelineState> pipeline;
 
-    m_device->CreateGraphicsPipelineState(&pso, IID_PPV_ARGS(&pipeline));
+    auto result = m_device->CreateGraphicsPipelineState(&pso, IID_PPV_ARGS(&pipeline));
+    Assert(SUCCEEDED(result));
     m_cache[pipelineState] = pipeline;
 
     return pipeline.Get();

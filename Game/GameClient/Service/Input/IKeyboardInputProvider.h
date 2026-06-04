@@ -10,6 +10,5 @@ struct IKeyboardInputProvider
 };
 
 #ifdef _WIN32
-namespace DirectX { class Keyboard; }
-std::unique_ptr<IKeyboardInputProvider> CreateDXKeyboardInputProvider(DirectX::Keyboard& keyboard);
+std::unique_ptr<IKeyboardInputProvider> CreateDXKeyboardInputProvider();
 #endif

@@ -10,6 +10,5 @@ struct IMouseInputProvider
 };
 
 #ifdef _WIN32
-namespace DirectX { class Mouse; }
-std::unique_ptr<IMouseInputProvider> CreateDXMouseInputProvider(DirectX::Mouse& mouse);
+std::unique_ptr<IMouseInputProvider> CreateDXMouseInputProvider(HWND hwnd);
 #endif

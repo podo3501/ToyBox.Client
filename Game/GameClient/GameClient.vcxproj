@@ -26,6 +26,8 @@
     <ClCompile Include="Graphics\Geometry\TextureDescFactory.cpp" />
     <ClCompile Include="Graphics\ShaderStageBuilder.cpp" />
     <ClCompile Include="Graphics\World\Camera.cpp" />
+    <ClCompile Include="Graphics\World\CameraController.cpp" />
+    <ClCompile Include="Graphics\World\CameraInputMapper.cpp" />
     <ClCompile Include="Graphics\World\DirectionalLight.cpp" />
     <ClCompile Include="Graphics\World\Transform.cpp" />
     <ClCompile Include="Locator\UIComponentLocator.cpp" />
@@ -120,6 +122,9 @@
     <ClInclude Include="Graphics\RenderData\DirectionalLightData.h" />
     <ClInclude Include="Graphics\ShaderStageBuilder.h" />
     <ClInclude Include="Graphics\World\Camera.h" />
+    <ClInclude Include="Graphics\World\CameraController.h" />
+    <ClInclude Include="Graphics\World\CameraInputMapper.h" />
+    <ClInclude Include="Graphics\World\CameraInputState.h" />
     <ClInclude Include="Graphics\World\DirectionalLight.h" />
     <ClInclude Include="Graphics\World\Transform.h" />
     <ClInclude Include="Locator\InputLocator.h" />

@@ -2,6 +2,8 @@
 #include "DXMouseInputProvider.h"
 #include "DirectXTK12/Mouse.h"
 
+DirectX::Mouse DXMouseInputProvider::m_mouse;
+
 inline constexpr bool DirectX::Mouse::State::* ButtonMap[] =
 {
     &DirectX::Mouse::State::leftButton,
@@ -14,9 +16,10 @@ inline constexpr size_t ButtonCount = std::size(ButtonMap);
 static_assert(ButtonCount == static_cast<size_t>(MouseButton::Count), "ButtonMap and MouseState::buttons size mismatch");
 
 DXMouseInputProvider::~DXMouseInputProvider() = default;
-DXMouseInputProvider::DXMouseInputProvider(DirectX::Mouse& mouse) noexcept :
-    m_mouse{ mouse }
-{}
+DXMouseInputProvider::DXMouseInputProvider(HWND hwnd) noexcept
+{
+    m_mouse.SetWindow(hwnd);
+}
 
 void DXMouseInputProvider::UpdateButton(const DirectX::Mouse::State& dxState, UpdateMode mode)
 {
@@ -72,8 +75,8 @@ const MouseState& DXMouseInputProvider::GetState() const noexcept
 //////////////////////////////////////////////////
 
 #ifdef _WIN32
-unique_ptr<IMouseInputProvider> CreateDXMouseInputProvider(DirectX::Mouse& mouse)
+unique_ptr<IMouseInputProvider> CreateDXMouseInputProvider(HWND hwnd)
 {
-	return make_unique<DXMouseInputProvider>(mouse);
+	return make_unique<DXMouseInputProvider>(hwnd);
 }
 #endif

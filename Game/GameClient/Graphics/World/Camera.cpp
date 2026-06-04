@@ -39,28 +39,17 @@ void Camera::Move(const cm::Vector3& delta)
 
 void Camera::MoveForward(float distance)
 {
-    cm::Vector3 forward;
+    UpdateIfNeeded();
 
-    forward.x = cosf(m_pitch) * cosf(m_yaw);
-    forward.y = sinf(m_pitch);
-    forward.z = cosf(m_pitch) * sinf(m_yaw);
-
-    m_position = m_position + forward * distance;
+    m_position = m_position + m_forward * distance;
     m_dirty = true;
 }
 
 void Camera::MoveRight(float distance)
 {
-    cm::Vector3 forward;
+    UpdateIfNeeded();
 
-    forward.x = cosf(m_pitch) * cosf(m_yaw);
-    forward.y = sinf(m_pitch);
-    forward.z = cosf(m_pitch) * sinf(m_yaw);
-
-    cm::Vector3 up = { 0,1,0 };
-    cm::Vector3 right = up.Cross(forward);
-
-    m_position = m_position + right * distance;
+    m_position = m_position + m_right * distance;
     m_dirty = true;
 }
 
@@ -116,14 +105,19 @@ void Camera::UpdateMatrices() const
     float cosYaw = cosf(m_yaw);
     float sinYaw = sinf(m_yaw);
 
-    cm::Vector3 forward;
-    forward.x = sinYaw * cosPitch;
-    forward.y = sinPitch;
-    forward.z = cosYaw * cosPitch;
+    m_forward.x = sinYaw * cosPitch;
+    m_forward.y = sinPitch;
+    m_forward.z = cosYaw * cosPitch;
+    m_forward.Normalize();
 
-    cm::Vector3 target = m_position + forward;
-    cm::Vector3 up = { 0.0f, 1.0f, 0.0f };
+    cm::Vector3 worldUp = { 0.0f, 1.0f, 0.0f };
+    m_right = worldUp.Cross(m_forward);
+    m_right.Normalize();
 
-    m_view = cm::CreateLookAt(m_position, target, up);
+    m_up = m_forward.Cross(m_right);
+    m_up.Normalize();
+
+    cm::Vector3 target = m_position + m_forward;
+    m_view = cm::CreateLookAt(m_position, target, worldUp);
     m_proj = cm::CreatePerspectiveFov(DegToRad(m_fov), m_aspect, m_nearZ, m_farZ);
 }

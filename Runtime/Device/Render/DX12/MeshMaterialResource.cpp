@@ -43,7 +43,6 @@ std::vector<UINT> MeshMaterialResource::GetTextureIndices() const noexcept
 
     for (auto& tex : m_texResources)
     {
-        
         auto t = std::static_pointer_cast<TextureResource>(tex);
         indices.push_back(t->GetHeapIndex());
     }

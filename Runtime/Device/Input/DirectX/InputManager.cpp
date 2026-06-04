@@ -50,14 +50,14 @@ static bool IsMouseButtonState(
 /////////////////////////////////////////////////////////////////////////////
 
 //키보드와 마우스는 한번만 생성되어야 하기 때문에 이렇게 생성한다.
-DirectX::Keyboard g_keyboard;
-DirectX::Mouse g_mouse;
+//DirectX::Keyboard g_keyboard;
+//DirectX::Mouse g_mouse;
 
 InputManager::~InputManager() = default;
 InputManager::InputManager() = default;
 void InputManager::Initialize(HWND hwnd)
 {
-    g_mouse.SetWindow(hwnd);
+    //g_mouse.SetWindow(hwnd);
 }
 
 void InputManager::SetMouseStartOffset(const XMINT2& offset) noexcept
@@ -67,18 +67,19 @@ void InputManager::SetMouseStartOffset(const XMINT2& offset) noexcept
 
 void InputManager::Update() noexcept
 {
-    m_keyboardTracker.Update(g_keyboard.GetState());
-    DirectX::Mouse::State offset(g_mouse.GetState());
-    offset.x -= m_startOffset.x;
-    offset.y -= m_startOffset.y;
-    SetPosition({ offset.x, offset.y });
-    m_mouseTracker.Update(offset);
+    //m_keyboardTracker.Update(g_keyboard.GetState());
+    //DirectX::Mouse::State offset(g_mouse.GetState());
+    //offset.x -= m_startOffset.x;
+    //offset.y -= m_startOffset.y;
+    //SetPosition({ offset.x, offset.y });
+    //m_mouseTracker.Update(offset);
 }
 
 MouseDataState InputManager::GetMouseState() const noexcept
 {
-    auto dxState = g_mouse.GetState();
-    return { m_position, static_cast<InputKeyState>(m_mouseTracker.leftButton) };
+    //auto dxState = g_mouse.GetState();
+    //return { m_position, static_cast<InputKeyState>(m_mouseTracker.leftButton) };
+    return {};
 }
 
 const XMINT2& InputManager::GetPosition() const noexcept

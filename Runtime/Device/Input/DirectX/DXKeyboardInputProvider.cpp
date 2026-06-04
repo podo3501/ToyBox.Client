@@ -2,10 +2,10 @@
 #include "DXKeyboardInputProvider.h"
 #include "DXKeyMap.h"
 
+DirectX::Keyboard DXKeyboardInputProvider::m_keyboard;
+
 DXKeyboardInputProvider::~DXKeyboardInputProvider() = default;
-DXKeyboardInputProvider::DXKeyboardInputProvider(DirectX::Keyboard& keyboard) noexcept :
-    m_keyboard{ keyboard }
-{}
+DXKeyboardInputProvider::DXKeyboardInputProvider() noexcept = default;
 
 void DXKeyboardInputProvider::Update() noexcept
 {
@@ -26,8 +26,8 @@ const KeyboardState& DXKeyboardInputProvider::GetState() const noexcept
 //////////////////////////////////////////////////
 
 #ifdef _WIN32
-unique_ptr<IKeyboardInputProvider> CreateDXKeyboardInputProvider(DirectX::Keyboard& keyboard)
+unique_ptr<IKeyboardInputProvider> CreateDXKeyboardInputProvider()
 {
-	return make_unique<DXKeyboardInputProvider>(keyboard);
+	return make_unique<DXKeyboardInputProvider>();
 }
 #endif

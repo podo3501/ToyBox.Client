@@ -5,11 +5,11 @@ class DXKeyboardInputProvider : public IKeyboardInputProvider
 {
 public:
 	~DXKeyboardInputProvider();
-	DXKeyboardInputProvider(DirectX::Keyboard& keyboard) noexcept;
+	DXKeyboardInputProvider() noexcept;
 	virtual void Update() noexcept override;
 	virtual const KeyboardState& GetState() const noexcept override;
 
 private:
-	DirectX::Keyboard& m_keyboard;
+	static DirectX::Keyboard m_keyboard;
 	KeyboardState m_keyboardState{};
 };

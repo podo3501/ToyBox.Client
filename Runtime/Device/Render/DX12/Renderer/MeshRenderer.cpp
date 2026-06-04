@@ -18,10 +18,12 @@ struct MaterialCB
 {
     uint32_t albedoTextureIndex;
     uint32_t normalTextureIndex;
+    uint32_t roughnessTextureIndex;
+    uint32_t ambientOcclusionTextureIndex;
     float normalIntensity;
     float roughnessIntensity;
+    float ambientOcclusionIntensity;
     float metallic;
-    float matPadding[3];
 };
 CHECK_ALIGN16(MaterialCB);
 
@@ -112,7 +114,8 @@ void MeshRenderer::BindCommonState(CommandList& cmd)
 
 void MeshRenderer::BindPipeline(CommandList& cmd, const PipelineState& pipelineState)
 {
-    cmd->SetPipelineState(GetPipeline(pipelineState));
+    auto pipeline = GetPipeline(pipelineState);
+    cmd->SetPipelineState(pipeline);
     m_pipelineState = pipelineState;
 }
 
@@ -129,6 +132,11 @@ void MeshRenderer::PrepareFrame(const DirectionalLightData& light, const CameraD
     // GPU용으로 transpose해서 저장
     XMStoreFloat4x4(&meshFrame.frame.view, DirectX::XMMatrixTranspose(view));
     XMStoreFloat4x4(&meshFrame.frame.proj, DirectX::XMMatrixTranspose(proj));
+
+    // Camera Position
+    meshFrame.camera.cameraPosition[0] = camera.position.x;
+    meshFrame.camera.cameraPosition[1] = camera.position.y;
+    meshFrame.camera.cameraPosition[2] = camera.position.z;
 
     // Directional Light
     meshFrame.lighting.lightDirection[0] = light.direction.x;
@@ -190,11 +198,13 @@ D3D12_GPU_VIRTUAL_ADDRESS MeshRenderer::UpdateMaterialCB(
 
     cb.albedoTextureIndex = textureIndices[static_cast<int>(MeshTextureSlot::Albedo)];
     cb.normalTextureIndex = textureIndices[static_cast<int>(MeshTextureSlot::Normal)];
+    cb.roughnessTextureIndex = textureIndices[static_cast<int>(MeshTextureSlot::Roughness)];
+    cb.ambientOcclusionTextureIndex = textureIndices[static_cast<int>(MeshTextureSlot::AmbientOcclusion)];
+
     cb.normalIntensity = surface.normalIntensity;
     cb.roughnessIntensity = surface.roughnessIntensity;
+    cb.ambientOcclusionIntensity = surface.ambientOcclusionIntensity;
     cb.metallic = surface.metallic;
 
     return m_materialCBAllocator.AllocateConstant(cb);
 }
-
-//텍스쳐가 뭔가 잘못 올라간거 같다. 왠지는 모르겠고.. 찾아봐야 할듯. 일단 hlsl 문제는 아닌듯.

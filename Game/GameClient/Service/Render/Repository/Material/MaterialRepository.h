@@ -28,19 +28,7 @@ public:
     ~MaterialRepository();
     MaterialRepository() = delete;
     MaterialRepository(IMaterialSystem* matSystem, AssetPipelineT* assetPipeline);
-
     MaterialHandle GetOrCreate(const MaterialDesc& desc);
-
-    //MaterialHandle GetOrCreate(
-    //    std::filesystem::path path,
-    //    std::unique_ptr<MaterialDesc> desc,
-    //    function<shared_ptr<TextureAsset>(const filesystem::path&)> loader);
-
-    //MaterialHandle GetOrCreate(
-    //    const std::string& runtimeKey, 
-    //    shared_ptr<TextureAsset> albedoAsset, 
-    //    std::unique_ptr<MaterialDesc> desc);
-
     void Update();
     bool Release(MaterialHandle h);
     void ReleaseAll();
