@@ -34,7 +34,11 @@ std::shared_ptr<TextureAsset> TextureSystem::CreateColorAsset(uint32_t pixelColo
     asset->height = 1;
     asset->pixels.resize(sizeof(uint32_t));
 
-    std::memcpy(asset->pixels.data(), &pixelColor, sizeof(uint32_t));
+    // 비트 연산을 통해 엔디안에 무관하게 항상 R, G, B, A 순서로 메모리 배치
+    asset->pixels[0] = static_cast<uint8_t>((pixelColor >> 24) & 0xFF); // R
+    asset->pixels[1] = static_cast<uint8_t>((pixelColor >> 16) & 0xFF); // G
+    asset->pixels[2] = static_cast<uint8_t>((pixelColor >> 8) & 0xFF); // B
+    asset->pixels[3] = static_cast<uint8_t>((pixelColor >> 0) & 0xFF); // A
 
     return asset;
 }
@@ -42,14 +46,14 @@ std::shared_ptr<TextureAsset> TextureSystem::CreateColorAsset(uint32_t pixelColo
 bool TextureSystem::CreateBuiltinTextures()
 {
     m_defaultAssets[DefaultTextureType::White] = CreateColorAsset(0xFFFFFFFF); // 흰색
-    m_defaultAssets[DefaultTextureType::FlatNormal] = CreateColorAsset(0xFFFF8080); // 평평한 노멀 (128, 128, 255)
-    m_defaultAssets[DefaultTextureType::Gray] = CreateColorAsset(0xFF808080);
+    m_defaultAssets[DefaultTextureType::FlatNormal] = CreateColorAsset(0x8080FFFF); // 평평한 노멀 (128, 128, 255)
+    m_defaultAssets[DefaultTextureType::Orange] = CreateColorAsset(0xFF8000FF);
 
     struct BuiltinConfig { DefaultTextureType type; const char* name; bool srgb; };
     BuiltinConfig configs[] = {
         { DefaultTextureType::White, "DefaultTexture_White", true },
         { DefaultTextureType::FlatNormal, "DefaultTexture_FlatNormal", false },
-        { DefaultTextureType::Gray, "DefaultTexture_Gray", false }
+        { DefaultTextureType::Orange, "DefaultTexture_Orange", false }
     };
 
     for (const auto& config : configs)

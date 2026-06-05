@@ -4,6 +4,14 @@
 class MeshFactory
 {
 public:
+    static std::shared_ptr<MeshAsset> CreateSphere(
+        float radius = 0.5f,
+        uint32_t sliceCount = 32,
+        uint32_t stackCount = 32
+    );
+
+    static std::shared_ptr<MeshAsset> CreateCube(float size = 1.f);
+
     static std::shared_ptr<MeshAsset> CreateTorus(
         float radius = 1.0f, //전체 반지름
         float tubeRadius = 0.3f, //도넛 두께

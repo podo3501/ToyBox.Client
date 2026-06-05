@@ -7,8 +7,7 @@ struct MeshTextureArgs
 {
     TextureDesc albedo{};
     TextureDesc normal{};
-    TextureDesc roughness{};
-    TextureDesc ambientOcclusion{};
+    TextureDesc arm{}; //R: AO, G: Roughness, B: Metallic
 };
 
 class MeshMaterialDescFactory

@@ -18,12 +18,12 @@ struct MaterialCB
 {
     uint32_t albedoTextureIndex;
     uint32_t normalTextureIndex;
-    uint32_t roughnessTextureIndex;
-    uint32_t ambientOcclusionTextureIndex;
+    uint32_t armTextureIndex;
     float normalIntensity;
     float roughnessIntensity;
     float ambientOcclusionIntensity;
     float metallic;
+    float MaterialPadding{ 0.f };
 };
 CHECK_ALIGN16(MaterialCB);
 
@@ -130,24 +130,24 @@ void MeshRenderer::PrepareFrame(const DirectionalLightData& light, const CameraD
     DirectX::XMMATRIX proj = ToDXMatrix(camera.proj);
 
     // GPU용으로 transpose해서 저장
-    XMStoreFloat4x4(&meshFrame.frame.view, DirectX::XMMatrixTranspose(view));
-    XMStoreFloat4x4(&meshFrame.frame.proj, DirectX::XMMatrixTranspose(proj));
+    XMStoreFloat4x4(&meshFrame.view, DirectX::XMMatrixTranspose(view));
+    XMStoreFloat4x4(&meshFrame.proj, DirectX::XMMatrixTranspose(proj));
 
     // Camera Position
-    meshFrame.camera.cameraPosition[0] = camera.position.x;
-    meshFrame.camera.cameraPosition[1] = camera.position.y;
-    meshFrame.camera.cameraPosition[2] = camera.position.z;
+    meshFrame.cameraPosition[0] = camera.position.x;
+    meshFrame.cameraPosition[1] = camera.position.y;
+    meshFrame.cameraPosition[2] = camera.position.z;
 
     // Directional Light
-    meshFrame.lighting.lightDirection[0] = light.direction.x;
-    meshFrame.lighting.lightDirection[1] = light.direction.y;
-    meshFrame.lighting.lightDirection[2] = light.direction.z;
+    meshFrame.lightDirection[0] = light.direction.x;
+    meshFrame.lightDirection[1] = light.direction.y;
+    meshFrame.lightDirection[2] = light.direction.z;
 
-    meshFrame.lighting.lightColor[0] = light.color.x;
-    meshFrame.lighting.lightColor[1] = light.color.y;
-    meshFrame.lighting.lightColor[2] = light.color.z;
+    meshFrame.lightColor[0] = light.color.x;
+    meshFrame.lightColor[1] = light.color.y;
+    meshFrame.lightColor[2] = light.color.z;
 
-    meshFrame.lighting.lightIntensity = light.intensity;
+    meshFrame.lightIntensity = light.intensity;
 
     m_frameCBAddress = m_frameCBAllocator.AllocateConstant(meshFrame);
 }
@@ -198,8 +198,7 @@ D3D12_GPU_VIRTUAL_ADDRESS MeshRenderer::UpdateMaterialCB(
 
     cb.albedoTextureIndex = textureIndices[static_cast<int>(MeshTextureSlot::Albedo)];
     cb.normalTextureIndex = textureIndices[static_cast<int>(MeshTextureSlot::Normal)];
-    cb.roughnessTextureIndex = textureIndices[static_cast<int>(MeshTextureSlot::Roughness)];
-    cb.ambientOcclusionTextureIndex = textureIndices[static_cast<int>(MeshTextureSlot::AmbientOcclusion)];
+    cb.armTextureIndex = textureIndices[static_cast<int>(MeshTextureSlot::ARM)];
 
     cb.normalIntensity = surface.normalIntensity;
     cb.roughnessIntensity = surface.roughnessIntensity;

@@ -70,10 +70,8 @@ void MaterialSystem::SetDefaultTextures(MaterialResource* matRes, size_t slotCou
             auto meshSlot = static_cast<MeshTextureSlot>(i);
             if (meshSlot == MeshTextureSlot::Normal)
                 targetDefaultType = DefaultTextureType::FlatNormal;
-            if (meshSlot == MeshTextureSlot::Roughness)
-                targetDefaultType = DefaultTextureType::Gray;
-            if (meshSlot == MeshTextureSlot::AmbientOcclusion)
-                targetDefaultType = DefaultTextureType::White;
+            if (meshSlot == MeshTextureSlot::ARM)
+                targetDefaultType = DefaultTextureType::Orange;
         }
         break;
         case MaterialType::UI:

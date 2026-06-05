@@ -16,7 +16,7 @@ enum class DefaultTextureType
 {
     White,  // 일반 컬러/알베도용 (1,1,1,1)
     FlatNormal, // 노멀 맵용 (0.5, 0.5, 1.0)
-    Gray, //roughness용 회색 (0.5, 0.5, 0.5) (ex 0이면 거울 1이면 거친상태. 그래서 중간값)
+    Orange, //arm용 오렌지색(1, 0.5, 0)
     Black, // 필요시 (0,0,0,1)
     Count
 };

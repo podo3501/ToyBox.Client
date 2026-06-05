@@ -38,12 +38,12 @@ cbuffer MaterialCB : register(b3)
 {
     uint albedoTextureIndex;
     uint normalTextureIndex;
-    uint roughnessTextureIndex;
-    uint ambientOcclusionTextureIndex;
+    uint armTextureIndex;
     float normalIntensity;
     float roughnessIntensity;
     float ambientOcclusionIntensity;
     float metallic;
+    float MaterialPadding;
 };
 
 struct PSInput
@@ -129,7 +129,6 @@ float3 FresnelSchlick(float cosTheta, float3 F0)
     return F0 + (1.0f - F0) * pow(saturate(1.0f - cosTheta), 5.0f);
 }
 
-
 float4 PSMain(PSInput input) : SV_TARGET
 {
 //Texture2D testTex = ResourceDescriptorHeap[ambientOcclusionTextureIndex];
@@ -154,24 +153,28 @@ float4 PSMain(PSInput input) : SV_TARGET
     // 탄젠트 공간 -> 월드 공간 노멀 최종 변환
     N = normalize(mul(localNormal, TBN));
 
-    // 3. PBR에 필요한 핵심 3대 방향 벡터 계산 (L, V, H)
-    float3 L = normalize(lightDirection);
-    //float3 L = normalize(float3(1.0f, 0.0f, 0.0f));
+    // 3. ARM(Ambient Occlusion, Roughness, Metallic)
+    Texture2D armTex = ResourceDescriptorHeap[armTextureIndex];
+    float4 armSample = armTex.Sample(gSampler, input.uv);
+
+    float sampledAO = armSample.r; // R 채널 = Ambient Occlusion
+    float sampledRoughness = armSample.g; // G 채널 = Roughness
+    float sampledMetallic  = armSample.b; // B 채널 = Metallic
+
+    // 4. PBR에 필요한 핵심 3대 방향 벡터 계산 (L, V, H)
+    float3 L = normalize(-lightDirection);
     float3 V = normalize(cameraPosition - input.worldPos);     
     float3 H = normalize(L + V);
 
-    // 4. 내적값 계산 및 saturate
+    // 5. 내적값 계산 및 saturate
     float NdotL = saturate(dot(N, L));
     float NdotV = saturate(dot(N, V));
 
-    // 5. PBR 재질 데이터 가공 (여기는 일단 테스트용 고정값을 쓰고, 나중에 C++ 연동해줘!)
-    //float PBR_Roughness = 0.2f; // 너무 낮으면 바늘구멍이 되니 0.35가 딱 좋아
-    Texture2D roughnessTex = ResourceDescriptorHeap[roughnessTextureIndex];
-    float sampledRoughness = roughnessTex.Sample(gSampler, input.uv).r;
+    // 6. PBR 재질 데이터 가공
     float PBR_Roughness = clamp(sampledRoughness * roughnessIntensity, 0.05f, 1.0f);
-    float PBR_Metallic  = saturate(metallic); 
+    float PBR_Metallic  = saturate(sampledMetallic * metallic);
 
-    // 6. Cook-Torrance PBR BRDF 연산 시작
+    // 7. Cook-Torrance PBR BRDF 연산 시작
     float3 F0 = float3(0.04f, 0.04f, 0.04f); 
     F0 = lerp(F0, albedo.rgb, PBR_Metallic);
 
@@ -185,22 +188,20 @@ float4 PSMain(PSInput input) : SV_TARGET
     float  denominator  = 4.0f * NdotV * NdotL;
     float3 specularBRDF = numerator / max(denominator, 0.0001f); 
 
-    // 7. 에너지 보존 법칙 적용 (kD, kS 계산)
+    // 8. 에너지 보존 법칙 적용 (kD, kS 계산)
     float3 kS = F;              
     float3 kD = float3(1.0f, 1.0f, 1.0f) - kS; 
     kD *= (1.0f - PBR_Metallic); 
 
-    // 8. 디퓨즈 컬러 (빛 번짐) 연산
+    // 9. 디퓨즈 컬러 (빛 번짐) 연산
     float3 diffuseColor = kD * albedo.rgb / PI;
     
-    // 9. 최종 셰이딩 라이트 결합 (디퓨즈 + 스펙큘러)
+    // 10. 최종 셰이딩 라이트 결합 (디퓨즈 + 스펙큘러)
     //float3 finalLight = (diffuseColor + specularBRDF) * lightColor * (NdotL * lightIntensity);
     float3 finalSpecular = (NdotL > 0.0f) ? specularBRDF : float3(0.0f, 0.0f, 0.0f);
     float3 finalLight = (diffuseColor + finalSpecular) * lightColor * (NdotL * lightIntensity);
 
-    // 10. 주변광(Ambient) 처리
-    Texture2D aoTex = ResourceDescriptorHeap[ambientOcclusionTextureIndex];
-    float sampledAO = aoTex.Sample(gSampler, input.uv).r;
+    // 11. 주변광(Ambient) 처리
     float highContrastAO = pow(saturate(sampledAO), 2.0f);
     float PBR_AO = lerp(1.0f, highContrastAO, ambientOcclusionIntensity);
  

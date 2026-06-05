@@ -306,12 +306,14 @@
 --AssetQueue를 만들어 AssetService를 다른 Service에 직접 넣지 않고 중간에서 처리하는 클래스 만듦.
 --AssetWorker를 만들어 thread로 로딩처리
 --AssetWorker에서 여러개를 로딩걸어서 죽는지 어떤지 테스트
+--PBR
+--카메라 움직이게끔
+--빛이 이상한듯.
 
-@normal map
+@Material type에 grid가 없다. 추가해야 할 것 같다. 지금은 그냥 타입만 있는데 어떻게 할지 보자.
 @texture asset factory 만들지 말지.
 @texture system은 service 레벨에서 안보이게 될듯.
 @backend는 지금 그려지는 게 ui인지 mesh인지 결과적으로는 모르게 해야 할듯. quad renderer, mesh renderer 통합도 생각해보자.
-@카메라 움직이게끔
 @shadow pass
 
 @렌더러 만들기    
