@@ -12,8 +12,11 @@ struct UIMaterialDesc : public MaterialDesc
 {
     UIMaterialDesc()
     {
-        type = MaterialType::UI;
-        pipelineState = PipelineLibrary::Get(ShaderID::UI, RasterPreset::NoCull);
+        domain = MaterialDomain::UserInterface;
+        pipelineState = PipelineLibrary::Get(
+            ShadingModel::UI, 
+            RasterPreset::NoCull, 
+            PrimitiveTopologyType::Triangle);
     }
 
     bool operator==(const UIMaterialDesc&) const = default;

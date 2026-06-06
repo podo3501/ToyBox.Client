@@ -111,11 +111,11 @@ bool ShaderSystem::Initialize(const std::vector<ShaderRegisterDesc>& shaders)
         shaderData.asset = desc.asset;
         shaderData.stages = desc.stages;
 
-        auto [shaderIt, inserted] = m_shaders.emplace(desc.shaderID, std::move(shaderData));
+        auto [shaderIt, inserted] = m_shaders.emplace(desc.model, std::move(shaderData));
         if (!inserted)
             continue;
 
-        ShaderVariant baseVariant{ desc.shaderID };
+        ShaderVariant baseVariant{ desc.model };
         ShaderEntry entry;
         
         if (!CompileVariant(baseVariant, *shaderIt->second.asset, shaderIt->second.stages, entry))
@@ -133,7 +133,7 @@ const ShaderEntry* ShaderSystem::Find(const ShaderVariant& variant) const
     if (it != m_variants.end())
         return &it->second;
 
-    auto shaderIt = m_shaders.find(variant.shaderID);
+    auto shaderIt = m_shaders.find(variant.model);
     if (shaderIt == m_shaders.end())
         return nullptr; // shader가 등록이 안돼 있다.
 

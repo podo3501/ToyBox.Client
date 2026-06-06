@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "MeshRenderer.h"
 #include "../MeshResource.h"
-#include "../MeshMaterialResource.h"
+#include "../MaterialResource/PbrMaterialResource.h"
 #include "RenderConstants.h"
 #include "RootSignatureBuilder.h"
 #include "../d3dx12.h"
@@ -46,11 +46,11 @@ bool MeshRenderer::Initialize()
 
 void MeshRenderer::CreateDefaultPSOs()
 {
-    CreatePSO(PipelineLibrary::Get(ShaderID::Mesh, RasterPreset::Default));
-    CreatePSO(PipelineLibrary::Get(ShaderID::Mesh, RasterPreset::NoCull));
-    CreatePSO(PipelineLibrary::Get(ShaderID::Mesh, RasterPreset::Wireframe));
-    CreatePSO(PipelineLibrary::Get(ShaderID::Mesh, RasterPreset::WireframeNoCull));
-    CreatePSO(PipelineLibrary::Get(ShaderID::Mesh, RasterPreset::Default, PrimitiveTopologyType::Line));
+    CreatePSO(PipelineLibrary::Get(ShadingModel::PBR, RasterPreset::Default));
+    CreatePSO(PipelineLibrary::Get(ShadingModel::PBR, RasterPreset::NoCull));
+    CreatePSO(PipelineLibrary::Get(ShadingModel::PBR, RasterPreset::Wireframe));
+    CreatePSO(PipelineLibrary::Get(ShadingModel::PBR, RasterPreset::WireframeNoCull));
+    CreatePSO(PipelineLibrary::Get(ShadingModel::PBR, RasterPreset::Default, PrimitiveTopologyType::Line));
 }
 
 ID3D12PipelineState* MeshRenderer::CreatePSO(const PipelineState& pipelineState)
@@ -155,11 +155,11 @@ void MeshRenderer::PrepareFrame(const DirectionalLightData& light, const CameraD
 void MeshRenderer::Draw(
     CommandList& cmd, 
     MeshResource& mesh, 
-    MeshMaterialResource& material,
+    PbrMaterialResource& pbrMaterial,
     const cm::Matrix& world)
 {
     auto objectCBAddress = UpdateObjectCB(world);
-    auto materialCBAddress = UpdateMaterialCB(material.GetSurface(), material.GetTextureIndices());
+    auto materialCBAddress = UpdateMaterialCB(pbrMaterial.GetSurface(), pbrMaterial.GetTextureIndices());
     uint32_t meshIndices[2] = { mesh.GetVertexHeapIndex(), mesh.GetIndexHeapIndex() };
     
     cmd->SetGraphicsRoot32BitConstants(0, 2, meshIndices, 0);
@@ -191,18 +191,17 @@ D3D12_GPU_VIRTUAL_ADDRESS MeshRenderer::UpdateObjectCB(const cm::Matrix& world)
     return m_objectCBAllocator.AllocateConstant(obj);
 }
 
-D3D12_GPU_VIRTUAL_ADDRESS MeshRenderer::UpdateMaterialCB(
-    const MaterialSurface& surface, std::vector<UINT> textureIndices)
+D3D12_GPU_VIRTUAL_ADDRESS MeshRenderer::UpdateMaterialCB(const PbrSurface& surface, std::vector<UINT> textureIndices)
 {
     MaterialCB cb{};
 
-    cb.albedoTextureIndex = textureIndices[static_cast<int>(MeshTextureSlot::Albedo)];
-    cb.normalTextureIndex = textureIndices[static_cast<int>(MeshTextureSlot::Normal)];
-    cb.armTextureIndex = textureIndices[static_cast<int>(MeshTextureSlot::ARM)];
+    cb.albedoTextureIndex = textureIndices[static_cast<int>(PbrTextureSlot::Albedo)];
+    cb.normalTextureIndex = textureIndices[static_cast<int>(PbrTextureSlot::Normal)];
+    cb.armTextureIndex = textureIndices[static_cast<int>(PbrTextureSlot::ARM)];
 
-    cb.normalIntensity = surface.normalIntensity;
-    cb.roughnessIntensity = surface.roughnessIntensity;
-    cb.ambientOcclusionIntensity = surface.ambientOcclusionIntensity;
+    cb.normalIntensity = surface.normal;
+    cb.roughnessIntensity = surface.roughness;
+    cb.ambientOcclusionIntensity = surface.ao;
     cb.metallic = surface.metallic;
 
     return m_materialCBAllocator.AllocateConstant(cb);

@@ -93,9 +93,9 @@ struct ShaderStageDesc
     std::string target;
 };
 
-enum class ShaderID
+enum class ShadingModel
 {
-    Mesh,
+    PBR,
     UI,
     Grid,
     MipGenerator
@@ -104,21 +104,21 @@ enum class ShaderID
 struct ShaderAsset;
 struct ShaderRegisterDesc
 {
-    ShaderID shaderID;
+    ShadingModel model;
     std::shared_ptr<ShaderAsset> asset;
     std::vector<ShaderStageDesc> stages;
 };
 
 struct ShaderVariant
 {
-    ShaderID shaderID;
+    ShadingModel model;
     std::vector<ShaderMacroDesc> runtimeMacros;
 
     bool operator==(const ShaderVariant&) const = default;
 
     size_t GetHash() const
     {
-        size_t h = Core::HashOf(shaderID);
+        size_t h = Core::HashOf(model);
         for (const auto& macro : runtimeMacros)
             Core::HashCombine(h, macro.GetHash());
         return h;
@@ -169,14 +169,14 @@ class PipelineLibrary
 {
 public:
     static PipelineState Get(
-        ShaderID shaderID,
+        ShadingModel model,
         RasterPreset rasterPreset,
         PrimitiveTopologyType topologyType =
         PrimitiveTopologyType::Triangle)
     {
         PipelineState state{};
 
-        state.shaderVariant.shaderID = shaderID;
+        state.shaderVariant.model = model;
         state.rasterState = RasterLibrary::Get(rasterPreset);
         state.topologyType = topologyType;
 

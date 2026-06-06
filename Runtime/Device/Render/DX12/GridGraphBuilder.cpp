@@ -5,7 +5,7 @@
 #include "RenderScene.h"
 #include "Renderer/GridRenderer.h"
 #include "MeshResource.h"
-#include "MeshMaterialResource.h"
+#include "MaterialResource/GridMaterialResource.h"
 
 GridGraphBuilder::~GridGraphBuilder() = default;
 GridGraphBuilder::GridGraphBuilder(GridRenderer* gridRenderer, RenderScene* scene, RGHandle hBb) :
@@ -27,7 +27,7 @@ void GridGraphBuilder::Build(RenderGraph& graph)
         for (auto& item : m_scene->GetGridDraws())
         {
             auto mesh = static_cast<MeshResource*>(item.mesh.get());
-            auto material = static_cast<MeshMaterialResource*>(item.material.get());
+            auto material = static_cast<GridMaterialResource*>(item.material.get());
 
             const PipelineState& nextPSO = material->GetPipelineState();
             if (!currentPSO || *currentPSO != nextPSO)

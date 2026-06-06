@@ -5,7 +5,7 @@
 #include "RenderScene.h"
 #include "Renderer/UIRenderer.h"
 #include "MeshResource.h"
-#include "UIMaterialResource.h"
+#include "MaterialResource/UIMaterialResource.h"
 
 UIGraphBuilder::~UIGraphBuilder() = default;
 UIGraphBuilder::UIGraphBuilder(UIRenderer* uiRenderer, RenderScene* scene, RGHandle hBb) :

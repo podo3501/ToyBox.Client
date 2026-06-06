@@ -60,8 +60,10 @@
     <ClInclude Include="Render\DX12\Helpers\CommandListHelpers.h" />
     <ClInclude Include="Render\DX12\Helpers\CommonHelpers.h" />
     <ClInclude Include="Render\DX12\Helpers\MathHelpers.h" />
-    <ClInclude Include="Render\DX12\MaterialResource.h" />
-    <ClInclude Include="Render\DX12\MeshMaterialResource.h" />
+    <ClInclude Include="Render\DX12\MaterialResource\GridMaterialResource.h" />
+    <ClInclude Include="Render\DX12\MaterialResource\MaterialResource.h" />
+    <ClInclude Include="Render\DX12\MaterialResource\PbrMaterialResource.h" />
+    <ClInclude Include="Render\DX12\MaterialResource\UIMaterialResource.h" />
     <ClInclude Include="Render\DX12\MaterialSystem.h" />
     <ClInclude Include="Render\DX12\OpaqueGraphBuilder.h" />
     <ClInclude Include="Render\DX12\GPUProfiler.h" />
@@ -100,7 +102,6 @@
     <ClInclude Include="Render\DX12\TextureResource.h" />
     <ClInclude Include="Render\DX12\TextureSystem.h" />
     <ClInclude Include="Render\DX12\UIGraphBuilder.h" />
-    <ClInclude Include="Render\DX12\UIMaterialResource.h" />
     <ClInclude Include="Storage\JsonObjectIO.h" />
   </ItemGroup>
   <ItemGroup>
@@ -144,7 +145,10 @@
     <ClCompile Include="Render\DX12\GridGraphBuilder.cpp" />
     <ClCompile Include="Render\DX12\Helpers\CommonHelpers.cpp" />
     <ClCompile Include="Render\DX12\Helpers\MathHelpers.cpp" />
-    <ClCompile Include="Render\DX12\MeshMaterialResource.cpp" />
+    <ClCompile Include="Render\DX12\MaterialResource\GridMaterialResource.cpp" />
+    <ClCompile Include="Render\DX12\MaterialResource\MaterialResource.cpp" />
+    <ClCompile Include="Render\DX12\MaterialResource\PbrMaterialResource.cpp" />
+    <ClCompile Include="Render\DX12\MaterialResource\UIMaterialResource.cpp" />
     <ClCompile Include="Render\DX12\MaterialSystem.cpp" />
     <ClCompile Include="Render\DX12\OpaqueGraphBuilder.cpp" />
     <ClCompile Include="Render\DX12\GPUProfiler.cpp" />
@@ -175,7 +179,6 @@
     <ClCompile Include="Render\DX12\TextureResource.cpp" />
     <ClCompile Include="Render\DX12\TextureSystem.cpp" />
     <ClCompile Include="Render\DX12\UIGraphBuilder.cpp" />
-    <ClCompile Include="Render\DX12\UIMaterialResource.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Platform\Platform.vcxproj">

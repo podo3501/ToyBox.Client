@@ -2,19 +2,18 @@
 #include "RenderState.h"
 #include "TextureDesc.h"
 
-enum class MaterialType
+enum class MaterialDomain
 {
-    Mesh,
-    Grid,
-    UI
+    Surface,
+    UserInterface
 };
 
 struct MaterialDesc
 {
     virtual ~MaterialDesc() = default;
 
-    MaterialType type{ MaterialType::Mesh };
-    PipelineState pipelineState { PipelineLibrary::Get(ShaderID::Mesh, RasterPreset::Default) };
+    MaterialDomain domain{ MaterialDomain::Surface };
+    PipelineState pipelineState { PipelineLibrary::Get(ShadingModel::PBR, RasterPreset::Default) };
     std::vector<TextureDesc> textures;
 
     bool operator==(const MaterialDesc&) const = default;
@@ -22,7 +21,7 @@ struct MaterialDesc
     virtual size_t GetHash() const
     {
         size_t h;
-        Core::HashCombine(h, type);
+        Core::HashCombine(h, domain);
         Core::HashCombine(h, pipelineState.GetHash());
         for (const auto& tex : textures)
             Core::HashCombine(h, tex.GetHash());

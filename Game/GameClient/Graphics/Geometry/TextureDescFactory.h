@@ -1,5 +1,5 @@
 #pragma once
-#include "GameClient/Service/Render/Desc/MeshMaterialDesc.h"
+#include "GameClient/Service/Render/Desc/TextureDesc.h"
 #include "Core/Foundation/ResourceID.h"
 
 class TextureDescFactory

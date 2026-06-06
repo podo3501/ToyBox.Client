@@ -1,9 +1,10 @@
 #pragma once
-#include "GameClient/Service/Render/Desc/MeshMaterialDesc.h"
+#include "GameClient/Service/Render/Desc/PbrMaterialDesc.h"
+#include "GameClient/Service/Render/Desc/GridMaterialDesc.h"
 #include "GameClient/Service/Render/Desc/UIMaterialDesc.h"
 #include "TextureDescFactory.h"
 
-struct MeshTextureArgs
+struct PbrTextureArgs
 {
     TextureDesc albedo{};
     TextureDesc normal{};
@@ -13,9 +14,9 @@ struct MeshTextureArgs
 class MeshMaterialDescFactory
 {
 public:
-    static MeshMaterialDesc CreateLit(const MeshTextureArgs& texArgs);
-    static MeshMaterialDesc CreateGrid();
-    static MeshMaterialDesc CreateWireframe();
+    static PbrMaterialDesc CreateLit(const PbrTextureArgs& texArgs);
+    static GridMaterialDesc CreateGrid();
+    static PbrMaterialDesc CreateWireframe();
 };
 
 struct UITextureArgs

@@ -42,7 +42,7 @@ bool GridRenderer::CreateRootSignature()
 
 void GridRenderer::CreateDefaultPSOs()
 {
-    CreatePSO(PipelineLibrary::Get(ShaderID::Grid, RasterPreset::Default, PrimitiveTopologyType::Line));
+    CreatePSO(PipelineLibrary::Get(ShadingModel::Grid, RasterPreset::Default, PrimitiveTopologyType::Line));
 }
 
 void GridRenderer::CreateConstantBuffers()

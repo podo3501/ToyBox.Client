@@ -4,9 +4,7 @@
 #include "Repository/Texture/TextureRepository.h"
 #include "Repository/Mesh/MeshRepository.h"
 #include "Service/Asset/Assets/MeshAsset.h"
-#include "Desc/MeshMaterialDesc.h"
 #include "Desc/MeshDesc.h"
-#include "Desc/UIMaterialDesc.h"
 #include "Resource/IMeshResource.h"
 #include "IRenderBackend.h"
 

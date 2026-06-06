@@ -55,6 +55,9 @@
     <Filter Include="Render\DX12\Descriptor">
       <UniqueIdentifier>{cc3bb541-3b13-4277-9ea4-7b35ecc12573}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Render\DX12\MaterialResource">
+      <UniqueIdentifier>{f25b1064-ee2d-4275-a2fa-e2d68673d353}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Storage\JsonObjectIO.h">
@@ -229,9 +232,6 @@
     <ClInclude Include="Render\DX12\MaterialSystem.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\MeshMaterialResource.h">
-      <Filter>Render\DX12</Filter>
-    </ClInclude>
     <ClInclude Include="Render\DX12\RenderSortKey.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
@@ -239,9 +239,6 @@
       <Filter>Asset\Loader\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Render\DX12\ShaderSystem.h">
-      <Filter>Render\DX12</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\DX12\UIMaterialResource.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
     <ClInclude Include="Render\DX12\Renderer\Renderers.h">
@@ -301,8 +298,17 @@
     <ClInclude Include="Render\DX12\GridGraphBuilder.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\MaterialResource.h">
-      <Filter>Render\DX12</Filter>
+    <ClInclude Include="Render\DX12\MaterialResource\MaterialResource.h">
+      <Filter>Render\DX12\MaterialResource</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\MaterialResource\PbrMaterialResource.h">
+      <Filter>Render\DX12\MaterialResource</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\MaterialResource\UIMaterialResource.h">
+      <Filter>Render\DX12\MaterialResource</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\MaterialResource\GridMaterialResource.h">
+      <Filter>Render\DX12\MaterialResource</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -445,9 +451,6 @@
     <ClCompile Include="Render\DX12\MaterialSystem.cpp">
       <Filter>Render\DX12</Filter>
     </ClCompile>
-    <ClCompile Include="Render\DX12\MeshMaterialResource.cpp">
-      <Filter>Render\DX12</Filter>
-    </ClCompile>
     <ClCompile Include="Render\DX12\RenderSortKey.cpp">
       <Filter>Render\DX12</Filter>
     </ClCompile>
@@ -455,9 +458,6 @@
       <Filter>Asset\Loader\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\ShaderSystem.cpp">
-      <Filter>Render\DX12</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\DX12\UIMaterialResource.cpp">
       <Filter>Render\DX12</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\Renderer\Renderers.cpp">
@@ -504,6 +504,18 @@
     </ClCompile>
     <ClCompile Include="Render\DX12\GridGraphBuilder.cpp">
       <Filter>Render\DX12</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\MaterialResource\PbrMaterialResource.cpp">
+      <Filter>Render\DX12\MaterialResource</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\MaterialResource\UIMaterialResource.cpp">
+      <Filter>Render\DX12\MaterialResource</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\MaterialResource\MaterialResource.cpp">
+      <Filter>Render\DX12\MaterialResource</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\MaterialResource\GridMaterialResource.cpp">
+      <Filter>Render\DX12\MaterialResource</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

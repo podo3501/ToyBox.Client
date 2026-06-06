@@ -37,6 +37,6 @@ private:
         const std::vector<ShaderStageDesc>& stages,
         ShaderEntry& outEntry) const;
 
-    std::unordered_map<ShaderID, ShaderData> m_shaders;
+    std::unordered_map<ShadingModel, ShaderData> m_shaders;
     mutable std::unordered_map<ShaderVariant, ShaderEntry, ShaderVariantHasher> m_variants;
 };

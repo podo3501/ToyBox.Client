@@ -25,11 +25,11 @@ bool MipGenerator::Initialize(ShaderSystem* shaderSystem)
 
 bool MipGenerator::LoadShader(ShaderSystem* shaderSystem)
 {
-    ShaderVariant sRGBVariant{ ShaderID::MipGenerator };
+    ShaderVariant sRGBVariant{ ShadingModel::MipGenerator };
     if (const auto* entry = shaderSystem->Find(sRGBVariant))
         m_csSRGBBlob = entry->cs;
 
-    ShaderVariant srgbVariant{ ShaderID::MipGenerator };
+    ShaderVariant srgbVariant{ ShadingModel::MipGenerator };
     srgbVariant.runtimeMacros.push_back({ "IS_DATA_MAP" });
     if (const auto* entry = shaderSystem->Find(srgbVariant))
         m_csDataBlob = entry->cs;

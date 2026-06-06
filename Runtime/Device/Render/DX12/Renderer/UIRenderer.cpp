@@ -3,7 +3,7 @@
 #include "RootSignatureBuilder.h"
 #include "../Command/CommandList.h"
 #include "../MeshResource.h"
-#include "../UIMaterialResource.h"
+#include "../MaterialResource/UIMaterialResource.h"
 #include "../Helpers/MathHelpers.h"
 
 namespace cm = Core::Math;
@@ -37,7 +37,7 @@ bool UIRenderer::Initialize(const Size& screenSize)
 
 void UIRenderer::CreateDefaultPSOs()
 {
-    CreatePSO(PipelineLibrary::Get(ShaderID::UI, RasterPreset::NoCull));
+    CreatePSO(PipelineLibrary::Get(ShadingModel::UI, RasterPreset::NoCull));
 }
 
 ID3D12PipelineState* UIRenderer::CreatePSO(const PipelineState& pipelineState)
@@ -98,10 +98,12 @@ void UIRenderer::Draw(
     UIMaterialResource& material,
     const cm::Matrix& quadWorld)
 {
+    auto texIndices = material.GetTextureIndices();
+
     uint32_t uiIndices[3] = {
         mesh.GetVertexHeapIndex(),
         mesh.GetIndexHeapIndex(),
-        material.GetTextureHeapIndex()
+        texIndices[0]
     };
 
     cmd->SetGraphicsRoot32BitConstants(0, 3, uiIndices, 0);

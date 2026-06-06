@@ -32,24 +32,24 @@ ShaderStageDesc ShaderStageBuilder::CS(std::string entry)
 }
 
 ShaderRegisterDesc ShaderBuilder::Build(
-    ShaderID shaderID,
+    ShadingModel model,
     std::shared_ptr<ShaderAsset> asset)
 {
     ShaderRegisterDesc regiDesc;
-    regiDesc.shaderID = shaderID;
+    regiDesc.model = model;
     regiDesc.asset = std::move(asset);
 
-    switch (shaderID)
+    switch (model)
     {
-    case ShaderID::Mesh:
-    case ShaderID::UI:
-    case ShaderID::Grid:
+    case ShadingModel::PBR:
+    case ShadingModel::UI:
+    case ShadingModel::Grid:
     {
         regiDesc.stages = { ShaderStageBuilder::VS(), ShaderStageBuilder::PS() };
         break;
     }
 
-    case ShaderID::MipGenerator:
+    case ShadingModel::MipGenerator:
     {
         regiDesc.stages = { ShaderStageBuilder::CS() };
         break;

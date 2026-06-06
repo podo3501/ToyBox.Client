@@ -1,8 +1,9 @@
 #include "pch.h"
 #include "MaterialSystem.h"
-#include "MeshMaterialResource.h"
+#include "MaterialResource/PbrMaterialResource.h"
+#include "MaterialResource/GridMaterialResource.h"
 #include "Descriptor/DescriptorFactory.h"
-#include "UIMaterialResource.h"
+#include "MaterialResource/UIMaterialResource.h"
 #include "TextureSystem.h"
 #include "TextureResource.h"
 
@@ -11,35 +12,36 @@ MaterialSystem::MaterialSystem(ID3D12Device* device, DescriptorAllocator* srvAll
     m_descriptorFactory{ make_unique<DescriptorFactory>(device, srvAllocator) },
 	m_texSystem{ texSystem }
 {
-    MaterialDesc desc;
+    PbrMaterialDesc pbrDesc;
+    m_defaultPbrMaterial = make_shared<PbrMaterialResource>(pbrDesc);
+    SetDefaultTextures(m_defaultPbrMaterial.get());
 
-    desc.type = MaterialType::Mesh;
-    auto meshRes = make_shared<MeshMaterialResource>(desc);
-    SetDefaultTextures(meshRes.get(), GetTextureSlotCount(MaterialType::Mesh));
-    m_defaultMaterials[MaterialType::Mesh] = meshRes;
+    GridMaterialDesc gridDesc;
+    m_defaultGridMaterial = make_shared<GridMaterialResource>(gridDesc);
+    SetDefaultTextures(m_defaultGridMaterial.get());
 
-    desc.type = MaterialType::Grid;
-    auto gridRes = make_shared<MeshMaterialResource>(desc);
-    SetDefaultTextures(gridRes.get(), GetTextureSlotCount(MaterialType::Grid));
-    m_defaultMaterials[MaterialType::Grid] = gridRes;
-
-    desc.type = MaterialType::UI;
-    auto uiRes = make_shared<UIMaterialResource>(desc);
-    SetDefaultTextures(uiRes.get(), GetTextureSlotCount(MaterialType::UI));
-    m_defaultMaterials[MaterialType::UI] = uiRes;
+    UIMaterialDesc uiDesc;
+    m_defaultUIMaterial = make_shared<UIMaterialResource>(uiDesc);
+    SetDefaultTextures(m_defaultUIMaterial.get());
 }
 
 shared_ptr<IMaterialResource> MaterialSystem::CreateMaterialResource(const MaterialDesc& matDesc)
 {
     shared_ptr<MaterialResource> matRes{ nullptr };
 
-    switch (matDesc.type)
+    switch (matDesc.domain)
     {
-    case MaterialType::Mesh:
-    case MaterialType::Grid:
-        matRes = make_shared<MeshMaterialResource>(matDesc);
+    case MaterialDomain::Surface:
+    {
+        const auto& meshDesc = static_cast<const SurfaceMaterialDesc&>(matDesc);
+
+        if (meshDesc.surfType == SurfaceType::PBR) 
+            matRes = make_shared<PbrMaterialResource>(matDesc);
+        else if (meshDesc.surfType == SurfaceType::Grid)
+            matRes = make_shared<GridMaterialResource>(matDesc);
         break;
-    case MaterialType::UI:
+    }
+    case MaterialDomain::UserInterface:
         matRes = make_shared<UIMaterialResource>(matDesc);
         break;
     }
@@ -47,58 +49,21 @@ shared_ptr<IMaterialResource> MaterialSystem::CreateMaterialResource(const Mater
     if (!matRes)
         return nullptr;
 
-    size_t texSlotCount = GetTextureSlotCount(matDesc.type);
-    SetDefaultTextures(matRes.get(), texSlotCount);
+    SetDefaultTextures(matRes.get());
 
     return matRes;
 }
 
-void MaterialSystem::SetDefaultTextures(MaterialResource* matRes, size_t slotCount)
+void MaterialSystem::SetDefaultTextures(MaterialResource* matRes)
 {
     if (!matRes) return;
 
-    const auto& matDesc = matRes->GetMaterialDesc();
-    MaterialType matType = matDesc.type;
-
-    for (size_t i = 0; i < slotCount; ++i)
+    auto defaultTypes = matRes->GetRequiredDefaultTextures();
+    for (size_t i = 0; i < defaultTypes.size(); ++i)
     {
-        DefaultTextureType targetDefaultType = DefaultTextureType::White; // 기본 폴백은 흰색
-        switch (matType)
-        {
-        case MaterialType::Mesh:
-        {
-            auto meshSlot = static_cast<MeshTextureSlot>(i);
-            if (meshSlot == MeshTextureSlot::Normal)
-                targetDefaultType = DefaultTextureType::FlatNormal;
-            if (meshSlot == MeshTextureSlot::ARM)
-                targetDefaultType = DefaultTextureType::Orange;
-        }
-        break;
-        case MaterialType::UI:
-        {
-            auto uiSlot = static_cast<UITextureSlot>(i);
-            if (uiSlot == UITextureSlot::Normal) // UI에서의 Normal은 '일반 이미지(컬러)'를 뜻함
-                targetDefaultType = DefaultTextureType::White;
-        }
-        break;
-        case MaterialType::Grid: break;
-        }
-
-        auto defaultTex = m_texSystem->GetDefaultTexture(targetDefaultType);
+        auto defaultTex = m_texSystem->GetDefaultTexture(defaultTypes[i]);
         matRes->SetTexture(static_cast<TextureSlot>(i), defaultTex);
     }
-}
-
-size_t MaterialSystem::GetTextureSlotCount(MaterialType type) const noexcept
-{
-    switch (type)
-    {
-    case MaterialType::Mesh: return static_cast<size_t>(MeshTextureSlot::Count);
-    case MaterialType::Grid: return 0;
-    case MaterialType::UI: return static_cast<size_t>(UITextureSlot::Count);
-    }
-
-    return 0;
 }
 
 bool MaterialSystem::LoadFromAsset(
@@ -147,11 +112,6 @@ void MaterialSystem::Update()
     }
 }
 
-shared_ptr<IMaterialResource> MaterialSystem::GetDefaultMaterial(MaterialType type)
-{
-    auto it = m_defaultMaterials.find(type);
-    if (it != m_defaultMaterials.end())
-        return it->second;
-
-    return m_defaultMaterials[MaterialType::Mesh]; //기본은 Mesh를 리턴.
-}
+shared_ptr<IMaterialResource> MaterialSystem::GetDefaultPbrMaterial() { return m_defaultPbrMaterial; }
+shared_ptr<IMaterialResource> MaterialSystem::GetDefaultGridMaterial() { return m_defaultGridMaterial; }
+shared_ptr<IMaterialResource> MaterialSystem::GetDefaultUIMaterial() { return m_defaultUIMaterial; }

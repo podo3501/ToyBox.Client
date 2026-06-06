@@ -583,7 +583,7 @@
     <ClInclude Include="Service\Render\Desc\MaterialDesc.h">
       <Filter>Service\Render\Desc</Filter>
     </ClInclude>
-    <ClInclude Include="Service\Render\Desc\MeshMaterialDesc.h">
+    <ClInclude Include="Service\Render\Desc\SurfaceMaterialDesc.h">
       <Filter>Service\Render\Desc</Filter>
     </ClInclude>
     <ClInclude Include="Service\Render\Desc\TextureDesc.h">
@@ -651,6 +651,12 @@
     </ClInclude>
     <ClInclude Include="Graphics\World\CameraInputMapper.h">
       <Filter>Graphics\World</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Desc\PbrMaterialDesc.h">
+      <Filter>Service\Render\Desc</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Desc\GridMaterialDesc.h">
+      <Filter>Service\Render\Desc</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

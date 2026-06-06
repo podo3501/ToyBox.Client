@@ -4,10 +4,9 @@
 #include "../ResourceTypes.h"
 #include "Service/Render/Handle/MaterialHandle.h"
 #include "Service/Render/Desc/TextureDesc.h"
-#include "Service/Render/Desc/MeshMaterialDesc.h"
-#include "Service/Render/Desc/UIMaterialDesc.h"
 #include "Service/AssetAsync/AssetAsyncTypes.h"
 
+struct MaterialDesc;
 struct IMaterialSystem;
 struct IMaterialResource;
 struct Asset;
