@@ -63,6 +63,8 @@
     <ClInclude Include="Render\DX12\MaterialResource\GridMaterialResource.h" />
     <ClInclude Include="Render\DX12\MaterialResource\MaterialResource.h" />
     <ClInclude Include="Render\DX12\MaterialResource\PbrMaterialResource.h" />
+    <ClInclude Include="Render\DX12\MaterialResource\PhongMaterialResource.h" />
+    <ClInclude Include="Render\DX12\MaterialResource\SurfaceMaterialResource.h" />
     <ClInclude Include="Render\DX12\MaterialResource\UIMaterialResource.h" />
     <ClInclude Include="Render\DX12\MaterialSystem.h" />
     <ClInclude Include="Render\DX12\OpaqueGraphBuilder.h" />
@@ -148,6 +150,7 @@
     <ClCompile Include="Render\DX12\MaterialResource\GridMaterialResource.cpp" />
     <ClCompile Include="Render\DX12\MaterialResource\MaterialResource.cpp" />
     <ClCompile Include="Render\DX12\MaterialResource\PbrMaterialResource.cpp" />
+    <ClCompile Include="Render\DX12\MaterialResource\PhongMaterialResource.cpp" />
     <ClCompile Include="Render\DX12\MaterialResource\UIMaterialResource.cpp" />
     <ClCompile Include="Render\DX12\MaterialSystem.cpp" />
     <ClCompile Include="Render\DX12\OpaqueGraphBuilder.cpp" />

@@ -1,39 +1,63 @@
 #include "pch.h"
 #include "MaterialDescFactory.h"
 
-PbrMaterialDesc MeshMaterialDescFactory::CreateLit(const PbrTextureArgs& texArgs)
+namespace SurfaceMatDescFactory
 {
-    PbrMaterialDesc desc;
+    namespace Phong
+    {
+        PhongMaterialDesc CreateLit(const PhongTextureArgs& texArgs)
+        {
+            PhongMaterialDesc desc;
 
-    desc.textures.resize(static_cast<size_t>(PbrTextureSlot::Count));
-    desc.textures[static_cast<size_t>(PbrTextureSlot::Albedo)] = texArgs.albedo;
-    desc.textures[static_cast<size_t>(PbrTextureSlot::Normal)] = texArgs.normal;
-    desc.textures[static_cast<size_t>(PbrTextureSlot::ARM)] = texArgs.arm;
+            desc.textures.resize(static_cast<size_t>(PhongTextureSlot::Count));
+            desc.textures[static_cast<size_t>(PbrTextureSlot::Albedo)] = texArgs.albedo;
+            desc.textures[static_cast<size_t>(PbrTextureSlot::Normal)] = texArgs.normal;
 
-    return desc;
+            return desc;
+        }
+    }
+
+    namespace PBR
+    {
+        PbrMaterialDesc CreateLit(const PbrTextureArgs& texArgs)
+        {
+            PbrMaterialDesc desc;
+
+            desc.textures.resize(static_cast<size_t>(PbrTextureSlot::Count));
+            desc.textures[static_cast<size_t>(PbrTextureSlot::Albedo)] = texArgs.albedo;
+            desc.textures[static_cast<size_t>(PbrTextureSlot::Normal)] = texArgs.normal;
+            desc.textures[static_cast<size_t>(PbrTextureSlot::ARM)] = texArgs.arm;
+
+            return desc;
+        }
+
+        PbrMaterialDesc CreateWireframe()
+        {
+            PbrMaterialDesc desc;
+
+            desc.pipelineState = PipelineLibrary::Get(
+                ShadingModel::PBR,
+                RasterPreset::Wireframe,
+                PrimitiveTopologyType::Triangle);
+
+            return desc;
+        }
+    }
+    
+    namespace Grid
+    {
+        GridMaterialDesc CreateGrid()
+        {
+            GridMaterialDesc desc;
+            return desc;
+        }
+    }
 }
 
-GridMaterialDesc MeshMaterialDescFactory::CreateGrid()
-{
-    GridMaterialDesc desc;
-    return desc;
-}
-
-PbrMaterialDesc MeshMaterialDescFactory::CreateWireframe()
-{
-    PbrMaterialDesc desc;
-
-    desc.pipelineState = PipelineLibrary::Get(
-        ShadingModel::PBR,
-        RasterPreset::Wireframe,
-        PrimitiveTopologyType::Triangle);
-
-    return desc;
-}
 
 /////////////////////////////////////////////////////////////////
 
-UIMaterialDesc UIMaterialDescFactory::CreateDefault(const UITextureArgs& texArgs)
+UIMaterialDesc UIMatDescFactory::CreateDefault(const UITextureArgs& texArgs)
 {
     UIMaterialDesc desc;
 

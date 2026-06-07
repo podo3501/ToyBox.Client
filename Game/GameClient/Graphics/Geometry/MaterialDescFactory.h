@@ -1,8 +1,15 @@
 #pragma once
+#include "GameClient/Service/Render/Desc/PhongMaterialDesc.h"
 #include "GameClient/Service/Render/Desc/PbrMaterialDesc.h"
 #include "GameClient/Service/Render/Desc/GridMaterialDesc.h"
 #include "GameClient/Service/Render/Desc/UIMaterialDesc.h"
 #include "TextureDescFactory.h"
+
+struct PhongTextureArgs
+{
+    TextureDesc albedo{};
+    TextureDesc normal{};
+};
 
 struct PbrTextureArgs
 {
@@ -11,21 +18,31 @@ struct PbrTextureArgs
     TextureDesc arm{}; //R: AO, G: Roughness, B: Metallic
 };
 
-class MeshMaterialDescFactory
+namespace SurfaceMatDescFactory
 {
-public:
-    static PbrMaterialDesc CreateLit(const PbrTextureArgs& texArgs);
-    static GridMaterialDesc CreateGrid();
-    static PbrMaterialDesc CreateWireframe();
-};
+    namespace Phong
+    {
+        PhongMaterialDesc CreateLit(const PhongTextureArgs& texArgs);
+    }
+
+    namespace PBR 
+    {
+        PbrMaterialDesc CreateLit(const PbrTextureArgs& texArgs);
+        PbrMaterialDesc CreateWireframe();
+    }
+
+    namespace Grid
+    {
+        GridMaterialDesc CreateGrid();
+    }
+}
 
 struct UITextureArgs
 {
     TextureDesc normal{};
 };
 
-class UIMaterialDescFactory
+namespace UIMatDescFactory
 {
-public:
-    static UIMaterialDesc CreateDefault(const UITextureArgs& texArgs);
-};
+    UIMaterialDesc CreateDefault(const UITextureArgs& texArgs);
+}

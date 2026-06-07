@@ -39,7 +39,7 @@ public:
 	MaterialHandle LoadMaterial(const MaterialDesc& desc);
 	bool ReleaseMaterial(MaterialHandle mh);
 
-	void DrawMesh(MeshHandle hM, MaterialHandle hMtl, const Core::Math::Matrix& world);
+	void DrawSurface(MeshHandle hM, MaterialHandle hMtl, const Core::Math::Matrix& world);
 	void DrawUI(MaterialHandle mh, const Rect& dest, const Rect* source = nullptr);
 	void Update();
 	void ReleaseAll();

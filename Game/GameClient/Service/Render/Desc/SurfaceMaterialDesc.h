@@ -3,6 +3,7 @@
 
 enum class SurfaceType
 {
+    Phong,
     PBR,
     Grid
 };

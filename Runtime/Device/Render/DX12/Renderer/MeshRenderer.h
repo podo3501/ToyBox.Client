@@ -13,9 +13,11 @@ struct MaterialCB;
 struct DirectionalLightData;
 struct CameraData;
 struct PbrSurface;
+struct PhongSurface;
 class CommandList;
 class MeshResource;
 class PbrMaterialResource;
+class PhongMaterialResource;
 class ShaderSystem;
 
 using Microsoft::WRL::ComPtr;
@@ -33,6 +35,7 @@ public:
     void SetSRVHeap(ID3D12DescriptorHeap* heap) { m_srvHeap = heap; }
     void PrepareFrame(const DirectionalLightData& light, const CameraData& camera);
     void Draw(CommandList& cmd, MeshResource& mesh, PbrMaterialResource& pbrMaterial, const Core::Math::Matrix& world);
+    void Draw(CommandList& cmd, MeshResource& mesh, PhongMaterialResource& phongMaterial, const Core::Math::Matrix& world);
     
 private:
     bool CreateRootSignature();
@@ -44,6 +47,7 @@ private:
 
     D3D12_GPU_VIRTUAL_ADDRESS UpdateObjectCB(const Core::Math::Matrix& world);
     D3D12_GPU_VIRTUAL_ADDRESS UpdateMaterialCB(const PbrSurface& surface, std::vector<UINT> textureIndices);
+    D3D12_GPU_VIRTUAL_ADDRESS UpdateMaterialCB(const PhongSurface& surface, std::vector<UINT> textureIndices);
 
     static constexpr UINT kCBSize = 256;
     static constexpr uint32_t kMaxObjectCount{ 1024 }; //추후에 링버퍼로 수정할 계획

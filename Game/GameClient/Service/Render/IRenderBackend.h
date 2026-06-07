@@ -24,13 +24,8 @@ struct IRenderBackend
 	virtual void SetDirectionalLight(const DirectionalLightData& light) = 0;
 	virtual void SetCamera(const CameraData& camera) = 0;
 
-	virtual void DrawMesh(
-		std::shared_ptr<IMeshResource> meshRes, 
-		std::shared_ptr<IMaterialResource> matRes,
-		const Core::Math::Matrix& world) = 0;
-
-	virtual void DrawGrid(
-		std::shared_ptr<IMeshResource> meshRes, 
+	virtual void DrawSurface(
+		std::shared_ptr<IMeshResource> meshRes,
 		std::shared_ptr<IMaterialResource> matRes,
 		const Core::Math::Matrix& world) = 0;
 

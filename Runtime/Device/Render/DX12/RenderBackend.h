@@ -27,11 +27,13 @@ public:
 	virtual bool Initialize(HWND hwnd, const Size& wndSize, const RenderConfig& renderConfig, const std::vector<ShaderRegisterDesc>& shaders) override;
 	virtual void SetDirectionalLight(const DirectionalLightData& light) override;
 	virtual void SetCamera(const CameraData& camera) override;
-	virtual void DrawMesh(std::shared_ptr<IMeshResource> meshRes, std::shared_ptr<IMaterialResource> matRes,
+	virtual void DrawSurface(
+		std::shared_ptr<IMeshResource> meshRes,
+		std::shared_ptr<IMaterialResource> matRes,
 		const Core::Math::Matrix& world) override;
-	virtual void DrawGrid(std::shared_ptr<IMeshResource> meshRes, std::shared_ptr<IMaterialResource> matRes,
-		const Core::Math::Matrix& world) override;
-	virtual void DrawUI(std::shared_ptr<IMeshResource> meshRes, std::shared_ptr<IMaterialResource> matRes,
+	virtual void DrawUI(
+		std::shared_ptr<IMeshResource> meshRes, 
+		std::shared_ptr<IMaterialResource> matRes,
 		const Core::Math::Matrix& world) override;
 	virtual void Resize(const Size& size) override;
 	virtual void Update() override;

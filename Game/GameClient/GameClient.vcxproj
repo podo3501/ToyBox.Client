@@ -172,6 +172,7 @@
     <ClInclude Include="Service\Render\Desc\GridMaterialDesc.h" />
     <ClInclude Include="Service\Render\Desc\MaterialDesc.h" />
     <ClInclude Include="Service\Render\Desc\MeshDesc.h" />
+    <ClInclude Include="Service\Render\Desc\PhongMaterialDesc.h" />
     <ClInclude Include="Service\Render\Desc\SurfaceMaterialDesc.h" />
     <ClInclude Include="Service\Render\Desc\PbrMaterialDesc.h" />
     <ClInclude Include="Service\Render\Desc\RenderState.h" />

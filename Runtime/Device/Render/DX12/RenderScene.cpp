@@ -1,52 +1,47 @@
 #include "pch.h"
 #include "RenderScene.h"
 #include "RenderSortKey.h"
-#include "MaterialResource/PbrMaterialResource.h"
+#include "MaterialResource/SurfaceMaterialResource.h"
 
-void RenderScene::AddOpaque(const DrawItem& item)
+void RenderScene::AddSurface(const DrawItem& item)
 {
     DrawItem newItem = item;
-    auto pbrMaterial = static_cast<PbrMaterialResource*>(item.material.get());
-    newItem.sortKey = RenderSortKey::Build(pbrMaterial->GetPipelineState().GetHash());
-    
-    m_opaqueDraws.push_back(newItem);
-}
+    auto material = static_cast<SurfaceMaterialResource*>(item.material.get());
+    newItem.sortKey = RenderSortKey::Build(material->GetPipelineState().GetHash());
 
-void RenderScene::AddGrid(const DrawItem& item)
-{
-    DrawItem newItem = item;
-    auto meshMaterial = static_cast<PbrMaterialResource*>(item.material.get());
-    newItem.sortKey = RenderSortKey::Build(meshMaterial->GetPipelineState().GetHash());
-
-    m_gridDraws.push_back(newItem);
+    m_surfaceDraws[material->GetSurfaceType()].push_back(newItem);
 }
 
 void RenderScene::AddUI(const DrawItem& item)
 {
+    //UI Batching & Layer Breaking 문제가 있기 때문에 z-order 값을 만들고 그것을 넣어주면 그 z값으로 sorting 해야 한다.
+    //sorting 후 batch가 가능하면 batch 해 주기.
     m_uiDraws.push_back(item);
 }
 
 void RenderScene::SortDraws()
 {
-    //sort opaque
-    std::sort(
-        m_opaqueDraws.begin(),
-        m_opaqueDraws.end(),
-        [](const DrawItem& a, const DrawItem& b)
-        {
-            return a.sortKey < b.sortKey;
-        });
+    for (auto& [type, drawVector] : m_surfaceDraws)
+    {
+        std::sort(
+            drawVector.begin(),
+            drawVector.end(),
+            [](const DrawItem& a, const DrawItem& b)
+            {
+                return a.sortKey < b.sortKey;
+            });
+    }
 }
 
 void RenderScene::Clear()
 {
-    OpaqueClear();
+    SurfaceClear();
     UIClear();
 }
 
-void RenderScene::OpaqueClear()
+void RenderScene::SurfaceClear()
 {
-    m_opaqueDraws.clear();
+    m_surfaceDraws.clear();
 }
 
 void RenderScene::UIClear()

@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "MaterialSystem.h"
+#include "MaterialResource/PhongMaterialResource.h"
 #include "MaterialResource/PbrMaterialResource.h"
 #include "MaterialResource/GridMaterialResource.h"
 #include "Descriptor/DescriptorFactory.h"
@@ -7,22 +8,39 @@
 #include "TextureSystem.h"
 #include "TextureResource.h"
 
+template <typename DescType, typename ResourceType>
+void MaterialSystem::AddDefaultSurface()
+{
+    DescType desc{};
+    auto defaultMat = std::make_shared<ResourceType>(desc);
+    SetDefaultTextures(defaultMat.get());
+    m_defaultSurfaceMaterials[desc.surfType] = defaultMat;
+}
+
 MaterialSystem::~MaterialSystem() = default;
 MaterialSystem::MaterialSystem(ID3D12Device* device, DescriptorAllocator* srvAllocator, TextureSystem* texSystem) :
     m_descriptorFactory{ make_unique<DescriptorFactory>(device, srvAllocator) },
 	m_texSystem{ texSystem }
 {
-    PbrMaterialDesc pbrDesc;
-    m_defaultPbrMaterial = make_shared<PbrMaterialResource>(pbrDesc);
-    SetDefaultTextures(m_defaultPbrMaterial.get());
-
-    GridMaterialDesc gridDesc;
-    m_defaultGridMaterial = make_shared<GridMaterialResource>(gridDesc);
-    SetDefaultTextures(m_defaultGridMaterial.get());
+    AddDefaultSurface<PhongMaterialDesc, PhongMaterialResource>();
+    AddDefaultSurface<PbrMaterialDesc, PbrMaterialResource>();
+    AddDefaultSurface<GridMaterialDesc, GridMaterialResource>();
 
     UIMaterialDesc uiDesc;
     m_defaultUIMaterial = make_shared<UIMaterialResource>(uiDesc);
     SetDefaultTextures(m_defaultUIMaterial.get());
+}
+
+static std::shared_ptr<MaterialResource> CreateSurfaceResource(const SurfaceMaterialDesc& surfaceDesc)
+{
+    switch (surfaceDesc.surfType)
+    {
+    case SurfaceType::Phong: return std::make_shared<PhongMaterialResource>(surfaceDesc);
+    case SurfaceType::PBR: return std::make_shared<PbrMaterialResource>(surfaceDesc);
+    case SurfaceType::Grid: return std::make_shared<GridMaterialResource>(surfaceDesc);
+    }
+
+    return nullptr;
 }
 
 shared_ptr<IMaterialResource> MaterialSystem::CreateMaterialResource(const MaterialDesc& matDesc)
@@ -32,15 +50,8 @@ shared_ptr<IMaterialResource> MaterialSystem::CreateMaterialResource(const Mater
     switch (matDesc.domain)
     {
     case MaterialDomain::Surface:
-    {
-        const auto& meshDesc = static_cast<const SurfaceMaterialDesc&>(matDesc);
-
-        if (meshDesc.surfType == SurfaceType::PBR) 
-            matRes = make_shared<PbrMaterialResource>(matDesc);
-        else if (meshDesc.surfType == SurfaceType::Grid)
-            matRes = make_shared<GridMaterialResource>(matDesc);
+        matRes = CreateSurfaceResource(static_cast<const SurfaceMaterialDesc&>(matDesc));
         break;
-    }
     case MaterialDomain::UserInterface:
         matRes = make_shared<UIMaterialResource>(matDesc);
         break;
@@ -112,6 +123,17 @@ void MaterialSystem::Update()
     }
 }
 
-shared_ptr<IMaterialResource> MaterialSystem::GetDefaultPbrMaterial() { return m_defaultPbrMaterial; }
-shared_ptr<IMaterialResource> MaterialSystem::GetDefaultGridMaterial() { return m_defaultGridMaterial; }
-shared_ptr<IMaterialResource> MaterialSystem::GetDefaultUIMaterial() { return m_defaultUIMaterial; }
+std::shared_ptr<IMaterialResource> MaterialSystem::GetDefaultSurfaceMaterial(SurfaceType surfType)
+{
+    auto it = m_defaultSurfaceMaterials.find(surfType);
+    if (it != m_defaultSurfaceMaterials.end())
+    {
+        return it->second;
+    }
+    return nullptr;
+}
+
+shared_ptr<IMaterialResource> MaterialSystem::GetDefaultUIMaterial()
+{
+    return m_defaultUIMaterial;
+}

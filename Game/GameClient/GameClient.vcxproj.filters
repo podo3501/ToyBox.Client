@@ -658,6 +658,9 @@
     <ClInclude Include="Service\Render\Desc\GridMaterialDesc.h">
       <Filter>Service\Render\Desc</Filter>
     </ClInclude>
+    <ClInclude Include="Service\Render\Desc\PhongMaterialDesc.h">
+      <Filter>Service\Render\Desc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Locator">

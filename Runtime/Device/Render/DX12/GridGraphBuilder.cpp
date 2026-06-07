@@ -24,7 +24,7 @@ void GridGraphBuilder::Build(RenderGraph& graph)
         m_gridRenderer->PrepareFrame(ctx.frame.camera);
 
         std::optional<PipelineState> currentPSO;
-        for (auto& item : m_scene->GetGridDraws())
+        for (auto& item : m_scene->GetSurfaceDraws(SurfaceType::Grid))
         {
             auto mesh = static_cast<MeshResource*>(item.mesh.get());
             auto material = static_cast<GridMaterialResource*>(item.material.get());

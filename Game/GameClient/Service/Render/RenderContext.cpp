@@ -55,7 +55,7 @@ bool RenderContext::ReleaseMaterial(MaterialHandle mh)
 	return m_matRepository->Release(mh);
 }
 
-void RenderContext::DrawMesh(MeshHandle hM, MaterialHandle hMtl, const cm::Matrix& world)
+void RenderContext::DrawSurface(MeshHandle hM, MaterialHandle hMtl, const cm::Matrix& world)
 {
 	auto mesh = m_meshRepository->Get(hM);
 	if (!mesh || mesh->state != LoadState::Ready)
@@ -73,12 +73,7 @@ void RenderContext::DrawMesh(MeshHandle hM, MaterialHandle hMtl, const cm::Matri
 	else
 		matRes = nullptr;
 
-	auto& meshRes = mesh->meshRes;
-	switch (meshRes->GetVertexFormat())
-	{
-	case VertexFormat::Mesh: m_backend->DrawMesh(meshRes, matRes, world); break;
-	case VertexFormat::Grid: m_backend->DrawGrid(meshRes, matRes, world); break;
-	}
+	m_backend->DrawSurface(mesh->meshRes, matRes, world);
 }
 
 void RenderContext::DrawUI(MaterialHandle mh, const Rect& dest, const Rect* source)

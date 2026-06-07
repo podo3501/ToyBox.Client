@@ -4,7 +4,7 @@
 
 PbrMaterialResource::~PbrMaterialResource() = default;
 PbrMaterialResource::PbrMaterialResource(const MaterialDesc& desc) :
-    MaterialResource{ static_cast<size_t>(PbrTextureSlot::Count) }
+    SurfaceMaterialResource{ static_cast<uint32_t>(PbrTextureSlot::Count) }
 {
     Assert(desc.domain == MaterialDomain::Surface);
     m_desc = static_cast<const PbrMaterialDesc&>(desc);

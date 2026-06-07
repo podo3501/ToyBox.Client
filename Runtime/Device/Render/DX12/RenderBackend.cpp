@@ -7,6 +7,7 @@
 #include "TaskScheduler.h"
 #include "ResourceLoader.h"
 #include "GPUProfiler.h"
+#include "MaterialResource/SurfaceMaterialResource.h"
 #include "Renderer/Renderers.h"
 #include "TextureSystem.h"
 #include "MeshSystem.h"
@@ -121,30 +122,20 @@ void RenderBackend::EndFrame()
     m_cmd = nullptr;
 }
 
-void RenderBackend::DrawMesh(
-    std::shared_ptr<IMeshResource> meshRes, 
-    std::shared_ptr<IMaterialResource> matRes,
-    const Core::Math::Matrix& world)
-{
-    DrawItem item;
-    item.mesh = meshRes;
-    item.material = matRes ? matRes : m_matSystem->GetDefaultPbrMaterial();
-    item.world = world;
-
-    m_scene->AddOpaque(item);
-}
-
-void RenderBackend::DrawGrid(
+void RenderBackend::DrawSurface(
     std::shared_ptr<IMeshResource> meshRes,
     std::shared_ptr<IMaterialResource> matRes,
     const Core::Math::Matrix& world)
 {
+    if (!matRes)
+        matRes = m_matSystem->GetDefaultSurfaceMaterial(SurfaceType::PBR); //?!? 나중에 Phong으로 바꾸자
+    
     DrawItem item;
     item.mesh = meshRes;
-    item.material = matRes ? matRes : m_matSystem->GetDefaultGridMaterial();
+    item.material = matRes;
     item.world = world;
 
-    m_scene->AddGrid(item);
+    m_scene->AddSurface(item);
 }
 
 void RenderBackend::DrawUI(

@@ -310,6 +310,12 @@
     <ClInclude Include="Render\DX12\MaterialResource\GridMaterialResource.h">
       <Filter>Render\DX12\MaterialResource</Filter>
     </ClInclude>
+    <ClInclude Include="Render\DX12\MaterialResource\SurfaceMaterialResource.h">
+      <Filter>Render\DX12\MaterialResource</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\MaterialResource\PhongMaterialResource.h">
+      <Filter>Render\DX12\MaterialResource</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -515,6 +521,9 @@
       <Filter>Render\DX12\MaterialResource</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\MaterialResource\GridMaterialResource.cpp">
+      <Filter>Render\DX12\MaterialResource</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\MaterialResource\PhongMaterialResource.cpp">
       <Filter>Render\DX12\MaterialResource</Filter>
     </ClCompile>
   </ItemGroup>

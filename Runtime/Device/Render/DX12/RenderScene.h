@@ -5,6 +5,7 @@
 struct ITextureResource;
 struct IMaterialResource;
 struct IMeshResource;
+enum class SurfaceType;
 
 struct DrawItem
 {
@@ -18,11 +19,8 @@ struct DrawItem
 class RenderScene
 {
 public:
-    void AddOpaque(const DrawItem& item);
-    const std::vector<DrawItem>& GetOpaqueDraws() { return m_opaqueDraws; }
-
-    void AddGrid(const DrawItem& item);
-    const std::vector<DrawItem>& GetGridDraws() { return m_gridDraws; }
+    void AddSurface(const DrawItem& item);
+    const std::vector<DrawItem>& GetSurfaceDraws(SurfaceType surfType) { return m_surfaceDraws[surfType]; }
     
     void AddUI(const DrawItem& item);
     const std::vector<DrawItem>& GetUIDraws() { return m_uiDraws; }
@@ -31,10 +29,9 @@ public:
     void Clear();
 
 private:
-    void OpaqueClear();
+    void SurfaceClear();
     void UIClear();
 
-    std::vector<DrawItem> m_opaqueDraws;
-    std::vector<DrawItem> m_gridDraws;
+    std::unordered_map<SurfaceType, std::vector<DrawItem>> m_surfaceDraws;
     std::vector<DrawItem> m_uiDraws;
 };

@@ -41,6 +41,7 @@ ShaderRegisterDesc ShaderBuilder::Build(
 
     switch (model)
     {
+    case ShadingModel::Phong:
     case ShadingModel::PBR:
     case ShadingModel::UI:
     case ShadingModel::Grid:

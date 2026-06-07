@@ -34,7 +34,7 @@ cbuffer MeshFrameCB : register(b2)
     float  lightPadding;
 };
 
-cbuffer MaterialCB : register(b3)
+cbuffer PbrMaterialCB : register(b3)
 {
     uint albedoTextureIndex;
     uint normalTextureIndex;

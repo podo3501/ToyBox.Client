@@ -95,6 +95,7 @@ struct ShaderStageDesc
 
 enum class ShadingModel
 {
+    Phong,
     PBR,
     UI,
     Grid,
