@@ -18,7 +18,7 @@
 #include "RenderPass.h"
 #include "PrepareGraphBuilder.h"
 #include "OpaqueGraphBuilder.h"
-#include "GridGraphBuilder.h"
+#include "DebugSurfaceGraphBuilder.h"
 #include "PresentGraphBuilder.h"
 #include "UIGraphBuilder.h"
 #include "MeshResource.h"
@@ -125,17 +125,29 @@ void RenderBackend::EndFrame()
 void RenderBackend::DrawSurface(
     std::shared_ptr<IMeshResource> meshRes,
     std::shared_ptr<IMaterialResource> matRes,
+    MaterialDomain domain, //?!? 나중에 matRes가 service 에서 nullptr을 채워주는 식으로 간다면 이게 필요 없어진다.
     const Core::Math::Matrix& world)
 {
     if (!matRes)
-        matRes = m_matSystem->GetDefaultSurfaceMaterial(SurfaceType::PBR); //?!? 나중에 Phong으로 바꾸자
+    {
+        switch (domain)
+        {
+        case MaterialDomain::Surface: matRes = m_matSystem->GetDefaultSurfaceMaterial(SurfaceType::Phong); break;
+        case MaterialDomain::DebugSurface: matRes = m_matSystem->GetDefaultDebugSurfMaterial(); break;
+        default: Assert(false); return; //surface가 아닌게 들어왔다.
+        }
+    }
     
     DrawItem item;
     item.mesh = meshRes;
     item.material = matRes;
     item.world = world;
 
-    m_scene->AddSurface(item);
+    switch (domain)
+    {
+    case MaterialDomain::Surface: m_scene->AddSurface(item); break;
+    case MaterialDomain::DebugSurface: m_scene->AddDebugSurface(item); break;
+    }
 }
 
 void RenderBackend::DrawUI(
@@ -179,14 +191,14 @@ void RenderBackend::Render()
     graph.ImportResource(hBb, RGAccess::Present); //backbuffer가 present에서 시작한다고 알려준다.
 
     PrepareGraphBuilder prepare(m_swapChain.get(), hBb);
-    OpaqueGraphBuilder opaque(m_renderers->GetMeshRenderer(), m_scene.get(), hBb);
-    GridGraphBuilder grid(m_renderers->GetGridRenderer(), m_scene.get(), hBb);
+    OpaqueGraphBuilder opaque(m_renderers->GetSurfRenderer(), m_scene.get(), hBb);
+    DebugSurfaceGraphBuilder debugSurface(m_renderers->GetDebugSurfRenderer(), m_scene.get(), hBb);
     UIGraphBuilder ui(m_renderers->GetUIRenderer(), m_scene.get(), hBb);
     PresentGraphBuilder present(hBb);
 
     prepare.Build(graph);
     opaque.Build(graph);
-    grid.Build(graph);
+    debugSurface.Build(graph);
     ui.Build(graph);
     present.Build(graph);
 

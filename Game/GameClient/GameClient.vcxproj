@@ -169,6 +169,7 @@
     <ClInclude Include="Service\Input\KeyCode.h" />
     <ClInclude Include="Service\Input\MouseButton.h" />
     <ClInclude Include="Service\Input\MouseState.h" />
+    <ClInclude Include="Service\Render\Desc\DebugSurfaceMaterialDesc.h" />
     <ClInclude Include="Service\Render\Desc\GridMaterialDesc.h" />
     <ClInclude Include="Service\Render\Desc\MaterialDesc.h" />
     <ClInclude Include="Service\Render\Desc\MeshDesc.h" />

@@ -5,6 +5,7 @@
 enum class MaterialDomain
 {
     Surface,
+    DebugSurface,
     UserInterface
 };
 
@@ -13,7 +14,7 @@ struct MaterialDesc
     virtual ~MaterialDesc() = default;
 
     MaterialDomain domain{ MaterialDomain::Surface };
-    PipelineState pipelineState { PipelineLibrary::Get(ShadingModel::PBR, RasterPreset::Default) };
+    PipelineState pipelineState { PipelineLibrary::Get(ShadingModel::Phong, RasterPreset::Default) };
     std::vector<TextureDesc> textures;
 
     bool operator==(const MaterialDesc&) const = default;

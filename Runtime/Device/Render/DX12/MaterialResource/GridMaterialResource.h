@@ -1,8 +1,8 @@
 #pragma once
-#include "SurfaceMaterialResource.h"
+#include "DebugSurfaceMaterialResource.h"
 #include "GameClient/Service/Render/Desc/GridMaterialDesc.h"
 
-class GridMaterialResource : public SurfaceMaterialResource
+class GridMaterialResource : public DebugSurfaceMaterialResource
 {
 public:
 	~GridMaterialResource();
@@ -10,7 +10,7 @@ public:
 	GridMaterialResource(const MaterialDesc& desc);
 
 	virtual const MaterialDesc& GetMaterialDesc() const noexcept override { return m_desc; }
-	virtual SurfaceType GetSurfaceType() const noexcept override { return m_desc.surfType; }
+	virtual DebugSurfaceType GetDebugSurfaceType() const noexcept override { return m_desc.debugSurfType; }
 
 private:
 	GridMaterialDesc m_desc;

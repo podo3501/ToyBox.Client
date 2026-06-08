@@ -2,6 +2,7 @@
 #include "RenderScene.h"
 #include "RenderSortKey.h"
 #include "MaterialResource/SurfaceMaterialResource.h"
+#include "MaterialResource/DebugSurfaceMaterialResource.h"
 
 void RenderScene::AddSurface(const DrawItem& item)
 {
@@ -9,7 +10,16 @@ void RenderScene::AddSurface(const DrawItem& item)
     auto material = static_cast<SurfaceMaterialResource*>(item.material.get());
     newItem.sortKey = RenderSortKey::Build(material->GetPipelineState().GetHash());
 
-    m_surfaceDraws[material->GetSurfaceType()].push_back(newItem);
+    m_surfaceDraws.push_back(newItem);
+}
+
+void RenderScene::AddDebugSurface(const DrawItem& item)
+{
+    DrawItem newItem = item;
+    auto material = static_cast<DebugSurfaceMaterialResource*>(item.material.get());
+    newItem.sortKey = RenderSortKey::Build(material->GetPipelineState().GetHash());
+
+    m_debugSurfaceDraws.push_back(newItem);
 }
 
 void RenderScene::AddUI(const DrawItem& item)
@@ -21,16 +31,13 @@ void RenderScene::AddUI(const DrawItem& item)
 
 void RenderScene::SortDraws()
 {
-    for (auto& [type, drawVector] : m_surfaceDraws)
-    {
-        std::sort(
-            drawVector.begin(),
-            drawVector.end(),
-            [](const DrawItem& a, const DrawItem& b)
-            {
-                return a.sortKey < b.sortKey;
-            });
-    }
+    std::sort(
+        m_surfaceDraws.begin(),
+        m_surfaceDraws.end(),
+        [](const DrawItem& a, const DrawItem& b)
+        {
+            return a.sortKey < b.sortKey;
+        });
 }
 
 void RenderScene::Clear()

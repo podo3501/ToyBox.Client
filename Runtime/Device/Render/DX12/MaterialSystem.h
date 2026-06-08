@@ -18,6 +18,7 @@ public:
 
 	void Update();
 	std::shared_ptr<IMaterialResource> GetDefaultSurfaceMaterial(SurfaceType surfType);
+	std::shared_ptr<IMaterialResource> GetDefaultDebugSurfMaterial();
 	std::shared_ptr<IMaterialResource> GetDefaultUIMaterial();
 
 private:
@@ -31,5 +32,6 @@ private:
 	std::vector<std::shared_ptr<MaterialResource>> m_pendingMaterials;
 
 	unordered_map<SurfaceType, shared_ptr<MaterialResource>> m_defaultSurfaceMaterials;
+	shared_ptr<MaterialResource> m_defaultDebugSurfMats;
 	shared_ptr<MaterialResource> m_defaultUIMaterial; //surface와 ui는 많이 다르기 때문에 따로 간다.
 };

@@ -1,11 +1,11 @@
 #pragma once
-#include "SurfaceMaterialDesc.h"
+#include "DebugSurfaceMaterialDesc.h"
 
-struct GridMaterialDesc : public SurfaceMaterialDesc
+struct GridMaterialDesc : public DebugSurfaceMaterialDesc
 {
     GridMaterialDesc()
     {
-        surfType = SurfaceType::Grid;
+        debugSurfType = DebugSurfaceType::Grid;
         pipelineState = PipelineLibrary::Get(
             ShadingModel::Grid, 
             RasterPreset::Default, 
@@ -13,5 +13,5 @@ struct GridMaterialDesc : public SurfaceMaterialDesc
     }
 
     bool operator==(const GridMaterialDesc&) const = default;
-    size_t GetHash() const { return Core::HashOf(SurfaceMaterialDesc::GetHash()); }
+    size_t GetHash() const { return Core::HashOf(DebugSurfaceMaterialDesc::GetHash()); }
 };

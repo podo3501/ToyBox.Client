@@ -17,6 +17,7 @@ struct MeshAsset;
 struct ShaderAsset;
 struct MeshDesc;
 struct MeshMaterialDesc;
+struct ResolvedDrawData;
 class TextureRepository;
 class MaterialRepository;
 class MeshRepository;
@@ -40,12 +41,14 @@ public:
 	bool ReleaseMaterial(MaterialHandle mh);
 
 	void DrawSurface(MeshHandle hM, MaterialHandle hMtl, const Core::Math::Matrix& world);
+	void DrawDebugSurface(MeshHandle hM, MaterialHandle hMtl, const Core::Math::Matrix& world);
 	void DrawUI(MaterialHandle mh, const Rect& dest, const Rect* source = nullptr);
 	void Update();
 	void ReleaseAll();
 
 private:
 	std::shared_ptr<MeshAsset> CreateUIQuad();
+	std::optional<ResolvedDrawData> ResolveResources(MeshHandle hM, MaterialHandle hMtl);
 
 	IRenderBackend* m_backend{ nullptr };
 	unique_ptr<MeshRepository> m_meshRepository;

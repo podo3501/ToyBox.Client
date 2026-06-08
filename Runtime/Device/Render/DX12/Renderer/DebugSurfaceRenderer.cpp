@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "GridRenderer.h"
+#include "DebugSurfaceRenderer.h"
 #include "../ShaderSystem.h"
 #include "RootSignatureBuilder.h"
 #include "../Command/CommandList.h"
@@ -10,13 +10,13 @@
 
 namespace cm = Core::Math;
 
-GridRenderer::~GridRenderer() = default;
-GridRenderer::GridRenderer(ID3D12Device* device, ShaderSystem* shaderSystem) :
+DebugSurfaceRenderer::~DebugSurfaceRenderer() = default;
+DebugSurfaceRenderer::DebugSurfaceRenderer(ID3D12Device* device, ShaderSystem* shaderSystem) :
     m_device{ device },
     m_shaderSystem{ shaderSystem }
 {}
 
-bool GridRenderer::Initialize()
+bool DebugSurfaceRenderer::Initialize()
 {
     m_pipelineCache.Initialize(m_device, m_shaderSystem);
 
@@ -28,7 +28,7 @@ bool GridRenderer::Initialize()
     return true;
 }
 
-bool GridRenderer::CreateRootSignature()
+bool DebugSurfaceRenderer::CreateRootSignature()
 {
     RootSignatureBuilder builder;
 
@@ -40,12 +40,12 @@ bool GridRenderer::CreateRootSignature()
     return m_rootSignature != nullptr;
 }
 
-void GridRenderer::CreateDefaultPSOs()
+void DebugSurfaceRenderer::CreateDefaultPSOs()
 {
     CreatePSO(PipelineLibrary::Get(ShadingModel::Grid, RasterPreset::Default, PrimitiveTopologyType::Line));
 }
 
-void GridRenderer::CreateConstantBuffers()
+void DebugSurfaceRenderer::CreateConstantBuffers()
 {
     constexpr UINT objectBufferSize = kMaxObjectCount * kCBSize;
     m_objectCBAllocator.Initialize(m_device, objectBufferSize);
@@ -54,7 +54,7 @@ void GridRenderer::CreateConstantBuffers()
     m_frameCBAllocator.Initialize(m_device, frameBufferSize);
 }
 
-void GridRenderer::BindCommonState(CommandList& cmd)
+void DebugSurfaceRenderer::BindCommonState(CommandList& cmd)
 {
     ID3D12DescriptorHeap* heaps[] = { m_srvHeap };
     cmd->SetDescriptorHeaps(1, heaps);
@@ -62,13 +62,16 @@ void GridRenderer::BindCommonState(CommandList& cmd)
     cmd->SetGraphicsRootSignature(m_rootSignature.Get());
 }
 
-void GridRenderer::BindPipeline(CommandList& cmd, const PipelineState& pipelineState)
+void DebugSurfaceRenderer::BindPipeline(CommandList& cmd, const PipelineState& pipelineState)
 {
+    if (m_pipelineState && *m_pipelineState == pipelineState)
+        return;
+
     cmd->SetPipelineState(GetPipeline(pipelineState));
     m_pipelineState = pipelineState;
 }
 
-ID3D12PipelineState* GridRenderer::GetPipeline(const PipelineState& pipelineState)
+ID3D12PipelineState* DebugSurfaceRenderer::GetPipeline(const PipelineState& pipelineState)
 {
     auto* pipeline = m_pipelineCache.Find(pipelineState);
     if (pipeline)
@@ -77,7 +80,7 @@ ID3D12PipelineState* GridRenderer::GetPipeline(const PipelineState& pipelineStat
     return CreatePSO(pipelineState);
 }
 
-ID3D12PipelineState* GridRenderer::CreatePSO(const PipelineState& pipelineState)
+ID3D12PipelineState* DebugSurfaceRenderer::CreatePSO(const PipelineState& pipelineState)
 {
     return m_pipelineCache.GetOrCreate(
         pipelineState,
@@ -92,8 +95,10 @@ ID3D12PipelineState* GridRenderer::CreatePSO(const PipelineState& pipelineState)
         });
 }
 
-void GridRenderer::PrepareFrame(const CameraData& camera)
+void DebugSurfaceRenderer::PrepareFrame(const CameraData& camera)
 {
+    m_pipelineState = std::nullopt;
+
     m_objectCBAllocator.Reset();
     m_frameCBAllocator.Reset();
 
@@ -108,7 +113,7 @@ void GridRenderer::PrepareFrame(const CameraData& camera)
     m_frameCBAddress = m_frameCBAllocator.AllocateConstant(frame);
 }
 
-void GridRenderer::Draw(CommandList& cmd, MeshResource& mesh, const cm::Matrix& world)
+void DebugSurfaceRenderer::Draw(CommandList& cmd, MeshResource& mesh, const cm::Matrix& world)
 {
     auto objectCBAddress = UpdateObjectCB(world);
     uint32_t vbIndex = mesh.GetVertexHeapIndex();
@@ -117,7 +122,7 @@ void GridRenderer::Draw(CommandList& cmd, MeshResource& mesh, const cm::Matrix& 
     cmd->SetGraphicsRootConstantBufferView(1, m_frameCBAddress);
     cmd->SetGraphicsRootConstantBufferView(2, objectCBAddress);
 
-    switch (m_pipelineState.topologyType)
+    switch (m_pipelineState->topologyType)
     {
     case PrimitiveTopologyType::Triangle:
         cmd->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -131,7 +136,7 @@ void GridRenderer::Draw(CommandList& cmd, MeshResource& mesh, const cm::Matrix& 
     cmd->DrawInstanced(mesh.GetVertexCount(), 1, 0, 0);
 }
 
-D3D12_GPU_VIRTUAL_ADDRESS GridRenderer::UpdateObjectCB(const cm::Matrix& world)
+D3D12_GPU_VIRTUAL_ADDRESS DebugSurfaceRenderer::UpdateObjectCB(const cm::Matrix& world)
 {
     ObjectCB obj{};
 

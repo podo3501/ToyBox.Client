@@ -15,6 +15,18 @@ namespace SurfaceMatDescFactory
 
             return desc;
         }
+
+        PhongMaterialDesc CreateWireframe()
+        {
+            PhongMaterialDesc desc;
+
+            desc.pipelineState = PipelineLibrary::Get(
+                ShadingModel::Phong,
+                RasterPreset::Wireframe,
+                PrimitiveTopologyType::Triangle);
+
+            return desc;
+        }
     }
 
     namespace PBR
@@ -30,20 +42,11 @@ namespace SurfaceMatDescFactory
 
             return desc;
         }
-
-        PbrMaterialDesc CreateWireframe()
-        {
-            PbrMaterialDesc desc;
-
-            desc.pipelineState = PipelineLibrary::Get(
-                ShadingModel::PBR,
-                RasterPreset::Wireframe,
-                PrimitiveTopologyType::Triangle);
-
-            return desc;
-        }
     }
-    
+}
+
+namespace DebugSurfaceMatDescFactory
+{
     namespace Grid
     {
         GridMaterialDesc CreateGrid()

@@ -244,7 +244,7 @@
     <ClInclude Include="Render\DX12\Renderer\Renderers.h">
       <Filter>Render\DX12\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\Renderer\MeshRenderer.h">
+    <ClInclude Include="Render\DX12\Renderer\SurfaceRenderer.h">
       <Filter>Render\DX12\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="Render\DX12\Renderer\UIRenderer.h">
@@ -289,13 +289,13 @@
     <ClInclude Include="Render\DX12\Descriptor\DescriptorFactory.h">
       <Filter>Render\DX12\Descriptor</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\Renderer\GridRenderer.h">
+    <ClInclude Include="Render\DX12\Renderer\DebugSurfaceRenderer.h">
       <Filter>Render\DX12\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="Render\DX12\Renderer\RenderConstants.h">
       <Filter>Render\DX12\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\GridGraphBuilder.h">
+    <ClInclude Include="Render\DX12\DebugSurfaceGraphBuilder.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
     <ClInclude Include="Render\DX12\MaterialResource\MaterialResource.h">
@@ -314,6 +314,9 @@
       <Filter>Render\DX12\MaterialResource</Filter>
     </ClInclude>
     <ClInclude Include="Render\DX12\MaterialResource\PhongMaterialResource.h">
+      <Filter>Render\DX12\MaterialResource</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\MaterialResource\DebugSurfaceMaterialResource.h">
       <Filter>Render\DX12\MaterialResource</Filter>
     </ClInclude>
   </ItemGroup>
@@ -469,7 +472,7 @@
     <ClCompile Include="Render\DX12\Renderer\Renderers.cpp">
       <Filter>Render\DX12\Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="Render\DX12\Renderer\MeshRenderer.cpp">
+    <ClCompile Include="Render\DX12\Renderer\SurfaceRenderer.cpp">
       <Filter>Render\DX12\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\Renderer\UIRenderer.cpp">
@@ -505,10 +508,10 @@
     <ClCompile Include="Render\DX12\Descriptor\DescriptorFactory.cpp">
       <Filter>Render\DX12\Descriptor</Filter>
     </ClCompile>
-    <ClCompile Include="Render\DX12\Renderer\GridRenderer.cpp">
+    <ClCompile Include="Render\DX12\Renderer\DebugSurfaceRenderer.cpp">
       <Filter>Render\DX12\Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="Render\DX12\GridGraphBuilder.cpp">
+    <ClCompile Include="Render\DX12\DebugSurfaceGraphBuilder.cpp">
       <Filter>Render\DX12</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\MaterialResource\PbrMaterialResource.cpp">

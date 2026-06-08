@@ -30,6 +30,7 @@ public:
 	virtual void DrawSurface(
 		std::shared_ptr<IMeshResource> meshRes,
 		std::shared_ptr<IMaterialResource> matRes,
+		MaterialDomain domain,
 		const Core::Math::Matrix& world) override;
 	virtual void DrawUI(
 		std::shared_ptr<IMeshResource> meshRes, 

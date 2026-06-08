@@ -6,6 +6,7 @@ struct ITextureResource;
 struct IMaterialResource;
 struct IMeshResource;
 enum class SurfaceType;
+enum class DebugSurfaceType;
 
 struct DrawItem
 {
@@ -20,7 +21,10 @@ class RenderScene
 {
 public:
     void AddSurface(const DrawItem& item);
-    const std::vector<DrawItem>& GetSurfaceDraws(SurfaceType surfType) { return m_surfaceDraws[surfType]; }
+    const std::vector<DrawItem>& GetSurfaceDraws() { return m_surfaceDraws; }
+
+    void AddDebugSurface(const DrawItem& item);
+    const std::vector<DrawItem>& GetDebugSurfaceDraws() { return m_debugSurfaceDraws; }
     
     void AddUI(const DrawItem& item);
     const std::vector<DrawItem>& GetUIDraws() { return m_uiDraws; }
@@ -32,6 +36,7 @@ private:
     void SurfaceClear();
     void UIClear();
 
-    std::unordered_map<SurfaceType, std::vector<DrawItem>> m_surfaceDraws;
+    std::vector<DrawItem> m_surfaceDraws;
+    std::vector<DrawItem> m_debugSurfaceDraws;
     std::vector<DrawItem> m_uiDraws;
 };

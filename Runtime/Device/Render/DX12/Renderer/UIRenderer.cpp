@@ -83,12 +83,16 @@ void UIRenderer::BindCommonState(CommandList& cmd)
 
 void UIRenderer::BindPipeline(CommandList& cmd, const PipelineState& pipelineState)
 {
+    if (m_pipelineState && *m_pipelineState == pipelineState)
+        return;
+
     cmd->SetPipelineState(GetPipeline(pipelineState));
     m_pipelineState = pipelineState;
 }
 
 void UIRenderer::PrepareFrame()
 {
+    m_pipelineState = std::nullopt;
     m_uiFrameCBAllocator.Reset();
 }
 
@@ -119,7 +123,7 @@ void UIRenderer::Draw(
     auto gpuAddress = m_uiFrameCBAllocator.AllocateConstant(frameCB);
     cmd->SetGraphicsRootConstantBufferView(1, gpuAddress);
 
-    switch (m_pipelineState.topologyType)
+    switch (m_pipelineState->topologyType)
     {
     case PrimitiveTopologyType::Triangle:
         cmd->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);

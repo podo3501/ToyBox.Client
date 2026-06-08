@@ -24,7 +24,10 @@ MaterialSystem::MaterialSystem(ID3D12Device* device, DescriptorAllocator* srvAll
 {
     AddDefaultSurface<PhongMaterialDesc, PhongMaterialResource>();
     AddDefaultSurface<PbrMaterialDesc, PbrMaterialResource>();
-    AddDefaultSurface<GridMaterialDesc, GridMaterialResource>();
+
+    GridMaterialDesc gridDesc;
+    m_defaultDebugSurfMats = make_shared<GridMaterialResource>(gridDesc);
+    SetDefaultTextures(m_defaultDebugSurfMats.get());
 
     UIMaterialDesc uiDesc;
     m_defaultUIMaterial = make_shared<UIMaterialResource>(uiDesc);
@@ -37,7 +40,6 @@ static std::shared_ptr<MaterialResource> CreateSurfaceResource(const SurfaceMate
     {
     case SurfaceType::Phong: return std::make_shared<PhongMaterialResource>(surfaceDesc);
     case SurfaceType::PBR: return std::make_shared<PbrMaterialResource>(surfaceDesc);
-    case SurfaceType::Grid: return std::make_shared<GridMaterialResource>(surfaceDesc);
     }
 
     return nullptr;
@@ -51,6 +53,9 @@ shared_ptr<IMaterialResource> MaterialSystem::CreateMaterialResource(const Mater
     {
     case MaterialDomain::Surface:
         matRes = CreateSurfaceResource(static_cast<const SurfaceMaterialDesc&>(matDesc));
+        break;
+    case MaterialDomain::DebugSurface:
+        matRes = std::make_shared<GridMaterialResource>(matDesc);
         break;
     case MaterialDomain::UserInterface:
         matRes = make_shared<UIMaterialResource>(matDesc);
@@ -131,6 +136,11 @@ std::shared_ptr<IMaterialResource> MaterialSystem::GetDefaultSurfaceMaterial(Sur
         return it->second;
     }
     return nullptr;
+}
+
+shared_ptr<IMaterialResource> MaterialSystem::GetDefaultDebugSurfMaterial()
+{
+    return m_defaultDebugSurfMats;
 }
 
 shared_ptr<IMaterialResource> MaterialSystem::GetDefaultUIMaterial()

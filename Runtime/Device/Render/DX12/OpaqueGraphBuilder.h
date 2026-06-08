@@ -3,18 +3,18 @@
 
 class RenderGraph;
 class RenderScene;
-class MeshRenderer;
+class SurfaceRenderer;
 
 class OpaqueGraphBuilder
 {
 public:
     ~OpaqueGraphBuilder();
     OpaqueGraphBuilder() = delete;
-    OpaqueGraphBuilder(MeshRenderer* meshRenderer, RenderScene* scene, RGHandle hBb);
+    OpaqueGraphBuilder(SurfaceRenderer* surfRenderer, RenderScene* scene, RGHandle hBb);
     void Build(RenderGraph& graph);
     
 private:
-    MeshRenderer* m_meshRenderer{ nullptr };
+    SurfaceRenderer* m_surfRenderer{ nullptr };
     RenderScene* m_scene{ nullptr };
     RGHandle m_hBb;
 };

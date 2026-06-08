@@ -3,14 +3,14 @@
 #include "RenderPass.h"
 #include "RenderGraph.h"
 #include "RenderScene.h"
-#include "Renderer/MeshRenderer.h"
+#include "Renderer/SurfaceRenderer.h"
 #include "MeshResource.h"
 #include "MaterialResource/PhongMaterialResource.h"
 #include "MaterialResource/PbrMaterialResource.h"
 
 OpaqueGraphBuilder::~OpaqueGraphBuilder() = default;
-OpaqueGraphBuilder::OpaqueGraphBuilder(MeshRenderer* meshRenderer, RenderScene* scene, RGHandle hBb) :
-    m_meshRenderer{ meshRenderer },
+OpaqueGraphBuilder::OpaqueGraphBuilder(SurfaceRenderer* surfRenderer, RenderScene* scene, RGHandle hBb) :
+    m_surfRenderer{ surfRenderer },
     m_scene{ scene }, 
     m_hBb { hBb }
 {}
@@ -21,38 +21,16 @@ void OpaqueGraphBuilder::Build(RenderGraph& graph)
     opaque.dependsOn.push_back("Prepare");
     opaque.writes.push_back({ m_hBb, RGAccess::RTV });
     opaque.gpuExecute = [this](CommandList& cmd, TaskContext& ctx) {
-        m_meshRenderer->BindCommonState(cmd);
-        m_meshRenderer->PrepareFrame(ctx.frame.light, ctx.frame.camera);
+        m_surfRenderer->BindCommonState(cmd);
+        m_surfRenderer->PrepareFrame(ctx.frame.light, ctx.frame.camera);
 
-        std::optional<PipelineState> currentPSO;
-        for (auto& item : m_scene->GetSurfaceDraws(SurfaceType::Phong))
+        for (auto& item : m_scene->GetSurfaceDraws())
         {
             auto mesh = static_cast<MeshResource*>(item.mesh.get());
-            auto material = static_cast<PhongMaterialResource*>(item.material.get());
+            auto material = static_cast<MaterialResource*>(item.material.get());
 
-            const PipelineState& nextPSO = material->GetPipelineState();
-            if (!currentPSO || *currentPSO != nextPSO)
-            {
-                m_meshRenderer->BindPipeline(cmd, nextPSO);
-                currentPSO = nextPSO;
-            }
-
-            m_meshRenderer->Draw(cmd, *mesh, *material, item.world);
-        }
-
-        for (auto& item : m_scene->GetSurfaceDraws(SurfaceType::PBR))
-        {
-            auto mesh = static_cast<MeshResource*>(item.mesh.get());
-            auto material = static_cast<PbrMaterialResource*>(item.material.get());
-
-            const PipelineState& nextPSO = material->GetPipelineState();
-            if (!currentPSO || *currentPSO != nextPSO)
-            {
-                m_meshRenderer->BindPipeline(cmd, nextPSO);
-                currentPSO = nextPSO;
-            }
-
-            m_meshRenderer->Draw(cmd, *mesh, *material, item.world);
+            m_surfRenderer->BindPipeline(cmd, material->GetPipelineState());
+            m_surfRenderer->Draw(cmd, *mesh, *material, item.world);
         }
         };
 }

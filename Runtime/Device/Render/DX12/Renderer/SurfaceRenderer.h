@@ -16,26 +16,24 @@ struct PbrSurface;
 struct PhongSurface;
 class CommandList;
 class MeshResource;
-class PbrMaterialResource;
-class PhongMaterialResource;
+class MaterialResource;
 class ShaderSystem;
 
 using Microsoft::WRL::ComPtr;
 
-class MeshRenderer
+class SurfaceRenderer
 {
 public:
-    ~MeshRenderer();
-    MeshRenderer() = delete;
-    explicit MeshRenderer(ID3D12Device* device, ShaderSystem* shaderSystem);
+    ~SurfaceRenderer();
+    SurfaceRenderer() = delete;
+    explicit SurfaceRenderer(ID3D12Device* device, ShaderSystem* shaderSystem);
 
     bool Initialize();
     void BindCommonState(CommandList& cmd);
     void BindPipeline(CommandList& cmd, const PipelineState& pipelineState);
     void SetSRVHeap(ID3D12DescriptorHeap* heap) { m_srvHeap = heap; }
     void PrepareFrame(const DirectionalLightData& light, const CameraData& camera);
-    void Draw(CommandList& cmd, MeshResource& mesh, PbrMaterialResource& pbrMaterial, const Core::Math::Matrix& world);
-    void Draw(CommandList& cmd, MeshResource& mesh, PhongMaterialResource& phongMaterial, const Core::Math::Matrix& world);
+    void Draw(CommandList& cmd, MeshResource& mesh, MaterialResource& material, const Core::Math::Matrix& world);
     
 private:
     bool CreateRootSignature();
@@ -46,8 +44,7 @@ private:
     ID3D12PipelineState* GetPipeline(const PipelineState& pipelineState);
 
     D3D12_GPU_VIRTUAL_ADDRESS UpdateObjectCB(const Core::Math::Matrix& world);
-    D3D12_GPU_VIRTUAL_ADDRESS UpdateMaterialCB(const PbrSurface& surface, std::vector<UINT> textureIndices);
-    D3D12_GPU_VIRTUAL_ADDRESS UpdateMaterialCB(const PhongSurface& surface, std::vector<UINT> textureIndices);
+    D3D12_GPU_VIRTUAL_ADDRESS UpdateMaterialCB(MaterialResource& material);
 
     static constexpr UINT kCBSize = 256;
     static constexpr uint32_t kMaxObjectCount{ 1024 }; //추후에 링버퍼로 수정할 계획
@@ -58,7 +55,7 @@ private:
     ComPtr<ID3D12RootSignature> m_rootSignature;
     ID3D12DescriptorHeap* m_srvHeap{ nullptr };
 
-    PipelineState m_pipelineState;
+    std::optional<PipelineState> m_pipelineState{ nullopt };
     PipelineCache m_pipelineCache;
 
     FrameUploadAllocator m_objectCBAllocator;

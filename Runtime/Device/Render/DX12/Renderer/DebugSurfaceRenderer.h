@@ -10,12 +10,12 @@ class MeshResource;
 
 using Microsoft::WRL::ComPtr;
 
-class GridRenderer
+class DebugSurfaceRenderer
 {
 public:
-    ~GridRenderer();
-    GridRenderer() = delete;
-    explicit GridRenderer(ID3D12Device* device, ShaderSystem* shaderSystem);
+    ~DebugSurfaceRenderer();
+    DebugSurfaceRenderer() = delete;
+    explicit DebugSurfaceRenderer(ID3D12Device* device, ShaderSystem* shaderSystem);
 
     bool Initialize();
     void BindCommonState(CommandList& cmd);
@@ -43,7 +43,7 @@ private:
 
     ID3D12DescriptorHeap* m_srvHeap{ nullptr };
 
-    PipelineState m_pipelineState;
+    std::optional<PipelineState> m_pipelineState{ nullopt };
     PipelineCache m_pipelineCache;
 
     FrameUploadAllocator m_objectCBAllocator;

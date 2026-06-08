@@ -4,13 +4,12 @@
 enum class SurfaceType
 {
     Phong,
-    PBR,
-    Grid
+    PBR
 };
 
 struct SurfaceMaterialDesc : public MaterialDesc
 {
-    SurfaceType surfType{ SurfaceType::PBR };
+    SurfaceType surfType{ SurfaceType::Phong };
 
     bool operator==(const SurfaceMaterialDesc&) const = default;
     size_t GetHash() const { return Core::HashOf(surfType, MaterialDesc::GetHash()); }

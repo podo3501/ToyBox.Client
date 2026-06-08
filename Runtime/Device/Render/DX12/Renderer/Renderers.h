@@ -3,8 +3,8 @@
 
 struct Size;
 class ShaderSystem;
-class MeshRenderer;
-class GridRenderer;
+class SurfaceRenderer;
+class DebugSurfaceRenderer;
 class UIRenderer;
 
 class Renderers
@@ -19,12 +19,12 @@ public:
         ID3D12DescriptorHeap* srvHeap);
     void SetScreenSize(const Size& screenSize);
 
-    MeshRenderer* GetMeshRenderer() const { return m_meshRenderer.get(); }
-    GridRenderer* GetGridRenderer() const { return m_gridRenderer.get(); }
+    SurfaceRenderer* GetSurfRenderer() const { return m_surfRenderer.get(); }
+    DebugSurfaceRenderer* GetDebugSurfRenderer() const { return m_debugSurfRenderer.get(); }
     UIRenderer* GetUIRenderer() const { return m_uiRenderer.get(); }
 
 private:
-    std::unique_ptr<MeshRenderer> m_meshRenderer;
-    std::unique_ptr<GridRenderer> m_gridRenderer;
+    std::unique_ptr<SurfaceRenderer> m_surfRenderer;
+    std::unique_ptr<DebugSurfaceRenderer> m_debugSurfRenderer;
     std::unique_ptr<UIRenderer> m_uiRenderer;
 };

@@ -8,6 +8,12 @@
 #include "Resource/IMeshResource.h"
 #include "IRenderBackend.h"
 
+struct ResolvedDrawData
+{
+	std::shared_ptr<IMeshResource> meshRes;
+	std::shared_ptr<IMaterialResource> matRes;
+};
+
 namespace cm = Core::Math;
 
 RenderContext::~RenderContext() { m_backend->WaitIdle(); } //리소스를 RenderService가 들고 있기 때문에 gpu의 활동을 중지 시키고 리소스 삭제->backend 순으로 된다.
@@ -57,42 +63,24 @@ bool RenderContext::ReleaseMaterial(MaterialHandle mh)
 
 void RenderContext::DrawSurface(MeshHandle hM, MaterialHandle hMtl, const cm::Matrix& world)
 {
-	auto mesh = m_meshRepository->Get(hM);
-	if (!mesh || mesh->state != LoadState::Ready)
-		return;
+	auto data = ResolveResources(hM, hMtl);
+	if (!data) return;
 
-	std::shared_ptr<IMaterialResource> matRes;
-	if (hMtl)
-	{
-		auto material = m_matRepository->Get(hMtl);
-		if (!material || material->state != LoadState::Ready)
-			return;
+	m_backend->DrawSurface(data->meshRes, data->matRes, MaterialDomain::Surface, world);
+}
 
-		matRes = material->matRes;
-	}
-	else
-		matRes = nullptr;
+void RenderContext::DrawDebugSurface(MeshHandle hM, MaterialHandle hMtl, const cm::Matrix& world)
+{
+	auto data = ResolveResources(hM, hMtl);
+	if (!data) return;
 
-	m_backend->DrawSurface(mesh->meshRes, matRes, world);
+	m_backend->DrawSurface(data->meshRes, data->matRes, MaterialDomain::DebugSurface, world);
 }
 
 void RenderContext::DrawUI(MaterialHandle mh, const Rect& dest, const Rect* source)
 {
-	auto mesh = m_meshRepository->Get(m_uiQuad);
-	if (!mesh || mesh->state != LoadState::Ready)
-		return;
-
-	std::shared_ptr<IMaterialResource> matRes;
-	if (mh)
-	{
-		auto material = m_matRepository->Get(mh);
-		if (!material || material->state != LoadState::Ready)
-			return;
-
-		matRes = material->matRes;
-	}
-	else
-		matRes = nullptr;
+	auto data = ResolveResources(m_uiQuad, mh);
+	if (!data) return;
 
 	float width = static_cast<float>(dest.width);
 	float height = static_cast<float>(dest.height);
@@ -117,7 +105,30 @@ void RenderContext::DrawUI(MaterialHandle mh, const Rect& dest, const Rect* sour
 		// matRes->SetUVTransform(uvScale, uvOffset);
 	}
 
-	m_backend->DrawUI(mesh->meshRes, matRes, world);
+	m_backend->DrawUI(data->meshRes, data->matRes, world);
+}
+
+std::optional<ResolvedDrawData> RenderContext::ResolveResources(MeshHandle hM, MaterialHandle hMtl)
+{
+	auto mesh = m_meshRepository->Get(hM);
+	if (!mesh || mesh->state != LoadState::Ready)
+		return std::nullopt;
+
+	std::shared_ptr<IMaterialResource> matRes;
+
+	if (hMtl)
+	{
+		auto material = m_matRepository->Get(hMtl);
+		if (!material || material->state != LoadState::Ready)
+			return std::nullopt;
+
+		matRes = material->matRes;
+	}
+
+	return ResolvedDrawData{
+		mesh->meshRes,
+		std::move(matRes)
+	};
 }
 
 void RenderContext::Update()

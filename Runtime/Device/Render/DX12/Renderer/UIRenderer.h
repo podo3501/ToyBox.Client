@@ -40,7 +40,7 @@ private:
     Microsoft::WRL::ComPtr<ID3D12RootSignature> m_rootSignature;
     ID3D12DescriptorHeap* m_srvHeap{ nullptr };
 
-    PipelineState m_pipelineState;
+    std::optional<PipelineState> m_pipelineState{ nullopt };
     PipelineCache m_pipelineCache;
 
     Core::Math::Matrix m_projection;

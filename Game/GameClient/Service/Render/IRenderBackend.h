@@ -16,6 +16,7 @@ struct IMeshSystem;
 struct IMaterialSystem;
 struct IShaderSystem;
 struct ShaderRegisterDesc;
+enum class MaterialDomain;
 
 struct IRenderBackend
 {
@@ -27,6 +28,7 @@ struct IRenderBackend
 	virtual void DrawSurface(
 		std::shared_ptr<IMeshResource> meshRes,
 		std::shared_ptr<IMaterialResource> matRes,
+		MaterialDomain domain,
 		const Core::Math::Matrix& world) = 0;
 
 	virtual void DrawUI(

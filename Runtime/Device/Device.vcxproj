@@ -56,10 +56,11 @@
     <ClInclude Include="Render\DX12\Descriptor\DescriptorAllocator.h" />
     <ClInclude Include="Render\DX12\Descriptor\DescriptorFactory.h" />
     <ClInclude Include="Render\DX12\DX12Core.h" />
-    <ClInclude Include="Render\DX12\GridGraphBuilder.h" />
+    <ClInclude Include="Render\DX12\DebugSurfaceGraphBuilder.h" />
     <ClInclude Include="Render\DX12\Helpers\CommandListHelpers.h" />
     <ClInclude Include="Render\DX12\Helpers\CommonHelpers.h" />
     <ClInclude Include="Render\DX12\Helpers\MathHelpers.h" />
+    <ClInclude Include="Render\DX12\MaterialResource\DebugSurfaceMaterialResource.h" />
     <ClInclude Include="Render\DX12\MaterialResource\GridMaterialResource.h" />
     <ClInclude Include="Render\DX12\MaterialResource\MaterialResource.h" />
     <ClInclude Include="Render\DX12\MaterialResource\PbrMaterialResource.h" />
@@ -78,8 +79,8 @@
     <ClInclude Include="Render\DX12\PrepareGraphBuilder.h" />
     <ClInclude Include="Render\DX12\PresentGraphBuilder.h" />
     <ClInclude Include="Render\DX12\Renderer\FrameUploadAllocator.h" />
-    <ClInclude Include="Render\DX12\Renderer\GridRenderer.h" />
-    <ClInclude Include="Render\DX12\Renderer\MeshRenderer.h" />
+    <ClInclude Include="Render\DX12\Renderer\DebugSurfaceRenderer.h" />
+    <ClInclude Include="Render\DX12\Renderer\SurfaceRenderer.h" />
     <ClInclude Include="Render\DX12\Renderer\PipelineCache.h" />
     <ClInclude Include="Render\DX12\Renderer\RenderConstants.h" />
     <ClInclude Include="Render\DX12\Renderer\Renderers.h" />
@@ -144,7 +145,7 @@
     <ClCompile Include="Render\DX12\Descriptor\DescriptorFactory.cpp" />
     <ClCompile Include="Render\DX12\DX12Core.cpp" />
     <ClCompile Include="Render\DX12\DX12Link.cpp" />
-    <ClCompile Include="Render\DX12\GridGraphBuilder.cpp" />
+    <ClCompile Include="Render\DX12\DebugSurfaceGraphBuilder.cpp" />
     <ClCompile Include="Render\DX12\Helpers\CommonHelpers.cpp" />
     <ClCompile Include="Render\DX12\Helpers\MathHelpers.cpp" />
     <ClCompile Include="Render\DX12\MaterialResource\GridMaterialResource.cpp" />
@@ -163,8 +164,8 @@
     <ClCompile Include="Render\DX12\PrepareGraphBuilder.cpp" />
     <ClCompile Include="Render\DX12\PresentGraphBuilder.cpp" />
     <ClCompile Include="Render\DX12\Renderer\FrameUploadAllocator.cpp" />
-    <ClCompile Include="Render\DX12\Renderer\GridRenderer.cpp" />
-    <ClCompile Include="Render\DX12\Renderer\MeshRenderer.cpp" />
+    <ClCompile Include="Render\DX12\Renderer\DebugSurfaceRenderer.cpp" />
+    <ClCompile Include="Render\DX12\Renderer\SurfaceRenderer.cpp" />
     <ClCompile Include="Render\DX12\Renderer\PipelineCache.cpp" />
     <ClCompile Include="Render\DX12\Renderer\Renderers.cpp" />
     <ClCompile Include="Render\DX12\Renderer\RootSignatureBuilder.cpp" />

@@ -23,14 +23,17 @@ namespace SurfaceMatDescFactory
     namespace Phong
     {
         PhongMaterialDesc CreateLit(const PhongTextureArgs& texArgs);
+        PhongMaterialDesc CreateWireframe();
     }
 
-    namespace PBR 
+    namespace PBR
     {
         PbrMaterialDesc CreateLit(const PbrTextureArgs& texArgs);
-        PbrMaterialDesc CreateWireframe();
     }
+}
 
+namespace DebugSurfaceMatDescFactory
+{
     namespace Grid
     {
         GridMaterialDesc CreateGrid();
