@@ -76,10 +76,10 @@
     <ClInclude Include="Render\DX12\MeshResource.h" />
     <ClInclude Include="Render\DX12\MeshSystem.h" />
     <ClInclude Include="Render\DX12\MipGenerator.h" />
-    <ClInclude Include="Render\DX12\PrepareGraphBuilder.h" />
-    <ClInclude Include="Render\DX12\PresentGraphBuilder.h" />
+    <ClInclude Include="Render\DX12\FrameEndGraphBuilder.h" />
     <ClInclude Include="Render\DX12\Renderer\FrameUploadAllocator.h" />
     <ClInclude Include="Render\DX12\Renderer\DebugSurfaceRenderer.h" />
+    <ClInclude Include="Render\DX12\Renderer\ShadowRenderer.h" />
     <ClInclude Include="Render\DX12\Renderer\SurfaceRenderer.h" />
     <ClInclude Include="Render\DX12\Renderer\PipelineCache.h" />
     <ClInclude Include="Render\DX12\Renderer\RenderConstants.h" />
@@ -93,6 +93,8 @@
     <ClInclude Include="Render\DX12\ResourceLoader.h" />
     <ClInclude Include="Render\DX12\RGTypes.h" />
     <ClInclude Include="Render\DX12\ShaderSystem.h" />
+    <ClInclude Include="Render\DX12\ShadowGraphBuilder.h" />
+    <ClInclude Include="Render\DX12\ShadowResource.h" />
     <ClInclude Include="Render\DX12\SwapChainPresenter.h" />
     <ClInclude Include="Render\DX12\RenderBackend.h" />
     <ClInclude Include="Render\DX12\Task.h" />
@@ -161,10 +163,10 @@
     <ClCompile Include="Render\DX12\MeshResource.cpp" />
     <ClCompile Include="Render\DX12\MeshSystem.cpp" />
     <ClCompile Include="Render\DX12\MipGenerator.cpp" />
-    <ClCompile Include="Render\DX12\PrepareGraphBuilder.cpp" />
-    <ClCompile Include="Render\DX12\PresentGraphBuilder.cpp" />
+    <ClCompile Include="Render\DX12\FrameEndGraphBuilder.cpp" />
     <ClCompile Include="Render\DX12\Renderer\FrameUploadAllocator.cpp" />
     <ClCompile Include="Render\DX12\Renderer\DebugSurfaceRenderer.cpp" />
+    <ClCompile Include="Render\DX12\Renderer\ShadowRenderer.cpp" />
     <ClCompile Include="Render\DX12\Renderer\SurfaceRenderer.cpp" />
     <ClCompile Include="Render\DX12\Renderer\PipelineCache.cpp" />
     <ClCompile Include="Render\DX12\Renderer\Renderers.cpp" />
@@ -175,6 +177,8 @@
     <ClCompile Include="Render\DX12\RenderSortKey.cpp" />
     <ClCompile Include="Render\DX12\ResourceLoader.cpp" />
     <ClCompile Include="Render\DX12\ShaderSystem.cpp" />
+    <ClCompile Include="Render\DX12\ShadowGraphBuilder.cpp" />
+    <ClCompile Include="Render\DX12\ShadowResource.cpp" />
     <ClCompile Include="Render\DX12\SwapChainPresenter.cpp" />
     <ClCompile Include="Render\DX12\RenderBackend.cpp" />
     <ClCompile Include="Render\DX12\TaskScheduler.cpp" />

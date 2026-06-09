@@ -43,15 +43,18 @@ static bool IsUAVCompatibleFormat(DXGI_FORMAT format)
     }
 }
 
-static D3D12_RESOURCE_DESC CreateTexture2DDescriptor(const TextureAsset& asset)
+static D3D12_RESOURCE_DESC CreateTextureDescriptor(
+    UINT64 width, 
+    UINT height, 
+    DXGI_FORMAT format)
 {
     D3D12_RESOURCE_DESC desc{};
     desc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-    desc.Width = asset.width;
-    desc.Height = asset.height;
+    desc.Width = width;
+    desc.Height = height;
+    desc.Format = format;
     desc.DepthOrArraySize = 1;
     desc.SampleDesc.Count = 1;
-    desc.Format = GetFormat(asset.format);
     desc.MipLevels = 1;
     desc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
 
@@ -80,12 +83,6 @@ static void UploadSubresource(
     UpdateSubresources(cmd.Get(), dest, upload, 0, 0, 1, &subresource);
 }
 
-bool ResourceLoader::ShouldGenerateMips(const TextureAsset& asset, bool generateMips)
-{
-    DXGI_FORMAT format = GetFormat(asset.format);
-    return generateMips && IsUAVCompatibleFormat(format);
-}
-
 ComPtr<ID3D12Resource> ResourceLoader::CreateUploadResource(size_t size)
 {
     return CreateResource(
@@ -94,19 +91,50 @@ ComPtr<ID3D12Resource> ResourceLoader::CreateUploadResource(size_t size)
         D3D12_RESOURCE_STATE_GENERIC_READ);
 }
 
-D3D12_RESOURCE_DESC ResourceLoader::CreateTexture2DDesc(const TextureAsset& asset, bool mips)
-{
-    auto texDesc = CreateTexture2DDescriptor(asset);
-    ApplyMipSettings(texDesc, mips);
-
-    return texDesc;
-}
-
 ComPtr<ID3D12Resource> ResourceLoader::CreateTextureResource(const D3D12_RESOURCE_DESC& desc)
 {
     return CreateResource(desc,
         D3D12_HEAP_TYPE_DEFAULT,
         D3D12_RESOURCE_STATE_COMMON);
+}
+
+ComPtr<ID3D12Resource> ResourceLoader::CreateBufferResource(UINT64 size)
+{
+    return CreateResource(
+        CreateBufferDesc(size),
+        D3D12_HEAP_TYPE_DEFAULT,
+        D3D12_RESOURCE_STATE_COMMON);
+}
+
+ComPtr<ID3D12Resource> ResourceLoader::CreateShadowResource(UINT width, UINT height)
+{
+    auto desc = CreateTextureDescriptor(width, height, DXGI_FORMAT_R32_TYPELESS);
+    desc.Flags |= D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
+
+    D3D12_CLEAR_VALUE clearValue{};
+    clearValue.Format = DXGI_FORMAT_D32_FLOAT;
+    clearValue.DepthStencil.Depth = 1.0f;
+    clearValue.DepthStencil.Stencil = 0;
+
+    return CreateResource(
+        desc,
+        D3D12_HEAP_TYPE_DEFAULT,
+        D3D12_RESOURCE_STATE_DEPTH_WRITE,
+        &clearValue);
+}
+
+bool ResourceLoader::ShouldGenerateMips(const TextureAsset& asset, bool generateMips)
+{
+    DXGI_FORMAT format = GetFormat(asset.format);
+    return generateMips && IsUAVCompatibleFormat(format);
+}
+
+D3D12_RESOURCE_DESC ResourceLoader::CreateTexture2DDesc(const TextureAsset& asset, bool mips)
+{
+    auto texDesc = CreateTextureDescriptor(asset.width, asset.height, GetFormat(asset.format));
+    ApplyMipSettings(texDesc, mips);
+
+    return texDesc;
 }
 
 UINT64 ResourceLoader::GetTextureUploadLayout(const D3D12_RESOURCE_DESC& texDesc, size_t offset)
@@ -117,14 +145,6 @@ UINT64 ResourceLoader::GetTextureUploadLayout(const D3D12_RESOURCE_DESC& texDesc
         nullptr, nullptr, nullptr, &requiredSize);
 
     return requiredSize;
-}
-
-ComPtr<ID3D12Resource> ResourceLoader::CreateBufferResource(UINT64 size)
-{
-    return CreateResource(
-        CreateBufferDesc(size), 
-        D3D12_HEAP_TYPE_DEFAULT, 
-        D3D12_RESOURCE_STATE_COMMON);
 }
 
 void ResourceLoader::UploadBufferRegion(
@@ -197,18 +217,20 @@ ComPtr<ID3D12Resource> ResourceLoader::UploadVertexBuffer(
 ComPtr<ID3D12Resource> ResourceLoader::CreateResource(
     const D3D12_RESOURCE_DESC& desc,
     D3D12_HEAP_TYPE heapType,
-    D3D12_RESOURCE_STATES state)
+    D3D12_RESOURCE_STATES state,
+    const D3D12_CLEAR_VALUE* clearValue)
 {
     CD3DX12_HEAP_PROPERTIES heap(heapType);
     
     ComPtr<ID3D12Resource> res;
-    m_device->CreateCommittedResource(
+    auto result = m_device->CreateCommittedResource(
         &heap,
         D3D12_HEAP_FLAG_NONE,
         &desc,
         state,
-        nullptr,
+        clearValue,
         IID_PPV_ARGS(&res));
+    Assert(result == S_OK);
 
     return res;
 }

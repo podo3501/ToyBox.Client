@@ -25,7 +25,7 @@ class TextureSystem : public ITextureSystem
 {
 public:
     ~TextureSystem();
-    TextureSystem(ID3D12Device* device, DescriptorAllocator* srvAllocator, TaskScheduler* taskScheduler, ResourceLoader* loader);
+    TextureSystem(ID3D12Device* device, DescriptorFactory* descFactory, TaskScheduler* taskScheduler, ResourceLoader* loader);
     virtual shared_ptr<ITextureResource> CreateTextureResource(const TextureDesc& desc) override;
     virtual bool LoadFromAsset(std::shared_ptr<ITextureResource> resource, std::shared_ptr<TextureAsset> asset) override;
 
@@ -40,7 +40,6 @@ private:
     
 
     unique_ptr<MipGenerator> m_mipGenerator;
-    unique_ptr<DescriptorFactory> m_descriptorFactory;
     unique_ptr<TextureGraphBuilder> m_builder;
 
     std::queue<TextureLoadRequest> m_pending;

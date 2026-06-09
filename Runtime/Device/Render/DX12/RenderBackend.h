@@ -9,6 +9,7 @@ class SwapChainPresenter;
 class CommandList;
 class CommandScheduler;
 class DescriptorAllocator;
+class DescriptorFactory;
 class TaskScheduler;
 class ResourceLoader;
 class GPUProfiler;
@@ -18,6 +19,7 @@ class MaterialSystem;
 class ShaderSystem;
 class Renderers;
 class RenderScene;
+class ShadowResource;
 
 class RenderBackend : public IRenderBackend
 {
@@ -55,6 +57,8 @@ private:
 	unique_ptr<CommandScheduler> m_command;
 	unique_ptr<SwapChainPresenter> m_swapChain;
 	unique_ptr<DescriptorAllocator> m_srvAllocator;
+	unique_ptr<DescriptorAllocator> m_dsvAllocator;
+	unique_ptr<DescriptorFactory> m_descFactory;
 	unique_ptr<TaskScheduler> m_taskScheduler;
 	unique_ptr<ResourceLoader> m_loader;
 	unique_ptr<GPUProfiler> m_profiler;
@@ -65,6 +69,7 @@ private:
 	unique_ptr<ShaderSystem> m_shaderSystem;
 	unique_ptr<RenderScene> m_scene;
 	unique_ptr<Renderers> m_renderers;
+	unique_ptr<ShadowResource> m_shadowRes;
 
 	CommandList* m_cmd{ nullptr }; //direct command юс.
 

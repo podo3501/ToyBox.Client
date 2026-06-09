@@ -15,14 +15,21 @@ bool DescriptorAllocator::Initialize(D3D12_DESCRIPTOR_HEAP_TYPE type, UINT maxCo
     D3D12_DESCRIPTOR_HEAP_DESC desc = {};
     desc.NumDescriptors = maxCount;
     desc.Type = type;
-    desc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+    m_shaderVisible = (type == D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+
+    if (m_shaderVisible)
+        desc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+    else // DSV 나 RTV 힙일 때는 FLAG_NONE (0) 즉, OMSetRenderTargets 등의 API가 사용하며 Shader가 직접 접근하지 않음.
+        desc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
 
     if (FAILED(m_device->CreateDescriptorHeap(&desc, IID_PPV_ARGS(&m_heap))))
         return false;
 
     m_descriptorSize = m_device->GetDescriptorHandleIncrementSize(type);
     m_cpuStart = m_heap->GetCPUDescriptorHandleForHeapStart();
-    m_gpuStart = m_heap->GetGPUDescriptorHandleForHeapStart();
+
+    if (m_shaderVisible)
+        m_gpuStart = m_heap->GetGPUDescriptorHandleForHeapStart();
 
     return true;
 }
@@ -75,8 +82,21 @@ D3D12_CPU_DESCRIPTOR_HANDLE DescriptorAllocator::GetCpuHandle(UINT index) const 
     return handle;
 }
 
+static D3D12_GPU_DESCRIPTOR_HANDLE InvalidGpuHandle()
+{
+    D3D12_GPU_DESCRIPTOR_HANDLE h{};
+    h.ptr = 0;
+    return h;
+}
+
 D3D12_GPU_DESCRIPTOR_HANDLE DescriptorAllocator::GetGpuHandle(UINT index) const noexcept
 {
+    if (!m_shaderVisible)
+    {
+        Assert(false); //shader에서 읽지 못하게끔 초기화 돼 있음. dsv거나 rtv 거나..
+        return InvalidGpuHandle();
+    }
+
     D3D12_GPU_DESCRIPTOR_HANDLE handle = m_gpuStart;
     handle.ptr += index * m_descriptorSize;
     return handle;

@@ -14,9 +14,9 @@ class MipGenerator
 {
 public:
     ~MipGenerator();
-    MipGenerator(ID3D12Device* device, DescriptorAllocator* srvAllocator);
+    MipGenerator(ID3D12Device* device);
     bool Initialize(ShaderSystem* shaderSystem);
-    void GenerateMips(CommandList& cmd, TextureResource* texResource);
+    void GenerateMips(CommandList& cmd, DescriptorAllocator* srvAllocator, TextureResource* texResource);
 
 private:
     bool LoadShader(ShaderSystem* shaderSystem);
@@ -25,7 +25,6 @@ private:
 
 private:
     ID3D12Device* m_device{ nullptr };
-    DescriptorAllocator* m_srvAllocator{ nullptr };
 
     ComPtr<ID3D12RootSignature> m_rootSignature;
     ComPtr<ID3D12PipelineState> m_psoSRGB;

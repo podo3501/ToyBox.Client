@@ -5,10 +5,62 @@
 #include "GameClient/Service/Render/Desc/TextureDesc.h"
 
 DescriptorFactory::~DescriptorFactory() = default;
-DescriptorFactory::DescriptorFactory(ID3D12Device* device, DescriptorAllocator* srvAllocator) :
+DescriptorFactory::DescriptorFactory(
+    ID3D12Device* device, 
+    DescriptorAllocator* srvAllocator,
+    DescriptorAllocator* dsvAllocator) :
     m_device{ device },
-    m_srvAllocator{ srvAllocator }
+    m_srvAllocator{ srvAllocator },
+    m_dsvAllocator{ dsvAllocator }
 {}
+
+UINT DescriptorFactory::CreateBufferSRV(ID3D12Resource* buffer, UINT elementCount, UINT elementStride)
+{
+    auto srvDesc = CreateStructuredBufferSRVDesc(elementCount, elementStride);
+
+    UINT index = m_srvAllocator->Allocate();
+    if (index == UINT_MAX)
+        return UINT_MAX;
+
+    m_device->CreateShaderResourceView(buffer, &srvDesc, GetSrvCpuHandle(index));
+    return index;
+}
+
+UINT DescriptorFactory::CreateTextureSRV(ID3D12Resource* res, DXGI_FORMAT format, UINT mipLevels)
+{
+    const auto& resDesc = res->GetDesc();
+    D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
+    srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+    srvDesc.Format = format;
+    srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+    srvDesc.Texture2D.MipLevels = mipLevels;
+    srvDesc.Texture2D.MostDetailedMip = 0;
+    srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
+
+    UINT Index = m_srvAllocator->Allocate();
+    if (Index == UINT_MAX) return UINT_MAX;
+
+    m_device->CreateShaderResourceView(res, &srvDesc, GetSrvCpuHandle(Index));
+    return Index;
+}
+
+UINT DescriptorFactory::CreateTextureDSV(ID3D12Resource* res, DXGI_FORMAT format, UINT mipSlice)
+{
+    if (!res) return UINT_MAX;
+
+    D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc{};
+    dsvDesc.Format = format;
+    dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
+    dsvDesc.Texture2D.MipSlice = mipSlice; // 기본값 0, 필요시 특정 밉슬라이스 지정 가능
+    dsvDesc.Flags = D3D12_DSV_FLAG_NONE;
+
+    // 앞서 설계한 DSV 전용 할당자(m_dsvAllocator)에서 공간 확보
+    UINT index = m_dsvAllocator->Allocate();
+    if (index == UINT_MAX) return UINT_MAX;
+
+    m_device->CreateDepthStencilView(res, &dsvDesc, GetDsvHandle(index));
+    return index;
+}
 
 static DXGI_FORMAT MakeSRGBFormat(DXGI_FORMAT format)
 {
@@ -64,67 +116,6 @@ bool DescriptorFactory::CreateTextureViews(TextureResource* texRes, bool generat
     return true;
 }
 
-UINT DescriptorFactory::CreateTextureSRV(ID3D12Resource* res, DXGI_FORMAT format, UINT mipLevels)
-{
-    const auto& resDesc = res->GetDesc();
-    D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
-    srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-    srvDesc.Format = format;
-    srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-    srvDesc.Texture2D.MipLevels = mipLevels;
-    srvDesc.Texture2D.MostDetailedMip = 0;
-    srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
-
-    UINT Index = m_srvAllocator->Allocate();
-    if (Index == UINT_MAX) return UINT_MAX;
-
-    m_device->CreateShaderResourceView(res, &srvDesc, m_srvAllocator->GetCpuHandle(Index));
-    return Index;
-}
-
-UINT DescriptorFactory::CreateMipSRV(ID3D12Resource* res, DXGI_FORMAT format, UINT mipLevel)
-{
-    D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
-    srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-    srvDesc.Format = format;
-    srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-    srvDesc.Texture2D.MostDetailedMip = mipLevel;  // 인자로 넘어온 타겟 밉슬라이스 고정
-    srvDesc.Texture2D.MipLevels = 1;  // 무조건 1개 밉 레벨 영역만 타겟팅
-    //srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
-
-    UINT index = m_srvAllocator->AllocateTransient();
-    if (index == UINT_MAX) return UINT_MAX;
-
-    m_device->CreateShaderResourceView(res, &srvDesc, m_srvAllocator->GetCpuHandle(index));
-    return index;
-}
-
-UINT DescriptorFactory::CreateMipUAV(ID3D12Resource* res, DXGI_FORMAT format, UINT mipLevel)
-{
-    D3D12_UNORDERED_ACCESS_VIEW_DESC uavDesc{};
-    uavDesc.Format = format;
-    uavDesc.ViewDimension = D3D12_UAV_DIMENSION_TEXTURE2D;
-    uavDesc.Texture2D.MipSlice = mipLevel;
-
-    UINT index = m_srvAllocator->AllocateTransient();
-    if (index == UINT_MAX) return UINT_MAX;
-
-    m_device->CreateUnorderedAccessView(res, nullptr, &uavDesc, m_srvAllocator->GetCpuHandle(index));
-    return index;
-}
-
-UINT DescriptorFactory::CreateBufferSRV(ID3D12Resource* buffer, UINT elementCount, UINT elementStride)
-{
-    auto srvDesc = CreateStructuredBufferSRVDesc(elementCount, elementStride);
-
-    UINT index = m_srvAllocator->Allocate();
-    if (index == UINT_MAX)
-        return UINT_MAX;
-
-    m_device->CreateShaderResourceView(buffer, &srvDesc, m_srvAllocator->GetCpuHandle(index));
-    return index;
-}
-
 D3D12_SHADER_RESOURCE_VIEW_DESC DescriptorFactory::CreateStructuredBufferSRVDesc(
     UINT numElements, UINT stride) const
 {
@@ -140,4 +131,49 @@ D3D12_SHADER_RESOURCE_VIEW_DESC DescriptorFactory::CreateStructuredBufferSRVDesc
     desc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
 
     return desc;
+}
+
+UINT DescriptorFactory::CreateMipSRV(ID3D12Resource* res, DXGI_FORMAT format, UINT mipLevel)
+{
+    D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
+    srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+    srvDesc.Format = format;
+    srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+    srvDesc.Texture2D.MostDetailedMip = mipLevel;  // 인자로 넘어온 타겟 밉슬라이스 고정
+    srvDesc.Texture2D.MipLevels = 1;  // 무조건 1개 밉 레벨 영역만 타겟팅
+    //srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
+
+    UINT index = m_srvAllocator->AllocateTransient();
+    if (index == UINT_MAX) return UINT_MAX;
+
+    m_device->CreateShaderResourceView(res, &srvDesc, GetSrvCpuHandle(index));
+    return index;
+}
+
+UINT DescriptorFactory::CreateMipUAV(ID3D12Resource* res, DXGI_FORMAT format, UINT mipLevel)
+{
+    D3D12_UNORDERED_ACCESS_VIEW_DESC uavDesc{};
+    uavDesc.Format = format;
+    uavDesc.ViewDimension = D3D12_UAV_DIMENSION_TEXTURE2D;
+    uavDesc.Texture2D.MipSlice = mipLevel;
+
+    UINT index = m_srvAllocator->AllocateTransient();
+    if (index == UINT_MAX) return UINT_MAX;
+
+    m_device->CreateUnorderedAccessView(res, nullptr, &uavDesc, GetSrvCpuHandle(index));
+    return index;
+}
+
+D3D12_CPU_DESCRIPTOR_HANDLE DescriptorFactory::GetDsvHandle(UINT dsvIndex)
+{
+    return m_dsvAllocator->GetCpuHandle(dsvIndex);
+}
+
+D3D12_CPU_DESCRIPTOR_HANDLE DescriptorFactory::GetSrvCpuHandle(UINT index)
+{
+    return m_srvAllocator->GetCpuHandle(index);
+}
+D3D12_GPU_DESCRIPTOR_HANDLE DescriptorFactory::GetSrvGpuHandle(UINT index)
+{
+    return m_srvAllocator->GetGpuHandle(index);
 }

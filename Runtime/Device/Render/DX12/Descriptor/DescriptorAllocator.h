@@ -27,6 +27,7 @@ private:
     ID3D12Device* m_device{ nullptr };
     ComPtr<ID3D12DescriptorHeap> m_heap;
 
+    bool m_shaderVisible{ false }; //dsv랑 점점 다른게 많아지면 클래스를 분리해야 함.
     UINT m_descriptorSize{ 0 };
     UINT m_capacity{ 0 };
     UINT m_allocated{ 0 }; //현재할당

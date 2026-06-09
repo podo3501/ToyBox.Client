@@ -99,7 +99,8 @@ enum class ShadingModel
     PBR,
     UI,
     Grid,
-    MipGenerator
+    MipGenerator,
+    Shadow
 };
 
 struct ShaderAsset;

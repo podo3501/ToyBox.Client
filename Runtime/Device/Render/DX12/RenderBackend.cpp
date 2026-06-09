@@ -4,11 +4,13 @@
 #include "SwapChainPresenter.h"
 #include "Command/CommandScheduler.h"
 #include "Descriptor/DescriptorAllocator.h"
+#include "Descriptor/DescriptorFactory.h"
 #include "TaskScheduler.h"
 #include "ResourceLoader.h"
 #include "GPUProfiler.h"
 #include "MaterialResource/SurfaceMaterialResource.h"
 #include "Renderer/Renderers.h"
+#include "ShadowResource.h"
 #include "TextureSystem.h"
 #include "MeshSystem.h"
 #include "MaterialSystem.h"
@@ -16,10 +18,10 @@
 #include "RenderScene.h"
 #include "RenderGraph.h"
 #include "RenderPass.h"
-#include "PrepareGraphBuilder.h"
+#include "ShadowGraphBuilder.h"
 #include "OpaqueGraphBuilder.h"
 #include "DebugSurfaceGraphBuilder.h"
-#include "PresentGraphBuilder.h"
+#include "FrameEndGraphBuilder.h"
 #include "UIGraphBuilder.h"
 #include "MeshResource.h"
 #include "Command/CommandList.h"
@@ -74,6 +76,9 @@ bool RenderBackend::Initialize(
 
     m_srvAllocator = make_unique<DescriptorAllocator>(device);
     ReturnIfFalse(m_srvAllocator->Initialize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, config.srvDescriptorCount));
+    m_dsvAllocator = make_unique<DescriptorAllocator>(device);
+    ReturnIfFalse(m_dsvAllocator->Initialize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV, config.dsvDescriptorCount));
+    m_descFactory = make_unique<DescriptorFactory>(device, m_srvAllocator.get(), m_dsvAllocator.get());
 
     m_taskScheduler = make_unique<TaskScheduler>(m_command.get());
     m_loader = make_unique<ResourceLoader>(device);
@@ -82,14 +87,17 @@ bool RenderBackend::Initialize(
 
     m_shaderSystem = make_unique<ShaderSystem>();
     ReturnIfFalse(m_shaderSystem->Initialize(shaders));
-    m_texSystem = make_unique<TextureSystem>(device, m_srvAllocator.get(), m_taskScheduler.get(), m_loader.get());
+    m_texSystem = make_unique<TextureSystem>(device, m_descFactory.get(), m_taskScheduler.get(), m_loader.get());
     ReturnIfFalse(m_texSystem->Initialize(m_shaderSystem.get()));
-    m_meshSystem = make_unique<MeshSystem>(device, m_srvAllocator.get(), m_taskScheduler.get(), m_loader.get());
-    m_matSystem = make_unique<MaterialSystem>(device, m_srvAllocator.get(), m_texSystem.get());
+    m_meshSystem = make_unique<MeshSystem>(device, m_descFactory.get(), m_taskScheduler.get(), m_loader.get());
+    m_matSystem = make_unique<MaterialSystem>(device, m_texSystem.get());
     m_scene = make_unique<RenderScene>();
 
     m_renderers = make_unique<Renderers>();
     ReturnIfFalse(m_renderers->Initialize(device, m_shaderSystem.get(), wndSize, m_srvAllocator->GetHeap()));
+
+    m_shadowRes = make_unique<ShadowResource>(); //이 클래스는 framereseource 클래스중의 하나. 프레임당 render가 필요한 리소스들.
+    ReturnIfFalse(m_shadowRes->Initialize(m_loader.get(), m_descFactory.get(), 2048, 2048));
     
     return true;
 }
@@ -188,19 +196,22 @@ void RenderBackend::Render()
 
     RenderGraph graph;
     auto hBb = graph.CreateRGHandle();
+    auto hShadow = graph.CreateRGHandle();
     graph.ImportResource(hBb, RGAccess::Present); //backbuffer가 present에서 시작한다고 알려준다.
+    graph.ImportResource(hShadow, RGAccess::DepthWrite);
 
-    PrepareGraphBuilder prepare(m_swapChain.get(), hBb);
-    OpaqueGraphBuilder opaque(m_renderers->GetSurfRenderer(), m_scene.get(), hBb);
+    ShadowGraphBuilder shadow(m_renderers->GetShadowRenderer(), 
+        m_descFactory.get(), m_shadowRes.get(), m_scene.get(), hShadow);
+    OpaqueGraphBuilder opaque(m_renderers->GetSurfRenderer(), m_swapChain.get(), m_scene.get(), hBb, hShadow);
     DebugSurfaceGraphBuilder debugSurface(m_renderers->GetDebugSurfRenderer(), m_scene.get(), hBb);
     UIGraphBuilder ui(m_renderers->GetUIRenderer(), m_scene.get(), hBb);
-    PresentGraphBuilder present(hBb);
+    FrameEndGraphBuilder end(hBb, hShadow);
 
-    prepare.Build(graph);
+    shadow.Build(graph);
     opaque.Build(graph);
     debugSurface.Build(graph);
     ui.Build(graph);
-    present.Build(graph);
+    end.Build(graph);
 
     m_scene->SortDraws();
 
@@ -209,6 +220,7 @@ void RenderBackend::Render()
     TaskContext taskCtx;
     taskCtx.resources = std::make_shared<ResourceContext>();
     taskCtx.resources->Set(hBb, std::move(ComPtr<ID3D12Resource>(m_swapChain->GetCurrentBackbuffer())));
+    taskCtx.resources->Set(hShadow, std::move(ComPtr<ID3D12Resource>(m_shadowRes->Get())));
 
     FrameData frame;
     frame.light = m_lightData;

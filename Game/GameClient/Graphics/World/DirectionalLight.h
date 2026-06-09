@@ -2,13 +2,15 @@
 #include "Core/Math/Vector3.h"
 #include "GameClient/Graphics/RenderData/DirectionalLightData.h"
 
+struct CameraData;
+
 class DirectionalLight
 {
 public:
     void SetDirection(const Core::Math::Vector3& dir) { m_direction = dir.NormalizedOr({ 0.0f, -1.0f, 0.0f }); }
     void SetColor(const Core::Math::Vector3& color) { m_color = color; }
     void SetIntensity(float intensity) { m_intensity = intensity; }
-    DirectionalLightData BuildLightData() const;
+    DirectionalLightData BuildLightData(const CameraData& mainCameraData) const;
 
     const Core::Math::Vector3& GetDirection() const { return m_direction; }
     const Core::Math::Vector3& GetColor() const { return m_color; }

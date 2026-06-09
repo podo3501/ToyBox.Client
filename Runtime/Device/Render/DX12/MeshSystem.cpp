@@ -9,10 +9,9 @@
 #include "Helpers/CommonHelpers.h"
 
 MeshSystem::~MeshSystem() = default;
-MeshSystem::MeshSystem(ID3D12Device* device, DescriptorAllocator* srvAllocator, 
+MeshSystem::MeshSystem(ID3D12Device* device, DescriptorFactory* descFactory,
     TaskScheduler* taskScheduler, ResourceLoader* loader) :
-    m_descriptorFactory{ make_unique<DescriptorFactory>(device, srvAllocator) },
-    m_builder{ make_unique<MeshGraphBuilder>(taskScheduler, loader, m_descriptorFactory.get()) }
+    m_builder{ make_unique<MeshGraphBuilder>(taskScheduler, loader, descFactory) }
 {}
 
 shared_ptr<IMeshResource> MeshSystem::CreateMeshResource()

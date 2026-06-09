@@ -3,7 +3,6 @@
 #include "MaterialResource/PhongMaterialResource.h"
 #include "MaterialResource/PbrMaterialResource.h"
 #include "MaterialResource/GridMaterialResource.h"
-#include "Descriptor/DescriptorFactory.h"
 #include "MaterialResource/UIMaterialResource.h"
 #include "TextureSystem.h"
 #include "TextureResource.h"
@@ -18,8 +17,7 @@ void MaterialSystem::AddDefaultSurface()
 }
 
 MaterialSystem::~MaterialSystem() = default;
-MaterialSystem::MaterialSystem(ID3D12Device* device, DescriptorAllocator* srvAllocator, TextureSystem* texSystem) :
-    m_descriptorFactory{ make_unique<DescriptorFactory>(device, srvAllocator) },
+MaterialSystem::MaterialSystem(ID3D12Device* device, TextureSystem* texSystem) :
 	m_texSystem{ texSystem }
 {
     AddDefaultSurface<PhongMaterialDesc, PhongMaterialResource>();

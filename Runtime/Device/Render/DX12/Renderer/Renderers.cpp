@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Renderers.h"
+#include "ShadowRenderer.h"
 #include "SurfaceRenderer.h"
 #include "DebugSurfaceRenderer.h"
 #include "UIRenderer.h"
@@ -14,6 +15,9 @@ bool Renderers::Initialize(
     const Size& screenSize,
     ID3D12DescriptorHeap* srvHeap)
 {
+    m_shadowRenderer = std::make_unique<ShadowRenderer>(device, shaderSystem);
+    ReturnIfFalse(m_shadowRenderer->Initialize());
+
     m_surfRenderer = std::make_unique<SurfaceRenderer>(device, shaderSystem);
     ReturnIfFalse(m_surfRenderer->Initialize());
 
@@ -23,6 +27,7 @@ bool Renderers::Initialize(
     m_uiRenderer = std::make_unique<UIRenderer>(device, shaderSystem);
     ReturnIfFalse(m_uiRenderer->Initialize(screenSize));
 
+    m_shadowRenderer->SetSRVHeap(srvHeap);
     m_surfRenderer->SetSRVHeap(srvHeap);
     m_debugSurfRenderer->SetSRVHeap(srvHeap);
     m_uiRenderer->SetSRVHeap(srvHeap);

@@ -14,6 +14,8 @@ static D3D12_RESOURCE_STATES AccessToState(RGAccess access)
     //case RGAccess::CopySrc: return D3D12_RESOURCE_STATE_COPY_SOURCE;
     //case RGAccess::CopyDst: return D3D12_RESOURCE_STATE_COPY_DEST;
     case RGAccess::RTV: return D3D12_RESOURCE_STATE_RENDER_TARGET;
+    case RGAccess::DepthWrite: return D3D12_RESOURCE_STATE_DEPTH_WRITE;
+    case RGAccess::DepthRead: return D3D12_RESOURCE_STATE_DEPTH_READ;
     case RGAccess::Present: return D3D12_RESOURCE_STATE_PRESENT;
     default: return D3D12_RESOURCE_STATE_COMMON;
     }

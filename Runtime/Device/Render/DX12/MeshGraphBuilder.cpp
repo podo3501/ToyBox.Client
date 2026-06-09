@@ -28,10 +28,10 @@ struct MeshFinalizeEntry
 
 MeshGraphBuilder::~MeshGraphBuilder() = default;
 MeshGraphBuilder::MeshGraphBuilder(TaskScheduler* taskScheduler, ResourceLoader* loader,
-    DescriptorFactory* descriptorFactory) :
+    DescriptorFactory* descFactory) :
     m_taskScheduler{ taskScheduler },
     m_loader{ loader },
-    m_descriptorFactory{ descriptorFactory },
+    m_descFactory{ descFactory },
     m_registry{ make_unique<MeshRegistry>() }
 {}
 
@@ -129,8 +129,8 @@ void MeshGraphBuilder::BuildFinalizePass(RenderGraph& graph, std::vector<MeshFin
             auto vertexCount = static_cast<uint32_t>(mesh.asset->vertices.size());
             auto indexCount = static_cast<uint32_t>(mesh.asset->indices.size());
 
-            auto vbHeapIndex = m_descriptorFactory->CreateBufferSRV(vb.Get(), mesh.asset->vertexCount, mesh.asset->vertexStride);
-            auto ibHeapIndex = m_descriptorFactory->CreateBufferSRV(ib.Get(), indexCount, sizeof(uint32_t));
+            auto vbHeapIndex = m_descFactory->CreateBufferSRV(vb.Get(), mesh.asset->vertexCount, mesh.asset->vertexStride);
+            auto ibHeapIndex = m_descFactory->CreateBufferSRV(ib.Get(), indexCount, sizeof(uint32_t));
 
             m_registry->FinalizeMesh(
                 mesh.hMesh.id,

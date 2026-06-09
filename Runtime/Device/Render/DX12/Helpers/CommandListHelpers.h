@@ -97,4 +97,12 @@ namespace CommandUtils
     {
         cmd.Get()->OMSetRenderTargets(1, &rtv, FALSE, &dsv);
     }
+
+    template<CommandListLike T>
+    inline void SetDepthTarget(
+        T& cmd,
+        D3D12_CPU_DESCRIPTOR_HANDLE dsv) noexcept
+    {
+        cmd.Get()->OMSetRenderTargets(0, nullptr, FALSE, &dsv);
+    }
 }

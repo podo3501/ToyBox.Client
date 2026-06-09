@@ -220,10 +220,7 @@
     <ClInclude Include="Render\DX12\OpaqueGraphBuilder.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\PrepareGraphBuilder.h">
-      <Filter>Render\DX12</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\DX12\PresentGraphBuilder.h">
+    <ClInclude Include="Render\DX12\FrameEndGraphBuilder.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
     <ClInclude Include="Render\DX12\UIGraphBuilder.h">
@@ -318,6 +315,15 @@
     </ClInclude>
     <ClInclude Include="Render\DX12\MaterialResource\DebugSurfaceMaterialResource.h">
       <Filter>Render\DX12\MaterialResource</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\ShadowGraphBuilder.h">
+      <Filter>Render\DX12</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Renderer\ShadowRenderer.h">
+      <Filter>Render\DX12\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\ShadowResource.h">
+      <Filter>Render\DX12</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -448,10 +454,7 @@
     <ClCompile Include="Render\DX12\OpaqueGraphBuilder.cpp">
       <Filter>Render\DX12</Filter>
     </ClCompile>
-    <ClCompile Include="Render\DX12\PrepareGraphBuilder.cpp">
-      <Filter>Render\DX12</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\DX12\PresentGraphBuilder.cpp">
+    <ClCompile Include="Render\DX12\FrameEndGraphBuilder.cpp">
       <Filter>Render\DX12</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\UIGraphBuilder.cpp">
@@ -528,6 +531,15 @@
     </ClCompile>
     <ClCompile Include="Render\DX12\MaterialResource\PhongMaterialResource.cpp">
       <Filter>Render\DX12\MaterialResource</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\ShadowGraphBuilder.cpp">
+      <Filter>Render\DX12</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Renderer\ShadowRenderer.cpp">
+      <Filter>Render\DX12\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\ShadowResource.cpp">
+      <Filter>Render\DX12</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

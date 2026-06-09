@@ -6,11 +6,9 @@
 #include "TextureResource.h"
 
 TextureSystem::~TextureSystem() = default;
-TextureSystem::TextureSystem(ID3D12Device* device, DescriptorAllocator* srvAllocator, TaskScheduler* taskScheduler, ResourceLoader* loader) :
-    m_mipGenerator{ make_unique<MipGenerator>(device, srvAllocator) },
-    m_descriptorFactory{ make_unique<DescriptorFactory>(device, srvAllocator) },
-    m_builder{ make_unique<TextureGraphBuilder>(taskScheduler, loader, 
-        m_mipGenerator.get(), m_descriptorFactory.get()) }
+TextureSystem::TextureSystem(ID3D12Device* device, DescriptorFactory* descFactory, TaskScheduler* taskScheduler, ResourceLoader* loader) :
+    m_mipGenerator{ make_unique<MipGenerator>(device) },
+    m_builder{ make_unique<TextureGraphBuilder>(taskScheduler, loader, m_mipGenerator.get(), descFactory) }
 {}
 
 bool TextureSystem::Initialize(ShaderSystem* shaderSystem)

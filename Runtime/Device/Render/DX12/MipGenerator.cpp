@@ -9,9 +9,8 @@
 #include <algorithm>
 
 MipGenerator::~MipGenerator() = default;
-MipGenerator::MipGenerator(ID3D12Device* device, DescriptorAllocator* srvAllocator) :
-    m_device{ device },
-    m_srvAllocator{ srvAllocator }
+MipGenerator::MipGenerator(ID3D12Device* device) :
+    m_device{ device }
 {}
 
 bool MipGenerator::Initialize(ShaderSystem* shaderSystem)
@@ -77,7 +76,7 @@ bool MipGenerator::CreatePSO()
     return true;
 }
 
-void MipGenerator::GenerateMips(CommandList& cmd, TextureResource* texResource)
+void MipGenerator::GenerateMips(CommandList& cmd, DescriptorAllocator* srvAllocator, TextureResource* texResource)
 {
     if (!texResource)
         return;
@@ -89,7 +88,7 @@ void MipGenerator::GenerateMips(CommandList& cmd, TextureResource* texResource)
     if (mipCount <= 1)
         return;
 
-    ID3D12DescriptorHeap* heaps[] = { m_srvAllocator->GetHeap() };
+    ID3D12DescriptorHeap* heaps[] = { srvAllocator->GetHeap() };
 
     cmd->SetDescriptorHeaps(1, heaps);
     cmd->SetComputeRootSignature(m_rootSignature.Get());

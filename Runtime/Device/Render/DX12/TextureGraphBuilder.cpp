@@ -31,11 +31,11 @@ struct TextureFinalizeEntry
 
 TextureGraphBuilder::~TextureGraphBuilder() = default;
 TextureGraphBuilder::TextureGraphBuilder(TaskScheduler* taskScheduler, ResourceLoader* loader,
-    MipGenerator* mipGenerator, DescriptorFactory* descriptorFactory) :
+    MipGenerator* mipGenerator, DescriptorFactory* descFactory) :
     m_taskScheduler{ taskScheduler },
     m_loader{ loader },
     m_mipGenerator{ mipGenerator },
-    m_descriptorFactory{ descriptorFactory },
+    m_descFactory{ descFactory },
     m_registry{ make_unique<TextureRegistry>() }
 {}
 
@@ -60,7 +60,7 @@ void TextureGraphBuilder::LoadTextures(const std::vector<TextureLoadRequest>& re
 
         auto textureResource = std::static_pointer_cast<TextureResource>(req.resource);
         textureResource->SetResource(texRes);
-        m_descriptorFactory->CreateTextureViews(textureResource.get(), mips);
+        m_descFactory->CreateTextureViews(textureResource.get(), mips);
 
         hasMipTask |= mips;
         offset = AlignSize(offset, AlignTexture);
@@ -118,7 +118,7 @@ void TextureGraphBuilder::BuildMipPass(RenderGraph& graph, std::vector<TextureUp
             if (!tex.generateMips) continue;
 
             auto texRes = m_registry->GetTextureResource(tex.handle.id);
-            m_mipGenerator->GenerateMips(cmd, texRes);
+            m_mipGenerator->GenerateMips(cmd, m_descFactory->GetSrvAllocator(), texRes);
         }
         };
 }
@@ -138,7 +138,7 @@ void TextureGraphBuilder::BuildFinalizePass(RenderGraph& graph, std::vector<Text
         {
             m_registry->FinalizeTexture(tex.handle.id);
         }
-        m_descriptorFactory->GetDescriptorAllocator()->ResetTransient(); //mipmap때 임시로 만든 srv/uav 정리.
+        m_descFactory->GetSrvAllocator()->ResetTransient(); //mipmap때 임시로 만든 srv/uav 정리.
         };
 }
 

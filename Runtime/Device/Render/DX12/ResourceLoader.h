@@ -46,11 +46,13 @@ public:
     ResourceLoader(ID3D12Device* device);
 
     ComPtr<ID3D12Resource> CreateUploadResource(size_t size);
+    ComPtr<ID3D12Resource> CreateTextureResource(const D3D12_RESOURCE_DESC& desc);
+    ComPtr<ID3D12Resource> CreateBufferResource(UINT64 size);
+    ComPtr<ID3D12Resource> CreateShadowResource(UINT width, UINT height);
+
     bool ShouldGenerateMips(const TextureAsset& asset, bool generateMips);
     D3D12_RESOURCE_DESC CreateTexture2DDesc(const TextureAsset& asset, bool mips);
-    ComPtr<ID3D12Resource> CreateTextureResource(const D3D12_RESOURCE_DESC& desc);
     UINT64 GetTextureUploadLayout(const D3D12_RESOURCE_DESC& texDesc, size_t offset);
-    ComPtr<ID3D12Resource> CreateBufferResource(UINT64 size);
 
     void UploadBufferRegion(
         CommandList& cmd, 
@@ -74,7 +76,8 @@ private:
     ComPtr<ID3D12Resource> CreateResource(
         const D3D12_RESOURCE_DESC& desc,
         D3D12_HEAP_TYPE heapType,
-        D3D12_RESOURCE_STATES state);
+        D3D12_RESOURCE_STATES state,
+        const D3D12_CLEAR_VALUE* clearValue = nullptr);
 
     ID3D12Device* m_device{ nullptr };
 };

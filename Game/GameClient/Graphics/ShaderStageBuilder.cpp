@@ -45,6 +45,7 @@ ShaderRegisterDesc ShaderBuilder::Build(
     case ShadingModel::PBR:
     case ShadingModel::UI:
     case ShadingModel::Grid:
+    case ShadingModel::Shadow:
     {
         regiDesc.stages = { ShaderStageBuilder::VS(), ShaderStageBuilder::PS() };
         break;
