@@ -325,6 +325,9 @@
     <ClInclude Include="Render\DX12\ShadowResource.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
+    <ClInclude Include="Render\DX12\ForwardRenderPipeline.h">
+      <Filter>Render\DX12</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -539,6 +542,9 @@
       <Filter>Render\DX12\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\ShadowResource.cpp">
+      <Filter>Render\DX12</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\ForwardRenderPipeline.cpp">
       <Filter>Render\DX12</Filter>
     </ClCompile>
   </ItemGroup>

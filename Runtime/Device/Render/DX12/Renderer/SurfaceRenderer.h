@@ -32,7 +32,7 @@ public:
     void BindCommonState(CommandList& cmd);
     void BindPipeline(CommandList& cmd, const PipelineState& pipelineState);
     void SetSRVHeap(ID3D12DescriptorHeap* heap) { m_srvHeap = heap; }
-    void PrepareFrame(const DirectionalLightData& light, const CameraData& camera);
+    void PrepareFrame(const DirectionalLightData& light, const CameraData& camera, uint32_t shadowSRVIndex);
     void Draw(CommandList& cmd, MeshResource& mesh, MaterialResource& material, const Core::Math::Matrix& world);
     
 private:

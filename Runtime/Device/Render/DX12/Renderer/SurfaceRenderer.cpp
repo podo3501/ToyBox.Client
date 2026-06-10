@@ -111,6 +111,7 @@ bool SurfaceRenderer::CreateRootSignature()
     builder.AddCBV(3); //materialCB
     
     builder.AddLinearSampler(0);
+    builder.AddComparisonSampler(1);
 
     m_rootSignature = builder.Build(m_device);
     return m_rootSignature != nullptr;
@@ -145,7 +146,7 @@ void SurfaceRenderer::BindPipeline(CommandList& cmd, const PipelineState& pipeli
     m_pipelineState = pipelineState;
 }
 
-void SurfaceRenderer::PrepareFrame(const DirectionalLightData& light, const CameraData& camera)
+void SurfaceRenderer::PrepareFrame(const DirectionalLightData& light, const CameraData& camera, uint32_t shadowSRVIndex)
 {
     m_pipelineState = std::nullopt;
 
@@ -156,10 +157,12 @@ void SurfaceRenderer::PrepareFrame(const DirectionalLightData& light, const Came
     MeshFrameCB meshFrame{};
     DirectX::XMMATRIX view = ToDXMatrix(camera.view);
     DirectX::XMMATRIX proj = ToDXMatrix(camera.proj);
+    DirectX::XMMATRIX lightVP = ToDXMatrix(light.viewProj);
 
     // GPU용으로 transpose해서 저장
     XMStoreFloat4x4(&meshFrame.view, DirectX::XMMatrixTranspose(view));
     XMStoreFloat4x4(&meshFrame.proj, DirectX::XMMatrixTranspose(proj));
+    XMStoreFloat4x4(&meshFrame.lightViewProj, DirectX::XMMatrixTranspose(lightVP));
 
     // Camera Position
     meshFrame.cameraPosition[0] = camera.position.x;
@@ -176,6 +179,7 @@ void SurfaceRenderer::PrepareFrame(const DirectionalLightData& light, const Came
     meshFrame.lightColor[2] = light.color.z;
 
     meshFrame.lightIntensity = light.intensity;
+    meshFrame.shadowTextureIndex = shadowSRVIndex;
 
     m_frameCBAddress = m_frameCBAllocator.AllocateConstant(meshFrame);
 }

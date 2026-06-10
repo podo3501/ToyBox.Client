@@ -57,6 +57,7 @@ static D3D12_RESOURCE_DESC CreateTextureDescriptor(
     desc.SampleDesc.Count = 1;
     desc.MipLevels = 1;
     desc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
+    Assert(desc.Flags == 0);
 
     return desc;
 }

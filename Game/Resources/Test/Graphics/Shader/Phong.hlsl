@@ -23,15 +23,16 @@ cbuffer MeshFrameCB : register(b2)
 {
     float4x4 view;
     float4x4 proj;
+    float4x4 lightViewProj;
 
     float3 cameraPosition;
     float cameraPadding;
 
     float3 lightDirection;
-    float  lightIntensity;
+    float lightIntensity;
 
     float3 lightColor;
-    float  lightPadding;
+    uint shadowTextureIndex;
 };
 
 cbuffer PhongMaterialCB : register(b3)

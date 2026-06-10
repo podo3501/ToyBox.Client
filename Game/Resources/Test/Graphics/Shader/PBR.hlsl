@@ -23,15 +23,16 @@ cbuffer MeshFrameCB : register(b2)
 {
     float4x4 view;
     float4x4 proj;
+    float4x4 lightViewProj;
 
     float3 cameraPosition;
     float cameraPadding;
 
     float3 lightDirection;
-    float  lightIntensity;
+    float lightIntensity;
 
     float3 lightColor;
-    float  lightPadding;
+    uint shadowTextureIndex;
 };
 
 cbuffer PbrMaterialCB : register(b3)
@@ -53,7 +54,50 @@ struct PSInput
     float3 normal : NORMAL;
     float2 uv : TEXCOORD0;
     float3 tangent  : TANGENT;
+    float4 shadowPos : TEXCOORD1;
 };
+
+/*
+PSInput VSMain(uint vID : SV_VertexID)
+{
+    PSInput output;
+
+    // 인덱스/버텍스 버퍼 정보를 완전히 무시하고, 
+    // SV_VertexID(0, 1, 2, 3...)에 따라 화면 구석 4개의 좌표를 직접 하드코딩합니다.
+    // 0번: 좌상단, 1번: 우상단, 2번: 좌하단, 3번: 우하단 (삼각형 스트립 기준)
+    float2 texCoords[4] = {
+        float2(0.0f, 0.0f), // 좌상단
+        float2(1.0f, 0.0f), // 우상단
+        float2(0.0f, 1.0f), // 좌하단
+        float2(1.0f, 1.0f)  // 우하단
+    };
+
+    // DirectX 클립 공간 좌표 (-1.0 ~ 1.0)
+    float4 clipPositions[4] = {
+        float4(-1.0f,  1.0f, 0.0f, 1.0f),
+        float4( 1.0f,  1.0f, 0.0f, 1.0f),
+        float4(-1.0f, -1.0f, 0.0f, 1.0f),
+        float4( 1.0f, -1.0f, 0.0f, 1.0f)
+    };
+
+    // 만약 현재 드로우 콜이 인덱스 버퍼를 쓰는 일반 삼각형 리스트(Triangle List) 방식이라면
+    // vID가 0, 1, 2, 3, 4, 5 순으로 들어옵니다. 사각형을 이루는 6개 정점을 안전하게 매핑합니다.
+    uint id[6] = { 0, 1, 2, 2, 1, 3 };
+    uint index = (vID < 6) ? id[vID] : 0;
+
+    // 화면 가득 채우기 (정점 좌표 강제 주입)
+    output.pos = clipPositions[index];
+    output.uv = texCoords[index]; // 픽셀 셰이더에서 바로 쓸 수 있는 UV도 넣어줍니다.
+
+    // 나머지 사용하지 않는 픽셀 셰이더 입력값들은 0으로 초기화
+    output.worldPos = float3(0.0f, 0.0f, 0.0f);
+    output.normal   = float3(0.0f, 0.0f, 1.0f);
+    output.tangent  = float3(1.0f, 0.0f, 0.0f);
+    output.shadowPos = float4(0.0f, 0.0f, 0.0f, 1.0f);
+
+    return output;
+}
+*/
 
 PSInput VSMain(uint vID : SV_VertexID)
 {
@@ -67,6 +111,7 @@ PSInput VSMain(uint vID : SV_VertexID)
 
     float4 worldPos = mul(float4(input.pos, 1.0f), world);
     float4 viewPos = mul(worldPos, view);
+    float4 shadowPos = mul(worldPos, lightViewProj);
     float4 clipPos = mul(viewPos, proj);
 
     // normal transform
@@ -75,6 +120,7 @@ PSInput VSMain(uint vID : SV_VertexID)
 
     output.pos = clipPos;
     output.worldPos = worldPos.xyz;
+    output.shadowPos = shadowPos;
     output.normal = worldNormal;
     output.tangent  = worldTangent;
     output.uv = input.uv;
@@ -129,11 +175,63 @@ float3 FresnelSchlick(float cosTheta, float3 F0)
     return F0 + (1.0f - F0) * pow(saturate(1.0f - cosTheta), 5.0f);
 }
 
+//Shadow 계산 함수
+float CalculateShadow(float4 shadowPos)
+{
+    float3 projCoords = shadowPos.xyz / shadowPos.w;
+
+    projCoords.x = projCoords.x * 0.5f + 0.5f;
+    projCoords.y = -projCoords.y * 0.5f + 0.5f;
+
+    if (projCoords.x < 0.0f || projCoords.x > 1.0f ||
+        projCoords.y < 0.0f || projCoords.y > 1.0f)
+        return 1.0f;
+
+    Texture2D shadowMap = ResourceDescriptorHeap[shadowTextureIndex];
+
+    float shadowDepth = shadowMap.SampleLevel(
+        gSampler,
+        projCoords.xy,
+        0).r;
+
+    float currentDepth = projCoords.z;
+
+    float bias = 0.001f;
+
+    return (currentDepth - bias <= shadowDepth)
+        ? 1.0f
+        : 0.3f;
+}
+
+/*
+float4 PSMain_TextureTest(PSInput input) : SV_TARGET
+{
+    // 섀도우 맵 가져오기
+    Texture2D tex = ResourceDescriptorHeap[shadowTextureIndex];
+    uint width, height;
+    tex.GetDimensions(width, height); 
+
+    // 화면 해상도 비율에 맞게 UV 계산 (0.0 ~ 1.0)
+    // ※ 만약 화면이 비정상적으로 나오면 float2(1920.0f, 1080.0f) 처럼 
+    //    본인의 실제 창(Window) 해상도 수치를 직접 나누어 대입해 보셔도 됩니다.
+    float2 screenUV = input.pos.xy / float2(width, height); 
+
+    // 섀도우 맵 깊이 값 샘플링
+    float4 texSample = tex.SampleLevel(gSampler, screenUV, 0);
+
+    // 화면 전체에 흑백 깊이 값 출력!
+    return float4(texSample.rgb, 1.0f);
+}
+*/
+
 float4 PSMain(PSInput input) : SV_TARGET
 {
-//Texture2D testTex = ResourceDescriptorHeap[ambientOcclusionTextureIndex];
-//float4 testSample = testTex.Sample(gSampler, input.uv);
-//return float4(testSample.rgb, testSample.a);
+//float3 projCoords = input.shadowPos.xyz / input.shadowPos.w;
+//float2 shadowUV;
+//shadowUV.x = projCoords.x * 0.5f + 0.5f;
+//shadowUV.y = -projCoords.y * 0.5f + 0.5f; // 만약 Y축 반전이 있다면
+
+//return float4(shadowUV, 0.0f, 1.0f); // X는 Red, Y는 Green으로 출력
 
     // 1. 알베도 샘플링
     Texture2D albedoTex = ResourceDescriptorHeap[albedoTextureIndex];
@@ -199,7 +297,9 @@ float4 PSMain(PSInput input) : SV_TARGET
     // 10. 최종 셰이딩 라이트 결합 (디퓨즈 + 스펙큘러)
     //float3 finalLight = (diffuseColor + specularBRDF) * lightColor * (NdotL * lightIntensity);
     float3 finalSpecular = (NdotL > 0.0f) ? specularBRDF : float3(0.0f, 0.0f, 0.0f);
-    float3 finalLight = (diffuseColor + finalSpecular) * lightColor * (NdotL * lightIntensity);
+    //float3 finalLight = (diffuseColor + finalSpecular) * lightColor * (NdotL * lightIntensity);
+    float shadow = CalculateShadow(input.shadowPos);
+    float3 finalLight = (diffuseColor + finalSpecular) * lightColor * (NdotL * lightIntensity) * shadow;
 
     // 11. 주변광(Ambient) 처리
     float highContrastAO = pow(saturate(sampledAO), 2.0f);

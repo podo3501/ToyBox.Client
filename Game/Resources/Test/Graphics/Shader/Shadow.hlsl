@@ -39,6 +39,7 @@ VSOutput VSMain(uint vID : SV_VertexID)
 
     float4 worldPos = mul(float4(inputPos, 1.0f), world);
     output.pos = mul(worldPos, lightViewProj);
+    //output.pos = float4(inputPos.xy * 0.3, 0.9, 1.0);
 
     return output;
 }

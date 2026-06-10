@@ -57,6 +57,7 @@
     <ClInclude Include="Render\DX12\Descriptor\DescriptorFactory.h" />
     <ClInclude Include="Render\DX12\DX12Core.h" />
     <ClInclude Include="Render\DX12\DebugSurfaceGraphBuilder.h" />
+    <ClInclude Include="Render\DX12\ForwardRenderPipeline.h" />
     <ClInclude Include="Render\DX12\Helpers\CommandListHelpers.h" />
     <ClInclude Include="Render\DX12\Helpers\CommonHelpers.h" />
     <ClInclude Include="Render\DX12\Helpers\MathHelpers.h" />
@@ -148,6 +149,7 @@
     <ClCompile Include="Render\DX12\DX12Core.cpp" />
     <ClCompile Include="Render\DX12\DX12Link.cpp" />
     <ClCompile Include="Render\DX12\DebugSurfaceGraphBuilder.cpp" />
+    <ClCompile Include="Render\DX12\ForwardRenderPipeline.cpp" />
     <ClCompile Include="Render\DX12\Helpers\CommonHelpers.cpp" />
     <ClCompile Include="Render\DX12\Helpers\MathHelpers.cpp" />
     <ClCompile Include="Render\DX12\MaterialResource\GridMaterialResource.cpp" />

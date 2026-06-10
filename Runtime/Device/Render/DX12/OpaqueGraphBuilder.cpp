@@ -8,15 +8,18 @@
 #include "MeshResource.h"
 #include "MaterialResource/PhongMaterialResource.h"
 #include "MaterialResource/PbrMaterialResource.h"
+#include "ShadowResource.h"
 
 OpaqueGraphBuilder::~OpaqueGraphBuilder() = default;
 OpaqueGraphBuilder::OpaqueGraphBuilder(
     SurfaceRenderer* surfRenderer, 
     SwapChainPresenter* swapChain,
+    ShadowResource* shadowRes,
     RenderScene* scene, 
     RGHandle hBb, RGHandle hShadow) :
     m_surfRenderer{ surfRenderer },
     m_swapChain{ swapChain },
+    m_shadowRes{ shadowRes },
     m_scene{ scene }, 
     m_hBb { hBb },
     m_hShadow{ hShadow }
@@ -31,12 +34,12 @@ void OpaqueGraphBuilder::Build(RenderGraph& graph)
     opaque.gpuExecute = [this](CommandList& cmd, TaskContext& ctx) {
         m_swapChain->SetRenderTarget(cmd);
         m_swapChain->Clear(cmd, 0.13f, 0.13f, 0.16f, 1.0f);
-
+        
         m_surfRenderer->BindCommonState(cmd);
         m_surfRenderer->PrepareFrame(
             ctx.frame.light, 
-            ctx.frame.camera
-
+            ctx.frame.camera,
+            m_shadowRes->GetSrvIndex()
         );
 
         for (auto& item : m_scene->GetSurfaceDraws())

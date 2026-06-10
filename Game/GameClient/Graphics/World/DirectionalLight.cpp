@@ -13,9 +13,10 @@ DirectionalLightData DirectionalLight::BuildLightData(const CameraData& mainCame
     data.intensity = m_intensity;
 
     // 메인 카메라 위치를 기준으로 조명이 들어오는 반대 방향 벡터로 멀리 떨어뜨림
-    cm::Vector3 mainCamPos{ mainCameraData.position.x, mainCameraData.position.y, mainCameraData.position.z };
+    //cm::Vector3 mainCamPos{ mainCameraData.position.x, mainCameraData.position.y, mainCameraData.position.z };
+    cm::Vector3 targetCenter{ 0.0f, 0.0f, 0.0f };
     float lightDistance = 200.0f; // 씬 크기에 맞게 조절 가능
-    cm::Vector3 lightPos = mainCamPos - (m_direction * lightDistance);
+    cm::Vector3 lightPos = targetCenter - (m_direction * lightDistance);
 
     // 2. Light View Matrix 계산 (LookAt 변환 직접 유도) 기저 벡터 생성 (조명이 바라보는 방향이 곧 Forward 축)
     cm::Vector3 zAxis = m_direction.NormalizedOr({ 0.0f, -1.0f, 0.0f });
@@ -40,8 +41,8 @@ DirectionalLightData DirectionalLight::BuildLightData(const CameraData& mainCame
     lightView.m[3][2] = -lightPos.Dot(zAxis);
 
     // 3. Light Projection Matrix 계산 (Orthographic) 조명이 커버할 공간의 가로세로 범위 (너무 크면 해상도가 뭉개지고 작으면 잘림)
-    float shadowSizeX = 150.0f;
-    float shadowSizeY = 150.0f;
+    float shadowSizeX = 20.0f;
+    float shadowSizeY = 20.0f;
 
     float halfWidth = shadowSizeX * 0.5f;
     float halfHeight = shadowSizeY * 0.5f;

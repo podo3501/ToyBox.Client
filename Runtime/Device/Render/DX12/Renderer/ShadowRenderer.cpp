@@ -77,14 +77,14 @@ ID3D12PipelineState* ShadowRenderer::CreatePSO(const PipelineState& pipelineStat
             pso.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
             pso.DepthStencilState.DepthEnable = TRUE;
             pso.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
-            pso.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS;
+            pso.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
             pso.DSVFormat = DXGI_FORMAT_D32_FLOAT;
 
             pso.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
             pso.RasterizerState.CullMode = D3D12_CULL_MODE_BACK;
 
             // 아티팩트 방지를 위한 하드웨어 뎁스 바이어스 설정 (수치는 상황에 따라 미세조정 필요)
-            pso.RasterizerState.DepthBias = 100000;
+            pso.RasterizerState.DepthBias = 3000;
             pso.RasterizerState.DepthBiasClamp = 0.0f;
             pso.RasterizerState.SlopeScaledDepthBias = 1.0f;
                             
@@ -129,8 +129,6 @@ void ShadowRenderer::PrepareFrame(const DirectionalLightData& light)
     // 조명 데이터(light) 내부에 계산되어 저장되어 있을 Light View-Projection 행렬을 가져옴
     // 만약 Matrix 형식이 아니라면 프로젝트 변환 헬퍼(ToDXMatrix) 등을 거쳐 처리해줘
     DirectX::XMMATRIX lightVP = ToDXMatrix(light.viewProj);
-
-    // GPU용 Transpose 저장
     XMStoreFloat4x4(&shadowFrame.lightViewProj, DirectX::XMMatrixTranspose(lightVP));
 
     m_frameCBAddress = m_frameCBAllocator.AllocateConstant(shadowFrame);

@@ -27,6 +27,28 @@ void RootSignatureBuilder::AddLinearSampler(UINT shaderRegister)
     m_samplers.push_back({ shaderRegister });
 }
 
+void RootSignatureBuilder::AddComparisonSampler(UINT shaderRegister)
+{
+    D3D12_STATIC_SAMPLER_DESC samplerDesc{};
+    samplerDesc.Filter = D3D12_FILTER_COMPARISON_MIN_MAG_LINEAR_MIP_POINT; //비교(Comparison) 필터 설정
+    samplerDesc.AddressU = D3D12_TEXTURE_ADDRESS_MODE_BORDER; // 그림자 맵 영역 밖 처리
+    samplerDesc.AddressV = D3D12_TEXTURE_ADDRESS_MODE_BORDER;
+    samplerDesc.AddressW = D3D12_TEXTURE_ADDRESS_MODE_BORDER;
+    samplerDesc.MipLODBias = 0.0f;
+    samplerDesc.MaxAnisotropy = 1;
+
+    // "현재 그리려는 깊이가 섀도우 맵의 깊이보다 작거나 같으면(앞에 있으면) 빛을 받는다"
+    samplerDesc.ComparisonFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
+    samplerDesc.BorderColor = D3D12_STATIC_BORDER_COLOR_OPAQUE_WHITE; // 영역 밖은 흰색(그림자 없음) 처리
+    samplerDesc.MinLOD = 0.0f;
+    samplerDesc.MaxLOD = D3D12_FLOAT32_MAX;
+    samplerDesc.ShaderRegister = shaderRegister; // 인자로 받은 레지스터 번호 (예: 1번이면 s1)
+    samplerDesc.RegisterSpace = 0;
+    samplerDesc.ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; // 픽셀 셰이더에서만 사용
+
+    m_staticSamplers.push_back(samplerDesc);
+}
+
 void RootSignatureBuilder::AddFlags(D3D12_ROOT_SIGNATURE_FLAGS flags)
 {
     m_flags |= flags;
@@ -40,7 +62,7 @@ ComPtr<ID3D12RootSignature> RootSignatureBuilder::Build(ID3D12Device* device)
 
     ranges.reserve(m_srvTables.size());
     params.reserve(m_constants.size() + m_cbvs.size() + m_srvs.size() + m_srvTables.size());
-    samplers.reserve(m_samplers.size());
+    samplers.reserve(m_samplers.size() + m_staticSamplers.size());
 
     // 일반적으로 가장 자주 바뀌는 루트 상수를 앞쪽 파라미터 색인에 두는 것이 성능상 유리.
     for (const auto& c : m_constants)
@@ -82,7 +104,11 @@ ComPtr<ID3D12RootSignature> RootSignatureBuilder::Build(ID3D12Device* device)
     }
 
     for (const auto& s : m_samplers)
-        samplers.emplace_back(s.shaderRegister, D3D12_FILTER_MIN_MAG_MIP_LINEAR);
+    {
+        CD3DX12_STATIC_SAMPLER_DESC linearDesc(s.shaderRegister, D3D12_FILTER_MIN_MAG_MIP_LINEAR);
+        samplers.push_back(linearDesc);
+    }
+    samplers.insert(samplers.end(), m_staticSamplers.begin(), m_staticSamplers.end());
 
     D3D12_ROOT_SIGNATURE_FLAGS finalFlags =
         D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT |

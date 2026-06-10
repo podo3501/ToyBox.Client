@@ -202,7 +202,8 @@ void RenderBackend::Render()
 
     ShadowGraphBuilder shadow(m_renderers->GetShadowRenderer(), 
         m_descFactory.get(), m_shadowRes.get(), m_scene.get(), hShadow);
-    OpaqueGraphBuilder opaque(m_renderers->GetSurfRenderer(), m_swapChain.get(), m_scene.get(), hBb, hShadow);
+    OpaqueGraphBuilder opaque(m_renderers->GetSurfRenderer(), 
+        m_swapChain.get(), m_shadowRes.get(), m_scene.get(), hBb, hShadow);
     DebugSurfaceGraphBuilder debugSurface(m_renderers->GetDebugSurfRenderer(), m_scene.get(), hBb);
     UIGraphBuilder ui(m_renderers->GetUIRenderer(), m_scene.get(), hBb);
     FrameEndGraphBuilder end(hBb, hShadow);
