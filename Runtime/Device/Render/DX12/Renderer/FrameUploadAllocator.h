@@ -1,6 +1,7 @@
 #pragma once
 #include <d3d12.h>
 #include <wrl.h>
+#include "../Resource/Resource.h"
 
 class FrameUploadAllocator
 {
@@ -12,7 +13,7 @@ public:
     D3D12_GPU_VIRTUAL_ADDRESS AllocateConstant(const T& data);
 
 private:
-    Microsoft::WRL::ComPtr<ID3D12Resource> m_resource;
+    Resource m_resource;
 
     static constexpr UINT kAlignment = 256;
 

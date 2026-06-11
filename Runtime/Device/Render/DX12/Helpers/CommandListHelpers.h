@@ -1,6 +1,7 @@
 #pragma once
 #include "../d3dx12.h"
 #include <concepts>
+#include "../Resource/Resource.h"
 
 template<typename T>
 concept CommandListLike = requires(T t)
@@ -11,18 +12,18 @@ concept CommandListLike = requires(T t)
 namespace CommandUtils
 {
     inline D3D12_RESOURCE_BARRIER CreateTransitionBarrier(
-        ID3D12Resource* resource,
+        const Resource& resource,
         D3D12_RESOURCE_STATES before,
         D3D12_RESOURCE_STATES after) noexcept
     {
         return CD3DX12_RESOURCE_BARRIER::Transition(
-            resource,
+            resource.Get(),
             before,
             after);
     }
 
     template<CommandListLike T>
-    inline void Transition(T& cmd, ID3D12Resource* resource,
+    inline void Transition(T& cmd, const Resource& resource,
         D3D12_RESOURCE_STATES before,
         D3D12_RESOURCE_STATES after) noexcept
     {

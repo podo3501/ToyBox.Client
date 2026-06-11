@@ -1,7 +1,8 @@
 #include "pch.h"
 #include "DescriptorFactory.h"
 #include "DescriptorAllocator.h"
-#include "../TextureResource.h"
+#include "Asset/Texture/TextureResource.h"
+#include "Resource/Resource.h"
 #include "GameClient/Service/Render/Desc/TextureDesc.h"
 
 DescriptorFactory::~DescriptorFactory() = default;
@@ -14,7 +15,7 @@ DescriptorFactory::DescriptorFactory(
     m_dsvAllocator{ dsvAllocator }
 {}
 
-UINT DescriptorFactory::CreateBufferSRV(ID3D12Resource* buffer, UINT elementCount, UINT elementStride)
+UINT DescriptorFactory::CreateBufferSRV(const Resource& resBuffer, UINT elementCount, UINT elementStride)
 {
     auto srvDesc = CreateStructuredBufferSRVDesc(elementCount, elementStride);
 
@@ -22,11 +23,11 @@ UINT DescriptorFactory::CreateBufferSRV(ID3D12Resource* buffer, UINT elementCoun
     if (index == UINT_MAX)
         return UINT_MAX;
 
-    m_device->CreateShaderResourceView(buffer, &srvDesc, GetSrvCpuHandle(index));
+    m_device->CreateShaderResourceView(resBuffer.Get(), &srvDesc, GetSrvCpuHandle(index));
     return index;
 }
 
-UINT DescriptorFactory::CreateTextureSRV(ID3D12Resource* res, DXGI_FORMAT format, UINT mipLevels)
+UINT DescriptorFactory::CreateTextureSRV(const Resource& res, DXGI_FORMAT format, UINT mipLevels)
 {
     const auto& resDesc = res->GetDesc();
     D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
@@ -40,11 +41,11 @@ UINT DescriptorFactory::CreateTextureSRV(ID3D12Resource* res, DXGI_FORMAT format
     UINT Index = m_srvAllocator->Allocate();
     if (Index == UINT_MAX) return UINT_MAX;
 
-    m_device->CreateShaderResourceView(res, &srvDesc, GetSrvCpuHandle(Index));
+    m_device->CreateShaderResourceView(res.Get(), &srvDesc, GetSrvCpuHandle(Index));
     return Index;
 }
 
-UINT DescriptorFactory::CreateTextureDSV(ID3D12Resource* res, DXGI_FORMAT format, UINT mipSlice)
+UINT DescriptorFactory::CreateTextureDSV(const Resource& res, DXGI_FORMAT format, UINT mipSlice)
 {
     if (!res) return UINT_MAX;
 
@@ -58,7 +59,7 @@ UINT DescriptorFactory::CreateTextureDSV(ID3D12Resource* res, DXGI_FORMAT format
     UINT index = m_dsvAllocator->Allocate();
     if (index == UINT_MAX) return UINT_MAX;
 
-    m_device->CreateDepthStencilView(res, &dsvDesc, GetDsvHandle(index));
+    m_device->CreateDepthStencilView(res.Get(), &dsvDesc, GetDsvHandle(index));
     return index;
 }
 
@@ -79,7 +80,7 @@ bool DescriptorFactory::CreateTextureViews(TextureResource* texRes, bool generat
 {
     if (!texRes) return false;
 
-    ID3D12Resource* res = texRes->Get();
+    auto& res = texRes->Get();
     const auto& resDesc = res->GetDesc();
     const UINT mipCount = resDesc.MipLevels;
 
@@ -133,7 +134,7 @@ D3D12_SHADER_RESOURCE_VIEW_DESC DescriptorFactory::CreateStructuredBufferSRVDesc
     return desc;
 }
 
-UINT DescriptorFactory::CreateMipSRV(ID3D12Resource* res, DXGI_FORMAT format, UINT mipLevel)
+UINT DescriptorFactory::CreateMipSRV(const Resource& res, DXGI_FORMAT format, UINT mipLevel)
 {
     D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
     srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
@@ -146,11 +147,11 @@ UINT DescriptorFactory::CreateMipSRV(ID3D12Resource* res, DXGI_FORMAT format, UI
     UINT index = m_srvAllocator->AllocateTransient();
     if (index == UINT_MAX) return UINT_MAX;
 
-    m_device->CreateShaderResourceView(res, &srvDesc, GetSrvCpuHandle(index));
+    m_device->CreateShaderResourceView(res.Get(), &srvDesc, GetSrvCpuHandle(index));
     return index;
 }
 
-UINT DescriptorFactory::CreateMipUAV(ID3D12Resource* res, DXGI_FORMAT format, UINT mipLevel)
+UINT DescriptorFactory::CreateMipUAV(const Resource& res, DXGI_FORMAT format, UINT mipLevel)
 {
     D3D12_UNORDERED_ACCESS_VIEW_DESC uavDesc{};
     uavDesc.Format = format;
@@ -160,7 +161,7 @@ UINT DescriptorFactory::CreateMipUAV(ID3D12Resource* res, DXGI_FORMAT format, UI
     UINT index = m_srvAllocator->AllocateTransient();
     if (index == UINT_MAX) return UINT_MAX;
 
-    m_device->CreateUnorderedAccessView(res, nullptr, &uavDesc, GetSrvCpuHandle(index));
+    m_device->CreateUnorderedAccessView(res.Get(), nullptr, &uavDesc, GetSrvCpuHandle(index));
     return index;
 }
 

@@ -1,14 +1,14 @@
 #include "pch.h"
 #include "ShadowGraphBuilder.h"
-#include "RenderPass.h"
-#include "RenderGraph.h"
 #include "RenderScene.h"
+#include "Graph/RenderPass.h"
+#include "Graph/RenderGraph.h"
 #include "Renderer/ShadowRenderer.h"
-#include "MeshResource.h"
+#include "Asset/Mesh/MeshResource.h"
 #include "Helpers/CommandListHelpers.h"
 #include "Descriptor/DescriptorFactory.h"
 #include "Command/CommandList.h"
-#include "ShadowResource.h"
+#include "Resource/ShadowResource.h"
 
 ShadowGraphBuilder::~ShadowGraphBuilder() = default;
 
@@ -49,6 +49,3 @@ void ShadowGraphBuilder::Build(RenderGraph& graph)
         }
         };
 }
-
-//shadow map resource를 생성하고 Set으로 연결 시킨후 주석을 풀고
-//돌아가는지 확인한다.

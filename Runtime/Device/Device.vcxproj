@@ -44,6 +44,25 @@
     <ClInclude Include="Input\DirectX\InputManager.h" />
     <ClInclude Include="Input\IInputManager.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="Render\DX12\Asset\Material\MaterialSystem.h" />
+    <ClInclude Include="Render\DX12\Asset\Material\Resource\DebugSurfaceMaterialResource.h" />
+    <ClInclude Include="Render\DX12\Asset\Material\Resource\GridMaterialResource.h" />
+    <ClInclude Include="Render\DX12\Asset\Material\Resource\MaterialResource.h" />
+    <ClInclude Include="Render\DX12\Asset\Material\Resource\PbrMaterialResource.h" />
+    <ClInclude Include="Render\DX12\Asset\Material\Resource\PhongMaterialResource.h" />
+    <ClInclude Include="Render\DX12\Asset\Material\Resource\SurfaceMaterialResource.h" />
+    <ClInclude Include="Render\DX12\Asset\Material\Resource\UIMaterialResource.h" />
+    <ClInclude Include="Render\DX12\Asset\Mesh\MeshGraphBuilder.h" />
+    <ClInclude Include="Render\DX12\Asset\Mesh\MeshLoadRequest.h" />
+    <ClInclude Include="Render\DX12\Asset\Mesh\MeshRegistry.h" />
+    <ClInclude Include="Render\DX12\Asset\Mesh\MeshResource.h" />
+    <ClInclude Include="Render\DX12\Asset\Mesh\MeshSystem.h" />
+    <ClInclude Include="Render\DX12\Asset\Texture\MipGenerator.h" />
+    <ClInclude Include="Render\DX12\Asset\Texture\TextureGraphBuilder.h" />
+    <ClInclude Include="Render\DX12\Asset\Texture\TextureLoadRequest.h" />
+    <ClInclude Include="Render\DX12\Asset\Texture\TextureRegistry.h" />
+    <ClInclude Include="Render\DX12\Asset\Texture\TextureResource.h" />
+    <ClInclude Include="Render\DX12\Asset\Texture\TextureSystem.h" />
     <ClInclude Include="Render\DX12\BuildConfig.h" />
     <ClInclude Include="Render\DX12\Command\CommandList.h" />
     <ClInclude Include="Render\DX12\Command\CommandQueue.h" />
@@ -58,25 +77,18 @@
     <ClInclude Include="Render\DX12\DX12Core.h" />
     <ClInclude Include="Render\DX12\DebugSurfaceGraphBuilder.h" />
     <ClInclude Include="Render\DX12\ForwardRenderPipeline.h" />
+    <ClInclude Include="Render\DX12\Graph\RenderGraph.h" />
+    <ClInclude Include="Render\DX12\Graph\RenderPass.h" />
+    <ClInclude Include="Render\DX12\Graph\RGTypes.h" />
+    <ClInclude Include="Render\DX12\Graph\Task.h" />
+    <ClInclude Include="Render\DX12\Graph\TaskHandle.h" />
+    <ClInclude Include="Render\DX12\Graph\TaskNode.h" />
+    <ClInclude Include="Render\DX12\Graph\TaskScheduler.h" />
     <ClInclude Include="Render\DX12\Helpers\CommandListHelpers.h" />
     <ClInclude Include="Render\DX12\Helpers\CommonHelpers.h" />
     <ClInclude Include="Render\DX12\Helpers\MathHelpers.h" />
-    <ClInclude Include="Render\DX12\MaterialResource\DebugSurfaceMaterialResource.h" />
-    <ClInclude Include="Render\DX12\MaterialResource\GridMaterialResource.h" />
-    <ClInclude Include="Render\DX12\MaterialResource\MaterialResource.h" />
-    <ClInclude Include="Render\DX12\MaterialResource\PbrMaterialResource.h" />
-    <ClInclude Include="Render\DX12\MaterialResource\PhongMaterialResource.h" />
-    <ClInclude Include="Render\DX12\MaterialResource\SurfaceMaterialResource.h" />
-    <ClInclude Include="Render\DX12\MaterialResource\UIMaterialResource.h" />
-    <ClInclude Include="Render\DX12\MaterialSystem.h" />
     <ClInclude Include="Render\DX12\OpaqueGraphBuilder.h" />
     <ClInclude Include="Render\DX12\GPUProfiler.h" />
-    <ClInclude Include="Render\DX12\MeshGraphBuilder.h" />
-    <ClInclude Include="Render\DX12\MeshLoadRequest.h" />
-    <ClInclude Include="Render\DX12\MeshRegistry.h" />
-    <ClInclude Include="Render\DX12\MeshResource.h" />
-    <ClInclude Include="Render\DX12\MeshSystem.h" />
-    <ClInclude Include="Render\DX12\MipGenerator.h" />
     <ClInclude Include="Render\DX12\FrameEndGraphBuilder.h" />
     <ClInclude Include="Render\DX12\Renderer\FrameUploadAllocator.h" />
     <ClInclude Include="Render\DX12\Renderer\DebugSurfaceRenderer.h" />
@@ -87,26 +99,15 @@
     <ClInclude Include="Render\DX12\Renderer\Renderers.h" />
     <ClInclude Include="Render\DX12\Renderer\RootSignatureBuilder.h" />
     <ClInclude Include="Render\DX12\Renderer\UIRenderer.h" />
-    <ClInclude Include="Render\DX12\RenderGraph.h" />
-    <ClInclude Include="Render\DX12\RenderPass.h" />
     <ClInclude Include="Render\DX12\RenderScene.h" />
     <ClInclude Include="Render\DX12\RenderSortKey.h" />
-    <ClInclude Include="Render\DX12\ResourceLoader.h" />
-    <ClInclude Include="Render\DX12\RGTypes.h" />
+    <ClInclude Include="Render\DX12\Resource\Resource.h" />
+    <ClInclude Include="Render\DX12\Resource\ResourceLoader.h" />
+    <ClInclude Include="Render\DX12\Resource\ShadowResource.h" />
     <ClInclude Include="Render\DX12\ShaderSystem.h" />
     <ClInclude Include="Render\DX12\ShadowGraphBuilder.h" />
-    <ClInclude Include="Render\DX12\ShadowResource.h" />
     <ClInclude Include="Render\DX12\SwapChainPresenter.h" />
     <ClInclude Include="Render\DX12\RenderBackend.h" />
-    <ClInclude Include="Render\DX12\Task.h" />
-    <ClInclude Include="Render\DX12\TaskHandle.h" />
-    <ClInclude Include="Render\DX12\TaskNode.h" />
-    <ClInclude Include="Render\DX12\TaskScheduler.h" />
-    <ClInclude Include="Render\DX12\TextureGraphBuilder.h" />
-    <ClInclude Include="Render\DX12\TextureLoadRequest.h" />
-    <ClInclude Include="Render\DX12\TextureRegistry.h" />
-    <ClInclude Include="Render\DX12\TextureResource.h" />
-    <ClInclude Include="Render\DX12\TextureSystem.h" />
     <ClInclude Include="Render\DX12\UIGraphBuilder.h" />
     <ClInclude Include="Storage\JsonObjectIO.h" />
   </ItemGroup>
@@ -140,6 +141,21 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Render\DX12\Asset\Material\MaterialSystem.cpp" />
+    <ClCompile Include="Render\DX12\Asset\Material\Resource\GridMaterialResource.cpp" />
+    <ClCompile Include="Render\DX12\Asset\Material\Resource\MaterialResource.cpp" />
+    <ClCompile Include="Render\DX12\Asset\Material\Resource\PbrMaterialResource.cpp" />
+    <ClCompile Include="Render\DX12\Asset\Material\Resource\PhongMaterialResource.cpp" />
+    <ClCompile Include="Render\DX12\Asset\Material\Resource\UIMaterialResource.cpp" />
+    <ClCompile Include="Render\DX12\Asset\Mesh\MeshGraphBuilder.cpp" />
+    <ClCompile Include="Render\DX12\Asset\Mesh\MeshRegistry.cpp" />
+    <ClCompile Include="Render\DX12\Asset\Mesh\MeshResource.cpp" />
+    <ClCompile Include="Render\DX12\Asset\Mesh\MeshSystem.cpp" />
+    <ClCompile Include="Render\DX12\Asset\Texture\MipGenerator.cpp" />
+    <ClCompile Include="Render\DX12\Asset\Texture\TextureGraphBuilder.cpp" />
+    <ClCompile Include="Render\DX12\Asset\Texture\TextureRegistry.cpp" />
+    <ClCompile Include="Render\DX12\Asset\Texture\TextureResource.cpp" />
+    <ClCompile Include="Render\DX12\Asset\Texture\TextureSystem.cpp" />
     <ClCompile Include="Render\DX12\Command\CommandList.cpp" />
     <ClCompile Include="Render\DX12\Command\CommandQueue.cpp" />
     <ClCompile Include="Render\DX12\Command\CommandScheduler.cpp" />
@@ -150,21 +166,12 @@
     <ClCompile Include="Render\DX12\DX12Link.cpp" />
     <ClCompile Include="Render\DX12\DebugSurfaceGraphBuilder.cpp" />
     <ClCompile Include="Render\DX12\ForwardRenderPipeline.cpp" />
+    <ClCompile Include="Render\DX12\Graph\RenderGraph.cpp" />
+    <ClCompile Include="Render\DX12\Graph\TaskScheduler.cpp" />
     <ClCompile Include="Render\DX12\Helpers\CommonHelpers.cpp" />
     <ClCompile Include="Render\DX12\Helpers\MathHelpers.cpp" />
-    <ClCompile Include="Render\DX12\MaterialResource\GridMaterialResource.cpp" />
-    <ClCompile Include="Render\DX12\MaterialResource\MaterialResource.cpp" />
-    <ClCompile Include="Render\DX12\MaterialResource\PbrMaterialResource.cpp" />
-    <ClCompile Include="Render\DX12\MaterialResource\PhongMaterialResource.cpp" />
-    <ClCompile Include="Render\DX12\MaterialResource\UIMaterialResource.cpp" />
-    <ClCompile Include="Render\DX12\MaterialSystem.cpp" />
     <ClCompile Include="Render\DX12\OpaqueGraphBuilder.cpp" />
     <ClCompile Include="Render\DX12\GPUProfiler.cpp" />
-    <ClCompile Include="Render\DX12\MeshGraphBuilder.cpp" />
-    <ClCompile Include="Render\DX12\MeshRegistry.cpp" />
-    <ClCompile Include="Render\DX12\MeshResource.cpp" />
-    <ClCompile Include="Render\DX12\MeshSystem.cpp" />
-    <ClCompile Include="Render\DX12\MipGenerator.cpp" />
     <ClCompile Include="Render\DX12\FrameEndGraphBuilder.cpp" />
     <ClCompile Include="Render\DX12\Renderer\FrameUploadAllocator.cpp" />
     <ClCompile Include="Render\DX12\Renderer\DebugSurfaceRenderer.cpp" />
@@ -174,20 +181,15 @@
     <ClCompile Include="Render\DX12\Renderer\Renderers.cpp" />
     <ClCompile Include="Render\DX12\Renderer\RootSignatureBuilder.cpp" />
     <ClCompile Include="Render\DX12\Renderer\UIRenderer.cpp" />
-    <ClCompile Include="Render\DX12\RenderGraph.cpp" />
     <ClCompile Include="Render\DX12\RenderScene.cpp" />
     <ClCompile Include="Render\DX12\RenderSortKey.cpp" />
-    <ClCompile Include="Render\DX12\ResourceLoader.cpp" />
+    <ClCompile Include="Render\DX12\Resource\Resource.cpp" />
+    <ClCompile Include="Render\DX12\Resource\ResourceLoader.cpp" />
+    <ClCompile Include="Render\DX12\Resource\ShadowResource.cpp" />
     <ClCompile Include="Render\DX12\ShaderSystem.cpp" />
     <ClCompile Include="Render\DX12\ShadowGraphBuilder.cpp" />
-    <ClCompile Include="Render\DX12\ShadowResource.cpp" />
     <ClCompile Include="Render\DX12\SwapChainPresenter.cpp" />
     <ClCompile Include="Render\DX12\RenderBackend.cpp" />
-    <ClCompile Include="Render\DX12\TaskScheduler.cpp" />
-    <ClCompile Include="Render\DX12\TextureGraphBuilder.cpp" />
-    <ClCompile Include="Render\DX12\TextureRegistry.cpp" />
-    <ClCompile Include="Render\DX12\TextureResource.cpp" />
-    <ClCompile Include="Render\DX12\TextureSystem.cpp" />
     <ClCompile Include="Render\DX12\UIGraphBuilder.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -256,7 +258,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir);$(SolutionDir)Game;$(SolutionDir)Runtime;$(SolutionDir)ThirdParty\Include;$(SolutionDir)ThirdParty\SDL3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir);$(SolutionDir)Game;$(SolutionDir)Runtime;$(SolutionDir)ThirdParty\Include;$(SolutionDir)ThirdParty\SDL3\include;$(ProjectDir)\Render\DX12;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -279,7 +281,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir);$(SolutionDir)Game;$(SolutionDir)Runtime;$(SolutionDir)ThirdParty\Include;$(SolutionDir)ThirdParty\SDL3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir);$(SolutionDir)Game;$(SolutionDir)Runtime;$(SolutionDir)ThirdParty\Include;$(SolutionDir)ThirdParty\SDL3\include;$(ProjectDir)\Render\DX12;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -300,7 +302,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir);$(SolutionDir)Game;$(SolutionDir)Runtime;$(SolutionDir)ThirdParty\Include;$(SolutionDir)ThirdParty\SDL3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir);$(SolutionDir)Game;$(SolutionDir)Runtime;$(SolutionDir)ThirdParty\Include;$(SolutionDir)ThirdParty\SDL3\include;$(ProjectDir)\Render\DX12;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -323,7 +325,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir);$(SolutionDir)Game;$(SolutionDir)Runtime;$(SolutionDir)ThirdParty\Include;$(SolutionDir)ThirdParty\SDL3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir);$(SolutionDir)Game;$(SolutionDir)Runtime;$(SolutionDir)ThirdParty\Include;$(SolutionDir)ThirdParty\SDL3\include;$(ProjectDir)\Render\DX12;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>

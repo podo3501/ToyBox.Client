@@ -1,11 +1,11 @@
 #include "pch.h"
 #include "UIGraphBuilder.h"
-#include "RenderPass.h"
-#include "RenderGraph.h"
 #include "RenderScene.h"
+#include "Graph/RenderPass.h"
+#include "Graph/RenderGraph.h"
 #include "Renderer/UIRenderer.h"
-#include "MeshResource.h"
-#include "MaterialResource/UIMaterialResource.h"
+#include "Asset/Mesh/MeshResource.h"
+#include "Asset/Material/Resource/UIMaterialResource.h"
 
 UIGraphBuilder::~UIGraphBuilder() = default;
 UIGraphBuilder::UIGraphBuilder(UIRenderer* uiRenderer, RenderScene* scene, RGHandle hBb) :

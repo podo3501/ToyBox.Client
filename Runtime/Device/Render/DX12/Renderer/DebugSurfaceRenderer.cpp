@@ -1,12 +1,12 @@
 #include "pch.h"
 #include "DebugSurfaceRenderer.h"
-#include "../ShaderSystem.h"
+#include "ShaderSystem.h"
 #include "RootSignatureBuilder.h"
-#include "../Command/CommandList.h"
+#include "Command/CommandList.h"
 #include "RenderConstants.h"
-#include "../Helpers/MathHelpers.h"
+#include "Helpers/MathHelpers.h"
 #include "GameClient/Graphics/RenderData/CameraData.h"
-#include "../MeshResource.h"
+#include "Asset/Mesh/MeshResource.h"
 
 namespace cm = Core::Math;
 

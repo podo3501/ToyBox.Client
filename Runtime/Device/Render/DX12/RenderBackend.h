@@ -3,7 +3,6 @@
 #include "Core/Foundation/Geometry2D.h"
 #include <wrl/client.h>
 
-struct MeshBuffer;
 class DX12Core;
 class SwapChainPresenter;
 class CommandList;

@@ -1,5 +1,5 @@
 #pragma once
-#include "RGTypes.h"
+#include "Graph/RGTypes.h"
 
 class RenderGraph;
 

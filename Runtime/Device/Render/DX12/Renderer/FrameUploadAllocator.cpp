@@ -15,7 +15,7 @@ bool FrameUploadAllocator::Initialize(ID3D12Device* device, UINT bufferSize)
         &desc,
         D3D12_RESOURCE_STATE_GENERIC_READ,
         nullptr,
-        IID_PPV_ARGS(&m_resource)
+        IID_PPV_ARGS(m_resource.GetAddressOf())
     );
 
     m_resource->Map(0, nullptr, reinterpret_cast<void**>(&m_mapped));

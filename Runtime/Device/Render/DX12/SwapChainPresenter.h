@@ -1,6 +1,7 @@
 #pragma once
 #include <wrl/client.h>
 #include "Core/Foundation/Geometry2D.h"
+#include "Resource/Resource.h"
 
 struct ID3D12Fence;
 struct ID3D12Device;
@@ -8,7 +9,6 @@ struct IDXGIFactory4;
 struct IDXGISwapChain4;
 struct ID3D12DescriptorHeap;
 struct ID3D12CommandQueue;
-struct ID3D12Resource;
 struct D3D12_CPU_DESCRIPTOR_HANDLE;
 struct Size;
 class CommandList;
@@ -40,7 +40,7 @@ public:
 
     D3D12_CPU_DESCRIPTOR_HANDLE GetCurrentRTV() const;
     D3D12_CPU_DESCRIPTOR_HANDLE GetDSV() const;
-    ID3D12Resource* GetCurrentBackbuffer() { return m_renderTargets[m_frameIndex].Get(); }
+    Resource& GetCurrentBackbuffer() { return m_renderTargets[m_frameIndex]; }
 
 private:
     bool CreateSwapChain(ID3D12Device* device, IDXGIFactory4* factory,
@@ -51,9 +51,9 @@ private:
 
     Microsoft::WRL::ComPtr<IDXGISwapChain4> m_swapChain;
     Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> m_rtvHeap;
-    vector<Microsoft::WRL::ComPtr<ID3D12Resource>> m_renderTargets;
+    vector<Resource> m_renderTargets;
 
-    Microsoft::WRL::ComPtr<ID3D12Resource> m_depthBuffer;
+    Resource m_depthBuffer;
     Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> m_dsvHeap;
     DXGI_FORMAT m_depthFormat{ DXGI_FORMAT_D32_FLOAT };
 

@@ -1,10 +1,10 @@
 #include "pch.h"
 #include "ShadowRenderer.h"
-#include "../MeshResource.h"
+#include "Asset/Mesh/MeshResource.h"
 #include "RootSignatureBuilder.h"
-#include "../ShaderSystem.h"
-#include "../Command/CommandList.h"
-#include "../Helpers/MathHelpers.h"
+#include "ShaderSystem.h"
+#include "Command/CommandList.h"
+#include "Helpers/MathHelpers.h"
 #include "GameClient/Graphics/RenderData/DirectionalLightData.h"
 
 namespace cm = Core::Math;

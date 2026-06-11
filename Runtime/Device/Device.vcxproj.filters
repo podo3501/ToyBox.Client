@@ -55,8 +55,26 @@
     <Filter Include="Render\DX12\Descriptor">
       <UniqueIdentifier>{cc3bb541-3b13-4277-9ea4-7b35ecc12573}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Render\DX12\MaterialResource">
-      <UniqueIdentifier>{f25b1064-ee2d-4275-a2fa-e2d68673d353}</UniqueIdentifier>
+    <Filter Include="Render\DX12\Resource">
+      <UniqueIdentifier>{18be30e4-551c-4810-8f7d-b35aae51a9f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Render\DX12\Asset">
+      <UniqueIdentifier>{166b090a-d4eb-4fc1-8a13-9b6c1477f472}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Render\DX12\Asset\Mesh">
+      <UniqueIdentifier>{a702286c-98ed-4f41-9e2e-acddf457b8bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Render\DX12\Asset\Texture">
+      <UniqueIdentifier>{f9962671-b2ec-4869-9f28-d45965d28f33}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Render\DX12\Asset\Material">
+      <UniqueIdentifier>{81ca0b1a-e3d0-4d6a-85a6-24b369246cb1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Render\DX12\Asset\Material\Resource">
+      <UniqueIdentifier>{30c947de-2557-4531-b3f7-d83d6c9f9fb3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Render\DX12\Graph">
+      <UniqueIdentifier>{e4bb0a2a-16cc-4d5e-85f4-199ba1ea76ba}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -124,9 +142,6 @@
     <ClInclude Include="Render\DX12\SwapChainPresenter.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\ResourceLoader.h">
-      <Filter>Render\DX12</Filter>
-    </ClInclude>
     <ClInclude Include="Render\DX12\DebugOptions.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
@@ -151,67 +166,13 @@
     <ClInclude Include="Asset\Loader\Sound\OggStreamLoader.h">
       <Filter>Asset\Loader\Sound</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\TextureResource.h">
-      <Filter>Render\DX12</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\DX12\MipGenerator.h">
-      <Filter>Render\DX12</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\DX12\TaskScheduler.h">
-      <Filter>Render\DX12</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\DX12\TaskNode.h">
-      <Filter>Render\DX12</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\DX12\Task.h">
-      <Filter>Render\DX12</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\DX12\TaskHandle.h">
-      <Filter>Render\DX12</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\DX12\RenderGraph.h">
-      <Filter>Render\DX12</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\DX12\RGTypes.h">
-      <Filter>Render\DX12</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\DX12\RenderPass.h">
-      <Filter>Render\DX12</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\DX12\TextureRegistry.h">
-      <Filter>Render\DX12</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\DX12\TextureGraphBuilder.h">
-      <Filter>Render\DX12</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\DX12\TextureSystem.h">
-      <Filter>Render\DX12</Filter>
-    </ClInclude>
     <ClInclude Include="Asset\Loader\Graphics\PngTextureLoader.h">
       <Filter>Asset\Loader\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Asset\Loader\Graphics\MeshJsonLoader.h">
       <Filter>Asset\Loader\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\MeshSystem.h">
-      <Filter>Render\DX12</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\DX12\MeshResource.h">
-      <Filter>Render\DX12</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\DX12\MeshGraphBuilder.h">
-      <Filter>Render\DX12</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\DX12\MeshRegistry.h">
-      <Filter>Render\DX12</Filter>
-    </ClInclude>
     <ClInclude Include="Render\DX12\GPUProfiler.h">
-      <Filter>Render\DX12</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\DX12\TextureLoadRequest.h">
-      <Filter>Render\DX12</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\DX12\MeshLoadRequest.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
     <ClInclude Include="Render\DX12\RenderScene.h">
@@ -224,9 +185,6 @@
       <Filter>Render\DX12</Filter>
     </ClInclude>
     <ClInclude Include="Render\DX12\UIGraphBuilder.h">
-      <Filter>Render\DX12</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\DX12\MaterialSystem.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
     <ClInclude Include="Render\DX12\RenderSortKey.h">
@@ -295,38 +253,101 @@
     <ClInclude Include="Render\DX12\DebugSurfaceGraphBuilder.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\MaterialResource\MaterialResource.h">
-      <Filter>Render\DX12\MaterialResource</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\DX12\MaterialResource\PbrMaterialResource.h">
-      <Filter>Render\DX12\MaterialResource</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\DX12\MaterialResource\UIMaterialResource.h">
-      <Filter>Render\DX12\MaterialResource</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\DX12\MaterialResource\GridMaterialResource.h">
-      <Filter>Render\DX12\MaterialResource</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\DX12\MaterialResource\SurfaceMaterialResource.h">
-      <Filter>Render\DX12\MaterialResource</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\DX12\MaterialResource\PhongMaterialResource.h">
-      <Filter>Render\DX12\MaterialResource</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\DX12\MaterialResource\DebugSurfaceMaterialResource.h">
-      <Filter>Render\DX12\MaterialResource</Filter>
-    </ClInclude>
     <ClInclude Include="Render\DX12\ShadowGraphBuilder.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
     <ClInclude Include="Render\DX12\Renderer\ShadowRenderer.h">
       <Filter>Render\DX12\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\ShadowResource.h">
-      <Filter>Render\DX12</Filter>
-    </ClInclude>
     <ClInclude Include="Render\DX12\ForwardRenderPipeline.h">
       <Filter>Render\DX12</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Resource\Resource.h">
+      <Filter>Render\DX12\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Resource\ResourceLoader.h">
+      <Filter>Render\DX12\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Resource\ShadowResource.h">
+      <Filter>Render\DX12\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Asset\Mesh\MeshGraphBuilder.h">
+      <Filter>Render\DX12\Asset\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Asset\Mesh\MeshLoadRequest.h">
+      <Filter>Render\DX12\Asset\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Asset\Mesh\MeshRegistry.h">
+      <Filter>Render\DX12\Asset\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Asset\Mesh\MeshResource.h">
+      <Filter>Render\DX12\Asset\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Asset\Mesh\MeshSystem.h">
+      <Filter>Render\DX12\Asset\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Asset\Texture\MipGenerator.h">
+      <Filter>Render\DX12\Asset\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Asset\Texture\TextureGraphBuilder.h">
+      <Filter>Render\DX12\Asset\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Asset\Texture\TextureLoadRequest.h">
+      <Filter>Render\DX12\Asset\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Asset\Texture\TextureRegistry.h">
+      <Filter>Render\DX12\Asset\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Asset\Texture\TextureResource.h">
+      <Filter>Render\DX12\Asset\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Asset\Texture\TextureSystem.h">
+      <Filter>Render\DX12\Asset\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Asset\Material\MaterialSystem.h">
+      <Filter>Render\DX12\Asset\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Asset\Material\Resource\DebugSurfaceMaterialResource.h">
+      <Filter>Render\DX12\Asset\Material\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Asset\Material\Resource\GridMaterialResource.h">
+      <Filter>Render\DX12\Asset\Material\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Asset\Material\Resource\MaterialResource.h">
+      <Filter>Render\DX12\Asset\Material\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Asset\Material\Resource\PbrMaterialResource.h">
+      <Filter>Render\DX12\Asset\Material\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Asset\Material\Resource\PhongMaterialResource.h">
+      <Filter>Render\DX12\Asset\Material\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Asset\Material\Resource\SurfaceMaterialResource.h">
+      <Filter>Render\DX12\Asset\Material\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Asset\Material\Resource\UIMaterialResource.h">
+      <Filter>Render\DX12\Asset\Material\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Graph\RenderGraph.h">
+      <Filter>Render\DX12\Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Graph\RenderPass.h">
+      <Filter>Render\DX12\Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Graph\RGTypes.h">
+      <Filter>Render\DX12\Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Graph\Task.h">
+      <Filter>Render\DX12\Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Graph\TaskHandle.h">
+      <Filter>Render\DX12\Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Graph\TaskNode.h">
+      <Filter>Render\DX12\Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Graph\TaskScheduler.h">
+      <Filter>Render\DX12\Graph</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -379,9 +400,6 @@
     <ClCompile Include="Render\DX12\SwapChainPresenter.cpp">
       <Filter>Render\DX12</Filter>
     </ClCompile>
-    <ClCompile Include="Render\DX12\ResourceLoader.cpp">
-      <Filter>Render\DX12</Filter>
-    </ClCompile>
     <ClCompile Include="Asset\Loader\StaticSoundTable.cpp">
       <Filter>Asset\Loader</Filter>
     </ClCompile>
@@ -409,44 +427,11 @@
     <ClCompile Include="Asset\Loader\Sound\OggStreamLoader.cpp">
       <Filter>Asset\Loader\Sound</Filter>
     </ClCompile>
-    <ClCompile Include="Render\DX12\TextureResource.cpp">
-      <Filter>Render\DX12</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\DX12\MipGenerator.cpp">
-      <Filter>Render\DX12</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\DX12\TaskScheduler.cpp">
-      <Filter>Render\DX12</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\DX12\RenderGraph.cpp">
-      <Filter>Render\DX12</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\DX12\TextureGraphBuilder.cpp">
-      <Filter>Render\DX12</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\DX12\TextureRegistry.cpp">
-      <Filter>Render\DX12</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\DX12\TextureSystem.cpp">
-      <Filter>Render\DX12</Filter>
-    </ClCompile>
     <ClCompile Include="Asset\Loader\Graphics\PngTextureLoader.cpp">
       <Filter>Asset\Loader\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="Asset\Loader\Graphics\MeshJsonLoader.cpp">
       <Filter>Asset\Loader\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\DX12\MeshSystem.cpp">
-      <Filter>Render\DX12</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\DX12\MeshGraphBuilder.cpp">
-      <Filter>Render\DX12</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\DX12\MeshResource.cpp">
-      <Filter>Render\DX12</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\DX12\MeshRegistry.cpp">
-      <Filter>Render\DX12</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\GPUProfiler.cpp">
       <Filter>Render\DX12</Filter>
@@ -461,9 +446,6 @@
       <Filter>Render\DX12</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\UIGraphBuilder.cpp">
-      <Filter>Render\DX12</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\DX12\MaterialSystem.cpp">
       <Filter>Render\DX12</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\RenderSortKey.cpp">
@@ -520,32 +502,74 @@
     <ClCompile Include="Render\DX12\DebugSurfaceGraphBuilder.cpp">
       <Filter>Render\DX12</Filter>
     </ClCompile>
-    <ClCompile Include="Render\DX12\MaterialResource\PbrMaterialResource.cpp">
-      <Filter>Render\DX12\MaterialResource</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\DX12\MaterialResource\UIMaterialResource.cpp">
-      <Filter>Render\DX12\MaterialResource</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\DX12\MaterialResource\MaterialResource.cpp">
-      <Filter>Render\DX12\MaterialResource</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\DX12\MaterialResource\GridMaterialResource.cpp">
-      <Filter>Render\DX12\MaterialResource</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\DX12\MaterialResource\PhongMaterialResource.cpp">
-      <Filter>Render\DX12\MaterialResource</Filter>
-    </ClCompile>
     <ClCompile Include="Render\DX12\ShadowGraphBuilder.cpp">
       <Filter>Render\DX12</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\Renderer\ShadowRenderer.cpp">
       <Filter>Render\DX12\Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="Render\DX12\ShadowResource.cpp">
-      <Filter>Render\DX12</Filter>
-    </ClCompile>
     <ClCompile Include="Render\DX12\ForwardRenderPipeline.cpp">
       <Filter>Render\DX12</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Resource\Resource.cpp">
+      <Filter>Render\DX12\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Resource\ResourceLoader.cpp">
+      <Filter>Render\DX12\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Resource\ShadowResource.cpp">
+      <Filter>Render\DX12\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Asset\Mesh\MeshGraphBuilder.cpp">
+      <Filter>Render\DX12\Asset\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Asset\Mesh\MeshRegistry.cpp">
+      <Filter>Render\DX12\Asset\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Asset\Mesh\MeshResource.cpp">
+      <Filter>Render\DX12\Asset\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Asset\Mesh\MeshSystem.cpp">
+      <Filter>Render\DX12\Asset\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Asset\Texture\MipGenerator.cpp">
+      <Filter>Render\DX12\Asset\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Asset\Texture\TextureGraphBuilder.cpp">
+      <Filter>Render\DX12\Asset\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Asset\Texture\TextureRegistry.cpp">
+      <Filter>Render\DX12\Asset\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Asset\Texture\TextureResource.cpp">
+      <Filter>Render\DX12\Asset\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Asset\Texture\TextureSystem.cpp">
+      <Filter>Render\DX12\Asset\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Asset\Material\MaterialSystem.cpp">
+      <Filter>Render\DX12\Asset\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Asset\Material\Resource\GridMaterialResource.cpp">
+      <Filter>Render\DX12\Asset\Material\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Asset\Material\Resource\MaterialResource.cpp">
+      <Filter>Render\DX12\Asset\Material\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Asset\Material\Resource\PbrMaterialResource.cpp">
+      <Filter>Render\DX12\Asset\Material\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Asset\Material\Resource\PhongMaterialResource.cpp">
+      <Filter>Render\DX12\Asset\Material\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Asset\Material\Resource\UIMaterialResource.cpp">
+      <Filter>Render\DX12\Asset\Material\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Graph\RenderGraph.cpp">
+      <Filter>Render\DX12\Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Graph\TaskScheduler.cpp">
+      <Filter>Render\DX12\Graph</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

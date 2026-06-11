@@ -1,6 +1,7 @@
 #pragma once
 #include "d3dx12.h"
 #include <wrl/client.h>
+#include "Resource/Resource.h"
 
 class CommandList;
 class CommandScheduler;
@@ -19,7 +20,7 @@ public:
 
 private:
     ComPtr<ID3D12QueryHeap> m_queryHeap;
-    ComPtr<ID3D12Resource>  m_readbackBuffer;
+    Resource m_readbackBuffer;
 
     uint64_t m_timestampFreq = 0;
 

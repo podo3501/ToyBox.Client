@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "FrameEndGraphBuilder.h"
-#include "RenderPass.h"
-#include "RenderGraph.h"
+#include "Graph/RenderPass.h"
+#include "Graph/RenderGraph.h"
 
 FrameEndGraphBuilder::FrameEndGraphBuilder(RGHandle hBb, RGHandle hShadow) :
     m_hBb{ hBb },

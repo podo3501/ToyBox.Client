@@ -1,10 +1,10 @@
 #include "pch.h"
 #include "UIRenderer.h"
 #include "RootSignatureBuilder.h"
-#include "../Command/CommandList.h"
-#include "../MeshResource.h"
-#include "../MaterialResource/UIMaterialResource.h"
-#include "../Helpers/MathHelpers.h"
+#include "Command/CommandList.h"
+#include "Asset/Mesh/MeshResource.h"
+#include "Asset/Material/Resource/UIMaterialResource.h"
+#include "Helpers/MathHelpers.h"
 
 namespace cm = Core::Math;
 

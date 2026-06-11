@@ -28,7 +28,7 @@ bool GPUProfiler::Initialize(ID3D12Device* device, CommandScheduler* scheduler, 
         &bd,
         D3D12_RESOURCE_STATE_COPY_DEST,
         nullptr,
-        IID_PPV_ARGS(&m_readbackBuffer)
+        IID_PPV_ARGS(m_readbackBuffer.GetAddressOf())
     );
 
     return true;

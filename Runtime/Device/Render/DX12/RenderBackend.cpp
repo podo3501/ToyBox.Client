@@ -5,35 +5,30 @@
 #include "Command/CommandScheduler.h"
 #include "Descriptor/DescriptorAllocator.h"
 #include "Descriptor/DescriptorFactory.h"
-#include "TaskScheduler.h"
-#include "ResourceLoader.h"
+#include "Resource/ResourceLoader.h"
+#include "Resource/ShadowResource.h"
 #include "GPUProfiler.h"
-#include "MaterialResource/SurfaceMaterialResource.h"
 #include "Renderer/Renderers.h"
-#include "ShadowResource.h"
-#include "TextureSystem.h"
-#include "MeshSystem.h"
-#include "MaterialSystem.h"
 #include "ShaderSystem.h"
 #include "RenderScene.h"
-#include "RenderGraph.h"
-#include "RenderPass.h"
+#include "Graph/RenderGraph.h"
+#include "Graph/RenderPass.h"
+#include "Graph/TaskScheduler.h"
 #include "ShadowGraphBuilder.h"
 #include "OpaqueGraphBuilder.h"
 #include "DebugSurfaceGraphBuilder.h"
 #include "FrameEndGraphBuilder.h"
 #include "UIGraphBuilder.h"
-#include "MeshResource.h"
+#include "Asset/Mesh/MeshSystem.h"
+#include "Asset/Mesh/MeshResource.h"
+#include "Asset/Texture/TextureSystem.h"
+#include "Asset/Material/MaterialSystem.h"
+#include "Asset/Material/Resource/SurfaceMaterialResource.h"
 #include "Command/CommandList.h"
 #include "Helpers/CommandListHelpers.h"
 #include <dxgi1_6.h>
 
 using Microsoft::WRL::ComPtr;
-
-struct MeshBuffer
-{
-    ComPtr<ID3D12Resource> vertexBuffer;
-};
 
 struct QuadDrawInfo
 {
@@ -220,8 +215,8 @@ void RenderBackend::Render()
 
     TaskContext taskCtx;
     taskCtx.resources = std::make_shared<ResourceContext>();
-    taskCtx.resources->Set(hBb, std::move(ComPtr<ID3D12Resource>(m_swapChain->GetCurrentBackbuffer())));
-    taskCtx.resources->Set(hShadow, std::move(ComPtr<ID3D12Resource>(m_shadowRes->Get())));
+    taskCtx.SetResource(hBb, m_swapChain->GetCurrentBackbuffer());
+    taskCtx.SetResource(hShadow, m_shadowRes->GetResource());
 
     FrameData frame;
     frame.light = m_lightData;

@@ -50,14 +50,14 @@ void SwapChainPresenter::SetRenderTarget(CommandList& cmd)
 
 void SwapChainPresenter::TransitionToRenderTarget(CommandList& cmd)
 {
-    CommandUtils::Transition(cmd, m_renderTargets[m_frameIndex].Get(),
+    CommandUtils::Transition(cmd, m_renderTargets[m_frameIndex],
         D3D12_RESOURCE_STATE_PRESENT,
         D3D12_RESOURCE_STATE_RENDER_TARGET);
 }
 
 void SwapChainPresenter::TransitionToPresent(CommandList& cmd)
 {
-    CommandUtils::Transition(cmd, m_renderTargets[m_frameIndex].Get(),
+    CommandUtils::Transition(cmd, m_renderTargets[m_frameIndex],
         D3D12_RESOURCE_STATE_RENDER_TARGET,
         D3D12_RESOURCE_STATE_PRESENT);
 }
@@ -173,7 +173,8 @@ bool SwapChainPresenter::CreateFrameRTVs(ID3D12Device* device)
 
     for (UINT i = 0; i < m_frameCount; ++i)
     {
-        if (FAILED(m_swapChain->GetBuffer(i, IID_PPV_ARGS(&m_renderTargets[i])))) return false;
+        auto result = m_swapChain->GetBuffer(i, IID_PPV_ARGS(m_renderTargets[i].GetAddressOf()));
+        if (FAILED(result)) return false;
 
         D3D12_RENDER_TARGET_VIEW_DESC rtvDesc{};
         rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
@@ -218,7 +219,7 @@ bool SwapChainPresenter::CreateDepthBuffer(ID3D12Device* device)
         &desc,
         D3D12_RESOURCE_STATE_DEPTH_WRITE,
         &clear,
-        IID_PPV_ARGS(&m_depthBuffer))))
+        IID_PPV_ARGS(m_depthBuffer.GetAddressOf()))))
         return false;
 
     D3D12_DESCRIPTOR_HEAP_DESC heapDesc{};
