@@ -12,10 +12,10 @@ class DescriptorFactory;
 class TaskScheduler;
 class ResourceLoader;
 class GPUProfiler;
-class TextureSystem;
-class MeshSystem;
-class MaterialSystem;
-class ShaderSystem;
+class TextureProvider;
+class MeshProvider;
+class MaterialProvider;
+class ShaderProvider;
 class Renderers;
 class RenderScene;
 class ShadowResource;
@@ -41,9 +41,9 @@ public:
 	virtual void Update() override;
 	virtual void Render() override;
 	virtual void WaitIdle() override;
-	virtual ITextureSystem* GetTextureSystem() override;
-	virtual IMeshSystem* GetMeshSystem() override;
-	virtual IMaterialSystem* GetMaterialSystem() override;
+	virtual ITextureProvider* GetTextureProvider() override;
+	virtual IMeshProvider* GetMeshProvider() override;
+	virtual IMaterialProvider* GetMaterialProvider() override;
 
 private:
 	bool BeginFrame();
@@ -62,10 +62,10 @@ private:
 	unique_ptr<ResourceLoader> m_loader;
 	unique_ptr<GPUProfiler> m_profiler;
 	
-	unique_ptr<TextureSystem> m_texSystem;
-	unique_ptr<MeshSystem> m_meshSystem;
-	unique_ptr<MaterialSystem> m_matSystem;
-	unique_ptr<ShaderSystem> m_shaderSystem;
+	unique_ptr<TextureProvider> m_texProvider;
+	unique_ptr<MeshProvider> m_meshProvider;
+	unique_ptr<MaterialProvider> m_matProvider;
+	unique_ptr<ShaderProvider> m_shaderProvider;
 	unique_ptr<RenderScene> m_scene;
 	unique_ptr<Renderers> m_renderers;
 	unique_ptr<ShadowResource> m_shadowRes;

@@ -314,10 +314,10 @@
 --Phong 만들기
 --meshRenderer 이름을 surfaceRenderer로 바꿔야 할지
 --기본을 phong으로 맞추자.
-    지금 디폴트가 pbr로 돼 있는데 이거 phong으로 수정
-	MaterialDescFactory CreateWireframe
+--지금 디폴트가 pbr로 돼 있는데 이거 phong으로 수정
+--shadow pass
 
-@shadow pass
+@resource loader factory로 바꾸고 나머지 함수들은 helper로 만들어서 보내자.
 @기본 텍스쳐를 service 영역으로 올릴지 생각해 보자.
 @texture asset factory 만들지 말지.
 

@@ -604,19 +604,19 @@
     <ClInclude Include="Service\Render\Resource\ITextureResource.h">
       <Filter>Service\Render\Resource</Filter>
     </ClInclude>
-    <ClInclude Include="Service\Render\Repository\Material\IMaterialSystem.h">
+    <ClInclude Include="Service\Render\Repository\Material\IMaterialProvider.h">
       <Filter>Service\Render\Repository\Material</Filter>
     </ClInclude>
     <ClInclude Include="Service\Render\Repository\Material\MaterialRepository.h">
       <Filter>Service\Render\Repository\Material</Filter>
     </ClInclude>
-    <ClInclude Include="Service\Render\Repository\Mesh\IMeshSystem.h">
+    <ClInclude Include="Service\Render\Repository\Mesh\IMeshProvider.h">
       <Filter>Service\Render\Repository\Mesh</Filter>
     </ClInclude>
     <ClInclude Include="Service\Render\Repository\Mesh\MeshRepository.h">
       <Filter>Service\Render\Repository\Mesh</Filter>
     </ClInclude>
-    <ClInclude Include="Service\Render\Repository\Texture\ITextureSystem.h">
+    <ClInclude Include="Service\Render\Repository\Texture\ITextureProvider.h">
       <Filter>Service\Render\Repository\Texture</Filter>
     </ClInclude>
     <ClInclude Include="Service\Render\Repository\Texture\TextureRepository.h">

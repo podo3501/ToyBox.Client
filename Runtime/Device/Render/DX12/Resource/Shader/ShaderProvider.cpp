@@ -1,11 +1,11 @@
 #include "pch.h"
-#include "ShaderSystem.h"
+#include "ShaderProvider.h"
 #include "Core/Utils/StringUtils.h"
 #include "GameClient/Service/Asset/Assets/ShaderAsset.h"
 #pragma comment(lib, "dxcompiler.lib")
 
-ShaderSystem::~ShaderSystem() = default;
-ShaderSystem::ShaderSystem() = default;
+ShaderProvider::~ShaderProvider() = default;
+ShaderProvider::ShaderProvider() = default;
 
 static bool CompileStage(
     const std::string& source, 
@@ -100,7 +100,7 @@ static ComPtr<IDxcBlob> CreateBlobFromBuffer(const Core::ByteBuffer& buffer)
     return nullptr;
 }
 
-bool ShaderSystem::Initialize(const std::vector<ShaderRegisterDesc>& shaders)
+bool ShaderProvider::Initialize(const std::vector<ShaderRegisterDesc>& shaders)
 {
     for (const ShaderRegisterDesc& desc : shaders)
     {
@@ -127,7 +127,7 @@ bool ShaderSystem::Initialize(const std::vector<ShaderRegisterDesc>& shaders)
     return true;
 }
 
-const ShaderEntry* ShaderSystem::Find(const ShaderVariant& variant) const
+const ShaderEntry* ShaderProvider::Find(const ShaderVariant& variant) const
 {
     auto it = m_variants.find(variant);
     if (it != m_variants.end())
@@ -147,7 +147,7 @@ const ShaderEntry* ShaderSystem::Find(const ShaderVariant& variant) const
     return &iter->second;
 }
 
-bool ShaderSystem::CompileVariant(
+bool ShaderProvider::CompileVariant(
     const ShaderVariant& variant,
     const ShaderAsset& asset,
     const std::vector<ShaderStageDesc>& stages,

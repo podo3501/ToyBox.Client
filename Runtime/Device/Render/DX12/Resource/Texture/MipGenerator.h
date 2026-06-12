@@ -3,7 +3,7 @@
 #include <wrl/client.h>
 #include <dxcapi.h>
 
-class ShaderSystem;
+class ShaderProvider;
 class CommandList;
 class DescriptorAllocator;
 class TextureResource;
@@ -15,11 +15,11 @@ class MipGenerator
 public:
     ~MipGenerator();
     MipGenerator(ID3D12Device* device);
-    bool Initialize(ShaderSystem* shaderSystem);
+    bool Initialize(ShaderProvider* shaderProvider);
     void GenerateMips(CommandList& cmd, DescriptorAllocator* srvAllocator, TextureResource* texResource);
 
 private:
-    bool LoadShader(ShaderSystem* shaderSystem);
+    bool LoadShader(ShaderProvider* shaderProvider);
     bool CreateRootSignature();
     bool CreatePSO();
 

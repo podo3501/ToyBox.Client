@@ -7,7 +7,7 @@
 #include "Service/AssetAsync/AssetAsyncTypes.h"
 
 struct MaterialDesc;
-struct IMaterialSystem;
+struct IMaterialProvider;
 struct IMaterialResource;
 struct Asset;
 struct CpuPendingMaterialRequest;
@@ -26,7 +26,7 @@ class MaterialRepository
 public:
     ~MaterialRepository();
     MaterialRepository() = delete;
-    MaterialRepository(IMaterialSystem* matSystem, AssetPipelineT* assetPipeline);
+    MaterialRepository(IMaterialProvider* matProvider, AssetPipelineT* assetPipeline);
     MaterialHandle GetOrCreate(const MaterialDesc& desc);
     void Update();
     bool Release(MaterialHandle h);
@@ -38,7 +38,7 @@ private:
     void ProcessGpuPending();
     void ProcessLoading();
 
-    IMaterialSystem* m_matSystem{ nullptr };
+    IMaterialProvider* m_matProvider{ nullptr };
     AssetPipelineT* m_assetPipeline{ nullptr };
 
     std::unordered_map<size_t, MaterialHandle> m_cache;

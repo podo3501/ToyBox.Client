@@ -2,8 +2,8 @@
 #include "UIRenderer.h"
 #include "RootSignatureBuilder.h"
 #include "Command/CommandList.h"
-#include "Asset/Mesh/MeshResource.h"
-#include "Asset/Material/Resource/UIMaterialResource.h"
+#include "Resource/Mesh/MeshResource.h"
+#include "Resource/Material/UIMaterialResource.h"
 #include "Helpers/MathHelpers.h"
 
 namespace cm = Core::Math;
@@ -17,14 +17,14 @@ struct UIFrameCB
 using Microsoft::WRL::ComPtr;
 
 UIRenderer::~UIRenderer() = default;
-UIRenderer::UIRenderer(ID3D12Device* device, ShaderSystem* shaderSystem) :
+UIRenderer::UIRenderer(ID3D12Device* device, ShaderProvider* shaderProvider) :
     m_device{ device },
-    m_shaderSystem{ shaderSystem }
+    m_shaderProvider{ shaderProvider }
 {}
 
 bool UIRenderer::Initialize(const Size& screenSize)
 {
-    m_pipelineCache.Initialize(m_device, m_shaderSystem);
+    m_pipelineCache.Initialize(m_device, m_shaderProvider);
 
     ReturnIfFalse(CreateRootSignature());
     CreateDefaultPSOs();

@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "UIMaterialResource.h"
-#include "Asset/Texture/TextureResource.h"
-#include "Asset/Texture/TextureSystem.h"
+#include "Resource/Texture/TextureResource.h"
+#include "Resource/Texture/TextureProvider.h"
 
 UIMaterialResource::~UIMaterialResource() = default;
 UIMaterialResource::UIMaterialResource(const MaterialDesc& desc) :

@@ -4,17 +4,15 @@
 #include "GameClient/Graphics/RenderData/CameraData.h"
 #include "Core/Math/Matrix.h"
 
-struct ITextureResource;
 struct IMeshResource;
 struct IMaterialResource;
 struct ShaderAsset;
 struct TextureAsset;
 struct Size;
 struct Rect;
-struct ITextureSystem;
-struct IMeshSystem;
-struct IMaterialSystem;
-struct IShaderSystem;
+struct ITextureProvider;
+struct IMeshProvider;
+struct IMaterialProvider;
 struct ShaderRegisterDesc;
 enum class MaterialDomain;
 
@@ -41,9 +39,9 @@ struct IRenderBackend
 	virtual void Render() = 0;
 	virtual void WaitIdle() = 0;
 
-	virtual ITextureSystem* GetTextureSystem() = 0;
-	virtual IMeshSystem* GetMeshSystem() = 0;
-	virtual IMaterialSystem* GetMaterialSystem() = 0;
+	virtual ITextureProvider* GetTextureProvider() = 0;
+	virtual IMeshProvider* GetMeshProvider() = 0;
+	virtual IMaterialProvider* GetMaterialProvider() = 0;
 };
 
 std::unique_ptr<IRenderBackend> CreateRenderBackend();

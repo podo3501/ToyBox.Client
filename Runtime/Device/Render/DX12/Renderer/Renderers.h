@@ -2,7 +2,7 @@
 #include <d3d12.h>
 
 struct Size;
-class ShaderSystem;
+class ShaderProvider;
 class ShadowRenderer;
 class SurfaceRenderer;
 class DebugSurfaceRenderer;
@@ -15,7 +15,7 @@ public:
     Renderers();
     bool Initialize(
         ID3D12Device* device, 
-        ShaderSystem* shaderSystem, 
+        ShaderProvider* shaderProvider,
         const Size& screenSize,
         ID3D12DescriptorHeap* srvHeap);
     void SetScreenSize(const Size& screenSize);

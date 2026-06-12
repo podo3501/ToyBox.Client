@@ -1,5 +1,5 @@
 #pragma once
-#include "GameClient/Service/Render/Repository/Mesh/IMeshSystem.h"
+#include "GameClient/Service/Render/Repository/Mesh/IMeshProvider.h"
 #include "MeshLoadRequest.h"
 #include <queue>
 
@@ -11,11 +11,11 @@ class MeshGraphBuilder;
 class TaskScheduler;
 class ResourceLoader;
 
-class MeshSystem : public IMeshSystem
+class MeshProvider : public IMeshProvider
 {
 public:
-    ~MeshSystem();
-    MeshSystem(ID3D12Device* device, DescriptorFactory* descFactory, TaskScheduler* taskScheduler, ResourceLoader* loader);
+    ~MeshProvider();
+    MeshProvider(ID3D12Device* device, DescriptorFactory* descFactory, TaskScheduler* taskScheduler, ResourceLoader* loader);
     virtual shared_ptr<IMeshResource> CreateMeshResource() override;
     virtual bool LoadFromAsset(std::shared_ptr<IMeshResource> resource, std::shared_ptr<MeshAsset> asset) override;
 

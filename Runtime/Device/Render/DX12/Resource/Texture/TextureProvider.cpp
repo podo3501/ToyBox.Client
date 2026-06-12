@@ -1,30 +1,30 @@
 #include "pch.h"
-#include "TextureSystem.h"
+#include "TextureProvider.h"
 #include "MipGenerator.h"
 #include "Descriptor/DescriptorFactory.h"
 #include "TextureGraphBuilder.h"
 #include "TextureResource.h"
 
-TextureSystem::~TextureSystem() = default;
-TextureSystem::TextureSystem(ID3D12Device* device, DescriptorFactory* descFactory, TaskScheduler* taskScheduler, ResourceLoader* loader) :
+TextureProvider::~TextureProvider() = default;
+TextureProvider::TextureProvider(ID3D12Device* device, DescriptorFactory* descFactory, TaskScheduler* taskScheduler, ResourceLoader* loader) :
     m_mipGenerator{ make_unique<MipGenerator>(device) },
     m_builder{ make_unique<TextureGraphBuilder>(taskScheduler, loader, m_mipGenerator.get(), descFactory) }
 {}
 
-bool TextureSystem::Initialize(ShaderSystem* shaderSystem)
+bool TextureProvider::Initialize(ShaderProvider* shaderProvider)
 {
     ReturnIfFalse(CreateBuiltinTextures());
-    ReturnIfFalse(m_mipGenerator->Initialize(shaderSystem));
+    ReturnIfFalse(m_mipGenerator->Initialize(shaderProvider));
 
     return true;
 }
 
-shared_ptr<ITextureResource> TextureSystem::CreateTextureResource(const TextureDesc& desc)
+shared_ptr<ITextureResource> TextureProvider::CreateTextureResource(const TextureDesc& desc)
 {
     return make_shared<TextureResource>(desc);
 }
 
-std::shared_ptr<TextureAsset> TextureSystem::CreateColorAsset(uint32_t pixelColor)
+std::shared_ptr<TextureAsset> TextureProvider::CreateColorAsset(uint32_t pixelColor)
 {
     auto asset = std::make_shared<TextureAsset>();
 
@@ -41,7 +41,7 @@ std::shared_ptr<TextureAsset> TextureSystem::CreateColorAsset(uint32_t pixelColo
     return asset;
 }
 
-bool TextureSystem::CreateBuiltinTextures()
+bool TextureProvider::CreateBuiltinTextures()
 {
     m_defaultAssets[DefaultTextureType::White] = CreateColorAsset(0xFFFFFFFF); // 흰색
     m_defaultAssets[DefaultTextureType::FlatNormal] = CreateColorAsset(0x8080FFFF); // 평평한 노멀 (128, 128, 255)
@@ -66,7 +66,7 @@ bool TextureSystem::CreateBuiltinTextures()
     return true;
 }
 
-std::shared_ptr<ITextureResource> TextureSystem::CreateDefaultTexture(
+std::shared_ptr<ITextureResource> TextureProvider::CreateDefaultTexture(
     const TextureDesc& desc,
     std::shared_ptr<TextureAsset> asset)
 {
@@ -80,7 +80,7 @@ std::shared_ptr<ITextureResource> TextureSystem::CreateDefaultTexture(
     return texRes;
 }
 
-std::shared_ptr<ITextureResource> TextureSystem::GetDefaultTexture(DefaultTextureType type) const
+std::shared_ptr<ITextureResource> TextureProvider::GetDefaultTexture(DefaultTextureType type) const
 {
     auto it = m_defaultTextures.find(type);
     if (it != m_defaultTextures.end())
@@ -98,7 +98,7 @@ static size_t EstimateBytes(const TextureAsset& asset, const TextureDesc& desc)
     return static_cast<size_t>(baseBytes * 4 / 3); //mip 비용은 정확 계산 대신 안정적인 근사 (1.33x)
 }
 
-bool TextureSystem::LoadFromAsset(
+bool TextureProvider::LoadFromAsset(
     std::shared_ptr<ITextureResource> resource, 
     std::shared_ptr<TextureAsset> asset)
 {
@@ -117,7 +117,7 @@ bool TextureSystem::LoadFromAsset(
     return true;
 }
 
-void TextureSystem::Update(size_t uploadBudgetBytes)
+void TextureProvider::Update(size_t uploadBudgetBytes)
 {
     size_t usedBytes = 0;
     std::vector<TextureLoadRequest> batch;

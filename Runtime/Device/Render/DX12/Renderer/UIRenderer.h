@@ -8,14 +8,14 @@ struct UIFrameCB;
 class CommandList;
 class MeshResource;
 class UIMaterialResource;
-class ShaderSystem;
+class ShaderProvider;
 class FrameUploadAllocator;
 
 class UIRenderer
 {
 public:
     ~UIRenderer();
-    UIRenderer(ID3D12Device* device, ShaderSystem* shaderSystem);
+    UIRenderer(ID3D12Device* device, ShaderProvider* shaderProvider);
     bool Initialize(const Size& screenSize);
     void SetSRVHeap(ID3D12DescriptorHeap* heap) { m_srvHeap = heap; }
     void PrepareFrame();
@@ -34,7 +34,7 @@ private:
     static constexpr UINT kCBSize = 256;
 
     ID3D12Device* m_device{ nullptr };
-    ShaderSystem* m_shaderSystem{ nullptr };
+    ShaderProvider* m_shaderProvider{ nullptr };
     FrameUploadAllocator m_uiFrameCBAllocator;
 
     Microsoft::WRL::ComPtr<ID3D12RootSignature> m_rootSignature;

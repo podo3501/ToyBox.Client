@@ -1,17 +1,17 @@
 #include "pch.h"
 #include "SurfaceRenderer.h"
-#include "Asset/Mesh/MeshResource.h"
-#include "Asset/Material/Resource/PhongMaterialResource.h"
-#include "Asset/Material/Resource/PbrMaterialResource.h"
 #include "RenderConstants.h"
 #include "RootSignatureBuilder.h"
-#include "d3dx12.h"
-#include <d3dcompiler.h>
 #include "Command/CommandList.h"
-#include "ShaderSystem.h"
 #include "Helpers/MathHelpers.h"
+#include "Resource/Mesh/MeshResource.h"
+#include "Resource/Material/PhongMaterialResource.h"
+#include "Resource/Material/PbrMaterialResource.h"
+#include "Resource/Shader/ShaderProvider.h"
 #include "GameClient/Graphics/RenderData/DirectionalLightData.h"
 #include "GameClient/Graphics/RenderData/CameraData.h"
+#include "d3dx12.h"
+#include <d3dcompiler.h>
 
 namespace cm = Core::Math;
 
@@ -50,14 +50,14 @@ static_assert(sizeof(PbrMaterialCB) == sizeof(MaterialConstantBuffer));
 static_assert(sizeof(PhongMaterialCB) == sizeof(MaterialConstantBuffer));
 
 SurfaceRenderer::~SurfaceRenderer() = default;
-SurfaceRenderer::SurfaceRenderer(ID3D12Device* device, ShaderSystem* shaderSystem) :
+SurfaceRenderer::SurfaceRenderer(ID3D12Device* device, ShaderProvider* shaderProvider) :
     m_device{ device },
-    m_shaderSystem{ shaderSystem }
+    m_shaderProvider{ shaderProvider }
 {}
 
 bool SurfaceRenderer::Initialize()
 {
-    m_pipelineCache.Initialize(m_device, m_shaderSystem);
+    m_pipelineCache.Initialize(m_device, m_shaderProvider);
 
     ReturnIfFalse(CreateRootSignature());
     CreateDefaultPSOs();

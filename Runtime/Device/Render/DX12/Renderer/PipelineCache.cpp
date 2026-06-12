@@ -1,15 +1,15 @@
 #include "pch.h"
 #include "PipelineCache.h"
-#include "../ShaderSystem.h"
+#include "Resource/Shader/ShaderProvider.h"
 #include "../d3dx12.h"
 
 PipelineCache::~PipelineCache() = default;
 PipelineCache::PipelineCache() = default;
 
-void PipelineCache::Initialize(ID3D12Device* device, ShaderSystem* shaderSystem)
+void PipelineCache::Initialize(ID3D12Device* device, ShaderProvider* shaderProvider)
 {
     m_device = device;
-    m_shaderSystem = shaderSystem;
+    m_shaderProvider = shaderProvider;
 }
 
 ID3D12PipelineState* PipelineCache::GetOrCreate(
@@ -21,7 +21,7 @@ ID3D12PipelineState* PipelineCache::GetOrCreate(
     if (it != m_cache.end())
         return it->second.Get();
 
-    const ShaderEntry* shaderEntry = m_shaderSystem->Find(pipelineState.shaderVariant);
+    const ShaderEntry* shaderEntry = m_shaderProvider->Find(pipelineState.shaderVariant);
     if (!shaderEntry)
         return nullptr;
 

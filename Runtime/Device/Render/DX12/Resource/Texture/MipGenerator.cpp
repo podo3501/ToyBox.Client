@@ -1,6 +1,6 @@
 ﻿#include "pch.h"
 #include "MipGenerator.h"
-#include "ShaderSystem.h"
+#include "Resource/Shader/ShaderProvider.h"
 #include "Descriptor/DescriptorAllocator.h"
 #include "Command/CommandList.h"
 #include "TextureResource.h"
@@ -13,24 +13,24 @@ MipGenerator::MipGenerator(ID3D12Device* device) :
     m_device{ device }
 {}
 
-bool MipGenerator::Initialize(ShaderSystem* shaderSystem)
+bool MipGenerator::Initialize(ShaderProvider* shaderProvider)
 {
-    ReturnIfFalse(LoadShader(shaderSystem));
+    ReturnIfFalse(LoadShader(shaderProvider));
     ReturnIfFalse(CreateRootSignature());
     ReturnIfFalse(CreatePSO());
 
     return true;
 }
 
-bool MipGenerator::LoadShader(ShaderSystem* shaderSystem)
+bool MipGenerator::LoadShader(ShaderProvider* shaderProvider)
 {
     ShaderVariant sRGBVariant{ ShadingModel::MipGenerator };
-    if (const auto* entry = shaderSystem->Find(sRGBVariant))
+    if (const auto* entry = shaderProvider->Find(sRGBVariant))
         m_csSRGBBlob = entry->cs;
 
     ShaderVariant srgbVariant{ ShadingModel::MipGenerator };
     srgbVariant.runtimeMacros.push_back({ "IS_DATA_MAP" });
-    if (const auto* entry = shaderSystem->Find(srgbVariant))
+    if (const auto* entry = shaderProvider->Find(srgbVariant))
         m_csDataBlob = entry->cs;
 
     return (m_csSRGBBlob && m_csDataBlob);

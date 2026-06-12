@@ -1,16 +1,16 @@
 #pragma once
-#include "GameClient/Service/Render/Repository/Material/IMaterialSystem.h"
+#include "GameClient/Service/Render/Repository/Material/IMaterialProvider.h"
 
 struct ID3D12Device;
 class MaterialResource;
-class TextureSystem;
+class TextureProvider;
 enum class SurfaceType;
 
-class MaterialSystem : public IMaterialSystem
+class MaterialProvider : public IMaterialProvider
 {
 public:
-	~MaterialSystem();
-	MaterialSystem(ID3D12Device* device, TextureSystem* texSystem);
+	~MaterialProvider();
+	MaterialProvider(ID3D12Device* device, TextureProvider* texProvider);
 	virtual shared_ptr<IMaterialResource> CreateMaterialResource(const MaterialDesc& matDesc) override;
 	virtual bool LoadFromAsset(std::shared_ptr<IMaterialResource> resource, std::vector<std::shared_ptr<TextureAsset>> texAssets) override;
 
@@ -25,7 +25,7 @@ private:
 
 	void SetDefaultTextures(MaterialResource* matRes);
 
-	TextureSystem* m_texSystem{ nullptr };
+	TextureProvider* m_texProvider{ nullptr };
 	std::vector<std::shared_ptr<MaterialResource>> m_pendingMaterials;
 
 	unordered_map<SurfaceType, shared_ptr<MaterialResource>> m_defaultSurfaceMaterials;

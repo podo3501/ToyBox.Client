@@ -1,13 +1,13 @@
 #include "pch.h"
 #include "OpaqueGraphBuilder.h"
 #include "SwapChainPresenter.h"
-#include "RenderScene.h"
+#include "Scene/RenderScene.h"
 #include "Graph/RenderPass.h"
 #include "Graph/RenderGraph.h"
 #include "Renderer/SurfaceRenderer.h"
-#include "Asset/Mesh/MeshResource.h"
-#include "Asset/Material/Resource/PhongMaterialResource.h"
-#include "Asset/Material/Resource/PbrMaterialResource.h"
+#include "Resource/Mesh/MeshResource.h"
+#include "Resource/Material/PhongMaterialResource.h"
+#include "Resource/Material/PbrMaterialResource.h"
 #include "Resource/ShadowResource.h"
 
 OpaqueGraphBuilder::~OpaqueGraphBuilder() = default;

@@ -17,7 +17,7 @@ struct PhongSurface;
 class CommandList;
 class MeshResource;
 class MaterialResource;
-class ShaderSystem;
+class ShaderProvider;
 
 using Microsoft::WRL::ComPtr;
 
@@ -26,7 +26,7 @@ class SurfaceRenderer
 public:
     ~SurfaceRenderer();
     SurfaceRenderer() = delete;
-    explicit SurfaceRenderer(ID3D12Device* device, ShaderSystem* shaderSystem);
+    explicit SurfaceRenderer(ID3D12Device* device, ShaderProvider* shaderProvider);
 
     bool Initialize();
     void BindCommonState(CommandList& cmd);
@@ -50,7 +50,7 @@ private:
     static constexpr uint32_t kMaxObjectCount{ 1024 }; //추후에 링버퍼로 수정할 계획
 
     ID3D12Device* m_device{ nullptr };
-    ShaderSystem* m_shaderSystem{ nullptr };
+    ShaderProvider* m_shaderProvider{ nullptr };
 
     ComPtr<ID3D12RootSignature> m_rootSignature;
     ID3D12DescriptorHeap* m_srvHeap{ nullptr };

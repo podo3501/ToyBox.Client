@@ -2,10 +2,10 @@
 #include "DebugSurfaceGraphBuilder.h"
 #include "Graph/RenderPass.h"
 #include "Graph/RenderGraph.h"
-#include "RenderScene.h"
+#include "Scene/RenderScene.h"
 #include "Renderer/DebugSurfaceRenderer.h"
-#include "Asset/Mesh/MeshResource.h"
-#include "Asset/Material/Resource/GridMaterialResource.h"
+#include "Resource/Mesh/MeshResource.h"
+#include "Resource/Material/GridMaterialResource.h"
 
 DebugSurfaceGraphBuilder::~DebugSurfaceGraphBuilder() = default;
 DebugSurfaceGraphBuilder::DebugSurfaceGraphBuilder(DebugSurfaceRenderer* debugSurfRenderer, RenderScene* scene, RGHandle hBb) :

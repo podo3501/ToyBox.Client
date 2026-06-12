@@ -1,24 +1,24 @@
 #include "pch.h"
 #include "DebugSurfaceRenderer.h"
-#include "ShaderSystem.h"
+#include "Resource/Shader/ShaderProvider.h"
 #include "RootSignatureBuilder.h"
 #include "Command/CommandList.h"
 #include "RenderConstants.h"
 #include "Helpers/MathHelpers.h"
 #include "GameClient/Graphics/RenderData/CameraData.h"
-#include "Asset/Mesh/MeshResource.h"
+#include "Resource/Mesh/MeshResource.h"
 
 namespace cm = Core::Math;
 
 DebugSurfaceRenderer::~DebugSurfaceRenderer() = default;
-DebugSurfaceRenderer::DebugSurfaceRenderer(ID3D12Device* device, ShaderSystem* shaderSystem) :
+DebugSurfaceRenderer::DebugSurfaceRenderer(ID3D12Device* device, ShaderProvider* shaderProvider) :
     m_device{ device },
-    m_shaderSystem{ shaderSystem }
+    m_shaderProvider{ shaderProvider }
 {}
 
 bool DebugSurfaceRenderer::Initialize()
 {
-    m_pipelineCache.Initialize(m_device, m_shaderSystem);
+    m_pipelineCache.Initialize(m_device, m_shaderProvider);
 
     ReturnIfFalse(CreateRootSignature());
 

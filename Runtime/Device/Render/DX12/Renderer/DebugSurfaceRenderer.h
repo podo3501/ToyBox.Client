@@ -5,7 +5,7 @@
 
 struct CameraData;
 class CommandList;
-class ShaderSystem;
+class ShaderProvider;
 class MeshResource;
 
 using Microsoft::WRL::ComPtr;
@@ -15,7 +15,7 @@ class DebugSurfaceRenderer
 public:
     ~DebugSurfaceRenderer();
     DebugSurfaceRenderer() = delete;
-    explicit DebugSurfaceRenderer(ID3D12Device* device, ShaderSystem* shaderSystem);
+    explicit DebugSurfaceRenderer(ID3D12Device* device, ShaderProvider* shaderProvider);
 
     bool Initialize();
     void BindCommonState(CommandList& cmd);
@@ -37,7 +37,7 @@ private:
     static constexpr uint32_t kMaxObjectCount = 1024;
 
     ID3D12Device* m_device{ nullptr };
-    ShaderSystem* m_shaderSystem{ nullptr };
+    ShaderProvider* m_shaderProvider{ nullptr };
 
     ComPtr<ID3D12RootSignature> m_rootSignature;
 

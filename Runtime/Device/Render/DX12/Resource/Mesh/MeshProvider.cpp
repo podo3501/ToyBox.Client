@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "MeshSystem.h"
+#include "MeshProvider.h"
 #include "MeshResource.h"
 #include "MeshGraphBuilder.h"
 #include "Resource/ResourceLoader.h"
@@ -8,13 +8,13 @@
 #include "Graph/TaskScheduler.h"
 #include "Helpers/CommonHelpers.h"
 
-MeshSystem::~MeshSystem() = default;
-MeshSystem::MeshSystem(ID3D12Device* device, DescriptorFactory* descFactory,
+MeshProvider::~MeshProvider() = default;
+MeshProvider::MeshProvider(ID3D12Device* device, DescriptorFactory* descFactory,
     TaskScheduler* taskScheduler, ResourceLoader* loader) :
     m_builder{ make_unique<MeshGraphBuilder>(taskScheduler, loader, descFactory) }
 {}
 
-shared_ptr<IMeshResource> MeshSystem::CreateMeshResource()
+shared_ptr<IMeshResource> MeshProvider::CreateMeshResource()
 {
     return make_shared<MeshResource>();
 }
@@ -30,7 +30,7 @@ static std::pair<size_t, size_t> EstimateBytes(const MeshAsset& mesh)
     return { vb, ib };
 }
 
-bool MeshSystem::LoadFromAsset(std::shared_ptr<IMeshResource> resource, std::shared_ptr<MeshAsset> asset)
+bool MeshProvider::LoadFromAsset(std::shared_ptr<IMeshResource> resource, std::shared_ptr<MeshAsset> asset)
 {
     auto [vbBytes, ibBytes] = EstimateBytes(*asset);
 
@@ -45,7 +45,7 @@ bool MeshSystem::LoadFromAsset(std::shared_ptr<IMeshResource> resource, std::sha
     return true;
 }
 
-void MeshSystem::Update(size_t uploadBudgetBytes)
+void MeshProvider::Update(size_t uploadBudgetBytes)
 {
     size_t usedBytes = 0;
     std::vector<MeshLoadRequest> batch;

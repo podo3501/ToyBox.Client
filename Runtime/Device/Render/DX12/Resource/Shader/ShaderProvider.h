@@ -21,11 +21,11 @@ struct ShaderData
     std::vector<ShaderStageDesc> stages;
 };
 
-class ShaderSystem
+class ShaderProvider
 {
 public:
-    ~ShaderSystem();
-    ShaderSystem();
+    ~ShaderProvider();
+    ShaderProvider();
     bool Initialize(const std::vector<ShaderRegisterDesc>& shaders);
     
     const ShaderEntry* Find(const ShaderVariant& variant) const;

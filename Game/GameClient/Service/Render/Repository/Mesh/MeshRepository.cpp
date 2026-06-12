@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "MeshRepository.h"
-#include "IMeshSystem.h"
+#include "IMeshProvider.h"
 #include "Service/Render/Desc/MeshDesc.h"
 #include "Service/AssetAsync/AssetPipeline.h"
 
@@ -17,8 +17,8 @@ struct GpuPendingMeshRequest
 };
 
 MeshRepository::~MeshRepository() { ReleaseAll(); }
-MeshRepository::MeshRepository(IMeshSystem* meshSystem, AssetPipelineT* assetPipeline) :
-	m_meshSystem{ meshSystem },
+MeshRepository::MeshRepository(IMeshProvider* meshProvider, AssetPipelineT* assetPipeline) :
+	m_meshProvider{ meshProvider },
 	m_assetPipeline{ assetPipeline }
 {}
 
@@ -29,7 +29,7 @@ MeshHandle MeshRepository::GetOrCreate(const MeshDesc& desc, std::shared_ptr<Mes
 	if (it != m_cache.end())
 		return it->second;
 
-	auto meshRes = m_meshSystem->CreateMeshResource();
+	auto meshRes = m_meshProvider->CreateMeshResource();
 	if (!meshRes) return MeshHandle::Invalid();
 
 	MeshEntry entry;
@@ -93,7 +93,7 @@ void MeshRepository::ProcessGpuPending()
 		if (!entry || !entry->meshRes) continue;
 		if (entry->state != LoadState::Pending) continue; // 중복으로 들어온 경우 이미 Loading/Ready 라면 처리안함.
 
-		if (!m_meshSystem->LoadFromAsset(entry->meshRes, work.meshAsset))
+		if (!m_meshProvider->LoadFromAsset(entry->meshRes, work.meshAsset))
 		{
 			entry->state = LoadState::Failed;
 			continue;

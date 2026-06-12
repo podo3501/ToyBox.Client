@@ -4,7 +4,7 @@
 #include "../ResourceTypes.h"
 #include "Service/AssetAsync/AssetAsyncTypes.h"
 
-struct IMeshSystem;
+struct IMeshProvider;
 struct IMeshResource;
 struct MeshAsset;
 struct MeshDesc;
@@ -21,7 +21,7 @@ class MeshRepository
 {
 public:
     ~MeshRepository();
-    MeshRepository(IMeshSystem* meshSystem, AssetPipelineT* assetPipeline);
+    MeshRepository(IMeshProvider* meshProvider, AssetPipelineT* assetPipeline);
     
     MeshHandle GetOrCreate(const MeshDesc& desc, std::shared_ptr<MeshAsset> asset = nullptr);
     bool Release(MeshHandle mh);
@@ -34,7 +34,7 @@ private:
     void ProcessGpuPending();
     void ProcessLoading();
 
-    IMeshSystem* m_meshSystem{ nullptr };
+    IMeshProvider* m_meshProvider{ nullptr };
     AssetPipelineT* m_assetPipeline{ nullptr };
 
     std::unordered_map<Core::ResourceID, MeshHandle> m_cache;

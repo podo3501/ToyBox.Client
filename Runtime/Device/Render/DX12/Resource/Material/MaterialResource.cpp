@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "MaterialResource.h"
-#include "Asset/Texture/TextureResource.h"
+#include "Resource/Texture/TextureResource.h"
 
 MaterialResource::MaterialResource(uint32_t texSlotCount)
 {

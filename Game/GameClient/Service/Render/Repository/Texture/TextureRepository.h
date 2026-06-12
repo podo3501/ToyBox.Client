@@ -6,7 +6,7 @@
 #include "Service/Render/Desc/TextureDesc.h"
 #include "Service/AssetAsync/AssetAsyncTypes.h"
 
-struct ITextureSystem;
+struct ITextureProvider;
 struct ITextureResource;
 struct TextureAsset;
 struct CpuPendingTextureRequest;
@@ -22,7 +22,7 @@ class TextureRepository
 {
 public:
     ~TextureRepository();
-    TextureRepository(ITextureSystem* texSystem, AssetPipelineT* assetPipeline);
+    TextureRepository(ITextureProvider* texProvider, AssetPipelineT* assetPipeline);
 
     TextureHandle GetOrCreate(const TextureDesc& desc, std::shared_ptr<TextureAsset> asset = nullptr);
 
@@ -46,7 +46,7 @@ private:
     void ProcessGpuPending();
     void ProcessLoading();
 
-    ITextureSystem* m_texSystem{ nullptr };
+    ITextureProvider* m_texProvider{ nullptr };
     AssetPipelineT* m_assetPipeline{ nullptr };
 
     unordered_map<size_t, TextureHandle> m_cache;

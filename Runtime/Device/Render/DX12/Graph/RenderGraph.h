@@ -1,5 +1,5 @@
 #pragma once
-#include "Device/Render/DX12/Graph/RGTypes.h"
+#include "Graph/RGTypes.h"
 #include "GameClient/Service/Render/Desc/TextureDesc.h"
 #include "TaskHandle.h"
 #include <d3d12.h>

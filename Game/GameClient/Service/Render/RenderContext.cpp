@@ -19,9 +19,9 @@ namespace cm = Core::Math;
 RenderContext::~RenderContext() { m_backend->WaitIdle(); } //리소스를 RenderService가 들고 있기 때문에 gpu의 활동을 중지 시키고 리소스 삭제->backend 순으로 된다.
 RenderContext::RenderContext(IRenderBackend* backend, AssetPipelineT* assetPipeline) :
 	m_backend{ backend },
-	m_texRepository{ make_unique<TextureRepository>(m_backend->GetTextureSystem(), assetPipeline) },
-	m_meshRepository{ make_unique<MeshRepository>(m_backend->GetMeshSystem(), assetPipeline) },
-	m_matRepository{ make_unique<MaterialRepository>(m_backend->GetMaterialSystem(), assetPipeline) }
+	m_texRepository{ make_unique<TextureRepository>(m_backend->GetTextureProvider(), assetPipeline) },
+	m_meshRepository{ make_unique<MeshRepository>(m_backend->GetMeshProvider(), assetPipeline) },
+	m_matRepository{ make_unique<MaterialRepository>(m_backend->GetMaterialProvider(), assetPipeline) }
 {}
 
 bool RenderContext::Initialize()

@@ -1,14 +1,14 @@
 #include "pch.h"
-#include "MaterialSystem.h"
-#include "Resource/PhongMaterialResource.h"
-#include "Resource/PbrMaterialResource.h"
-#include "Resource/GridMaterialResource.h"
-#include "Resource/UIMaterialResource.h"
-#include "Asset/Texture/TextureSystem.h"
-#include "Asset/Texture/TextureResource.h"
+#include "MaterialProvider.h"
+#include "PhongMaterialResource.h"
+#include "PbrMaterialResource.h"
+#include "GridMaterialResource.h"
+#include "UIMaterialResource.h"
+#include "../Texture/TextureProvider.h"
+#include "../Texture/TextureResource.h"
 
 template <typename DescType, typename ResourceType>
-void MaterialSystem::AddDefaultSurface()
+void MaterialProvider::AddDefaultSurface()
 {
     DescType desc{};
     auto defaultMat = std::make_shared<ResourceType>(desc);
@@ -16,9 +16,9 @@ void MaterialSystem::AddDefaultSurface()
     m_defaultSurfaceMaterials[desc.surfType] = defaultMat;
 }
 
-MaterialSystem::~MaterialSystem() = default;
-MaterialSystem::MaterialSystem(ID3D12Device* device, TextureSystem* texSystem) :
-	m_texSystem{ texSystem }
+MaterialProvider::~MaterialProvider() = default;
+MaterialProvider::MaterialProvider(ID3D12Device* device, TextureProvider* texProvider) :
+	m_texProvider{ texProvider }
 {
     AddDefaultSurface<PhongMaterialDesc, PhongMaterialResource>();
     AddDefaultSurface<PbrMaterialDesc, PbrMaterialResource>();
@@ -43,7 +43,7 @@ static std::shared_ptr<MaterialResource> CreateSurfaceResource(const SurfaceMate
     return nullptr;
 }
 
-shared_ptr<IMaterialResource> MaterialSystem::CreateMaterialResource(const MaterialDesc& matDesc)
+shared_ptr<IMaterialResource> MaterialProvider::CreateMaterialResource(const MaterialDesc& matDesc)
 {
     shared_ptr<MaterialResource> matRes{ nullptr };
 
@@ -68,19 +68,19 @@ shared_ptr<IMaterialResource> MaterialSystem::CreateMaterialResource(const Mater
     return matRes;
 }
 
-void MaterialSystem::SetDefaultTextures(MaterialResource* matRes)
+void MaterialProvider::SetDefaultTextures(MaterialResource* matRes)
 {
     if (!matRes) return;
 
     auto defaultTypes = matRes->GetRequiredDefaultTextures();
     for (size_t i = 0; i < defaultTypes.size(); ++i)
     {
-        auto defaultTex = m_texSystem->GetDefaultTexture(defaultTypes[i]);
+        auto defaultTex = m_texProvider->GetDefaultTexture(defaultTypes[i]);
         matRes->SetTexture(static_cast<TextureSlot>(i), defaultTex);
     }
 }
 
-bool MaterialSystem::LoadFromAsset(
+bool MaterialProvider::LoadFromAsset(
     std::shared_ptr<IMaterialResource> res,
     std::vector<std::shared_ptr<TextureAsset>> texAssets)
 {
@@ -96,11 +96,11 @@ bool MaterialSystem::LoadFromAsset(
             continue;
 
         auto& texDesc = matDesc.textures[i];
-        auto texRes = m_texSystem->CreateTextureResource(texDesc);
+        auto texRes = m_texProvider->CreateTextureResource(texDesc);
         if (!texRes)
             return false;
 
-        if (!m_texSystem->LoadFromAsset(texRes, texAsset))
+        if (!m_texProvider->LoadFromAsset(texRes, texAsset))
             return false;
 
         matRes->SetTexture(static_cast<TextureSlot>(i), texRes);
@@ -110,7 +110,7 @@ bool MaterialSystem::LoadFromAsset(
     return true;
 }
 
-void MaterialSystem::Update()
+void MaterialProvider::Update()
 {
     for (auto it = m_pendingMaterials.begin(); it != m_pendingMaterials.end();)
     {
@@ -126,7 +126,7 @@ void MaterialSystem::Update()
     }
 }
 
-std::shared_ptr<IMaterialResource> MaterialSystem::GetDefaultSurfaceMaterial(SurfaceType surfType)
+std::shared_ptr<IMaterialResource> MaterialProvider::GetDefaultSurfaceMaterial(SurfaceType surfType)
 {
     auto it = m_defaultSurfaceMaterials.find(surfType);
     if (it != m_defaultSurfaceMaterials.end())
@@ -136,12 +136,12 @@ std::shared_ptr<IMaterialResource> MaterialSystem::GetDefaultSurfaceMaterial(Sur
     return nullptr;
 }
 
-shared_ptr<IMaterialResource> MaterialSystem::GetDefaultDebugSurfMaterial()
+shared_ptr<IMaterialResource> MaterialProvider::GetDefaultDebugSurfMaterial()
 {
     return m_defaultDebugSurfMats;
 }
 
-shared_ptr<IMaterialResource> MaterialSystem::GetDefaultUIMaterial()
+shared_ptr<IMaterialResource> MaterialProvider::GetDefaultUIMaterial()
 {
     return m_defaultUIMaterial;
 }

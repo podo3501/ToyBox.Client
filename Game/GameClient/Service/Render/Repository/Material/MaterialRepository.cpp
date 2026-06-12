@@ -1,9 +1,9 @@
 #include "pch.h"
 #include "MaterialRepository.h"
-#include "IMaterialSystem.h"
+#include "IMaterialProvider.h"
 #include "Service/Render/Resource/IMaterialResource.h"
 #include "Service/AssetAsync/AssetPipeline.h"
-#include "../Texture/ITextureSystem.h"
+#include "../Texture/ITextureProvider.h"
 
 struct CpuPendingMaterialRequest
 {
@@ -29,8 +29,8 @@ struct GpuPendingMaterialRequest
 };
 
 MaterialRepository::~MaterialRepository() = default;
-MaterialRepository::MaterialRepository(IMaterialSystem* matSystem, AssetPipelineT* assetPipeline) :
-    m_matSystem{ matSystem },
+MaterialRepository::MaterialRepository(IMaterialProvider* matProvider, AssetPipelineT* assetPipeline) :
+    m_matProvider{ matProvider },
     m_assetPipeline{ assetPipeline }
 {}
 
@@ -41,7 +41,7 @@ MaterialHandle MaterialRepository::GetOrCreate(const MaterialDesc& desc)
     if (it != m_cache.end())
         return it->second;
 
-    auto matRes = m_matSystem->CreateMaterialResource(desc);
+    auto matRes = m_matProvider->CreateMaterialResource(desc);
     if (!matRes)
         return MaterialHandle::Invalid();
 
@@ -151,7 +151,7 @@ void MaterialRepository::ProcessGpuPending()
         auto entry = m_loadedMaterials.Find(work.handle);
         if (!entry || !entry->matRes) continue;
 
-        if (!m_matSystem->LoadFromAsset(entry->matRes, work.textures))
+        if (!m_matProvider->LoadFromAsset(entry->matRes, work.textures))
         {
             entry->state = LoadState::Failed;
             continue;

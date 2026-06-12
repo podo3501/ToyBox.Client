@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "TextureRepository.h"
-#include "ITextureSystem.h"
+#include "ITextureProvider.h"
 #include "Service/Render/Resource/ITextureResource.h"
 #include "Service/AssetAsync/AssetPipeline.h"
 
@@ -17,8 +17,8 @@ struct GpuPendingTextureRequest
 };
 
 TextureRepository::~TextureRepository() { ReleaseAll(); }
-TextureRepository::TextureRepository(ITextureSystem* texSystem, AssetPipelineT* assetPipeline) :
-	m_texSystem{ texSystem },
+TextureRepository::TextureRepository(ITextureProvider* texProvider, AssetPipelineT* assetPipeline) :
+	m_texProvider{ texProvider },
 	m_assetPipeline{ assetPipeline }
 {}
 
@@ -29,7 +29,7 @@ TextureHandle TextureRepository::GetOrCreate(const TextureDesc& desc, std::share
 	if (it != m_cache.end())
 		return it->second;
 
-	auto texRes = m_texSystem->CreateTextureResource(desc);
+	auto texRes = m_texProvider->CreateTextureResource(desc);
 	if (!texRes) return TextureHandle::Invalid();
 
 	TextureEntry entry;
@@ -101,7 +101,7 @@ void TextureRepository::ProcessGpuPending()
 		if (!entry || !entry->texRes) continue;
 		if (entry->state != LoadState::Pending) continue; // 중복으로 들어온 경우 이미 Loading/Ready 라면 처리안함.
 
-		if (!m_texSystem->LoadFromAsset(entry->texRes, work.texAsset))
+		if (!m_texProvider->LoadFromAsset(entry->texRes, work.texAsset))
 		{
 			entry->state = LoadState::Failed;
 			continue;

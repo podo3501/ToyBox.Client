@@ -1,5 +1,5 @@
 #pragma once
-#include "GameClient/Service/Render/Repository/Texture/ITextureSystem.h"
+#include "GameClient/Service/Render/Repository/Texture/ITextureProvider.h"
 #include "TextureLoadRequest.h"
 #include <queue>
 
@@ -10,7 +10,7 @@ class DescriptorFactory;
 class TextureGraphBuilder;
 class TaskScheduler;
 class ResourceLoader;
-class ShaderSystem;
+class ShaderProvider;
 
 enum class DefaultTextureType
 {
@@ -21,15 +21,15 @@ enum class DefaultTextureType
     Count
 };
 
-class TextureSystem : public ITextureSystem
+class TextureProvider : public ITextureProvider
 {
 public:
-    ~TextureSystem();
-    TextureSystem(ID3D12Device* device, DescriptorFactory* descFactory, TaskScheduler* taskScheduler, ResourceLoader* loader);
+    ~TextureProvider();
+    TextureProvider(ID3D12Device* device, DescriptorFactory* descFactory, TaskScheduler* taskScheduler, ResourceLoader* loader);
     virtual shared_ptr<ITextureResource> CreateTextureResource(const TextureDesc& desc) override;
     virtual bool LoadFromAsset(std::shared_ptr<ITextureResource> resource, std::shared_ptr<TextureAsset> asset) override;
 
-    bool Initialize(ShaderSystem* shaderSystem);
+    bool Initialize(ShaderProvider* shaderProvider);
     void Update(size_t uploadBudgetBytes);
     std::shared_ptr<ITextureResource> GetDefaultTexture(DefaultTextureType type) const;
 

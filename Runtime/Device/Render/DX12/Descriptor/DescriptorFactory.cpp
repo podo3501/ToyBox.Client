@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "DescriptorFactory.h"
 #include "DescriptorAllocator.h"
-#include "Asset/Texture/TextureResource.h"
+#include "Resource/Texture/TextureResource.h"
 #include "Resource/Resource.h"
 #include "GameClient/Service/Render/Desc/TextureDesc.h"
 

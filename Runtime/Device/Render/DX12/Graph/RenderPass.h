@@ -3,7 +3,7 @@
 #include <vector>
 #include <functional>
 
-#include "Device/Render/DX12/Command/CommandType.h"
+#include "Command/CommandType.h"
 #include "Task.h"
 #include "RGTypes.h"
 

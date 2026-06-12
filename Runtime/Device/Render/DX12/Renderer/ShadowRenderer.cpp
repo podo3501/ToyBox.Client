@@ -1,8 +1,8 @@
 #include "pch.h"
 #include "ShadowRenderer.h"
-#include "Asset/Mesh/MeshResource.h"
+#include "Resource/Mesh/MeshResource.h"
 #include "RootSignatureBuilder.h"
-#include "ShaderSystem.h"
+#include "Resource/Shader/ShaderProvider.h"
 #include "Command/CommandList.h"
 #include "Helpers/MathHelpers.h"
 #include "GameClient/Graphics/RenderData/DirectionalLightData.h"
@@ -22,14 +22,14 @@ struct ShadowObjectCB
 CHECK_ALIGN16(ShadowObjectCB);
 
 ShadowRenderer::~ShadowRenderer() = default;
-ShadowRenderer::ShadowRenderer(ID3D12Device* device, ShaderSystem* shaderSystem) :
+ShadowRenderer::ShadowRenderer(ID3D12Device* device, ShaderProvider* shaderProvider) :
     m_device{ device },
-    m_shaderSystem{ shaderSystem }
+    m_shaderProvider{ shaderProvider }
 {}
 
 bool ShadowRenderer::Initialize()
 {
-    m_pipelineCache.Initialize(m_device, m_shaderSystem);
+    m_pipelineCache.Initialize(m_device, m_shaderProvider);
 
     ReturnIfFalse(CreateRootSignature());
     CreateDefaultPSOs();

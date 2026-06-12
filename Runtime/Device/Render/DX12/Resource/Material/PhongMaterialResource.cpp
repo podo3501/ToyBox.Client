@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "PhongMaterialResource.h"
-#include "Asset/Texture/TextureSystem.h"
+#include "../Texture/TextureProvider.h"
 
 PhongMaterialResource::~PhongMaterialResource() = default;
 PhongMaterialResource::PhongMaterialResource(const MaterialDesc& desc) :

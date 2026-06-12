@@ -1,8 +1,8 @@
 #include "pch.h"
 #include "RenderScene.h"
 #include "RenderSortKey.h"
-#include "Asset/Material/Resource/SurfaceMaterialResource.h"
-#include "Asset/Material/Resource/DebugSurfaceMaterialResource.h"
+#include "Resource/Material/SurfaceMaterialResource.h"
+#include "Resource/Material/DebugSurfaceMaterialResource.h"
 
 void RenderScene::AddSurface(const DrawItem& item)
 {

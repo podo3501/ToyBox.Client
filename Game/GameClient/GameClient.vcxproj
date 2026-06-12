@@ -186,12 +186,12 @@
     <ClInclude Include="Service\Render\RenderConfig.h" />
     <ClInclude Include="Service\Render\RenderContext.h" />
     <ClInclude Include="Service\Render\RenderService.h" />
-    <ClInclude Include="Service\Render\Repository\Material\IMaterialSystem.h" />
+    <ClInclude Include="Service\Render\Repository\Material\IMaterialProvider.h" />
     <ClInclude Include="Service\Render\Repository\Material\MaterialRepository.h" />
-    <ClInclude Include="Service\Render\Repository\Mesh\IMeshSystem.h" />
+    <ClInclude Include="Service\Render\Repository\Mesh\IMeshProvider.h" />
     <ClInclude Include="Service\Render\Repository\Mesh\MeshRepository.h" />
     <ClInclude Include="Service\Render\Repository\ResourceTypes.h" />
-    <ClInclude Include="Service\Render\Repository\Texture\ITextureSystem.h" />
+    <ClInclude Include="Service\Render\Repository\Texture\ITextureProvider.h" />
     <ClInclude Include="Service\Render\Repository\Texture\TextureRepository.h" />
     <ClInclude Include="Service\Render\Resource\IMaterialResource.h" />
     <ClInclude Include="Service\Render\Resource\IMeshResource.h" />
