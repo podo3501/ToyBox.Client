@@ -19,7 +19,7 @@ enum class MaterialDomain;
 struct IRenderBackend
 {
 	virtual ~IRenderBackend() = default;
-	virtual bool Initialize(HWND hwnd, const Size& wndSize, const RenderConfig& config, const std::vector<ShaderRegisterDesc>& shaders) = 0;
+	virtual bool Initialize(HWND hwnd, const Size& wndSize, const std::vector<ShaderRegisterDesc>& shaders) = 0;
 	virtual void SetDirectionalLight(const DirectionalLightData& light) = 0;
 	virtual void SetCamera(const CameraData& camera) = 0;
 
@@ -44,4 +44,4 @@ struct IRenderBackend
 	virtual IMaterialProvider* GetMaterialProvider() = 0;
 };
 
-std::unique_ptr<IRenderBackend> CreateRenderBackend();
+std::unique_ptr<IRenderBackend> CreateRenderBackend(const RenderConfig& config);

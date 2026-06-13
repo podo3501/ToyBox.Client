@@ -16,13 +16,14 @@ struct UploadRegion
 };
 
 struct TextureAsset;
+class Device;
 class CommandList;
 
 class ResourceLoader
 {
 public:
     ~ResourceLoader();
-    ResourceLoader(ID3D12Device* device);
+    ResourceLoader(Device& device);
 
     //?!? create 되는 함수는 Factory 클래스로 이동하는게 좋을듯.
     Resource CreateUploadResource(size_t size);
@@ -53,5 +54,5 @@ private:
         D3D12_RESOURCE_STATES state,
         const D3D12_CLEAR_VALUE* clearValue = nullptr);
 
-    ID3D12Device* m_device{ nullptr };
+    Device& m_device;
 };

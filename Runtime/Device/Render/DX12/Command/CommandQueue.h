@@ -4,6 +4,7 @@
 
 using Microsoft::WRL::ComPtr;
 
+class Device;
 class CommandList;
 
 class CommandQueue
@@ -12,7 +13,7 @@ public:
     ~CommandQueue();
     CommandQueue();
 
-    bool Initialize(ID3D12Device* device, CommandType type, uint32_t cmdPoolSize);
+    bool Initialize(Device& device, CommandType type, uint32_t cmdPoolSize);
     CommandList* Begin();
     uint64_t End();
 
@@ -24,8 +25,8 @@ public:
     uint64_t GetCompletedFence() const noexcept { return m_fence->GetCompletedValue(); }
 
 private:
-    bool CreateQueue(ID3D12Device* device, CommandType type);
-    bool CreateFence(ID3D12Device* device);
+    bool CreateQueue(Device& device, CommandType type);
+    bool CreateFence(Device& device);
     CommandList* GetAvailableCommandList();
     void WaitFence(uint64_t value);
 

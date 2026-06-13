@@ -1,7 +1,6 @@
 #pragma once
 #include "GameClient/Service/Render/Repository/Material/IMaterialProvider.h"
 
-struct ID3D12Device;
 class MaterialResource;
 class TextureProvider;
 enum class SurfaceType;
@@ -10,7 +9,7 @@ class MaterialProvider : public IMaterialProvider
 {
 public:
 	~MaterialProvider();
-	MaterialProvider(ID3D12Device* device, TextureProvider* texProvider);
+	explicit MaterialProvider(TextureProvider* texProvider);
 	virtual shared_ptr<IMaterialResource> CreateMaterialResource(const MaterialDesc& matDesc) override;
 	virtual bool LoadFromAsset(std::shared_ptr<IMaterialResource> resource, std::vector<std::shared_ptr<TextureAsset>> texAssets) override;
 

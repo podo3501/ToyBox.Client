@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "RootSignatureBuilder.h"
+#include "Core/Device.h"
 #include <dxcapi.h>
 
 void RootSignatureBuilder::Add32BitConstants(UINT shaderRegister, UINT numConstants)
@@ -54,7 +55,7 @@ void RootSignatureBuilder::AddFlags(D3D12_ROOT_SIGNATURE_FLAGS flags)
     m_flags |= flags;
 }
 
-ComPtr<ID3D12RootSignature> RootSignatureBuilder::Build(ID3D12Device* device)
+ComPtr<ID3D12RootSignature> RootSignatureBuilder::Build(Device& device)
 {
     std::vector<CD3DX12_DESCRIPTOR_RANGE> ranges;
     std::vector<CD3DX12_ROOT_PARAMETER> params;

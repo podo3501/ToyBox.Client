@@ -1,9 +1,11 @@
 #pragma once
-#include "PipelineCache.h"
 #include "FrameUploadAllocator.h"
 #include "Core/Math/Matrix.h"
+#include "GameClient/Service/Render/Desc/RenderState.h"
 
 struct CameraData;
+class Device;
+class PipelineCache;
 class CommandList;
 class ShaderProvider;
 class MeshResource;
@@ -15,7 +17,7 @@ class DebugSurfaceRenderer
 public:
     ~DebugSurfaceRenderer();
     DebugSurfaceRenderer() = delete;
-    explicit DebugSurfaceRenderer(ID3D12Device* device, ShaderProvider* shaderProvider);
+    DebugSurfaceRenderer(Device& device, PipelineCache& pipelineCache);
 
     bool Initialize();
     void BindCommonState(CommandList& cmd);
@@ -29,22 +31,18 @@ private:
     void CreateDefaultPSOs();
     ID3D12PipelineState* CreatePSO(const PipelineState& pipelineState);
     ID3D12PipelineState* GetPipeline(const PipelineState& pipelineState);
-    void CreateConstantBuffers();
 
     D3D12_GPU_VIRTUAL_ADDRESS UpdateObjectCB(const Core::Math::Matrix& world);
 
     static constexpr UINT kCBSize = 256;
     static constexpr uint32_t kMaxObjectCount = 1024;
 
-    ID3D12Device* m_device{ nullptr };
-    ShaderProvider* m_shaderProvider{ nullptr };
+    Device& m_device;
+    PipelineCache& m_pipelineCache;
+    std::optional<PipelineState> m_pipelineState{ nullopt };
 
     ComPtr<ID3D12RootSignature> m_rootSignature;
-
     ID3D12DescriptorHeap* m_srvHeap{ nullptr };
-
-    std::optional<PipelineState> m_pipelineState{ nullopt };
-    PipelineCache m_pipelineCache;
 
     FrameUploadAllocator m_objectCBAllocator;
     FrameUploadAllocator m_frameCBAllocator;

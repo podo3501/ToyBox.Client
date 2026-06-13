@@ -1,6 +1,7 @@
 #pragma once
 #include "../d3dx12.h"
 
+class Device;
 class Resource;
 class TextureResource;
 class DescriptorAllocator;
@@ -10,7 +11,7 @@ class DescriptorFactory
 public:
     ~DescriptorFactory();
     DescriptorFactory() = delete;
-    DescriptorFactory(ID3D12Device* device, DescriptorAllocator* srvAllocator, DescriptorAllocator* dsvAllocator);
+    DescriptorFactory(Device& device, DescriptorAllocator* srvAllocator, DescriptorAllocator* dsvAllocator);
     UINT CreateBufferSRV(const Resource& resBuffer, UINT elementCount, UINT elementStride); //vb, ib ¸¸µé¶§
     UINT CreateTextureSRV(const Resource& res, DXGI_FORMAT format, UINT mipLevels = 1);
     UINT CreateTextureDSV(const Resource& res, DXGI_FORMAT format, UINT mipSlice = 0);
@@ -27,7 +28,7 @@ private:
     UINT CreateMipSRV(const Resource& res, DXGI_FORMAT format, UINT mipLevel);
     UINT CreateMipUAV(const Resource& res, DXGI_FORMAT format, UINT mipLevel);
 
-    ID3D12Device* m_device{ nullptr };
+    Device& m_device;
     DescriptorAllocator* m_srvAllocator{ nullptr };
     DescriptorAllocator* m_dsvAllocator{ nullptr };
 };

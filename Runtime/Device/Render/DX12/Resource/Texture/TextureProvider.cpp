@@ -6,7 +6,7 @@
 #include "TextureResource.h"
 
 TextureProvider::~TextureProvider() = default;
-TextureProvider::TextureProvider(ID3D12Device* device, DescriptorFactory* descFactory, TaskScheduler* taskScheduler, ResourceLoader* loader) :
+TextureProvider::TextureProvider(Device& device, DescriptorFactory* descFactory, TaskScheduler* taskScheduler, ResourceLoader* loader) :
     m_mipGenerator{ make_unique<MipGenerator>(device) },
     m_builder{ make_unique<TextureGraphBuilder>(taskScheduler, loader, m_mipGenerator.get(), descFactory) }
 {}

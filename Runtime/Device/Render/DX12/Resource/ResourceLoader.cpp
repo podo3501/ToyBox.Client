@@ -1,12 +1,13 @@
 ﻿#include "pch.h"
 #include "ResourceLoader.h"
+#include "Core/Device.h"
 #include "../Command/CommandScheduler.h"
 #include "../Command/CommandList.h"
 #include "GameClient/Service/Asset/Assets/MeshAsset.h"
 #include "GameClient/Service/Asset/Assets/TextureAsset.h"
 
 ResourceLoader::~ResourceLoader() = default;
-ResourceLoader::ResourceLoader(ID3D12Device* device) :
+ResourceLoader::ResourceLoader(Device& device) :
     m_device{ device }
 {}
 

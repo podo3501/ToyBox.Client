@@ -4,11 +4,11 @@
 #include "Graph/RenderPass.h"
 #include "Graph/RenderGraph.h"
 #include "Renderer/ShadowRenderer.h"
-#include "Resource/Mesh/MeshResource.h"
-#include "Helpers/CommandListHelpers.h"
-#include "Descriptor/DescriptorFactory.h"
+#include "Command/CommandListHelpers.h"
 #include "Command/CommandList.h"
+#include "Resource/Mesh/MeshResource.h"
 #include "Resource/ShadowResource.h"
+#include "Descriptor/DescriptorFactory.h"
 
 ShadowGraphBuilder::~ShadowGraphBuilder() = default;
 

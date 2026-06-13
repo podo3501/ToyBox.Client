@@ -1,13 +1,11 @@
 #pragma once
 #include "FrameUploadAllocator.h"
-#include "PipelineCache.h"
-#include "Core/Foundation/Geometry2D.h"
 #include "Core/Math/Matrix.h"
 #include "GameClient/Service/Render/Desc/RenderState.h"
-#include <d3d12.h>
-#include <wrl.h>
 
 struct DirectionalLightData;
+class Device;
+class PipelineCache;
 class CommandList;
 class ShaderProvider;
 class MeshResource;
@@ -19,7 +17,7 @@ class ShadowRenderer
 public:
     ~ShadowRenderer();
     ShadowRenderer() = delete;
-    ShadowRenderer(ID3D12Device* device, ShaderProvider* shaderProvider);
+    ShadowRenderer(Device& device, PipelineCache& pipelineCache);
 
     bool Initialize();
     void BindCommonState(CommandList& cmd);
@@ -40,14 +38,12 @@ private:
     static constexpr UINT kCBSize = 256;
     static constexpr uint32_t kMaxObjectCount{ 1024 }; 
 
-    ID3D12Device* m_device{ nullptr };
-    ShaderProvider* m_shaderProvider{ nullptr };
+    Device& m_device;
+    PipelineCache& m_pipelineCache;
+    std::optional<PipelineState> m_pipelineState;
 
     ComPtr<ID3D12RootSignature> m_rootSignature;
     ID3D12DescriptorHeap* m_srvHeap{ nullptr };
-
-    std::optional<PipelineState> m_pipelineState;
-    PipelineCache   m_pipelineCache;
 
     FrameUploadAllocator m_objectCBAllocator;
     FrameUploadAllocator m_frameCBAllocator;

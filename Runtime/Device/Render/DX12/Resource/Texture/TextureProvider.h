@@ -3,7 +3,7 @@
 #include "TextureLoadRequest.h"
 #include <queue>
 
-struct ID3D12Device;
+class Device;
 class DescriptorAllocator;
 class MipGenerator;
 class DescriptorFactory;
@@ -25,7 +25,7 @@ class TextureProvider : public ITextureProvider
 {
 public:
     ~TextureProvider();
-    TextureProvider(ID3D12Device* device, DescriptorFactory* descFactory, TaskScheduler* taskScheduler, ResourceLoader* loader);
+    TextureProvider(Device& device, DescriptorFactory* descFactory, TaskScheduler* taskScheduler, ResourceLoader* loader);
     virtual shared_ptr<ITextureResource> CreateTextureResource(const TextureDesc& desc) override;
     virtual bool LoadFromAsset(std::shared_ptr<ITextureResource> resource, std::shared_ptr<TextureAsset> asset) override;
 
@@ -37,7 +37,6 @@ private:
     bool CreateBuiltinTextures();
     std::shared_ptr<ITextureResource> CreateDefaultTexture(const TextureDesc& desc, std::shared_ptr<TextureAsset> asset);
     std::shared_ptr<TextureAsset> CreateColorAsset(uint32_t pixelColor);
-    
 
     unique_ptr<MipGenerator> m_mipGenerator;
     unique_ptr<TextureGraphBuilder> m_builder;

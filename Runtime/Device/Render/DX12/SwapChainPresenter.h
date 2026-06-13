@@ -3,17 +3,13 @@
 #include "Core/Foundation/Geometry2D.h"
 #include "Resource/Resource.h"
 
-struct ID3D12Fence;
-struct ID3D12Device;
-struct IDXGIFactory4;
 struct IDXGISwapChain4;
 struct ID3D12DescriptorHeap;
-struct ID3D12CommandQueue;
 struct D3D12_CPU_DESCRIPTOR_HANDLE;
 struct Size;
+class Device;
 class CommandList;
 class CommandScheduler;
-enum D3D12_RESOURCE_STATES;
 
 struct SwapChainDesc
 {
@@ -29,13 +25,13 @@ public:
     ~SwapChainPresenter();
     SwapChainPresenter();
 
-    bool Initialize(ID3D12Device* device, IDXGIFactory4* factory, CommandScheduler* scheduler, const SwapChainDesc& desc);
+    bool Initialize(Device& device, CommandScheduler* scheduler, const SwapChainDesc& desc);
     void Clear(CommandList& cmd, float r, float g, float b, float a);
     void TransitionToRenderTarget(CommandList& cmd);
     void SetRenderTarget(CommandList& cmd);
     void TransitionToPresent(CommandList& cmd);
     bool Present(bool vsync);
-    bool Resize(ID3D12Device* device, const Size& size);
+    bool Resize(Device& device, const Size& size);
     const Size& GetSize() { return m_size; }
 
     D3D12_CPU_DESCRIPTOR_HANDLE GetCurrentRTV() const;
@@ -43,11 +39,10 @@ public:
     Resource& GetCurrentBackbuffer() { return m_renderTargets[m_frameIndex]; }
 
 private:
-    bool CreateSwapChain(ID3D12Device* device, IDXGIFactory4* factory,
-        ID3D12CommandQueue* queue, const SwapChainDesc& desc);
-    bool CreateRTV(ID3D12Device* device);
-    bool CreateFrameRTVs(ID3D12Device* device);
-    bool CreateDepthBuffer(ID3D12Device* device);
+    bool CreateSwapChain(Device& device, ID3D12CommandQueue* queue, const SwapChainDesc& desc);
+    bool CreateRTV(Device& device);
+    bool CreateFrameRTVs(Device& device);
+    bool CreateDepthBuffer(Device& device);
 
     Microsoft::WRL::ComPtr<IDXGISwapChain4> m_swapChain;
     Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> m_rtvHeap;

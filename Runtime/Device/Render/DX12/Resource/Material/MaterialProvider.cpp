@@ -17,7 +17,7 @@ void MaterialProvider::AddDefaultSurface()
 }
 
 MaterialProvider::~MaterialProvider() = default;
-MaterialProvider::MaterialProvider(ID3D12Device* device, TextureProvider* texProvider) :
+MaterialProvider::MaterialProvider(TextureProvider* texProvider) :
 	m_texProvider{ texProvider }
 {
     AddDefaultSurface<PhongMaterialDesc, PhongMaterialResource>();

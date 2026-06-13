@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "CommandQueue.h"
 #include "CommandList.h"
+#include "Core/Device.h"
 
 CommandQueue::~CommandQueue() 
 { 
@@ -12,9 +13,9 @@ CommandQueue::~CommandQueue()
 }
 CommandQueue::CommandQueue() = default;
 
-bool CommandQueue::Initialize(ID3D12Device* device, CommandType type, uint32_t cmdPoolSize)
+bool CommandQueue::Initialize(Device& device, CommandType type, uint32_t cmdPoolSize)
 {
-    if (!device || cmdPoolSize <= 0) return false;
+    if (cmdPoolSize <= 0) return false;
 
     ReturnIfFalse(CreateQueue(device, type));
     ReturnIfFalse(CreateFence(device));
@@ -75,7 +76,7 @@ void CommandQueue::WaitIdle()
         WaitFence(m_fenceValue - 1);
 }
 
-bool CommandQueue::CreateQueue(ID3D12Device* device, CommandType type)
+bool CommandQueue::CreateQueue(Device& device, CommandType type)
 {
     D3D12_COMMAND_QUEUE_DESC desc = {};
     desc.Type = ToD3D12(type);
@@ -86,7 +87,7 @@ bool CommandQueue::CreateQueue(ID3D12Device* device, CommandType type)
     return SUCCEEDED(device->CreateCommandQueue(&desc, IID_PPV_ARGS(&m_queue)));
 }
 
-bool CommandQueue::CreateFence(ID3D12Device* device)
+bool CommandQueue::CreateFence(Device& device)
 {
     if (FAILED(device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&m_fence))))
         return false;

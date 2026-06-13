@@ -1,10 +1,12 @@
 #pragma once
 #include "FrameUploadAllocator.h"
-#include "PipelineCache.h"
 #include "Core/Foundation/Geometry2D.h"
 #include "Core/Math/Matrix.h"
+#include "GameClient/Service/Render/Desc/RenderState.h"
 
 struct UIFrameCB;
+class Device;
+class PipelineCache;
 class CommandList;
 class MeshResource;
 class UIMaterialResource;
@@ -15,7 +17,7 @@ class UIRenderer
 {
 public:
     ~UIRenderer();
-    UIRenderer(ID3D12Device* device, ShaderProvider* shaderProvider);
+    UIRenderer(Device& device, PipelineCache& pipelineCache);
     bool Initialize(const Size& screenSize);
     void SetSRVHeap(ID3D12DescriptorHeap* heap) { m_srvHeap = heap; }
     void PrepareFrame();
@@ -33,15 +35,14 @@ private:
     static constexpr UINT kMaxUI = 1024;
     static constexpr UINT kCBSize = 256;
 
-    ID3D12Device* m_device{ nullptr };
-    ShaderProvider* m_shaderProvider{ nullptr };
-    FrameUploadAllocator m_uiFrameCBAllocator;
-
+    Device& m_device;
+    PipelineCache& m_pipelineCache;
+    std::optional<PipelineState> m_pipelineState{ nullopt };
+    
     Microsoft::WRL::ComPtr<ID3D12RootSignature> m_rootSignature;
     ID3D12DescriptorHeap* m_srvHeap{ nullptr };
 
-    std::optional<PipelineState> m_pipelineState{ nullopt };
-    PipelineCache m_pipelineCache;
+    FrameUploadAllocator m_uiFrameCBAllocator;
 
     Core::Math::Matrix m_projection;
 };

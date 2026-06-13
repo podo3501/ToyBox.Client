@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "DescriptorFactory.h"
+#include "Core/Device.h"
 #include "DescriptorAllocator.h"
 #include "Resource/Texture/TextureResource.h"
 #include "Resource/Resource.h"
@@ -7,7 +8,7 @@
 
 DescriptorFactory::~DescriptorFactory() = default;
 DescriptorFactory::DescriptorFactory(
-    ID3D12Device* device, 
+    Device& device,
     DescriptorAllocator* srvAllocator,
     DescriptorAllocator* dsvAllocator) :
     m_device{ device },

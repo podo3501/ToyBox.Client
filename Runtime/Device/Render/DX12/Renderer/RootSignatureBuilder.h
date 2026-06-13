@@ -3,6 +3,8 @@
 #include <wrl.h>
 #include "../d3dx12.h"
 
+class Device;
+
 using Microsoft::WRL::ComPtr;
 
 class RootSignatureBuilder
@@ -16,7 +18,7 @@ public:
     void AddLinearSampler(UINT shaderRegister);
     void AddComparisonSampler(UINT shaderRegister);
     void AddFlags(D3D12_ROOT_SIGNATURE_FLAGS flags);
-    ComPtr<ID3D12RootSignature> Build(ID3D12Device* device);
+    ComPtr<ID3D12RootSignature> Build(Device& device);
 
 private:
     struct SRVTableDesc { UINT numDescriptors{ 0 }; UINT baseRegister{ 0 }; UINT registerSpace{ 0 }; };

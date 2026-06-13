@@ -3,14 +3,16 @@
 #include <wrl/client.h>
 #include <mutex>
 
+class Device;
+
 using Microsoft::WRL::ComPtr;
 
 class DescriptorAllocator
 {
 public:
     ~DescriptorAllocator();
-    explicit DescriptorAllocator(ID3D12Device* device) noexcept;
-    bool Initialize(D3D12_DESCRIPTOR_HEAP_TYPE type, UINT maxCount) noexcept;
+    explicit DescriptorAllocator() noexcept;
+    bool Initialize(Device& device, D3D12_DESCRIPTOR_HEAP_TYPE type, UINT maxCount) noexcept;
     UINT Allocate() noexcept;
     UINT AllocateTransient(UINT count = 1) noexcept; // 뒤에서부터 채우는 임시 할당(mipmap 같이 잠시 계산때 쓰고 버리는 거)
 
@@ -24,7 +26,6 @@ public:
     UINT GetDescriptorSize() const { return m_descriptorSize; }
 
 private:
-    ID3D12Device* m_device{ nullptr };
     ComPtr<ID3D12DescriptorHeap> m_heap;
 
     bool m_shaderVisible{ false }; //dsv랑 점점 다른게 많아지면 클래스를 분리해야 함.

@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "RenderBackend.h"
-#include "Core/DX12Core.h"
 #include "Core/GPUProfiler.h"
 #include "SwapChainPresenter.h"
 #include "Command/CommandScheduler.h"
@@ -25,7 +24,7 @@
 #include "Resource/Material/SurfaceMaterialResource.h"
 #include "Resource/Shader/ShaderProvider.h"
 #include "Command/CommandList.h"
-#include "Helpers/CommandListHelpers.h"
+#include "Command/CommandListHelpers.h"
 #include <dxgi1_6.h>
 
 using Microsoft::WRL::ComPtr;
@@ -38,8 +37,9 @@ struct QuadDrawInfo
 };
 
 RenderBackend::~RenderBackend() = default;
-RenderBackend::RenderBackend() :
-    m_core{ make_unique<DX12Core>() }
+RenderBackend::RenderBackend(const RenderConfig& config) :
+    m_device{ config.enableDebugLayer },
+    m_config{ config }
 {}
 
 void RenderBackend::WaitIdle()
@@ -50,46 +50,38 @@ void RenderBackend::WaitIdle()
 bool RenderBackend::Initialize(
     HWND hwnd, 
     const Size& wndSize, 
-    const RenderConfig& config,
     const std::vector<ShaderRegisterDesc>& shaders)
 {
     m_size = wndSize;
-    ReturnIfFalse(m_core->Initialize(config.enableDebugLayer));
-    auto device = m_core->GetDevice();
-    auto factory = m_core->GetFactory();
-
     m_command = make_unique<CommandScheduler>();
-    ReturnIfFalse(m_command->Initialize(device, 
-        config.directCommandListPoolSize, 
-        config.copyCommandListPoolSize,
-        config.computeCommandListPoolSize));
+    ReturnIfFalse(m_command->Initialize(m_device, m_config.commandPools));
 
     auto queue = m_command->GetCommandQueue(CommandType::Direct);
-    SwapChainDesc desc{ hwnd, wndSize, config.allowTearing };
+    SwapChainDesc desc{ hwnd, wndSize, m_config.allowTearing };
     m_swapChain = make_unique<SwapChainPresenter>();
-    ReturnIfFalse(m_swapChain->Initialize(device, factory, m_command.get(), desc));
+    ReturnIfFalse(m_swapChain->Initialize(m_device, m_command.get(), desc));
 
-    m_srvAllocator = make_unique<DescriptorAllocator>(device);
-    ReturnIfFalse(m_srvAllocator->Initialize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, config.srvDescriptorCount));
-    m_dsvAllocator = make_unique<DescriptorAllocator>(device);
-    ReturnIfFalse(m_dsvAllocator->Initialize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV, config.dsvDescriptorCount));
-    m_descFactory = make_unique<DescriptorFactory>(device, m_srvAllocator.get(), m_dsvAllocator.get());
+    m_srvAllocator = make_unique<DescriptorAllocator>();
+    ReturnIfFalse(m_srvAllocator->Initialize(m_device, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, m_config.descriptors.srvCount));
+    m_dsvAllocator = make_unique<DescriptorAllocator>();
+    ReturnIfFalse(m_dsvAllocator->Initialize(m_device, D3D12_DESCRIPTOR_HEAP_TYPE_DSV, m_config.descriptors.dsvCount));
+    m_descFactory = make_unique<DescriptorFactory>(m_device, m_srvAllocator.get(), m_dsvAllocator.get());
 
     m_taskScheduler = make_unique<TaskScheduler>(m_command.get());
-    m_loader = make_unique<ResourceLoader>(device);
+    m_loader = make_unique<ResourceLoader>(m_device);
     m_profiler = make_unique<GPUProfiler>();
-    ReturnIfFalse(m_profiler->Initialize(device, m_command.get()));
+    ReturnIfFalse(m_profiler->Initialize(m_device, m_command.get()));
 
     m_shaderProvider = make_unique<ShaderProvider>();
     ReturnIfFalse(m_shaderProvider->Initialize(shaders));
-    m_texProvider = make_unique<TextureProvider>(device, m_descFactory.get(), m_taskScheduler.get(), m_loader.get());
+    m_texProvider = make_unique<TextureProvider>(m_device, m_descFactory.get(), m_taskScheduler.get(), m_loader.get());
     ReturnIfFalse(m_texProvider->Initialize(m_shaderProvider.get()));
-    m_meshProvider = make_unique<MeshProvider>(device, m_descFactory.get(), m_taskScheduler.get(), m_loader.get());
-    m_matProvider = make_unique<MaterialProvider>(device, m_texProvider.get());
+    m_meshProvider = make_unique<MeshProvider>(m_descFactory.get(), m_taskScheduler.get(), m_loader.get());
+    m_matProvider = make_unique<MaterialProvider>(m_texProvider.get());
     m_scene = make_unique<RenderScene>();
 
-    m_renderers = make_unique<Renderers>();
-    ReturnIfFalse(m_renderers->Initialize(device, m_shaderProvider.get(), wndSize, m_srvAllocator->GetHeap()));
+    m_renderers = make_unique<Renderers>(m_device, m_shaderProvider.get());
+    ReturnIfFalse(m_renderers->Initialize(wndSize, m_srvAllocator->GetHeap()));
 
     m_shadowRes = make_unique<ShadowResource>(); //이 클래스는 framereseource 클래스중의 하나. 프레임당 render가 필요한 리소스들.
     ReturnIfFalse(m_shadowRes->Initialize(m_loader.get(), m_descFactory.get(), 2048, 2048));
@@ -169,7 +161,7 @@ void RenderBackend::DrawUI(
 void RenderBackend::Resize(const Size& size)
 {
     m_renderers->SetScreenSize(size);
-    m_swapChain->Resize(m_core->GetDevice(), size);
+    m_swapChain->Resize(m_device, size);
 }
 
 void RenderBackend::Update()
@@ -290,7 +282,7 @@ IMaterialProvider* RenderBackend::GetMaterialProvider()
 
 //////////////////////////////////////////////////////
 
-unique_ptr<IRenderBackend> CreateRenderBackend()
+unique_ptr<IRenderBackend> CreateRenderBackend(const RenderConfig& config)
 {
-	return make_unique<RenderBackend>();
+	return make_unique<RenderBackend>(config);
 }

@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "ShadowRenderer.h"
+#include "PipelineCache.h"
 #include "Resource/Mesh/MeshResource.h"
 #include "RootSignatureBuilder.h"
 #include "Resource/Shader/ShaderProvider.h"
@@ -22,28 +23,19 @@ struct ShadowObjectCB
 CHECK_ALIGN16(ShadowObjectCB);
 
 ShadowRenderer::~ShadowRenderer() = default;
-ShadowRenderer::ShadowRenderer(ID3D12Device* device, ShaderProvider* shaderProvider) :
+ShadowRenderer::ShadowRenderer(Device& device, PipelineCache& pipelineCache) :
     m_device{ device },
-    m_shaderProvider{ shaderProvider }
+    m_pipelineCache{ pipelineCache },
+    m_objectCBAllocator{ device, kMaxObjectCount * kCBSize },
+    m_frameCBAllocator{ device, kCBSize }
 {}
 
 bool ShadowRenderer::Initialize()
 {
-    m_pipelineCache.Initialize(m_device, m_shaderProvider);
-
     ReturnIfFalse(CreateRootSignature());
     CreateDefaultPSOs();
-    CreateConstantBuffers();
 
     return true;
-}
-
-void ShadowRenderer::CreateConstantBuffers()
-{
-    constexpr UINT objectBufferSize = kMaxObjectCount * kCBSize;
-    constexpr UINT frameBufferSize = kCBSize;
-    m_objectCBAllocator.Initialize(m_device, objectBufferSize);
-    m_frameCBAllocator.Initialize(m_device, frameBufferSize);
 }
 
 bool ShadowRenderer::CreateRootSignature()

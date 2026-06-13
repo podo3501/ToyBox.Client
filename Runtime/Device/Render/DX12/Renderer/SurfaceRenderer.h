@@ -1,6 +1,5 @@
 #pragma once
 #include "FrameUploadAllocator.h"
-#include "PipelineCache.h"
 #include "Core/Foundation/Geometry2D.h"
 #include "Core/Math/Matrix.h"
 #include "GameClient/Service/Render/Desc/RenderState.h"
@@ -14,6 +13,8 @@ struct DirectionalLightData;
 struct CameraData;
 struct PbrSurface;
 struct PhongSurface;
+class Device;
+class PipelineCache;
 class CommandList;
 class MeshResource;
 class MaterialResource;
@@ -26,7 +27,7 @@ class SurfaceRenderer
 public:
     ~SurfaceRenderer();
     SurfaceRenderer() = delete;
-    explicit SurfaceRenderer(ID3D12Device* device, ShaderProvider* shaderProvider);
+    SurfaceRenderer(Device& device, PipelineCache& pipelineCache);
 
     bool Initialize();
     void BindCommonState(CommandList& cmd);
@@ -40,7 +41,6 @@ private:
     void CreateDefaultPSOs();
     ID3D12PipelineState* CreatePSO(const PipelineState& pipelineState);
     void CreatePipeline(const PipelineState& pipelineState);
-    void CreateConstantBuffers();
     ID3D12PipelineState* GetPipeline(const PipelineState& pipelineState);
 
     D3D12_GPU_VIRTUAL_ADDRESS UpdateObjectCB(const Core::Math::Matrix& world);
@@ -49,14 +49,12 @@ private:
     static constexpr UINT kCBSize = 256;
     static constexpr uint32_t kMaxObjectCount{ 1024 }; //추후에 링버퍼로 수정할 계획
 
-    ID3D12Device* m_device{ nullptr };
-    ShaderProvider* m_shaderProvider{ nullptr };
+    Device& m_device;
+    PipelineCache& m_pipelineCache;
+    std::optional<PipelineState> m_pipelineState{ nullopt };
 
     ComPtr<ID3D12RootSignature> m_rootSignature;
     ID3D12DescriptorHeap* m_srvHeap{ nullptr };
-
-    std::optional<PipelineState> m_pipelineState{ nullopt };
-    PipelineCache m_pipelineCache;
 
     FrameUploadAllocator m_objectCBAllocator;
     FrameUploadAllocator m_materialCBAllocator;

@@ -3,6 +3,7 @@
 #include <wrl/client.h>
 #include <dxcapi.h>
 
+class Device;
 class ShaderProvider;
 class CommandList;
 class DescriptorAllocator;
@@ -14,7 +15,7 @@ class MipGenerator
 {
 public:
     ~MipGenerator();
-    MipGenerator(ID3D12Device* device);
+    MipGenerator(Device& device);
     bool Initialize(ShaderProvider* shaderProvider);
     void GenerateMips(CommandList& cmd, DescriptorAllocator* srvAllocator, TextureResource* texResource);
 
@@ -24,7 +25,7 @@ private:
     bool CreatePSO();
 
 private:
-    ID3D12Device* m_device{ nullptr };
+    Device& m_device;
 
     ComPtr<ID3D12RootSignature> m_rootSignature;
     ComPtr<ID3D12PipelineState> m_psoSRGB;

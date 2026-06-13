@@ -1,13 +1,12 @@
 #include "pch.h"
 #include "DescriptorAllocator.h"
-#include "../Command/FenceTypes.h"
+#include "Core/Device.h"
+#include "Command/FenceTypes.h"
 
 DescriptorAllocator::~DescriptorAllocator() = default;
-DescriptorAllocator::DescriptorAllocator(ID3D12Device* device) noexcept :
-    m_device{ device }
-{}
+DescriptorAllocator::DescriptorAllocator() noexcept = default;
 
-bool DescriptorAllocator::Initialize(D3D12_DESCRIPTOR_HEAP_TYPE type, UINT maxCount) noexcept
+bool DescriptorAllocator::Initialize(Device& device, D3D12_DESCRIPTOR_HEAP_TYPE type, UINT maxCount) noexcept
 {
     m_capacity = maxCount;
     m_allocated = 0;
@@ -22,10 +21,10 @@ bool DescriptorAllocator::Initialize(D3D12_DESCRIPTOR_HEAP_TYPE type, UINT maxCo
     else // DSV 나 RTV 힙일 때는 FLAG_NONE (0) 즉, OMSetRenderTargets 등의 API가 사용하며 Shader가 직접 접근하지 않음.
         desc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
 
-    if (FAILED(m_device->CreateDescriptorHeap(&desc, IID_PPV_ARGS(&m_heap))))
+    if (FAILED(device->CreateDescriptorHeap(&desc, IID_PPV_ARGS(&m_heap))))
         return false;
 
-    m_descriptorSize = m_device->GetDescriptorHandleIncrementSize(type);
+    m_descriptorSize = device->GetDescriptorHandleIncrementSize(type);
     m_cpuStart = m_heap->GetCPUDescriptorHandleForHeapStart();
 
     if (m_shaderVisible)

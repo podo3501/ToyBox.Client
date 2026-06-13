@@ -1,15 +1,17 @@
 #include "pch.h"
 #include "FrameUploadAllocator.h"
+#include "Core/Device.h"
 #include "../d3dx12.h"
 
-bool FrameUploadAllocator::Initialize(ID3D12Device* device, UINT bufferSize)
+FrameUploadAllocator::~FrameUploadAllocator() = default;
+FrameUploadAllocator::FrameUploadAllocator(Device& device, UINT bufferSize)
 {
     m_bufferSize = bufferSize;
 
     CD3DX12_HEAP_PROPERTIES heap(D3D12_HEAP_TYPE_UPLOAD);
     auto desc = CD3DX12_RESOURCE_DESC::Buffer(bufferSize);
 
-    device->CreateCommittedResource(
+    auto hr = device->CreateCommittedResource(
         &heap,
         D3D12_HEAP_FLAG_NONE,
         &desc,
@@ -17,10 +19,10 @@ bool FrameUploadAllocator::Initialize(ID3D12Device* device, UINT bufferSize)
         nullptr,
         IID_PPV_ARGS(m_resource.GetAddressOf())
     );
+    Assert(SUCCEEDED(hr));
 
-    m_resource->Map(0, nullptr, reinterpret_cast<void**>(&m_mapped));
-
-    return true;
+    hr = m_resource->Map(0, nullptr, reinterpret_cast<void**>(&m_mapped));
+    Assert(SUCCEEDED(hr));
 }
 
 void FrameUploadAllocator::Reset()

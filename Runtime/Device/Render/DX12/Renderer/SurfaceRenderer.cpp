@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "SurfaceRenderer.h"
+#include "PipelineCache.h"
 #include "RenderConstants.h"
 #include "RootSignatureBuilder.h"
 #include "Command/CommandList.h"
@@ -50,18 +51,18 @@ static_assert(sizeof(PbrMaterialCB) == sizeof(MaterialConstantBuffer));
 static_assert(sizeof(PhongMaterialCB) == sizeof(MaterialConstantBuffer));
 
 SurfaceRenderer::~SurfaceRenderer() = default;
-SurfaceRenderer::SurfaceRenderer(ID3D12Device* device, ShaderProvider* shaderProvider) :
+SurfaceRenderer::SurfaceRenderer(Device& device, PipelineCache& pipelineCache) :
     m_device{ device },
-    m_shaderProvider{ shaderProvider }
+    m_pipelineCache{ pipelineCache },
+    m_objectCBAllocator{ device, kMaxObjectCount * kCBSize },
+    m_materialCBAllocator{ device, kMaxObjectCount * kCBSize },
+    m_frameCBAllocator{ device, kCBSize }
 {}
 
 bool SurfaceRenderer::Initialize()
 {
-    m_pipelineCache.Initialize(m_device, m_shaderProvider);
-
     ReturnIfFalse(CreateRootSignature());
     CreateDefaultPSOs();
-    CreateConstantBuffers();
 
     return true;
 }
@@ -115,17 +116,6 @@ bool SurfaceRenderer::CreateRootSignature()
 
     m_rootSignature = builder.Build(m_device);
     return m_rootSignature != nullptr;
-}
-
-void SurfaceRenderer::CreateConstantBuffers()
-{
-    constexpr UINT objectBufferSize = kMaxObjectCount * kCBSize;
-    constexpr UINT materialBufferSize = kMaxObjectCount * kCBSize;
-    constexpr UINT frameBufferSize = kCBSize;
-
-    m_objectCBAllocator.Initialize(m_device, objectBufferSize);
-    m_materialCBAllocator.Initialize(m_device, materialBufferSize);
-    m_frameCBAllocator.Initialize(m_device, frameBufferSize);
 }
 
 void SurfaceRenderer::BindCommonState(CommandList& cmd)

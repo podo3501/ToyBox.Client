@@ -1,10 +1,9 @@
 #pragma once
-#include <wrl/client.h>
 #include "CommandType.h"
 #include "FenceTypes.h"
 
-using Microsoft::WRL::ComPtr;
-
+struct CommandPoolConfig;
+class Device;
 class CommandList;
 class CommandQueue;
 
@@ -13,11 +12,7 @@ class CommandScheduler
 public:
     ~CommandScheduler();
     CommandScheduler();
-    bool Initialize(ID3D12Device* device, 
-        uint32_t directCmdPoolSize, 
-        uint32_t copyCmdPoolSize, 
-        uint32_t computeCmdPoolSize);
-
+    bool Initialize(Device& device, const CommandPoolConfig& config);
     CommandList* Begin(CommandType type);
     uint64_t End();
     

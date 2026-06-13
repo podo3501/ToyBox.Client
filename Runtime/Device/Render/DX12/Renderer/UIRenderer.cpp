@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "UIRenderer.h"
+#include "PipelineCache.h"
 #include "RootSignatureBuilder.h"
 #include "Command/CommandList.h"
 #include "Resource/Mesh/MeshResource.h"
@@ -17,19 +18,16 @@ struct UIFrameCB
 using Microsoft::WRL::ComPtr;
 
 UIRenderer::~UIRenderer() = default;
-UIRenderer::UIRenderer(ID3D12Device* device, ShaderProvider* shaderProvider) :
+UIRenderer::UIRenderer(Device& device, PipelineCache& pipelineCache) :
     m_device{ device },
-    m_shaderProvider{ shaderProvider }
+    m_pipelineCache{ pipelineCache },
+    m_uiFrameCBAllocator{ device, kMaxUI * kCBSize }
 {}
 
 bool UIRenderer::Initialize(const Size& screenSize)
 {
-    m_pipelineCache.Initialize(m_device, m_shaderProvider);
-
     ReturnIfFalse(CreateRootSignature());
     CreateDefaultPSOs();
-    m_uiFrameCBAllocator.Initialize(m_device, kMaxUI * kCBSize);
-
     SetScreenSize(screenSize);
 
     return true;

@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "DebugSurfaceRenderer.h"
-#include "Resource/Shader/ShaderProvider.h"
+#include "PipelineCache.h"
 #include "RootSignatureBuilder.h"
 #include "Command/CommandList.h"
 #include "RenderConstants.h"
@@ -11,19 +11,17 @@
 namespace cm = Core::Math;
 
 DebugSurfaceRenderer::~DebugSurfaceRenderer() = default;
-DebugSurfaceRenderer::DebugSurfaceRenderer(ID3D12Device* device, ShaderProvider* shaderProvider) :
+DebugSurfaceRenderer::DebugSurfaceRenderer(Device& device, PipelineCache& pipelineCache) :
     m_device{ device },
-    m_shaderProvider{ shaderProvider }
+    m_pipelineCache{ pipelineCache },
+    m_objectCBAllocator{ device, kMaxObjectCount * kCBSize },
+    m_frameCBAllocator{ device, kCBSize }
 {}
 
 bool DebugSurfaceRenderer::Initialize()
 {
-    m_pipelineCache.Initialize(m_device, m_shaderProvider);
-
     ReturnIfFalse(CreateRootSignature());
-
     CreateDefaultPSOs();
-    CreateConstantBuffers();
 
     return true;
 }
@@ -43,15 +41,6 @@ bool DebugSurfaceRenderer::CreateRootSignature()
 void DebugSurfaceRenderer::CreateDefaultPSOs()
 {
     CreatePSO(PipelineLibrary::Get(ShadingModel::Grid, RasterPreset::Default, PrimitiveTopologyType::Line));
-}
-
-void DebugSurfaceRenderer::CreateConstantBuffers()
-{
-    constexpr UINT objectBufferSize = kMaxObjectCount * kCBSize;
-    m_objectCBAllocator.Initialize(m_device, objectBufferSize);
-
-    constexpr UINT frameBufferSize = kCBSize;
-    m_frameCBAllocator.Initialize(m_device, frameBufferSize);
 }
 
 void DebugSurfaceRenderer::BindCommonState(CommandList& cmd)

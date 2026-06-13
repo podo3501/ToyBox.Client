@@ -4,6 +4,7 @@
 #include "CommandType.h"
 
 struct QueueDependency;
+class Device;
 
 using Microsoft::WRL::ComPtr;
 
@@ -12,7 +13,7 @@ class CommandList
 public:
     ~CommandList();
     CommandList();
-    bool Initialize(ID3D12Device* device, CommandType type);
+    bool Initialize(Device& device, CommandType type);
     void Reset();
     void Close();
 

@@ -3,10 +3,13 @@
 #include <wrl.h>
 #include "../Resource/Resource.h"
 
+class Device;
+
 class FrameUploadAllocator
 {
 public:
-    bool Initialize(ID3D12Device* device, UINT bufferSize);
+    ~FrameUploadAllocator();
+    FrameUploadAllocator(Device& device, UINT bufferSize);
     void Reset();
 
     template<typename T>

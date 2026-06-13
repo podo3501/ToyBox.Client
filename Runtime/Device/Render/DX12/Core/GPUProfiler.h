@@ -3,6 +3,7 @@
 #include <wrl/client.h>
 #include "Resource/Resource.h"
 
+class Device;
 class CommandList;
 class CommandScheduler;
 
@@ -11,7 +12,7 @@ using Microsoft::WRL::ComPtr;
 class GPUProfiler
 {
 public:
-    bool Initialize(ID3D12Device* device, CommandScheduler* scheduler, uint32_t frameCount = 2);
+    bool Initialize(Device& device, CommandScheduler* scheduler, uint32_t frameCount = 2);
 
     void BeginFrame(CommandList& cmd);
     void EndFrame(CommandList& cmd);

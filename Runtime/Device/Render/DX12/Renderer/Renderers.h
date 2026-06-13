@@ -1,7 +1,9 @@
 #pragma once
 #include <d3d12.h>
+#include "PipelineCache.h"
 
 struct Size;
+class Device;
 class ShaderProvider;
 class ShadowRenderer;
 class SurfaceRenderer;
@@ -12,12 +14,8 @@ class Renderers
 {
 public:
     ~Renderers();
-    Renderers();
-    bool Initialize(
-        ID3D12Device* device, 
-        ShaderProvider* shaderProvider,
-        const Size& screenSize,
-        ID3D12DescriptorHeap* srvHeap);
+    Renderers(Device& device, ShaderProvider* shaderProvider);
+    bool Initialize(const Size& screenSize, ID3D12DescriptorHeap* srvHeap);
     void SetScreenSize(const Size& screenSize);
 
     ShadowRenderer* GetShadowRenderer() const { return m_shadowRenderer.get(); }
@@ -26,6 +24,9 @@ public:
     UIRenderer* GetUIRenderer() const { return m_uiRenderer.get(); }
 
 private:
+    Device& m_device;
+    PipelineCache m_pipelineCache;
+
     std::unique_ptr<ShadowRenderer> m_shadowRenderer;
     std::unique_ptr<SurfaceRenderer> m_surfRenderer;
     std::unique_ptr<DebugSurfaceRenderer> m_debugSurfRenderer;

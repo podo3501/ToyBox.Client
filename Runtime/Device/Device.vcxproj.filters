@@ -184,9 +184,6 @@
     <ClInclude Include="Render\DX12\Renderer\RootSignatureBuilder.h">
       <Filter>Render\DX12\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\Helpers\CommandListHelpers.h">
-      <Filter>Render\DX12\Helpers</Filter>
-    </ClInclude>
     <ClInclude Include="Render\DX12\Helpers\MathHelpers.h">
       <Filter>Render\DX12\Helpers</Filter>
     </ClInclude>
@@ -283,7 +280,7 @@
     <ClInclude Include="Render\DX12\Core\DebugOptions.h">
       <Filter>Render\DX12\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\Core\DX12Core.h">
+    <ClInclude Include="Render\DX12\Core\Device.h">
       <Filter>Render\DX12\Core</Filter>
     </ClInclude>
     <ClInclude Include="Render\DX12\Core\GPUProfiler.h">
@@ -354,6 +351,9 @@
     </ClInclude>
     <ClInclude Include="Render\DX12\Resource\Texture\TextureProvider.h">
       <Filter>Render\DX12\Resource\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Command\CommandListHelpers.h">
+      <Filter>Render\DX12\Command</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -514,7 +514,7 @@
     <ClCompile Include="Render\DX12\Core\DebugHelper.cpp">
       <Filter>Render\DX12\Core</Filter>
     </ClCompile>
-    <ClCompile Include="Render\DX12\Core\DX12Core.cpp">
+    <ClCompile Include="Render\DX12\Core\Device.cpp">
       <Filter>Render\DX12\Core</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\Core\DX12Link.cpp">

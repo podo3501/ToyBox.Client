@@ -9,8 +9,7 @@
 #include "Helpers/CommonHelpers.h"
 
 MeshProvider::~MeshProvider() = default;
-MeshProvider::MeshProvider(ID3D12Device* device, DescriptorFactory* descFactory,
-    TaskScheduler* taskScheduler, ResourceLoader* loader) :
+MeshProvider::MeshProvider(DescriptorFactory* descFactory, TaskScheduler* taskScheduler, ResourceLoader* loader) :
     m_builder{ make_unique<MeshGraphBuilder>(taskScheduler, loader, descFactory) }
 {}
 

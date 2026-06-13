@@ -6,15 +6,16 @@ struct ID3D12Device;
 struct IDXGIFactory4;
 struct ID3D12CommandQueue;
 
-class DX12Core
+class Device
 {
 public:
-    DX12Core() = default;
-    ~DX12Core() = default;
+    ~Device();
+    explicit Device(bool enableDebug);
+    Device(const Device&) = delete;
+    Device& operator=(const Device&) = delete;
 
-    bool Initialize(bool enableDebug);
-
-    ID3D12Device* GetDevice() const { return m_device.Get(); }
+    ID3D12Device* operator->() const { return m_device.Get(); }
+    ID3D12Device* Get() { return m_device.Get(); }
     IDXGIFactory4* GetFactory() const { return m_dxgiFactory.Get(); }
     D3D_FEATURE_LEVEL GetFeatureLevel() const { return m_featureLevel; }
 

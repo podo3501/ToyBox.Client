@@ -1,9 +1,9 @@
 #pragma once
 #include "GameClient/Service/Render/IRenderBackend.h"
+#include "Core/Device.h"
 #include "Core/Foundation/Geometry2D.h"
 #include <wrl/client.h>
 
-class DX12Core;
 class SwapChainPresenter;
 class CommandList;
 class CommandScheduler;
@@ -24,8 +24,8 @@ class RenderBackend : public IRenderBackend
 {
 public:
 	~RenderBackend();
-	RenderBackend();
-	virtual bool Initialize(HWND hwnd, const Size& wndSize, const RenderConfig& renderConfig, const std::vector<ShaderRegisterDesc>& shaders) override;
+	RenderBackend(const RenderConfig& config);
+	virtual bool Initialize(HWND hwnd, const Size& wndSize, const std::vector<ShaderRegisterDesc>& shaders) override;
 	virtual void SetDirectionalLight(const DirectionalLightData& light) override;
 	virtual void SetCamera(const CameraData& camera) override;
 	virtual void DrawSurface(
@@ -52,7 +52,9 @@ private:
 	size_t ComputeTextureBudget(float gpuMs);
 	size_t ComputeMeshBudget(float gpuMs);
 
-	unique_ptr<DX12Core> m_core;
+	Device m_device;
+	RenderConfig m_config;
+
 	unique_ptr<CommandScheduler> m_command;
 	unique_ptr<SwapChainPresenter> m_swapChain;
 	unique_ptr<DescriptorAllocator> m_srvAllocator;

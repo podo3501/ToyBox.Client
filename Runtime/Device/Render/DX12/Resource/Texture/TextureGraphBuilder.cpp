@@ -8,7 +8,7 @@
 #include "MipGenerator.h"
 #include "Descriptor/DescriptorFactory.h"
 #include "Descriptor/DescriptorAllocator.h"
-#include "Helpers/CommandListHelpers.h"
+#include "Command/CommandListHelpers.h"
 #include "Command/CommandList.h"
 #include "TextureLoadRequest.h"
 #include "Helpers/CommonHelpers.h"

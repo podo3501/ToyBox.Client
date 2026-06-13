@@ -45,6 +45,7 @@
     <ClInclude Include="Input\IInputManager.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Render\DX12\Command\CommandList.h" />
+    <ClInclude Include="Render\DX12\Command\CommandListHelpers.h" />
     <ClInclude Include="Render\DX12\Command\CommandQueue.h" />
     <ClInclude Include="Render\DX12\Command\CommandScheduler.h" />
     <ClInclude Include="Render\DX12\Command\CommandType.h" />
@@ -53,7 +54,7 @@
     <ClInclude Include="Render\DX12\Core\Debug.h" />
     <ClInclude Include="Render\DX12\Core\DebugHelper.h" />
     <ClInclude Include="Render\DX12\Core\DebugOptions.h" />
-    <ClInclude Include="Render\DX12\Core\DX12Core.h" />
+    <ClInclude Include="Render\DX12\Core\Device.h" />
     <ClInclude Include="Render\DX12\Core\GPUProfiler.h" />
     <ClInclude Include="Render\DX12\Descriptor\DescriptorAllocator.h" />
     <ClInclude Include="Render\DX12\Descriptor\DescriptorFactory.h" />
@@ -64,7 +65,6 @@
     <ClInclude Include="Render\DX12\Graph\TaskHandle.h" />
     <ClInclude Include="Render\DX12\Graph\TaskNode.h" />
     <ClInclude Include="Render\DX12\Graph\TaskScheduler.h" />
-    <ClInclude Include="Render\DX12\Helpers\CommandListHelpers.h" />
     <ClInclude Include="Render\DX12\Helpers\CommonHelpers.h" />
     <ClInclude Include="Render\DX12\Helpers\MathHelpers.h" />
     <ClInclude Include="Render\DX12\Pipeline\DebugSurfaceGraphBuilder.h" />
@@ -145,7 +145,7 @@
     <ClCompile Include="Render\DX12\Command\CommandQueue.cpp" />
     <ClCompile Include="Render\DX12\Command\CommandScheduler.cpp" />
     <ClCompile Include="Render\DX12\Core\DebugHelper.cpp" />
-    <ClCompile Include="Render\DX12\Core\DX12Core.cpp" />
+    <ClCompile Include="Render\DX12\Core\Device.cpp" />
     <ClCompile Include="Render\DX12\Core\DX12Link.cpp" />
     <ClCompile Include="Render\DX12\Core\GPUProfiler.cpp" />
     <ClCompile Include="Render\DX12\Descriptor\DescriptorAllocator.cpp" />

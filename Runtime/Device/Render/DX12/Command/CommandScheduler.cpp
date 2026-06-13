@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "CommandScheduler.h"
 #include "CommandQueue.h"
+#include "Core/Device.h"
+#include "GameClient/Service/Render/RenderConfig.h"
 
 using Microsoft::WRL::ComPtr;
 
@@ -10,16 +12,15 @@ CommandScheduler::~CommandScheduler()
 }
 CommandScheduler::CommandScheduler() = default;
 
-bool CommandScheduler::Initialize(ID3D12Device* device, 
-    uint32_t directCmdPoolSize, uint32_t copyCmdPoolSize, uint32_t computeCmdPoolSize)
+bool CommandScheduler::Initialize(Device& device, const CommandPoolConfig& config)
 {
     m_directQueue = make_unique<CommandQueue>();
     m_copyQueue = make_unique<CommandQueue>();
     m_computeQueue = make_unique<CommandQueue>();
 
-    ReturnIfFalse(m_directQueue->Initialize(device, CommandType::Direct, directCmdPoolSize));
-    ReturnIfFalse(m_copyQueue->Initialize(device, CommandType::Copy, copyCmdPoolSize));
-    ReturnIfFalse(m_computeQueue->Initialize(device, CommandType::Compute, computeCmdPoolSize));
+    ReturnIfFalse(m_directQueue->Initialize(device, CommandType::Direct, config.direct));
+    ReturnIfFalse(m_copyQueue->Initialize(device, CommandType::Copy, config.copy));
+    ReturnIfFalse(m_computeQueue->Initialize(device, CommandType::Compute, config.compute));
     
     return true;
 }

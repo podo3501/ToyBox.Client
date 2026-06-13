@@ -1,15 +1,13 @@
 ﻿#include "pch.h"
 #include "MipGenerator.h"
+#include "Core/Device.h"
 #include "Resource/Shader/ShaderProvider.h"
 #include "Descriptor/DescriptorAllocator.h"
 #include "Command/CommandList.h"
 #include "TextureResource.h"
-#include "d3dx12.h"
-#include <d3dcompiler.h>
-#include <algorithm>
 
 MipGenerator::~MipGenerator() = default;
-MipGenerator::MipGenerator(ID3D12Device* device) :
+MipGenerator::MipGenerator(Device& device) :
     m_device{ device }
 {}
 

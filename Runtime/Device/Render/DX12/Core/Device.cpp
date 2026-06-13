@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "DX12Core.h"
+#include "Device.h"
 #include "DebugHelper.h"
 #include "DebugOptions.h"
 #include "d3dx12.h"
@@ -7,7 +7,8 @@
 
 using Microsoft::WRL::ComPtr;
 
-bool DX12Core::Initialize(bool enableDebug)
+Device::~Device() = default;
+Device::Device(bool enableDebug)
 {
 #if defined(_DEBUG)
     DebugOptions opt;
@@ -19,23 +20,24 @@ bool DX12Core::Initialize(bool enableDebug)
         DebugHelper::EnableDebugLayer(opt);
 #endif
 
-    ReturnIfFalse(CreateFactory(enableDebug));
-    ReturnIfFalse(CreateDevice());
+    bool result = CreateFactory(enableDebug);
+    Assert(result);
+
+    result = CreateDevice();
+    Assert(result);
 
 #if defined(_DEBUG)
     DebugHelper::SetupInfoQueue(m_device.Get(), opt);
 #endif
-
-    return true;
 }
 
-bool DX12Core::CreateFactory(bool enableDebug)
+bool Device::CreateFactory(bool enableDebug)
 {
     UINT flags = enableDebug ? DXGI_CREATE_FACTORY_DEBUG : 0;
     return SUCCEEDED(CreateDXGIFactory2(flags, IID_PPV_ARGS(&m_dxgiFactory)));
 }
 
-bool DX12Core::TryCreateDevice(IUnknown* adapter)
+bool Device::TryCreateDevice(IUnknown* adapter)
 {
     const D3D_FEATURE_LEVEL levels[] =
     {
@@ -56,7 +58,7 @@ bool DX12Core::TryCreateDevice(IUnknown* adapter)
     return false;
 }
 
-bool DX12Core::CreateDevice()
+bool Device::CreateDevice()
 {
     ComPtr<IDXGIAdapter1> adapter;
 

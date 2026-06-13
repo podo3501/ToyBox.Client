@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "CommandList.h"
+#include "Core/Device.h"
 
 struct QueueDependency
 {
@@ -10,7 +11,7 @@ struct QueueDependency
 CommandList::~CommandList() = default;
 CommandList::CommandList() = default;
 
-bool CommandList::Initialize(ID3D12Device* device, CommandType type)
+bool CommandList::Initialize(Device& device, CommandType type)
 {
     ReturnIfFailed(device->CreateCommandAllocator(ToD3D12(type), IID_PPV_ARGS(&m_allocator)));
     ReturnIfFailed(device->CreateCommandList(0, ToD3D12(type), m_allocator.Get(), nullptr, IID_PPV_ARGS(&m_command)));

@@ -1,9 +1,10 @@
 #include "pch.h"
 #include "SwapChainPresenter.h"
+#include "Core/Device.h"
 #include "Command/CommandScheduler.h"
-#include <dxgi1_6.h>
 #include "Command/CommandList.h"
-#include "Helpers/CommandListHelpers.h"
+#include "Command/CommandListHelpers.h"
+#include <dxgi1_6.h>
 
 using Microsoft::WRL::ComPtr;
 
@@ -14,8 +15,7 @@ SwapChainPresenter::~SwapChainPresenter()
 }
 SwapChainPresenter::SwapChainPresenter() = default;
 
-bool SwapChainPresenter::Initialize(ID3D12Device* device, IDXGIFactory4* factory,
-    CommandScheduler* scheduler, const SwapChainDesc& desc)
+bool SwapChainPresenter::Initialize(Device& device, CommandScheduler* scheduler, const SwapChainDesc& desc)
 {
     m_frameCount = desc.frameCount;
     m_renderTargets.resize(m_frameCount);
@@ -25,7 +25,7 @@ bool SwapChainPresenter::Initialize(ID3D12Device* device, IDXGIFactory4* factory
     m_tearing = desc.allowTearing;
 
     auto queue = scheduler->GetCommandQueue(CommandType::Direct);
-    ReturnIfFalse(CreateSwapChain(device, factory, queue, desc));
+    ReturnIfFalse(CreateSwapChain(device, queue, desc));
     ReturnIfFalse(CreateRTV(device));
     ReturnIfFalse(CreateDepthBuffer(device));
 
@@ -73,7 +73,7 @@ bool SwapChainPresenter::Present(bool vsync)
     return true;
 }
 
-bool SwapChainPresenter::Resize(ID3D12Device* device, const Size& size)
+bool SwapChainPresenter::Resize(Device& device, const Size& size)
 {
     if (size.width == 0 || size.height == 0) return false;
     if (m_size == size) return true;
@@ -124,8 +124,7 @@ D3D12_CPU_DESCRIPTOR_HANDLE SwapChainPresenter::GetDSV() const
     return m_dsvHeap->GetCPUDescriptorHandleForHeapStart();
 }
 
-bool SwapChainPresenter::CreateSwapChain(ID3D12Device* device, IDXGIFactory4* factory,
-    ID3D12CommandQueue* queue, const SwapChainDesc& desc)
+bool SwapChainPresenter::CreateSwapChain(Device& device, ID3D12CommandQueue* queue, const SwapChainDesc& desc)
 {
     DXGI_SWAP_CHAIN_DESC1 scDesc{};
     scDesc.BufferCount = m_frameCount;
@@ -136,6 +135,9 @@ bool SwapChainPresenter::CreateSwapChain(ID3D12Device* device, IDXGIFactory4* fa
     scDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
     scDesc.SampleDesc.Count = 1;
     scDesc.Flags = desc.allowTearing ? DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING : 0;
+    
+    auto factory = device.GetFactory();
+    if (!factory) return false;
 
     ComPtr<IDXGISwapChain1> swapChain1;
     if (FAILED(factory->CreateSwapChainForHwnd(
@@ -152,7 +154,7 @@ bool SwapChainPresenter::CreateSwapChain(ID3D12Device* device, IDXGIFactory4* fa
     return SUCCEEDED(swapChain1.As(&m_swapChain));
 }
 
-bool SwapChainPresenter::CreateRTV(ID3D12Device* device)
+bool SwapChainPresenter::CreateRTV(Device& device)
 {
     D3D12_DESCRIPTOR_HEAP_DESC heapDesc{};
     heapDesc.NumDescriptors = m_frameCount;
@@ -167,7 +169,7 @@ bool SwapChainPresenter::CreateRTV(ID3D12Device* device)
     return CreateFrameRTVs(device);
 }
 
-bool SwapChainPresenter::CreateFrameRTVs(ID3D12Device* device)
+bool SwapChainPresenter::CreateFrameRTVs(Device& device)
 {
     CD3DX12_CPU_DESCRIPTOR_HANDLE handle(m_rtvHeap->GetCPUDescriptorHandleForHeapStart());
 
@@ -189,7 +191,7 @@ bool SwapChainPresenter::CreateFrameRTVs(ID3D12Device* device)
     return true;
 }
 
-bool SwapChainPresenter::CreateDepthBuffer(ID3D12Device* device)
+bool SwapChainPresenter::CreateDepthBuffer(Device& device)
 {
     Assert(m_size.width > 0);
     Assert(m_size.height > 0);
