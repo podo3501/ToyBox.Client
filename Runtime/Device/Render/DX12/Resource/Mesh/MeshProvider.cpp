@@ -2,15 +2,14 @@
 #include "MeshProvider.h"
 #include "MeshResource.h"
 #include "MeshGraphBuilder.h"
-#include "Resource/ResourceLoader.h"
 #include "Descriptor/DescriptorFactory.h"
 #include "Graph/RGTypes.h"
 #include "Graph/TaskScheduler.h"
 #include "Helpers/CommonHelpers.h"
 
 MeshProvider::~MeshProvider() = default;
-MeshProvider::MeshProvider(DescriptorFactory* descFactory, TaskScheduler* taskScheduler, ResourceLoader* loader) :
-    m_builder{ make_unique<MeshGraphBuilder>(taskScheduler, loader, descFactory) }
+MeshProvider::MeshProvider(DescriptorFactory* descFactory, TaskScheduler* taskScheduler, ResourceFactory* resFactory) :
+    m_builder{ make_unique<MeshGraphBuilder>(taskScheduler, resFactory, descFactory) }
 {}
 
 shared_ptr<IMeshResource> MeshProvider::CreateMeshResource()

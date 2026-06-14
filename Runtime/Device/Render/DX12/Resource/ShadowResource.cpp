@@ -1,12 +1,11 @@
 #include "pch.h"
 #include "ShadowResource.h"
-#include "ResourceLoader.h"
+#include "ResourceFactory.h"
 #include "../Descriptor/DescriptorFactory.h"
 
-
-bool ShadowResource::Initialize(ResourceLoader* loader, DescriptorFactory* factory, UINT width, UINT height)
+bool ShadowResource::Initialize(ResourceFactory* resFactory, DescriptorFactory* factory, UINT width, UINT height)
 {
-	m_resource = Resource{ loader->CreateShadowResource(width, height) };
+	m_resource = resFactory->CreateShadowResource(width, height);
 	if (!m_resource) return false;
 
 	m_dsvIndex = factory->CreateTextureDSV(m_resource, DXGI_FORMAT_D32_FLOAT);

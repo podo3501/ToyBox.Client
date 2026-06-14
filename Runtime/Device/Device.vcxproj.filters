@@ -223,9 +223,6 @@
     <ClInclude Include="Render\DX12\Resource\Resource.h">
       <Filter>Render\DX12\Resource</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\Resource\ResourceLoader.h">
-      <Filter>Render\DX12\Resource</Filter>
-    </ClInclude>
     <ClInclude Include="Render\DX12\Resource\ShadowResource.h">
       <Filter>Render\DX12\Resource</Filter>
     </ClInclude>
@@ -355,6 +352,15 @@
     <ClInclude Include="Render\DX12\Command\CommandListHelpers.h">
       <Filter>Render\DX12\Command</Filter>
     </ClInclude>
+    <ClInclude Include="Render\DX12\Resource\ResourceFactory.h">
+      <Filter>Render\DX12\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Resource\Texture\TextureUtils.h">
+      <Filter>Render\DX12\Resource\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Resource\Mesh\MeshUtils.h">
+      <Filter>Render\DX12\Resource\Mesh</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -481,9 +487,6 @@
     <ClCompile Include="Render\DX12\Resource\Resource.cpp">
       <Filter>Render\DX12\Resource</Filter>
     </ClCompile>
-    <ClCompile Include="Render\DX12\Resource\ResourceLoader.cpp">
-      <Filter>Render\DX12\Resource</Filter>
-    </ClCompile>
     <ClCompile Include="Render\DX12\Resource\ShadowResource.cpp">
       <Filter>Render\DX12\Resource</Filter>
     </ClCompile>
@@ -576,6 +579,15 @@
     </ClCompile>
     <ClCompile Include="Render\DX12\Resource\Texture\TextureProvider.cpp">
       <Filter>Render\DX12\Resource\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Resource\ResourceFactory.cpp">
+      <Filter>Render\DX12\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Resource\Texture\TextureUtils.cpp">
+      <Filter>Render\DX12\Resource\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Resource\Mesh\MeshUtils.cpp">
+      <Filter>Render\DX12\Resource\Mesh</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

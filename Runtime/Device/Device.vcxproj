@@ -95,8 +95,9 @@
     <ClInclude Include="Render\DX12\Resource\Mesh\MeshRegistry.h" />
     <ClInclude Include="Render\DX12\Resource\Mesh\MeshResource.h" />
     <ClInclude Include="Render\DX12\Resource\Mesh\MeshProvider.h" />
+    <ClInclude Include="Render\DX12\Resource\Mesh\MeshUtils.h" />
     <ClInclude Include="Render\DX12\Resource\Resource.h" />
-    <ClInclude Include="Render\DX12\Resource\ResourceLoader.h" />
+    <ClInclude Include="Render\DX12\Resource\ResourceFactory.h" />
     <ClInclude Include="Render\DX12\Resource\Shader\ShaderProvider.h" />
     <ClInclude Include="Render\DX12\Resource\ShadowResource.h" />
     <ClInclude Include="Render\DX12\Resource\Texture\MipGenerator.h" />
@@ -105,6 +106,7 @@
     <ClInclude Include="Render\DX12\Resource\Texture\TextureRegistry.h" />
     <ClInclude Include="Render\DX12\Resource\Texture\TextureResource.h" />
     <ClInclude Include="Render\DX12\Resource\Texture\TextureProvider.h" />
+    <ClInclude Include="Render\DX12\Resource\Texture\TextureUtils.h" />
     <ClInclude Include="Render\DX12\Scene\RenderScene.h" />
     <ClInclude Include="Render\DX12\Scene\RenderSortKey.h" />
     <ClInclude Include="Render\DX12\SwapChainPresenter.h" />
@@ -178,8 +180,9 @@
     <ClCompile Include="Render\DX12\Resource\Mesh\MeshRegistry.cpp" />
     <ClCompile Include="Render\DX12\Resource\Mesh\MeshResource.cpp" />
     <ClCompile Include="Render\DX12\Resource\Mesh\MeshProvider.cpp" />
+    <ClCompile Include="Render\DX12\Resource\Mesh\MeshUtils.cpp" />
     <ClCompile Include="Render\DX12\Resource\Resource.cpp" />
-    <ClCompile Include="Render\DX12\Resource\ResourceLoader.cpp" />
+    <ClCompile Include="Render\DX12\Resource\ResourceFactory.cpp" />
     <ClCompile Include="Render\DX12\Resource\Shader\ShaderProvider.cpp" />
     <ClCompile Include="Render\DX12\Resource\ShadowResource.cpp" />
     <ClCompile Include="Render\DX12\Resource\Texture\MipGenerator.cpp" />
@@ -187,6 +190,7 @@
     <ClCompile Include="Render\DX12\Resource\Texture\TextureRegistry.cpp" />
     <ClCompile Include="Render\DX12\Resource\Texture\TextureResource.cpp" />
     <ClCompile Include="Render\DX12\Resource\Texture\TextureProvider.cpp" />
+    <ClCompile Include="Render\DX12\Resource\Texture\TextureUtils.cpp" />
     <ClCompile Include="Render\DX12\Scene\RenderScene.cpp" />
     <ClCompile Include="Render\DX12\Scene\RenderSortKey.cpp" />
     <ClCompile Include="Render\DX12\SwapChainPresenter.cpp" />

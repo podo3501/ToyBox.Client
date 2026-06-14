@@ -7,30 +7,10 @@
 #include "../Texture/TextureProvider.h"
 #include "../Texture/TextureResource.h"
 
-template <typename DescType, typename ResourceType>
-void MaterialProvider::AddDefaultSurface()
-{
-    DescType desc{};
-    auto defaultMat = std::make_shared<ResourceType>(desc);
-    SetDefaultTextures(defaultMat.get());
-    m_defaultSurfaceMaterials[desc.surfType] = defaultMat;
-}
-
 MaterialProvider::~MaterialProvider() = default;
 MaterialProvider::MaterialProvider(TextureProvider* texProvider) :
 	m_texProvider{ texProvider }
-{
-    AddDefaultSurface<PhongMaterialDesc, PhongMaterialResource>();
-    AddDefaultSurface<PbrMaterialDesc, PbrMaterialResource>();
-
-    GridMaterialDesc gridDesc;
-    m_defaultDebugSurfMats = make_shared<GridMaterialResource>(gridDesc);
-    SetDefaultTextures(m_defaultDebugSurfMats.get());
-
-    UIMaterialDesc uiDesc;
-    m_defaultUIMaterial = make_shared<UIMaterialResource>(uiDesc);
-    SetDefaultTextures(m_defaultUIMaterial.get());
-}
+{}
 
 static std::shared_ptr<MaterialResource> CreateSurfaceResource(const SurfaceMaterialDesc& surfaceDesc)
 {
@@ -124,24 +104,4 @@ void MaterialProvider::Update()
         matRes->MarkReady();
         it = m_pendingMaterials.erase(it);
     }
-}
-
-std::shared_ptr<IMaterialResource> MaterialProvider::GetDefaultSurfaceMaterial(SurfaceType surfType)
-{
-    auto it = m_defaultSurfaceMaterials.find(surfType);
-    if (it != m_defaultSurfaceMaterials.end())
-    {
-        return it->second;
-    }
-    return nullptr;
-}
-
-shared_ptr<IMaterialResource> MaterialProvider::GetDefaultDebugSurfMaterial()
-{
-    return m_defaultDebugSurfMats;
-}
-
-shared_ptr<IMaterialResource> MaterialProvider::GetDefaultUIMaterial()
-{
-    return m_defaultUIMaterial;
 }

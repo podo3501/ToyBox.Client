@@ -6,9 +6,9 @@
 #include "TextureResource.h"
 
 TextureProvider::~TextureProvider() = default;
-TextureProvider::TextureProvider(Device& device, DescriptorFactory* descFactory, TaskScheduler* taskScheduler, ResourceLoader* loader) :
+TextureProvider::TextureProvider(Device& device, DescriptorFactory* descFactory, TaskScheduler* taskScheduler, ResourceFactory* resFactory) :
     m_mipGenerator{ make_unique<MipGenerator>(device) },
-    m_builder{ make_unique<TextureGraphBuilder>(taskScheduler, loader, m_mipGenerator.get(), descFactory) }
+    m_builder{ make_unique<TextureGraphBuilder>(taskScheduler, resFactory, m_mipGenerator.get(), descFactory) }
 {}
 
 bool TextureProvider::Initialize(ShaderProvider* shaderProvider)

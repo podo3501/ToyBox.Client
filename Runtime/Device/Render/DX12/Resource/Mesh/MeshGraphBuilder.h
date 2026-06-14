@@ -8,7 +8,7 @@ struct MeshUploadEntry;
 struct MeshFinalizeEntry;
 class RenderGraph;
 class TaskScheduler;
-class ResourceLoader;
+class ResourceFactory;
 class DescriptorFactory;
 class MeshRegistry;
 
@@ -19,7 +19,7 @@ class MeshGraphBuilder
 public:
     ~MeshGraphBuilder();
     MeshGraphBuilder() = delete;
-    MeshGraphBuilder(TaskScheduler* taskScheduler, ResourceLoader* uploader, DescriptorFactory* descFactory);
+    MeshGraphBuilder(TaskScheduler* taskScheduler, ResourceFactory* resFactory, DescriptorFactory* descFactory);
     void LoadMeshes(const std::vector<MeshLoadRequest>& requests);
 
 private:
@@ -29,7 +29,7 @@ private:
     RGHandle CreateRGHandle();
 
     TaskScheduler* m_taskScheduler{ nullptr };
-    ResourceLoader* m_loader{ nullptr };
+    ResourceFactory* m_resFactory{ nullptr };
     DescriptorFactory* m_descFactory{ nullptr };
 
     unique_ptr<MeshRegistry> m_registry;

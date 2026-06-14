@@ -1,4 +1,5 @@
 #pragma once
+#include "Resource/Resource.h"
 #include <wrl/client.h>
 #include <d3dcommon.h>
 
@@ -13,6 +14,18 @@ public:
     explicit Device(bool enableDebug);
     Device(const Device&) = delete;
     Device& operator=(const Device&) = delete;
+
+    Resource CreateResource(
+        const D3D12_RESOURCE_DESC& desc,
+        D3D12_HEAP_TYPE heapType,
+        D3D12_RESOURCE_STATES state,
+        const D3D12_CLEAR_VALUE* clearValue = nullptr);
+
+    UINT64 GetRequiredIntermediateSize(
+        const D3D12_RESOURCE_DESC& desc,
+        UINT firstSubresource,
+        UINT numSubresources,
+        UINT64 offset);
 
     ID3D12Device* operator->() const { return m_device.Get(); }
     ID3D12Device* Get() { return m_device.Get(); }

@@ -186,6 +186,7 @@
     <ClInclude Include="Service\Render\RenderConfig.h" />
     <ClInclude Include="Service\Render\RenderContext.h" />
     <ClInclude Include="Service\Render\RenderService.h" />
+    <ClInclude Include="Service\Render\RenderServiceConfig.h" />
     <ClInclude Include="Service\Render\Repository\Material\IMaterialProvider.h" />
     <ClInclude Include="Service\Render\Repository\Material\MaterialRepository.h" />
     <ClInclude Include="Service\Render\Repository\Mesh\IMeshProvider.h" />

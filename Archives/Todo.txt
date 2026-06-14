@@ -316,6 +316,12 @@
 --기본을 phong으로 맞추자.
 --지금 디폴트가 pbr로 돼 있는데 이거 phong으로 수정
 --shadow pass
+--ShadowResource에 loader 인자가 들어가는데 이 인자를 device로 교체
+--loader를 해체하고 create 함수들은 device로 들어가고 다른 것들은 helper나 기타 등등으로 보냄.
+
+//backend 에서 머터리얼이 널 일때 처리 하는 부분 삭제
+//provider 합칠 수 있는지 확인
+@ForwardRenderPipeline 만드는 중
 
 @Verify 기능 (release에서 로그 남기는 define)을 어떻게 만들지 생각해보자.
 @m_pipelineCache renderer들 주입식으로 교체. m_objectCBAllocator 이거 비슷비슷한데 어떻게 할지.

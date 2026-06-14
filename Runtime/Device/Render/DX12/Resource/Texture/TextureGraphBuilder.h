@@ -7,7 +7,7 @@ struct TextureUploadEntry;
 struct TextureFinalizeEntry;
 class TextureRegistry;
 class TaskScheduler;
-class ResourceLoader;
+class ResourceFactory;
 class MipGenerator;
 class DescriptorFactory;
 class RenderGraph;
@@ -19,7 +19,7 @@ class TextureGraphBuilder
 public:
     ~TextureGraphBuilder();
     TextureGraphBuilder() = delete;
-    TextureGraphBuilder(TaskScheduler* taskScheduler, ResourceLoader* loader,
+    TextureGraphBuilder(TaskScheduler* taskScheduler, ResourceFactory* resFactory,
         MipGenerator* mipGenerator, DescriptorFactory* descFactory);
 
     void LoadTextures(const std::vector<TextureLoadRequest>& requests);
@@ -32,7 +32,7 @@ private:
     RGHandle CreateRGHandle();
 
     TaskScheduler* m_taskScheduler{ nullptr };
-    ResourceLoader* m_loader{ nullptr };
+    ResourceFactory* m_resFactory{ nullptr };
     MipGenerator* m_mipGenerator{ nullptr };
     DescriptorFactory* m_descFactory{ nullptr };
 

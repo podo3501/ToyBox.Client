@@ -16,6 +16,57 @@ ForwardRenderPipeline::ForwardRenderPipeline(Renderers* renderers, DescriptorFac
     m_renderers{ renderers },
     m_descFactory{ descFactory }
 {}
+//
+//void ForwardRenderPipeline::BuildGraph()
+//{
+//    m_hBackBuffer = m_graph.CreateRGHandle();
+//    m_hShadow = m_graph.CreateRGHandle();
+//
+//    m_graph.ImportResource(
+//        m_hBackBuffer,
+//        RGAccess::Present);
+//
+//    m_graph.ImportResource(
+//        m_hShadow,
+//        RGAccess::DepthWrite);
+//
+//    ShadowGraphBuilder shadow(
+//        m_renderers->GetShadowRenderer(),
+//        m_descFactory,
+//        m_shadowRes,
+//        nullptr,
+//        m_hShadow);
+//
+//    OpaqueGraphBuilder opaque(
+//        m_renderers->GetSurfRenderer(),
+//        m_swapChain,
+//        m_shadowRes,
+//        nullptr,
+//        m_hBackBuffer,
+//        m_hShadow);
+//
+//    DebugSurfaceGraphBuilder debug(
+//        m_renderers->GetDebugSurfRenderer(),
+//        nullptr,
+//        m_hBackBuffer);
+//
+//    UIGraphBuilder ui(
+//        m_renderers->GetUIRenderer(),
+//        nullptr,
+//        m_hBackBuffer);
+//
+//    FrameEndGraphBuilder end(
+//        m_hBackBuffer,
+//        m_hShadow);
+//
+//    shadow.Build(m_graph);
+//    opaque.Build(m_graph);
+//    debug.Build(m_graph);
+//    ui.Build(m_graph);
+//    end.Build(m_graph);
+//
+//    m_compiledTasks = m_graph.Compile();
+//}
 
 void ForwardRenderPipeline::BuildFrame(RenderGraph& graph, RenderScene* scene, SwapChainPresenter* swapChain, ShadowResource* shadowRes)
 {

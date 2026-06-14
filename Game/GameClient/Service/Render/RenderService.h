@@ -1,5 +1,6 @@
 #pragma once
 #include "RenderContext.h"
+#include "RenderServiceConfig.h"
 #include "../AssetAsync/AssetAsyncTypes.h"
 
 struct IRenderBackend;
@@ -13,8 +14,12 @@ class RenderService
 public:
 	~RenderService();
 	RenderService() = delete;
-	static unique_ptr<RenderService> Create(unique_ptr<IRenderBackend> backend, AssetPipelineT* assetPipeline) noexcept;
-	bool Initialize();
+	static unique_ptr<RenderService> Create(
+		unique_ptr<IRenderBackend> backend,
+		AssetPipelineT* assetPipeline,
+		const DefaultMaterialDescs& defaultMatDescs) noexcept;
+
+	bool Initialize(const DefaultMaterialDescs& defaultMatDescs);
 	void SetCamera(const CameraData& camera);
 	void SetDirectionalLight(const DirectionalLightData& light);
 	void Update();

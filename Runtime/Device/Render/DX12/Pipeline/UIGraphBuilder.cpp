@@ -23,7 +23,7 @@ void UIGraphBuilder::Build(RenderGraph& graph)
         m_uiRenderer->BindCommonState(cmd);
         m_uiRenderer->PrepareFrame();
 
-        for (auto& item : m_scene->GetUIDraws())
+        for (auto& item : m_scene->GetDrawList(MaterialDomain::UserInterface))
         {
             auto mesh = static_cast<MeshResource*>(item.mesh.get());
             auto material = static_cast<UIMaterialResource*>(item.material.get());

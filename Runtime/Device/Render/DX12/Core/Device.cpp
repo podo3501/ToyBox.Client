@@ -31,6 +31,48 @@ Device::Device(bool enableDebug)
 #endif
 }
 
+Resource Device::CreateResource(
+    const D3D12_RESOURCE_DESC& desc,
+    D3D12_HEAP_TYPE heapType,
+    D3D12_RESOURCE_STATES state,
+    const D3D12_CLEAR_VALUE* clearValue)
+{
+    CD3DX12_HEAP_PROPERTIES heap(heapType);
+
+    Resource res;
+    auto result = m_device->CreateCommittedResource(
+        &heap,
+        D3D12_HEAP_FLAG_NONE,
+        &desc,
+        state,
+        clearValue,
+        IID_PPV_ARGS(res.GetAddressOf()));
+    Assert(result == S_OK);
+
+    return res;
+}
+
+UINT64 Device::GetRequiredIntermediateSize(
+    const D3D12_RESOURCE_DESC& desc,
+    UINT firstSubresource,
+    UINT numSubresources,
+    UINT64 offset)
+{
+    UINT64 size = 0;
+
+    m_device->GetCopyableFootprints(
+        &desc,
+        firstSubresource,
+        numSubresources,
+        offset,
+        nullptr,
+        nullptr,
+        nullptr,
+        &size);
+
+    return size;
+}
+
 bool Device::CreateFactory(bool enableDebug)
 {
     UINT flags = enableDebug ? DXGI_CREATE_FACTORY_DEBUG : 0;

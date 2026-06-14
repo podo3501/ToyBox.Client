@@ -40,7 +40,7 @@ void ShadowGraphBuilder::Build(RenderGraph& graph)
         m_shadowRenderer->BindCommonState(cmd);
         m_shadowRenderer->PrepareFrame(ctx.frame.light);
 
-        for (auto& item : m_scene->GetSurfaceDraws())
+        for (auto& item : m_scene->GetDrawList(MaterialDomain::Surface))
         {
             auto mesh = static_cast<MeshResource*>(item.mesh.get());
 

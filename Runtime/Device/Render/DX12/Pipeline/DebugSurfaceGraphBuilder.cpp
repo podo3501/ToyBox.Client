@@ -23,7 +23,7 @@ void DebugSurfaceGraphBuilder::Build(RenderGraph& graph)
         m_debugSurfRenderer->BindCommonState(cmd);
         m_debugSurfRenderer->PrepareFrame(ctx.frame.camera);
 
-        for (auto& item : m_scene->GetDebugSurfaceDraws())
+        for (auto& item : m_scene->GetDrawList(MaterialDomain::DebugSurface))
         {
             auto mesh = static_cast<MeshResource*>(item.mesh.get());
             auto material = static_cast<GridMaterialResource*>(item.material.get());

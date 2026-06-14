@@ -5,7 +5,7 @@
 #include "Command/CommandScheduler.h"
 #include "Descriptor/DescriptorAllocator.h"
 #include "Descriptor/DescriptorFactory.h"
-#include "Resource/ResourceLoader.h"
+#include "Resource/ResourceFactory.h"
 #include "Resource/ShadowResource.h"
 #include "Renderer/Renderers.h"
 #include "Scene/RenderScene.h"
@@ -66,17 +66,17 @@ bool RenderBackend::Initialize(
     m_dsvAllocator = make_unique<DescriptorAllocator>();
     ReturnIfFalse(m_dsvAllocator->Initialize(m_device, D3D12_DESCRIPTOR_HEAP_TYPE_DSV, m_config.descriptors.dsvCount));
     m_descFactory = make_unique<DescriptorFactory>(m_device, m_srvAllocator.get(), m_dsvAllocator.get());
+    m_resFactory = make_unique<ResourceFactory>(m_device);
 
     m_taskScheduler = make_unique<TaskScheduler>(m_command.get());
-    m_loader = make_unique<ResourceLoader>(m_device);
     m_profiler = make_unique<GPUProfiler>();
     ReturnIfFalse(m_profiler->Initialize(m_device, m_command.get()));
 
     m_shaderProvider = make_unique<ShaderProvider>();
     ReturnIfFalse(m_shaderProvider->Initialize(shaders));
-    m_texProvider = make_unique<TextureProvider>(m_device, m_descFactory.get(), m_taskScheduler.get(), m_loader.get());
+    m_texProvider = make_unique<TextureProvider>(m_device, m_descFactory.get(), m_taskScheduler.get(), m_resFactory.get());
     ReturnIfFalse(m_texProvider->Initialize(m_shaderProvider.get()));
-    m_meshProvider = make_unique<MeshProvider>(m_descFactory.get(), m_taskScheduler.get(), m_loader.get());
+    m_meshProvider = make_unique<MeshProvider>(m_descFactory.get(), m_taskScheduler.get(), m_resFactory.get());
     m_matProvider = make_unique<MaterialProvider>(m_texProvider.get());
     m_scene = make_unique<RenderScene>();
 
@@ -84,7 +84,7 @@ bool RenderBackend::Initialize(
     ReturnIfFalse(m_renderers->Initialize(wndSize, m_srvAllocator->GetHeap()));
 
     m_shadowRes = make_unique<ShadowResource>(); //이 클래스는 framereseource 클래스중의 하나. 프레임당 render가 필요한 리소스들.
-    ReturnIfFalse(m_shadowRes->Initialize(m_loader.get(), m_descFactory.get(), 2048, 2048));
+    ReturnIfFalse(m_shadowRes->Initialize(m_resFactory.get(), m_descFactory.get(), 2048, 2048));
     
     return true;
 }
@@ -120,29 +120,14 @@ void RenderBackend::EndFrame()
 void RenderBackend::DrawSurface(
     std::shared_ptr<IMeshResource> meshRes,
     std::shared_ptr<IMaterialResource> matRes,
-    MaterialDomain domain, //?!? 나중에 matRes가 service 에서 nullptr을 채워주는 식으로 간다면 이게 필요 없어진다.
     const Core::Math::Matrix& world)
-{
-    if (!matRes)
-    {
-        switch (domain)
-        {
-        case MaterialDomain::Surface: matRes = m_matProvider->GetDefaultSurfaceMaterial(SurfaceType::Phong); break;
-        case MaterialDomain::DebugSurface: matRes = m_matProvider->GetDefaultDebugSurfMaterial(); break;
-        default: Assert(false); return; //surface가 아닌게 들어왔다.
-        }
-    }
-    
+{   
     DrawItem item;
     item.mesh = meshRes;
     item.material = matRes;
     item.world = world;
 
-    switch (domain)
-    {
-    case MaterialDomain::Surface: m_scene->AddSurface(item); break;
-    case MaterialDomain::DebugSurface: m_scene->AddDebugSurface(item); break;
-    }
+    m_scene->AddSurface(item);
 }
 
 void RenderBackend::DrawUI(
@@ -152,7 +137,7 @@ void RenderBackend::DrawUI(
 {
     DrawItem item;
     item.mesh = meshRes;
-    item.material = matRes ? matRes : m_matProvider->GetDefaultUIMaterial();
+    item.material = matRes;
     item.world = world;
 
     m_scene->AddUI(item);

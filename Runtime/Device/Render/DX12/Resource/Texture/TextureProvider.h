@@ -9,7 +9,7 @@ class MipGenerator;
 class DescriptorFactory;
 class TextureGraphBuilder;
 class TaskScheduler;
-class ResourceLoader;
+class ResourceFactory;
 class ShaderProvider;
 
 enum class DefaultTextureType
@@ -25,7 +25,7 @@ class TextureProvider : public ITextureProvider
 {
 public:
     ~TextureProvider();
-    TextureProvider(Device& device, DescriptorFactory* descFactory, TaskScheduler* taskScheduler, ResourceLoader* loader);
+    TextureProvider(Device& device, DescriptorFactory* descFactory, TaskScheduler* taskScheduler, ResourceFactory* resFactory);
     virtual shared_ptr<ITextureResource> CreateTextureResource(const TextureDesc& desc) override;
     virtual bool LoadFromAsset(std::shared_ptr<ITextureResource> resource, std::shared_ptr<TextureAsset> asset) override;
 

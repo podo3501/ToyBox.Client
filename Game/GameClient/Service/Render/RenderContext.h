@@ -18,6 +18,7 @@ struct ShaderAsset;
 struct MeshDesc;
 struct MeshMaterialDesc;
 struct ResolvedDrawData;
+struct DefaultMaterialDescs;
 class TextureRepository;
 class MaterialRepository;
 class MeshRepository;
@@ -29,7 +30,7 @@ public:
 	~RenderContext();
 	RenderContext() = delete;
 	RenderContext(IRenderBackend* backend, AssetPipelineT* assetPipeline);
-	bool Initialize();
+	bool Initialize(const DefaultMaterialDescs& defaultMatDescs);
 
 	MeshHandle LoadMesh(const MeshDesc& desc, std::shared_ptr<MeshAsset> asset = nullptr);
 	bool ReleaseMesh(MeshHandle mh);
@@ -42,18 +43,21 @@ public:
 
 	void DrawSurface(MeshHandle hM, MaterialHandle hMtl, const Core::Math::Matrix& world);
 	void DrawDebugSurface(MeshHandle hM, MaterialHandle hMtl, const Core::Math::Matrix& world);
-	void DrawUI(MaterialHandle mh, const Rect& dest, const Rect* source = nullptr);
+	void DrawUI(MaterialHandle hMtl, const Rect& dest, const Rect* source = nullptr);
 	void Update();
 	void ReleaseAll();
 
 private:
 	std::shared_ptr<MeshAsset> CreateUIQuad();
 	std::optional<ResolvedDrawData> ResolveResources(MeshHandle hM, MaterialHandle hMtl);
+	MaterialHandle GetDefaultMaterial(MaterialDomain matDomain) const;
 
 	IRenderBackend* m_backend{ nullptr };
 	unique_ptr<MeshRepository> m_meshRepository;
 	unique_ptr<TextureRepository> m_texRepository;
 	unique_ptr<MaterialRepository> m_matRepository;
 
-	MeshHandle m_uiQuad;
+	//default(built in)
+	MeshHandle m_uiQuad{};
+	std::array<MaterialHandle, static_cast<size_t>(MaterialDomain::Count)> m_defaultMaterials;
 };

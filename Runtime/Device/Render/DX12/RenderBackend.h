@@ -9,8 +9,8 @@ class CommandList;
 class CommandScheduler;
 class DescriptorAllocator;
 class DescriptorFactory;
+class ResourceFactory;
 class TaskScheduler;
-class ResourceLoader;
 class GPUProfiler;
 class TextureProvider;
 class MeshProvider;
@@ -31,7 +31,6 @@ public:
 	virtual void DrawSurface(
 		std::shared_ptr<IMeshResource> meshRes,
 		std::shared_ptr<IMaterialResource> matRes,
-		MaterialDomain domain,
 		const Core::Math::Matrix& world) override;
 	virtual void DrawUI(
 		std::shared_ptr<IMeshResource> meshRes, 
@@ -60,8 +59,8 @@ private:
 	unique_ptr<DescriptorAllocator> m_srvAllocator;
 	unique_ptr<DescriptorAllocator> m_dsvAllocator;
 	unique_ptr<DescriptorFactory> m_descFactory;
+	unique_ptr<ResourceFactory> m_resFactory;
 	unique_ptr<TaskScheduler> m_taskScheduler;
-	unique_ptr<ResourceLoader> m_loader;
 	unique_ptr<GPUProfiler> m_profiler;
 	
 	unique_ptr<TextureProvider> m_texProvider;

@@ -5,6 +5,6 @@ GridMaterialResource::~GridMaterialResource() = default;
 GridMaterialResource::GridMaterialResource(const MaterialDesc& desc) :
     DebugSurfaceMaterialResource{ 0 } //텍스쳐를 쓰지 않는다.
 {
-    Assert(desc.domain == MaterialDomain::Surface);
+    Assert(desc.domain == MaterialDomain::DebugSurface);
     m_desc = static_cast<const GridMaterialDesc&>(desc);
 }

@@ -1,12 +1,11 @@
 #pragma once
 #include "Core/Foundation/Geometry2D.h"
 #include "Core/Math/Matrix.h"
+#include "GameClient/Service/Render/Desc/MaterialDesc.h"
 
 struct ITextureResource;
 struct IMaterialResource;
 struct IMeshResource;
-enum class SurfaceType;
-enum class DebugSurfaceType;
 
 struct DrawItem
 {
@@ -20,23 +19,16 @@ struct DrawItem
 class RenderScene
 {
 public:
-    void AddSurface(const DrawItem& item);
-    const std::vector<DrawItem>& GetSurfaceDraws() { return m_surfaceDraws; }
-
-    void AddDebugSurface(const DrawItem& item);
-    const std::vector<DrawItem>& GetDebugSurfaceDraws() { return m_debugSurfaceDraws; }
-    
+    void AddSurface(const DrawItem& item);   
     void AddUI(const DrawItem& item);
-    const std::vector<DrawItem>& GetUIDraws() { return m_uiDraws; }
 
     void SortDraws();
     void Clear();
 
-private:
-    void SurfaceClear();
-    void UIClear();
+    const std::vector<DrawItem>& GetDrawList(MaterialDomain domain) const;
 
-    std::vector<DrawItem> m_surfaceDraws;
-    std::vector<DrawItem> m_debugSurfaceDraws;
-    std::vector<DrawItem> m_uiDraws;
+private:
+    void SortDrawList(MaterialDomain domain, std::vector<DrawItem>& drawList);
+
+    std::array<std::vector<DrawItem>, static_cast<size_t>(MaterialDomain::Count)> m_drawLists;
 };

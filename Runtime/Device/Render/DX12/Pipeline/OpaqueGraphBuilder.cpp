@@ -42,7 +42,7 @@ void OpaqueGraphBuilder::Build(RenderGraph& graph)
             m_shadowRes->GetSrvIndex()
         );
 
-        for (auto& item : m_scene->GetSurfaceDraws())
+        for (auto& item : m_scene->GetDrawList(MaterialDomain::Surface))
         {
             auto mesh = static_cast<MeshResource*>(item.mesh.get());
             auto material = static_cast<MaterialResource*>(item.material.get());

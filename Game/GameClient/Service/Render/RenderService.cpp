@@ -8,17 +8,20 @@ RenderService::RenderService(unique_ptr<IRenderBackend> backend, AssetPipelineT*
 	m_context{ make_unique<RenderContext>(m_backend.get(), assetPipeline) }
 {}
 
-unique_ptr<RenderService> RenderService::Create(unique_ptr<IRenderBackend> backend, AssetPipelineT* assetPipeline) noexcept
+unique_ptr<RenderService> RenderService::Create(
+	unique_ptr<IRenderBackend> backend, 
+	AssetPipelineT* assetPipeline,
+	const DefaultMaterialDescs& defaultMatDescs) noexcept
 {
 	unique_ptr<RenderService> service(new RenderService(move(backend), assetPipeline));
-	if (!service->Initialize()) return nullptr;
+	if (!service->Initialize(defaultMatDescs)) return nullptr;
 
 	return service;
 }
 
-bool RenderService::Initialize()
+bool RenderService::Initialize(const DefaultMaterialDescs& defaultMatDescs)
 {
-	return m_context->Initialize();
+	return m_context->Initialize(defaultMatDescs);
 }
 
 void RenderService::SetCamera(const CameraData& camera)

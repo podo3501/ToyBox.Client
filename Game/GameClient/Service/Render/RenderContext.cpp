@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "RenderContext.h"
+#include "RenderServiceConfig.h"
 #include "Repository/Material/MaterialRepository.h"
 #include "Repository/Texture/TextureRepository.h"
 #include "Repository/Mesh/MeshRepository.h"
@@ -24,10 +25,15 @@ RenderContext::RenderContext(IRenderBackend* backend, AssetPipelineT* assetPipel
 	m_matRepository{ make_unique<MaterialRepository>(m_backend->GetMaterialProvider(), assetPipeline) }
 {}
 
-bool RenderContext::Initialize()
+bool RenderContext::Initialize(const DefaultMaterialDescs& defaultMat)
 {
 	MeshDesc meshDesc{ Core::ResourceID::MakeBuiltin("ui_quad") };
-	m_uiQuad = m_meshRepository->GetOrCreate(meshDesc, CreateUIQuad());
+	m_uiQuad = LoadMesh(meshDesc, CreateUIQuad());
+
+	m_defaultMaterials[(size_t)MaterialDomain::Surface] = LoadMaterial(defaultMat.surface);
+	m_defaultMaterials[(size_t)MaterialDomain::DebugSurface] = LoadMaterial(defaultMat.debugSurface);
+	m_defaultMaterials[(size_t)MaterialDomain::UserInterface] = LoadMaterial(defaultMat.userInterface);
+
 	return true;
 }
 
@@ -63,23 +69,32 @@ bool RenderContext::ReleaseMaterial(MaterialHandle mh)
 
 void RenderContext::DrawSurface(MeshHandle hM, MaterialHandle hMtl, const cm::Matrix& world)
 {
+	if (!hMtl)
+		hMtl = GetDefaultMaterial(MaterialDomain::Surface);
+
 	auto data = ResolveResources(hM, hMtl);
 	if (!data) return;
 
-	m_backend->DrawSurface(data->meshRes, data->matRes, MaterialDomain::Surface, world);
+	m_backend->DrawSurface(data->meshRes, data->matRes, world);
 }
 
 void RenderContext::DrawDebugSurface(MeshHandle hM, MaterialHandle hMtl, const cm::Matrix& world)
 {
+	if (!hMtl)
+		hMtl = GetDefaultMaterial(MaterialDomain::DebugSurface);
+
 	auto data = ResolveResources(hM, hMtl);
 	if (!data) return;
 
-	m_backend->DrawSurface(data->meshRes, data->matRes, MaterialDomain::DebugSurface, world);
+	m_backend->DrawSurface(data->meshRes, data->matRes, world);
 }
 
-void RenderContext::DrawUI(MaterialHandle mh, const Rect& dest, const Rect* source)
+void RenderContext::DrawUI(MaterialHandle hMtl, const Rect& dest, const Rect* source)
 {
-	auto data = ResolveResources(m_uiQuad, mh);
+	if (!hMtl)
+		hMtl = GetDefaultMaterial(MaterialDomain::UserInterface);
+
+	auto data = ResolveResources(m_uiQuad, hMtl);
 	if (!data) return;
 
 	float width = static_cast<float>(dest.width);
@@ -116,19 +131,11 @@ std::optional<ResolvedDrawData> RenderContext::ResolveResources(MeshHandle hM, M
 
 	std::shared_ptr<IMaterialResource> matRes;
 
-	if (hMtl)
-	{
-		auto material = m_matRepository->Get(hMtl);
-		if (!material || material->state != LoadState::Ready)
-			return std::nullopt;
+	auto material = m_matRepository->Get(hMtl);
+	if (!material || material->state != LoadState::Ready)
+		return std::nullopt;
 
-		matRes = material->matRes;
-	}
-
-	return ResolvedDrawData{
-		mesh->meshRes,
-		std::move(matRes)
-	};
+	return ResolvedDrawData{ mesh->meshRes, material->matRes };
 }
 
 void RenderContext::Update()
@@ -168,4 +175,9 @@ std::shared_ptr<MeshAsset> RenderContext::CreateUIQuad()
 	asset->indices = std::move(indices);
 
 	return asset;
+}
+
+MaterialHandle RenderContext::GetDefaultMaterial(MaterialDomain matDomain) const
+{
+	return m_defaultMaterials[static_cast<size_t>(matDomain)];
 }

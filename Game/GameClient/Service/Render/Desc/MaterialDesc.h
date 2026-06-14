@@ -6,7 +6,8 @@ enum class MaterialDomain
 {
     Surface,
     DebugSurface,
-    UserInterface
+    UserInterface,
+    Count
 };
 
 struct MaterialDesc

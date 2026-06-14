@@ -5,11 +5,12 @@
 #include "Graph/TaskScheduler.h"
 #include "Descriptor/DescriptorFactory.h"
 #include "Resource/Resource.h"
-#include "Resource/ResourceLoader.h"
+#include "Resource/ResourceFactory.h"
 #include "MeshRegistry.h"
 #include "MeshLoadRequest.h"
 #include "Helpers/CommonHelpers.h"
 #include "GameClient/Service/Asset/Assets/MeshAsset.h"
+#include "MeshUtils.h"
 
 struct MeshUploadEntry
 {
@@ -28,10 +29,10 @@ struct MeshFinalizeEntry
 };
 
 MeshGraphBuilder::~MeshGraphBuilder() = default;
-MeshGraphBuilder::MeshGraphBuilder(TaskScheduler* taskScheduler, ResourceLoader* loader,
+MeshGraphBuilder::MeshGraphBuilder(TaskScheduler* taskScheduler, ResourceFactory* resFactory,
     DescriptorFactory* descFactory) :
     m_taskScheduler{ taskScheduler },
-    m_loader{ loader },
+    m_resFactory{ resFactory },
     m_descFactory{ descFactory },
     m_registry{ make_unique<MeshRegistry>() }
 {}
@@ -54,8 +55,8 @@ void MeshGraphBuilder::LoadMeshes(
 
         m_registry->Register(hMesh.id, req.resource);
 
-        auto vbRes = m_loader->CreateBufferResource(static_cast<UINT64>(req.vbBytes));
-        auto ibRes = m_loader->CreateBufferResource(static_cast<UINT64>(req.ibBytes));
+        auto vbRes = m_resFactory->CreateBufferResource(static_cast<UINT64>(req.vbBytes));
+        auto ibRes = m_resFactory->CreateBufferResource(static_cast<UINT64>(req.ibBytes));
 
         size_t vbOffset = offset;
         size_t ibOffset = offset + req.vbBytes;
@@ -89,7 +90,7 @@ void MeshGraphBuilder::LoadMeshes(
 
     size_t totalUploadSize = AlignSize(offset, AlignVertexIndex);
     auto resCtx = std::make_shared<ResourceContext>();
-    resCtx->Set(hUploadRes, m_loader->CreateUploadResource(totalUploadSize));
+    resCtx->Set(hUploadRes, m_resFactory->CreateUploadResource(totalUploadSize));
 
     m_taskScheduler->Submit(compiledTasks, resCtx);
 }
@@ -105,7 +106,7 @@ void MeshGraphBuilder::BuildUploadPass(RenderGraph& graph, std::vector<MeshUploa
         auto& uploadRes = ctx.GetResource(hUploadRes);
         for (auto& mesh : meshUploads)
         {
-            m_loader->UploadBufferRegion(cmd, uploadRes, mesh.region);
+            UploadBufferRegion(cmd, uploadRes, mesh.region);
             ctx.SetResource(mesh.handle, std::move(mesh.resource));
         }
         };

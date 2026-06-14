@@ -22,13 +22,13 @@ namespace SurfaceMatDescFactory
 {
     namespace Phong
     {
-        PhongMaterialDesc CreateLit(const PhongTextureArgs& texArgs);
+        PhongMaterialDesc CreateLit(const PhongTextureArgs& texArgs = {});
         PhongMaterialDesc CreateWireframe();
     }
 
     namespace PBR
     {
-        PbrMaterialDesc CreateLit(const PbrTextureArgs& texArgs);
+        PbrMaterialDesc CreateLit(const PbrTextureArgs& texArgs = {});
     }
 }
 
@@ -47,5 +47,5 @@ struct UITextureArgs
 
 namespace UIMatDescFactory
 {
-    UIMaterialDesc CreateDefault(const UITextureArgs& texArgs);
+    UIMaterialDesc CreateDefault(const UITextureArgs& texArgs = {});
 }

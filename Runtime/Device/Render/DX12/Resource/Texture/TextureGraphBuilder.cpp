@@ -4,7 +4,7 @@
 #include "Graph/RenderGraph.h"
 #include "Graph/RenderPass.h"
 #include "Graph/TaskScheduler.h"
-#include "Resource/ResourceLoader.h"
+#include "Resource/ResourceFactory.h"
 #include "MipGenerator.h"
 #include "Descriptor/DescriptorFactory.h"
 #include "Descriptor/DescriptorAllocator.h"
@@ -12,6 +12,7 @@
 #include "Command/CommandList.h"
 #include "TextureLoadRequest.h"
 #include "Helpers/CommonHelpers.h"
+#include "TextureUtils.h"
 
 struct TextureUploadEntry
 {
@@ -30,10 +31,10 @@ struct TextureFinalizeEntry
 };
 
 TextureGraphBuilder::~TextureGraphBuilder() = default;
-TextureGraphBuilder::TextureGraphBuilder(TaskScheduler* taskScheduler, ResourceLoader* loader,
+TextureGraphBuilder::TextureGraphBuilder(TaskScheduler* taskScheduler, ResourceFactory* resFactory,
     MipGenerator* mipGenerator, DescriptorFactory* descFactory) :
     m_taskScheduler{ taskScheduler },
-    m_loader{ loader },
+    m_resFactory{ resFactory },
     m_mipGenerator{ mipGenerator },
     m_descFactory{ descFactory },
     m_registry{ make_unique<TextureRegistry>() }
@@ -54,9 +55,9 @@ void TextureGraphBuilder::LoadTextures(const std::vector<TextureLoadRequest>& re
         m_registry->Register(hTex.id, req.resource);
 
         auto& texDesc = req.resource->GetDesc();
-        auto mips = m_loader->ShouldGenerateMips(*req.asset, texDesc.generateMips);
-        auto resDesc = m_loader->CreateTexture2DDesc(*req.asset, mips);
-        auto texRes = m_loader->CreateTextureResource(resDesc);
+        auto mips = ShouldGenerateMips(*req.asset, texDesc.generateMips);
+        auto resDesc = CreateTexture2DDesc(*req.asset, mips);
+        auto texRes = m_resFactory->CreateTextureResource(resDesc);
 
         auto textureResource = std::static_pointer_cast<TextureResource>(req.resource);
         textureResource->Set(texRes);
@@ -68,7 +69,7 @@ void TextureGraphBuilder::LoadTextures(const std::vector<TextureLoadRequest>& re
         textureUploads.push_back({ hTex, texRes, req.asset, offset, mips });
         finalizeEntries.push_back({ hTex, mips });
 
-        auto requiredSize = m_loader->GetTextureUploadLayout(resDesc, offset);
+        auto requiredSize = m_resFactory->GetRequiredIntermediateSize(resDesc, 0, 1, offset);
         offset += requiredSize;
     }
     RGHandle hUploadRes = CreateRGHandle();
@@ -81,7 +82,7 @@ void TextureGraphBuilder::LoadTextures(const std::vector<TextureLoadRequest>& re
 
     size_t totalUploadSize = AlignSize(offset, AlignTexture);
     auto resCtx = std::make_shared<ResourceContext>();
-    resCtx->Set(hUploadRes, m_loader->CreateUploadResource(totalUploadSize));
+    resCtx->Set(hUploadRes, m_resFactory->CreateUploadResource(totalUploadSize));
 
     m_taskScheduler->Submit(compiledTasks, resCtx);
 }
@@ -97,7 +98,7 @@ void TextureGraphBuilder::BuildUploadPass(RenderGraph& graph, std::vector<Textur
         auto& uploadRes = ctx.GetResource(hUploadRes);
         for (auto& tex : textureUploads)
         {
-            m_loader->UploadTexture(cmd, *tex.asset, tex.resource, uploadRes, tex.offset);
+            UploadTexture(cmd, *tex.asset, tex.resource, uploadRes, tex.offset);
             ctx.SetResource(tex.handle, std::move(tex.resource));
         }
         };
