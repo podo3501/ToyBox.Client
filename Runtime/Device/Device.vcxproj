@@ -51,11 +51,13 @@
     <ClInclude Include="Render\DX12\Command\CommandType.h" />
     <ClInclude Include="Render\DX12\Command\FenceTypes.h" />
     <ClInclude Include="Render\DX12\Core\BuildConfig.h" />
+    <ClInclude Include="Render\DX12\Core\D3D12Conversions.h" />
     <ClInclude Include="Render\DX12\Core\Debug.h" />
     <ClInclude Include="Render\DX12\Core\DebugHelper.h" />
     <ClInclude Include="Render\DX12\Core\DebugOptions.h" />
     <ClInclude Include="Render\DX12\Core\Device.h" />
     <ClInclude Include="Render\DX12\Core\GPUProfiler.h" />
+    <ClInclude Include="Render\DX12\Core\RenderData.h" />
     <ClInclude Include="Render\DX12\Descriptor\DescriptorAllocator.h" />
     <ClInclude Include="Render\DX12\Descriptor\DescriptorFactory.h" />
     <ClInclude Include="Render\DX12\Graph\RenderGraph.h" />
@@ -75,6 +77,7 @@
     <ClInclude Include="Render\DX12\Pipeline\UIGraphBuilder.h" />
     <ClInclude Include="Render\DX12\Renderer\FrameUploadAllocator.h" />
     <ClInclude Include="Render\DX12\Renderer\DebugSurfaceRenderer.h" />
+    <ClInclude Include="Render\DX12\Renderer\RendererConfig.h" />
     <ClInclude Include="Render\DX12\Renderer\ShadowRenderer.h" />
     <ClInclude Include="Render\DX12\Renderer\SurfaceRenderer.h" />
     <ClInclude Include="Render\DX12\Renderer\PipelineCache.h" />
@@ -146,6 +149,7 @@
     <ClCompile Include="Render\DX12\Command\CommandList.cpp" />
     <ClCompile Include="Render\DX12\Command\CommandQueue.cpp" />
     <ClCompile Include="Render\DX12\Command\CommandScheduler.cpp" />
+    <ClCompile Include="Render\DX12\Core\D3D12Conversions.cpp" />
     <ClCompile Include="Render\DX12\Core\DebugHelper.cpp" />
     <ClCompile Include="Render\DX12\Core\Device.cpp" />
     <ClCompile Include="Render\DX12\Core\DX12Link.cpp" />

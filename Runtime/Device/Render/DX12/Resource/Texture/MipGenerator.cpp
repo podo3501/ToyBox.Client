@@ -5,6 +5,7 @@
 #include "Descriptor/DescriptorAllocator.h"
 #include "Command/CommandList.h"
 #include "TextureResource.h"
+#include "Renderer/RootSignatureBuilder.h"
 
 MipGenerator::~MipGenerator() = default;
 MipGenerator::MipGenerator(Device& device) :
@@ -36,28 +37,11 @@ bool MipGenerator::LoadShader(ShaderProvider* shaderProvider)
 
 bool MipGenerator::CreateRootSignature()
 {
-    CD3DX12_ROOT_PARAMETER params[1] = {};
+    RootSignatureBuilder builder;
+    builder.Add32BitConstants(0, 4);
 
-    // [전달할 데이터 구성 총 4 dwords]
-    // constants[0] = SrcMipIndex (SRV 방 번호)
-    // constants[1] = DstMipIndex (UAV 방 번호)
-    // constants[2] = Width
-    // constants[3] = Height
-    params[0].InitAsConstants(4, 0); // b0 등록
-
-    CD3DX12_ROOT_SIGNATURE_DESC desc{};
-    desc.Init(1, params, 0, nullptr, D3D12_ROOT_SIGNATURE_FLAG_CBV_SRV_UAV_HEAP_DIRECTLY_INDEXED); //SM 6.6+ Bindless 힙 직접 인덱싱을 사용하기 위해 플래그를 명시
-    
-    ComPtr<ID3DBlob> sig;
-    ComPtr<ID3DBlob> err;
-
-    ReturnIfFailed(D3D12SerializeRootSignature(&desc, D3D_ROOT_SIGNATURE_VERSION_1, &sig, &err));
-    ReturnIfFailed(m_device->CreateRootSignature(0,
-        sig->GetBufferPointer(),
-        sig->GetBufferSize(),
-        IID_PPV_ARGS(&m_rootSignature)));
-
-    return true;
+    m_rootSignature = builder.Build(m_device);
+    return m_rootSignature != nullptr;
 }
 
 bool MipGenerator::CreatePSO()

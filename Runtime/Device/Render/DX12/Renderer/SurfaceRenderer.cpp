@@ -11,6 +11,7 @@
 #include "Resource/Shader/ShaderProvider.h"
 #include "GameClient/Graphics/RenderData/DirectionalLightData.h"
 #include "GameClient/Graphics/RenderData/CameraData.h"
+#include "Core/D3D12Conversions.h"
 #include "d3dx12.h"
 #include <d3dcompiler.h>
 
@@ -51,17 +52,18 @@ static_assert(sizeof(PbrMaterialCB) == sizeof(MaterialConstantBuffer));
 static_assert(sizeof(PhongMaterialCB) == sizeof(MaterialConstantBuffer));
 
 SurfaceRenderer::~SurfaceRenderer() = default;
-SurfaceRenderer::SurfaceRenderer(Device& device, PipelineCache& pipelineCache) :
-    m_device{ device },
-    m_pipelineCache{ pipelineCache },
-    m_objectCBAllocator{ device, kMaxObjectCount * kCBSize },
-    m_materialCBAllocator{ device, kMaxObjectCount * kCBSize },
-    m_frameCBAllocator{ device, kCBSize }
+SurfaceRenderer::SurfaceRenderer(const SurfaceRendererConfig& config, PipelineCache& pipelineCache) :
+    m_config{ config },
+    m_pipelineCache{ pipelineCache }
 {}
 
-bool SurfaceRenderer::Initialize()
+bool SurfaceRenderer::Initialize(Device& device)
 {
-    ReturnIfFalse(CreateRootSignature());
+    m_objectCBAllocator.Initialize<ObjectCB>(device, m_config.maxObjectCount);
+    m_materialCBAllocator.Initialize<MaterialConstantBuffer>(device, m_config.maxObjectCount);
+    m_frameCBAllocator.Initialize<MeshFrameCB>(device, 1);
+
+    ReturnIfFalse(CreateRootSignature(device));
     CreateDefaultPSOs();
 
     return true;
@@ -101,7 +103,7 @@ ID3D12PipelineState* SurfaceRenderer::GetPipeline(const PipelineState& pipelineS
     return CreatePSO(pipelineState);
 }
 
-bool SurfaceRenderer::CreateRootSignature()
+bool SurfaceRenderer::CreateRootSignature(Device& device)
 {
     RootSignatureBuilder builder;
 
@@ -110,11 +112,13 @@ bool SurfaceRenderer::CreateRootSignature()
     builder.AddCBV(1); //objectCB
     builder.AddCBV(2); //meshFrameCB
     builder.AddCBV(3); //materialCB
+
+    builder.AddFlags(D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
     
     builder.AddLinearSampler(0);
     builder.AddComparisonSampler(1);
 
-    m_rootSignature = builder.Build(m_device);
+    m_rootSignature = builder.Build(device);
     return m_rootSignature != nullptr;
 }
 
@@ -133,6 +137,8 @@ void SurfaceRenderer::BindPipeline(CommandList& cmd, const PipelineState& pipeli
 
     auto pipeline = GetPipeline(pipelineState);
     cmd->SetPipelineState(pipeline);
+    cmd->IASetPrimitiveTopology(ToD3D12(pipelineState.topologyType));
+
     m_pipelineState = pipelineState;
 }
 
@@ -248,17 +254,6 @@ void SurfaceRenderer::Draw(
     cmd->SetGraphicsRootConstantBufferView(1, objectCBAddress);
     cmd->SetGraphicsRootConstantBufferView(2, m_frameCBAddress);
     cmd->SetGraphicsRootConstantBufferView(3, materialCBAddress);
-
-    switch (m_pipelineState->topologyType)
-    {
-    case PrimitiveTopologyType::Triangle:
-        cmd->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-        break;
-
-    case PrimitiveTopologyType::Line:
-        cmd->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
-        break;
-    }
 
     cmd->DrawInstanced(mesh.GetIndexCount(), 1, 0, 0);
 }

@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "UIGraphBuilder.h"
-#include "Scene/RenderScene.h"
 #include "Graph/RenderPass.h"
 #include "Graph/RenderGraph.h"
 #include "Renderer/UIRenderer.h"
@@ -8,9 +7,8 @@
 #include "Resource/Material/UIMaterialResource.h"
 
 UIGraphBuilder::~UIGraphBuilder() = default;
-UIGraphBuilder::UIGraphBuilder(UIRenderer* uiRenderer, RenderScene* scene, RGHandle hBb) :
+UIGraphBuilder::UIGraphBuilder(UIRenderer* uiRenderer, RGHandle hBb) :
     m_uiRenderer{ uiRenderer },
-    m_scene{ scene }, 
     m_hBb{ hBb }
 {}
 
@@ -19,17 +17,22 @@ void UIGraphBuilder::Build(RenderGraph& graph)
     auto& ui = graph.AddPass("UI", CommandType::Direct);
     ui.dependsOn.push_back("DebugSurface");
     ui.writes.push_back({ m_hBb, RGAccess::RTV });
-    ui.gpuExecute = [this](CommandList& cmd, TaskContext& ctx) {
-        m_uiRenderer->BindCommonState(cmd);
-        m_uiRenderer->PrepareFrame();
-
-        for (auto& item : m_scene->GetDrawList(MaterialDomain::UserInterface))
+    ui.gpuExecute =
+        [
+            uiRenderer = m_uiRenderer
+        ]
+        (CommandList& cmd, TaskContext& ctx)
         {
-            auto mesh = static_cast<MeshResource*>(item.mesh.get());
-            auto material = static_cast<UIMaterialResource*>(item.material.get());
+            uiRenderer->BindCommonState(cmd);
+            uiRenderer->PrepareFrame();
 
-            m_uiRenderer->BindPipeline(cmd, material->GetPipelineState());
-            m_uiRenderer->Draw(cmd, *mesh, *material, item.world);
-        }
+            for (auto& item : ctx.drawPacket.ui)
+            {
+                auto mesh = static_cast<MeshResource*>(item.mesh.get());
+                auto material = static_cast<UIMaterialResource*>(item.material.get());
+
+                uiRenderer->BindPipeline(cmd, material->GetPipelineState());
+                uiRenderer->Draw(cmd, *mesh, *material, item.world);
+            }
         };
 }

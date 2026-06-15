@@ -3,13 +3,14 @@
 #include <vector>
 #include <functional>
 #include <variant>
+#include <utility>
+#include <memory>
 #include "d3dx12.h"
+#include "Core/RenderData.h"
 #include "Command/CommandType.h"
 #include "Resource/Resource.h"
 #include "TaskHandle.h"
 #include "RGTypes.h"
-#include <utility>
-#include <memory>
 #include "GameClient/Graphics/RenderData/DirectionalLightData.h"
 #include "GameClient/Graphics/RenderData/CameraData.h"
 
@@ -49,8 +50,9 @@ struct FrameData
 
 struct TaskContext
 {
-    shared_ptr<ResourceContext> resources; //중요한 리소스. 공유됨.
+    DrawPacket drawPacket;
     FrameData frame;
+    shared_ptr<ResourceContext> resources; //중요한 리소스. 공유됨.
 
     void SetResource(RGHandle h, const Resource& resource) const { resources->Set(h, resource); }
     void SetResource(RGHandle h, Resource&& resource) const { resources->Set(h, std::move(resource)); }

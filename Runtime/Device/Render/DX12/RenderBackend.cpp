@@ -9,19 +9,11 @@
 #include "Resource/ShadowResource.h"
 #include "Renderer/Renderers.h"
 #include "Scene/RenderScene.h"
-#include "Graph/RenderGraph.h"
-#include "Graph/RenderPass.h"
 #include "Graph/TaskScheduler.h"
-#include "Pipeline/ShadowGraphBuilder.h"
-#include "Pipeline/OpaqueGraphBuilder.h"
-#include "Pipeline/DebugSurfaceGraphBuilder.h"
-#include "Pipeline/FrameEndGraphBuilder.h"
-#include "Pipeline/UIGraphBuilder.h"
-#include "Resource/Mesh/MeshResource.h"
+#include "Pipeline/ForwardRenderPipeline.h"
 #include "Resource/Mesh/MeshProvider.h"
 #include "Resource/Texture/TextureProvider.h"
 #include "Resource/Material/MaterialProvider.h"
-#include "Resource/Material/SurfaceMaterialResource.h"
 #include "Resource/Shader/ShaderProvider.h"
 #include "Command/CommandList.h"
 #include "Command/CommandListHelpers.h"
@@ -85,6 +77,9 @@ bool RenderBackend::Initialize(
 
     m_shadowRes = make_unique<ShadowResource>(); //이 클래스는 framereseource 클래스중의 하나. 프레임당 render가 필요한 리소스들.
     ReturnIfFalse(m_shadowRes->Initialize(m_resFactory.get(), m_descFactory.get(), 2048, 2048));
+
+    m_pipeline = std::make_unique<ForwardRenderPipeline>(m_renderers.get(), m_swapChain.get(),
+        m_descFactory.get(), m_shadowRes.get());
     
     return true;
 }
@@ -166,43 +161,14 @@ void RenderBackend::Render()
     if (!BeginFrame())
         return;
 
-    RenderGraph graph;
-    auto hBb = graph.CreateRGHandle();
-    auto hShadow = graph.CreateRGHandle();
-    graph.ImportResource(hBb, RGAccess::Present); //backbuffer가 present에서 시작한다고 알려준다.
-    graph.ImportResource(hShadow, RGAccess::DepthWrite);
-
-    ShadowGraphBuilder shadow(m_renderers->GetShadowRenderer(), 
-        m_descFactory.get(), m_shadowRes.get(), m_scene.get(), hShadow);
-    OpaqueGraphBuilder opaque(m_renderers->GetSurfRenderer(), 
-        m_swapChain.get(), m_shadowRes.get(), m_scene.get(), hBb, hShadow);
-    DebugSurfaceGraphBuilder debugSurface(m_renderers->GetDebugSurfRenderer(), m_scene.get(), hBb);
-    UIGraphBuilder ui(m_renderers->GetUIRenderer(), m_scene.get(), hBb);
-    FrameEndGraphBuilder end(hBb, hShadow);
-
-    shadow.Build(graph);
-    opaque.Build(graph);
-    debugSurface.Build(graph);
-    ui.Build(graph);
-    end.Build(graph);
-
-    m_scene->SortDraws();
-
-    auto compiledTasks = graph.Compile();
-
-    TaskContext taskCtx;
-    taskCtx.resources = std::make_shared<ResourceContext>();
-    taskCtx.SetResource(hBb, m_swapChain->GetCurrentBackbuffer());
-    taskCtx.SetResource(hShadow, m_shadowRes->GetResource());
-
     FrameData frame;
     frame.light = m_lightData;
     frame.camera = m_cameraData;
 
-    taskCtx.frame = frame;
+    m_scene->SortDraws();
 
     m_profiler->BeginFrame(*m_cmd);
-    graph.Excute(*m_cmd, compiledTasks, taskCtx);
+    m_pipeline->Render(*m_cmd, m_scene->BuildDrawPacket(), frame);
     m_profiler->EndFrame(*m_cmd);
 
     EndFrame();

@@ -1,6 +1,7 @@
 #pragma once
 #include <d3d12.h>
 #include "PipelineCache.h"
+#include "RendererConfig.h"
 
 struct Size;
 class Device;
@@ -25,6 +26,7 @@ public:
 
 private:
     Device& m_device;
+    RendererConfig m_config;
     PipelineCache m_pipelineCache;
 
     std::unique_ptr<ShadowRenderer> m_shadowRenderer;

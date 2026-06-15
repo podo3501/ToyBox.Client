@@ -1,8 +1,8 @@
 #pragma once
-#include "GameClient/Service/Render/IRenderBackend.h"
 #include "Core/Device.h"
-#include "Core/Foundation/Geometry2D.h"
-#include <wrl/client.h>
+#include "GameClient/Service/Render/IRenderBackend.h"
+#include "GameClient/Graphics/RenderData/DirectionalLightData.h"
+#include "GameClient/Graphics/RenderData/CameraData.h"
 
 class SwapChainPresenter;
 class CommandList;
@@ -19,6 +19,7 @@ class ShaderProvider;
 class Renderers;
 class RenderScene;
 class ShadowResource;
+class ForwardRenderPipeline;
 
 class RenderBackend : public IRenderBackend
 {
@@ -70,6 +71,7 @@ private:
 	unique_ptr<RenderScene> m_scene;
 	unique_ptr<Renderers> m_renderers;
 	unique_ptr<ShadowResource> m_shadowRes;
+	unique_ptr<ForwardRenderPipeline> m_pipeline;
 
 	CommandList* m_cmd{ nullptr }; //direct command юс.
 

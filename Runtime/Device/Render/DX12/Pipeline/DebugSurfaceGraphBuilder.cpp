@@ -8,9 +8,8 @@
 #include "Resource/Material/GridMaterialResource.h"
 
 DebugSurfaceGraphBuilder::~DebugSurfaceGraphBuilder() = default;
-DebugSurfaceGraphBuilder::DebugSurfaceGraphBuilder(DebugSurfaceRenderer* debugSurfRenderer, RenderScene* scene, RGHandle hBb) :
+DebugSurfaceGraphBuilder::DebugSurfaceGraphBuilder(DebugSurfaceRenderer* debugSurfRenderer, RGHandle hBb) :
     m_debugSurfRenderer{ debugSurfRenderer },
-    m_scene{ scene },
     m_hBb{ hBb }
 {}
 
@@ -19,17 +18,22 @@ void DebugSurfaceGraphBuilder::Build(RenderGraph& graph)
     auto& grid = graph.AddPass("DebugSurface", CommandType::Direct);
     grid.dependsOn.push_back("Opaque");
     grid.writes.push_back({ m_hBb, RGAccess::RTV });
-    grid.gpuExecute = [this](CommandList& cmd, TaskContext& ctx) {
-        m_debugSurfRenderer->BindCommonState(cmd);
-        m_debugSurfRenderer->PrepareFrame(ctx.frame.camera);
-
-        for (auto& item : m_scene->GetDrawList(MaterialDomain::DebugSurface))
+    grid.gpuExecute =
+        [
+            debugSurfRenderer = m_debugSurfRenderer
+        ]
+        (CommandList& cmd, TaskContext& ctx)
         {
-            auto mesh = static_cast<MeshResource*>(item.mesh.get());
-            auto material = static_cast<GridMaterialResource*>(item.material.get());
+            debugSurfRenderer->BindCommonState(cmd);
+            debugSurfRenderer->PrepareFrame(ctx.frame.camera);
 
-            m_debugSurfRenderer->BindPipeline(cmd, material->GetPipelineState());
-            m_debugSurfRenderer->Draw(cmd, *mesh, item.world);
-        }
+            for (auto& item : ctx.drawPacket.debugSurface)
+            {
+                auto mesh = static_cast<MeshResource*>(item.mesh.get());
+                auto material = static_cast<GridMaterialResource*>(item.material.get());
+
+                debugSurfRenderer->BindPipeline(cmd, material->GetPipelineState());
+                debugSurfRenderer->Draw(cmd, *mesh, item.world);
+            }
         };
 }

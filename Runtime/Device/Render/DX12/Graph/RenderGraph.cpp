@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "RenderGraph.h"
-#include "RenderPass.h"
 #include "Command/CommandListHelpers.h"
 #include "Command/CommandList.h"
 #include "Command/CommandType.h"
@@ -353,7 +352,7 @@ void RenderGraph::ImportResource(RGHandle h, RGAccess access)
     m_statesTracker[h.id].state = AccessToState(access);
 }
 
-void RenderGraph::Excute(CommandList& cmd, const vector<CompiledTask>& compiledTasks, TaskContext& ctx)
+void RenderGraph::Execute(CommandList& cmd, const vector<CompiledTask>& compiledTasks, TaskContext& ctx)
 {
     for (auto& compiled : compiledTasks)
     {

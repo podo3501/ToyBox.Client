@@ -1,4 +1,5 @@
 #pragma once
+#include "RendererConfig.h"
 #include "FrameUploadAllocator.h"
 #include "Core/Foundation/Geometry2D.h"
 #include "Core/Math/Matrix.h"
@@ -10,15 +11,14 @@ class PipelineCache;
 class CommandList;
 class MeshResource;
 class UIMaterialResource;
-class ShaderProvider;
 class FrameUploadAllocator;
 
 class UIRenderer
 {
 public:
     ~UIRenderer();
-    UIRenderer(Device& device, PipelineCache& pipelineCache);
-    bool Initialize(const Size& screenSize);
+    UIRenderer(const UIRendererConfig& config, PipelineCache& pipelineCache);
+    bool Initialize(Device& device, const Size& screenSize);
     void SetSRVHeap(ID3D12DescriptorHeap* heap) { m_srvHeap = heap; }
     void PrepareFrame();
     void BindCommonState(CommandList& cmd);
@@ -27,15 +27,12 @@ public:
     void SetScreenSize(const Size& size);
 
 private:
-    bool CreateRootSignature();
+    bool CreateRootSignature(Device& device);
     void CreateDefaultPSOs();
     ID3D12PipelineState* CreatePSO(const PipelineState& pipelineState);
     ID3D12PipelineState* GetPipeline(const PipelineState& pipelineState);
 
-    static constexpr UINT kMaxUI = 1024;
-    static constexpr UINT kCBSize = 256;
-
-    Device& m_device;
+    UIRendererConfig m_config;
     PipelineCache& m_pipelineCache;
     std::optional<PipelineState> m_pipelineState{ nullopt };
     

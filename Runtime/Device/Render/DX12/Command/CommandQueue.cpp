@@ -2,6 +2,7 @@
 #include "CommandQueue.h"
 #include "CommandList.h"
 #include "Core/Device.h"
+#include "Core/D3D12Conversions.h"
 
 CommandQueue::~CommandQueue() 
 { 

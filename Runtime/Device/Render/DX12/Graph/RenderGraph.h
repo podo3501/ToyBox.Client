@@ -2,6 +2,7 @@
 #include "Graph/RGTypes.h"
 #include "GameClient/Service/Render/Desc/TextureDesc.h"
 #include "TaskHandle.h"
+#include "RenderPass.h"
 #include <d3d12.h>
 
 struct ResourceStateTracker
@@ -10,7 +11,6 @@ struct ResourceStateTracker
 };
 
 struct PassNode;
-struct RenderPass;
 struct TaskContext;
 struct CompiledTask;
 class CommandList;
@@ -24,7 +24,7 @@ public:
     std::vector<CompiledTask> Compile();
     RGHandle CreateRGHandle();
     void ImportResource(RGHandle h, RGAccess access);
-    void Excute(CommandList& cmd, const vector<CompiledTask>& compiledTasks, TaskContext& ctx);
+    void Execute(CommandList& cmd, const vector<CompiledTask>& compiledTasks, TaskContext& ctx);
 
 private:
     int FindPassIndex(const std::string& name);

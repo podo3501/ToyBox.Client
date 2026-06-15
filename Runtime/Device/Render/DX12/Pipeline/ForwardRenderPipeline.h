@@ -1,9 +1,8 @@
 #pragma once
+#include "Graph/RenderGraph.h"
 
 class Renderers;
 class DescriptorFactory;
-class RenderGraph;
-class RenderScene;
 class SwapChainPresenter;
 class ShadowResource;
 
@@ -11,10 +10,20 @@ class ForwardRenderPipeline
 {
 public:
     ~ForwardRenderPipeline();
-    ForwardRenderPipeline(Renderers* renderers, DescriptorFactory* descFactory);
-    void BuildFrame(RenderGraph& graph, RenderScene* scene, SwapChainPresenter* swapChain, ShadowResource* shadowRes);
+    ForwardRenderPipeline(Renderers* renderers, SwapChainPresenter* swapChain,
+        DescriptorFactory* descFactory, ShadowResource* shadowRes);
+    void Render(CommandList& cmd, const DrawPacket& drawPacket, const FrameData& frame);
 
 private:
-    Renderers* m_renderers{ nullptr };
-    DescriptorFactory* m_descFactory{ nullptr };
+    void BuildGraph(Renderers* renderers, DescriptorFactory* descFactory);
+
+    SwapChainPresenter* m_swapChain{ nullptr };
+    ShadowResource* m_shadowRes{ nullptr };
+
+    RenderGraph m_graph;
+
+    RGHandle m_hBackBuffer;
+    RGHandle m_hShadow;
+
+    std::vector<CompiledTask> m_compiledTasks;
 };

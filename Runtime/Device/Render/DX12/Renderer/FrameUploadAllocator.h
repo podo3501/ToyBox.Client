@@ -1,7 +1,8 @@
 #pragma once
 #include <d3d12.h>
 #include <wrl.h>
-#include "../Resource/Resource.h"
+#include "Resource/Resource.h"
+#include "Helpers/CommonHelpers.h"
 
 class Device;
 
@@ -9,33 +10,47 @@ class FrameUploadAllocator
 {
 public:
     ~FrameUploadAllocator();
-    FrameUploadAllocator(Device& device, UINT bufferSize);
+    FrameUploadAllocator();
     void Reset();
 
+    template<typename T>
+    void Initialize(Device& device, UINT count);
     template<typename T>
     D3D12_GPU_VIRTUAL_ADDRESS AllocateConstant(const T& data);
 
 private:
+    void CreateBuffer(Device& device, UINT bufferSize);
+
     Resource m_resource;
-
-    static constexpr UINT kAlignment = 256;
-
     uint8_t* m_mapped{};
     UINT m_offset{};
+    UINT m_stride{};
     UINT m_bufferSize{};
 };
 
 template<typename T>
+void FrameUploadAllocator::Initialize(Device& device, UINT count)
+{
+    static_assert(std::is_trivially_copyable_v<T>);
+    Assert(count > 0);
+
+    m_stride = static_cast<UINT>(AlignSize(sizeof(T), D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT));
+
+    CreateBuffer(device, m_stride * count);
+}
+
+template<typename T>
 D3D12_GPU_VIRTUAL_ADDRESS FrameUploadAllocator::AllocateConstant(const T& data)
 {
-    UINT alignedOffset = (m_offset + (kAlignment - 1)) & ~(kAlignment - 1);
-    UINT requiredSize = alignedOffset + kAlignment;
+    static_assert(std::is_trivially_copyable_v<T>);
 
+    UINT requiredSize = m_offset + m_stride;
     Assert(requiredSize <= m_bufferSize);
+    Assert(sizeof(T) <= m_stride);
 
-    memcpy(m_mapped + alignedOffset, &data, sizeof(T));
+    memcpy(m_mapped + m_offset, &data, sizeof(T));
 
-    auto gpuAddress = m_resource->GetGPUVirtualAddress() + alignedOffset;
+    auto gpuAddress = m_resource->GetGPUVirtualAddress() + m_offset;
     m_offset = requiredSize;
 
     return gpuAddress;

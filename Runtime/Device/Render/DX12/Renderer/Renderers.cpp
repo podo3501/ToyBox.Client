@@ -14,17 +14,17 @@ Renderers::Renderers(Device& device, ShaderProvider* shaderProvider) :
 
 bool Renderers::Initialize(const Size& screenSize, ID3D12DescriptorHeap* srvHeap)
 {
-    m_shadowRenderer = std::make_unique<ShadowRenderer>(m_device, m_pipelineCache);
-    ReturnIfFalse(m_shadowRenderer->Initialize());
+    m_shadowRenderer = std::make_unique<ShadowRenderer>(m_config.shadow, m_pipelineCache);
+    ReturnIfFalse(m_shadowRenderer->Initialize(m_device));
 
-    m_surfRenderer = std::make_unique<SurfaceRenderer>(m_device, m_pipelineCache);
-    ReturnIfFalse(m_surfRenderer->Initialize());
+    m_surfRenderer = std::make_unique<SurfaceRenderer>(m_config.surface, m_pipelineCache);
+    ReturnIfFalse(m_surfRenderer->Initialize(m_device));
 
-    m_debugSurfRenderer = std::make_unique<DebugSurfaceRenderer>(m_device, m_pipelineCache);
-    ReturnIfFalse(m_debugSurfRenderer->Initialize());
+    m_debugSurfRenderer = std::make_unique<DebugSurfaceRenderer>(m_config.debug, m_pipelineCache);
+    ReturnIfFalse(m_debugSurfRenderer->Initialize(m_device));
 
-    m_uiRenderer = std::make_unique<UIRenderer>(m_device, m_pipelineCache);
-    ReturnIfFalse(m_uiRenderer->Initialize(screenSize));
+    m_uiRenderer = std::make_unique<UIRenderer>(m_config.ui, m_pipelineCache);
+    ReturnIfFalse(m_uiRenderer->Initialize(m_device, screenSize));
 
     m_shadowRenderer->SetSRVHeap(srvHeap);
     m_surfRenderer->SetSRVHeap(srvHeap);

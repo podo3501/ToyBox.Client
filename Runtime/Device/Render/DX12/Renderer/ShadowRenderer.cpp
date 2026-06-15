@@ -23,22 +23,23 @@ struct ShadowObjectCB
 CHECK_ALIGN16(ShadowObjectCB);
 
 ShadowRenderer::~ShadowRenderer() = default;
-ShadowRenderer::ShadowRenderer(Device& device, PipelineCache& pipelineCache) :
-    m_device{ device },
-    m_pipelineCache{ pipelineCache },
-    m_objectCBAllocator{ device, kMaxObjectCount * kCBSize },
-    m_frameCBAllocator{ device, kCBSize }
+ShadowRenderer::ShadowRenderer(const ShadowRendererConfig& config, PipelineCache& pipelineCache) :
+    m_config{ config },
+    m_pipelineCache{ pipelineCache }
 {}
 
-bool ShadowRenderer::Initialize()
+bool ShadowRenderer::Initialize(Device& device)
 {
-    ReturnIfFalse(CreateRootSignature());
+    m_objectCBAllocator.Initialize<ShadowObjectCB>(device, m_config.maxObjectCount);
+    m_frameCBAllocator.Initialize<ShadowFrameCB>(device, 1);
+
+    ReturnIfFalse(CreateRootSignature(device));
     CreateDefaultPSOs();
 
     return true;
 }
 
-bool ShadowRenderer::CreateRootSignature()
+bool ShadowRenderer::CreateRootSignature(Device& device)
 {
     RootSignatureBuilder builder;
 
@@ -46,7 +47,9 @@ bool ShadowRenderer::CreateRootSignature()
     builder.AddCBV(1); // b1 : objectCB
     builder.AddCBV(2); // b2 : shadowFrameCB (Light VP)
 
-    m_rootSignature = builder.Build(m_device);
+    builder.AddFlags(D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+
+    m_rootSignature = builder.Build(device);
     return m_rootSignature != nullptr;
 }
 

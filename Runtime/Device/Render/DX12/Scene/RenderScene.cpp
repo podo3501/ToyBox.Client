@@ -2,7 +2,6 @@
 #include "RenderScene.h"
 #include "RenderSortKey.h"
 #include "Resource/Material/SurfaceMaterialResource.h"
-#include "Resource/Material/DebugSurfaceMaterialResource.h"
 
 void RenderScene::AddSurface(const DrawItem& item)
 {
@@ -19,6 +18,17 @@ void RenderScene::AddUI(const DrawItem& item)
     //sorting 후 batch가 가능하면 batch 해 주기.
     auto material = static_cast<MaterialResource*>(item.material.get());
     m_drawLists[static_cast<size_t>(material->GetDomain())].push_back(item);
+}
+
+DrawPacket RenderScene::BuildDrawPacket()
+{
+    DrawPacket packet;
+
+    packet.surface = m_drawLists[static_cast<size_t>(MaterialDomain::Surface)];
+    packet.debugSurface = m_drawLists[static_cast<size_t>(MaterialDomain::DebugSurface)];
+    packet.ui = m_drawLists[static_cast<size_t>(MaterialDomain::UserInterface)];
+
+    return packet;
 }
 
 void RenderScene::SortDraws()
@@ -55,9 +65,4 @@ void RenderScene::Clear()
 {
     for (auto& drawList : m_drawLists)
         drawList.clear();
-}
-
-const std::vector<DrawItem>& RenderScene::GetDrawList(MaterialDomain domain) const
-{
-    return m_drawLists[static_cast<size_t>(domain)];
 }

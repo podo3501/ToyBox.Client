@@ -1,19 +1,18 @@
 #pragma once
 #include "RenderConfig.h"
-#include "GameClient/Graphics/RenderData/DirectionalLightData.h"
-#include "GameClient/Graphics/RenderData/CameraData.h"
 #include "Core/Math/Matrix.h"
+#include "Core/Foundation/Geometry2D.h"
 
 struct IMeshResource;
 struct IMaterialResource;
 struct ShaderAsset;
 struct TextureAsset;
-struct Size;
-struct Rect;
 struct ITextureProvider;
 struct IMeshProvider;
 struct IMaterialProvider;
 struct ShaderRegisterDesc;
+struct DirectionalLightData;
+struct CameraData;
 
 struct IRenderBackend
 {

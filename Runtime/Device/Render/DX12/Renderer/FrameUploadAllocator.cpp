@@ -4,8 +4,11 @@
 #include "../d3dx12.h"
 
 FrameUploadAllocator::~FrameUploadAllocator() = default;
-FrameUploadAllocator::FrameUploadAllocator(Device& device, UINT bufferSize)
+FrameUploadAllocator::FrameUploadAllocator() = default;
+
+void FrameUploadAllocator::CreateBuffer(Device& device, UINT bufferSize)
 {
+    Assert(bufferSize > 0);
     m_bufferSize = bufferSize;
 
     CD3DX12_HEAP_PROPERTIES heap(D3D12_HEAP_TYPE_UPLOAD);

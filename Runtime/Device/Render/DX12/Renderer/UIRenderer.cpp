@@ -6,6 +6,7 @@
 #include "Resource/Mesh/MeshResource.h"
 #include "Resource/Material/UIMaterialResource.h"
 #include "Helpers/MathHelpers.h"
+#include "Core/D3D12Conversions.h"
 
 namespace cm = Core::Math;
 
@@ -18,15 +19,16 @@ struct UIFrameCB
 using Microsoft::WRL::ComPtr;
 
 UIRenderer::~UIRenderer() = default;
-UIRenderer::UIRenderer(Device& device, PipelineCache& pipelineCache) :
-    m_device{ device },
-    m_pipelineCache{ pipelineCache },
-    m_uiFrameCBAllocator{ device, kMaxUI * kCBSize }
+UIRenderer::UIRenderer(const UIRendererConfig& config, PipelineCache& pipelineCache) :
+    m_config{ config },
+    m_pipelineCache{ pipelineCache }
 {}
 
-bool UIRenderer::Initialize(const Size& screenSize)
+bool UIRenderer::Initialize(Device& device, const Size& screenSize)
 {
-    ReturnIfFalse(CreateRootSignature());
+    m_uiFrameCBAllocator.Initialize<UIFrameCB>(device, m_config.maxUI);
+
+    ReturnIfFalse(CreateRootSignature(device));
     CreateDefaultPSOs();
     SetScreenSize(screenSize);
 
@@ -59,7 +61,7 @@ ID3D12PipelineState* UIRenderer::GetPipeline(const PipelineState& pipelineState)
     return CreatePSO(pipelineState);
 }
 
-bool UIRenderer::CreateRootSignature()
+bool UIRenderer::CreateRootSignature(Device& device)
 {
     RootSignatureBuilder builder;
 
@@ -67,7 +69,9 @@ bool UIRenderer::CreateRootSignature()
     builder.AddCBV(1);
     builder.AddLinearSampler(0);
 
-    m_rootSignature = builder.Build(m_device);
+    builder.AddFlags(D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+
+    m_rootSignature = builder.Build(device);
     return m_rootSignature != nullptr;
 }
 
@@ -84,7 +88,10 @@ void UIRenderer::BindPipeline(CommandList& cmd, const PipelineState& pipelineSta
     if (m_pipelineState && *m_pipelineState == pipelineState)
         return;
 
-    cmd->SetPipelineState(GetPipeline(pipelineState));
+    auto pipeline = GetPipeline(pipelineState);
+    cmd->SetPipelineState(pipeline);
+    cmd->IASetPrimitiveTopology(ToD3D12(pipelineState.topologyType));
+
     m_pipelineState = pipelineState;
 }
 
@@ -120,17 +127,6 @@ void UIRenderer::Draw(
 
     auto gpuAddress = m_uiFrameCBAllocator.AllocateConstant(frameCB);
     cmd->SetGraphicsRootConstantBufferView(1, gpuAddress);
-
-    switch (m_pipelineState->topologyType)
-    {
-    case PrimitiveTopologyType::Triangle:
-        cmd->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-        break;
-
-    case PrimitiveTopologyType::Line:
-        cmd->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
-        break;
-    }
 
     cmd->DrawInstanced(mesh.GetIndexCount(), 1, 0, 0);
 }

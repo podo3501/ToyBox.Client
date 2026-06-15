@@ -111,9 +111,7 @@ ComPtr<ID3D12RootSignature> RootSignatureBuilder::Build(Device& device)
     }
     samplers.insert(samplers.end(), m_staticSamplers.begin(), m_staticSamplers.end());
 
-    D3D12_ROOT_SIGNATURE_FLAGS finalFlags =
-        D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT |
-        D3D12_ROOT_SIGNATURE_FLAG_CBV_SRV_UAV_HEAP_DIRECTLY_INDEXED;
+    D3D12_ROOT_SIGNATURE_FLAGS finalFlags = D3D12_ROOT_SIGNATURE_FLAG_CBV_SRV_UAV_HEAP_DIRECTLY_INDEXED;
     finalFlags |= m_flags;
 
     CD3DX12_ROOT_SIGNATURE_DESC desc;

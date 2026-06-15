@@ -361,6 +361,15 @@
     <ClInclude Include="Render\DX12\Resource\Mesh\MeshUtils.h">
       <Filter>Render\DX12\Resource\Mesh</Filter>
     </ClInclude>
+    <ClInclude Include="Render\DX12\Core\RenderData.h">
+      <Filter>Render\DX12\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Renderer\RendererConfig.h">
+      <Filter>Render\DX12\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Core\D3D12Conversions.h">
+      <Filter>Render\DX12\Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -588,6 +597,9 @@
     </ClCompile>
     <ClCompile Include="Render\DX12\Resource\Mesh\MeshUtils.cpp">
       <Filter>Render\DX12\Resource\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Core\D3D12Conversions.cpp">
+      <Filter>Render\DX12\Core</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -7,26 +7,28 @@
 #include "Helpers/MathHelpers.h"
 #include "GameClient/Graphics/RenderData/CameraData.h"
 #include "Resource/Mesh/MeshResource.h"
+#include "Core/D3D12Conversions.h"
 
 namespace cm = Core::Math;
 
 DebugSurfaceRenderer::~DebugSurfaceRenderer() = default;
-DebugSurfaceRenderer::DebugSurfaceRenderer(Device& device, PipelineCache& pipelineCache) :
-    m_device{ device },
-    m_pipelineCache{ pipelineCache },
-    m_objectCBAllocator{ device, kMaxObjectCount * kCBSize },
-    m_frameCBAllocator{ device, kCBSize }
+DebugSurfaceRenderer::DebugSurfaceRenderer(const DebugSurfaceRendererConfig& config, PipelineCache& pipelineCache) :
+    m_config{ config },
+    m_pipelineCache{ pipelineCache }
 {}
 
-bool DebugSurfaceRenderer::Initialize()
+bool DebugSurfaceRenderer::Initialize(Device& device)
 {
-    ReturnIfFalse(CreateRootSignature());
+    m_objectCBAllocator.Initialize<ObjectCB>(device, m_config.maxObjectCount);
+    m_frameCBAllocator.Initialize<FrameCB>(device, 1);
+
+    ReturnIfFalse(CreateRootSignature(device));
     CreateDefaultPSOs();
 
     return true;
 }
 
-bool DebugSurfaceRenderer::CreateRootSignature()
+bool DebugSurfaceRenderer::CreateRootSignature(Device& device)
 {
     RootSignatureBuilder builder;
 
@@ -34,7 +36,9 @@ bool DebugSurfaceRenderer::CreateRootSignature()
     builder.AddCBV(1); // b1
     builder.AddCBV(2); // b2 ObjectCB
 
-    m_rootSignature = builder.Build(m_device);
+    builder.AddFlags(D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+
+    m_rootSignature = builder.Build(device);
     return m_rootSignature != nullptr;
 }
 
@@ -56,7 +60,10 @@ void DebugSurfaceRenderer::BindPipeline(CommandList& cmd, const PipelineState& p
     if (m_pipelineState && *m_pipelineState == pipelineState)
         return;
 
-    cmd->SetPipelineState(GetPipeline(pipelineState));
+    auto pipeline = GetPipeline(pipelineState);
+    cmd->SetPipelineState(pipeline);
+    cmd->IASetPrimitiveTopology(ToD3D12(pipelineState.topologyType));
+
     m_pipelineState = pipelineState;
 }
 
@@ -110,17 +117,6 @@ void DebugSurfaceRenderer::Draw(CommandList& cmd, MeshResource& mesh, const cm::
     cmd->SetGraphicsRoot32BitConstants(0, 1, &vbIndex, 0);
     cmd->SetGraphicsRootConstantBufferView(1, m_frameCBAddress);
     cmd->SetGraphicsRootConstantBufferView(2, objectCBAddress);
-
-    switch (m_pipelineState->topologyType)
-    {
-    case PrimitiveTopologyType::Triangle:
-        cmd->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-        break;
-
-    case PrimitiveTopologyType::Line:
-        cmd->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
-        break;
-    }
 
     cmd->DrawInstanced(mesh.GetVertexCount(), 1, 0, 0);
 }
