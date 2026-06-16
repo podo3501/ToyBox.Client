@@ -7,7 +7,6 @@
 class SwapChainPresenter;
 class CommandList;
 class CommandScheduler;
-class DescriptorAllocator;
 class DescriptorFactory;
 class ResourceFactory;
 class TaskScheduler;
@@ -57,8 +56,6 @@ private:
 
 	unique_ptr<CommandScheduler> m_command;
 	unique_ptr<SwapChainPresenter> m_swapChain;
-	unique_ptr<DescriptorAllocator> m_srvAllocator;
-	unique_ptr<DescriptorAllocator> m_dsvAllocator;
 	unique_ptr<DescriptorFactory> m_descFactory;
 	unique_ptr<ResourceFactory> m_resFactory;
 	unique_ptr<TaskScheduler> m_taskScheduler;

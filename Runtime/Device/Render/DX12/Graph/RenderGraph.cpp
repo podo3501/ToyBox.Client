@@ -3,23 +3,8 @@
 #include "Command/CommandListHelpers.h"
 #include "Command/CommandList.h"
 #include "Command/CommandType.h"
+#include "Core/D3D12Conversions.h"
 #include <unordered_set>
-
-static D3D12_RESOURCE_STATES AccessToState(RGAccess access)
-{
-    switch (access)
-    {
-    case RGAccess::SRV: return D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
-    case RGAccess::UAV: return D3D12_RESOURCE_STATE_UNORDERED_ACCESS;
-    //case RGAccess::CopySrc: return D3D12_RESOURCE_STATE_COPY_SOURCE;
-    //case RGAccess::CopyDst: return D3D12_RESOURCE_STATE_COPY_DEST;
-    case RGAccess::RTV: return D3D12_RESOURCE_STATE_RENDER_TARGET;
-    case RGAccess::DepthWrite: return D3D12_RESOURCE_STATE_DEPTH_WRITE;
-    case RGAccess::DepthRead: return D3D12_RESOURCE_STATE_DEPTH_READ;
-    case RGAccess::Present: return D3D12_RESOURCE_STATE_PRESENT;
-    default: return D3D12_RESOURCE_STATE_COMMON;
-    }
-}
 
 static D3D12_RESOURCE_STATES AccessToState(CommandType cmdType, RGAccess access)
 {
@@ -31,7 +16,7 @@ static D3D12_RESOURCE_STATES AccessToState(CommandType cmdType, RGAccess access)
         return D3D12_RESOURCE_STATE_COPY_DEST;
     }
 
-    return AccessToState(access);
+    return ToD3D12(access);
 }
 
 RenderGraph::~RenderGraph() = default;
@@ -349,7 +334,7 @@ uint32_t RenderGraph::CreateLocalTaskID()
 
 void RenderGraph::ImportResource(RGHandle h, RGAccess access)
 {
-    m_statesTracker[h.id].state = AccessToState(access);
+    m_statesTracker[h.id].state = ToD3D12(access);
 }
 
 void RenderGraph::Execute(CommandList& cmd, const vector<CompiledTask>& compiledTasks, TaskContext& ctx)

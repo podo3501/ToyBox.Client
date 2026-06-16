@@ -17,13 +17,13 @@ struct MeshFrameCB
     DirectX::XMFLOAT4X4 proj;
     DirectX::XMFLOAT4X4 lightViewProj;
 
-    float cameraPosition[3];
+    DirectX::XMFLOAT3 cameraPosition;
     float cameraPadding{ 0.f };
 
-    float lightDirection[3];
+    DirectX::XMFLOAT3 lightDirection;
     float lightIntensity;
 
-    float lightColor[3];
+    DirectX::XMFLOAT3 lightColor;
     uint32_t shadowTextureIndex;
 };
 CHECK_ALIGN16(MeshFrameCB);

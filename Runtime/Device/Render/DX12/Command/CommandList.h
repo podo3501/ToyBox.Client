@@ -18,6 +18,7 @@ public:
     void Close();
 
     bool IsAvailable() const;
+    void SetBindlessHeap(ID3D12DescriptorHeap* heap);
     void SetFence(ID3D12Fence* fence, uint64_t value);
     void DependOn(CommandType type, uint64_t fenceValue);
     const vector<QueueDependency>& GetDependencies() const;

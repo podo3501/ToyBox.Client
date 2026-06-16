@@ -212,17 +212,11 @@ bool SwapChainPresenter::CreateDepthBuffer(Device& device)
     clear.DepthStencil.Depth = 1.0f;
     clear.DepthStencil.Stencil = 0;
 
-    CD3DX12_HEAP_PROPERTIES heap(
-        D3D12_HEAP_TYPE_DEFAULT);
-
-    if (FAILED(device->CreateCommittedResource(
-        &heap,
-        D3D12_HEAP_FLAG_NONE,
-        &desc,
+    m_depthBuffer = device.CreateResource(
+        desc,
+        D3D12_HEAP_TYPE_DEFAULT,
         D3D12_RESOURCE_STATE_DEPTH_WRITE,
-        &clear,
-        IID_PPV_ARGS(m_depthBuffer.GetAddressOf()))))
-        return false;
+        &clear);
 
     D3D12_DESCRIPTOR_HEAP_DESC heapDesc{};
     heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;

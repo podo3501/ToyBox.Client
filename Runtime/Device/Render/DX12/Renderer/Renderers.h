@@ -16,7 +16,7 @@ class Renderers
 public:
     ~Renderers();
     Renderers(Device& device, ShaderProvider* shaderProvider);
-    bool Initialize(const Size& screenSize, ID3D12DescriptorHeap* srvHeap);
+    bool Initialize(const Size& screenSize);
     void SetScreenSize(const Size& screenSize);
 
     ShadowRenderer* GetShadowRenderer() const { return m_shadowRenderer.get(); }

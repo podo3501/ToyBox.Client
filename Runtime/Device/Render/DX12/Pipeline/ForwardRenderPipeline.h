@@ -15,9 +15,10 @@ public:
     void Render(CommandList& cmd, const DrawPacket& drawPacket, const FrameData& frame);
 
 private:
-    void BuildGraph(Renderers* renderers, DescriptorFactory* descFactory);
+    void BuildGraph(Renderers* renderers);
 
     SwapChainPresenter* m_swapChain{ nullptr };
+    DescriptorFactory* m_descFactory{ nullptr };
     ShadowResource* m_shadowRes{ nullptr };
 
     RenderGraph m_graph;

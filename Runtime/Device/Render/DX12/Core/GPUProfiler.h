@@ -6,13 +6,15 @@
 class Device;
 class CommandList;
 class CommandScheduler;
+class ResourceFactory;
 
 using Microsoft::WRL::ComPtr;
 
 class GPUProfiler
 {
 public:
-    bool Initialize(Device& device, CommandScheduler* scheduler, uint32_t frameCount = 2);
+    bool Initialize(Device& device, CommandScheduler* scheduler, 
+        ResourceFactory* resFactory, uint32_t frameCount = 2);
 
     void BeginFrame(CommandList& cmd);
     void EndFrame(CommandList& cmd);

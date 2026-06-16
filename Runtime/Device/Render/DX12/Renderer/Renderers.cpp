@@ -12,7 +12,7 @@ Renderers::Renderers(Device& device, ShaderProvider* shaderProvider) :
     m_pipelineCache{ device, shaderProvider }
 {}
 
-bool Renderers::Initialize(const Size& screenSize, ID3D12DescriptorHeap* srvHeap)
+bool Renderers::Initialize(const Size& screenSize)
 {
     m_shadowRenderer = std::make_unique<ShadowRenderer>(m_config.shadow, m_pipelineCache);
     ReturnIfFalse(m_shadowRenderer->Initialize(m_device));
@@ -25,11 +25,6 @@ bool Renderers::Initialize(const Size& screenSize, ID3D12DescriptorHeap* srvHeap
 
     m_uiRenderer = std::make_unique<UIRenderer>(m_config.ui, m_pipelineCache);
     ReturnIfFalse(m_uiRenderer->Initialize(m_device, screenSize));
-
-    m_shadowRenderer->SetSRVHeap(srvHeap);
-    m_surfRenderer->SetSRVHeap(srvHeap);
-    m_debugSurfRenderer->SetSRVHeap(srvHeap);
-    m_uiRenderer->SetSRVHeap(srvHeap);
 
     return true;
 }

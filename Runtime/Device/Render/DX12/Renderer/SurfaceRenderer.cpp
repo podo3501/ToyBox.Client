@@ -8,12 +8,9 @@
 #include "Resource/Mesh/MeshResource.h"
 #include "Resource/Material/PhongMaterialResource.h"
 #include "Resource/Material/PbrMaterialResource.h"
-#include "Resource/Shader/ShaderProvider.h"
 #include "GameClient/Graphics/RenderData/DirectionalLightData.h"
 #include "GameClient/Graphics/RenderData/CameraData.h"
 #include "Core/D3D12Conversions.h"
-#include "d3dx12.h"
-#include <d3dcompiler.h>
 
 namespace cm = Core::Math;
 
@@ -122,11 +119,8 @@ bool SurfaceRenderer::CreateRootSignature(Device& device)
     return m_rootSignature != nullptr;
 }
 
-void SurfaceRenderer::BindCommonState(CommandList& cmd)
+void SurfaceRenderer::BindRootSignature(CommandList& cmd)
 {
-    ID3D12DescriptorHeap* heaps[] = { m_srvHeap };
-    cmd->SetDescriptorHeaps(1, heaps);
-
     cmd->SetGraphicsRootSignature(m_rootSignature.Get());
 }
 
@@ -137,7 +131,7 @@ void SurfaceRenderer::BindPipeline(CommandList& cmd, const PipelineState& pipeli
 
     auto pipeline = GetPipeline(pipelineState);
     cmd->SetPipelineState(pipeline);
-    cmd->IASetPrimitiveTopology(ToD3D12(pipelineState.topologyType));
+    cmd->IASetPrimitiveTopology(ToD3D12_Draw(pipelineState.topologyType));
 
     m_pipelineState = pipelineState;
 }
@@ -160,21 +154,10 @@ void SurfaceRenderer::PrepareFrame(const DirectionalLightData& light, const Came
     XMStoreFloat4x4(&meshFrame.proj, DirectX::XMMatrixTranspose(proj));
     XMStoreFloat4x4(&meshFrame.lightViewProj, DirectX::XMMatrixTranspose(lightVP));
 
-    // Camera Position
-    meshFrame.cameraPosition[0] = camera.position.x;
-    meshFrame.cameraPosition[1] = camera.position.y;
-    meshFrame.cameraPosition[2] = camera.position.z;
-
-    // Directional Light
-    meshFrame.lightDirection[0] = light.direction.x;
-    meshFrame.lightDirection[1] = light.direction.y;
-    meshFrame.lightDirection[2] = light.direction.z;
-
-    meshFrame.lightColor[0] = light.color.x;
-    meshFrame.lightColor[1] = light.color.y;
-    meshFrame.lightColor[2] = light.color.z;
-
+    meshFrame.cameraPosition = ToXMFLOAT3(camera.position);
+    meshFrame.lightDirection = ToXMFLOAT3(light.direction);
     meshFrame.lightIntensity = light.intensity;
+    meshFrame.lightColor = ToXMFLOAT3(light.color);
     meshFrame.shadowTextureIndex = shadowSRVIndex;
 
     m_frameCBAddress = m_frameCBAllocator.AllocateConstant(meshFrame);

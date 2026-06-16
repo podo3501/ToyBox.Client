@@ -3,8 +3,10 @@
 #include "Core/Device.h"
 #include "Command/CommandScheduler.h"
 #include "Command/CommandList.h"
+#include "Factory/ResourceFactory.h"
 
-bool GPUProfiler::Initialize(Device& device, CommandScheduler* scheduler, uint32_t frameCount)
+bool GPUProfiler::Initialize(Device& device, CommandScheduler* scheduler,
+    ResourceFactory* resFactory, uint32_t frameCount)
 {
     auto queue = scheduler->GetCommandQueue(CommandType::Direct);
     queue->GetTimestampFrequency(&m_timestampFreq);
@@ -16,21 +18,7 @@ bool GPUProfiler::Initialize(Device& device, CommandScheduler* scheduler, uint32
     device->CreateQueryHeap(&desc, IID_PPV_ARGS(&m_queryHeap));
 
     UINT size = sizeof(uint64_t) * frameCount * 2;
-
-    D3D12_HEAP_PROPERTIES hp =
-        CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_READBACK);
-
-    D3D12_RESOURCE_DESC bd =
-        CD3DX12_RESOURCE_DESC::Buffer(size);
-
-    device->CreateCommittedResource(
-        &hp,
-        D3D12_HEAP_FLAG_NONE,
-        &bd,
-        D3D12_RESOURCE_STATE_COPY_DEST,
-        nullptr,
-        IID_PPV_ARGS(m_readbackBuffer.GetAddressOf())
-    );
+    m_readbackBuffer = resFactory->CreateReadbackBuffer(size);
 
     return true;
 }

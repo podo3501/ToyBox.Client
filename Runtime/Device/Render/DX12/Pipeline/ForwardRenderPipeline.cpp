@@ -8,17 +8,21 @@
 #include "UIGraphBuilder.h"
 #include "FrameEndGraphBuilder.h"
 #include "SwapChainPresenter.h"
+#include "Factory/DescriptorFactory.h"
+#include "Factory/DescriptorAllocator.h"
+#include "Command/CommandList.h"
 
 ForwardRenderPipeline::~ForwardRenderPipeline() = default;
 ForwardRenderPipeline::ForwardRenderPipeline(Renderers* renderers, SwapChainPresenter* swapChain,
     DescriptorFactory* descFactory, ShadowResource* shadowRes) :
-    m_swapChain(swapChain),
-    m_shadowRes(shadowRes)
+    m_swapChain{ swapChain },
+    m_descFactory{ descFactory },
+    m_shadowRes{ shadowRes }
 {
-    BuildGraph(renderers, descFactory);
+    BuildGraph(renderers);
 }
 
-void ForwardRenderPipeline::BuildGraph(Renderers* renderers, DescriptorFactory* descFactory)
+void ForwardRenderPipeline::BuildGraph(Renderers* renderers)
 {
     m_hBackBuffer = m_graph.CreateRGHandle();
     m_hShadow = m_graph.CreateRGHandle();
@@ -28,7 +32,7 @@ void ForwardRenderPipeline::BuildGraph(Renderers* renderers, DescriptorFactory* 
 
     ShadowGraphBuilder shadow(
         renderers->GetShadowRenderer(),
-        descFactory,
+        m_descFactory,
         m_shadowRes,
         m_hShadow);
 
@@ -70,6 +74,9 @@ void ForwardRenderPipeline::Render(CommandList& cmd, const DrawPacket& drawPacke
 
     ctx.frame = frame;
     ctx.drawPacket = drawPacket;
+
+    auto srvAllocator = m_descFactory->GetSrvAllocator();
+    cmd.SetBindlessHeap(srvAllocator->GetHeap());
 
     m_graph.Execute(cmd, m_compiledTasks, ctx);
 }

@@ -2,19 +2,9 @@
 #include "TextureUtils.h"
 #include "Resource/Resource.h"
 #include "Command/CommandList.h"
+#include "Core/D3D12Conversions.h"
 #include "GameClient/Service/Asset/Assets/TextureAsset.h"
 #include "d3dx12.h"
-
-static DXGI_FORMAT GetFormat(PixelFormat format)
-{
-    switch (format)
-    {
-    case PixelFormat::RGB8: return DXGI_FORMAT_R8G8B8A8_UNORM; //3채널은 지원하지 않는다. 일단 이걸로.
-    case PixelFormat::RGBA8: return DXGI_FORMAT_R8G8B8A8_UNORM;
-    }
-
-    return DXGI_FORMAT_R8G8B8A8_UNORM;
-}
 
 static bool IsUAVCompatibleFormat(DXGI_FORMAT format)
 {
@@ -67,7 +57,7 @@ D3D12_RESOURCE_DESC CreateTextureDescriptor(
 
 D3D12_RESOURCE_DESC CreateTexture2DDesc(const TextureAsset& asset, bool mips)
 {
-    auto texDesc = CreateTextureDescriptor(asset.width, asset.height, GetFormat(asset.format));
+    auto texDesc = CreateTextureDescriptor(asset.width, asset.height, ToDXGIFormat(asset.format));
     ApplyMipSettings(texDesc, mips);
 
     return texDesc;
@@ -75,7 +65,7 @@ D3D12_RESOURCE_DESC CreateTexture2DDesc(const TextureAsset& asset, bool mips)
 
 bool ShouldGenerateMips(const TextureAsset& asset, bool generateMips)
 {
-    DXGI_FORMAT format = GetFormat(asset.format);
+    DXGI_FORMAT format = ToDXGIFormat(asset.format);
     return generateMips && IsUAVCompatibleFormat(format);
 }
 

@@ -20,9 +20,8 @@ public:
     DebugSurfaceRenderer(const DebugSurfaceRendererConfig& config, PipelineCache& pipelineCache);
 
     bool Initialize(Device& device);
-    void BindCommonState(CommandList& cmd);
+    void BindRootSignature(CommandList& cmd);
     void BindPipeline(CommandList& cmd, const PipelineState& pipelineState);
-    void SetSRVHeap(ID3D12DescriptorHeap* heap) { m_srvHeap = heap; }
     void PrepareFrame(const CameraData& camera);
     void Draw(CommandList& cmd, MeshResource& mesh, const Core::Math::Matrix& world);
 
@@ -36,10 +35,8 @@ private:
 
     DebugSurfaceRendererConfig m_config;
     PipelineCache& m_pipelineCache;
-    std::optional<PipelineState> m_pipelineState{ nullopt };
-
     ComPtr<ID3D12RootSignature> m_rootSignature;
-    ID3D12DescriptorHeap* m_srvHeap{ nullptr };
+    std::optional<PipelineState> m_pipelineState{ nullopt };
 
     FrameUploadAllocator m_objectCBAllocator;
     FrameUploadAllocator m_frameCBAllocator;

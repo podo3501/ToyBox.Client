@@ -321,6 +321,12 @@
 --draw packet을 만들어서 scene의 의존성을 없앤다.
 --ForwardRenderPipeline 만드는 중
 --MipGenerator 여기에 root signature 만들때 builder를 써서 만들도록 수정
+--meshFrame.cameraPosition[0] = camera.position.x; 이거 float 쓰고 있는데 vector로 고치기.
+--Heap 셋팅하는거 한번만 하면 되지 않을까?
+--DescriptorFactory 밑으로 DescriptorAllocator 넣기
+--팩토리 한군데 모으기
+
+@Device 함수를 자주 생성해서 한군데 몰아 넣을게 있나 찾아보기
 
 @RenderBackend의 init를 보고 의존관계를 파악한뒤 어떻게 폴더를 구성할 것인지 생각해보자.
 @device->CreateCommittedResource 이런거 찾아서 device에 넣어놓자.

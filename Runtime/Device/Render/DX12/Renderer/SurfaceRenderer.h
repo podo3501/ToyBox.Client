@@ -27,9 +27,8 @@ public:
     SurfaceRenderer(const SurfaceRendererConfig& config, PipelineCache& pipelineCache);
 
     bool Initialize(Device& device);
-    void BindCommonState(CommandList& cmd);
+    void BindRootSignature(CommandList& cmd);
     void BindPipeline(CommandList& cmd, const PipelineState& pipelineState);
-    void SetSRVHeap(ID3D12DescriptorHeap* heap) { m_srvHeap = heap; }
     void PrepareFrame(const DirectionalLightData& light, const CameraData& camera, uint32_t shadowSRVIndex);
     void Draw(CommandList& cmd, MeshResource& mesh, MaterialResource& material, const Core::Math::Matrix& world);
     
@@ -45,10 +44,8 @@ private:
 
     SurfaceRendererConfig m_config;
     PipelineCache& m_pipelineCache;
-    std::optional<PipelineState> m_pipelineState{ nullopt };
-
     ComPtr<ID3D12RootSignature> m_rootSignature;
-    ID3D12DescriptorHeap* m_srvHeap{ nullptr };
+    std::optional<PipelineState> m_pipelineState{ nullopt };
 
     FrameUploadAllocator m_objectCBAllocator;
     FrameUploadAllocator m_materialCBAllocator;

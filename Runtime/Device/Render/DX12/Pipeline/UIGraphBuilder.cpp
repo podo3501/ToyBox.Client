@@ -23,7 +23,7 @@ void UIGraphBuilder::Build(RenderGraph& graph)
         ]
         (CommandList& cmd, TaskContext& ctx)
         {
-            uiRenderer->BindCommonState(cmd);
+            uiRenderer->BindRootSignature(cmd);
             uiRenderer->PrepareFrame();
 
             for (auto& item : ctx.drawPacket.ui)

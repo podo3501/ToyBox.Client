@@ -58,8 +58,9 @@
     <ClInclude Include="Render\DX12\Core\Device.h" />
     <ClInclude Include="Render\DX12\Core\GPUProfiler.h" />
     <ClInclude Include="Render\DX12\Core\RenderData.h" />
-    <ClInclude Include="Render\DX12\Descriptor\DescriptorAllocator.h" />
-    <ClInclude Include="Render\DX12\Descriptor\DescriptorFactory.h" />
+    <ClInclude Include="Render\DX12\Factory\DescriptorAllocator.h" />
+    <ClInclude Include="Render\DX12\Factory\DescriptorFactory.h" />
+    <ClInclude Include="Render\DX12\Factory\ResourceFactory.h" />
     <ClInclude Include="Render\DX12\Graph\RenderGraph.h" />
     <ClInclude Include="Render\DX12\Graph\RenderPass.h" />
     <ClInclude Include="Render\DX12\Graph\RGTypes.h" />
@@ -100,7 +101,6 @@
     <ClInclude Include="Render\DX12\Resource\Mesh\MeshProvider.h" />
     <ClInclude Include="Render\DX12\Resource\Mesh\MeshUtils.h" />
     <ClInclude Include="Render\DX12\Resource\Resource.h" />
-    <ClInclude Include="Render\DX12\Resource\ResourceFactory.h" />
     <ClInclude Include="Render\DX12\Resource\Shader\ShaderProvider.h" />
     <ClInclude Include="Render\DX12\Resource\ShadowResource.h" />
     <ClInclude Include="Render\DX12\Resource\Texture\MipGenerator.h" />
@@ -154,8 +154,9 @@
     <ClCompile Include="Render\DX12\Core\Device.cpp" />
     <ClCompile Include="Render\DX12\Core\DX12Link.cpp" />
     <ClCompile Include="Render\DX12\Core\GPUProfiler.cpp" />
-    <ClCompile Include="Render\DX12\Descriptor\DescriptorAllocator.cpp" />
-    <ClCompile Include="Render\DX12\Descriptor\DescriptorFactory.cpp" />
+    <ClCompile Include="Render\DX12\Factory\DescriptorAllocator.cpp" />
+    <ClCompile Include="Render\DX12\Factory\DescriptorFactory.cpp" />
+    <ClCompile Include="Render\DX12\Factory\ResourceFactory.cpp" />
     <ClCompile Include="Render\DX12\Graph\RenderGraph.cpp" />
     <ClCompile Include="Render\DX12\Graph\TaskScheduler.cpp" />
     <ClCompile Include="Render\DX12\Helpers\CommonHelpers.cpp" />
@@ -186,7 +187,6 @@
     <ClCompile Include="Render\DX12\Resource\Mesh\MeshProvider.cpp" />
     <ClCompile Include="Render\DX12\Resource\Mesh\MeshUtils.cpp" />
     <ClCompile Include="Render\DX12\Resource\Resource.cpp" />
-    <ClCompile Include="Render\DX12\Resource\ResourceFactory.cpp" />
     <ClCompile Include="Render\DX12\Resource\Shader\ShaderProvider.cpp" />
     <ClCompile Include="Render\DX12\Resource\ShadowResource.cpp" />
     <ClCompile Include="Render\DX12\Resource\Texture\MipGenerator.cpp" />

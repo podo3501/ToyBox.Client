@@ -52,9 +52,6 @@
     <Filter Include="Render\DX12\Command">
       <UniqueIdentifier>{88253109-bbfb-44c3-94b2-f5e62414af12}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Render\DX12\Descriptor">
-      <UniqueIdentifier>{cc3bb541-3b13-4277-9ea4-7b35ecc12573}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Render\DX12\Resource">
       <UniqueIdentifier>{18be30e4-551c-4810-8f7d-b35aae51a9f1}</UniqueIdentifier>
     </Filter>
@@ -81,6 +78,9 @@
     </Filter>
     <Filter Include="Render\DX12\Resource\Shader">
       <UniqueIdentifier>{ff0e25c1-c7c6-4ae8-a0c6-4c1cd6a40c03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Render\DX12\Factory">
+      <UniqueIdentifier>{1878e9a5-ec9e-4970-a310-fa4d6975f0fa}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -204,12 +204,6 @@
     </ClInclude>
     <ClInclude Include="Render\DX12\Command\FenceTypes.h">
       <Filter>Render\DX12\Command</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\DX12\Descriptor\DescriptorAllocator.h">
-      <Filter>Render\DX12\Descriptor</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\DX12\Descriptor\DescriptorFactory.h">
-      <Filter>Render\DX12\Descriptor</Filter>
     </ClInclude>
     <ClInclude Include="Render\DX12\Renderer\DebugSurfaceRenderer.h">
       <Filter>Render\DX12\Renderer</Filter>
@@ -352,9 +346,6 @@
     <ClInclude Include="Render\DX12\Command\CommandListHelpers.h">
       <Filter>Render\DX12\Command</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\Resource\ResourceFactory.h">
-      <Filter>Render\DX12\Resource</Filter>
-    </ClInclude>
     <ClInclude Include="Render\DX12\Resource\Texture\TextureUtils.h">
       <Filter>Render\DX12\Resource\Texture</Filter>
     </ClInclude>
@@ -369,6 +360,15 @@
     </ClInclude>
     <ClInclude Include="Render\DX12\Core\D3D12Conversions.h">
       <Filter>Render\DX12\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Factory\DescriptorFactory.h">
+      <Filter>Render\DX12\Factory</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Factory\ResourceFactory.h">
+      <Filter>Render\DX12\Factory</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Factory\DescriptorAllocator.h">
+      <Filter>Render\DX12\Factory</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -481,12 +481,6 @@
     <ClCompile Include="Render\DX12\Command\CommandScheduler.cpp">
       <Filter>Render\DX12\Command</Filter>
     </ClCompile>
-    <ClCompile Include="Render\DX12\Descriptor\DescriptorAllocator.cpp">
-      <Filter>Render\DX12\Descriptor</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\DX12\Descriptor\DescriptorFactory.cpp">
-      <Filter>Render\DX12\Descriptor</Filter>
-    </ClCompile>
     <ClCompile Include="Render\DX12\Renderer\DebugSurfaceRenderer.cpp">
       <Filter>Render\DX12\Renderer</Filter>
     </ClCompile>
@@ -589,9 +583,6 @@
     <ClCompile Include="Render\DX12\Resource\Texture\TextureProvider.cpp">
       <Filter>Render\DX12\Resource\Texture</Filter>
     </ClCompile>
-    <ClCompile Include="Render\DX12\Resource\ResourceFactory.cpp">
-      <Filter>Render\DX12\Resource</Filter>
-    </ClCompile>
     <ClCompile Include="Render\DX12\Resource\Texture\TextureUtils.cpp">
       <Filter>Render\DX12\Resource\Texture</Filter>
     </ClCompile>
@@ -600,6 +591,15 @@
     </ClCompile>
     <ClCompile Include="Render\DX12\Core\D3D12Conversions.cpp">
       <Filter>Render\DX12\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Factory\DescriptorFactory.cpp">
+      <Filter>Render\DX12\Factory</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Factory\ResourceFactory.cpp">
+      <Filter>Render\DX12\Factory</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Factory\DescriptorAllocator.cpp">
+      <Filter>Render\DX12\Factory</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

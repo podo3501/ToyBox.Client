@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "PipelineCache.h"
 #include "Core/Device.h"
+#include "Core/D3D12Conversions.h"
 #include "Resource/Shader/ShaderProvider.h"
 #include "../d3dx12.h"
 
@@ -32,28 +33,13 @@ ID3D12PipelineState* PipelineCache::GetOrCreate(
 
     CD3DX12_RASTERIZER_DESC raster(D3D12_DEFAULT);
 
-    raster.FillMode =
-        pipelineState.rasterState.fillMode == FillMode::Wireframe
-        ? D3D12_FILL_MODE_WIREFRAME
-        : D3D12_FILL_MODE_SOLID;
-
-    switch (pipelineState.rasterState.cullMode)
-    {
-    case CullMode::None: raster.CullMode = D3D12_CULL_MODE_NONE; break;
-    case CullMode::Front: raster.CullMode = D3D12_CULL_MODE_FRONT; break;
-    case CullMode::Back: raster.CullMode = D3D12_CULL_MODE_BACK; break;
-    }
+    raster.FillMode = ToD3D12(pipelineState.rasterState.fillMode);
+    raster.CullMode = ToD3D12(pipelineState.rasterState.cullMode);
 
     pso.RasterizerState = raster;
     pso.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
     pso.SampleMask = UINT_MAX;
-
-    switch (pipelineState.topologyType)
-    {
-    case PrimitiveTopologyType::Triangle: pso.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE; break;
-    case PrimitiveTopologyType::Line: pso.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE; break;
-    }
-
+    pso.PrimitiveTopologyType = ToD3D12_PSO(pipelineState.topologyType);
     pso.NumRenderTargets = 1;
     pso.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
     pso.SampleDesc.Count = 1;

@@ -3,10 +3,9 @@
 #include "Core/GPUProfiler.h"
 #include "SwapChainPresenter.h"
 #include "Command/CommandScheduler.h"
-#include "Descriptor/DescriptorAllocator.h"
-#include "Descriptor/DescriptorFactory.h"
-#include "Resource/ResourceFactory.h"
 #include "Resource/ShadowResource.h"
+#include "Factory/DescriptorFactory.h"
+#include "Factory/ResourceFactory.h"
 #include "Renderer/Renderers.h"
 #include "Scene/RenderScene.h"
 #include "Graph/TaskScheduler.h"
@@ -48,21 +47,17 @@ bool RenderBackend::Initialize(
     m_command = make_unique<CommandScheduler>();
     ReturnIfFalse(m_command->Initialize(m_device, m_config.commandPools));
 
-    auto queue = m_command->GetCommandQueue(CommandType::Direct);
     SwapChainDesc desc{ hwnd, wndSize, m_config.allowTearing };
     m_swapChain = make_unique<SwapChainPresenter>();
     ReturnIfFalse(m_swapChain->Initialize(m_device, m_command.get(), desc));
 
-    m_srvAllocator = make_unique<DescriptorAllocator>();
-    ReturnIfFalse(m_srvAllocator->Initialize(m_device, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, m_config.descriptors.srvCount));
-    m_dsvAllocator = make_unique<DescriptorAllocator>();
-    ReturnIfFalse(m_dsvAllocator->Initialize(m_device, D3D12_DESCRIPTOR_HEAP_TYPE_DSV, m_config.descriptors.dsvCount));
-    m_descFactory = make_unique<DescriptorFactory>(m_device, m_srvAllocator.get(), m_dsvAllocator.get());
+    m_descFactory = make_unique<DescriptorFactory>(m_device);
+    ReturnIfFalse(m_descFactory->Initialize(m_config.descriptors));
     m_resFactory = make_unique<ResourceFactory>(m_device);
 
     m_taskScheduler = make_unique<TaskScheduler>(m_command.get());
     m_profiler = make_unique<GPUProfiler>();
-    ReturnIfFalse(m_profiler->Initialize(m_device, m_command.get()));
+    ReturnIfFalse(m_profiler->Initialize(m_device, m_command.get(), m_resFactory.get()));
 
     m_shaderProvider = make_unique<ShaderProvider>();
     ReturnIfFalse(m_shaderProvider->Initialize(shaders));
@@ -73,7 +68,7 @@ bool RenderBackend::Initialize(
     m_scene = make_unique<RenderScene>();
 
     m_renderers = make_unique<Renderers>(m_device, m_shaderProvider.get());
-    ReturnIfFalse(m_renderers->Initialize(wndSize, m_srvAllocator->GetHeap()));
+    ReturnIfFalse(m_renderers->Initialize(wndSize));
 
     m_shadowRes = make_unique<ShadowResource>(); //이 클래스는 framereseource 클래스중의 하나. 프레임당 render가 필요한 리소스들.
     ReturnIfFalse(m_shadowRes->Initialize(m_resFactory.get(), m_descFactory.get(), 2048, 2048));

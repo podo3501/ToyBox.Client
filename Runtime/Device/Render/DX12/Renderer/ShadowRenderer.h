@@ -21,9 +21,8 @@ public:
     ShadowRenderer(const ShadowRendererConfig& config, PipelineCache& pipelineCache);
 
     bool Initialize(Device& device);
-    void BindCommonState(CommandList& cmd);
+    void BindRootSignature(CommandList& cmd);
     void BindPipeline(CommandList& cmd);
-    void SetSRVHeap(ID3D12DescriptorHeap* heap) { m_srvHeap = heap; }
     void PrepareFrame(const DirectionalLightData& light);
     void Draw(CommandList& cmd, MeshResource& mesh, const Core::Math::Matrix& world);
 
@@ -38,10 +37,8 @@ private:
 
     ShadowRendererConfig m_config;
     PipelineCache& m_pipelineCache;
-    std::optional<PipelineState> m_pipelineState;
-
     ComPtr<ID3D12RootSignature> m_rootSignature;
-    ID3D12DescriptorHeap* m_srvHeap{ nullptr };
+    std::optional<PipelineState> m_pipelineState;
 
     FrameUploadAllocator m_objectCBAllocator;
     FrameUploadAllocator m_frameCBAllocator;

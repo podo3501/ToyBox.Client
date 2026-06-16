@@ -96,11 +96,8 @@ ID3D12PipelineState* ShadowRenderer::GetPipeline(const PipelineState& pipelineSt
     return CreatePSO(pipelineState);
 }
 
-void ShadowRenderer::BindCommonState(CommandList& cmd)
+void ShadowRenderer::BindRootSignature(CommandList& cmd)
 {
-    ID3D12DescriptorHeap* heaps[] = { m_srvHeap };
-    cmd->SetDescriptorHeaps(_countof(heaps), heaps);
-
     cmd->SetGraphicsRootSignature(m_rootSignature.Get());
 }
 

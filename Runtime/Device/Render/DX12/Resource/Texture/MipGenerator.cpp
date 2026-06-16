@@ -2,7 +2,7 @@
 #include "MipGenerator.h"
 #include "Core/Device.h"
 #include "Resource/Shader/ShaderProvider.h"
-#include "Descriptor/DescriptorAllocator.h"
+#include "Factory/DescriptorAllocator.h"
 #include "Command/CommandList.h"
 #include "TextureResource.h"
 #include "Renderer/RootSignatureBuilder.h"

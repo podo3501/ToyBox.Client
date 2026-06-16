@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "ShadowResource.h"
-#include "ResourceFactory.h"
-#include "../Descriptor/DescriptorFactory.h"
+#include "Factory/ResourceFactory.h"
+#include "Factory/DescriptorFactory.h"
 
 bool ShadowResource::Initialize(ResourceFactory* resFactory, DescriptorFactory* factory, UINT width, UINT height)
 {

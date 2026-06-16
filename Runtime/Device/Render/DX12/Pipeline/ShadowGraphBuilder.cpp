@@ -7,7 +7,7 @@
 #include "Command/CommandList.h"
 #include "Resource/Mesh/MeshResource.h"
 #include "Resource/ShadowResource.h"
-#include "Descriptor/DescriptorFactory.h"
+#include "Factory/DescriptorFactory.h"
 
 ShadowGraphBuilder::~ShadowGraphBuilder() = default;
 
@@ -43,7 +43,7 @@ void ShadowGraphBuilder::Build(RenderGraph& graph)
             CommandUtils::ClearDSV(cmd, dsv);
             CommandUtils::SetDepthTarget(cmd, dsv);
 
-            shadowRenderer->BindCommonState(cmd);
+            shadowRenderer->BindRootSignature(cmd);
             shadowRenderer->PrepareFrame(ctx.frame.light);
 
             for (auto& item : ctx.drawPacket.surface)

@@ -1,20 +1,28 @@
 #include "pch.h"
 #include "DescriptorFactory.h"
-#include "Core/Device.h"
 #include "DescriptorAllocator.h"
+#include "Core/Device.h"
+#include "Core/D3D12Conversions.h"
 #include "Resource/Texture/TextureResource.h"
 #include "Resource/Resource.h"
 #include "GameClient/Service/Render/Desc/TextureDesc.h"
+#include "GameClient/Service/Render/RenderConfig.h"
 
 DescriptorFactory::~DescriptorFactory() = default;
-DescriptorFactory::DescriptorFactory(
-    Device& device,
-    DescriptorAllocator* srvAllocator,
-    DescriptorAllocator* dsvAllocator) :
-    m_device{ device },
-    m_srvAllocator{ srvAllocator },
-    m_dsvAllocator{ dsvAllocator }
+DescriptorFactory::DescriptorFactory(Device& device) :
+    m_device{ device }
 {}
+
+bool DescriptorFactory::Initialize(const DescriptorConfig& config)
+{
+    m_srvAllocator = make_unique<DescriptorAllocator>();
+    ReturnIfFalse(m_srvAllocator->Initialize(m_device, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, config.srvCount));
+
+    m_dsvAllocator = make_unique<DescriptorAllocator>();
+    ReturnIfFalse(m_dsvAllocator->Initialize(m_device, D3D12_DESCRIPTOR_HEAP_TYPE_DSV, config.dsvCount));
+
+    return true;
+}
 
 UINT DescriptorFactory::CreateBufferSRV(const Resource& resBuffer, UINT elementCount, UINT elementStride)
 {
@@ -64,19 +72,6 @@ UINT DescriptorFactory::CreateTextureDSV(const Resource& res, DXGI_FORMAT format
     return index;
 }
 
-static DXGI_FORMAT MakeSRGBFormat(DXGI_FORMAT format)
-{
-    switch (format)
-    {
-    case DXGI_FORMAT_R8G8B8A8_UNORM: return DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-    case DXGI_FORMAT_BC1_UNORM: return DXGI_FORMAT_BC1_UNORM_SRGB;
-    case DXGI_FORMAT_BC2_UNORM: return DXGI_FORMAT_BC2_UNORM_SRGB;
-    case DXGI_FORMAT_BC3_UNORM: return DXGI_FORMAT_BC3_UNORM_SRGB;
-    default:
-        return format; // 이미 SRGB거나 변환 불가
-    }
-}
-
 bool DescriptorFactory::CreateTextureViews(TextureResource* texRes, bool generateMips)
 {
     if (!texRes) return false;
@@ -85,7 +80,7 @@ bool DescriptorFactory::CreateTextureViews(TextureResource* texRes, bool generat
     const auto& resDesc = res->GetDesc();
     const UINT mipCount = resDesc.MipLevels;
 
-    DXGI_FORMAT srvFormat = texRes->GetDesc().srgb ? MakeSRGBFormat(resDesc.Format) : resDesc.Format;
+    DXGI_FORMAT srvFormat = texRes->GetDesc().srgb ? ToSRGB(resDesc.Format) : resDesc.Format;
 
     UINT mainMipLevels = generateMips ? mipCount : 1;
     UINT mainIndex = CreateTextureSRV(res, srvFormat, mainMipLevels);

@@ -24,7 +24,7 @@ void DebugSurfaceGraphBuilder::Build(RenderGraph& graph)
         ]
         (CommandList& cmd, TaskContext& ctx)
         {
-            debugSurfRenderer->BindCommonState(cmd);
+            debugSurfRenderer->BindRootSignature(cmd);
             debugSurfRenderer->PrepareFrame(ctx.frame.camera);
 
             for (auto& item : ctx.drawPacket.debugSurface)

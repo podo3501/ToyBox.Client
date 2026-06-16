@@ -47,11 +47,8 @@ void DebugSurfaceRenderer::CreateDefaultPSOs()
     CreatePSO(PipelineLibrary::Get(ShadingModel::Grid, RasterPreset::Default, PrimitiveTopologyType::Line));
 }
 
-void DebugSurfaceRenderer::BindCommonState(CommandList& cmd)
+void DebugSurfaceRenderer::BindRootSignature(CommandList& cmd)
 {
-    ID3D12DescriptorHeap* heaps[] = { m_srvHeap };
-    cmd->SetDescriptorHeaps(1, heaps);
-
     cmd->SetGraphicsRootSignature(m_rootSignature.Get());
 }
 
@@ -62,7 +59,7 @@ void DebugSurfaceRenderer::BindPipeline(CommandList& cmd, const PipelineState& p
 
     auto pipeline = GetPipeline(pipelineState);
     cmd->SetPipelineState(pipeline);
-    cmd->IASetPrimitiveTopology(ToD3D12(pipelineState.topologyType));
+    cmd->IASetPrimitiveTopology(ToD3D12_Draw(pipelineState.topologyType));
 
     m_pipelineState = pipelineState;
 }

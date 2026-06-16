@@ -19,9 +19,8 @@ public:
     ~UIRenderer();
     UIRenderer(const UIRendererConfig& config, PipelineCache& pipelineCache);
     bool Initialize(Device& device, const Size& screenSize);
-    void SetSRVHeap(ID3D12DescriptorHeap* heap) { m_srvHeap = heap; }
     void PrepareFrame();
-    void BindCommonState(CommandList& cmd);
+    void BindRootSignature(CommandList& cmd);
     void BindPipeline(CommandList& cmd, const PipelineState& pipelineState);
     void Draw(CommandList& cmd, MeshResource& mesh, UIMaterialResource& material, const Core::Math::Matrix& world);
     void SetScreenSize(const Size& size);
@@ -34,12 +33,9 @@ private:
 
     UIRendererConfig m_config;
     PipelineCache& m_pipelineCache;
-    std::optional<PipelineState> m_pipelineState{ nullopt };
-    
     Microsoft::WRL::ComPtr<ID3D12RootSignature> m_rootSignature;
-    ID3D12DescriptorHeap* m_srvHeap{ nullptr };
+    std::optional<PipelineState> m_pipelineState{ nullopt };
 
     FrameUploadAllocator m_uiFrameCBAllocator;
-
     Core::Math::Matrix m_projection;
 };

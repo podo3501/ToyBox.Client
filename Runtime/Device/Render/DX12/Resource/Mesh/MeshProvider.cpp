@@ -2,7 +2,7 @@
 #include "MeshProvider.h"
 #include "MeshResource.h"
 #include "MeshGraphBuilder.h"
-#include "Descriptor/DescriptorFactory.h"
+#include "Factory/DescriptorFactory.h"
 #include "Graph/RGTypes.h"
 #include "Graph/TaskScheduler.h"
 #include "Helpers/CommonHelpers.h"

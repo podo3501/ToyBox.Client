@@ -75,11 +75,8 @@ bool UIRenderer::CreateRootSignature(Device& device)
     return m_rootSignature != nullptr;
 }
 
-void UIRenderer::BindCommonState(CommandList& cmd)
+void UIRenderer::BindRootSignature(CommandList& cmd)
 {
-    ID3D12DescriptorHeap* heaps[] = { m_srvHeap };
-    cmd->SetDescriptorHeaps(1, heaps);
-
     cmd->SetGraphicsRootSignature(m_rootSignature.Get());
 }
 
@@ -90,7 +87,7 @@ void UIRenderer::BindPipeline(CommandList& cmd, const PipelineState& pipelineSta
 
     auto pipeline = GetPipeline(pipelineState);
     cmd->SetPipelineState(pipeline);
-    cmd->IASetPrimitiveTopology(ToD3D12(pipelineState.topologyType));
+    cmd->IASetPrimitiveTopology(ToD3D12_Draw(pipelineState.topologyType));
 
     m_pipelineState = pipelineState;
 }

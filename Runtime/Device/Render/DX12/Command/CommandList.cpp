@@ -43,6 +43,14 @@ void CommandList::Close()
     DxCheck(m_command->Close());
 }
 
+void CommandList::SetBindlessHeap(ID3D12DescriptorHeap* heap)
+{
+    Assert(heap);
+
+    ID3D12DescriptorHeap* heaps[] = { heap };
+    m_command->SetDescriptorHeaps(1, heaps);
+}
+
 void CommandList::SetFence(ID3D12Fence* fence, uint64_t value)
 {
     Assert(value != 0);
