@@ -17,7 +17,7 @@ public:
     ~MipGenerator();
     MipGenerator(Device& device);
     bool Initialize(ShaderProvider* shaderProvider);
-    void GenerateMips(CommandList& cmd, DescriptorAllocator* srvAllocator, TextureResource* texResource);
+    void GenerateMips(CommandList& cmd, DescriptorAllocator& srvAllocator, TextureResource* texResource);
 
 private:
     bool LoadShader(ShaderProvider* shaderProvider);

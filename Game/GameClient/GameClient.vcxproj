@@ -54,7 +54,6 @@
     <ClCompile Include="Service\Render\RenderService.cpp" />
     <ClCompile Include="Service\Render\Repository\Material\MaterialRepository.cpp" />
     <ClCompile Include="Service\Render\Repository\Mesh\MeshRepository.cpp" />
-    <ClCompile Include="Service\Render\Repository\Texture\TextureRepository.cpp" />
     <ClCompile Include="UserInterface\CommandHistory\TextureResource\TexResCommandHistory.cpp" />
     <ClCompile Include="UserInterface\CommandHistory\TextureResource\TexResCommandRegistry.cpp" />
     <ClCompile Include="UserInterface\CommandHistory\UserInterface\UICommandHistory.cpp" />
@@ -192,8 +191,6 @@
     <ClInclude Include="Service\Render\Repository\Mesh\IMeshProvider.h" />
     <ClInclude Include="Service\Render\Repository\Mesh\MeshRepository.h" />
     <ClInclude Include="Service\Render\Repository\ResourceTypes.h" />
-    <ClInclude Include="Service\Render\Repository\Texture\ITextureProvider.h" />
-    <ClInclude Include="Service\Render\Repository\Texture\TextureRepository.h" />
     <ClInclude Include="Service\Render\Resource\IMaterialResource.h" />
     <ClInclude Include="Service\Render\Resource\IMeshResource.h" />
     <ClInclude Include="Service\Render\Resource\ITextureResource.h" />

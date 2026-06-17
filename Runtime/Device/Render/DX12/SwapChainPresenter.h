@@ -23,9 +23,9 @@ class SwapChainPresenter
 {
 public:
     ~SwapChainPresenter();
-    SwapChainPresenter();
+    SwapChainPresenter(CommandScheduler& cmdScheduler);
 
-    bool Initialize(Device& device, CommandScheduler* scheduler, const SwapChainDesc& desc);
+    bool Initialize(Device& device, const SwapChainDesc& desc);
     void Clear(CommandList& cmd, float r, float g, float b, float a);
     void TransitionToRenderTarget(CommandList& cmd);
     void SetRenderTarget(CommandList& cmd);
@@ -44,6 +44,7 @@ private:
     bool CreateFrameRTVs(Device& device);
     bool CreateDepthBuffer(Device& device);
 
+    CommandScheduler& m_cmdScheduler;
     Microsoft::WRL::ComPtr<IDXGISwapChain4> m_swapChain;
     Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> m_rtvHeap;
     vector<Resource> m_renderTargets;
@@ -51,8 +52,6 @@ private:
     Resource m_depthBuffer;
     Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> m_dsvHeap;
     DXGI_FORMAT m_depthFormat{ DXGI_FORMAT_D32_FLOAT };
-
-    CommandScheduler* m_scheduler{ nullptr };
 
     Size m_size{};
     bool m_tearing{ false };

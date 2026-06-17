@@ -8,23 +8,20 @@
 
 using Microsoft::WRL::ComPtr;
 
-SwapChainPresenter::~SwapChainPresenter()
-{
-    if (m_scheduler)
-        m_scheduler->WaitIdle(CommandType::Direct);
-}
-SwapChainPresenter::SwapChainPresenter() = default;
+SwapChainPresenter::~SwapChainPresenter() { m_cmdScheduler.WaitIdle(CommandType::Direct); }
+SwapChainPresenter::SwapChainPresenter(CommandScheduler& cmdScheduler) :
+    m_cmdScheduler{ cmdScheduler }
+{}
 
-bool SwapChainPresenter::Initialize(Device& device, CommandScheduler* scheduler, const SwapChainDesc& desc)
+bool SwapChainPresenter::Initialize(Device& device, const SwapChainDesc& desc)
 {
     m_frameCount = desc.frameCount;
     m_renderTargets.resize(m_frameCount);
 
-    m_scheduler = scheduler;
     m_size = desc.size;
     m_tearing = desc.allowTearing;
 
-    auto queue = scheduler->GetCommandQueue(CommandType::Direct);
+    auto queue = m_cmdScheduler.GetCommandQueue(CommandType::Direct);
     ReturnIfFalse(CreateSwapChain(device, queue, desc));
     ReturnIfFalse(CreateRTV(device));
     ReturnIfFalse(CreateDepthBuffer(device));
@@ -68,7 +65,7 @@ bool SwapChainPresenter::Present(bool vsync)
     UINT flags = (!vsync && m_tearing) ? DXGI_PRESENT_ALLOW_TEARING : 0;
     if (FAILED(m_swapChain->Present(syncInterval, flags))) return false;
 
-    m_scheduler->SignalQueue(CommandType::Direct);
+    m_cmdScheduler.SignalQueue(CommandType::Direct);
     m_frameIndex = m_swapChain->GetCurrentBackBufferIndex();
     return true;
 }
@@ -78,7 +75,7 @@ bool SwapChainPresenter::Resize(Device& device, const Size& size)
     if (size.width == 0 || size.height == 0) return false;
     if (m_size == size) return true;
 
-    m_scheduler->WaitIdle(); // GPU 작업 끝날 때까지 대기
+    m_cmdScheduler.WaitIdle(); // GPU 작업 끝날 때까지 대기
 
     for (UINT i = 0; i < m_frameCount; ++i)
         m_renderTargets[i].Reset(); //기존 RTV 리소스 해제
@@ -156,13 +153,10 @@ bool SwapChainPresenter::CreateSwapChain(Device& device, ID3D12CommandQueue* que
 
 bool SwapChainPresenter::CreateRTV(Device& device)
 {
-    D3D12_DESCRIPTOR_HEAP_DESC heapDesc{};
-    heapDesc.NumDescriptors = m_frameCount;
-    heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
-    heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-
-    if (FAILED(device->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&m_rtvHeap))))
-        return false;
+    m_rtvHeap = device.CreateDescriptorHeap(
+        D3D12_DESCRIPTOR_HEAP_TYPE_RTV,
+        m_frameCount,
+        D3D12_DESCRIPTOR_HEAP_FLAG_NONE);
 
     m_rtvDescriptorSize = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
     
@@ -217,16 +211,11 @@ bool SwapChainPresenter::CreateDepthBuffer(Device& device)
         D3D12_HEAP_TYPE_DEFAULT,
         D3D12_RESOURCE_STATE_DEPTH_WRITE,
         &clear);
-
-    D3D12_DESCRIPTOR_HEAP_DESC heapDesc{};
-    heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
-    heapDesc.NumDescriptors = 1;
-    heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-
-    if (FAILED(device->CreateDescriptorHeap(
-        &heapDesc,
-        IID_PPV_ARGS(&m_dsvHeap))))
-        return false;
+    
+    m_dsvHeap = device.CreateDescriptorHeap(
+        D3D12_DESCRIPTOR_HEAP_TYPE_DSV,
+        1,
+        D3D12_DESCRIPTOR_HEAP_FLAG_NONE);
 
     auto dsvHandle = m_dsvHeap->GetCPUDescriptorHandleForHeapStart();
 

@@ -3,8 +3,8 @@
 #include "Command/CommandScheduler.h"
 
 TaskScheduler::~TaskScheduler() = default;
-TaskScheduler::TaskScheduler(CommandScheduler* cmdScheduler)
-    : m_cmdScheduler(cmdScheduler)
+TaskScheduler::TaskScheduler(CommandScheduler& cmdScheduler) : 
+    m_cmdScheduler{ cmdScheduler }
 {}
 
 TaskHandle TaskScheduler::AllocateHandle()
@@ -89,13 +89,13 @@ void TaskScheduler::ExecuteTask(TaskEntry& entry)
     }
     
     // GPU TASK
-    auto cmd = m_cmdScheduler->Begin(entry.task.type);
+    auto cmd = m_cmdScheduler.Begin(entry.task.type);
     AssertMsg(cmd, "해당 CommandList 가 없음. 할당을 못 받았거나 사용 가능한 것이 없거나 등등");
     if (!cmd) 
         return;
 
     entry.task.gpuExecute(*cmd, entry.context);
-    entry.fenceValue = m_cmdScheduler->End();
+    entry.fenceValue = m_cmdScheduler.End();
     entry.started = true;
 }
 
@@ -114,7 +114,7 @@ bool TaskScheduler::AreDependenciesDone(const TaskEntry& entry)
 bool TaskScheduler::IsTaskFinished(const TaskEntry& entry)
 {
     if (!entry.started) return false;
-    return m_cmdScheduler->IsFenceComplete(entry.task.type, entry.fenceValue);
+    return m_cmdScheduler.IsFenceComplete(entry.task.type, entry.fenceValue);
 }
 
 bool TaskScheduler::CanDeleteTask(const TaskEntry& entry)

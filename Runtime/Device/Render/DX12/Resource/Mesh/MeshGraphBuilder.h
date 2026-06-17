@@ -19,7 +19,7 @@ class MeshGraphBuilder
 public:
     ~MeshGraphBuilder();
     MeshGraphBuilder() = delete;
-    MeshGraphBuilder(TaskScheduler* taskScheduler, ResourceFactory* resFactory, DescriptorFactory* descFactory);
+    MeshGraphBuilder(TaskScheduler* taskScheduler, ResourceFactory& resFactory, DescriptorFactory& descFactory);
     void LoadMeshes(const std::vector<MeshLoadRequest>& requests);
 
 private:
@@ -29,8 +29,8 @@ private:
     RGHandle CreateRGHandle();
 
     TaskScheduler* m_taskScheduler{ nullptr };
-    ResourceFactory* m_resFactory{ nullptr };
-    DescriptorFactory* m_descFactory{ nullptr };
+    ResourceFactory& m_resFactory;
+    DescriptorFactory& m_descFactory;
 
     unique_ptr<MeshRegistry> m_registry;
     uint32_t m_nextId{ 1 };

@@ -2,10 +2,7 @@
 #include "RenderBackend.h"
 #include "Core/GPUProfiler.h"
 #include "SwapChainPresenter.h"
-#include "Command/CommandScheduler.h"
 #include "Resource/ShadowResource.h"
-#include "Factory/DescriptorFactory.h"
-#include "Factory/ResourceFactory.h"
 #include "Renderer/Renderers.h"
 #include "Scene/RenderScene.h"
 #include "Graph/TaskScheduler.h"
@@ -30,12 +27,14 @@ struct QuadDrawInfo
 RenderBackend::~RenderBackend() = default;
 RenderBackend::RenderBackend(const RenderConfig& config) :
     m_device{ config.enableDebugLayer },
+    m_descFactory{ m_device },
+    m_resFactory{ m_device },
     m_config{ config }
 {}
 
 void RenderBackend::WaitIdle()
 {
-    m_command->WaitIdle();
+    m_cmdScheduler.WaitIdle();
 }
 
 bool RenderBackend::Initialize(
@@ -44,37 +43,36 @@ bool RenderBackend::Initialize(
     const std::vector<ShaderRegisterDesc>& shaders)
 {
     m_size = wndSize;
-    m_command = make_unique<CommandScheduler>();
-    ReturnIfFalse(m_command->Initialize(m_device, m_config.commandPools));
+    ReturnIfFalse(m_cmdScheduler.Initialize(m_device, m_config.commandPools));
 
     SwapChainDesc desc{ hwnd, wndSize, m_config.allowTearing };
-    m_swapChain = make_unique<SwapChainPresenter>();
-    ReturnIfFalse(m_swapChain->Initialize(m_device, m_command.get(), desc));
+    m_swapChain = make_unique<SwapChainPresenter>(m_cmdScheduler);
+    ReturnIfFalse(m_swapChain->Initialize(m_device, desc));
+    ReturnIfFalse(m_descFactory.Initialize(m_config.descriptors));
 
-    m_descFactory = make_unique<DescriptorFactory>(m_device);
-    ReturnIfFalse(m_descFactory->Initialize(m_config.descriptors));
-    m_resFactory = make_unique<ResourceFactory>(m_device);
-
-    m_taskScheduler = make_unique<TaskScheduler>(m_command.get());
+    m_taskScheduler = make_unique<TaskScheduler>(m_cmdScheduler);
     m_profiler = make_unique<GPUProfiler>();
-    ReturnIfFalse(m_profiler->Initialize(m_device, m_command.get(), m_resFactory.get()));
+    ReturnIfFalse(m_profiler->Initialize(m_device, m_cmdScheduler, m_resFactory));
+
+    //m_resProvider.Initialize()
 
     m_shaderProvider = make_unique<ShaderProvider>();
     ReturnIfFalse(m_shaderProvider->Initialize(shaders));
-    m_texProvider = make_unique<TextureProvider>(m_device, m_descFactory.get(), m_taskScheduler.get(), m_resFactory.get());
+    m_texProvider = make_unique<TextureProvider>(m_device, m_descFactory, m_taskScheduler.get(), m_resFactory);
     ReturnIfFalse(m_texProvider->Initialize(m_shaderProvider.get()));
-    m_meshProvider = make_unique<MeshProvider>(m_descFactory.get(), m_taskScheduler.get(), m_resFactory.get());
+    m_meshProvider = make_unique<MeshProvider>(m_descFactory, m_taskScheduler.get(), m_resFactory);
     m_matProvider = make_unique<MaterialProvider>(m_texProvider.get());
+
     m_scene = make_unique<RenderScene>();
 
     m_renderers = make_unique<Renderers>(m_device, m_shaderProvider.get());
     ReturnIfFalse(m_renderers->Initialize(wndSize));
 
     m_shadowRes = make_unique<ShadowResource>(); //이 클래스는 framereseource 클래스중의 하나. 프레임당 render가 필요한 리소스들.
-    ReturnIfFalse(m_shadowRes->Initialize(m_resFactory.get(), m_descFactory.get(), 2048, 2048));
+    ReturnIfFalse(m_shadowRes->Initialize(m_resFactory, m_descFactory, 2048, 2048));
 
     m_pipeline = std::make_unique<ForwardRenderPipeline>(m_renderers.get(), m_swapChain.get(),
-        m_descFactory.get(), m_shadowRes.get());
+        m_descFactory, m_shadowRes.get());
     
     return true;
 }
@@ -91,7 +89,7 @@ void RenderBackend::SetDirectionalLight(const DirectionalLightData& light)
 
 bool RenderBackend::BeginFrame()
 {
-    m_cmd = m_command->Begin(CommandType::Direct);
+    m_cmd = m_cmdScheduler.Begin(CommandType::Direct);
     if (m_cmd == nullptr) return false;
 
     return true;
@@ -101,7 +99,7 @@ void RenderBackend::EndFrame()
 {
     assert(m_cmd);
 
-    m_command->End();
+    m_cmdScheduler.End();
     m_swapChain->Present(false);
 
     m_cmd = nullptr;
@@ -209,11 +207,6 @@ size_t RenderBackend::ComputeMeshBudget(float gpuMs)
         2 * 1024 * 1024,   // min 2MB
         16 * 1024 * 1024   // max 16MB
     );
-}
-
-ITextureProvider* RenderBackend::GetTextureProvider() 
-{ 
-    return m_texProvider.get(); 
 }
 
 IMeshProvider* RenderBackend::GetMeshProvider()

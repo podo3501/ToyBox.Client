@@ -19,8 +19,8 @@ class TextureGraphBuilder
 public:
     ~TextureGraphBuilder();
     TextureGraphBuilder() = delete;
-    TextureGraphBuilder(TaskScheduler* taskScheduler, ResourceFactory* resFactory,
-        MipGenerator* mipGenerator, DescriptorFactory* descFactory);
+    TextureGraphBuilder(TaskScheduler* taskScheduler, ResourceFactory& resFactory,
+        MipGenerator* mipGenerator, DescriptorFactory& descFactory);
 
     void LoadTextures(const std::vector<TextureLoadRequest>& requests);
 
@@ -32,9 +32,9 @@ private:
     RGHandle CreateRGHandle();
 
     TaskScheduler* m_taskScheduler{ nullptr };
-    ResourceFactory* m_resFactory{ nullptr };
     MipGenerator* m_mipGenerator{ nullptr };
-    DescriptorFactory* m_descFactory{ nullptr };
+    DescriptorFactory& m_descFactory;
+    ResourceFactory& m_resFactory;
 
     unique_ptr<TextureRegistry> m_registry;
     uint32_t m_nextId{ 1 }; //?!? mesh graph builder에도 있기 때문에 나중에 하나로 합치자.

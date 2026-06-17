@@ -2,7 +2,6 @@
 #include "RenderContext.h"
 #include "RenderServiceConfig.h"
 #include "Repository/Material/MaterialRepository.h"
-#include "Repository/Texture/TextureRepository.h"
 #include "Repository/Mesh/MeshRepository.h"
 #include "Service/Asset/Assets/MeshAsset.h"
 #include "Desc/MeshDesc.h"
@@ -20,7 +19,6 @@ namespace cm = Core::Math;
 RenderContext::~RenderContext() { m_backend->WaitIdle(); } //리소스를 RenderService가 들고 있기 때문에 gpu의 활동을 중지 시키고 리소스 삭제->backend 순으로 된다.
 RenderContext::RenderContext(IRenderBackend* backend, AssetPipelineT* assetPipeline) :
 	m_backend{ backend },
-	m_texRepository{ make_unique<TextureRepository>(m_backend->GetTextureProvider(), assetPipeline) },
 	m_meshRepository{ make_unique<MeshRepository>(m_backend->GetMeshProvider(), assetPipeline) },
 	m_matRepository{ make_unique<MaterialRepository>(m_backend->GetMaterialProvider(), assetPipeline) }
 {}
@@ -45,16 +43,6 @@ MeshHandle RenderContext::LoadMesh(const MeshDesc& desc, std::shared_ptr<MeshAss
 bool RenderContext::ReleaseMesh(MeshHandle mh)
 {
 	return m_meshRepository->Release(mh);
-}
-
-TextureHandle RenderContext::LoadTexture(const TextureDesc& desc)
-{
-	return m_texRepository->GetOrCreate(desc);
-}
-
-bool RenderContext::ReleaseTexture(TextureHandle th)
-{
-	return m_texRepository->Release(th);
 }
 
 MaterialHandle RenderContext::LoadMaterial(const MaterialDesc& desc)
@@ -141,14 +129,12 @@ std::optional<ResolvedDrawData> RenderContext::ResolveResources(MeshHandle hM, M
 void RenderContext::Update()
 {
 	m_meshRepository->Update();
-	m_texRepository->Update();
 	m_matRepository->Update();
 }
 
 void RenderContext::ReleaseAll()
 {
 	m_meshRepository->ReleaseAll();
-	m_texRepository->ReleaseAll();
 	m_matRepository->ReleaseAll();
 }
 

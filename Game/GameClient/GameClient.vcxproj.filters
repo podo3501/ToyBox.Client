@@ -225,9 +225,6 @@
     <ClCompile Include="Service\Render\Repository\Mesh\MeshRepository.cpp">
       <Filter>Service\Render\Repository\Mesh</Filter>
     </ClCompile>
-    <ClCompile Include="Service\Render\Repository\Texture\TextureRepository.cpp">
-      <Filter>Service\Render\Repository\Texture</Filter>
-    </ClCompile>
     <ClCompile Include="Graphics\ShaderStageBuilder.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
@@ -616,12 +613,6 @@
     <ClInclude Include="Service\Render\Repository\Mesh\MeshRepository.h">
       <Filter>Service\Render\Repository\Mesh</Filter>
     </ClInclude>
-    <ClInclude Include="Service\Render\Repository\Texture\ITextureProvider.h">
-      <Filter>Service\Render\Repository\Texture</Filter>
-    </ClInclude>
-    <ClInclude Include="Service\Render\Repository\Texture\TextureRepository.h">
-      <Filter>Service\Render\Repository\Texture</Filter>
-    </ClInclude>
     <ClInclude Include="Graphics\ShaderStageBuilder.h">
       <Filter>Graphics</Filter>
     </ClInclude>
@@ -770,9 +761,6 @@
     </Filter>
     <Filter Include="Service\Render\Repository\Mesh">
       <UniqueIdentifier>{31a6befa-ed82-42da-b785-70ff8f4bccf6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Service\Render\Repository\Texture">
-      <UniqueIdentifier>{8d2d9237-c25a-445a-8fc2-f75425938ebe}</UniqueIdentifier>
     </Filter>
     <Filter Include="Service\AssetAsync">
       <UniqueIdentifier>{c98e6e45-0e8e-4a3f-a21d-0c731a519f05}</UniqueIdentifier>

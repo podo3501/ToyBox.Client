@@ -1,14 +1,14 @@
 #pragma once
-#include "Core/Device.h"
 #include "GameClient/Service/Render/IRenderBackend.h"
+#include "Core/Device.h"
+#include "Command/CommandScheduler.h"
+#include "Factory/DescriptorFactory.h"
+#include "Factory/ResourceFactory.h"
 #include "GameClient/Graphics/RenderData/DirectionalLightData.h"
 #include "GameClient/Graphics/RenderData/CameraData.h"
 
 class SwapChainPresenter;
 class CommandList;
-class CommandScheduler;
-class DescriptorFactory;
-class ResourceFactory;
 class TaskScheduler;
 class GPUProfiler;
 class TextureProvider;
@@ -40,7 +40,6 @@ public:
 	virtual void Update() override;
 	virtual void Render() override;
 	virtual void WaitIdle() override;
-	virtual ITextureProvider* GetTextureProvider() override;
 	virtual IMeshProvider* GetMeshProvider() override;
 	virtual IMaterialProvider* GetMaterialProvider() override;
 
@@ -54,10 +53,10 @@ private:
 	Device m_device;
 	RenderConfig m_config;
 
-	unique_ptr<CommandScheduler> m_command;
+	CommandScheduler m_cmdScheduler;
 	unique_ptr<SwapChainPresenter> m_swapChain;
-	unique_ptr<DescriptorFactory> m_descFactory;
-	unique_ptr<ResourceFactory> m_resFactory;
+	DescriptorFactory m_descFactory;
+	ResourceFactory m_resFactory;
 	unique_ptr<TaskScheduler> m_taskScheduler;
 	unique_ptr<GPUProfiler> m_profiler;
 	

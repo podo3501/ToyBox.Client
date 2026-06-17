@@ -12,14 +12,14 @@ public:
     ~ShadowGraphBuilder();
     ShadowGraphBuilder(
         ShadowRenderer* shadowRenderer, 
-        DescriptorFactory* descFactory,
+        DescriptorFactory& descFactory,
         ShadowResource* shadowRes,
         RGHandle hShadow);
     void Build(RenderGraph& graph);
 
 private:
     ShadowRenderer* m_shadowRenderer{ nullptr };
-    DescriptorFactory* m_descFactory{ nullptr };
+    DescriptorFactory& m_descFactory;
     ShadowResource* m_shadowRes{ nullptr };
     RGHandle m_hShadow;
 };

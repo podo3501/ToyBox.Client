@@ -3,7 +3,6 @@
 #include "IMaterialProvider.h"
 #include "Service/Render/Resource/IMaterialResource.h"
 #include "Service/AssetAsync/AssetPipeline.h"
-#include "../Texture/ITextureProvider.h"
 
 struct CpuPendingMaterialRequest
 {

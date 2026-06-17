@@ -21,14 +21,9 @@ bool CommandQueue::Initialize(Device& device, CommandType type, uint32_t cmdPool
     ReturnIfFalse(CreateQueue(device, type));
     ReturnIfFalse(CreateFence(device));
 
-    m_pool.reserve(cmdPoolSize);
-    for (uint32_t i = 0; i < cmdPoolSize; ++i)
-    {
-        auto context = make_unique<CommandList>();
-        ReturnIfFalse(context->Initialize(device, type));
-
-        m_pool.emplace_back(move(context));
-    }
+    m_pool.resize(cmdPoolSize);
+    for (auto& cmd : m_pool)
+        ReturnIfFalse(cmd.Initialize(device, type));
 
     return true;
 }
@@ -90,8 +85,7 @@ bool CommandQueue::CreateQueue(Device& device, CommandType type)
 
 bool CommandQueue::CreateFence(Device& device)
 {
-    if (FAILED(device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&m_fence))))
-        return false;
+    m_fence = device.CreateFence(0, D3D12_FENCE_FLAG_NONE);
 
     m_event = CreateEvent(nullptr, FALSE, FALSE, nullptr);
     return m_event != nullptr;
@@ -101,7 +95,7 @@ CommandList* CommandQueue::GetAvailableCommandList()
 {
     for (size_t i = 0; i < m_pool.size(); ++i)
     {
-        CommandList* entry = m_pool[m_next].get();
+        CommandList* entry = &m_pool[m_next];
         m_next = (m_next + 1) % m_pool.size();
 
         if (entry->IsAvailable())

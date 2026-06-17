@@ -21,6 +21,14 @@ public:
         D3D12_RESOURCE_STATES state,
         const D3D12_CLEAR_VALUE* clearValue = nullptr);
 
+    ComPtr<ID3D12DescriptorHeap> CreateDescriptorHeap(
+        D3D12_DESCRIPTOR_HEAP_TYPE type,
+        UINT numDescriptors,
+        D3D12_DESCRIPTOR_HEAP_FLAGS flags);
+
+    ComPtr<ID3D12QueryHeap> CreateQueryHeap(D3D12_QUERY_HEAP_TYPE type, UINT count);
+    ComPtr<ID3D12Fence> CreateFence(UINT64 initialValue, D3D12_FENCE_FLAGS flags);
+
     UINT64 GetRequiredIntermediateSize(
         const D3D12_RESOURCE_DESC& desc,
         UINT firstSubresource,

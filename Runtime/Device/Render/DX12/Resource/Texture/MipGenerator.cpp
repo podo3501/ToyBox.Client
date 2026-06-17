@@ -58,7 +58,7 @@ bool MipGenerator::CreatePSO()
     return true;
 }
 
-void MipGenerator::GenerateMips(CommandList& cmd, DescriptorAllocator* srvAllocator, TextureResource* texResource)
+void MipGenerator::GenerateMips(CommandList& cmd, DescriptorAllocator& srvAllocator, TextureResource* texResource)
 {
     if (!texResource)
         return;
@@ -70,7 +70,7 @@ void MipGenerator::GenerateMips(CommandList& cmd, DescriptorAllocator* srvAlloca
     if (mipCount <= 1)
         return;
 
-    ID3D12DescriptorHeap* heaps[] = { srvAllocator->GetHeap() };
+    ID3D12DescriptorHeap* heaps[] = { srvAllocator.GetHeap() };
 
     cmd->SetDescriptorHeaps(1, heaps);
     cmd->SetComputeRootSignature(m_rootSignature.Get());

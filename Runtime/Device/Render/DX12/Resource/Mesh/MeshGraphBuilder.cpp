@@ -29,8 +29,8 @@ struct MeshFinalizeEntry
 };
 
 MeshGraphBuilder::~MeshGraphBuilder() = default;
-MeshGraphBuilder::MeshGraphBuilder(TaskScheduler* taskScheduler, ResourceFactory* resFactory,
-    DescriptorFactory* descFactory) :
+MeshGraphBuilder::MeshGraphBuilder(TaskScheduler* taskScheduler, ResourceFactory& resFactory,
+    DescriptorFactory& descFactory) :
     m_taskScheduler{ taskScheduler },
     m_resFactory{ resFactory },
     m_descFactory{ descFactory },
@@ -55,8 +55,8 @@ void MeshGraphBuilder::LoadMeshes(
 
         m_registry->Register(hMesh.id, req.resource);
 
-        auto vbRes = m_resFactory->CreateBufferResource(static_cast<UINT64>(req.vbBytes));
-        auto ibRes = m_resFactory->CreateBufferResource(static_cast<UINT64>(req.ibBytes));
+        auto vbRes = m_resFactory.CreateBufferResource(static_cast<UINT64>(req.vbBytes));
+        auto ibRes = m_resFactory.CreateBufferResource(static_cast<UINT64>(req.ibBytes));
 
         size_t vbOffset = offset;
         size_t ibOffset = offset + req.vbBytes;
@@ -90,7 +90,7 @@ void MeshGraphBuilder::LoadMeshes(
 
     size_t totalUploadSize = AlignSize(offset, AlignVertexIndex);
     auto resCtx = std::make_shared<ResourceContext>();
-    resCtx->Set(hUploadRes, m_resFactory->CreateUploadResource(totalUploadSize));
+    resCtx->Set(hUploadRes, m_resFactory.CreateUploadResource(totalUploadSize));
 
     m_taskScheduler->Submit(compiledTasks, resCtx);
 }
@@ -133,8 +133,8 @@ void MeshGraphBuilder::BuildFinalizePass(RenderGraph& graph, std::vector<MeshFin
             auto vertexCount = static_cast<uint32_t>(mesh.asset->vertices.size());
             auto indexCount = static_cast<uint32_t>(mesh.asset->indices.size());
 
-            auto vbHeapIndex = m_descFactory->CreateBufferSRV(vb, mesh.asset->vertexCount, mesh.asset->vertexStride);
-            auto ibHeapIndex = m_descFactory->CreateBufferSRV(ib, indexCount, sizeof(uint32_t));
+            auto vbHeapIndex = m_descFactory.CreateBufferSRV(vb, mesh.asset->vertexCount, mesh.asset->vertexStride);
+            auto ibHeapIndex = m_descFactory.CreateBufferSRV(ib, indexCount, sizeof(uint32_t));
 
             m_registry->FinalizeMesh(
                 mesh.hMesh.id,

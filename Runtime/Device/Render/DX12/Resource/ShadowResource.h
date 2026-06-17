@@ -10,7 +10,7 @@ public:
     ShadowResource() = default;
     ~ShadowResource() = default;
 
-    bool Initialize(ResourceFactory* resFactory, DescriptorFactory* factory, UINT width, UINT height);
+    bool Initialize(ResourceFactory& resFactory, DescriptorFactory& factory, UINT width, UINT height);
 
     const Resource& GetResource() const { return m_resource; }
     Resource& GetResource() { return m_resource; }

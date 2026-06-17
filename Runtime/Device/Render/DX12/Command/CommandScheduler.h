@@ -1,11 +1,11 @@
 #pragma once
 #include "CommandType.h"
 #include "FenceTypes.h"
+#include "CommandQueue.h"
 
 struct CommandPoolConfig;
 class Device;
 class CommandList;
-class CommandQueue;
 
 class CommandScheduler
 {
@@ -27,11 +27,11 @@ public:
     QueueFences GetCompletedFences() const noexcept;
 
 private:
-    CommandQueue* GetQueue(CommandType type);
+    CommandQueue* GetQueue(CommandType type) noexcept;
 
-    unique_ptr<CommandQueue> m_directQueue;
-    unique_ptr<CommandQueue> m_copyQueue;
-    unique_ptr<CommandQueue> m_computeQueue;
+    CommandQueue m_directQueue;
+    CommandQueue m_copyQueue;
+    CommandQueue m_computeQueue;
 
     CommandQueue* m_currentQueue{ nullptr };
 };

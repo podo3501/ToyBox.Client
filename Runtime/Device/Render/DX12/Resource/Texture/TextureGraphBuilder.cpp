@@ -31,8 +31,8 @@ struct TextureFinalizeEntry
 };
 
 TextureGraphBuilder::~TextureGraphBuilder() = default;
-TextureGraphBuilder::TextureGraphBuilder(TaskScheduler* taskScheduler, ResourceFactory* resFactory,
-    MipGenerator* mipGenerator, DescriptorFactory* descFactory) :
+TextureGraphBuilder::TextureGraphBuilder(TaskScheduler* taskScheduler, ResourceFactory& resFactory,
+    MipGenerator* mipGenerator, DescriptorFactory& descFactory) :
     m_taskScheduler{ taskScheduler },
     m_resFactory{ resFactory },
     m_mipGenerator{ mipGenerator },
@@ -57,11 +57,11 @@ void TextureGraphBuilder::LoadTextures(const std::vector<TextureLoadRequest>& re
         auto& texDesc = req.resource->GetDesc();
         auto mips = ShouldGenerateMips(*req.asset, texDesc.generateMips);
         auto resDesc = CreateTexture2DDesc(*req.asset, mips);
-        auto texRes = m_resFactory->CreateTextureResource(resDesc);
+        auto texRes = m_resFactory.CreateTextureResource(resDesc);
 
         auto textureResource = std::static_pointer_cast<TextureResource>(req.resource);
         textureResource->Set(texRes);
-        m_descFactory->CreateTextureViews(textureResource.get(), mips);
+        m_descFactory.CreateTextureViews(textureResource.get(), mips);
 
         hasMipTask |= mips;
         offset = AlignSize(offset, AlignTexture);
@@ -69,7 +69,7 @@ void TextureGraphBuilder::LoadTextures(const std::vector<TextureLoadRequest>& re
         textureUploads.push_back({ hTex, texRes, req.asset, offset, mips });
         finalizeEntries.push_back({ hTex, mips });
 
-        auto requiredSize = m_resFactory->GetRequiredIntermediateSize(resDesc, 0, 1, offset);
+        auto requiredSize = m_resFactory.GetRequiredIntermediateSize(resDesc, 0, 1, offset);
         offset += requiredSize;
     }
     RGHandle hUploadRes = CreateRGHandle();
@@ -82,7 +82,7 @@ void TextureGraphBuilder::LoadTextures(const std::vector<TextureLoadRequest>& re
 
     size_t totalUploadSize = AlignSize(offset, AlignTexture);
     auto resCtx = std::make_shared<ResourceContext>();
-    resCtx->Set(hUploadRes, m_resFactory->CreateUploadResource(totalUploadSize));
+    resCtx->Set(hUploadRes, m_resFactory.CreateUploadResource(totalUploadSize));
 
     m_taskScheduler->Submit(compiledTasks, resCtx);
 }
@@ -122,7 +122,7 @@ void TextureGraphBuilder::BuildMipPass(RenderGraph& graph, std::vector<TextureUp
             if (!tex.generateMips) continue;
 
             auto texRes = m_registry->GetTextureResource(tex.handle.id);
-            m_mipGenerator->GenerateMips(cmd, m_descFactory->GetSrvAllocator(), texRes);
+            m_mipGenerator->GenerateMips(cmd, m_descFactory.GetSrvAllocator(), texRes);
         }
         };
 }
@@ -142,7 +142,7 @@ void TextureGraphBuilder::BuildFinalizePass(RenderGraph& graph, std::vector<Text
         {
             m_registry->FinalizeTexture(tex.handle.id);
         }
-        m_descFactory->GetSrvAllocator()->ResetTransient(); //mipmap때 임시로 만든 srv/uav 정리.
+        m_descFactory.GetSrvAllocator().ResetTransient(); //mipmap때 임시로 만든 srv/uav 정리.
         };
 }
 

@@ -3,12 +3,6 @@
 #include "Core/Device.h"
 #include "Core/D3D12Conversions.h"
 
-struct QueueDependency
-{
-    CommandType type;
-    uint64_t fenceValue;
-};
-
 CommandList::~CommandList() = default;
 CommandList::CommandList() = default;
 

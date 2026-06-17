@@ -40,16 +40,58 @@ Resource Device::CreateResource(
     CD3DX12_HEAP_PROPERTIES heap(heapType);
 
     Resource res;
-    auto result = m_device->CreateCommittedResource(
+    auto hr = m_device->CreateCommittedResource(
         &heap,
         D3D12_HEAP_FLAG_NONE,
         &desc,
         state,
         clearValue,
         IID_PPV_ARGS(res.GetAddressOf()));
-    Assert(result == S_OK);
+    Assert(SUCCEEDED(hr));
 
     return res;
+}
+
+ComPtr<ID3D12DescriptorHeap> Device::CreateDescriptorHeap(
+    D3D12_DESCRIPTOR_HEAP_TYPE type,
+    UINT numDescriptors,
+    D3D12_DESCRIPTOR_HEAP_FLAGS flags)
+{
+    D3D12_DESCRIPTOR_HEAP_DESC desc{};
+    desc.Type = type;
+    desc.NumDescriptors = numDescriptors;
+    desc.Flags = flags;
+
+    ComPtr<ID3D12DescriptorHeap> heap;
+    auto hr = m_device->CreateDescriptorHeap(&desc, IID_PPV_ARGS(heap.GetAddressOf()));
+    Assert(SUCCEEDED(hr));
+
+    return heap;
+}
+
+ComPtr<ID3D12QueryHeap> Device::CreateQueryHeap(D3D12_QUERY_HEAP_TYPE type, UINT count)
+{
+    D3D12_QUERY_HEAP_DESC desc{};
+    desc.Type = type;
+    desc.Count = count;
+
+    ComPtr<ID3D12QueryHeap> heap;
+    auto hr = m_device->CreateQueryHeap(&desc, IID_PPV_ARGS(heap.GetAddressOf()));
+    Assert(SUCCEEDED(hr));
+
+    return heap;
+}
+
+ComPtr<ID3D12Fence> Device::CreateFence(UINT64 initialValue, D3D12_FENCE_FLAGS flags)
+{
+    ComPtr<ID3D12Fence> fence;
+    auto hr = m_device->CreateFence(
+        initialValue,
+        flags,
+        IID_PPV_ARGS(fence.GetAddressOf()));
+    Assert(SUCCEEDED(hr));
+
+    return fence;
 }
 
 UINT64 Device::GetRequiredIntermediateSize(

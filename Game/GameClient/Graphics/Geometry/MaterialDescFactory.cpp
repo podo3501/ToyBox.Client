@@ -7,7 +7,7 @@ namespace SurfaceMatDescFactory
     {
         PhongMaterialDesc CreateLit(const PhongTextureArgs& texArgs)
         {
-            PhongMaterialDesc desc;
+            PhongMaterialDesc desc{};
 
             desc.textures.resize(static_cast<size_t>(PhongTextureSlot::Count));
             desc.textures[static_cast<size_t>(PbrTextureSlot::Albedo)] = texArgs.albedo;
@@ -18,7 +18,7 @@ namespace SurfaceMatDescFactory
 
         PhongMaterialDesc CreateWireframe()
         {
-            PhongMaterialDesc desc;
+            PhongMaterialDesc desc{};
 
             desc.pipelineState = PipelineLibrary::Get(
                 ShadingModel::Phong,
@@ -33,7 +33,7 @@ namespace SurfaceMatDescFactory
     {
         PbrMaterialDesc CreateLit(const PbrTextureArgs& texArgs)
         {
-            PbrMaterialDesc desc;
+            PbrMaterialDesc desc{};
 
             desc.textures.resize(static_cast<size_t>(PbrTextureSlot::Count));
             desc.textures[static_cast<size_t>(PbrTextureSlot::Albedo)] = texArgs.albedo;
@@ -51,7 +51,7 @@ namespace DebugSurfaceMatDescFactory
     {
         GridMaterialDesc CreateGrid()
         {
-            GridMaterialDesc desc;
+            GridMaterialDesc desc{};
             return desc;
         }
     }
@@ -62,7 +62,7 @@ namespace DebugSurfaceMatDescFactory
 
 UIMaterialDesc UIMatDescFactory::CreateDefault(const UITextureArgs& texArgs)
 {
-    UIMaterialDesc desc;
+    UIMaterialDesc desc{};
 
     desc.textures.resize(static_cast<size_t>(UITextureSlot::Count));
     desc.textures[static_cast<size_t>(UITextureSlot::Normal)] = texArgs.normal;

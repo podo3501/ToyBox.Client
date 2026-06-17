@@ -1,26 +1,17 @@
 #include "pch.h"
 #include "CommandScheduler.h"
-#include "CommandQueue.h"
-#include "Core/Device.h"
 #include "GameClient/Service/Render/RenderConfig.h"
 
 using Microsoft::WRL::ComPtr;
 
-CommandScheduler::~CommandScheduler()
-{
-    WaitIdle();
-}
+CommandScheduler::~CommandScheduler() { WaitIdle(); }
 CommandScheduler::CommandScheduler() = default;
 
 bool CommandScheduler::Initialize(Device& device, const CommandPoolConfig& config)
 {
-    m_directQueue = make_unique<CommandQueue>();
-    m_copyQueue = make_unique<CommandQueue>();
-    m_computeQueue = make_unique<CommandQueue>();
-
-    ReturnIfFalse(m_directQueue->Initialize(device, CommandType::Direct, config.direct));
-    ReturnIfFalse(m_copyQueue->Initialize(device, CommandType::Copy, config.copy));
-    ReturnIfFalse(m_computeQueue->Initialize(device, CommandType::Compute, config.compute));
+    ReturnIfFalse(m_directQueue.Initialize(device, CommandType::Direct, config.direct));
+    ReturnIfFalse(m_copyQueue.Initialize(device, CommandType::Copy, config.copy));
+    ReturnIfFalse(m_computeQueue.Initialize(device, CommandType::Compute, config.compute));
     
     return true;
 }
@@ -59,9 +50,9 @@ void CommandScheduler::WaitIdle(CommandType type)
 
 void CommandScheduler::WaitIdle()
 {
-    m_directQueue->WaitIdle();
-    m_copyQueue->WaitIdle();
-    m_computeQueue->WaitIdle();
+    m_directQueue.WaitIdle();
+    m_copyQueue.WaitIdle();
+    m_computeQueue.WaitIdle();
 }
 
 bool CommandScheduler::IsFenceComplete(CommandType type, uint64_t fenceValue)
@@ -77,30 +68,30 @@ ID3D12CommandQueue* CommandScheduler::GetCommandQueue(CommandType type)
     return GetQueue(type)->GetQueue();
 }
 
-CommandQueue* CommandScheduler::GetQueue(CommandType type)
+CommandQueue* CommandScheduler::GetQueue(CommandType type) noexcept
 {
     switch (type)
     {
-    case CommandType::Direct: return m_directQueue.get();
-    case CommandType::Copy: return m_copyQueue.get();
-    case CommandType::Compute: return m_computeQueue.get();
-    default:
-        return nullptr;
+    case CommandType::Direct: return &m_directQueue;
+    case CommandType::Copy: return &m_copyQueue;
+    case CommandType::Compute: return &m_computeQueue;
     }
+
+    return nullptr;
 }
 
 QueueFences CommandScheduler::GetLastSubmittedFences() const noexcept
 {
     return QueueFences{
-        m_directQueue->GetLastSubmittedFence(),
-        m_copyQueue->GetLastSubmittedFence(),
-        m_computeQueue->GetLastSubmittedFence()};
+        m_directQueue.GetLastSubmittedFence(),
+        m_copyQueue.GetLastSubmittedFence(),
+        m_computeQueue.GetLastSubmittedFence()};
 }
 
 QueueFences CommandScheduler::GetCompletedFences() const noexcept
 {
     return QueueFences{
-        m_directQueue->GetCompletedFence(),
-        m_copyQueue->GetCompletedFence(),
-        m_computeQueue->GetCompletedFence() };
+        m_directQueue.GetCompletedFence(),
+        m_copyQueue.GetCompletedFence(),
+        m_computeQueue.GetCompletedFence() };
 }

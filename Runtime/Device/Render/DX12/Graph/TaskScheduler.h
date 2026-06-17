@@ -19,7 +19,7 @@ struct TaskEntry
 class TaskScheduler
 {
 public:
-    TaskScheduler(CommandScheduler* cmdScheduler);
+    TaskScheduler(CommandScheduler& cmdScheduler);
     ~TaskScheduler();
 
     TaskHandle AllocateHandle();
@@ -37,7 +37,7 @@ private:
     void RemoveTask(TaskHandle handle, TaskEntry& task);
 
 private:
-    CommandScheduler* m_cmdScheduler{ nullptr };
+    CommandScheduler& m_cmdScheduler;
     HandlePool<TaskEntry, struct TaskTag> m_tasks;
     std::vector<TaskHandle> m_executionOrder;
     uint32_t m_nextId{ 1 };

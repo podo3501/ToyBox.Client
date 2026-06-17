@@ -1,5 +1,4 @@
 #pragma once
-#include "GameClient/Service/Render/Repository/Texture/ITextureProvider.h"
 #include "TextureLoadRequest.h"
 #include <queue>
 
@@ -21,21 +20,21 @@ enum class DefaultTextureType
     Count
 };
 
-class TextureProvider : public ITextureProvider
+class TextureProvider
 {
 public:
     ~TextureProvider();
-    TextureProvider(Device& device, DescriptorFactory* descFactory, TaskScheduler* taskScheduler, ResourceFactory* resFactory);
-    virtual shared_ptr<ITextureResource> CreateTextureResource(const TextureDesc& desc) override;
-    virtual bool LoadFromAsset(std::shared_ptr<ITextureResource> resource, std::shared_ptr<TextureAsset> asset) override;
+    TextureProvider(Device& device, DescriptorFactory& descFactory, TaskScheduler* taskScheduler, ResourceFactory& resFactory);
+    shared_ptr<TextureResource> CreateTextureResource(const TextureDesc& desc);
+    bool LoadFromAsset(std::shared_ptr<TextureResource> resource, std::shared_ptr<TextureAsset> asset);
 
     bool Initialize(ShaderProvider* shaderProvider);
     void Update(size_t uploadBudgetBytes);
-    std::shared_ptr<ITextureResource> GetDefaultTexture(DefaultTextureType type) const;
+    std::shared_ptr<TextureResource> GetDefaultTexture(DefaultTextureType type) const;
 
 private:
     bool CreateBuiltinTextures();
-    std::shared_ptr<ITextureResource> CreateDefaultTexture(const TextureDesc& desc, std::shared_ptr<TextureAsset> asset);
+    std::shared_ptr<TextureResource> CreateDefaultTexture(const TextureDesc& desc, std::shared_ptr<TextureAsset> asset);
     std::shared_ptr<TextureAsset> CreateColorAsset(uint32_t pixelColor);
 
     unique_ptr<MipGenerator> m_mipGenerator;
@@ -44,5 +43,5 @@ private:
     std::queue<TextureLoadRequest> m_pending;
 
     std::unordered_map<DefaultTextureType, std::shared_ptr<TextureAsset>> m_defaultAssets;
-    std::unordered_map<DefaultTextureType, std::shared_ptr<ITextureResource>> m_defaultTextures;
+    std::unordered_map<DefaultTextureType, std::shared_ptr<TextureResource>> m_defaultTextures;
 };

@@ -3,7 +3,12 @@
 #include <d3d12.h>
 #include "CommandType.h"
 
-struct QueueDependency;
+struct QueueDependency
+{
+    CommandType type;
+    uint64_t fenceValue;
+};
+
 class Device;
 
 using Microsoft::WRL::ComPtr;
@@ -13,6 +18,12 @@ class CommandList
 public:
     ~CommandList();
     CommandList();
+
+    CommandList(const CommandList&) = delete;
+    CommandList& operator=(const CommandList&) = delete;
+    CommandList(CommandList&&) noexcept = default;
+    CommandList& operator=(CommandList&&) noexcept = default;
+
     bool Initialize(Device& device, CommandType type);
     void Reset();
     void Close();

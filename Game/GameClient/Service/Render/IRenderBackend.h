@@ -7,7 +7,6 @@ struct IMeshResource;
 struct IMaterialResource;
 struct ShaderAsset;
 struct TextureAsset;
-struct ITextureProvider;
 struct IMeshProvider;
 struct IMaterialProvider;
 struct ShaderRegisterDesc;
@@ -36,7 +35,6 @@ struct IRenderBackend
 	virtual void Render() = 0;
 	virtual void WaitIdle() = 0;
 
-	virtual ITextureProvider* GetTextureProvider() = 0;
 	virtual IMeshProvider* GetMeshProvider() = 0;
 	virtual IMaterialProvider* GetMaterialProvider() = 0;
 };

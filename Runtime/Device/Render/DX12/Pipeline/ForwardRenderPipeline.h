@@ -11,14 +11,14 @@ class ForwardRenderPipeline
 public:
     ~ForwardRenderPipeline();
     ForwardRenderPipeline(Renderers* renderers, SwapChainPresenter* swapChain,
-        DescriptorFactory* descFactory, ShadowResource* shadowRes);
+        DescriptorFactory& descFactory, ShadowResource* shadowRes);
     void Render(CommandList& cmd, const DrawPacket& drawPacket, const FrameData& frame);
 
 private:
     void BuildGraph(Renderers* renderers);
 
     SwapChainPresenter* m_swapChain{ nullptr };
-    DescriptorFactory* m_descFactory{ nullptr };
+    DescriptorFactory& m_descFactory;
     ShadowResource* m_shadowRes{ nullptr };
 
     RenderGraph m_graph;

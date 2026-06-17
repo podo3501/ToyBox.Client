@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "DescriptorFactory.h"
-#include "DescriptorAllocator.h"
 #include "Core/Device.h"
 #include "Core/D3D12Conversions.h"
 #include "Resource/Texture/TextureResource.h"
@@ -15,11 +14,8 @@ DescriptorFactory::DescriptorFactory(Device& device) :
 
 bool DescriptorFactory::Initialize(const DescriptorConfig& config)
 {
-    m_srvAllocator = make_unique<DescriptorAllocator>();
-    ReturnIfFalse(m_srvAllocator->Initialize(m_device, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, config.srvCount));
-
-    m_dsvAllocator = make_unique<DescriptorAllocator>();
-    ReturnIfFalse(m_dsvAllocator->Initialize(m_device, D3D12_DESCRIPTOR_HEAP_TYPE_DSV, config.dsvCount));
+    ReturnIfFalse(m_srvAllocator.Initialize(m_device, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, config.srvCount));
+    ReturnIfFalse(m_dsvAllocator.Initialize(m_device, D3D12_DESCRIPTOR_HEAP_TYPE_DSV, config.dsvCount));
 
     return true;
 }
@@ -28,7 +24,7 @@ UINT DescriptorFactory::CreateBufferSRV(const Resource& resBuffer, UINT elementC
 {
     auto srvDesc = CreateStructuredBufferSRVDesc(elementCount, elementStride);
 
-    UINT index = m_srvAllocator->Allocate();
+    UINT index = m_srvAllocator.Allocate();
     if (index == UINT_MAX)
         return UINT_MAX;
 
@@ -47,7 +43,7 @@ UINT DescriptorFactory::CreateTextureSRV(const Resource& res, DXGI_FORMAT format
     srvDesc.Texture2D.MostDetailedMip = 0;
     srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
 
-    UINT Index = m_srvAllocator->Allocate();
+    UINT Index = m_srvAllocator.Allocate();
     if (Index == UINT_MAX) return UINT_MAX;
 
     m_device->CreateShaderResourceView(res.Get(), &srvDesc, GetSrvCpuHandle(Index));
@@ -65,7 +61,7 @@ UINT DescriptorFactory::CreateTextureDSV(const Resource& res, DXGI_FORMAT format
     dsvDesc.Flags = D3D12_DSV_FLAG_NONE;
 
     // 앞서 설계한 DSV 전용 할당자(m_dsvAllocator)에서 공간 확보
-    UINT index = m_dsvAllocator->Allocate();
+    UINT index = m_dsvAllocator.Allocate();
     if (index == UINT_MAX) return UINT_MAX;
 
     m_device->CreateDepthStencilView(res.Get(), &dsvDesc, GetDsvHandle(index));
@@ -140,7 +136,7 @@ UINT DescriptorFactory::CreateMipSRV(const Resource& res, DXGI_FORMAT format, UI
     srvDesc.Texture2D.MipLevels = 1;  // 무조건 1개 밉 레벨 영역만 타겟팅
     //srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
 
-    UINT index = m_srvAllocator->AllocateTransient();
+    UINT index = m_srvAllocator.AllocateTransient();
     if (index == UINT_MAX) return UINT_MAX;
 
     m_device->CreateShaderResourceView(res.Get(), &srvDesc, GetSrvCpuHandle(index));
@@ -154,7 +150,7 @@ UINT DescriptorFactory::CreateMipUAV(const Resource& res, DXGI_FORMAT format, UI
     uavDesc.ViewDimension = D3D12_UAV_DIMENSION_TEXTURE2D;
     uavDesc.Texture2D.MipSlice = mipLevel;
 
-    UINT index = m_srvAllocator->AllocateTransient();
+    UINT index = m_srvAllocator.AllocateTransient();
     if (index == UINT_MAX) return UINT_MAX;
 
     m_device->CreateUnorderedAccessView(res.Get(), nullptr, &uavDesc, GetSrvCpuHandle(index));
@@ -163,14 +159,14 @@ UINT DescriptorFactory::CreateMipUAV(const Resource& res, DXGI_FORMAT format, UI
 
 D3D12_CPU_DESCRIPTOR_HANDLE DescriptorFactory::GetDsvHandle(UINT dsvIndex)
 {
-    return m_dsvAllocator->GetCpuHandle(dsvIndex);
+    return m_dsvAllocator.GetCpuHandle(dsvIndex);
 }
 
 D3D12_CPU_DESCRIPTOR_HANDLE DescriptorFactory::GetSrvCpuHandle(UINT index)
 {
-    return m_srvAllocator->GetCpuHandle(index);
+    return m_srvAllocator.GetCpuHandle(index);
 }
 D3D12_GPU_DESCRIPTOR_HANDLE DescriptorFactory::GetSrvGpuHandle(UINT index)
 {
-    return m_srvAllocator->GetGpuHandle(index);
+    return m_srvAllocator.GetGpuHandle(index);
 }

@@ -10,19 +10,14 @@ bool DescriptorAllocator::Initialize(Device& device, D3D12_DESCRIPTOR_HEAP_TYPE 
 {
     m_capacity = maxCount;
     m_allocated = 0;
-
-    D3D12_DESCRIPTOR_HEAP_DESC desc = {};
-    desc.NumDescriptors = maxCount;
-    desc.Type = type;
     m_shaderVisible = (type == D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
-    if (m_shaderVisible)
-        desc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-    else // DSV 나 RTV 힙일 때는 FLAG_NONE (0) 즉, OMSetRenderTargets 등의 API가 사용하며 Shader가 직접 접근하지 않음.
-        desc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-
-    if (FAILED(device->CreateDescriptorHeap(&desc, IID_PPV_ARGS(&m_heap))))
-        return false;
+    m_heap = device.CreateDescriptorHeap(
+        type,
+        maxCount,
+        m_shaderVisible
+        ? D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE
+        : D3D12_DESCRIPTOR_HEAP_FLAG_NONE);
 
     m_descriptorSize = device->GetDescriptorHandleIncrementSize(type);
     m_cpuStart = m_heap->GetCPUDescriptorHandleForHeapStart();

@@ -6,7 +6,7 @@
 #include "TextureResource.h"
 
 TextureProvider::~TextureProvider() = default;
-TextureProvider::TextureProvider(Device& device, DescriptorFactory* descFactory, TaskScheduler* taskScheduler, ResourceFactory* resFactory) :
+TextureProvider::TextureProvider(Device& device, DescriptorFactory& descFactory, TaskScheduler* taskScheduler, ResourceFactory& resFactory) :
     m_mipGenerator{ make_unique<MipGenerator>(device) },
     m_builder{ make_unique<TextureGraphBuilder>(taskScheduler, resFactory, m_mipGenerator.get(), descFactory) }
 {}
@@ -19,7 +19,7 @@ bool TextureProvider::Initialize(ShaderProvider* shaderProvider)
     return true;
 }
 
-shared_ptr<ITextureResource> TextureProvider::CreateTextureResource(const TextureDesc& desc)
+shared_ptr<TextureResource> TextureProvider::CreateTextureResource(const TextureDesc& desc)
 {
     return make_shared<TextureResource>(desc);
 }
@@ -66,7 +66,7 @@ bool TextureProvider::CreateBuiltinTextures()
     return true;
 }
 
-std::shared_ptr<ITextureResource> TextureProvider::CreateDefaultTexture(
+std::shared_ptr<TextureResource> TextureProvider::CreateDefaultTexture(
     const TextureDesc& desc,
     std::shared_ptr<TextureAsset> asset)
 {
@@ -80,7 +80,7 @@ std::shared_ptr<ITextureResource> TextureProvider::CreateDefaultTexture(
     return texRes;
 }
 
-std::shared_ptr<ITextureResource> TextureProvider::GetDefaultTexture(DefaultTextureType type) const
+std::shared_ptr<TextureResource> TextureProvider::GetDefaultTexture(DefaultTextureType type) const
 {
     auto it = m_defaultTextures.find(type);
     if (it != m_defaultTextures.end())
@@ -99,7 +99,7 @@ static size_t EstimateBytes(const TextureAsset& asset, const TextureDesc& desc)
 }
 
 bool TextureProvider::LoadFromAsset(
-    std::shared_ptr<ITextureResource> resource, 
+    std::shared_ptr<TextureResource> resource, 
     std::shared_ptr<TextureAsset> asset)
 {
     auto res = std::static_pointer_cast<TextureResource>(resource);

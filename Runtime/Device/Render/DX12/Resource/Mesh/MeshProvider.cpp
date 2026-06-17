@@ -8,7 +8,7 @@
 #include "Helpers/CommonHelpers.h"
 
 MeshProvider::~MeshProvider() = default;
-MeshProvider::MeshProvider(DescriptorFactory* descFactory, TaskScheduler* taskScheduler, ResourceFactory* resFactory) :
+MeshProvider::MeshProvider(DescriptorFactory& descFactory, TaskScheduler* taskScheduler, ResourceFactory& resFactory) :
     m_builder{ make_unique<MeshGraphBuilder>(taskScheduler, resFactory, descFactory) }
 {}
 

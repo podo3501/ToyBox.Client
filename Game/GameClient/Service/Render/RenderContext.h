@@ -19,7 +19,6 @@ struct MeshDesc;
 struct MeshMaterialDesc;
 struct ResolvedDrawData;
 struct DefaultMaterialDescs;
-class TextureRepository;
 class MaterialRepository;
 class MeshRepository;
 class ShaderRepository;
@@ -54,7 +53,6 @@ private:
 
 	IRenderBackend* m_backend{ nullptr };
 	unique_ptr<MeshRepository> m_meshRepository;
-	unique_ptr<TextureRepository> m_texRepository;
 	unique_ptr<MaterialRepository> m_matRepository;
 
 	//default(built in)

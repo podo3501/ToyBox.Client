@@ -14,7 +14,7 @@ class MeshProvider : public IMeshProvider
 {
 public:
     ~MeshProvider();
-    MeshProvider(DescriptorFactory* descFactory, TaskScheduler* taskScheduler, ResourceFactory* resFactory);
+    MeshProvider(DescriptorFactory& descFactory, TaskScheduler* taskScheduler, ResourceFactory& resFactory);
     virtual shared_ptr<IMeshResource> CreateMeshResource() override;
     virtual bool LoadFromAsset(std::shared_ptr<IMeshResource> resource, std::shared_ptr<MeshAsset> asset) override;
 

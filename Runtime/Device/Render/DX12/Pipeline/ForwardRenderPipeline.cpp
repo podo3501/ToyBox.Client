@@ -14,7 +14,7 @@
 
 ForwardRenderPipeline::~ForwardRenderPipeline() = default;
 ForwardRenderPipeline::ForwardRenderPipeline(Renderers* renderers, SwapChainPresenter* swapChain,
-    DescriptorFactory* descFactory, ShadowResource* shadowRes) :
+    DescriptorFactory& descFactory, ShadowResource* shadowRes) :
     m_swapChain{ swapChain },
     m_descFactory{ descFactory },
     m_shadowRes{ shadowRes }
@@ -75,8 +75,8 @@ void ForwardRenderPipeline::Render(CommandList& cmd, const DrawPacket& drawPacke
     ctx.frame = frame;
     ctx.drawPacket = drawPacket;
 
-    auto srvAllocator = m_descFactory->GetSrvAllocator();
-    cmd.SetBindlessHeap(srvAllocator->GetHeap());
+    auto& srvAllocator = m_descFactory.GetSrvAllocator();
+    cmd.SetBindlessHeap(srvAllocator.GetHeap());
 
     m_graph.Execute(cmd, m_compiledTasks, ctx);
 }

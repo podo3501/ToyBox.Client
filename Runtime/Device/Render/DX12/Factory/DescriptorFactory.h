@@ -1,5 +1,6 @@
 #pragma once
 #include "d3dx12.h"
+#include "DescriptorAllocator.h"
 
 struct DescriptorConfig;
 class Device;
@@ -18,8 +19,8 @@ public:
     UINT CreateTextureSRV(const Resource& res, DXGI_FORMAT format, UINT mipLevels = 1);
     UINT CreateTextureDSV(const Resource& res, DXGI_FORMAT format, UINT mipSlice = 0);
     bool CreateTextureViews(TextureResource* texRes, bool generateMips);
-    DescriptorAllocator* GetSrvAllocator() { return m_srvAllocator.get(); }
-    DescriptorAllocator* GetDsvAllocator() { return m_dsvAllocator.get(); }
+    DescriptorAllocator& GetSrvAllocator() noexcept { return m_srvAllocator; }
+    DescriptorAllocator& GetDsvAllocator() noexcept { return m_dsvAllocator; }
 
     D3D12_CPU_DESCRIPTOR_HANDLE GetDsvHandle(UINT index); //dsv는 gpu 핸들 api를 제공하지 않는다.
     D3D12_CPU_DESCRIPTOR_HANDLE GetSrvCpuHandle(UINT index);
@@ -31,6 +32,6 @@ private:
     UINT CreateMipUAV(const Resource& res, DXGI_FORMAT format, UINT mipLevel);
 
     Device& m_device;
-    unique_ptr<DescriptorAllocator> m_srvAllocator;
-    unique_ptr<DescriptorAllocator> m_dsvAllocator;
+    DescriptorAllocator m_srvAllocator;
+    DescriptorAllocator m_dsvAllocator;
 };

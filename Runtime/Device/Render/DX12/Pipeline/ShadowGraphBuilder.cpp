@@ -13,7 +13,7 @@ ShadowGraphBuilder::~ShadowGraphBuilder() = default;
 
 ShadowGraphBuilder::ShadowGraphBuilder(
     ShadowRenderer* shadowRenderer, 
-    DescriptorFactory* descFactory,
+    DescriptorFactory& descFactory,
     ShadowResource* shadowRes,
     RGHandle hShadow) :
     m_shadowRenderer{ shadowRenderer },
@@ -30,12 +30,12 @@ void ShadowGraphBuilder::Build(RenderGraph& graph)
     shadow.gpuExecute =
         [
             shadowRenderer = m_shadowRenderer,
-            descFactory = m_descFactory,
+            &descFactory = m_descFactory,
             shadowRes = m_shadowRes
         ]
         (CommandList& cmd, TaskContext& ctx)
         {
-            auto dsv = descFactory->GetDsvHandle(shadowRes->GetDsvIndex());
+            auto dsv = descFactory.GetDsvHandle(shadowRes->GetDsvIndex());
 
             CommandUtils::SetViewport(cmd, 2048.f, 2048.f);
             CommandUtils::SetScissor(cmd, 2048, 2048);

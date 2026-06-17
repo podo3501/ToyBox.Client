@@ -36,7 +36,7 @@ private:
     uint64_t m_fenceValue{ 0 };
     HANDLE m_event{ nullptr };
 
-    vector<unique_ptr<CommandList>> m_pool;
+    vector<CommandList> m_pool;
     size_t m_next{ 0 }; //command pool에서 다음에 어떤 command를 사용할지.
     uint64_t m_lastSubmittedFence{ 0 }; //여기까지 명령어가 들어가 있는 펜스값. GetCompletedValue() 값은 실제로 다 끝난 펜스값.
 
