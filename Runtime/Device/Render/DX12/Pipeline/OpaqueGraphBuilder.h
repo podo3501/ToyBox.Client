@@ -12,16 +12,16 @@ public:
     ~OpaqueGraphBuilder();
     OpaqueGraphBuilder() = delete;
     OpaqueGraphBuilder(
-        SurfaceRenderer* surfRenderer, 
-        SwapChainPresenter* swapChain,
-        ShadowResource* shadowRes,
+        SurfaceRenderer& surfRenderer, 
+        SwapChainPresenter& swapChain,
+        ShadowResource& shadowRes,
         RGHandle hBb, RGHandle hShadow);
     void Build(RenderGraph& graph);
     
 private:
-    SurfaceRenderer* m_surfRenderer{ nullptr };
-    SwapChainPresenter* m_swapChain{ nullptr };
-    ShadowResource* m_shadowRes{ nullptr };
+    SurfaceRenderer& m_surfRenderer;
+    SwapChainPresenter& m_swapChain;
+    ShadowResource&m_shadowRes;
     RGHandle m_hBb;
     RGHandle m_hShadow;
 };

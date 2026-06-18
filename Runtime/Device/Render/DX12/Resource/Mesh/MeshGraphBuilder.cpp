@@ -6,7 +6,6 @@
 #include "Resource/Resource.h"
 #include "Factory/DescriptorFactory.h"
 #include "Factory/ResourceFactory.h"
-#include "MeshRegistry.h"
 #include "MeshLoadRequest.h"
 #include "Helpers/CommonHelpers.h"
 #include "GameClient/Service/Asset/Assets/MeshAsset.h"
@@ -29,12 +28,11 @@ struct MeshFinalizeEntry
 };
 
 MeshGraphBuilder::~MeshGraphBuilder() = default;
-MeshGraphBuilder::MeshGraphBuilder(TaskScheduler* taskScheduler, ResourceFactory& resFactory,
+MeshGraphBuilder::MeshGraphBuilder(TaskScheduler& taskScheduler, ResourceFactory& resFactory,
     DescriptorFactory& descFactory) :
     m_taskScheduler{ taskScheduler },
     m_resFactory{ resFactory },
-    m_descFactory{ descFactory },
-    m_registry{ make_unique<MeshRegistry>() }
+    m_descFactory{ descFactory }
 {}
 
 void MeshGraphBuilder::LoadMeshes(
@@ -53,7 +51,7 @@ void MeshGraphBuilder::LoadMeshes(
         RGHandle hIb = CreateRGHandle();
         RGHandle hMesh = CreateRGHandle();
 
-        m_registry->Register(hMesh.id, req.resource);
+        m_registry.Register(hMesh.id, req.resource);
 
         auto vbRes = m_resFactory.CreateBufferResource(static_cast<UINT64>(req.vbBytes));
         auto ibRes = m_resFactory.CreateBufferResource(static_cast<UINT64>(req.ibBytes));
@@ -92,7 +90,7 @@ void MeshGraphBuilder::LoadMeshes(
     auto resCtx = std::make_shared<ResourceContext>();
     resCtx->Set(hUploadRes, m_resFactory.CreateUploadResource(totalUploadSize));
 
-    m_taskScheduler->Submit(compiledTasks, resCtx);
+    m_taskScheduler.Submit(compiledTasks, resCtx);
 }
 
 void MeshGraphBuilder::BuildUploadPass(RenderGraph& graph, std::vector<MeshUploadEntry>& meshUploads, RGHandle hUploadRes)
@@ -136,7 +134,7 @@ void MeshGraphBuilder::BuildFinalizePass(RenderGraph& graph, std::vector<MeshFin
             auto vbHeapIndex = m_descFactory.CreateBufferSRV(vb, mesh.asset->vertexCount, mesh.asset->vertexStride);
             auto ibHeapIndex = m_descFactory.CreateBufferSRV(ib, indexCount, sizeof(uint32_t));
 
-            m_registry->FinalizeMesh(
+            m_registry.FinalizeMesh(
                 mesh.hMesh.id,
                 mesh.asset->format,
                 std::move(vb), vbHeapIndex, vertexCount,

@@ -11,15 +11,15 @@ class ShadowGraphBuilder
 public:
     ~ShadowGraphBuilder();
     ShadowGraphBuilder(
-        ShadowRenderer* shadowRenderer, 
+        ShadowRenderer& shadowRenderer, 
         DescriptorFactory& descFactory,
-        ShadowResource* shadowRes,
+        ShadowResource& shadowRes,
         RGHandle hShadow);
     void Build(RenderGraph& graph);
 
 private:
-    ShadowRenderer* m_shadowRenderer{ nullptr };
+    ShadowRenderer& m_shadowRenderer;
     DescriptorFactory& m_descFactory;
-    ShadowResource* m_shadowRes{ nullptr };
+    ShadowResource& m_shadowRes;
     RGHandle m_hShadow;
 };

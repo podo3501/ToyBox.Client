@@ -4,17 +4,34 @@
 #include "Material/MaterialProvider.h"
 #include "Shader/ShaderProvider.h"
 
+struct ShaderRegisterDesc;
+class Device;
+class DescriptorFactory;
+class ResourceFactory;
+class TaskScheduler;
+
 class ResourceProviders
 {
 public:
 	~ResourceProviders();
-	ResourceProviders(Device& device);
+	ResourceProviders(
+		Device& device,
+		DescriptorFactory& descFactory,
+		ResourceFactory& resFactory,
+		TaskScheduler& taskScheduler);
+
+	bool Initialize(const std::vector<ShaderRegisterDesc>& shaders);
+	void Update(float gpuMs);
+
+	ShaderProvider& GetShaderProvider() { return m_shaderProvider; }
+	MeshProvider& GetMeshProvider() { return m_meshProvider; }
+	MaterialProvider& GetMaterialProvider() { return m_matProvider; }
 
 private:
 	Device& m_device;
 
-	//TextureProvider m_texProvider;
-	//MeshProvider m_meshProvider;
-	//MaterialProvider m_matProvider;
-	//ShaderProvider m_shaderProvider;
+	ShaderProvider m_shaderProvider;
+	TextureProvider m_texProvider;
+	MeshProvider m_meshProvider;
+	MaterialProvider m_matProvider;
 };

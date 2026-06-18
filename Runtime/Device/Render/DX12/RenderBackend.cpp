@@ -1,34 +1,21 @@
 #include "pch.h"
 #include "RenderBackend.h"
-#include "Core/GPUProfiler.h"
-#include "SwapChainPresenter.h"
-#include "Resource/ShadowResource.h"
-#include "Renderer/Renderers.h"
-#include "Scene/RenderScene.h"
-#include "Graph/TaskScheduler.h"
-#include "Pipeline/ForwardRenderPipeline.h"
-#include "Resource/Mesh/MeshProvider.h"
-#include "Resource/Texture/TextureProvider.h"
-#include "Resource/Material/MaterialProvider.h"
-#include "Resource/Shader/ShaderProvider.h"
 #include "Command/CommandList.h"
 #include "Command/CommandListHelpers.h"
 #include <dxgi1_6.h>
 
 using Microsoft::WRL::ComPtr;
 
-struct QuadDrawInfo
-{
-    int textureIndex;
-    Rect dest;
-    Rect source;
-};
-
 RenderBackend::~RenderBackend() = default;
 RenderBackend::RenderBackend(const RenderConfig& config) :
     m_device{ config.enableDebugLayer },
+    m_swapChain{ m_cmdScheduler },
     m_descFactory{ m_device },
     m_resFactory{ m_device },
+    m_taskScheduler{ m_cmdScheduler },
+    m_resProviders{ m_device, m_descFactory, m_resFactory, m_taskScheduler },
+    m_renderers{ m_device, m_resProviders.GetShaderProvider() },
+    m_pipeline{ m_swapChain, m_descFactory },
     m_config{ config }
 {}
 
@@ -43,36 +30,16 @@ bool RenderBackend::Initialize(
     const std::vector<ShaderRegisterDesc>& shaders)
 {
     m_size = wndSize;
+
     ReturnIfFalse(m_cmdScheduler.Initialize(m_device, m_config.commandPools));
-
     SwapChainDesc desc{ hwnd, wndSize, m_config.allowTearing };
-    m_swapChain = make_unique<SwapChainPresenter>(m_cmdScheduler);
-    ReturnIfFalse(m_swapChain->Initialize(m_device, desc));
+    ReturnIfFalse(m_swapChain.Initialize(m_device, desc));
     ReturnIfFalse(m_descFactory.Initialize(m_config.descriptors));
+    ReturnIfFalse(m_profiler.Initialize(m_device, m_cmdScheduler, m_resFactory));
 
-    m_taskScheduler = make_unique<TaskScheduler>(m_cmdScheduler);
-    m_profiler = make_unique<GPUProfiler>();
-    ReturnIfFalse(m_profiler->Initialize(m_device, m_cmdScheduler, m_resFactory));
-
-    //m_resProvider.Initialize()
-
-    m_shaderProvider = make_unique<ShaderProvider>();
-    ReturnIfFalse(m_shaderProvider->Initialize(shaders));
-    m_texProvider = make_unique<TextureProvider>(m_device, m_descFactory, m_taskScheduler.get(), m_resFactory);
-    ReturnIfFalse(m_texProvider->Initialize(m_shaderProvider.get()));
-    m_meshProvider = make_unique<MeshProvider>(m_descFactory, m_taskScheduler.get(), m_resFactory);
-    m_matProvider = make_unique<MaterialProvider>(m_texProvider.get());
-
-    m_scene = make_unique<RenderScene>();
-
-    m_renderers = make_unique<Renderers>(m_device, m_shaderProvider.get());
-    ReturnIfFalse(m_renderers->Initialize(wndSize));
-
-    m_shadowRes = make_unique<ShadowResource>(); //이 클래스는 framereseource 클래스중의 하나. 프레임당 render가 필요한 리소스들.
-    ReturnIfFalse(m_shadowRes->Initialize(m_resFactory, m_descFactory, 2048, 2048));
-
-    m_pipeline = std::make_unique<ForwardRenderPipeline>(m_renderers.get(), m_swapChain.get(),
-        m_descFactory, m_shadowRes.get());
+    ReturnIfFalse(m_resProviders.Initialize(shaders));
+    ReturnIfFalse(m_renderers.Initialize(wndSize));
+    ReturnIfFalse(m_pipeline.Initialize(m_device, Size{ 2048, 2048 }, m_renderers));
     
     return true;
 }
@@ -100,7 +67,7 @@ void RenderBackend::EndFrame()
     assert(m_cmd);
 
     m_cmdScheduler.End();
-    m_swapChain->Present(false);
+    m_swapChain.Present(false);
 
     m_cmd = nullptr;
 }
@@ -115,7 +82,7 @@ void RenderBackend::DrawSurface(
     item.material = matRes;
     item.world = world;
 
-    m_scene->AddSurface(item);
+    m_scene.AddSurface(item);
 }
 
 void RenderBackend::DrawUI(
@@ -128,25 +95,23 @@ void RenderBackend::DrawUI(
     item.material = matRes;
     item.world = world;
 
-    m_scene->AddUI(item);
+    m_scene.AddUI(item);
 }
 
 void RenderBackend::Resize(const Size& size)
 {
-    m_renderers->SetScreenSize(size);
-    m_swapChain->Resize(m_device, size);
+    m_renderers.SetScreenSize(size);
+    m_swapChain.Resize(m_device, size);
 }
 
 void RenderBackend::Update()
 {
-    m_taskScheduler->Execute();
+    m_taskScheduler.Execute();
 
-    m_profiler->Update();
-    float gpuMs = m_profiler->GetGpuFrameTimeMs();
+    m_profiler.Update();
+    float gpuMs = m_profiler.GetGpuFrameTimeMs();
 
-    m_texProvider->Update(ComputeTextureBudget(gpuMs));
-    m_matProvider->Update();
-    m_meshProvider->Update(ComputeMeshBudget(gpuMs));
+    m_resProviders.Update(gpuMs);
 }
 
 void RenderBackend::Render()
@@ -158,65 +123,23 @@ void RenderBackend::Render()
     frame.light = m_lightData;
     frame.camera = m_cameraData;
 
-    m_scene->SortDraws();
+    m_scene.SortDraws();
 
-    m_profiler->BeginFrame(*m_cmd);
-    m_pipeline->Render(*m_cmd, m_scene->BuildDrawPacket(), frame);
-    m_profiler->EndFrame(*m_cmd);
+    m_profiler.BeginFrame(*m_cmd);
+    m_pipeline.Render(*m_cmd, m_scene.BuildDrawPacket(), frame);
+    m_profiler.EndFrame(*m_cmd);
 
     EndFrame();
 
-    m_scene->Clear();
+    m_scene.Clear();
 }
 
 void RenderBackend::Clear(CommandList& cmd, float r, float g, float b, float a)
 {
-    auto rtv = m_swapChain->GetCurrentRTV();
+    auto rtv = m_swapChain.GetCurrentRTV();
 
     float color[4] = { r, g, b, a };
     CommandUtils::ClearRTV(cmd, rtv, color);
-}
-
-size_t RenderBackend::ComputeTextureBudget(float gpuMs)
-{
-    size_t baseBudget = 8 * 1024 * 1024;
-
-    if (gpuMs > 10.0f)
-        baseBudget = size_t(baseBudget * 0.7f);
-    else if (gpuMs < 5.0f)
-        baseBudget = size_t(baseBudget * 1.2f);
-
-    return std::clamp<size_t>(
-        baseBudget,
-        4 * 1024 * 1024,
-        32 * 1024 * 1024
-    );
-}
-
-size_t RenderBackend::ComputeMeshBudget(float gpuMs)
-{
-    size_t baseBudget = 4 * 1024 * 1024; // 4MB
-
-    if (gpuMs > 10.0f)
-        baseBudget = size_t(baseBudget * 0.8f);
-    else if (gpuMs < 5.0f)
-        baseBudget = size_t(baseBudget * 1.25f);
-
-    return std::clamp<size_t>(
-        baseBudget,
-        2 * 1024 * 1024,   // min 2MB
-        16 * 1024 * 1024   // max 16MB
-    );
-}
-
-IMeshProvider* RenderBackend::GetMeshProvider()
-{
-    return m_meshProvider.get();
-}
-
-IMaterialProvider* RenderBackend::GetMaterialProvider()
-{
-    return m_matProvider.get();
 }
 
 //////////////////////////////////////////////////////

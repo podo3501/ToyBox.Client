@@ -1,11 +1,11 @@
 #pragma once
 #include "Graph/RGTypes.h"
+#include "TextureRegistry.h"
 #include "d3dx12.h"
 
 struct TextureLoadRequest;
 struct TextureUploadEntry;
 struct TextureFinalizeEntry;
-class TextureRegistry;
 class TaskScheduler;
 class ResourceFactory;
 class MipGenerator;
@@ -19,8 +19,8 @@ class TextureGraphBuilder
 public:
     ~TextureGraphBuilder();
     TextureGraphBuilder() = delete;
-    TextureGraphBuilder(TaskScheduler* taskScheduler, ResourceFactory& resFactory,
-        MipGenerator* mipGenerator, DescriptorFactory& descFactory);
+    TextureGraphBuilder(TaskScheduler& taskScheduler, ResourceFactory& resFactory,
+        MipGenerator& mipGenerator, DescriptorFactory& descFactory);
 
     void LoadTextures(const std::vector<TextureLoadRequest>& requests);
 
@@ -31,11 +31,11 @@ private:
 
     RGHandle CreateRGHandle();
 
-    TaskScheduler* m_taskScheduler{ nullptr };
-    MipGenerator* m_mipGenerator{ nullptr };
+    TaskScheduler& m_taskScheduler;
+    MipGenerator& m_mipGenerator;
     DescriptorFactory& m_descFactory;
     ResourceFactory& m_resFactory;
 
-    unique_ptr<TextureRegistry> m_registry;
+    TextureRegistry m_registry;
     uint32_t m_nextId{ 1 }; //?!? mesh graph builder에도 있기 때문에 나중에 하나로 합치자.
 };

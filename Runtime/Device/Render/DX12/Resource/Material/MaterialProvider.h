@@ -3,13 +3,12 @@
 
 class MaterialResource;
 class TextureProvider;
-enum class SurfaceType;
 
 class MaterialProvider : public IMaterialProvider
 {
 public:
 	~MaterialProvider();
-	explicit MaterialProvider(TextureProvider* texProvider);
+	explicit MaterialProvider(TextureProvider& texProvider);
 	virtual shared_ptr<IMaterialResource> CreateMaterialResource(const MaterialDesc& matDesc) override;
 	virtual bool LoadFromAsset(std::shared_ptr<IMaterialResource> resource, std::vector<std::shared_ptr<TextureAsset>> texAssets) override;
 	void Update();
@@ -17,6 +16,6 @@ public:
 private:
 	void SetDefaultTextures(MaterialResource* matRes);
 
-	TextureProvider* m_texProvider{ nullptr };
+	TextureProvider& m_texProvider;
 	std::vector<std::shared_ptr<MaterialResource>> m_pendingMaterials;
 };

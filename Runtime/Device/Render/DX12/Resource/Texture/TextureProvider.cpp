@@ -1,20 +1,18 @@
 #include "pch.h"
 #include "TextureProvider.h"
-#include "MipGenerator.h"
 #include "Factory/DescriptorFactory.h"
-#include "TextureGraphBuilder.h"
 #include "TextureResource.h"
 
 TextureProvider::~TextureProvider() = default;
-TextureProvider::TextureProvider(Device& device, DescriptorFactory& descFactory, TaskScheduler* taskScheduler, ResourceFactory& resFactory) :
-    m_mipGenerator{ make_unique<MipGenerator>(device) },
-    m_builder{ make_unique<TextureGraphBuilder>(taskScheduler, resFactory, m_mipGenerator.get(), descFactory) }
+TextureProvider::TextureProvider(Device& device, DescriptorFactory& descFactory, TaskScheduler& taskScheduler, ResourceFactory& resFactory) :
+    m_mipGenerator{ device },
+    m_builder{ taskScheduler, resFactory, m_mipGenerator, descFactory }
 {}
 
-bool TextureProvider::Initialize(ShaderProvider* shaderProvider)
+bool TextureProvider::Initialize(ShaderProvider& shaderProvider)
 {
     ReturnIfFalse(CreateBuiltinTextures());
-    ReturnIfFalse(m_mipGenerator->Initialize(shaderProvider));
+    ReturnIfFalse(m_mipGenerator.Initialize(shaderProvider));
 
     return true;
 }
@@ -43,9 +41,11 @@ std::shared_ptr<TextureAsset> TextureProvider::CreateColorAsset(uint32_t pixelCo
 
 bool TextureProvider::CreateBuiltinTextures()
 {
-    m_defaultAssets[DefaultTextureType::White] = CreateColorAsset(0xFFFFFFFF); // 흰색
-    m_defaultAssets[DefaultTextureType::FlatNormal] = CreateColorAsset(0x8080FFFF); // 평평한 노멀 (128, 128, 255)
-    m_defaultAssets[DefaultTextureType::Orange] = CreateColorAsset(0xFF8000FF);
+    std::array<std::shared_ptr<TextureAsset>, Core::EnumSize<DefaultTextureType>> defaultAssets;
+
+    defaultAssets[Core::ToIndex(DefaultTextureType::White)] = CreateColorAsset(0xFFFFFFFF); // 흰색
+    defaultAssets[Core::ToIndex(DefaultTextureType::FlatNormal)] = CreateColorAsset(0x8080FFFF); // 평평한 노멀 (128, 128, 255)
+    defaultAssets[Core::ToIndex(DefaultTextureType::Orange)] = CreateColorAsset(0xFF8000FF);
 
     struct BuiltinConfig { DefaultTextureType type; const char* name; bool srgb; };
     BuiltinConfig configs[] = {
@@ -57,10 +57,12 @@ bool TextureProvider::CreateBuiltinTextures()
     for (const auto& config : configs)
     {
         TextureDesc desc{ Core::ResourceID::MakeBuiltin(config.name), config.srgb, false };
-        auto tex = CreateDefaultTexture(desc, m_defaultAssets[config.type]);
+
+        auto nType = Core::ToIndex(config.type);
+        auto tex = CreateDefaultTexture(desc, defaultAssets[nType]);
         if (!tex) return false;
 
-        m_defaultTextures[config.type] = tex;
+        m_defaultTextures[nType] = tex;
     }
 
     return true;
@@ -82,11 +84,10 @@ std::shared_ptr<TextureResource> TextureProvider::CreateDefaultTexture(
 
 std::shared_ptr<TextureResource> TextureProvider::GetDefaultTexture(DefaultTextureType type) const
 {
-    auto it = m_defaultTextures.find(type);
-    if (it != m_defaultTextures.end())
-        return it->second;
+    auto idx = Core::ToIndex(type);
+    Assert(idx < m_defaultTextures.size());
 
-    return nullptr; // 혹은 시스템 전체 폴백(Albedo) 리턴
+    return m_defaultTextures[idx];
 }
 
 static size_t EstimateBytes(const TextureAsset& asset, const TextureDesc& desc)
@@ -102,12 +103,11 @@ bool TextureProvider::LoadFromAsset(
     std::shared_ptr<TextureResource> resource, 
     std::shared_ptr<TextureAsset> asset)
 {
+    if (!asset) return false;
+
     auto res = std::static_pointer_cast<TextureResource>(resource);
     auto& texDesc = res->GetDesc();
 
-    if(!asset) 
-        asset = texDesc.srgb ? m_defaultAssets[DefaultTextureType::White] : m_defaultAssets[DefaultTextureType::FlatNormal]; //?!? 지금은 이렇게 하고 나중에는 이 윗단에서 default를 넣어줘야 한다.
-    
     TextureLoadRequest req;
     req.resource = res;
     req.asset = asset;
@@ -138,5 +138,5 @@ void TextureProvider::Update(size_t uploadBudgetBytes)
     if (batch.empty())
         return;
 
-    m_builder->LoadTextures(batch);
+    m_builder.LoadTextures(batch);
 }

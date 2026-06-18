@@ -1,6 +1,5 @@
 ﻿#include "pch.h"
 #include "TextureGraphBuilder.h"
-#include "TextureRegistry.h"
 #include "MipGenerator.h"
 #include "Graph/RenderGraph.h"
 #include "Graph/RenderPass.h"
@@ -31,13 +30,12 @@ struct TextureFinalizeEntry
 };
 
 TextureGraphBuilder::~TextureGraphBuilder() = default;
-TextureGraphBuilder::TextureGraphBuilder(TaskScheduler* taskScheduler, ResourceFactory& resFactory,
-    MipGenerator* mipGenerator, DescriptorFactory& descFactory) :
+TextureGraphBuilder::TextureGraphBuilder(TaskScheduler& taskScheduler, ResourceFactory& resFactory,
+    MipGenerator& mipGenerator, DescriptorFactory& descFactory) :
     m_taskScheduler{ taskScheduler },
     m_resFactory{ resFactory },
     m_mipGenerator{ mipGenerator },
-    m_descFactory{ descFactory },
-    m_registry{ make_unique<TextureRegistry>() }
+    m_descFactory{ descFactory }
 {}
 
 void TextureGraphBuilder::LoadTextures(const std::vector<TextureLoadRequest>& requests)
@@ -52,7 +50,7 @@ void TextureGraphBuilder::LoadTextures(const std::vector<TextureLoadRequest>& re
     for (const auto& req : requests)
     {
         RGHandle hTex = CreateRGHandle();
-        m_registry->Register(hTex.id, req.resource);
+        m_registry.Register(hTex.id, req.resource);
 
         auto& texDesc = req.resource->GetDesc();
         auto mips = ShouldGenerateMips(*req.asset, texDesc.generateMips);
@@ -84,7 +82,7 @@ void TextureGraphBuilder::LoadTextures(const std::vector<TextureLoadRequest>& re
     auto resCtx = std::make_shared<ResourceContext>();
     resCtx->Set(hUploadRes, m_resFactory.CreateUploadResource(totalUploadSize));
 
-    m_taskScheduler->Submit(compiledTasks, resCtx);
+    m_taskScheduler.Submit(compiledTasks, resCtx);
 }
 
 void TextureGraphBuilder::BuildUploadPass(RenderGraph& graph, std::vector<TextureUploadEntry>& textureUploads, RGHandle hUploadRes)
@@ -121,8 +119,8 @@ void TextureGraphBuilder::BuildMipPass(RenderGraph& graph, std::vector<TextureUp
         {
             if (!tex.generateMips) continue;
 
-            auto texRes = m_registry->GetTextureResource(tex.handle.id);
-            m_mipGenerator->GenerateMips(cmd, m_descFactory.GetSrvAllocator(), texRes);
+            auto texRes = m_registry.GetTextureResource(tex.handle.id);
+            m_mipGenerator.GenerateMips(cmd, m_descFactory.GetSrvAllocator(), texRes);
         }
         };
 }
@@ -139,9 +137,8 @@ void TextureGraphBuilder::BuildFinalizePass(RenderGraph& graph, std::vector<Text
 
     finalize.cpuExecute = [this, finalizeEntries](TaskContext& ctx) {
         for (auto& tex : finalizeEntries)
-        {
-            m_registry->FinalizeTexture(tex.handle.id);
-        }
+            m_registry.FinalizeTexture(tex.handle.id);
+
         m_descFactory.GetSrvAllocator().ResetTransient(); //mipmap때 임시로 만든 srv/uav 정리.
         };
 }

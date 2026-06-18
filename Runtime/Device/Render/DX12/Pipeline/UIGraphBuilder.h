@@ -9,10 +9,10 @@ class UIGraphBuilder
 public:
     ~UIGraphBuilder();
     UIGraphBuilder() = delete;
-    UIGraphBuilder(UIRenderer* uiRenderer, RGHandle hBb);
+    UIGraphBuilder(UIRenderer& uiRenderer, RGHandle hBb);
     void Build(RenderGraph& graph);
 
 private:
-    UIRenderer* m_uiRenderer{ nullptr };
+    UIRenderer& m_uiRenderer;
     RGHandle m_hBb;
 };

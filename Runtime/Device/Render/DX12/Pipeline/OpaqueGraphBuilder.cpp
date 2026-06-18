@@ -11,9 +11,9 @@
 
 OpaqueGraphBuilder::~OpaqueGraphBuilder() = default;
 OpaqueGraphBuilder::OpaqueGraphBuilder(
-    SurfaceRenderer* surfRenderer, 
-    SwapChainPresenter* swapChain,
-    ShadowResource* shadowRes,
+    SurfaceRenderer& surfRenderer, 
+    SwapChainPresenter& swapChain,
+    ShadowResource& shadowRes,
     RGHandle hBb, RGHandle hShadow) :
     m_surfRenderer{ surfRenderer },
     m_swapChain{ swapChain },
@@ -30,20 +30,20 @@ void OpaqueGraphBuilder::Build(RenderGraph& graph)
     opaque.writes.push_back({ m_hBb, RGAccess::RTV });
     opaque.gpuExecute =
         [
-            swapChain = m_swapChain,
-            surfRenderer = m_surfRenderer,
-            shadowRes = m_shadowRes
+            &swapChain = m_swapChain,
+            &surfRenderer = m_surfRenderer,
+            &shadowRes = m_shadowRes
         ]
         (CommandList& cmd, TaskContext& ctx)
         {
-            swapChain->SetRenderTarget(cmd);
-            swapChain->Clear(cmd, 0.13f, 0.13f, 0.16f, 1.0f);
+            swapChain.SetRenderTarget(cmd);
+            swapChain.Clear(cmd, 0.13f, 0.13f, 0.16f, 1.0f);
 
-            surfRenderer->BindRootSignature(cmd);
-            surfRenderer->PrepareFrame(
+            surfRenderer.BindRootSignature(cmd);
+            surfRenderer.PrepareFrame(
                 ctx.frame.light,
                 ctx.frame.camera,
-                shadowRes->GetSrvIndex()
+                shadowRes.GetSrvIndex()
             );
 
             for (auto& item : ctx.drawPacket.surface)
@@ -51,8 +51,8 @@ void OpaqueGraphBuilder::Build(RenderGraph& graph)
                 auto mesh = static_cast<MeshResource*>(item.mesh.get());
                 auto material = static_cast<MaterialResource*>(item.material.get());
 
-                surfRenderer->BindPipeline(cmd, material->GetPipelineState());
-                surfRenderer->Draw(cmd, *mesh, *material, item.world);
+                surfRenderer.BindPipeline(cmd, material->GetPipelineState());
+                surfRenderer.Draw(cmd, *mesh, *material, item.world);
             }
         };
 }

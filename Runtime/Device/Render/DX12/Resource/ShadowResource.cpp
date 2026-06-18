@@ -1,11 +1,14 @@
 #include "pch.h"
 #include "ShadowResource.h"
+#include "Core/Device.h"
 #include "Factory/ResourceFactory.h"
 #include "Factory/DescriptorFactory.h"
+#include "Resource/Texture/TextureUtils.h"
+#include "Core/Foundation/Geometry2D.h"
 
-bool ShadowResource::Initialize(ResourceFactory& resFactory, DescriptorFactory& factory, UINT width, UINT height)
+bool ShadowResource::Initialize(Device& device, DescriptorFactory& factory, const Size& shadowMapSize)
 {
-	m_resource = resFactory.CreateShadowResource(width, height);
+	m_resource = CreateShadowResource(device, shadowMapSize);
 	if (!m_resource) return false;
 
 	m_dsvIndex = factory.CreateTextureDSV(m_resource, DXGI_FORMAT_D32_FLOAT);
@@ -15,4 +18,21 @@ bool ShadowResource::Initialize(ResourceFactory& resFactory, DescriptorFactory& 
 		return false;
 
 	return true;
+}
+
+Resource ShadowResource::CreateShadowResource(Device& device, const Size& shadowMapSize)
+{
+    auto desc = CreateTextureDescriptor(shadowMapSize.width, shadowMapSize.height, DXGI_FORMAT_R32_TYPELESS);
+    desc.Flags |= D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
+
+    D3D12_CLEAR_VALUE clearValue{};
+    clearValue.Format = DXGI_FORMAT_D32_FLOAT;
+    clearValue.DepthStencil.Depth = 1.0f;
+    clearValue.DepthStencil.Stencil = 0;
+
+    return device.CreateResource(
+        desc,
+        D3D12_HEAP_TYPE_DEFAULT,
+        D3D12_RESOURCE_STATE_DEPTH_WRITE,
+        &clearValue);
 }

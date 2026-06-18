@@ -16,5 +16,5 @@ public:
 private:
     void SortDrawList(MaterialDomain domain, std::vector<DrawItem>& drawList);
 
-    std::array<std::vector<DrawItem>, static_cast<size_t>(MaterialDomain::Count)> m_drawLists;
+    std::array<std::vector<DrawItem>, Core::EnumSize<MaterialDomain>> m_drawLists;
 };

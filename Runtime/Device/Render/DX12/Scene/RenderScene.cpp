@@ -24,16 +24,16 @@ DrawPacket RenderScene::BuildDrawPacket()
 {
     DrawPacket packet;
 
-    packet.surface = m_drawLists[static_cast<size_t>(MaterialDomain::Surface)];
-    packet.debugSurface = m_drawLists[static_cast<size_t>(MaterialDomain::DebugSurface)];
-    packet.ui = m_drawLists[static_cast<size_t>(MaterialDomain::UserInterface)];
+    packet.surface = m_drawLists[Core::ToIndex(MaterialDomain::Surface)];
+    packet.debugSurface = m_drawLists[Core::ToIndex(MaterialDomain::DebugSurface)];
+    packet.ui = m_drawLists[Core::ToIndex(MaterialDomain::UserInterface)];
 
     return packet;
 }
 
 void RenderScene::SortDraws()
 {
-    for (size_t i = 0; i < static_cast<size_t>(MaterialDomain::Count); ++i)
+    for (size_t i = 0; i < Core::EnumSize<MaterialDomain>; ++i)
     {
         SortDrawList(
             static_cast<MaterialDomain>(i),

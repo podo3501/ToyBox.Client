@@ -41,6 +41,8 @@ public:
     D3D_FEATURE_LEVEL GetFeatureLevel() const { return m_featureLevel; }
 
 private:
+    float a[10000000];
+
     bool CreateFactory(bool enableDebug);
     bool CreateDevice();
     

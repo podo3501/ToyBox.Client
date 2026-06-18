@@ -1,5 +1,6 @@
 #pragma once
 #include "Graph/RGTypes.h"
+#include "MeshRegistry.h"
 #include "d3dx12.h"
 
 struct MeshAsset;
@@ -10,7 +11,6 @@ class RenderGraph;
 class TaskScheduler;
 class ResourceFactory;
 class DescriptorFactory;
-class MeshRegistry;
 
 using Microsoft::WRL::ComPtr;
 
@@ -19,7 +19,7 @@ class MeshGraphBuilder
 public:
     ~MeshGraphBuilder();
     MeshGraphBuilder() = delete;
-    MeshGraphBuilder(TaskScheduler* taskScheduler, ResourceFactory& resFactory, DescriptorFactory& descFactory);
+    MeshGraphBuilder(TaskScheduler& taskScheduler, ResourceFactory& resFactory, DescriptorFactory& descFactory);
     void LoadMeshes(const std::vector<MeshLoadRequest>& requests);
 
 private:
@@ -28,10 +28,10 @@ private:
 
     RGHandle CreateRGHandle();
 
-    TaskScheduler* m_taskScheduler{ nullptr };
+    TaskScheduler& m_taskScheduler;
     ResourceFactory& m_resFactory;
     DescriptorFactory& m_descFactory;
 
-    unique_ptr<MeshRegistry> m_registry;
+    MeshRegistry m_registry;
     uint32_t m_nextId{ 1 };
 };

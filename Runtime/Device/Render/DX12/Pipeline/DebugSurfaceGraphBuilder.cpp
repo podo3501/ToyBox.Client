@@ -8,7 +8,7 @@
 #include "Resource/Material/GridMaterialResource.h"
 
 DebugSurfaceGraphBuilder::~DebugSurfaceGraphBuilder() = default;
-DebugSurfaceGraphBuilder::DebugSurfaceGraphBuilder(DebugSurfaceRenderer* debugSurfRenderer, RGHandle hBb) :
+DebugSurfaceGraphBuilder::DebugSurfaceGraphBuilder(DebugSurfaceRenderer& debugSurfRenderer, RGHandle hBb) :
     m_debugSurfRenderer{ debugSurfRenderer },
     m_hBb{ hBb }
 {}
@@ -20,20 +20,20 @@ void DebugSurfaceGraphBuilder::Build(RenderGraph& graph)
     grid.writes.push_back({ m_hBb, RGAccess::RTV });
     grid.gpuExecute =
         [
-            debugSurfRenderer = m_debugSurfRenderer
+            &debugSurfRenderer = m_debugSurfRenderer
         ]
         (CommandList& cmd, TaskContext& ctx)
         {
-            debugSurfRenderer->BindRootSignature(cmd);
-            debugSurfRenderer->PrepareFrame(ctx.frame.camera);
+            debugSurfRenderer.BindRootSignature(cmd);
+            debugSurfRenderer.PrepareFrame(ctx.frame.camera);
 
             for (auto& item : ctx.drawPacket.debugSurface)
             {
                 auto mesh = static_cast<MeshResource*>(item.mesh.get());
                 auto material = static_cast<GridMaterialResource*>(item.material.get());
 
-                debugSurfRenderer->BindPipeline(cmd, material->GetPipelineState());
-                debugSurfRenderer->Draw(cmd, *mesh, item.world);
+                debugSurfRenderer.BindPipeline(cmd, material->GetPipelineState());
+                debugSurfRenderer.Draw(cmd, *mesh, item.world);
             }
         };
 }

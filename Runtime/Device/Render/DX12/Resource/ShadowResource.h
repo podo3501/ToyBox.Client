@@ -1,6 +1,8 @@
 #pragma once
 #include "Resource.h"
 
+struct Size;
+class Device;
 class ResourceFactory;
 class DescriptorFactory;
 
@@ -9,8 +11,7 @@ class ShadowResource
 public:
     ShadowResource() = default;
     ~ShadowResource() = default;
-
-    bool Initialize(ResourceFactory& resFactory, DescriptorFactory& factory, UINT width, UINT height);
+    bool Initialize(Device& device, DescriptorFactory& factory, const Size& shadowMapSize);
 
     const Resource& GetResource() const { return m_resource; }
     Resource& GetResource() { return m_resource; }
@@ -19,8 +20,9 @@ public:
     UINT GetSrvIndex() const { return m_srvIndex; } // 읽기용 Bindless 인덱스
 
 private:
-    Resource m_resource;
+    Resource CreateShadowResource(Device& device, const Size& shadowMapSize);
 
+    Resource m_resource;
     UINT m_dsvIndex{ UINT_MAX };
     UINT m_srvIndex{ UINT_MAX };
 };

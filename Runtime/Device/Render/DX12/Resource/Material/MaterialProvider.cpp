@@ -8,7 +8,7 @@
 #include "../Texture/TextureResource.h"
 
 MaterialProvider::~MaterialProvider() = default;
-MaterialProvider::MaterialProvider(TextureProvider* texProvider) :
+MaterialProvider::MaterialProvider(TextureProvider& texProvider) :
 	m_texProvider{ texProvider }
 {}
 
@@ -55,7 +55,7 @@ void MaterialProvider::SetDefaultTextures(MaterialResource* matRes)
     auto defaultTypes = matRes->GetRequiredDefaultTextures();
     for (size_t i = 0; i < defaultTypes.size(); ++i)
     {
-        auto defaultTex = m_texProvider->GetDefaultTexture(defaultTypes[i]);
+        auto defaultTex = m_texProvider.GetDefaultTexture(defaultTypes[i]);
         matRes->SetTexture(static_cast<TextureSlot>(i), defaultTex);
     }
 }
@@ -76,11 +76,11 @@ bool MaterialProvider::LoadFromAsset(
             continue;
 
         auto& texDesc = matDesc.textures[i];
-        auto texRes = m_texProvider->CreateTextureResource(texDesc);
+        auto texRes = m_texProvider.CreateTextureResource(texDesc);
         if (!texRes)
             return false;
 
-        if (!m_texProvider->LoadFromAsset(texRes, texAsset))
+        if (!m_texProvider.LoadFromAsset(texRes, texAsset))
             return false;
 
         matRes->SetTexture(static_cast<TextureSlot>(i), texRes);

@@ -6,7 +6,7 @@
 #include "../d3dx12.h"
 
 PipelineCache::~PipelineCache() = default;
-PipelineCache::PipelineCache(Device& device, ShaderProvider* shaderProvider) :
+PipelineCache::PipelineCache(Device& device, ShaderProvider& shaderProvider) :
     m_device{ device },
     m_shaderProvider{ shaderProvider }
 {}
@@ -20,7 +20,7 @@ ID3D12PipelineState* PipelineCache::GetOrCreate(
     if (it != m_cache.end())
         return it->second.Get();
 
-    const ShaderEntry* shaderEntry = m_shaderProvider->Find(pipelineState.shaderVariant);
+    const ShaderEntry* shaderEntry = m_shaderProvider.Find(pipelineState.shaderVariant);
     if (!shaderEntry)
         return nullptr;
 

@@ -101,9 +101,25 @@ namespace EnumUtil
 
 namespace Core
 {
+	//마지막 원소는 Count가 되어야 함. Invaild는 제일 큰 값으로 강제 설정. 그래서 IsValid에서 false가 나오게 됨.
 	template<typename T>
-		requires std::is_enum_v<T>
-	constexpr auto ToUnderlying(T value) noexcept //count 가 없는 일반 enum 값에 대한 정수값 반환
+	concept CountEnum =
+		std::is_enum_v<T> &&
+		requires { T::Count; };
+
+	template<CountEnum T>
+	inline constexpr std::size_t EnumSize = static_cast<std::size_t>(T::Count); //사용법 EnumSize<xxx> 뒤에 괄호가 없다.
+
+	template <CountEnum T>
+	constexpr auto ToIndex(T enumerator) noexcept
+	{
+		return static_cast<std::underlying_type_t<T>>(enumerator);
+	}
+
+	// 일반 Enum일 때 호출됨
+	template<typename T>
+		requires std::is_enum_v<T> && (!CountEnum<T>)
+	constexpr auto ToIndex(T value) noexcept
 	{
 		return static_cast<std::underlying_type_t<T>>(value);
 	}

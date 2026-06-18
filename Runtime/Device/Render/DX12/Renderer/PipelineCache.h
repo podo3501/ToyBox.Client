@@ -10,7 +10,7 @@ class PipelineCache
 {
 public:
     ~PipelineCache();
-    PipelineCache(Device& device, ShaderProvider* shaderProvider);
+    PipelineCache(Device& device, ShaderProvider& shaderProvider);
 
     ID3D12PipelineState* GetOrCreate(
         const PipelineState& pipelineState,
@@ -20,7 +20,7 @@ public:
 
 private:
     Device& m_device;
-    ShaderProvider* m_shaderProvider{ nullptr };
+    ShaderProvider& m_shaderProvider;
 
     std::unordered_map<PipelineState, Microsoft::WRL::ComPtr<ID3D12PipelineState>, PipelineStateHasher> m_cache;
 };

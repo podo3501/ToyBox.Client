@@ -12,7 +12,7 @@ MipGenerator::MipGenerator(Device& device) :
     m_device{ device }
 {}
 
-bool MipGenerator::Initialize(ShaderProvider* shaderProvider)
+bool MipGenerator::Initialize(ShaderProvider& shaderProvider)
 {
     ReturnIfFalse(LoadShader(shaderProvider));
     ReturnIfFalse(CreateRootSignature());
@@ -21,15 +21,15 @@ bool MipGenerator::Initialize(ShaderProvider* shaderProvider)
     return true;
 }
 
-bool MipGenerator::LoadShader(ShaderProvider* shaderProvider)
+bool MipGenerator::LoadShader(ShaderProvider& shaderProvider)
 {
     ShaderVariant sRGBVariant{ ShadingModel::MipGenerator };
-    if (const auto* entry = shaderProvider->Find(sRGBVariant))
+    if (const auto* entry = shaderProvider.Find(sRGBVariant))
         m_csSRGBBlob = entry->cs;
 
     ShaderVariant srgbVariant{ ShadingModel::MipGenerator };
     srgbVariant.runtimeMacros.push_back({ "IS_DATA_MAP" });
-    if (const auto* entry = shaderProvider->Find(srgbVariant))
+    if (const auto* entry = shaderProvider.Find(srgbVariant))
         m_csDataBlob = entry->cs;
 
     return (m_csSRGBBlob && m_csDataBlob);

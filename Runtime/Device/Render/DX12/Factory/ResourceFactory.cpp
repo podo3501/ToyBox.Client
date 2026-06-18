@@ -41,23 +41,6 @@ Resource ResourceFactory::CreateReadbackBuffer(UINT64 size)
         D3D12_RESOURCE_STATE_COPY_DEST);
 }
 
-Resource ResourceFactory::CreateShadowResource(UINT width, UINT height)
-{
-    auto desc = CreateTextureDescriptor(width, height, DXGI_FORMAT_R32_TYPELESS);
-    desc.Flags |= D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
-
-    D3D12_CLEAR_VALUE clearValue{};
-    clearValue.Format = DXGI_FORMAT_D32_FLOAT;
-    clearValue.DepthStencil.Depth = 1.0f;
-    clearValue.DepthStencil.Stencil = 0;
-
-    return m_device.CreateResource(
-        desc,
-        D3D12_HEAP_TYPE_DEFAULT,
-        D3D12_RESOURCE_STATE_DEPTH_WRITE,
-        &clearValue);
-}
-
 UINT64 ResourceFactory::GetRequiredIntermediateSize(
     const D3D12_RESOURCE_DESC& desc,
     UINT firstSubresource,

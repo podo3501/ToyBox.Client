@@ -12,9 +12,9 @@
 ShadowGraphBuilder::~ShadowGraphBuilder() = default;
 
 ShadowGraphBuilder::ShadowGraphBuilder(
-    ShadowRenderer* shadowRenderer, 
+    ShadowRenderer& shadowRenderer, 
     DescriptorFactory& descFactory,
-    ShadowResource* shadowRes,
+    ShadowResource& shadowRes,
     RGHandle hShadow) :
     m_shadowRenderer{ shadowRenderer },
     m_descFactory{ descFactory },
@@ -29,13 +29,13 @@ void ShadowGraphBuilder::Build(RenderGraph& graph)
 
     shadow.gpuExecute =
         [
-            shadowRenderer = m_shadowRenderer,
+            &shadowRenderer = m_shadowRenderer,
             &descFactory = m_descFactory,
-            shadowRes = m_shadowRes
+            &shadowRes = m_shadowRes
         ]
         (CommandList& cmd, TaskContext& ctx)
         {
-            auto dsv = descFactory.GetDsvHandle(shadowRes->GetDsvIndex());
+            auto dsv = descFactory.GetDsvHandle(shadowRes.GetDsvIndex());
 
             CommandUtils::SetViewport(cmd, 2048.f, 2048.f);
             CommandUtils::SetScissor(cmd, 2048, 2048);
@@ -43,15 +43,15 @@ void ShadowGraphBuilder::Build(RenderGraph& graph)
             CommandUtils::ClearDSV(cmd, dsv);
             CommandUtils::SetDepthTarget(cmd, dsv);
 
-            shadowRenderer->BindRootSignature(cmd);
-            shadowRenderer->PrepareFrame(ctx.frame.light);
+            shadowRenderer.BindRootSignature(cmd);
+            shadowRenderer.PrepareFrame(ctx.frame.light);
 
             for (auto& item : ctx.drawPacket.surface)
             {
                 auto mesh = static_cast<MeshResource*>(item.mesh.get());
 
-                shadowRenderer->BindPipeline(cmd);
-                shadowRenderer->Draw(cmd, *mesh, item.world);
+                shadowRenderer.BindPipeline(cmd);
+                shadowRenderer.Draw(cmd, *mesh, item.world);
             }
         };
 }

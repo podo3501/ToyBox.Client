@@ -1,15 +1,14 @@
 #include "pch.h"
 #include "MeshProvider.h"
 #include "MeshResource.h"
-#include "MeshGraphBuilder.h"
 #include "Factory/DescriptorFactory.h"
 #include "Graph/RGTypes.h"
 #include "Graph/TaskScheduler.h"
 #include "Helpers/CommonHelpers.h"
 
 MeshProvider::~MeshProvider() = default;
-MeshProvider::MeshProvider(DescriptorFactory& descFactory, TaskScheduler* taskScheduler, ResourceFactory& resFactory) :
-    m_builder{ make_unique<MeshGraphBuilder>(taskScheduler, resFactory, descFactory) }
+MeshProvider::MeshProvider(DescriptorFactory& descFactory, TaskScheduler& taskScheduler, ResourceFactory& resFactory) :
+    m_builder{ taskScheduler, resFactory, descFactory }
 {}
 
 shared_ptr<IMeshResource> MeshProvider::CreateMeshResource()
@@ -64,5 +63,5 @@ void MeshProvider::Update(size_t uploadBudgetBytes)
     if (batch.empty())
         return;
 
-    m_builder->LoadMeshes(batch);
+    m_builder.LoadMeshes(batch);
 }

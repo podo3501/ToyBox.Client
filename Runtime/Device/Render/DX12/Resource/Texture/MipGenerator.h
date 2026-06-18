@@ -16,11 +16,11 @@ class MipGenerator
 public:
     ~MipGenerator();
     MipGenerator(Device& device);
-    bool Initialize(ShaderProvider* shaderProvider);
+    bool Initialize(ShaderProvider& shaderProvider);
     void GenerateMips(CommandList& cmd, DescriptorAllocator& srvAllocator, TextureResource* texResource);
 
 private:
-    bool LoadShader(ShaderProvider* shaderProvider);
+    bool LoadShader(ShaderProvider& shaderProvider);
     bool CreateRootSignature();
     bool CreatePSO();
 
