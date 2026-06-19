@@ -326,15 +326,15 @@
 --DescriptorFactory 밑으로 DescriptorAllocator 넣기
 --팩토리 한군데 모으기
 --Device 함수를 자주 생성해서 한군데 몰아 넣을게 있나 찾아보기
+--provider를 하나의 클래스가 관리하게끔? 가능한지
 
 @RenderBackend의 init를 보고 의존관계를 파악한뒤 어떻게 폴더를 구성할 것인지 생각해보자.
-@provider를 하나의 클래스가 관리하게끔? 가능한지
+@backend 내부 config 만들기
 @Verify 기능 (release에서 로그 남기는 define)을 어떻게 만들지 생각해보자.
-@m_pipelineCache renderer들 주입식으로 교체. m_objectCBAllocator 이거 비슷비슷한데 어떻게 할지.
+@graph 쪽 디펜던시 만드는 부분 보완
 
 @m_heap ComPtr<ID3D12DescriptorHeap> m_heap; 이것도 device 처럼 처리 해야 할까?
 @resource loader factory로 바꾸고 나머지 함수들은 helper로 만들어서 보내자.
-@기본 텍스쳐를 service 영역으로 올릴지 생각해 보자.
 @texture asset factory 만들지 말지.
 
 @ui 텍스쳐 거꾸로 나오는 거 수정.

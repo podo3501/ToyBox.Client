@@ -17,15 +17,15 @@ struct ShaderEntry
 
 struct ShaderData
 {
-    std::shared_ptr<ShaderAsset> asset;
+    std::shared_ptr<ShaderAsset> asset{ nullptr };
     std::vector<ShaderStageDesc> stages;
 };
 
-class ShaderProvider
+class ShaderLibrary
 {
 public:
-    ~ShaderProvider();
-    ShaderProvider();
+    ~ShaderLibrary();
+    ShaderLibrary();
     bool Initialize(const std::vector<ShaderRegisterDesc>& shaders);
     
     const ShaderEntry* Find(const ShaderVariant& variant) const;
@@ -33,10 +33,9 @@ public:
 private:
     bool CompileVariant(
         const ShaderVariant& variant,
-        const ShaderAsset& asset,
-        const std::vector<ShaderStageDesc>& stages,
+        const ShaderData& shaderData,
         ShaderEntry& outEntry) const;
 
-    std::unordered_map<ShadingModel, ShaderData> m_shaders;
+    std::array<ShaderData, Core::EnumSize<ShadingModel>> m_shaders;
     mutable std::unordered_map<ShaderVariant, ShaderEntry, ShaderVariantHasher> m_variants;
 };

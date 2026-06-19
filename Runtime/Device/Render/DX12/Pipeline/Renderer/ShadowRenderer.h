@@ -8,7 +8,6 @@ struct DirectionalLightData;
 class Device;
 class PipelineCache;
 class CommandList;
-class ShaderProvider;
 class MeshResource;
 
 using Microsoft::WRL::ComPtr;

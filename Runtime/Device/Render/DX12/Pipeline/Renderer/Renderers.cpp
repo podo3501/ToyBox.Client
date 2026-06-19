@@ -1,11 +1,10 @@
 #include "pch.h"
 #include "Renderers.h"
-#include "Resource/Shader/ShaderProvider.h"
 
 Renderers::~Renderers() = default;
-Renderers::Renderers(Device& device, ShaderProvider& shaderProvider) :
+Renderers::Renderers(Device& device, ShaderLibrary& shaderLibrary) :
     m_device{ device },
-    m_pipelineCache{ device, shaderProvider },
+    m_pipelineCache{ device, shaderLibrary },
     m_shadowRenderer{ m_config.shadow, m_pipelineCache },
     m_surfRenderer{ m_config.surface, m_pipelineCache },
     m_debugSurfRenderer{ m_config.debug, m_pipelineCache },

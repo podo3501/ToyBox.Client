@@ -4,7 +4,7 @@
 #include <dxcapi.h>
 
 class Device;
-class ShaderProvider;
+class ShaderLibrary;
 class CommandList;
 class DescriptorAllocator;
 class TextureResource;
@@ -16,11 +16,11 @@ class MipGenerator
 public:
     ~MipGenerator();
     MipGenerator(Device& device);
-    bool Initialize(ShaderProvider& shaderProvider);
+    bool Initialize(ShaderLibrary& shaderLibrary);
     void GenerateMips(CommandList& cmd, DescriptorAllocator& srvAllocator, TextureResource* texResource);
 
 private:
-    bool LoadShader(ShaderProvider& shaderProvider);
+    bool LoadShader(ShaderLibrary& shaderLibrary);
     bool CreateRootSignature();
     bool CreatePSO();
 

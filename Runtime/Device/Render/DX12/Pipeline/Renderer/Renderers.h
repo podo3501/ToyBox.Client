@@ -9,13 +9,13 @@
 
 struct Size;
 class Device;
-class ShaderProvider;
+class ShaderLibrary;
 
 class Renderers
 {
 public:
     ~Renderers();
-    Renderers(Device& device, ShaderProvider& shaderProvider);
+    Renderers(Device& device, ShaderLibrary& shaderLibaray);
     bool Initialize(const Size& screenSize);
     void SetScreenSize(const Size& screenSize);
 

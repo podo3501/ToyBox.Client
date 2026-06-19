@@ -1,11 +1,11 @@
 #include "pch.h"
-#include "ShaderProvider.h"
+#include "ShaderLibrary.h"
 #include "Core/Utils/StringUtils.h"
 #include "GameClient/Service/Asset/Assets/ShaderAsset.h"
 #pragma comment(lib, "dxcompiler.lib")
 
-ShaderProvider::~ShaderProvider() = default;
-ShaderProvider::ShaderProvider() = default;
+ShaderLibrary::~ShaderLibrary() = default;
+ShaderLibrary::ShaderLibrary() = default;
 
 static bool CompileStage(
     const std::string& source, 
@@ -100,25 +100,23 @@ static ComPtr<IDxcBlob> CreateBlobFromBuffer(const Core::ByteBuffer& buffer)
     return nullptr;
 }
 
-bool ShaderProvider::Initialize(const std::vector<ShaderRegisterDesc>& shaders)
+bool ShaderLibrary::Initialize(const std::vector<ShaderRegisterDesc>& shaders)
 {
     for (const ShaderRegisterDesc& desc : shaders)
     {
         if (!desc.asset)
             return false;
 
-        ShaderData shaderData;
+        auto& shaderData = m_shaders[static_cast<size_t>(desc.model)];
+        if (shaderData.asset) return false;
+
         shaderData.asset = desc.asset;
         shaderData.stages = desc.stages;
-
-        auto [shaderIt, inserted] = m_shaders.emplace(desc.model, std::move(shaderData));
-        if (!inserted)
-            continue;
 
         ShaderVariant baseVariant{ desc.model };
         ShaderEntry entry;
         
-        if (!CompileVariant(baseVariant, *shaderIt->second.asset, shaderIt->second.stages, entry))
+        if (!CompileVariant(baseVariant, shaderData, entry))
             return false;
 
         m_variants.emplace(baseVariant, std::move(entry));
@@ -127,19 +125,17 @@ bool ShaderProvider::Initialize(const std::vector<ShaderRegisterDesc>& shaders)
     return true;
 }
 
-const ShaderEntry* ShaderProvider::Find(const ShaderVariant& variant) const
+const ShaderEntry* ShaderLibrary::Find(const ShaderVariant& variant) const
 {
     auto it = m_variants.find(variant);
     if (it != m_variants.end())
         return &it->second;
 
-    auto shaderIt = m_shaders.find(variant.model);
-    if (shaderIt == m_shaders.end())
-        return nullptr; // shader가 등록이 안돼 있다.
+    const ShaderData& shaderData = m_shaders[Core::ToIndex(variant.model)];
+    if (!shaderData.asset) return nullptr; // shader가 등록이 안돼 있다.
 
-    const ShaderData& shaderData = shaderIt->second;
     ShaderEntry entry;
-    if (!CompileVariant(variant, *shaderData.asset, shaderData.stages, entry))
+    if (!CompileVariant(variant, shaderData, entry))
         return nullptr;
 
     auto [iter, inserted] = m_variants.emplace(variant, std::move(entry)); //lazy cache 이기 때문에 mutable 처리.
@@ -147,12 +143,13 @@ const ShaderEntry* ShaderProvider::Find(const ShaderVariant& variant) const
     return &iter->second;
 }
 
-bool ShaderProvider::CompileVariant(
+bool ShaderLibrary::CompileVariant(
     const ShaderVariant& variant,
-    const ShaderAsset& asset,
-    const std::vector<ShaderStageDesc>& stages,
+    const ShaderData& shaderData,
     ShaderEntry& outEntry) const
 {
+    auto& asset = *shaderData.asset;
+
     // precompiled shader
     if (asset.hlslSource.empty())
     {
@@ -164,7 +161,7 @@ bool ShaderProvider::CompileVariant(
     }
 
     bool compiledAny = false;
-    for (const ShaderStageDesc& stage : stages)
+    for (const ShaderStageDesc& stage : shaderData.stages)
     {
         ComPtr<IDxcBlob>* targetBlob = nullptr;
         switch (stage.stage)

@@ -1,5 +1,5 @@
 #pragma once
-#include "TextureResource.h"
+#include "Resource/Texture/TextureResource.h"
 #include "Graph/RGTypes.h"
 
 class TextureRegistry

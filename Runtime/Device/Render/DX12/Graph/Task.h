@@ -11,8 +11,7 @@
 #include "Resource/Resource.h"
 #include "TaskHandle.h"
 #include "RGTypes.h"
-#include "GameClient/Graphics/RenderData/DirectionalLightData.h"
-#include "GameClient/Graphics/RenderData/CameraData.h"
+#include "GameClient/Graphics/RenderData/FrameData.h"
 
 class CommandList;
 
@@ -40,12 +39,6 @@ struct ResourceContext
 
         return it->second;
     }
-};
-
-struct FrameData
-{
-    DirectionalLightData light;
-    CameraData camera;
 };
 
 struct TaskContext

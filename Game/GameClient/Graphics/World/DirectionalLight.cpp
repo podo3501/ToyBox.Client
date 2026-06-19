@@ -5,15 +5,13 @@
 
 namespace cm = Core::Math;
 
-DirectionalLightData DirectionalLight::BuildLightData(const CameraData& mainCameraData) const
+DirectionalLightData DirectionalLight::BuildLightData() const
 {
     DirectionalLightData data{};
     data.direction = m_direction;
     data.color = m_color;
     data.intensity = m_intensity;
 
-    // 메인 카메라 위치를 기준으로 조명이 들어오는 반대 방향 벡터로 멀리 떨어뜨림
-    //cm::Vector3 mainCamPos{ mainCameraData.position.x, mainCameraData.position.y, mainCameraData.position.z };
     cm::Vector3 targetCenter{ 0.0f, 0.0f, 0.0f };
     float lightDistance = 200.0f; // 씬 크기에 맞게 조절 가능
     cm::Vector3 lightPos = targetCenter - (m_direction * lightDistance);

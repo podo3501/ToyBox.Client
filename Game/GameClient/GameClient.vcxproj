@@ -119,6 +119,7 @@
     <ClInclude Include="Graphics\Geometry\TextureDescFactory.h" />
     <ClInclude Include="Graphics\RenderData\CameraData.h" />
     <ClInclude Include="Graphics\RenderData\DirectionalLightData.h" />
+    <ClInclude Include="Graphics\RenderData\FrameData.h" />
     <ClInclude Include="Graphics\ShaderStageBuilder.h" />
     <ClInclude Include="Graphics\World\Camera.h" />
     <ClInclude Include="Graphics\World\CameraController.h" />
@@ -181,6 +182,7 @@
     <ClInclude Include="Service\Render\Handle\MaterialHandle.h" />
     <ClInclude Include="Service\Render\Handle\MeshHandle.h" />
     <ClInclude Include="Service\Render\Handle\TextureHandle.h" />
+    <ClInclude Include="Service\Render\IBackendContext.h" />
     <ClInclude Include="Service\Render\IRenderBackend.h" />
     <ClInclude Include="Service\Render\RenderConfig.h" />
     <ClInclude Include="Service\Render\RenderContext.h" />

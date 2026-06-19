@@ -4,13 +4,13 @@
 #include <wrl.h>
 
 class Device;
-class ShaderProvider;
+class ShaderLibrary;
 
 class PipelineCache
 {
 public:
     ~PipelineCache();
-    PipelineCache(Device& device, ShaderProvider& shaderProvider);
+    PipelineCache(Device& device, ShaderLibrary& shaderLibaray);
 
     ID3D12PipelineState* GetOrCreate(
         const PipelineState& pipelineState,
@@ -20,7 +20,7 @@ public:
 
 private:
     Device& m_device;
-    ShaderProvider& m_shaderProvider;
+    ShaderLibrary& m_shaderLibrary;
 
     std::unordered_map<PipelineState, Microsoft::WRL::ComPtr<ID3D12PipelineState>, PipelineStateHasher> m_cache;
 };

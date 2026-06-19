@@ -13,12 +13,9 @@ ResourceProviders::ResourceProviders(
 	m_matProvider{ m_texProvider }
 {}
 
-bool ResourceProviders::Initialize(const std::vector<ShaderRegisterDesc>& shaders)
+bool ResourceProviders::Initialize(ShaderLibrary& shaderLibrary)
 {
-	ReturnIfFalse(m_shaderProvider.Initialize(shaders));
-	ReturnIfFalse(m_texProvider.Initialize(m_shaderProvider));
-	
-	return true;
+	return m_texProvider.Initialize(shaderLibrary);
 }
 
 static size_t ComputeTextureBudget(float gpuMs)

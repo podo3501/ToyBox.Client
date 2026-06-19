@@ -13,15 +13,21 @@
 #include "Command/CommandList.h"
 
 ForwardRenderPipeline::~ForwardRenderPipeline() = default;
-ForwardRenderPipeline::ForwardRenderPipeline(SwapChainPresenter& swapChain,
-    DescriptorFactory& descFactory) :
+ForwardRenderPipeline::ForwardRenderPipeline(
+    Device& device,
+    SwapChainPresenter& swapChain,
+    DescriptorFactory& descFactory,
+    ShaderLibrary& shaderLibaray) :
+    m_device{ device },
     m_swapChain{ swapChain },
-    m_descFactory{ descFactory }
+    m_descFactory{ descFactory },
+    m_renderers{ device, shaderLibaray }
 {}
 
-bool ForwardRenderPipeline::Initialize(Device& device, const Size& shadowMapSize, Renderers& renderers)
+bool ForwardRenderPipeline::Initialize(const Size& screenSize, const Size& shadowMapSize)
 {
-    ReturnIfFalse(m_shadowRes.Initialize(device, m_descFactory, shadowMapSize));
+    ReturnIfFalse(m_shadowRes.Initialize(m_device, m_descFactory, shadowMapSize));
+    m_renderers.Initialize(screenSize);
 
     m_hBackBuffer = m_graph.CreateRGHandle();
     m_hShadow = m_graph.CreateRGHandle();
@@ -30,24 +36,24 @@ bool ForwardRenderPipeline::Initialize(Device& device, const Size& shadowMapSize
     m_graph.ImportResource(m_hShadow, RGAccess::DepthWrite);
 
     ShadowGraphBuilder shadow(
-        renderers.GetShadowRenderer(),
+        m_renderers.GetShadowRenderer(),
         m_descFactory,
         m_shadowRes,
         m_hShadow);
 
     OpaqueGraphBuilder opaque(
-        renderers.GetSurfRenderer(),
+        m_renderers.GetSurfRenderer(),
         m_swapChain,
         m_shadowRes,
         m_hBackBuffer,
         m_hShadow);
 
     DebugSurfaceGraphBuilder debug(
-        renderers.GetDebugSurfRenderer(),
+        m_renderers.GetDebugSurfRenderer(),
         m_hBackBuffer);
 
     UIGraphBuilder ui(
-        renderers.GetUIRenderer(),
+        m_renderers.GetUIRenderer(),
         m_hBackBuffer);
 
     FrameEndGraphBuilder end(
@@ -81,3 +87,9 @@ void ForwardRenderPipeline::Render(CommandList& cmd, const DrawPacket& drawPacke
 
     m_graph.Execute(cmd, m_compiledTasks, ctx);
 }
+
+void ForwardRenderPipeline::Resize(const Size& size)
+{
+    m_renderers.SetScreenSize(size);
+}
+

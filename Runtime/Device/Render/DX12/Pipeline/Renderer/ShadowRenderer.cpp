@@ -3,7 +3,6 @@
 #include "PipelineCache.h"
 #include "Resource/Mesh/MeshResource.h"
 #include "RootSignatureBuilder.h"
-#include "Resource/Shader/ShaderProvider.h"
 #include "Command/CommandList.h"
 #include "Helpers/MathHelpers.h"
 #include "GameClient/Graphics/RenderData/DirectionalLightData.h"

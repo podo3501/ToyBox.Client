@@ -547,14 +547,8 @@
     <ClInclude Include="Graphics\World\Camera.h">
       <Filter>Graphics\World</Filter>
     </ClInclude>
-    <ClInclude Include="Graphics\RenderData\CameraData.h">
-      <Filter>Graphics\RenderData</Filter>
-    </ClInclude>
     <ClInclude Include="Graphics\World\DirectionalLight.h">
       <Filter>Graphics\World</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\RenderData\DirectionalLightData.h">
-      <Filter>Graphics\RenderData</Filter>
     </ClInclude>
     <ClInclude Include="Graphics\Geometry\MeshFactory.h">
       <Filter>Graphics\Geometry</Filter>
@@ -656,6 +650,18 @@
       <Filter>Service\Render\Desc</Filter>
     </ClInclude>
     <ClInclude Include="Service\Render\RenderServiceConfig.h">
+      <Filter>Service\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\RenderData\FrameData.h">
+      <Filter>Graphics\RenderData</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\RenderData\CameraData.h">
+      <Filter>Graphics\RenderData</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\RenderData\DirectionalLightData.h">
+      <Filter>Graphics\RenderData</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\IBackendContext.h">
       <Filter>Service\Render</Filter>
     </ClInclude>
   </ItemGroup>

@@ -8,27 +8,21 @@
 #include "Core/Foundation/Geometry2D.h"
 #include "../AssetAsync/AssetAsyncTypes.h"
 
-struct TextureEntry;
-struct MeshEntry;
-struct MaterialEntry;
-struct TextureAsset;
-struct IRenderBackend;
+struct IBackendContext;
 struct MeshAsset;
-struct ShaderAsset;
 struct MeshDesc;
-struct MeshMaterialDesc;
 struct ResolvedDrawData;
 struct DefaultMaterialDescs;
+struct FrameData;
 class MaterialRepository;
 class MeshRepository;
-class ShaderRepository;
 
 class RenderContext
 {
 public:
 	~RenderContext();
 	RenderContext() = delete;
-	RenderContext(IRenderBackend* backend, AssetPipelineT* assetPipeline);
+	RenderContext(IBackendContext* backendContext, AssetPipelineT* assetPipeline);
 	bool Initialize(const DefaultMaterialDescs& defaultMatDescs);
 
 	MeshHandle LoadMesh(const MeshDesc& desc, std::shared_ptr<MeshAsset> asset = nullptr);
@@ -43,6 +37,7 @@ public:
 	void DrawSurface(MeshHandle hM, MaterialHandle hMtl, const Core::Math::Matrix& world);
 	void DrawDebugSurface(MeshHandle hM, MaterialHandle hMtl, const Core::Math::Matrix& world);
 	void DrawUI(MaterialHandle hMtl, const Rect& dest, const Rect* source = nullptr);
+	void SetFrameData(const FrameData& frameData);
 	void Update();
 	void ReleaseAll();
 
@@ -51,7 +46,7 @@ private:
 	std::optional<ResolvedDrawData> ResolveResources(MeshHandle hM, MaterialHandle hMtl);
 	MaterialHandle GetDefaultMaterial(MaterialDomain matDomain) const;
 
-	IRenderBackend* m_backend{ nullptr };
+	IBackendContext* m_backendContext{ nullptr };
 	unique_ptr<MeshRepository> m_meshRepository;
 	unique_ptr<MaterialRepository> m_matRepository;
 

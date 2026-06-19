@@ -2,13 +2,13 @@
 #include "PipelineCache.h"
 #include "Core/Device.h"
 #include "Core/D3D12Conversions.h"
-#include "Resource/Shader/ShaderProvider.h"
-#include "../d3dx12.h"
+#include "Shader/ShaderLibrary.h"
+#include "d3dx12.h"
 
 PipelineCache::~PipelineCache() = default;
-PipelineCache::PipelineCache(Device& device, ShaderProvider& shaderProvider) :
+PipelineCache::PipelineCache(Device& device, ShaderLibrary& shaderLibrary) :
     m_device{ device },
-    m_shaderProvider{ shaderProvider }
+    m_shaderLibrary{ shaderLibrary }
 {}
 
 ID3D12PipelineState* PipelineCache::GetOrCreate(
@@ -20,7 +20,7 @@ ID3D12PipelineState* PipelineCache::GetOrCreate(
     if (it != m_cache.end())
         return it->second.Get();
 
-    const ShaderEntry* shaderEntry = m_shaderProvider.Find(pipelineState.shaderVariant);
+    const ShaderEntry* shaderEntry = m_shaderLibrary.Find(pipelineState.shaderVariant);
     if (!shaderEntry)
         return nullptr;
 

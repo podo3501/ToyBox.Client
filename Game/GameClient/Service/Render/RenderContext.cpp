@@ -6,7 +6,7 @@
 #include "Service/Asset/Assets/MeshAsset.h"
 #include "Desc/MeshDesc.h"
 #include "Resource/IMeshResource.h"
-#include "IRenderBackend.h"
+#include "IBackendContext.h"
 
 struct ResolvedDrawData
 {
@@ -16,11 +16,11 @@ struct ResolvedDrawData
 
 namespace cm = Core::Math;
 
-RenderContext::~RenderContext() { m_backend->WaitIdle(); } //리소스를 RenderService가 들고 있기 때문에 gpu의 활동을 중지 시키고 리소스 삭제->backend 순으로 된다.
-RenderContext::RenderContext(IRenderBackend* backend, AssetPipelineT* assetPipeline) :
-	m_backend{ backend },
-	m_meshRepository{ make_unique<MeshRepository>(m_backend->GetMeshProvider(), assetPipeline) },
-	m_matRepository{ make_unique<MaterialRepository>(m_backend->GetMaterialProvider(), assetPipeline) }
+RenderContext::~RenderContext() = default; 
+RenderContext::RenderContext(IBackendContext* backendContext, AssetPipelineT* assetPipeline) :
+	m_backendContext{ backendContext },
+	m_meshRepository{ make_unique<MeshRepository>(m_backendContext->GetMeshProvider(), assetPipeline) },
+	m_matRepository{ make_unique<MaterialRepository>(m_backendContext->GetMaterialProvider(), assetPipeline) }
 {}
 
 bool RenderContext::Initialize(const DefaultMaterialDescs& defaultMat)
@@ -63,7 +63,7 @@ void RenderContext::DrawSurface(MeshHandle hM, MaterialHandle hMtl, const cm::Ma
 	auto data = ResolveResources(hM, hMtl);
 	if (!data) return;
 
-	m_backend->DrawSurface(data->meshRes, data->matRes, world);
+	m_backendContext->DrawSurface(data->meshRes, data->matRes, world);
 }
 
 void RenderContext::DrawDebugSurface(MeshHandle hM, MaterialHandle hMtl, const cm::Matrix& world)
@@ -74,7 +74,7 @@ void RenderContext::DrawDebugSurface(MeshHandle hM, MaterialHandle hMtl, const c
 	auto data = ResolveResources(hM, hMtl);
 	if (!data) return;
 
-	m_backend->DrawSurface(data->meshRes, data->matRes, world);
+	m_backendContext->DrawSurface(data->meshRes, data->matRes, world);
 }
 
 void RenderContext::DrawUI(MaterialHandle hMtl, const Rect& dest, const Rect* source)
@@ -108,7 +108,7 @@ void RenderContext::DrawUI(MaterialHandle hMtl, const Rect& dest, const Rect* so
 		// matRes->SetUVTransform(uvScale, uvOffset);
 	}
 
-	m_backend->DrawUI(data->meshRes, data->matRes, world);
+	m_backendContext->DrawUI(data->meshRes, data->matRes, world);
 }
 
 std::optional<ResolvedDrawData> RenderContext::ResolveResources(MeshHandle hM, MaterialHandle hMtl)
@@ -124,6 +124,11 @@ std::optional<ResolvedDrawData> RenderContext::ResolveResources(MeshHandle hM, M
 		return std::nullopt;
 
 	return ResolvedDrawData{ mesh->meshRes, material->matRes };
+}
+
+void RenderContext::SetFrameData(const FrameData& frameData)
+{
+	m_backendContext->SetFrameData(frameData);
 }
 
 void RenderContext::Update()

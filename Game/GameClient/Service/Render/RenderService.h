@@ -4,8 +4,7 @@
 #include "../AssetAsync/AssetAsyncTypes.h"
 
 struct IRenderBackend;
-struct DirectionalLightData;
-struct CameraData;
+struct FrameData;
 struct Asset;
 class RenderContext;
 
@@ -20,8 +19,7 @@ public:
 		const DefaultMaterialDescs& defaultMatDescs) noexcept;
 
 	bool Initialize(const DefaultMaterialDescs& defaultMatDescs);
-	void SetCamera(const CameraData& camera);
-	void SetDirectionalLight(const DirectionalLightData& light);
+	void SetFrameData(const FrameData& frameData);
 	void Update();
 	void Render();
 	void Resize(const Size& size);

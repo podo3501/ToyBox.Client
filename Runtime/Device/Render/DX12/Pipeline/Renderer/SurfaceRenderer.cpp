@@ -8,8 +8,7 @@
 #include "Resource/Mesh/MeshResource.h"
 #include "Resource/Material/PhongMaterialResource.h"
 #include "Resource/Material/PbrMaterialResource.h"
-#include "GameClient/Graphics/RenderData/DirectionalLightData.h"
-#include "GameClient/Graphics/RenderData/CameraData.h"
+#include "GameClient/Graphics/RenderData/FrameData.h"
 #include "Core/D3D12Conversions.h"
 
 namespace cm = Core::Math;

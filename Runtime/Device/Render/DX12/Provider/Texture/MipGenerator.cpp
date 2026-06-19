@@ -1,35 +1,35 @@
 ﻿#include "pch.h"
 #include "MipGenerator.h"
 #include "Core/Device.h"
-#include "Resource/Shader/ShaderProvider.h"
+#include "Shader/ShaderLibrary.h"
 #include "Factory/DescriptorAllocator.h"
 #include "Command/CommandList.h"
-#include "TextureResource.h"
-#include "Renderer/RootSignatureBuilder.h"
+#include "Resource/Texture/TextureResource.h"
+#include "Pipeline/Renderer/RootSignatureBuilder.h"
 
 MipGenerator::~MipGenerator() = default;
 MipGenerator::MipGenerator(Device& device) :
     m_device{ device }
 {}
 
-bool MipGenerator::Initialize(ShaderProvider& shaderProvider)
+bool MipGenerator::Initialize(ShaderLibrary& shaderLibrary)
 {
-    ReturnIfFalse(LoadShader(shaderProvider));
+    ReturnIfFalse(LoadShader(shaderLibrary));
     ReturnIfFalse(CreateRootSignature());
     ReturnIfFalse(CreatePSO());
 
     return true;
 }
 
-bool MipGenerator::LoadShader(ShaderProvider& shaderProvider)
+bool MipGenerator::LoadShader(ShaderLibrary& shaderLibrary)
 {
     ShaderVariant sRGBVariant{ ShadingModel::MipGenerator };
-    if (const auto* entry = shaderProvider.Find(sRGBVariant))
+    if (const auto* entry = shaderLibrary.Find(sRGBVariant))
         m_csSRGBBlob = entry->cs;
 
     ShaderVariant srgbVariant{ ShadingModel::MipGenerator };
     srgbVariant.runtimeMacros.push_back({ "IS_DATA_MAP" });
-    if (const auto* entry = shaderProvider.Find(srgbVariant))
+    if (const auto* entry = shaderLibrary.Find(srgbVariant))
         m_csDataBlob = entry->cs;
 
     return (m_csSRGBBlob && m_csDataBlob);

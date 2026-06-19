@@ -1,10 +1,10 @@
 #include "pch.h"
 #include "ShadowResource.h"
+#include "Core/Foundation/Geometry2D.h"
 #include "Core/Device.h"
 #include "Factory/ResourceFactory.h"
 #include "Factory/DescriptorFactory.h"
-#include "Resource/Texture/TextureUtils.h"
-#include "Core/Foundation/Geometry2D.h"
+#include "Provider/Texture/TextureUtils.h"
 
 bool ShadowResource::Initialize(Device& device, DescriptorFactory& factory, const Size& shadowMapSize)
 {

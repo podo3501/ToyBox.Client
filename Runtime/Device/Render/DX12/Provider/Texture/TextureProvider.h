@@ -9,7 +9,7 @@ class DescriptorAllocator;
 class DescriptorFactory;
 class TaskScheduler;
 class ResourceFactory;
-class ShaderProvider;
+class ShaderLibrary;
 
 enum class DefaultTextureType
 {
@@ -27,7 +27,7 @@ public:
     shared_ptr<TextureResource> CreateTextureResource(const TextureDesc& desc);
     bool LoadFromAsset(std::shared_ptr<TextureResource> resource, std::shared_ptr<TextureAsset> asset);
 
-    bool Initialize(ShaderProvider& shaderProvider);
+    bool Initialize(ShaderLibrary& shaderLibrary);
     void Update(size_t uploadBudgetBytes);
     std::shared_ptr<TextureResource> GetDefaultTexture(DefaultTextureType type) const;
 

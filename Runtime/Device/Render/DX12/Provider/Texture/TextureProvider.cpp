@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "TextureProvider.h"
 #include "Factory/DescriptorFactory.h"
-#include "TextureResource.h"
+#include "Resource/Texture/TextureResource.h"
 
 TextureProvider::~TextureProvider() = default;
 TextureProvider::TextureProvider(Device& device, DescriptorFactory& descFactory, TaskScheduler& taskScheduler, ResourceFactory& resFactory) :
@@ -9,10 +9,10 @@ TextureProvider::TextureProvider(Device& device, DescriptorFactory& descFactory,
     m_builder{ taskScheduler, resFactory, m_mipGenerator, descFactory }
 {}
 
-bool TextureProvider::Initialize(ShaderProvider& shaderProvider)
+bool TextureProvider::Initialize(ShaderLibrary& shaderLibrary)
 {
     ReturnIfFalse(CreateBuiltinTextures());
-    ReturnIfFalse(m_mipGenerator.Initialize(shaderProvider));
+    ReturnIfFalse(m_mipGenerator.Initialize(shaderLibrary));
 
     return true;
 }

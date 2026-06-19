@@ -2,10 +2,10 @@
 #include "RenderService.h"
 #include "IRenderBackend.h"
 
-RenderService::~RenderService() = default;
+RenderService::~RenderService() { m_backend->WaitIdle(); } //리소스를 RenderService가 들고 있기 때문에 gpu의 활동을 중지 시키고 리소스 삭제->backend 순으로 된다.
 RenderService::RenderService(unique_ptr<IRenderBackend> backend, AssetPipelineT* assetPipeline) :
 	m_backend{ move(backend) },
-	m_context{ make_unique<RenderContext>(m_backend.get(), assetPipeline) }
+	m_context{ make_unique<RenderContext>(m_backend->GetBackendContext(), assetPipeline)}
 {}
 
 unique_ptr<RenderService> RenderService::Create(
@@ -22,16 +22,6 @@ unique_ptr<RenderService> RenderService::Create(
 bool RenderService::Initialize(const DefaultMaterialDescs& defaultMatDescs)
 {
 	return m_context->Initialize(defaultMatDescs);
-}
-
-void RenderService::SetCamera(const CameraData& camera)
-{
-	m_backend->SetCamera(camera);
-}
-
-void RenderService::SetDirectionalLight(const DirectionalLightData& light)
-{
-	m_backend->SetDirectionalLight(light);
 }
 
 void RenderService::Update()

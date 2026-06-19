@@ -100,7 +100,8 @@ enum class ShadingModel
     UI,
     Grid,
     MipGenerator,
-    Shadow
+    Shadow,
+    Count
 };
 
 struct ShaderAsset;

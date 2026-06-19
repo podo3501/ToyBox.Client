@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "ResourceFactory.h"
 #include "Core/Device.h"
-#include "Resource/Texture/TextureUtils.h"
+#include "Provider/Texture/TextureUtils.h"
 
 static D3D12_RESOURCE_DESC CreateBufferDesc(UINT64 size) { return CD3DX12_RESOURCE_DESC::Buffer(size); }
 

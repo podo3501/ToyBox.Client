@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "FrameUploadAllocator.h"
 #include "Core/Device.h"
-#include "../d3dx12.h"
+#include "d3dx12.h"
 
 FrameUploadAllocator::~FrameUploadAllocator() = default;
 FrameUploadAllocator::FrameUploadAllocator() = default;

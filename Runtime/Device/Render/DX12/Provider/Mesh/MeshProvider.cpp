@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "MeshProvider.h"
-#include "MeshResource.h"
+#include "Resource/Mesh/MeshResource.h"
 #include "Factory/DescriptorFactory.h"
 #include "Graph/RGTypes.h"
 #include "Graph/TaskScheduler.h"

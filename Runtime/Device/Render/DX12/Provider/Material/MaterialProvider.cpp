@@ -1,11 +1,12 @@
 #include "pch.h"
 #include "MaterialProvider.h"
-#include "PhongMaterialResource.h"
-#include "PbrMaterialResource.h"
-#include "GridMaterialResource.h"
-#include "UIMaterialResource.h"
+#include "Resource/Material/PhongMaterialResource.h"
+#include "Resource/Material/PbrMaterialResource.h"
+#include "Resource/Material/GridMaterialResource.h"
+#include "Resource/Material/UIMaterialResource.h"
+#include "Resource/Texture/TextureResource.h"
 #include "../Texture/TextureProvider.h"
-#include "../Texture/TextureResource.h"
+
 
 MaterialProvider::~MaterialProvider() = default;
 MaterialProvider::MaterialProvider(TextureProvider& texProvider) :
