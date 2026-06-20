@@ -53,7 +53,7 @@ uint64_t CommandQueue::End()
     uint64_t fenceValue = Signal();
     m_lastSubmittedFence = fenceValue;
 
-    m_currentCmdEntry->SetFence(m_fence.Get(), fenceValue); // 재사용하기 위해서 fence 기록
+    m_currentCmdEntry->MarkSubmitted(m_fence.Get(), fenceValue); // 재사용하기 위해서 fence 기록
 
     m_currentCmdEntry = nullptr;
     return fenceValue;

@@ -44,7 +44,7 @@
     <ClInclude Include="Input\DirectX\InputManager.h" />
     <ClInclude Include="Input\IInputManager.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="Render\DX12\BackendContext.h" />
+    <ClInclude Include="Render\DX12\RenderFrame.h" />
     <ClInclude Include="Render\DX12\Command\CommandList.h" />
     <ClInclude Include="Render\DX12\Command\CommandListHelpers.h" />
     <ClInclude Include="Render\DX12\Command\CommandQueue.h" />
@@ -71,6 +71,7 @@
     <ClInclude Include="Render\DX12\Graph\TaskScheduler.h" />
     <ClInclude Include="Render\DX12\Helpers\CommonHelpers.h" />
     <ClInclude Include="Render\DX12\Helpers\MathHelpers.h" />
+    <ClInclude Include="Render\DX12\Helpers\TextureHelpers.h" />
     <ClInclude Include="Render\DX12\Pipeline\DebugSurfaceGraphBuilder.h" />
     <ClInclude Include="Render\DX12\Pipeline\ForwardRenderPipeline.h" />
     <ClInclude Include="Render\DX12\Pipeline\FrameEndGraphBuilder.h" />
@@ -93,7 +94,7 @@
     <ClInclude Include="Render\DX12\Provider\Mesh\MeshProvider.h" />
     <ClInclude Include="Render\DX12\Provider\Mesh\MeshRegistry.h" />
     <ClInclude Include="Render\DX12\Provider\Mesh\MeshUtils.h" />
-    <ClInclude Include="Render\DX12\Provider\ResourceProviders.h" />
+    <ClInclude Include="Render\DX12\Provider\ResourceProvider.h" />
     <ClInclude Include="Render\DX12\Provider\Texture\MipGenerator.h" />
     <ClInclude Include="Render\DX12\Provider\Texture\TextureGraphBuilder.h" />
     <ClInclude Include="Render\DX12\Provider\Texture\TextureLoadRequest.h" />
@@ -110,6 +111,7 @@
     <ClInclude Include="Render\DX12\Resource\Mesh\MeshResource.h" />
     <ClInclude Include="Render\DX12\Resource\Resource.h" />
     <ClInclude Include="Render\DX12\Resource\ShadowResource.h" />
+    <ClInclude Include="Render\DX12\Resource\Texture\DefaultTextureType.h" />
     <ClInclude Include="Render\DX12\Resource\Texture\TextureResource.h" />
     <ClInclude Include="Render\DX12\Scene\RenderScene.h" />
     <ClInclude Include="Render\DX12\Scene\RenderSortKey.h" />
@@ -148,7 +150,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Render\DX12\BackendContext.cpp" />
+    <ClCompile Include="Render\DX12\RenderFrame.cpp" />
     <ClCompile Include="Render\DX12\Command\CommandList.cpp" />
     <ClCompile Include="Render\DX12\Command\CommandQueue.cpp" />
     <ClCompile Include="Render\DX12\Command\CommandScheduler.cpp" />
@@ -164,6 +166,7 @@
     <ClCompile Include="Render\DX12\Graph\TaskScheduler.cpp" />
     <ClCompile Include="Render\DX12\Helpers\CommonHelpers.cpp" />
     <ClCompile Include="Render\DX12\Helpers\MathHelpers.cpp" />
+    <ClCompile Include="Render\DX12\Helpers\TextureHelpers.cpp" />
     <ClCompile Include="Render\DX12\Pipeline\DebugSurfaceGraphBuilder.cpp" />
     <ClCompile Include="Render\DX12\Pipeline\ForwardRenderPipeline.cpp" />
     <ClCompile Include="Render\DX12\Pipeline\FrameEndGraphBuilder.cpp" />
@@ -183,7 +186,7 @@
     <ClCompile Include="Render\DX12\Provider\Mesh\MeshProvider.cpp" />
     <ClCompile Include="Render\DX12\Provider\Mesh\MeshRegistry.cpp" />
     <ClCompile Include="Render\DX12\Provider\Mesh\MeshUtils.cpp" />
-    <ClCompile Include="Render\DX12\Provider\ResourceProviders.cpp" />
+    <ClCompile Include="Render\DX12\Provider\ResourceProvider.cpp" />
     <ClCompile Include="Render\DX12\Provider\Texture\MipGenerator.cpp" />
     <ClCompile Include="Render\DX12\Provider\Texture\TextureGraphBuilder.cpp" />
     <ClCompile Include="Render\DX12\Provider\Texture\TextureProvider.cpp" />

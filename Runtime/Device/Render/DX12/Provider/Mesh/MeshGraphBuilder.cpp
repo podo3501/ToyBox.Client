@@ -53,8 +53,8 @@ void MeshGraphBuilder::LoadMeshes(
 
         m_registry.Register(hMesh.id, req.resource);
 
-        auto vbRes = m_resFactory.CreateBufferResource(static_cast<UINT64>(req.vbBytes));
-        auto ibRes = m_resFactory.CreateBufferResource(static_cast<UINT64>(req.ibBytes));
+        auto vbRes = m_resFactory.CreateResource(static_cast<UINT64>(req.vbBytes), ResInitType::Default);
+        auto ibRes = m_resFactory.CreateResource(static_cast<UINT64>(req.ibBytes), ResInitType::Default);
 
         size_t vbOffset = offset;
         size_t ibOffset = offset + req.vbBytes;
@@ -88,7 +88,7 @@ void MeshGraphBuilder::LoadMeshes(
 
     size_t totalUploadSize = AlignSize(offset, AlignVertexIndex);
     auto resCtx = std::make_shared<ResourceContext>();
-    resCtx->Set(hUploadRes, m_resFactory.CreateUploadResource(totalUploadSize));
+    resCtx->Set(hUploadRes, m_resFactory.CreateResource(totalUploadSize, ResInitType::Upload));
 
     m_taskScheduler.Submit(compiledTasks, resCtx);
 }

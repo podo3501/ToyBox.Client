@@ -23,7 +23,7 @@ public:
 
 private:
     ComPtr<ID3D12QueryHeap> m_queryHeap;
-    Resource m_readbackBuffer;
+    Resource m_readbackResource;
 
     uint64_t m_timestampFreq = 0;
 

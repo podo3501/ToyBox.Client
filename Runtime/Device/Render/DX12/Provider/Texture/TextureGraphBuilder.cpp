@@ -80,7 +80,7 @@ void TextureGraphBuilder::LoadTextures(const std::vector<TextureLoadRequest>& re
 
     size_t totalUploadSize = AlignSize(offset, AlignTexture);
     auto resCtx = std::make_shared<ResourceContext>();
-    resCtx->Set(hUploadRes, m_resFactory.CreateUploadResource(totalUploadSize));
+    resCtx->Set(hUploadRes, m_resFactory.CreateResource(totalUploadSize, ResInitType::Upload));
 
     m_taskScheduler.Submit(compiledTasks, resCtx);
 }
@@ -120,7 +120,7 @@ void TextureGraphBuilder::BuildMipPass(RenderGraph& graph, std::vector<TextureUp
             if (!tex.generateMips) continue;
 
             auto texRes = m_registry.GetTextureResource(tex.handle.id);
-            m_mipGenerator.GenerateMips(cmd, m_descFactory.GetSrvAllocator(), texRes);
+            m_mipGenerator.GenerateMips(cmd, m_descFactory.GetBindlessAllocator(), texRes);
         }
         };
 }
@@ -139,7 +139,7 @@ void TextureGraphBuilder::BuildFinalizePass(RenderGraph& graph, std::vector<Text
         for (auto& tex : finalizeEntries)
             m_registry.FinalizeTexture(tex.handle.id);
 
-        m_descFactory.GetSrvAllocator().ResetTransient(); //mipmap때 임시로 만든 srv/uav 정리.
+        m_descFactory.GetBindlessAllocator().ResetTransient(); //mipmap때 임시로 만든 srv/uav 정리.
         };
 }
 

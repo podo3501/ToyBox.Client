@@ -5,7 +5,6 @@ struct TextureAsset;
 class Resource;
 class CommandList;
 
-D3D12_RESOURCE_DESC CreateTextureDescriptor(UINT64 width, UINT height, DXGI_FORMAT format);
 D3D12_RESOURCE_DESC CreateTexture2DDesc(const TextureAsset& asset, bool mips);
 bool ShouldGenerateMips(const TextureAsset& asset, bool generateMips);
 void UploadTexture(

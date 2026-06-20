@@ -10,7 +10,7 @@ bool CommandList::Initialize(Device& device, CommandType type)
 {
     ReturnIfFailed(device->CreateCommandAllocator(ToD3D12(type), IID_PPV_ARGS(&m_allocator)));
     ReturnIfFailed(device->CreateCommandList(0, ToD3D12(type), m_allocator.Get(), nullptr, IID_PPV_ARGS(&m_command)));
-    Close(); // 초기 상태는 닫아둠
+    m_command->Close(); // 초기 상태는 닫아둠
 
     m_type = type;
     return true;
@@ -34,7 +34,10 @@ void CommandList::Reset()
 
 void CommandList::Close()
 {
+    Assert(m_recording);
     DxCheck(m_command->Close());
+
+    m_recording = false;
 }
 
 void CommandList::SetBindlessHeap(ID3D12DescriptorHeap* heap)
@@ -45,14 +48,14 @@ void CommandList::SetBindlessHeap(ID3D12DescriptorHeap* heap)
     m_command->SetDescriptorHeaps(1, heaps);
 }
 
-void CommandList::SetFence(ID3D12Fence* fence, uint64_t value)
+void CommandList::MarkSubmitted(ID3D12Fence* fence, uint64_t value)
 {
+    Assert(!m_recording);
+    Assert(fence);
     Assert(value != 0);
 
     m_fence = fence;
     m_lastFenceValue = value;
-
-    m_recording = false;
 }
 
 bool CommandList::IsAvailable() const
@@ -67,14 +70,4 @@ bool CommandList::IsAvailable() const
 
     bool completed = m_fence->GetCompletedValue() >= m_lastFenceValue; //시킨 일이 끝나 있는지
     return completed;
-}
-
-void CommandList::DependOn(CommandType type, uint64_t fenceValue)
-{
-    m_dependencies.push_back({ type, fenceValue });
-}
-
-const std::vector<QueueDependency>& CommandList::GetDependencies() const
-{
-    return m_dependencies;
 }

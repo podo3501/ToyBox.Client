@@ -9,7 +9,7 @@ DescriptorAllocator::DescriptorAllocator() noexcept = default;
 bool DescriptorAllocator::Initialize(Device& device, D3D12_DESCRIPTOR_HEAP_TYPE type, UINT maxCount) noexcept
 {
     m_capacity = maxCount;
-    m_allocated = 0;
+    m_allocFront = 0;
     m_shaderVisible = (type == D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
     m_heap = device.CreateDescriptorHeap(
@@ -30,43 +30,45 @@ bool DescriptorAllocator::Initialize(Device& device, D3D12_DESCRIPTOR_HEAP_TYPE 
 
 UINT DescriptorAllocator::Allocate() noexcept
 {
-    if (m_allocated + m_allocatedTransient + 1 > m_capacity)
+    if (m_allocFront + m_allocBack + 1 > m_capacity)
     {
         Assert(false); //디스크립터 힙이 가득 참. 지워서 새로 만들던지, 힙을 늘리던지.
         return UINT_MAX;
     }
 
-    UINT index = m_allocated;
-    m_allocated += 1;
+    UINT index = m_allocFront;
+    m_allocFront += 1;
 
     return index;
 }
 
 UINT DescriptorAllocator::AllocateTransient(UINT count) noexcept
 {
-    std::lock_guard<std::mutex> lock(m_allocTransientMutex);
-    if (m_allocated + m_allocatedTransient + count > m_capacity) // 두 영역이 충돌했는지 체크
+    std::lock_guard<std::mutex> lock(m_allocBackMutex);
+
+    UINT start = m_capacity - (m_allocBack + count); // 예: capacity가 1000이고 1개 요청했다면 -> m_allocatedTransient는 1이 됨 -> index는 999번 방 반환
+    UINT used = m_allocFront + m_allocBack;
+
+    if (used + count > m_capacity) // 두 영역이 충돌했는지 체크
     {
         Assert(false);
         return UINT_MAX;
     }
 
-    m_allocatedTransient += count; //count만큼 방을 확보
-    UINT index = m_capacity - m_allocatedTransient; // 예: capacity가 1000이고 1개 요청했다면 -> m_allocatedTransient는 1이 됨 -> index는 999번 방 반환
-
-    return index;
+    m_allocBack += count; //count만큼 방을 확보
+    return start;
 }
 
 void DescriptorAllocator::Reset() noexcept
 {
-    m_allocated = 0;
+    m_allocFront = 0;
     ResetTransient();
 }
 
 void DescriptorAllocator::ResetTransient() noexcept
 {
-    std::lock_guard<std::mutex> lock(m_allocTransientMutex);
-    m_allocatedTransient = 0;
+    std::lock_guard<std::mutex> lock(m_allocBackMutex);
+    m_allocBack = 0;
 }
 
 D3D12_CPU_DESCRIPTOR_HANDLE DescriptorAllocator::GetCpuHandle(UINT index) const noexcept

@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "PbrMaterialResource.h"
-#include "Provider/Texture/TextureProvider.h"
+#include "Resource/Texture/DefaultTextureType.h"
 
 PbrMaterialResource::~PbrMaterialResource() = default;
 PbrMaterialResource::PbrMaterialResource(const MaterialDesc& desc) :

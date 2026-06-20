@@ -1,12 +1,15 @@
 #pragma once
-#include "RenderContext.h"
+#include "Core/Foundation/Geometry2D.h"
 #include "RenderServiceConfig.h"
+#include "RenderRepository.h"
+#include "SceneRenderer.h"
 #include "../AssetAsync/AssetAsyncTypes.h"
 
 struct IRenderBackend;
 struct FrameData;
 struct Asset;
-class RenderContext;
+class MeshRepository;
+class MaterialRepository;
 
 class RenderService
 {
@@ -24,11 +27,17 @@ public:
 	void Render();
 	void Resize(const Size& size);
 
-	RenderContext* GetContext();
+	RenderRepository* GetRepository() { return m_repository.get(); }
+	SceneRenderer* GetRenderer() { return m_renderer.get(); }
 
 private:
 	RenderService(unique_ptr<IRenderBackend> backend, AssetPipelineT* assetPipeline);
 
 	unique_ptr<IRenderBackend> m_backend;
-	unique_ptr<RenderContext> m_context;
+
+	unique_ptr<MeshRepository> m_meshRepository;
+	unique_ptr<MaterialRepository> m_matRepository;
+
+	unique_ptr<RenderRepository> m_repository;
+	unique_ptr<SceneRenderer> m_renderer;
 };

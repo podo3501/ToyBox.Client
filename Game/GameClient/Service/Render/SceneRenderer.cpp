@@ -1,12 +1,11 @@
 #include "pch.h"
-#include "RenderContext.h"
+#include "SceneRenderer.h"
+#include "IRenderFrame.h"
 #include "RenderServiceConfig.h"
+#include "Resource/IMeshResource.h"
 #include "Repository/Material/MaterialRepository.h"
 #include "Repository/Mesh/MeshRepository.h"
-#include "Service/Asset/Assets/MeshAsset.h"
 #include "Desc/MeshDesc.h"
-#include "Resource/IMeshResource.h"
-#include "IBackendContext.h"
 
 struct ResolvedDrawData
 {
@@ -16,46 +15,26 @@ struct ResolvedDrawData
 
 namespace cm = Core::Math;
 
-RenderContext::~RenderContext() = default; 
-RenderContext::RenderContext(IBackendContext* backendContext, AssetPipelineT* assetPipeline) :
-	m_backendContext{ backendContext },
-	m_meshRepository{ make_unique<MeshRepository>(m_backendContext->GetMeshProvider(), assetPipeline) },
-	m_matRepository{ make_unique<MaterialRepository>(m_backendContext->GetMaterialProvider(), assetPipeline) }
+SceneRenderer::~SceneRenderer() = default;
+SceneRenderer::SceneRenderer(IRenderFrame* renderFrame, MeshRepository* meshRepository, MaterialRepository* matRepository) :
+	m_renderFrame{ renderFrame },
+	m_meshRepository{ meshRepository },
+	m_matRepository{ matRepository }
 {}
 
-bool RenderContext::Initialize(const DefaultMaterialDescs& defaultMat)
+bool SceneRenderer::Initialize(const DefaultMaterialDescs& defaultMat)
 {
 	MeshDesc meshDesc{ Core::ResourceID::MakeBuiltin("ui_quad") };
-	m_uiQuad = LoadMesh(meshDesc, CreateUIQuad());
+	m_uiQuad = m_meshRepository->GetOrCreate(meshDesc, CreateUIQuad());
 
-	m_defaultMaterials[(size_t)MaterialDomain::Surface] = LoadMaterial(defaultMat.surface);
-	m_defaultMaterials[(size_t)MaterialDomain::DebugSurface] = LoadMaterial(defaultMat.debugSurface);
-	m_defaultMaterials[(size_t)MaterialDomain::UserInterface] = LoadMaterial(defaultMat.userInterface);
+	m_defaultMaterials[(size_t)MaterialDomain::Surface] = m_matRepository->GetOrCreate(defaultMat.surface);
+	m_defaultMaterials[(size_t)MaterialDomain::DebugSurface] = m_matRepository->GetOrCreate(defaultMat.debugSurface);
+	m_defaultMaterials[(size_t)MaterialDomain::UserInterface] = m_matRepository->GetOrCreate(defaultMat.userInterface);
 
 	return true;
 }
 
-MeshHandle RenderContext::LoadMesh(const MeshDesc& desc, std::shared_ptr<MeshAsset> asset)
-{
-	return m_meshRepository->GetOrCreate(desc, asset);
-}
-
-bool RenderContext::ReleaseMesh(MeshHandle mh)
-{
-	return m_meshRepository->Release(mh);
-}
-
-MaterialHandle RenderContext::LoadMaterial(const MaterialDesc& desc)
-{
-	return m_matRepository->GetOrCreate(desc);
-}
-
-bool RenderContext::ReleaseMaterial(MaterialHandle mh)
-{
-	return m_matRepository->Release(mh);
-}
-
-void RenderContext::DrawSurface(MeshHandle hM, MaterialHandle hMtl, const cm::Matrix& world)
+void SceneRenderer::DrawSurface(MeshHandle hM, MaterialHandle hMtl, const cm::Matrix& world)
 {
 	if (!hMtl)
 		hMtl = GetDefaultMaterial(MaterialDomain::Surface);
@@ -63,10 +42,10 @@ void RenderContext::DrawSurface(MeshHandle hM, MaterialHandle hMtl, const cm::Ma
 	auto data = ResolveResources(hM, hMtl);
 	if (!data) return;
 
-	m_backendContext->DrawSurface(data->meshRes, data->matRes, world);
+	m_renderFrame->DrawSurface(data->meshRes, data->matRes, world);
 }
 
-void RenderContext::DrawDebugSurface(MeshHandle hM, MaterialHandle hMtl, const cm::Matrix& world)
+void SceneRenderer::DrawDebugSurface(MeshHandle hM, MaterialHandle hMtl, const cm::Matrix& world)
 {
 	if (!hMtl)
 		hMtl = GetDefaultMaterial(MaterialDomain::DebugSurface);
@@ -74,10 +53,10 @@ void RenderContext::DrawDebugSurface(MeshHandle hM, MaterialHandle hMtl, const c
 	auto data = ResolveResources(hM, hMtl);
 	if (!data) return;
 
-	m_backendContext->DrawSurface(data->meshRes, data->matRes, world);
+	m_renderFrame->DrawSurface(data->meshRes, data->matRes, world);
 }
 
-void RenderContext::DrawUI(MaterialHandle hMtl, const Rect& dest, const Rect* source)
+void SceneRenderer::DrawUI(MaterialHandle hMtl, const Rect& dest, const Rect* source)
 {
 	if (!hMtl)
 		hMtl = GetDefaultMaterial(MaterialDomain::UserInterface);
@@ -108,10 +87,10 @@ void RenderContext::DrawUI(MaterialHandle hMtl, const Rect& dest, const Rect* so
 		// matRes->SetUVTransform(uvScale, uvOffset);
 	}
 
-	m_backendContext->DrawUI(data->meshRes, data->matRes, world);
+	m_renderFrame->DrawUI(data->meshRes, data->matRes, world);
 }
 
-std::optional<ResolvedDrawData> RenderContext::ResolveResources(MeshHandle hM, MaterialHandle hMtl)
+std::optional<ResolvedDrawData> SceneRenderer::ResolveResources(MeshHandle hM, MaterialHandle hMtl)
 {
 	auto mesh = m_meshRepository->Get(hM);
 	if (!mesh || mesh->state != LoadState::Ready)
@@ -126,24 +105,12 @@ std::optional<ResolvedDrawData> RenderContext::ResolveResources(MeshHandle hM, M
 	return ResolvedDrawData{ mesh->meshRes, material->matRes };
 }
 
-void RenderContext::SetFrameData(const FrameData& frameData)
+void SceneRenderer::SetFrameData(const FrameData& frameData)
 {
-	m_backendContext->SetFrameData(frameData);
+	m_renderFrame->SetFrameData(frameData);
 }
 
-void RenderContext::Update()
-{
-	m_meshRepository->Update();
-	m_matRepository->Update();
-}
-
-void RenderContext::ReleaseAll()
-{
-	m_meshRepository->ReleaseAll();
-	m_matRepository->ReleaseAll();
-}
-
-std::shared_ptr<MeshAsset> RenderContext::CreateUIQuad()
+std::shared_ptr<MeshAsset> SceneRenderer::CreateUIQuad()
 {
 	auto asset = std::make_shared<MeshAsset>();
 	asset->format = VertexFormat::UI;
@@ -168,7 +135,7 @@ std::shared_ptr<MeshAsset> RenderContext::CreateUIQuad()
 	return asset;
 }
 
-MaterialHandle RenderContext::GetDefaultMaterial(MaterialDomain matDomain) const
+MaterialHandle SceneRenderer::GetDefaultMaterial(MaterialDomain matDomain) const
 {
 	return m_defaultMaterials[static_cast<size_t>(matDomain)];
 }

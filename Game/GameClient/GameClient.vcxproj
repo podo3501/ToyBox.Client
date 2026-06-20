@@ -50,10 +50,11 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="Service\Input\InputService.cpp" />
-    <ClCompile Include="Service\Render\RenderContext.cpp" />
+    <ClCompile Include="Service\Render\SceneRenderer.cpp" />
     <ClCompile Include="Service\Render\RenderService.cpp" />
     <ClCompile Include="Service\Render\Repository\Material\MaterialRepository.cpp" />
     <ClCompile Include="Service\Render\Repository\Mesh\MeshRepository.cpp" />
+    <ClCompile Include="Service\Render\RenderRepository.cpp" />
     <ClCompile Include="UserInterface\CommandHistory\TextureResource\TexResCommandHistory.cpp" />
     <ClCompile Include="UserInterface\CommandHistory\TextureResource\TexResCommandRegistry.cpp" />
     <ClCompile Include="UserInterface\CommandHistory\UserInterface\UICommandHistory.cpp" />
@@ -182,10 +183,11 @@
     <ClInclude Include="Service\Render\Handle\MaterialHandle.h" />
     <ClInclude Include="Service\Render\Handle\MeshHandle.h" />
     <ClInclude Include="Service\Render\Handle\TextureHandle.h" />
-    <ClInclude Include="Service\Render\IBackendContext.h" />
+    <ClInclude Include="Service\Render\IRenderFrame.h" />
     <ClInclude Include="Service\Render\IRenderBackend.h" />
+    <ClInclude Include="Service\Render\IResourceProvider.h" />
     <ClInclude Include="Service\Render\RenderConfig.h" />
-    <ClInclude Include="Service\Render\RenderContext.h" />
+    <ClInclude Include="Service\Render\SceneRenderer.h" />
     <ClInclude Include="Service\Render\RenderService.h" />
     <ClInclude Include="Service\Render\RenderServiceConfig.h" />
     <ClInclude Include="Service\Render\Repository\Material\IMaterialProvider.h" />
@@ -193,6 +195,7 @@
     <ClInclude Include="Service\Render\Repository\Mesh\IMeshProvider.h" />
     <ClInclude Include="Service\Render\Repository\Mesh\MeshRepository.h" />
     <ClInclude Include="Service\Render\Repository\ResourceTypes.h" />
+    <ClInclude Include="Service\Render\RenderRepository.h" />
     <ClInclude Include="Service\Render\Resource\IMaterialResource.h" />
     <ClInclude Include="Service\Render\Resource\IMeshResource.h" />
     <ClInclude Include="Service\Render\Resource\ITextureResource.h" />

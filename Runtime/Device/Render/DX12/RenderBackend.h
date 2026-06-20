@@ -8,8 +8,9 @@
 #include "Factory/ResourceFactory.h"
 #include "Shader/ShaderLibrary.h"
 #include "Core/GPUProfiler.h"
+#include "Provider/ResourceProvider.h"
 #include "Pipeline/ForwardRenderPipeline.h"
-#include "BackendContext.h"
+#include "RenderFrame.h"
 
 class RenderBackend : public IRenderBackend
 {
@@ -21,7 +22,8 @@ public:
 	virtual void Update() override;
 	virtual void Render() override;
 	virtual void WaitIdle() override;
-	virtual IBackendContext* GetBackendContext() override { return &m_backendContext; }
+	virtual IResourceProvider* GetResourceProvider() override { return &m_resProvider; }
+	virtual IRenderFrame* GetRenderFrame() override { return &m_renderFrame; }
 
 private:
 	Device m_device;
@@ -34,6 +36,7 @@ private:
 	ResourceFactory m_resFactory;
 	ShaderLibrary m_shaderLibrary;
 	GPUProfiler m_profiler;
+	ResourceProvider m_resProvider;
 	ForwardRenderPipeline m_pipeline;
-	BackendContext m_backendContext;
+	RenderFrame m_renderFrame;
 };

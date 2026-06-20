@@ -1,10 +1,10 @@
 #include "pch.h"
 #include "TextureUtils.h"
 #include "Resource/Resource.h"
+#include "Helpers/TextureHelpers.h"
 #include "Command/CommandList.h"
 #include "Core/D3D12Conversions.h"
 #include "GameClient/Service/Asset/Assets/TextureAsset.h"
-#include "d3dx12.h"
 
 static bool IsUAVCompatibleFormat(DXGI_FORMAT format)
 {
@@ -34,25 +34,6 @@ static void ApplyMipSettings(D3D12_RESOURCE_DESC& desc, bool canGenerateMips)
 
     desc.MipLevels = 0; // full mip chain
     desc.Flags |= D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
-}
-
-D3D12_RESOURCE_DESC CreateTextureDescriptor(
-    UINT64 width,
-    UINT height,
-    DXGI_FORMAT format)
-{
-    D3D12_RESOURCE_DESC desc{};
-    desc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-    desc.Width = width;
-    desc.Height = height;
-    desc.Format = format;
-    desc.DepthOrArraySize = 1;
-    desc.SampleDesc.Count = 1;
-    desc.MipLevels = 1;
-    desc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
-    Assert(desc.Flags == 0);
-
-    return desc;
 }
 
 D3D12_RESOURCE_DESC CreateTexture2DDesc(const TextureAsset& asset, bool mips)

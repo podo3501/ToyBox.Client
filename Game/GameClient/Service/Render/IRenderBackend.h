@@ -2,7 +2,8 @@
 #include "RenderConfig.h"
 #include "Core/Math/Matrix.h"
 #include "Core/Foundation/Geometry2D.h"
-#include "IBackendContext.h"
+#include "IResourceProvider.h"
+#include "IRenderFrame.h"
 
 struct IMeshResource;
 struct IMaterialResource;
@@ -20,7 +21,8 @@ struct IRenderBackend
 	virtual void Update() = 0;
 	virtual void Render() = 0;
 	virtual void WaitIdle() = 0;
-	virtual IBackendContext* GetBackendContext() = 0;
+	virtual IResourceProvider* GetResourceProvider() = 0;
+	virtual IRenderFrame* GetRenderFrame() = 0;
 };
 
 std::unique_ptr<IRenderBackend> CreateRenderBackend(const RenderConfig& config);

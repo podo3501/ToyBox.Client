@@ -346,10 +346,10 @@
     <ClInclude Include="Render\DX12\Shader\ShaderLibrary.h">
       <Filter>Render\DX12\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\BackendContext.h">
+    <ClInclude Include="Render\DX12\RenderFrame.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\Provider\ResourceProviders.h">
+    <ClInclude Include="Render\DX12\Provider\ResourceProvider.h">
       <Filter>Render\DX12\Provider</Filter>
     </ClInclude>
     <ClInclude Include="Render\DX12\Provider\Material\MaterialProvider.h">
@@ -384,6 +384,12 @@
     </ClInclude>
     <ClInclude Include="Render\DX12\Provider\Texture\TextureRegistry.h">
       <Filter>Render\DX12\Provider\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Resource\Texture\DefaultTextureType.h">
+      <Filter>Render\DX12\Resource\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Helpers\TextureHelpers.h">
+      <Filter>Render\DX12\Helpers</Filter>
     </ClInclude>
     <ClInclude Include="Render\DX12\Provider\Texture\TextureUtils.h">
       <Filter>Render\DX12\Provider\Texture</Filter>
@@ -589,10 +595,10 @@
     <ClCompile Include="Render\DX12\Shader\ShaderLibrary.cpp">
       <Filter>Render\DX12\Shader</Filter>
     </ClCompile>
-    <ClCompile Include="Render\DX12\BackendContext.cpp">
+    <ClCompile Include="Render\DX12\RenderFrame.cpp">
       <Filter>Render\DX12</Filter>
     </ClCompile>
-    <ClCompile Include="Render\DX12\Provider\ResourceProviders.cpp">
+    <ClCompile Include="Render\DX12\Provider\ResourceProvider.cpp">
       <Filter>Render\DX12\Provider</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\Provider\Material\MaterialProvider.cpp">
@@ -621,6 +627,9 @@
     </ClCompile>
     <ClCompile Include="Render\DX12\Provider\Texture\TextureRegistry.cpp">
       <Filter>Render\DX12\Provider\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Helpers\TextureHelpers.cpp">
+      <Filter>Render\DX12\Helpers</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\Provider\Texture\TextureUtils.cpp">
       <Filter>Render\DX12\Provider\Texture</Filter>

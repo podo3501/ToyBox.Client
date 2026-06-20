@@ -4,7 +4,7 @@
 #include "Core/Device.h"
 #include "Factory/ResourceFactory.h"
 #include "Factory/DescriptorFactory.h"
-#include "Provider/Texture/TextureUtils.h"
+#include "Helpers/TextureHelpers.h"
 
 bool ShadowResource::Initialize(Device& device, DescriptorFactory& factory, const Size& shadowMapSize)
 {

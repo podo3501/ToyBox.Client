@@ -3,17 +3,21 @@
 
 class Device;
 
+enum class ResInitType
+{
+    Upload,
+    Default,
+    Readback
+};
+
 class ResourceFactory
 {
 public:
     ~ResourceFactory();
     ResourceFactory(Device& device);
 
-    Resource CreateUploadResource(UINT64 size); //cpu->gpu
     Resource CreateTextureResource(const D3D12_RESOURCE_DESC& desc);
-    Resource CreateBufferResource(UINT64 size);
-    Resource CreateReadbackBuffer(UINT64 size); //gpu->cpu
-    Resource CreateShadowResource(UINT width, UINT height);
+    Resource CreateResource(UINT64 size, ResInitType type);
 
     UINT64 GetRequiredIntermediateSize(
         const D3D12_RESOURCE_DESC& desc,

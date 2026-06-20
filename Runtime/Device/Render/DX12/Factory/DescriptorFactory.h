@@ -19,12 +19,12 @@ public:
     UINT CreateTextureSRV(const Resource& res, DXGI_FORMAT format, UINT mipLevels = 1);
     UINT CreateTextureDSV(const Resource& res, DXGI_FORMAT format, UINT mipSlice = 0);
     bool CreateTextureViews(TextureResource* texRes, bool generateMips);
-    DescriptorAllocator& GetSrvAllocator() noexcept { return m_srvAllocator; }
+    DescriptorAllocator& GetBindlessAllocator() noexcept { return m_bindlessAllocator; }
     DescriptorAllocator& GetDsvAllocator() noexcept { return m_dsvAllocator; }
 
     D3D12_CPU_DESCRIPTOR_HANDLE GetDsvHandle(UINT index); //dsv는 gpu 핸들 api를 제공하지 않는다.
-    D3D12_CPU_DESCRIPTOR_HANDLE GetSrvCpuHandle(UINT index);
-    D3D12_GPU_DESCRIPTOR_HANDLE GetSrvGpuHandle(UINT index);
+    D3D12_CPU_DESCRIPTOR_HANDLE GetBindlessCpuHandle(UINT index);
+    D3D12_GPU_DESCRIPTOR_HANDLE GetBindlessGpuHandle(UINT index);
 
 private:
     D3D12_SHADER_RESOURCE_VIEW_DESC CreateStructuredBufferSRVDesc(UINT numElements, UINT stride) const;
@@ -32,6 +32,6 @@ private:
     UINT CreateMipUAV(const Resource& res, DXGI_FORMAT format, UINT mipLevel);
 
     Device& m_device;
-    DescriptorAllocator m_srvAllocator;
+    DescriptorAllocator m_bindlessAllocator; // srv/uav/cbv 셋다 하나의 큰 힙에 들어감. cbv는 거의 안씀.
     DescriptorAllocator m_dsvAllocator;
 };

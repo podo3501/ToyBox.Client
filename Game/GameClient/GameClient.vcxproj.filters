@@ -216,7 +216,7 @@
     <ClCompile Include="Graphics\Geometry\MaterialDescFactory.cpp">
       <Filter>Graphics\Geometry</Filter>
     </ClCompile>
-    <ClCompile Include="Service\Render\RenderContext.cpp">
+    <ClCompile Include="Service\Render\SceneRenderer.cpp">
       <Filter>Service\Render</Filter>
     </ClCompile>
     <ClCompile Include="Service\Render\Repository\Material\MaterialRepository.cpp">
@@ -239,6 +239,9 @@
     </ClCompile>
     <ClCompile Include="Graphics\World\CameraInputMapper.cpp">
       <Filter>Graphics\World</Filter>
+    </ClCompile>
+    <ClCompile Include="Service\Render\RenderRepository.cpp">
+      <Filter>Service\Render</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -559,7 +562,7 @@
     <ClInclude Include="Service\Asset\Assets\ShaderAsset.h">
       <Filter>Service\Asset\Assets</Filter>
     </ClInclude>
-    <ClInclude Include="Service\Render\RenderContext.h">
+    <ClInclude Include="Service\Render\SceneRenderer.h">
       <Filter>Service\Render</Filter>
     </ClInclude>
     <ClInclude Include="Service\Render\Handle\MaterialHandle.h">
@@ -661,7 +664,13 @@
     <ClInclude Include="Graphics\RenderData\DirectionalLightData.h">
       <Filter>Graphics\RenderData</Filter>
     </ClInclude>
-    <ClInclude Include="Service\Render\IBackendContext.h">
+    <ClInclude Include="Service\Render\IRenderFrame.h">
+      <Filter>Service\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\IResourceProvider.h">
+      <Filter>Service\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\RenderRepository.h">
       <Filter>Service\Render</Filter>
     </ClInclude>
   </ItemGroup>

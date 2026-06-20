@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "ResourceFactory.h"
 #include "Core/Device.h"
-#include "Provider/Texture/TextureUtils.h"
 
 static D3D12_RESOURCE_DESC CreateBufferDesc(UINT64 size) { return CD3DX12_RESOURCE_DESC::Buffer(size); }
 
@@ -10,14 +9,6 @@ ResourceFactory::ResourceFactory(Device& device) :
     m_device{ device }
 {}
 
-Resource ResourceFactory::CreateUploadResource(UINT64 size)
-{
-    return m_device.CreateResource(
-        CreateBufferDesc(size),
-        D3D12_HEAP_TYPE_UPLOAD,
-        D3D12_RESOURCE_STATE_GENERIC_READ);
-}
-
 Resource ResourceFactory::CreateTextureResource(const D3D12_RESOURCE_DESC& desc)
 {
     return m_device.CreateResource(desc,
@@ -25,20 +16,32 @@ Resource ResourceFactory::CreateTextureResource(const D3D12_RESOURCE_DESC& desc)
         D3D12_RESOURCE_STATE_COMMON);
 }
 
-Resource ResourceFactory::CreateBufferResource(UINT64 size)
+Resource ResourceFactory::CreateResource(UINT64 size, ResInitType type)
 {
-    return m_device.CreateResource(
-        CreateBufferDesc(size),
-        D3D12_HEAP_TYPE_DEFAULT,
-        D3D12_RESOURCE_STATE_COMMON);
-}
+    const D3D12_RESOURCE_DESC desc = CD3DX12_RESOURCE_DESC::Buffer(size);
 
-Resource ResourceFactory::CreateReadbackBuffer(UINT64 size)
-{
-    return m_device.CreateResource(
-        CreateBufferDesc(size),
-        D3D12_HEAP_TYPE_READBACK,
-        D3D12_RESOURCE_STATE_COPY_DEST);
+    D3D12_HEAP_TYPE heapType = D3D12_HEAP_TYPE_DEFAULT;
+    D3D12_RESOURCE_STATES initState = D3D12_RESOURCE_STATE_COMMON;
+
+    switch (type)
+    {
+    case ResInitType::Upload: //cpu->gpu
+        heapType = D3D12_HEAP_TYPE_UPLOAD;
+        initState = D3D12_RESOURCE_STATE_GENERIC_READ;
+        break;
+
+    case ResInitType::Default:
+        heapType = D3D12_HEAP_TYPE_DEFAULT;
+        initState = D3D12_RESOURCE_STATE_COMMON;
+        break;
+
+    case ResInitType::Readback: //gpu->cpu
+        heapType = D3D12_HEAP_TYPE_READBACK;
+        initState = D3D12_RESOURCE_STATE_COPY_DEST;
+        break;
+    }
+
+    return m_device.CreateResource(desc, heapType, initState);
 }
 
 UINT64 ResourceFactory::GetRequiredIntermediateSize(

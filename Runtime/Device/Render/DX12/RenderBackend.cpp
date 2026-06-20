@@ -9,8 +9,8 @@ RenderBackend::RenderBackend(const RenderConfig& config) :
     m_swapChain{ m_cmdScheduler },
     m_descFactory{ m_device },
     m_resFactory{ m_device },
-    m_pipeline{ m_device, m_swapChain, m_descFactory, m_shaderLibrary },
-    m_backendContext{ m_device, m_descFactory, m_resFactory, m_taskScheduler }
+    m_resProvider{ m_device, m_descFactory, m_resFactory, m_taskScheduler },
+    m_pipeline{ m_device, m_swapChain, m_descFactory, m_shaderLibrary }
 {}
 
 void RenderBackend::WaitIdle()
@@ -31,8 +31,8 @@ bool RenderBackend::Initialize(
     ReturnIfFalse(m_descFactory.Initialize(m_config.descriptors));
     ReturnIfFalse(m_shaderLibrary.Initialize(shaders));
     ReturnIfFalse(m_profiler.Initialize(m_device, m_cmdScheduler, m_resFactory));
+    ReturnIfFalse(m_resProvider.Initialize(m_shaderLibrary));
     ReturnIfFalse(m_pipeline.Initialize(screenSize, shadowMapSize));
-    ReturnIfFalse(m_backendContext.Initialize(m_shaderLibrary));
     
     return true;
 }
@@ -50,7 +50,7 @@ void RenderBackend::Update()
     m_profiler.Update();
     float gpuMs = m_profiler.GetGpuFrameTimeMs();
 
-    m_backendContext.Update(gpuMs);
+    m_resProvider.Update(gpuMs);
 }
 
 void RenderBackend::Render()
@@ -60,13 +60,13 @@ void RenderBackend::Render()
         return;
 
     m_profiler.BeginFrame(*cmd);
-    m_pipeline.Render(*cmd, m_backendContext.PrepareRenderData(), m_backendContext.GetFrameData());
+    m_pipeline.Render(*cmd, m_renderFrame.PrepareRenderData(), m_renderFrame.GetFrameData());
     m_profiler.EndFrame(*cmd);
 
     m_cmdScheduler.End();
     m_swapChain.Present(false);
 
-    m_backendContext.Clear();
+    m_renderFrame.Clear();
 }
 
 //////////////////////////////////////////////////////

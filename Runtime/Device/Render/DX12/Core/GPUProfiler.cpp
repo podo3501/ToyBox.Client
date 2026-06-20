@@ -18,7 +18,7 @@ bool GPUProfiler::Initialize(Device& device, CommandScheduler& cmdScheduler,
         frameCount * kQueriesPerFrame);
 
     UINT size = sizeof(uint64_t) * frameCount * kQueriesPerFrame;
-    m_readbackBuffer = resFactory.CreateReadbackBuffer(size);
+    m_readbackResource = resFactory.CreateResource(size, ResInitType::Readback);
 
     return true;
 }
@@ -40,7 +40,7 @@ void GPUProfiler::EndFrame(CommandList& cmd)
         D3D12_QUERY_TYPE_TIMESTAMP,
         idx * 2,
         2,
-        m_readbackBuffer.Get(),
+        m_readbackResource.Get(),
         idx * sizeof(uint64_t) * 2
     );
 
@@ -58,7 +58,7 @@ void GPUProfiler::Update()
         (idx + 1) * sizeof(uint64_t) * 2
     };
 
-    if (SUCCEEDED(m_readbackBuffer->Map(0, &range, (void**)&data)))
+    if (SUCCEEDED(m_readbackResource->Map(0, &range, (void**)&data)))
     {
         uint64_t start = data[idx * 2];
         uint64_t end = data[idx * 2 + 1];
@@ -66,6 +66,6 @@ void GPUProfiler::Update()
         m_gpuFrameTimeMs =
             float(end - start) * 1000.0f / float(m_timestampFreq);
 
-        m_readbackBuffer->Unmap(0, nullptr);
+        m_readbackResource->Unmap(0, nullptr);
     }
 }

@@ -1,8 +1,8 @@
 #include "pch.h"
-#include "ResourceProviders.h"
+#include "ResourceProvider.h"
 
-ResourceProviders::~ResourceProviders() = default;
-ResourceProviders::ResourceProviders(
+ResourceProvider::~ResourceProvider() = default;
+ResourceProvider::ResourceProvider(
 	Device& device, 
 	DescriptorFactory& descFactory,
 	ResourceFactory& resFactory,
@@ -13,7 +13,7 @@ ResourceProviders::ResourceProviders(
 	m_matProvider{ m_texProvider }
 {}
 
-bool ResourceProviders::Initialize(ShaderLibrary& shaderLibrary)
+bool ResourceProvider::Initialize(ShaderLibrary& shaderLibrary)
 {
 	return m_texProvider.Initialize(shaderLibrary);
 }
@@ -50,7 +50,7 @@ static size_t ComputeMeshBudget(float gpuMs)
     );
 }
 
-void ResourceProviders::Update(float gpuMs)
+void ResourceProvider::Update(float gpuMs)
 {
     m_texProvider.Update(ComputeTextureBudget(gpuMs));
     m_matProvider.Update();

@@ -31,9 +31,9 @@ private:
     bool m_shaderVisible{ false }; //dsv랑 점점 다른게 많아지면 클래스를 분리해야 함.
     UINT m_descriptorSize{ 0 };
     UINT m_capacity{ 0 };
-    UINT m_allocated{ 0 }; //현재할당
-    UINT m_allocatedTransient{ 0 }; //뒤에서부터 채워지는 카운터 (최대치에서 깎아내려감)
-    std::mutex m_allocTransientMutex;
+    UINT m_allocFront{ 0 }; //앞에서부터 채워지는것. 지워지지 않을것. 스택 느낌
+    UINT m_allocBack{ 0 }; //뒤에서부터 채워지는 것. 임시로 만들었다가 지워지는것들. 힙 느낌.
+    std::mutex m_allocBackMutex; //뒤에서 부터 채워지는 건 공유 가능한 임시 영역이라 mutex가 필요함.
 
     D3D12_CPU_DESCRIPTOR_HANDLE m_cpuStart{};
     D3D12_GPU_DESCRIPTOR_HANDLE m_gpuStart{};

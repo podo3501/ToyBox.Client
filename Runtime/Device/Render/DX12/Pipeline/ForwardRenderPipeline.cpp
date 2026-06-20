@@ -82,8 +82,8 @@ void ForwardRenderPipeline::Render(CommandList& cmd, const DrawPacket& drawPacke
     ctx.frame = frame;
     ctx.drawPacket = drawPacket;
 
-    auto& srvAllocator = m_descFactory.GetSrvAllocator();
-    cmd.SetBindlessHeap(srvAllocator.GetHeap());
+    auto& bindlessAllocator = m_descFactory.GetBindlessAllocator();
+    cmd.SetBindlessHeap(bindlessAllocator.GetHeap());
 
     m_graph.Execute(cmd, m_compiledTasks, ctx);
 }
