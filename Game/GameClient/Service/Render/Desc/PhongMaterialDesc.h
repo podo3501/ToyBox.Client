@@ -8,6 +8,11 @@ enum class PhongTextureSlot : uint32_t
     Count
 };
 
+constexpr TextureSlot Resolve(PhongTextureSlot s)
+{
+    return static_cast<TextureSlot>(s);
+}
+
 struct PhongSurface
 {
     float normal{ 1.0f };    // 1. Normal Map의 강도 조절 (PBR과 동일)

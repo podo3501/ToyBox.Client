@@ -8,10 +8,8 @@ namespace SurfaceMatDescFactory
         PhongMaterialDesc CreateLit(const PhongTextureArgs& texArgs)
         {
             PhongMaterialDesc desc{};
-
-            desc.textures.resize(static_cast<size_t>(PhongTextureSlot::Count));
-            desc.textures[static_cast<size_t>(PbrTextureSlot::Albedo)] = texArgs.albedo;
-            desc.textures[static_cast<size_t>(PbrTextureSlot::Normal)] = texArgs.normal;
+            desc.textures[Resolve(PhongTextureSlot::Albedo)] = texArgs.albedo;
+            desc.textures[Resolve(PhongTextureSlot::Normal)] = texArgs.normal;
 
             return desc;
         }
@@ -34,11 +32,9 @@ namespace SurfaceMatDescFactory
         PbrMaterialDesc CreateLit(const PbrTextureArgs& texArgs)
         {
             PbrMaterialDesc desc{};
-
-            desc.textures.resize(static_cast<size_t>(PbrTextureSlot::Count));
-            desc.textures[static_cast<size_t>(PbrTextureSlot::Albedo)] = texArgs.albedo;
-            desc.textures[static_cast<size_t>(PbrTextureSlot::Normal)] = texArgs.normal;
-            desc.textures[static_cast<size_t>(PbrTextureSlot::ARM)] = texArgs.arm;
+            desc.textures[Resolve(PbrTextureSlot::Albedo)] = texArgs.albedo;
+            desc.textures[Resolve(PbrTextureSlot::Normal)] = texArgs.normal;
+            desc.textures[Resolve(PbrTextureSlot::ARM)] = texArgs.arm;
 
             return desc;
         }
@@ -63,9 +59,7 @@ namespace DebugSurfaceMatDescFactory
 UIMaterialDesc UIMatDescFactory::CreateDefault(const UITextureArgs& texArgs)
 {
     UIMaterialDesc desc{};
-
-    desc.textures.resize(static_cast<size_t>(UITextureSlot::Count));
-    desc.textures[static_cast<size_t>(UITextureSlot::Normal)] = texArgs.normal;
+    desc.textures[Resolve(UITextureSlot::Normal)] = texArgs.normal;
 
     return desc;
 }

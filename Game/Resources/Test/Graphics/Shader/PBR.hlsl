@@ -14,12 +14,7 @@ cbuffer MeshIndicesCB : register(b0)
     uint g_ibIndex;
 };
 
-cbuffer ObjectCB : register(b1)
-{
-    float4x4 world;
-};
-
-cbuffer MeshFrameCB : register(b2)
+cbuffer MeshFrameCB : register(b1)
 {
     float4x4 view;
     float4x4 proj;
@@ -33,6 +28,11 @@ cbuffer MeshFrameCB : register(b2)
 
     float3 lightColor;
     uint shadowTextureIndex;
+};
+
+cbuffer ObjectCB : register(b2)
+{
+    float4x4 world;
 };
 
 cbuffer PbrMaterialCB : register(b3)

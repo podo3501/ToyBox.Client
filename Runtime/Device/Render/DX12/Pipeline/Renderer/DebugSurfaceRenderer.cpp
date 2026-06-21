@@ -32,9 +32,9 @@ bool DebugSurfaceRenderer::CreateRootSignature(Device& device)
 {
     RootSignatureBuilder builder;
 
-    builder.Add32BitConstants(0, 1); // GridIndicesCB (b0)
-    builder.AddCBV(1); // b1
-    builder.AddCBV(2); // b2 ObjectCB
+    builder.Add32BitConstants(Core::ToIndex(RootSlot::IndexCB), 1);
+    builder.AddCBV(Core::ToIndex(RootSlot::FrameCB));
+    builder.AddCBV(Core::ToIndex(RootSlot::ObjectCB));
 
     builder.AddFlags(D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
@@ -47,21 +47,39 @@ void DebugSurfaceRenderer::CreateDefaultPSOs()
     CreatePSO(PipelineLibrary::Get(ShadingModel::Grid, RasterPreset::Default, PrimitiveTopologyType::Line));
 }
 
-void DebugSurfaceRenderer::BindRootSignature(CommandList& cmd)
+void DebugSurfaceRenderer::PrepareFrame(const CameraData& camera)
+{
+    m_currentPSO = nullptr;
+
+    m_objectCBAllocator.Reset();
+    m_frameCBAllocator.Reset();
+
+    FrameCB frame{};
+    DirectX::XMMATRIX view = ToDXMatrix(camera.view);
+    DirectX::XMMATRIX proj = ToDXMatrix(camera.proj);
+
+    // GPU용으로 transpose해서 저장
+    XMStoreFloat4x4(&frame.view, DirectX::XMMatrixTranspose(view));
+    XMStoreFloat4x4(&frame.proj, DirectX::XMMatrixTranspose(proj));
+
+    m_frameCBAddress = m_frameCBAllocator.AllocateConstant(frame);
+}
+
+void DebugSurfaceRenderer::BeginFrame(CommandList& cmd)
 {
     cmd->SetGraphicsRootSignature(m_rootSignature.Get());
+    cmd->SetGraphicsRootConstantBufferView(Core::ToIndex(RootSlot::FrameCB), m_frameCBAddress);
 }
 
 void DebugSurfaceRenderer::BindPipeline(CommandList& cmd, const PipelineState& pipelineState)
 {
-    if (m_pipelineState && *m_pipelineState == pipelineState)
+    auto* pso = GetPipeline(pipelineState);
+    if (m_currentPSO == pso)
         return;
 
-    auto pipeline = GetPipeline(pipelineState);
-    cmd->SetPipelineState(pipeline);
+    cmd->SetPipelineState(pso);
     cmd->IASetPrimitiveTopology(ToD3D12_Draw(pipelineState.topologyType));
-
-    m_pipelineState = pipelineState;
+    m_currentPSO = pso;
 }
 
 ID3D12PipelineState* DebugSurfaceRenderer::GetPipeline(const PipelineState& pipelineState)
@@ -82,28 +100,10 @@ ID3D12PipelineState* DebugSurfaceRenderer::CreatePSO(const PipelineState& pipeli
         {
             pso.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
             pso.DepthStencilState.DepthEnable = TRUE;
-            pso.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
+            pso.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
             pso.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS;
             pso.DSVFormat = DXGI_FORMAT_D32_FLOAT;
         });
-}
-
-void DebugSurfaceRenderer::PrepareFrame(const CameraData& camera)
-{
-    m_pipelineState = std::nullopt;
-
-    m_objectCBAllocator.Reset();
-    m_frameCBAllocator.Reset();
-
-    FrameCB frame{};
-    DirectX::XMMATRIX view = ToDXMatrix(camera.view);
-    DirectX::XMMATRIX proj = ToDXMatrix(camera.proj);
-
-    // GPU용으로 transpose해서 저장
-    XMStoreFloat4x4(&frame.view, DirectX::XMMatrixTranspose(view));
-    XMStoreFloat4x4(&frame.proj, DirectX::XMMatrixTranspose(proj));
-
-    m_frameCBAddress = m_frameCBAllocator.AllocateConstant(frame);
 }
 
 void DebugSurfaceRenderer::Draw(CommandList& cmd, MeshResource& mesh, const cm::Matrix& world)
@@ -111,9 +111,8 @@ void DebugSurfaceRenderer::Draw(CommandList& cmd, MeshResource& mesh, const cm::
     auto objectCBAddress = UpdateObjectCB(world);
     uint32_t vbIndex = mesh.GetVertexHeapIndex();
 
-    cmd->SetGraphicsRoot32BitConstants(0, 1, &vbIndex, 0);
-    cmd->SetGraphicsRootConstantBufferView(1, m_frameCBAddress);
-    cmd->SetGraphicsRootConstantBufferView(2, objectCBAddress);
+    cmd->SetGraphicsRoot32BitConstants(Core::ToIndex(RootSlot::IndexCB), 1, &vbIndex, 0);
+    cmd->SetGraphicsRootConstantBufferView(Core::ToIndex(RootSlot::ObjectCB), objectCBAddress);
 
     cmd->DrawInstanced(mesh.GetVertexCount(), 1, 0, 0);
 }

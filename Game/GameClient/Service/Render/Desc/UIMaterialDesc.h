@@ -8,6 +8,11 @@ enum class UITextureSlot : uint32_t
     Count
 };
 
+constexpr TextureSlot Resolve(UITextureSlot s)
+{
+    return static_cast<TextureSlot>(s);
+}
+
 struct UIMaterialDesc : public MaterialDesc
 {
     UIMaterialDesc()

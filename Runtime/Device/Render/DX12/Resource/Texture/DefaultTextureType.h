@@ -7,3 +7,9 @@ enum class DefaultTextureType
     Orange, //arm용 오렌지색(1, 0.5, 0)
     Count
 };
+
+struct DefaultTextureBinding
+{
+    TextureSlot slot;
+    DefaultTextureType type;
+};

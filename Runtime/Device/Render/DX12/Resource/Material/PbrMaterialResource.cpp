@@ -10,11 +10,11 @@ PbrMaterialResource::PbrMaterialResource(const MaterialDesc& desc) :
     m_desc = static_cast<const PbrMaterialDesc&>(desc);
 }
 
-std::vector<DefaultTextureType> PbrMaterialResource::GetRequiredDefaultTextures() const
+std::vector<DefaultTextureBinding> PbrMaterialResource::GetDefaultTextureBindings() const
 {
     return {
-        DefaultTextureType::White,      // PbrTextureSlot::Albedo
-        DefaultTextureType::FlatNormal, // PbrTextureSlot::Normal
-        DefaultTextureType::Orange      // PbrTextureSlot::ARM
+        { Core::ToIndex(PbrTextureSlot::Albedo), DefaultTextureType::White },
+        { Core::ToIndex(PbrTextureSlot::Normal), DefaultTextureType::FlatNormal },
+        { Core::ToIndex(PbrTextureSlot::ARM), DefaultTextureType::Orange }
     };
 }

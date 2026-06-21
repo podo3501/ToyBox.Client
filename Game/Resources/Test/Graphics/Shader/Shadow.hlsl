@@ -12,14 +12,14 @@ cbuffer MeshIndicesCB : register(b0)
     uint g_ibIndex;
 };
 
-cbuffer ObjectCB : register(b1)
-{
-    float4x4 world;
-};
-
-cbuffer ShadowFrameCB : register(b2)
+cbuffer ShadowFrameCB : register(b1)
 {
     float4x4 lightViewProj;
+};
+
+cbuffer ObjectCB : register(b2)
+{
+    float4x4 world;
 };
 
 struct VSOutput

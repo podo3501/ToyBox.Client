@@ -14,7 +14,7 @@ cbuffer UIIndicesCB : register(b0)
     uint g_textureIndex;
 };
 
-cbuffer UIFrameCB : register(b1)
+cbuffer UIDrawCB : register(b1)
 {
     float4x4 world;
     float4x4 projection;

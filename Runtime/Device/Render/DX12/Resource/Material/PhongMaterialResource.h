@@ -9,7 +9,7 @@ public:
 	PhongMaterialResource() = delete;
 	PhongMaterialResource(const MaterialDesc& desc);
 
-	virtual std::vector<DefaultTextureType> GetRequiredDefaultTextures() const override;
+	virtual std::vector<DefaultTextureBinding> GetDefaultTextureBindings() const override;
 	virtual const MaterialDesc& GetMaterialDesc() const noexcept override { return m_desc; }
 	virtual SurfaceType GetSurfaceType() const noexcept override { return m_desc.surfType; }
 

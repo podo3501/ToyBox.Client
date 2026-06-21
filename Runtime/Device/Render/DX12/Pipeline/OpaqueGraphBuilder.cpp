@@ -39,12 +39,12 @@ void OpaqueGraphBuilder::Build(RenderGraph& graph)
             swapChain.SetRenderTarget(cmd);
             swapChain.Clear(cmd, 0.13f, 0.13f, 0.16f, 1.0f);
 
-            surfRenderer.BindRootSignature(cmd);
             surfRenderer.PrepareFrame(
                 ctx.frame.light,
                 ctx.frame.camera,
                 shadowRes.GetSrvIndex()
             );
+            surfRenderer.BeginFrame(cmd);
 
             for (auto& item : ctx.drawPacket.surface)
             {

@@ -10,10 +10,10 @@ PhongMaterialResource::PhongMaterialResource(const MaterialDesc& desc) :
     m_desc = static_cast<const PhongMaterialDesc&>(desc);
 }
 
-std::vector<DefaultTextureType> PhongMaterialResource::GetRequiredDefaultTextures() const
+std::vector<DefaultTextureBinding> PhongMaterialResource::GetDefaultTextureBindings() const
 {
     return {
-        DefaultTextureType::White,      // PhongTextureSlot::Albedo
-        DefaultTextureType::FlatNormal // PhongTextureSlot::Normal
+        { Core::ToIndex(PhongTextureSlot::Albedo), DefaultTextureType::White },
+        { Core::ToIndex(PhongTextureSlot::Normal), DefaultTextureType::FlatNormal }
     };
 }

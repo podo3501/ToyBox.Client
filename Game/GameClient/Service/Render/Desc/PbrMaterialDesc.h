@@ -9,6 +9,11 @@ enum class PbrTextureSlot : uint32_t
     Count
 };
 
+constexpr TextureSlot Resolve(PbrTextureSlot s)
+{
+    return static_cast<TextureSlot>(s);
+}
+
 struct PbrSurface
 {
     float normal{ 1.f }; //¼¼±â°ª

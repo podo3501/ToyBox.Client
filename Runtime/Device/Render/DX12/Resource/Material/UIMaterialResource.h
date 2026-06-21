@@ -11,7 +11,7 @@ public:
 	UIMaterialResource() = delete;
 	UIMaterialResource(const MaterialDesc& desc);
 
-	virtual std::vector<DefaultTextureType> GetRequiredDefaultTextures() const override;
+	virtual std::vector<DefaultTextureBinding> GetDefaultTextureBindings() const override;
 	virtual const MaterialDesc& GetMaterialDesc() const noexcept override { return m_desc; }
 
 private:

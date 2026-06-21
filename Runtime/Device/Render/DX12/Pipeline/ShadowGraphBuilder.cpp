@@ -43,14 +43,12 @@ void ShadowGraphBuilder::Build(RenderGraph& graph)
             CommandUtils::ClearDSV(cmd, dsv);
             CommandUtils::SetDepthTarget(cmd, dsv);
 
-            shadowRenderer.BindRootSignature(cmd);
             shadowRenderer.PrepareFrame(ctx.frame.light);
+            shadowRenderer.BeginFrame(cmd);
 
             for (auto& item : ctx.drawPacket.surface)
             {
                 auto mesh = static_cast<MeshResource*>(item.mesh.get());
-
-                shadowRenderer.BindPipeline(cmd);
                 shadowRenderer.Draw(cmd, *mesh, item.world);
             }
         };

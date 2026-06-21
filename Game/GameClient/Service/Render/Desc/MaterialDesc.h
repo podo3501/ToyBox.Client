@@ -16,7 +16,7 @@ struct MaterialDesc
 
     MaterialDomain domain{ MaterialDomain::Surface };
     PipelineState pipelineState { PipelineLibrary::Get(ShadingModel::Phong, RasterPreset::Default) };
-    std::vector<TextureDesc> textures;
+    std::unordered_map<TextureSlot, TextureDesc> textures;
 
     bool operator==(const MaterialDesc&) const = default;
 
@@ -25,8 +25,11 @@ struct MaterialDesc
         size_t h;
         Core::HashCombine(h, domain);
         Core::HashCombine(h, pipelineState.GetHash());
-        for (const auto& tex : textures)
+        for (const auto& [slot, tex] : textures)
+        {
+            Core::HashCombine(h, slot);
             Core::HashCombine(h, tex.GetHash());
+        }
         return h;
     }
 };

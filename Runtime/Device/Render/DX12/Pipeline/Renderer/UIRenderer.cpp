@@ -10,7 +10,7 @@
 
 namespace cm = Core::Math;
 
-struct UIFrameCB
+struct UIDrawCB
 {
     DirectX::XMFLOAT4X4 world;
     DirectX::XMFLOAT4X4 projection;
@@ -26,7 +26,7 @@ UIRenderer::UIRenderer(const UIRendererConfig& config, PipelineCache& pipelineCa
 
 bool UIRenderer::Initialize(Device& device, const Size& screenSize)
 {
-    m_uiFrameCBAllocator.Initialize<UIFrameCB>(device, m_config.maxUI);
+    m_uiDrawCBAllocator.Initialize<UIDrawCB>(device, m_config.maxUI);
 
     ReturnIfFalse(CreateRootSignature(device));
     CreateDefaultPSOs();
@@ -65,8 +65,8 @@ bool UIRenderer::CreateRootSignature(Device& device)
 {
     RootSignatureBuilder builder;
 
-    builder.Add32BitConstants(0, 3); // [0]: 버텍스 버퍼 인덱스, [1]: 인덱스 버퍼 인덱스, [2]: UI 텍스처 인덱스
-    builder.AddCBV(1);
+    builder.Add32BitConstants(Core::ToIndex(RootSlot::ResourceIndices), 3);
+    builder.AddCBV(Core::ToIndex(RootSlot::DrawCB));
     builder.AddLinearSampler(0);
 
     builder.AddFlags(D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
@@ -75,27 +75,26 @@ bool UIRenderer::CreateRootSignature(Device& device)
     return m_rootSignature != nullptr;
 }
 
-void UIRenderer::BindRootSignature(CommandList& cmd)
+void UIRenderer::PrepareFrame()
+{
+    m_currentPSO = nullptr;
+    m_uiDrawCBAllocator.Reset();
+}
+
+void UIRenderer::BeginFrame(CommandList& cmd)
 {
     cmd->SetGraphicsRootSignature(m_rootSignature.Get());
 }
 
 void UIRenderer::BindPipeline(CommandList& cmd, const PipelineState& pipelineState)
 {
-    if (m_pipelineState && *m_pipelineState == pipelineState)
+    auto* pso = GetPipeline(pipelineState);
+    if (m_currentPSO == pso)
         return;
 
-    auto pipeline = GetPipeline(pipelineState);
-    cmd->SetPipelineState(pipeline);
+    cmd->SetPipelineState(pso);
     cmd->IASetPrimitiveTopology(ToD3D12_Draw(pipelineState.topologyType));
-
-    m_pipelineState = pipelineState;
-}
-
-void UIRenderer::PrepareFrame()
-{
-    m_pipelineState = std::nullopt;
-    m_uiFrameCBAllocator.Reset();
+    m_currentPSO = pso;
 }
 
 void UIRenderer::Draw(
@@ -106,24 +105,24 @@ void UIRenderer::Draw(
 {
     auto texIndices = material.GetTextureIndices();
 
-    uint32_t uiIndices[3] = {
+    uint32_t resIndices[3] = {
         mesh.GetVertexHeapIndex(),
         mesh.GetIndexHeapIndex(),
         texIndices[0]
     };
 
-    cmd->SetGraphicsRoot32BitConstants(0, 3, uiIndices, 0);
+    cmd->SetGraphicsRoot32BitConstants(Core::ToIndex(RootSlot::ResourceIndices), 3, resIndices, 0);
 
     DirectX::XMMATRIX world = ToDXMatrix(quadWorld);
     DirectX::XMMATRIX proj = ToDXMatrix(m_projection);
 
-    UIFrameCB frameCB{};
+    UIDrawCB drawCB{};
 
-    XMStoreFloat4x4(&frameCB.world, DirectX::XMMatrixTranspose(world));
-    XMStoreFloat4x4(&frameCB.projection, DirectX::XMMatrixTranspose(proj));
+    XMStoreFloat4x4(&drawCB.world, DirectX::XMMatrixTranspose(world));
+    XMStoreFloat4x4(&drawCB.projection, DirectX::XMMatrixTranspose(proj));
 
-    auto gpuAddress = m_uiFrameCBAllocator.AllocateConstant(frameCB);
-    cmd->SetGraphicsRootConstantBufferView(1, gpuAddress);
+    auto gpuAddress = m_uiDrawCBAllocator.AllocateConstant(drawCB);
+    cmd->SetGraphicsRootConstantBufferView(Core::ToIndex(RootSlot::DrawCB), gpuAddress);
 
     cmd->DrawInstanced(mesh.GetIndexCount(), 1, 0, 0);
 }

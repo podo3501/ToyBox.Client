@@ -103,11 +103,10 @@ bool SurfaceRenderer::CreateRootSignature(Device& device)
 {
     RootSignatureBuilder builder;
 
-    builder.Add32BitConstants(0, 2); // b0
-
-    builder.AddCBV(1); //objectCB
-    builder.AddCBV(2); //meshFrameCB
-    builder.AddCBV(3); //materialCB
+    builder.Add32BitConstants(Core::ToIndex(RootSlot::MeshData), 2);
+    builder.AddCBV(Core::ToIndex(RootSlot::FrameCB));
+    builder.AddCBV(Core::ToIndex(RootSlot::ObjectCB));
+    builder.AddCBV(Core::ToIndex(RootSlot::MaterialCB));
 
     builder.AddFlags(D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
     
@@ -118,26 +117,9 @@ bool SurfaceRenderer::CreateRootSignature(Device& device)
     return m_rootSignature != nullptr;
 }
 
-void SurfaceRenderer::BindRootSignature(CommandList& cmd)
-{
-    cmd->SetGraphicsRootSignature(m_rootSignature.Get());
-}
-
-void SurfaceRenderer::BindPipeline(CommandList& cmd, const PipelineState& pipelineState)
-{
-    if (m_pipelineState && *m_pipelineState == pipelineState)
-        return;
-
-    auto pipeline = GetPipeline(pipelineState);
-    cmd->SetPipelineState(pipeline);
-    cmd->IASetPrimitiveTopology(ToD3D12_Draw(pipelineState.topologyType));
-
-    m_pipelineState = pipelineState;
-}
-
 void SurfaceRenderer::PrepareFrame(const DirectionalLightData& light, const CameraData& camera, uint32_t shadowSRVIndex)
 {
-    m_pipelineState = std::nullopt;
+    m_currentPSO = nullptr;
 
     m_objectCBAllocator.Reset();
     m_materialCBAllocator.Reset();
@@ -160,6 +142,23 @@ void SurfaceRenderer::PrepareFrame(const DirectionalLightData& light, const Came
     meshFrame.shadowTextureIndex = shadowSRVIndex;
 
     m_frameCBAddress = m_frameCBAllocator.AllocateConstant(meshFrame);
+}
+
+void SurfaceRenderer::BeginFrame(CommandList& cmd)
+{
+    cmd->SetGraphicsRootSignature(m_rootSignature.Get());
+    cmd->SetGraphicsRootConstantBufferView(Core::ToIndex(RootSlot::FrameCB), m_frameCBAddress);
+}
+
+void SurfaceRenderer::BindPipeline(CommandList& cmd, const PipelineState& pipelineState)
+{
+    auto* pso = GetPipeline(pipelineState);
+    if (m_currentPSO == pso)
+        return;
+
+    cmd->SetPipelineState(pso);
+    cmd->IASetPrimitiveTopology(ToD3D12_Draw(pipelineState.topologyType));
+    m_currentPSO = pso;
 }
 
 D3D12_GPU_VIRTUAL_ADDRESS SurfaceRenderer::UpdateObjectCB(const cm::Matrix& world)
@@ -232,10 +231,9 @@ void SurfaceRenderer::Draw(
     auto materialCBAddress = UpdateMaterialCB(material);
     uint32_t meshIndices[2] = { mesh.GetVertexHeapIndex(), mesh.GetIndexHeapIndex() };
 
-    cmd->SetGraphicsRoot32BitConstants(0, 2, meshIndices, 0);
-    cmd->SetGraphicsRootConstantBufferView(1, objectCBAddress);
-    cmd->SetGraphicsRootConstantBufferView(2, m_frameCBAddress);
-    cmd->SetGraphicsRootConstantBufferView(3, materialCBAddress);
+    cmd->SetGraphicsRoot32BitConstants(Core::ToIndex(RootSlot::MeshData), 2, meshIndices, 0);
+    cmd->SetGraphicsRootConstantBufferView(Core::ToIndex(RootSlot::ObjectCB), objectCBAddress);
+    cmd->SetGraphicsRootConstantBufferView(Core::ToIndex(RootSlot::MaterialCB), materialCBAddress);
 
     cmd->DrawInstanced(mesh.GetIndexCount(), 1, 0, 0);
 }

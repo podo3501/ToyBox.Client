@@ -5,7 +5,6 @@
 #include "Core/Math/Matrix.h"
 #include "GameClient/Service/Render/Desc/RenderState.h"
 
-struct UIFrameCB;
 class Device;
 class PipelineCache;
 class CommandList;
@@ -20,12 +19,18 @@ public:
     UIRenderer(const UIRendererConfig& config, PipelineCache& pipelineCache);
     bool Initialize(Device& device, const Size& screenSize);
     void PrepareFrame();
-    void BindRootSignature(CommandList& cmd);
+    void BeginFrame(CommandList& cmd);
     void BindPipeline(CommandList& cmd, const PipelineState& pipelineState);
     void Draw(CommandList& cmd, MeshResource& mesh, UIMaterialResource& material, const Core::Math::Matrix& world);
     void SetScreenSize(const Size& size);
 
 private:
+    enum class RootSlot : uint32_t
+    {
+        ResourceIndices = 0, //vb index, ib index, tex index
+        DrawCB = 1
+    };
+
     bool CreateRootSignature(Device& device);
     void CreateDefaultPSOs();
     ID3D12PipelineState* CreatePSO(const PipelineState& pipelineState);
@@ -34,8 +39,8 @@ private:
     UIRendererConfig m_config;
     PipelineCache& m_pipelineCache;
     Microsoft::WRL::ComPtr<ID3D12RootSignature> m_rootSignature;
-    std::optional<PipelineState> m_pipelineState{ nullopt };
+    ID3D12PipelineState* m_currentPSO{ nullptr };
 
-    FrameUploadAllocator m_uiFrameCBAllocator;
+    FrameUploadAllocator m_uiDrawCBAllocator;
     Core::Math::Matrix m_projection;
 };

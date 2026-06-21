@@ -20,12 +20,19 @@ public:
     DebugSurfaceRenderer(const DebugSurfaceRendererConfig& config, PipelineCache& pipelineCache);
 
     bool Initialize(Device& device);
-    void BindRootSignature(CommandList& cmd);
-    void BindPipeline(CommandList& cmd, const PipelineState& pipelineState);
     void PrepareFrame(const CameraData& camera);
+    void BeginFrame(CommandList& cmd);
+    void BindPipeline(CommandList& cmd, const PipelineState& pipelineState);
     void Draw(CommandList& cmd, MeshResource& mesh, const Core::Math::Matrix& world);
 
 private:
+    enum class RootSlot : uint32_t
+    {
+        IndexCB = 0,
+        FrameCB = 1,
+        ObjectCB = 2
+    };
+
     bool CreateRootSignature(Device& device);
     void CreateDefaultPSOs();
     ID3D12PipelineState* CreatePSO(const PipelineState& pipelineState);
@@ -36,7 +43,7 @@ private:
     DebugSurfaceRendererConfig m_config;
     PipelineCache& m_pipelineCache;
     ComPtr<ID3D12RootSignature> m_rootSignature;
-    std::optional<PipelineState> m_pipelineState{ nullopt };
+    ID3D12PipelineState* m_currentPSO{ nullptr };
 
     FrameUploadAllocator m_objectCBAllocator;
     FrameUploadAllocator m_frameCBAllocator;

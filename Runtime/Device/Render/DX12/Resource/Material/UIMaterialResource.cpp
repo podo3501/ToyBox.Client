@@ -11,9 +11,9 @@ UIMaterialResource::UIMaterialResource(const MaterialDesc& desc) :
     m_desc = static_cast<const UIMaterialDesc&>(desc);
 }
 
-std::vector<DefaultTextureType> UIMaterialResource::GetRequiredDefaultTextures() const
+std::vector<DefaultTextureBinding> UIMaterialResource::GetDefaultTextureBindings() const
 {
     return {
-        DefaultTextureType::White       // UITextureSlot::Normal (UI 일반 이미지)
+        { Core::ToIndex(UITextureSlot::Normal), DefaultTextureType::White }
     };
 }

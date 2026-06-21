@@ -18,13 +18,13 @@ struct PendingMaterialTextures
     uint32_t expectedCount{ 0 };
     uint32_t loadedCount{ 0 };
 
-    std::vector<std::shared_ptr<TextureAsset>> textures;
+    std::unordered_map<TextureSlot, std::shared_ptr<TextureAsset>> textures;
 };
 
 struct GpuPendingMaterialRequest
 {
     MaterialHandle handle;
-    std::vector<std::shared_ptr<TextureAsset>> textures;
+    std::unordered_map<TextureSlot, std::shared_ptr<TextureAsset>> textures;
 };
 
 MaterialRepository::~MaterialRepository() = default;
@@ -53,7 +53,7 @@ MaterialHandle MaterialRepository::GetOrCreate(const MaterialDesc& desc)
     m_cache[key] = handle;
 
     uint32_t validTextureCount = 0;
-    for (const auto& tex : desc.textures)
+    for (const auto& [_, tex] : desc.textures)
     {
         if (tex.resID.GetType() == Core::ResourceIDType::Path)
             validTextureCount++;
@@ -71,19 +71,17 @@ MaterialHandle MaterialRepository::GetOrCreate(const MaterialDesc& desc)
     PendingMaterialTextures pending;
     pending.handle = handle;
     pending.expectedCount = validTextureCount;
-    pending.textures.resize(desc.textures.size());
     m_pendingTextures.emplace(handle, std::move(pending));
 
-    for (uint32_t i = 0; i < desc.textures.size(); ++i)
+    for (const auto& [slot, tex] : desc.textures)
     {
-        auto& tex = desc.textures[i];
         auto resType = tex.resID.GetType();
         switch (resType)
         {
         case Core::ResourceIDType::Path:
         {
             auto requestID = m_assetPipeline->PushRequest(MakeAssetRequest<TextureAsset>(tex.resID));
-            m_cpuPending.push_back({ handle, static_cast<TextureSlot>(i), requestID });
+            m_cpuPending.push_back({ handle, slot, requestID });
             break;
         }
         case Core::ResourceIDType::Builtin:
@@ -124,8 +122,7 @@ void MaterialRepository::ProcessCpuPending()
         if (pendingIt != m_pendingTextures.end())
         {
             auto& pending = pendingIt->second;
-            auto slot = static_cast<size_t>(req.slot);
-            pending.textures[slot] = std::static_pointer_cast<TextureAsset>(*asset);
+            pending.textures[req.slot] = std::static_pointer_cast<TextureAsset>(*asset);
             pending.loadedCount++;
 
             if (pending.loadedCount == pending.expectedCount)

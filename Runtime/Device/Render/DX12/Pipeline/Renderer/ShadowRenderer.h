@@ -20,27 +20,31 @@ public:
     ShadowRenderer(const ShadowRendererConfig& config, PipelineCache& pipelineCache);
 
     bool Initialize(Device& device);
-    void BindRootSignature(CommandList& cmd);
-    void BindPipeline(CommandList& cmd);
     void PrepareFrame(const DirectionalLightData& light);
+    void BeginFrame(CommandList& cmd);
     void Draw(CommandList& cmd, MeshResource& mesh, const Core::Math::Matrix& world);
 
 private:
+    enum class RootSlot : uint32_t
+    {
+        MeshData = 0,
+        FrameCB = 1,
+        ObjectCB = 2
+    };
+
     bool CreateRootSignature(Device& device);
-    void CreateDefaultPSOs();
     void CreateConstantBuffers();
     ID3D12PipelineState* CreatePSO(const PipelineState& pipelineState);
-    ID3D12PipelineState* GetPipeline(const PipelineState& pipelineState);
 
     D3D12_GPU_VIRTUAL_ADDRESS UpdateObjectCB(const Core::Math::Matrix& world);
 
     ShadowRendererConfig m_config;
     PipelineCache& m_pipelineCache;
     ComPtr<ID3D12RootSignature> m_rootSignature;
-    std::optional<PipelineState> m_pipelineState;
+    ID3D12PipelineState* m_shadowPSO{ nullptr };
 
     FrameUploadAllocator m_objectCBAllocator;
     FrameUploadAllocator m_frameCBAllocator;
 
-    D3D12_GPU_VIRTUAL_ADDRESS m_frameCBAddress{ 0 };
+    D3D12_GPU_VIRTUAL_ADDRESS m_frameCBAddress{};
 };

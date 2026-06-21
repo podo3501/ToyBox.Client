@@ -46,13 +46,14 @@ void MeshProvider::Update(size_t uploadBudgetBytes)
 {
     size_t usedBytes = 0;
     std::vector<MeshLoadRequest> batch;
-    batch.reserve(32);
+    size_t maxBatch = std::min<size_t>(m_pending.size(), 64);
+    batch.reserve(maxBatch);
 
     while (!m_pending.empty())
     {
-        auto& req = m_pending.front();
+        MeshLoadRequest req = m_pending.front();
 
-        if (usedBytes > uploadBudgetBytes && !batch.empty())
+        if (usedBytes > uploadBudgetBytes && !batch.empty()) //최초에 한번은 사이즈보다 큰게 있어도 로딩시킨다.
             break;
 
         usedBytes += req.estimatedBytes;

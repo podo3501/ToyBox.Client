@@ -53,41 +53,40 @@ void MaterialProvider::SetDefaultTextures(MaterialResource* matRes)
 {
     if (!matRes) return;
 
-    auto defaultTypes = matRes->GetRequiredDefaultTextures();
-    for (size_t i = 0; i < defaultTypes.size(); ++i)
+    auto defaultBindings = matRes->GetDefaultTextureBindings();
+    for (auto& binding : defaultBindings)
     {
-        auto defaultTex = m_texProvider.GetDefaultTexture(defaultTypes[i]);
-        matRes->SetTexture(static_cast<TextureSlot>(i), defaultTex);
+        auto tex = m_texProvider.GetDefaultTexture(binding.type);
+        matRes->SetTexture(binding.slot, tex);
     }
 }
 
 bool MaterialProvider::LoadFromAsset(
     std::shared_ptr<IMaterialResource> res,
-    std::vector<std::shared_ptr<TextureAsset>> texAssets)
+    std::unordered_map<TextureSlot, std::shared_ptr<TextureAsset>> texAssets)
 {
     auto matRes = static_pointer_cast<MaterialResource>(res);
     if (!matRes)
         return false;
 
     auto& matDesc = matRes->GetMaterialDesc();
-    for (size_t i = 0; i < texAssets.size(); ++i)
+    for (const auto& [slot, texDesc] : matDesc.textures)
     {
-        auto& texAsset = texAssets[i];
-        if (!texAsset)
+        auto it = texAssets.find(slot);
+        if (it == texAssets.end() || !it->second)
             continue;
 
-        auto& texDesc = matDesc.textures[i];
         auto texRes = m_texProvider.CreateTextureResource(texDesc);
         if (!texRes)
             return false;
 
-        if (!m_texProvider.LoadFromAsset(texRes, texAsset))
+        if (!m_texProvider.LoadFromAsset(texRes, it->second))
             return false;
 
-        matRes->SetTexture(static_cast<TextureSlot>(i), texRes);
+        matRes->SetTexture(slot, texRes);
     }
-    m_pendingMaterials.push_back(matRes);
 
+    m_pendingMaterials.push_back(matRes);
     return true;
 }
 

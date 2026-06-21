@@ -27,12 +27,20 @@ public:
     SurfaceRenderer(const SurfaceRendererConfig& config, PipelineCache& pipelineCache);
 
     bool Initialize(Device& device);
-    void BindRootSignature(CommandList& cmd);
-    void BindPipeline(CommandList& cmd, const PipelineState& pipelineState);
     void PrepareFrame(const DirectionalLightData& light, const CameraData& camera, uint32_t shadowSRVIndex);
+    void BeginFrame(CommandList& cmd);
+    void BindPipeline(CommandList& cmd, const PipelineState& pipelineState);
     void Draw(CommandList& cmd, MeshResource& mesh, MaterialResource& material, const Core::Math::Matrix& world);
     
 private:
+    enum class RootSlot : uint32_t
+    {
+        MeshData = 0,
+        FrameCB = 1,
+        ObjectCB = 2,
+        MaterialCB = 3
+    };
+
     bool CreateRootSignature(Device& device);
     void CreateDefaultPSOs();
     ID3D12PipelineState* CreatePSO(const PipelineState& pipelineState);
@@ -45,7 +53,7 @@ private:
     SurfaceRendererConfig m_config;
     PipelineCache& m_pipelineCache;
     ComPtr<ID3D12RootSignature> m_rootSignature;
-    std::optional<PipelineState> m_pipelineState{ nullopt };
+    ID3D12PipelineState* m_currentPSO{ nullptr };
 
     FrameUploadAllocator m_objectCBAllocator;
     FrameUploadAllocator m_materialCBAllocator;

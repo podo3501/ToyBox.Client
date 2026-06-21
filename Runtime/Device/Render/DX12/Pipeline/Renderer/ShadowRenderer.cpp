@@ -33,7 +33,7 @@ bool ShadowRenderer::Initialize(Device& device)
     m_frameCBAllocator.Initialize<ShadowFrameCB>(device, 1);
 
     ReturnIfFalse(CreateRootSignature(device));
-    CreateDefaultPSOs();
+    m_shadowPSO = CreatePSO(PipelineLibrary::Get(ShadingModel::Shadow, RasterPreset::Default));
 
     return true;
 }
@@ -42,19 +42,14 @@ bool ShadowRenderer::CreateRootSignature(Device& device)
 {
     RootSignatureBuilder builder;
 
-    builder.Add32BitConstants(0, 2);
-    builder.AddCBV(1); // b1 : objectCB
-    builder.AddCBV(2); // b2 : shadowFrameCB (Light VP)
+    builder.Add32BitConstants(Core::ToIndex(RootSlot::MeshData), 2);
+    builder.AddCBV(Core::ToIndex(RootSlot::FrameCB));
+    builder.AddCBV(Core::ToIndex(RootSlot::ObjectCB));
 
     builder.AddFlags(D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
     m_rootSignature = builder.Build(device);
     return m_rootSignature != nullptr;
-}
-
-void ShadowRenderer::CreateDefaultPSOs()
-{
-    CreatePSO(PipelineLibrary::Get(ShadingModel::Shadow, RasterPreset::Default));
 }
 
 ID3D12PipelineState* ShadowRenderer::CreatePSO(const PipelineState& pipelineState)
@@ -86,32 +81,8 @@ ID3D12PipelineState* ShadowRenderer::CreatePSO(const PipelineState& pipelineStat
         });
 }
 
-ID3D12PipelineState* ShadowRenderer::GetPipeline(const PipelineState& pipelineState)
-{
-    auto* pipeline = m_pipelineCache.Find(pipelineState);
-    if (pipeline)
-        return pipeline;
-
-    return CreatePSO(pipelineState);
-}
-
-void ShadowRenderer::BindRootSignature(CommandList& cmd)
-{
-    cmd->SetGraphicsRootSignature(m_rootSignature.Get());
-}
-
-void ShadowRenderer::BindPipeline(CommandList& cmd)
-{
-    PipelineState targetState = PipelineLibrary::Get(ShadingModel::Shadow, RasterPreset::Default);
-    auto pipeline = GetPipeline(targetState);
-
-    cmd->SetPipelineState(pipeline);
-}
-
 void ShadowRenderer::PrepareFrame(const DirectionalLightData& light)
 {
-    m_pipelineState = std::nullopt;
-
     m_objectCBAllocator.Reset();
     m_frameCBAllocator.Reset();
 
@@ -123,6 +94,14 @@ void ShadowRenderer::PrepareFrame(const DirectionalLightData& light)
     XMStoreFloat4x4(&shadowFrame.lightViewProj, DirectX::XMMatrixTranspose(lightVP));
 
     m_frameCBAddress = m_frameCBAllocator.AllocateConstant(shadowFrame);
+}
+
+void ShadowRenderer::BeginFrame(CommandList& cmd)
+{
+    cmd->SetGraphicsRootSignature(m_rootSignature.Get());
+    cmd->SetPipelineState(m_shadowPSO);
+
+    cmd->SetGraphicsRootConstantBufferView(Core::ToIndex(RootSlot::FrameCB), m_frameCBAddress);
 }
 
 D3D12_GPU_VIRTUAL_ADDRESS ShadowRenderer::UpdateObjectCB(const cm::Matrix& world)
@@ -140,11 +119,10 @@ void ShadowRenderer::Draw(
     const cm::Matrix& world)
 {
     auto objectCBAddress = UpdateObjectCB(world);
-    uint32_t meshIndices[2] = { mesh.GetVertexHeapIndex(), mesh.GetIndexHeapIndex() };
+    uint32_t meshData[2] = { mesh.GetVertexHeapIndex(), mesh.GetIndexHeapIndex() };
 
-    cmd->SetGraphicsRoot32BitConstants(0, 2, meshIndices, 0);
-    cmd->SetGraphicsRootConstantBufferView(1, objectCBAddress);
-    cmd->SetGraphicsRootConstantBufferView(2, m_frameCBAddress);
+    cmd->SetGraphicsRoot32BitConstants(Core::ToIndex(RootSlot::MeshData), 2, meshData, 0);
+    cmd->SetGraphicsRootConstantBufferView(Core::ToIndex(RootSlot::ObjectCB), objectCBAddress);
 
     // ¼¨µµ¿ì ¸ÊÀº Ç×»ó »ï°¢Çü ¸®½ºÆ®·Î ºôµå¾÷
     cmd->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
