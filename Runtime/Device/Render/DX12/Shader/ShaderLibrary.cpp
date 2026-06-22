@@ -23,7 +23,7 @@ static bool CompileStage(
     DxcBuffer sourceBuffer{};
     sourceBuffer.Ptr = source.data();
     sourceBuffer.Size = source.size();
-    sourceBuffer.Encoding = DXC_CP_ACP; // ANSI/UTF-8 기본값
+    sourceBuffer.Encoding = DXC_CP_UTF8; // ANSI/UTF-8 기본값
 
     std::vector<std::wstring> args; // 진입점(-E) 및 타겟 프로필(-T, 예: cs_6_6) 지정
     args.push_back(L"-E"); args.push_back(Core::ToWString(entry));
@@ -72,11 +72,7 @@ static bool CompileStage(
     if (FAILED(compileResult->GetStatus(&compileStatus)) || FAILED(compileStatus))
         return false;
 
-    ComPtr<IDxcBlob> compiledBlob;
-    if (SUCCEEDED(compileResult->GetResult(&outBlob)))
-        return true;
-    
-    return false;
+    return SUCCEEDED(compileResult->GetResult(&outBlob));
 }
 
 static ComPtr<IDxcBlob> CreateBlobFromBuffer(const Core::ByteBuffer& buffer)

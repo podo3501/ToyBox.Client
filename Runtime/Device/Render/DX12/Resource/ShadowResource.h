@@ -16,12 +16,10 @@ public:
     const Resource& GetResource() const { return m_resource; }
     Resource& GetResource() { return m_resource; }
 
-    UINT GetDsvIndex() const { return m_dsvIndex; } // 쓰기용 인덱스
-    UINT GetSrvIndex() const { return m_srvIndex; } // 읽기용 Bindless 인덱스
+    UINT GetDSVIndex() const { return m_dsvIndex; } // 쓰기용 인덱스
+    UINT GetSRVIndex() const { return m_srvIndex; } // 읽기용 Bindless 인덱스
 
 private:
-    Resource CreateShadowResource(Device& device, const Size& shadowMapSize);
-
     Resource m_resource;
     UINT m_dsvIndex{ UINT_MAX };
     UINT m_srvIndex{ UINT_MAX };

@@ -42,7 +42,7 @@ void OpaqueGraphBuilder::Build(RenderGraph& graph)
             surfRenderer.PrepareFrame(
                 ctx.frame.light,
                 ctx.frame.camera,
-                shadowRes.GetSrvIndex()
+                shadowRes.GetSRVIndex()
             );
             surfRenderer.BeginFrame(cmd);
 

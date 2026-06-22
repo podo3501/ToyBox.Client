@@ -64,7 +64,7 @@ UINT DescriptorFactory::CreateTextureDSV(const Resource& res, DXGI_FORMAT format
     UINT index = m_dsvAllocator.Allocate();
     if (index == UINT_MAX) return UINT_MAX;
 
-    m_device->CreateDepthStencilView(res.Get(), &dsvDesc, GetDsvHandle(index));
+    m_device->CreateDepthStencilView(res.Get(), &dsvDesc, GetDSVHandle(index));
     return index;
 }
 
@@ -76,7 +76,9 @@ bool DescriptorFactory::CreateTextureViews(TextureResource* texRes, bool generat
     const auto& resDesc = res->GetDesc();
     const UINT mipCount = resDesc.MipLevels;
 
-    DXGI_FORMAT srvFormat = texRes->GetDesc().srgb ? ToSRGB(resDesc.Format) : resDesc.Format;
+    DXGI_FORMAT srvFormat = resDesc.Format;
+    if (texRes->GetDesc().type == TextureType::Color)
+        srvFormat = ToSRGB(resDesc.Format);
 
     UINT mainMipLevels = generateMips ? mipCount : 1;
     UINT mainIndex = CreateTextureSRV(res, srvFormat, mainMipLevels);
@@ -102,8 +104,8 @@ bool DescriptorFactory::CreateTextureViews(TextureResource* texRes, bool generat
             mipUavIndices.push_back(mipUavIndex);
         }
 
-        texRes->SetMipSrvIndices(std::move(mipSrvIndices));
-        texRes->SetMipUavIndices(std::move(mipUavIndices));
+        texRes->SetMipSRVIndices(std::move(mipSrvIndices));
+        texRes->SetMipUAVIndices(std::move(mipUavIndices));
     }
 
     return true;
@@ -157,7 +159,7 @@ UINT DescriptorFactory::CreateMipUAV(const Resource& res, DXGI_FORMAT format, UI
     return index;
 }
 
-D3D12_CPU_DESCRIPTOR_HANDLE DescriptorFactory::GetDsvHandle(UINT dsvIndex)
+D3D12_CPU_DESCRIPTOR_HANDLE DescriptorFactory::GetDSVHandle(UINT dsvIndex)
 {
     return m_dsvAllocator.GetCpuHandle(dsvIndex);
 }

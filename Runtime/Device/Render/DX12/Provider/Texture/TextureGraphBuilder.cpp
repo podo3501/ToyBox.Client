@@ -53,7 +53,7 @@ void TextureGraphBuilder::LoadTextures(const std::vector<TextureLoadRequest>& re
         m_registry.Register(hTex.id, req.resource);
 
         auto& texDesc = req.resource->GetDesc();
-        auto mips = ShouldGenerateMips(*req.asset, texDesc.generateMips);
+        auto mips = CanGenerateMips(*req.asset, texDesc.generateMips);
         auto resDesc = CreateTexture2DDesc(*req.asset, mips);
         auto texRes = m_resFactory.CreateTextureResource(resDesc);
 

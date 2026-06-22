@@ -6,6 +6,12 @@
 #include "Command/CommandListHelpers.h"
 #include <dxgi1_6.h>
 
+namespace RenderFormat
+{
+    constexpr DXGI_FORMAT BackBufferFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
+    constexpr DXGI_FORMAT BackBufferSRGBView = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+}
+
 using Microsoft::WRL::ComPtr;
 
 SwapChainPresenter::~SwapChainPresenter() { m_cmdScheduler.WaitIdle(CommandType::Direct); }
@@ -23,7 +29,9 @@ bool SwapChainPresenter::Initialize(Device& device, const SwapChainDesc& desc)
 
     auto queue = m_cmdScheduler.GetCommandQueue(CommandType::Direct);
     ReturnIfFalse(CreateSwapChain(device, queue, desc));
+
     ReturnIfFalse(CreateRTV(device));
+    ReturnIfFalse(CreateDSV(device));
     ReturnIfFalse(CreateDepthBuffer(device));
 
     m_frameIndex = m_swapChain->GetCurrentBackBufferIndex();
@@ -63,7 +71,15 @@ bool SwapChainPresenter::Present(bool vsync)
 {
     UINT syncInterval = vsync ? 1 : 0;
     UINT flags = (!vsync && m_tearing) ? DXGI_PRESENT_ALLOW_TEARING : 0;
-    if (FAILED(m_swapChain->Present(syncInterval, flags))) return false;
+
+    HRESULT hr = m_swapChain->Present(syncInterval, flags);
+    if (FAILED(hr))
+    {
+        if (hr == DXGI_ERROR_DEVICE_REMOVED || hr == DXGI_ERROR_DEVICE_RESET)
+            HandleDeviceLost();
+
+        return false;
+    }
 
     m_cmdScheduler.SignalQueue(CommandType::Direct);
     m_frameIndex = m_swapChain->GetCurrentBackBufferIndex();
@@ -80,7 +96,6 @@ bool SwapChainPresenter::Resize(Device& device, const Size& size)
     for (UINT i = 0; i < m_frameCount; ++i)
         m_renderTargets[i].Reset(); //기존 RTV 리소스 해제
     m_depthBuffer.Reset();
-    m_dsvHeap.Reset();
 
     DXGI_SWAP_CHAIN_DESC desc{}; //SwapChain Resize
     if (FAILED(m_swapChain->GetDesc(&desc)))
@@ -96,7 +111,7 @@ bool SwapChainPresenter::Resize(Device& device, const Size& size)
         m_frameCount,
         size.width,
         size.height,
-        desc.BufferDesc.Format,
+        DXGI_FORMAT_UNKNOWN,
         flags)))
         return false;
 
@@ -127,7 +142,7 @@ bool SwapChainPresenter::CreateSwapChain(Device& device, ID3D12CommandQueue* que
     scDesc.BufferCount = m_frameCount;
     scDesc.Width = desc.size.width;
     scDesc.Height = desc.size.height;
-    scDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+    scDesc.Format = RenderFormat::BackBufferFormat;
     scDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
     scDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
     scDesc.SampleDesc.Count = 1;
@@ -163,6 +178,16 @@ bool SwapChainPresenter::CreateRTV(Device& device)
     return CreateFrameRTVs(device);
 }
 
+bool SwapChainPresenter::CreateDSV(Device& device)
+{
+    m_dsvHeap = device.CreateDescriptorHeap(
+        D3D12_DESCRIPTOR_HEAP_TYPE_DSV,
+        1,
+        D3D12_DESCRIPTOR_HEAP_FLAG_NONE);
+
+    return true;
+}
+
 bool SwapChainPresenter::CreateFrameRTVs(Device& device)
 {
     CD3DX12_CPU_DESCRIPTOR_HANDLE handle(m_rtvHeap->GetCPUDescriptorHandleForHeapStart());
@@ -173,7 +198,7 @@ bool SwapChainPresenter::CreateFrameRTVs(Device& device)
         if (FAILED(result)) return false;
 
         D3D12_RENDER_TARGET_VIEW_DESC rtvDesc{};
-        rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+        rtvDesc.Format = RenderFormat::BackBufferSRGBView;
         rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
         rtvDesc.Texture2D.MipSlice = 0;
         rtvDesc.Texture2D.PlaneSlice = 0;
@@ -211,11 +236,6 @@ bool SwapChainPresenter::CreateDepthBuffer(Device& device)
         D3D12_HEAP_TYPE_DEFAULT,
         D3D12_RESOURCE_STATE_DEPTH_WRITE,
         &clear);
-    
-    m_dsvHeap = device.CreateDescriptorHeap(
-        D3D12_DESCRIPTOR_HEAP_TYPE_DSV,
-        1,
-        D3D12_DESCRIPTOR_HEAP_FLAG_NONE);
 
     auto dsvHandle = m_dsvHeap->GetCPUDescriptorHandleForHeapStart();
 
@@ -227,4 +247,32 @@ bool SwapChainPresenter::CreateDepthBuffer(Device& device)
     device->CreateDepthStencilView(m_depthBuffer.Get(), &dsvDesc, dsvHandle);
 
     return true;
+}
+
+void SwapChainPresenter::HandleDeviceLost()
+{
+    // GPU device lost 발생 시 진입
+    // 현재는 최소 cleanup만 수행하고, 실제 재생성 로직은 상위 시스템에서 처리
+
+    // NOTE:
+    // - DXGI_ERROR_DEVICE_REMOVED / RESET 대응용
+    // - 여기서는 GPU 리소스 release + pointer invalidate까지만 수행
+    // - Device + SwapChain 재생성은 DeviceManager 레벨에서 담당
+
+    m_cmdScheduler.WaitIdle();
+
+    // GPU 리소스 invalidate
+    for (auto& rt : m_renderTargets)
+        rt.Reset();
+    m_renderTargets.resize(m_frameCount);
+
+    m_depthBuffer.Reset();
+    m_rtvHeap.Reset();
+    m_dsvHeap.Reset();
+    m_swapChain.Reset();
+
+    // TODO:
+    // - HandleDeviceLost 테스트용 fault injection 추가 시
+    //   이 함수가 정상적으로 호출되는지 검증 필요
+    // 이걸 정확히 하려면 코딩이 많이 필요하고 테스트 환경이 필요해서 일단 이렇게만.
 }

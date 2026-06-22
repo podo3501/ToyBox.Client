@@ -47,22 +47,22 @@ bool TextureProvider::CreateBuiltinTextures()
     defaultAssets[Core::ToIndex(DefaultTextureType::FlatNormal)] = CreateColorAsset(0x8080FFFF); // 평평한 노멀 (128, 128, 255)
     defaultAssets[Core::ToIndex(DefaultTextureType::Orange)] = CreateColorAsset(0xFF8000FF);
 
-    struct BuiltinConfig { DefaultTextureType type; const char* name; bool srgb; };
+    struct BuiltinConfig { DefaultTextureType defaultType; const char* name; TextureType texType; };
     BuiltinConfig configs[] = {
-        { DefaultTextureType::White, "DefaultTexture_White", true },
-        { DefaultTextureType::FlatNormal, "DefaultTexture_FlatNormal", false },
-        { DefaultTextureType::Orange, "DefaultTexture_Orange", false }
+        { DefaultTextureType::White, "DefaultTexture_White", TextureType::Color },
+        { DefaultTextureType::FlatNormal, "DefaultTexture_FlatNormal", TextureType::Linear },
+        { DefaultTextureType::Orange, "DefaultTexture_Orange", TextureType::Linear }
     };
 
     for (const auto& config : configs)
     {
-        TextureDesc desc{ Core::ResourceID::MakeBuiltin(config.name), config.srgb, false };
+        TextureDesc desc{ Core::ResourceID::MakeBuiltin(config.name), config.texType, false };
 
-        auto nType = Core::ToIndex(config.type);
-        auto tex = CreateDefaultTexture(desc, defaultAssets[nType]);
+        auto nDefaultType = Core::ToIndex(config.defaultType);
+        auto tex = CreateDefaultTexture(desc, defaultAssets[nDefaultType]);
         if (!tex) return false;
 
-        m_defaultTextures[nType] = tex;
+        m_defaultTextures[nDefaultType] = tex;
     }
 
     return true;
@@ -106,12 +106,11 @@ bool TextureProvider::LoadFromAsset(
     if (!asset) return false;
 
     auto res = std::static_pointer_cast<TextureResource>(resource);
-    auto& texDesc = res->GetDesc();
 
     TextureLoadRequest req;
     req.resource = res;
     req.asset = asset;
-    req.estimatedBytes = EstimateBytes(*asset, texDesc);
+    req.estimatedBytes = EstimateBytes(*asset, res->GetDesc());
 
     m_pending.push(req);
     return true;
@@ -127,8 +126,8 @@ void TextureProvider::Update(size_t uploadBudgetBytes)
     {
         auto& req = m_pending.front();
 
-        if (usedBytes + req.estimatedBytes > uploadBudgetBytes && !batch.empty())
-            break;
+        if (usedBytes + req.estimatedBytes > uploadBudgetBytes && !batch.empty()) // 최소 1개의 요청은 항상 처리한다. 그렇지 않으면 budget보다 큰 텍스처가 영원히 대기열에 남을 수 있다.
+            break; 
 
         usedBytes += req.estimatedBytes;
         batch.push_back(req);

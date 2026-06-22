@@ -6,7 +6,7 @@ TextureDesc TextureDescFactory::CreateDefault(Core::ResourceID resID)
 {
     TextureDesc desc;
     desc.resID = std::move(resID);
-    desc.srgb = true;
+    desc.type = TextureType::Color;
     desc.generateMips = false;
     return desc;
 }

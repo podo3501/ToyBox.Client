@@ -8,7 +8,7 @@
 #include "Factory/ResourceFactory.h"
 #include "Shader/ShaderLibrary.h"
 #include "Core/GPUProfiler.h"
-#include "Provider/ResourceProvider.h"
+#include "ResourceProvider.h"
 #include "Pipeline/ForwardRenderPipeline.h"
 #include "RenderFrame.h"
 

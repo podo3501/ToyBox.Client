@@ -35,7 +35,7 @@ void ShadowGraphBuilder::Build(RenderGraph& graph)
         ]
         (CommandList& cmd, TaskContext& ctx)
         {
-            auto dsv = descFactory.GetDsvHandle(shadowRes.GetDsvIndex());
+            auto dsv = descFactory.GetDSVHandle(shadowRes.GetDSVIndex());
 
             CommandUtils::SetViewport(cmd, 2048.f, 2048.f);
             CommandUtils::SetScissor(cmd, 2048, 2048);

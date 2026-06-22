@@ -1,4 +1,5 @@
 #pragma once
+#include "GameClient/Service/Render/Desc/TextureDesc.h"
 #include <d3d12.h>
 #include <wrl/client.h>
 #include <dxcapi.h>
@@ -11,6 +12,13 @@ class TextureResource;
 
 using Microsoft::WRL::ComPtr;
 
+enum class MipType : uint8_t
+{
+    SRGB = 0,
+    Data,
+    Count
+};
+
 class MipGenerator
 {
 public:
@@ -20,17 +28,19 @@ public:
     void GenerateMips(CommandList& cmd, DescriptorAllocator& srvAllocator, TextureResource* texResource);
 
 private:
+    enum class RootSlot : uint32_t
+    {
+        Constants = 0
+    };
+
     bool LoadShader(ShaderLibrary& shaderLibrary);
     bool CreateRootSignature();
     bool CreatePSO();
+    ID3D12PipelineState* GetPSO(MipType type) const;
 
-private:
     Device& m_device;
-
     ComPtr<ID3D12RootSignature> m_rootSignature;
-    ComPtr<ID3D12PipelineState> m_psoSRGB;
-    ComPtr<ID3D12PipelineState> m_psoData;
 
-    ComPtr<IDxcBlob> m_csSRGBBlob;
-    ComPtr<IDxcBlob> m_csDataBlob;
+    std::array<ComPtr<IDxcBlob>, Core::EnumSize<MipType>> m_shaderBlobs;
+    std::array< ComPtr<ID3D12PipelineState>, Core::EnumSize<MipType>> m_psoMap;
 };

@@ -1,8 +1,8 @@
 #pragma once
 #include "GameClient/Service/Render/IResourceProvider.h"
-#include "Texture/TextureProvider.h"
-#include "Mesh/MeshProvider.h"
-#include "Material/MaterialProvider.h"
+#include "Provider/Texture/TextureProvider.h"
+#include "Provider/Mesh/MeshProvider.h"
+#include "Provider/Material/MaterialProvider.h"
 
 struct ShaderRegisterDesc;
 class Device;
@@ -33,4 +33,6 @@ private:
 	TextureProvider m_texProvider;
 	MeshProvider m_meshProvider;
 	MaterialProvider m_matProvider;
+
+	float m_avgGpuMs{ 0.0f };
 };

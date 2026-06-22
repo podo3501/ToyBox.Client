@@ -4,10 +4,17 @@
 
 using TextureSlot = uint32_t;
 
+enum class TextureType
+{
+    Color,
+    Linear,
+    Count
+};
+
 struct TextureDesc
 {
     Core::ResourceID resID;
-    bool srgb{ true }; // true : color texture, false : data texture (ex. normal map)
+    TextureType type{ TextureType::Color };
     bool generateMips{ true }; // ui : false, 3d : true
 
     bool operator==(const TextureDesc&) const = default;
@@ -16,7 +23,7 @@ struct TextureDesc
     {
         return Core::HashOf(
             resID,
-            srgb, 
+            type,
             generateMips);
     }
 };

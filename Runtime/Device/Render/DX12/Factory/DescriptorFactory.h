@@ -20,9 +20,9 @@ public:
     UINT CreateTextureDSV(const Resource& res, DXGI_FORMAT format, UINT mipSlice = 0);
     bool CreateTextureViews(TextureResource* texRes, bool generateMips);
     DescriptorAllocator& GetBindlessAllocator() noexcept { return m_bindlessAllocator; }
-    DescriptorAllocator& GetDsvAllocator() noexcept { return m_dsvAllocator; }
+    DescriptorAllocator& GetDSVAllocator() noexcept { return m_dsvAllocator; }
 
-    D3D12_CPU_DESCRIPTOR_HANDLE GetDsvHandle(UINT index); //dsv는 gpu 핸들 api를 제공하지 않는다.
+    D3D12_CPU_DESCRIPTOR_HANDLE GetDSVHandle(UINT index); //dsv는 gpu 핸들 api를 제공하지 않는다.
     D3D12_CPU_DESCRIPTOR_HANDLE GetBindlessCpuHandle(UINT index);
     D3D12_GPU_DESCRIPTOR_HANDLE GetBindlessGpuHandle(UINT index);
 

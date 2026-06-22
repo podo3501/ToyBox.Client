@@ -6,7 +6,7 @@ class Resource;
 class CommandList;
 
 D3D12_RESOURCE_DESC CreateTexture2DDesc(const TextureAsset& asset, bool mips);
-bool ShouldGenerateMips(const TextureAsset& asset, bool generateMips);
+bool CanGenerateMips(const TextureAsset& asset, bool generateMips);
 void UploadTexture(
     CommandList& uploadCmd,
     const TextureAsset& asset,

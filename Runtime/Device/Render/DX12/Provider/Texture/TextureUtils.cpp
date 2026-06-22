@@ -44,7 +44,7 @@ D3D12_RESOURCE_DESC CreateTexture2DDesc(const TextureAsset& asset, bool mips)
     return texDesc;
 }
 
-bool ShouldGenerateMips(const TextureAsset& asset, bool generateMips)
+bool CanGenerateMips(const TextureAsset& asset, bool generateMips)
 {
     DXGI_FORMAT format = ToDXGIFormat(asset.format);
     return generateMips && IsUAVCompatibleFormat(format);

@@ -19,21 +19,20 @@ public:
 	void SetHeapIndex(UINT index) noexcept { m_heapIndex = index; }
 	UINT GetHeapIndex() const noexcept { return m_heapIndex; }
 
-	void SetMipSrvIndices(std::vector<UINT>&& indices) 
+	void SetMipSRVIndices(std::vector<UINT>&& indices) 
 	{ 
 		m_mipSrvIndices = std::move(indices); 
 	}
-	UINT GetMipSrvIndex(UINT mipLevel) const noexcept
+	UINT GetMipSRVIndex(UINT mipLevel) const noexcept
 	{
 		return (mipLevel < m_mipSrvIndices.size()) ? m_mipSrvIndices[mipLevel] : UINT_MAX;
 	}
 
-	void SetMipUavIndices(std::vector<UINT>&& indices) { m_mipUavIndices = std::move(indices); }
-	UINT GetMipUavIndex(UINT mipLevel) const noexcept
+	void SetMipUAVIndices(std::vector<UINT>&& indices) { m_mipUavIndices = std::move(indices); }
+	UINT GetMipUAVIndex(UINT mipLevel) const noexcept
 	{
 		return (mipLevel < m_mipUavIndices.size()) ? m_mipUavIndices[mipLevel] : UINT_MAX;
 	}
-	
 
 private:
 	TextureDesc m_desc;

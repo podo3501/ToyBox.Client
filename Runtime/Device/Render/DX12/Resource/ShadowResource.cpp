@@ -6,21 +6,7 @@
 #include "Factory/DescriptorFactory.h"
 #include "Helpers/TextureHelpers.h"
 
-bool ShadowResource::Initialize(Device& device, DescriptorFactory& factory, const Size& shadowMapSize)
-{
-	m_resource = CreateShadowResource(device, shadowMapSize);
-	if (!m_resource) return false;
-
-	m_dsvIndex = factory.CreateTextureDSV(m_resource, DXGI_FORMAT_D32_FLOAT);
-	m_srvIndex = factory.CreateTextureSRV(m_resource, DXGI_FORMAT_R32_FLOAT);
-
-	if (m_dsvIndex == UINT_MAX || m_srvIndex == UINT_MAX)
-		return false;
-
-	return true;
-}
-
-Resource ShadowResource::CreateShadowResource(Device& device, const Size& shadowMapSize)
+static Resource CreateShadowResource(Device& device, const Size& shadowMapSize)
 {
     auto desc = CreateTextureDescriptor(shadowMapSize.width, shadowMapSize.height, DXGI_FORMAT_R32_TYPELESS);
     desc.Flags |= D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
@@ -35,4 +21,18 @@ Resource ShadowResource::CreateShadowResource(Device& device, const Size& shadow
         D3D12_HEAP_TYPE_DEFAULT,
         D3D12_RESOURCE_STATE_DEPTH_WRITE,
         &clearValue);
+}
+
+bool ShadowResource::Initialize(Device& device, DescriptorFactory& factory, const Size& shadowMapSize)
+{
+	m_resource = CreateShadowResource(device, shadowMapSize);
+	if (!m_resource) return false;
+
+	m_dsvIndex = factory.CreateTextureDSV(m_resource, DXGI_FORMAT_D32_FLOAT);
+	m_srvIndex = factory.CreateTextureSRV(m_resource, DXGI_FORMAT_R32_FLOAT);
+
+	if (m_dsvIndex == UINT_MAX || m_srvIndex == UINT_MAX)
+		return false;
+
+	return true;
 }

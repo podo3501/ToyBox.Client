@@ -7,6 +7,29 @@
 #include "Resource/Texture/TextureResource.h"
 #include "Pipeline/Renderer/RootSignatureBuilder.h"
 
+struct MipShaderDesc
+{
+    MipType type;
+    std::vector<ShaderMacroDesc> macros;
+};
+
+static const MipShaderDesc g_mipShaders[] =
+{
+    { MipType::SRGB, {} },
+    { MipType::Data, { {"IS_DATA_MAP"} } }
+};
+
+static MipType GetMipType(TextureType textureType)
+{
+    switch (textureType)
+    {
+    case TextureType::Color:        return MipType::SRGB;
+    case TextureType::Linear:        return MipType::Data;
+    default:
+        return MipType::Data;
+    }
+}
+
 MipGenerator::~MipGenerator() = default;
 MipGenerator::MipGenerator(Device& device) :
     m_device{ device }
@@ -23,22 +46,26 @@ bool MipGenerator::Initialize(ShaderLibrary& shaderLibrary)
 
 bool MipGenerator::LoadShader(ShaderLibrary& shaderLibrary)
 {
-    ShaderVariant sRGBVariant{ ShadingModel::MipGenerator };
-    if (const auto* entry = shaderLibrary.Find(sRGBVariant))
-        m_csSRGBBlob = entry->cs;
+    size_t loadedCount = 0;
+    for (auto& desc : g_mipShaders)
+    {
+        ShaderVariant variant{ ShadingModel::MipGenerator };
+        variant.runtimeMacros = desc.macros;
 
-    ShaderVariant srgbVariant{ ShadingModel::MipGenerator };
-    srgbVariant.runtimeMacros.push_back({ "IS_DATA_MAP" });
-    if (const auto* entry = shaderLibrary.Find(srgbVariant))
-        m_csDataBlob = entry->cs;
+        if (const auto* entry = shaderLibrary.Find(variant))
+        {
+            m_shaderBlobs[Core::ToIndex(desc.type)] = entry->cs;
+            ++loadedCount;
+        }
+    }
 
-    return (m_csSRGBBlob && m_csDataBlob);
+    return loadedCount == std::size(g_mipShaders);
 }
 
 bool MipGenerator::CreateRootSignature()
 {
     RootSignatureBuilder builder;
-    builder.Add32BitConstants(0, 4);
+    builder.Add32BitConstants(Core::ToIndex(RootSlot::Constants), 4);
 
     m_rootSignature = builder.Build(m_device);
     return m_rootSignature != nullptr;
@@ -49,13 +76,26 @@ bool MipGenerator::CreatePSO()
     D3D12_COMPUTE_PIPELINE_STATE_DESC desc{};
     desc.pRootSignature = m_rootSignature.Get();
 
-    desc.CS = { m_csSRGBBlob->GetBufferPointer(), m_csSRGBBlob->GetBufferSize() };
-    ReturnIfFailed(m_device->CreateComputePipelineState(&desc, IID_PPV_ARGS(&m_psoSRGB)));
+    for (size_t i = 0; i < Core::EnumSize<MipType>; ++i)
+    {
+        auto& blob = m_shaderBlobs[i];
+        if (!blob)
+            continue;
 
-    desc.CS = { m_csDataBlob->GetBufferPointer(), m_csDataBlob->GetBufferSize() };
-    ReturnIfFailed(m_device->CreateComputePipelineState(&desc, IID_PPV_ARGS(&m_psoData)));
+        desc.CS = {
+            blob->GetBufferPointer(),
+            blob->GetBufferSize()
+        };
+
+        ReturnIfFailed(m_device->CreateComputePipelineState(&desc, IID_PPV_ARGS(&m_psoMap[i])));
+    }
 
     return true;
+}
+
+ID3D12PipelineState* MipGenerator::GetPSO(MipType type) const
+{
+    return m_psoMap[Core::ToIndex(type)].Get();
 }
 
 void MipGenerator::GenerateMips(CommandList& cmd, DescriptorAllocator& srvAllocator, TextureResource* texResource)
@@ -74,17 +114,18 @@ void MipGenerator::GenerateMips(CommandList& cmd, DescriptorAllocator& srvAlloca
 
     cmd->SetDescriptorHeaps(1, heaps);
     cmd->SetComputeRootSignature(m_rootSignature.Get());
-    if(texResource->GetDesc().srgb)
-        cmd->SetPipelineState(m_psoSRGB.Get());
-    else
-        cmd->SetPipelineState(m_psoData.Get());
+
+    const MipType mipType = GetMipType(texResource->GetDesc().type);
+    auto* pso = GetPSO(mipType);
+    if (!pso) return;
+    cmd->SetPipelineState(pso);
 
     for (UINT srcMip = 0; srcMip < mipCount - 1; ++srcMip)
     {
         UINT dstMip = srcMip + 1;
 
-        UINT srcMipSrvIndex = texResource->GetMipSrvIndex(srcMip);
-        UINT dstMipUavIndex = texResource->GetMipUavIndex(dstMip);
+        UINT srcMipSrvIndex = texResource->GetMipSRVIndex(srcMip);
+        UINT dstMipUavIndex = texResource->GetMipUAVIndex(dstMip);
 
         UINT width = std::max(1u, (UINT)(desc.Width >> dstMip));
         UINT height = std::max(1u, (UINT)(desc.Height >> dstMip));
@@ -95,7 +136,7 @@ void MipGenerator::GenerateMips(CommandList& cmd, DescriptorAllocator& srvAlloca
             width,
             height
         };
-        cmd->SetComputeRoot32BitConstants(0, 4, constants, 0);
+        cmd->SetComputeRoot32BitConstants(Core::ToIndex(RootSlot::Constants), 4, constants, 0);
 
         cmd->Dispatch((width + 7) / 8, (height + 7) / 8, 1);
 

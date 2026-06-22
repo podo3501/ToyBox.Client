@@ -41,8 +41,10 @@ public:
 private:
     bool CreateSwapChain(Device& device, ID3D12CommandQueue* queue, const SwapChainDesc& desc);
     bool CreateRTV(Device& device);
+    bool CreateDSV(Device& device);
     bool CreateFrameRTVs(Device& device);
     bool CreateDepthBuffer(Device& device);
+    void HandleDeviceLost();
 
     CommandScheduler& m_cmdScheduler;
     Microsoft::WRL::ComPtr<IDXGISwapChain4> m_swapChain;

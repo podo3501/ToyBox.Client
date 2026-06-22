@@ -349,9 +349,6 @@
     <ClInclude Include="Render\DX12\RenderFrame.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\Provider\ResourceProvider.h">
-      <Filter>Render\DX12\Provider</Filter>
-    </ClInclude>
     <ClInclude Include="Render\DX12\Provider\Material\MaterialProvider.h">
       <Filter>Render\DX12\Provider\Material</Filter>
     </ClInclude>
@@ -393,6 +390,9 @@
     </ClInclude>
     <ClInclude Include="Render\DX12\Provider\Texture\TextureUtils.h">
       <Filter>Render\DX12\Provider\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\ResourceProvider.h">
+      <Filter>Render\DX12</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -598,9 +598,6 @@
     <ClCompile Include="Render\DX12\RenderFrame.cpp">
       <Filter>Render\DX12</Filter>
     </ClCompile>
-    <ClCompile Include="Render\DX12\Provider\ResourceProvider.cpp">
-      <Filter>Render\DX12\Provider</Filter>
-    </ClCompile>
     <ClCompile Include="Render\DX12\Provider\Material\MaterialProvider.cpp">
       <Filter>Render\DX12\Provider\Material</Filter>
     </ClCompile>
@@ -633,6 +630,9 @@
     </ClCompile>
     <ClCompile Include="Render\DX12\Provider\Texture\TextureUtils.cpp">
       <Filter>Render\DX12\Provider\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\ResourceProvider.cpp">
+      <Filter>Render\DX12</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
