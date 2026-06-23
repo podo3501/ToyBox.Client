@@ -394,6 +394,15 @@
     <ClInclude Include="Render\DX12\ResourceProvider.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
+    <ClInclude Include="Render\DX12\Graph\RenderGraphV.h">
+      <Filter>Render\DX12\Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Graph\RenderPassV.h">
+      <Filter>Render\DX12\Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Graph\BarrierBuilder.h">
+      <Filter>Render\DX12\Graph</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -633,6 +642,12 @@
     </ClCompile>
     <ClCompile Include="Render\DX12\ResourceProvider.cpp">
       <Filter>Render\DX12</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Graph\RenderGraphV.cpp">
+      <Filter>Render\DX12\Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Graph\BarrierBuilder.cpp">
+      <Filter>Render\DX12\Graph</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

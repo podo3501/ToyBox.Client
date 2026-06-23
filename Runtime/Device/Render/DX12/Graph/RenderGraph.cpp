@@ -217,8 +217,7 @@ using BarrierGroups = std::unordered_map<CommandType, std::vector<BarrierPlan>>;
 static BarrierGroups BuildBarriers(
     CommandType cmdType, 
     const RenderPass& pass,
-    std::unordered_map<uint32_t, 
-    ResourceStateTracker>& resStateTracker)
+    std::unordered_map<uint32_t, ResourceStateTracker>& resStateTracker)
 {
     BarrierGroups groups;
 

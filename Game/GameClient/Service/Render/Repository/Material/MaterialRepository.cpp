@@ -63,6 +63,7 @@ MaterialHandle MaterialRepository::GetOrCreate(const MaterialDesc& desc)
     {
         GpuPendingMaterialRequest gpuReq;
         gpuReq.handle = handle;
+        gpuReq.textures.clear(); 
         m_gpuPending.push_back(std::move(gpuReq));
 
         return handle;
