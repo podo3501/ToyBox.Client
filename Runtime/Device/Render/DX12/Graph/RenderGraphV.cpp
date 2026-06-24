@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "RenderGraphV.h"
 #include "BarrierBuilder.h"
+#include "Core/D3D12Conversions.h"
+#include <unordered_set>
 
 RenderGraphV::~RenderGraphV() = default;
 
@@ -8,6 +10,11 @@ RGHandle RenderGraphV::CreateRGHandle()
 {
     RGHandle handle{ m_nextId++ };
     return handle;
+}
+
+void RenderGraphV::ImportResource(RGHandle h, RGAccess access)
+{
+    m_statesTracker[h.id].state = ToD3D12(access);
 }
 
 RenderPassV& RenderGraphV::AddGraphicsPass(std::string n) { return AddPass(std::move(n), CommandType::Direct);}
@@ -29,13 +36,15 @@ RenderPassV& RenderGraphV::AddPass(std::string name, CommandType type)
 struct PassNodeV
 {
     int index;
-    std::vector<int> dependencies;
+    std::vector<int> dependencies; // 내 앞에 실행되어야 하는 패스들 (정방향)
+    std::vector<int> dependents; // 내 뒤에 실행되어야 하는 패스들 (역방향) 나중에 barrier를 만들고 나서 다시 역방향을 만든다. barrier를 만들때 역방향을 연결해 줄 수도 있지만, 다시 만들어도 비교적 비용이 싸고 유지보수가 더 쉽기 때문이다.
     int indegree{ 0 };
 };
 
 static void BuildDependents(std::vector<CompiledTask>& tasks)
 {
     std::unordered_map<uint32_t, size_t> indexMap;
+    indexMap.reserve(tasks.size());
 
     for (size_t i = 0; i < tasks.size(); ++i)
         indexMap[tasks[i].localId] = i;
@@ -54,6 +63,8 @@ static void BuildDependents(std::vector<CompiledTask>& tasks)
 
 std::vector<CompiledTask> RenderGraphV::Compile()
 {
+    ValidateGraph();
+
     std::vector<CompiledTask> compiledTasks;
 
     auto passNodes = BuildDependencyGraph();
@@ -115,7 +126,8 @@ std::vector<PassNodeV> RenderGraphV::BuildDependencyGraph()
     for (int i = 0; i < passCount; ++i)
         nodes[i].index = i;
 
-    std::unordered_map<uint32_t, int> lastWriter; // resource -> 마지막 writer pass
+    std::unordered_map<uint32_t, int> lastWriter; // resource -> 마지막 writer pass. waw, raw(write->read)를 하기위한 변수.
+    std::unordered_map<uint32_t, std::vector<int>> activeReaders; //war(read->write) 에 필요한 변수. war은 조금 까다롭다.
 
     for (int passIndex = 0; passIndex < passCount; ++passIndex)
     {
@@ -123,22 +135,52 @@ std::vector<PassNodeV> RenderGraphV::BuildDependencyGraph()
 
         for (auto& usage : pass.usages)
         {
+            const auto resourceId = usage.handle.id;
+
             switch (usage.access)
             {
             case AccessType::Read:
             {
-                auto it = lastWriter.find(usage.handle.id);
-                if (it != lastWriter.end())
-                    nodes[passIndex].dependencies.push_back(it->second);
+                // RAW(write->read)
+                auto writerIt = lastWriter.find(resourceId);
+                if (writerIt != lastWriter.end())
+                {
+                    int writerPass = writerIt->second;
+
+                    nodes[passIndex].dependencies.push_back(writerPass);
+                    nodes[writerPass].dependents.push_back(passIndex);
+                }
+
+                activeReaders[resourceId].push_back(passIndex);
                 break;
             }
 
             case AccessType::Write:
             {
-                auto it = lastWriter.find(usage.handle.id);
-                if (it != lastWriter.end())
-                    nodes[passIndex].dependencies.push_back(it->second);
-                lastWriter[usage.handle.id] = passIndex;
+                // WAW(write->write)
+                auto writerIt = lastWriter.find(resourceId);
+                if (writerIt != lastWriter.end())
+                {
+                    int writerPass = writerIt->second;
+
+                    nodes[passIndex].dependencies.push_back(writerPass);
+                    nodes[writerPass].dependents.push_back(passIndex);
+                }
+
+                // WAR(read->write). 참고로 RAR은 하지 않는다.
+                auto readerIt = activeReaders.find(resourceId);
+                if (readerIt != activeReaders.end())
+                {
+                    for (int readerPass : readerIt->second)
+                    {
+                        nodes[passIndex].dependencies.push_back(readerPass);
+                        nodes[readerPass].dependents.push_back(passIndex);
+                    }
+
+                    readerIt->second.clear();
+                }
+
+                lastWriter[resourceId] = passIndex;
                 break;
             }
             }
@@ -147,19 +189,44 @@ std::vector<PassNodeV> RenderGraphV::BuildDependencyGraph()
 
     for (auto& node : nodes)
     {
+        // 정방향 간선 중복 제거
         std::sort(node.dependencies.begin(), node.dependencies.end());
-
         node.dependencies.erase(
-            std::unique(
-                node.dependencies.begin(),
-                node.dependencies.end()),
-            node.dependencies.end());
+            std::unique(node.dependencies.begin(), node.dependencies.end()), node.dependencies.end());
 
-        node.indegree =
-            static_cast<int>(node.dependencies.size());
+        // 역방향 간선 중복 제거
+        std::sort(node.dependents.begin(), node.dependents.end());
+        node.dependents.erase(
+            std::unique(node.dependents.begin(), node.dependents.end()), node.dependents.end());
+
+        node.indegree = static_cast<int>(node.dependencies.size());
     }
 
     return nodes;
+}
+
+void RenderGraphV::ValidateGraph()
+{
+    std::unordered_set<uint32_t> produced;
+
+    for (auto& [id, state] : m_statesTracker)
+        produced.insert(id);
+
+    for (auto& pass : m_passes)
+    {
+        for (auto& usage : pass.usages)
+        {
+            if (usage.access == AccessType::Read)
+            {
+                Assert(produced.contains(usage.handle.id)); //read pass는 import가 있거나 write pass가 있어야 한다.(즉, 읽을게 있어야 읽지)
+            }
+
+            if (usage.access == AccessType::Write)
+            {
+                produced.insert(usage.handle.id);
+            }
+        }
+    }
 }
 
 std::vector<int> RenderGraphV::TopologicalSort(const std::vector<PassNodeV>& graph)
@@ -182,26 +249,17 @@ std::vector<int> RenderGraphV::TopologicalSort(const std::vector<PassNodeV>& gra
             q.push(i);
     }
 
-    // 2. BFS Kahn algorithm
-    while (!q.empty())
+    while (!q.empty()) 
     {
         int cur = q.front();
         q.pop();
-
         result.push_back(cur);
 
-        for (int i = 0; i < n; ++i)
+        for (int nextPass : graph[cur].dependents) 
         {
-            for (int dep : graph[i].dependencies) // i가 cur를 dependency로 가지고 있다면
-            {
-                if (dep == cur)
-                {
-                    indegree[i]--;
-
-                    if (indegree[i] == 0)
-                        q.push(i);
-                }
-            }
+            indegree[nextPass]--;
+            if (indegree[nextPass] == 0) 
+                q.push(nextPass);
         }
     }
 

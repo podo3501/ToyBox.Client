@@ -14,6 +14,42 @@ struct TaskEntry
     bool started{ false };
     bool finished{ false };
     uint64_t fenceValue{ 0 };
+
+    std::atomic<int> activeDependents{ 0 }; // 나를 의존하는 자식 노드들 중, 아직 해제(Remove)되지 않고 살아있는 자식들의 총 개수. 이게 0이 되면 자신도 해제된다.
+
+    TaskEntry() = default;
+    TaskEntry(const TaskEntry&) = delete;
+    TaskEntry& operator=(const TaskEntry&) = delete;
+
+    //atomic 변수 때문에 이동 및 대입 연산자 작성.
+    TaskEntry(TaskEntry&& other) noexcept
+        : task(std::move(other.task))
+        , context(std::move(other.context))
+        , dependents(std::move(other.dependents))
+        , submitted(other.submitted)
+        , started(other.started)
+        , finished(other.finished)
+        , fenceValue(other.fenceValue)
+    {
+        activeDependents.store(other.activeDependents.load(std::memory_order_relaxed), std::memory_order_relaxed);
+    }
+
+    TaskEntry& operator=(TaskEntry&& other) noexcept
+    {
+        if (this != &other)
+        {
+            task = std::move(other.task);
+            context = std::move(other.context);
+            dependents = std::move(other.dependents);
+            submitted = other.submitted;
+            started = other.started;
+            finished = other.finished;
+            fenceValue = other.fenceValue;
+
+            activeDependents.store(other.activeDependents.load(std::memory_order_relaxed), std::memory_order_relaxed);
+        }
+        return *this;
+    }
 };
 
 class TaskScheduler

@@ -9,6 +9,7 @@ class RenderGraphV
 public:
     ~RenderGraphV();
     RGHandle CreateRGHandle();
+    void ImportResource(RGHandle h, RGAccess access);
 
     RenderPassV& AddGraphicsPass(std::string name);
     RenderPassV& AddCopyPass(std::string name);
@@ -19,6 +20,7 @@ public:
 
 private:
     RenderPassV& AddPass(std::string name, CommandType type);
+    void ValidateGraph();
     std::vector<PassNodeV> BuildDependencyGraph();
     std::vector<int> TopologicalSort(const std::vector<PassNodeV>& graph);
     uint32_t CreateLocalTaskID();
