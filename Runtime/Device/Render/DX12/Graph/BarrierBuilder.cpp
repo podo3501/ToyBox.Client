@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "BarrierBuilder.h"
+#include "RenderGraphDefinitions.h"
 #include "Command/CommandList.h"
 #include "Command/CommandListHelpers.h"
 #include "Core/D3D12Conversions.h"
@@ -46,21 +47,23 @@ static CommandType ResolveCommandType(CommandType type,
 BarrierGroups BuildBarriers(
     CommandType cmdType,
     const RenderPassV& pass,
-    std::unordered_map<uint32_t, ResourceStateTrackerV>& stateTracker)
+    std::unordered_map<RGResourceID, ResourceStateTrackerV>& stateTracker,
+    PassIndex passIndex)
 {
     BarrierGroups groups;
 
     for (auto& usage : pass.usages)
     {
-        auto& state = stateTracker[usage.handle.id].state;
+        auto& tracker = stateTracker[usage.resID];
         auto desired = AccessToState(cmdType, usage.state);
 
-        if (state != desired)
+        if (tracker.state != desired)
         {
-            auto barrierType = ResolveCommandType(cmdType, state, desired);
-            groups[barrierType].push_back({ usage.handle, state, desired });
+            auto barrierType = ResolveCommandType(cmdType, tracker.state, desired);
+            groups[barrierType].push_back({ usage.resID, tracker.state, desired });
 
-            state = desired;
+            tracker.state = desired;
+            tracker.lastUpdatedPass = passIndex;
         }
     }
 
@@ -78,7 +81,7 @@ Task CreateBarrierTask(CommandType type, const std::vector<BarrierPlanV>& barrie
 
         for (auto& barrier : barriers)
         {
-            auto& res = ctx.GetResource(barrier.handle);
+            auto& res = ctx.GetResource(RGHandle(barrier.resID)); //?!? 이거 나중에 RGHandle 타입 없어지면 수정해야함.
 
             barrierBatch.push_back(
                 CommandUtils::CreateTransitionBarrier(res, barrier.before, barrier.after));

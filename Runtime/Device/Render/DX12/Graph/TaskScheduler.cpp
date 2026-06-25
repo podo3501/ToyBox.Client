@@ -14,7 +14,7 @@ TaskHandle TaskScheduler::AllocateHandle()
 
 void TaskScheduler::Submit(const std::vector<CompiledTask>& compiledTasks, std::shared_ptr<ResourceContext> resources)
 {
-    std::unordered_map<uint32_t, TaskHandle> remap; //RenderGraph에서 만든 일시적인 handle을 실제 사용가능한 task handle로 바꾼다.
+    std::unordered_map<LocalTaskID, TaskHandle> remap; //RenderGraph에서 만든 일시적인 handle을 실제 사용가능한 task handle로 바꾼다.
     for (auto& compiled : compiledTasks)
         remap[compiled.localId] = AllocateHandle();
 
@@ -146,7 +146,7 @@ void TaskScheduler::Cancel(TaskHandle handle)
     TaskEntry* entry = m_tasks.Find(handle);
     if (!entry) return;
 
-    // 자신이 취소되므로 내 부모들에게서 나의 자식 지분을 제거합니다.
+    // 자신이 취소되므로 내 부모들에게서 나의 자식 지분을 제거.
     for (auto& depHandle : entry->task.dependencies)
     {
         if (TaskEntry* parent = m_tasks.Find(depHandle))

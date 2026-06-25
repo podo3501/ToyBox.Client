@@ -2,9 +2,11 @@
 #include "RenderPassV.h"
 #include "Task.h"
 
-using BarrierGroups = std::unordered_map<CommandType, std::vector<BarrierPlanV>>;
+struct ResourceStateTrackerV;
+
 BarrierGroups BuildBarriers(
     CommandType cmdType,
     const RenderPassV& pass,
-    std::unordered_map<uint32_t, ResourceStateTrackerV>& resStateTracker);
+    std::unordered_map<RGResourceID, ResourceStateTrackerV>& resStateTracker,
+    PassIndex passIndex);
 Task CreateBarrierTask(CommandType type, const std::vector<BarrierPlanV>& barriers);

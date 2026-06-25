@@ -403,6 +403,12 @@
     <ClInclude Include="Render\DX12\Graph\BarrierBuilder.h">
       <Filter>Render\DX12\Graph</Filter>
     </ClInclude>
+    <ClInclude Include="Render\DX12\Graph\RenderGraphUtils.h">
+      <Filter>Render\DX12\Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Graph\RenderGraphDefinitions.h">
+      <Filter>Render\DX12\Graph</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -647,6 +653,9 @@
       <Filter>Render\DX12\Graph</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\Graph\BarrierBuilder.cpp">
+      <Filter>Render\DX12\Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Graph\RenderGraphUtils.cpp">
       <Filter>Render\DX12\Graph</Filter>
     </ClCompile>
   </ItemGroup>

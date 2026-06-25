@@ -2,19 +2,19 @@
 #include "RenderGraphV.h"
 #include "BarrierBuilder.h"
 #include "Core/D3D12Conversions.h"
+#include "RenderGraphUtils.h"
 #include <unordered_set>
 
 RenderGraphV::~RenderGraphV() = default;
-
-RGHandle RenderGraphV::CreateRGHandle()
+RGResourceID RenderGraphV::CreateRGResourceID()
 {
-    RGHandle handle{ m_nextId++ };
-    return handle;
+    RGResourceID createID = m_resID++;
+    return createID;
 }
 
-void RenderGraphV::ImportResource(RGHandle h, RGAccess access)
+void RenderGraphV::ImportResource(RGResourceID resID, RGAccess access)
 {
-    m_statesTracker[h.id].state = ToD3D12(access);
+    m_statesTracker[resID].state = ToD3D12(access);
 }
 
 RenderPassV& RenderGraphV::AddGraphicsPass(std::string n) { return AddPass(std::move(n), CommandType::Direct);}
@@ -33,17 +33,9 @@ RenderPassV& RenderGraphV::AddPass(std::string name, CommandType type)
     return pass;
 }
 
-struct PassNodeV
-{
-    int index;
-    std::vector<int> dependencies; // 내 앞에 실행되어야 하는 패스들 (정방향)
-    std::vector<int> dependents; // 내 뒤에 실행되어야 하는 패스들 (역방향) 나중에 barrier를 만들고 나서 다시 역방향을 만든다. barrier를 만들때 역방향을 연결해 줄 수도 있지만, 다시 만들어도 비교적 비용이 싸고 유지보수가 더 쉽기 때문이다.
-    int indegree{ 0 };
-};
-
 static void BuildDependents(std::vector<CompiledTask>& tasks)
 {
-    std::unordered_map<uint32_t, size_t> indexMap;
+    std::unordered_map<LocalTaskID, size_t> indexMap;
     indexMap.reserve(tasks.size());
 
     for (size_t i = 0; i < tasks.size(); ++i)
@@ -65,56 +57,95 @@ std::vector<CompiledTask> RenderGraphV::Compile()
 {
     ValidateGraph();
 
-    std::vector<CompiledTask> compiledTasks;
+    auto passNodes = BuildDependencyGraph(); //dependency 만들기
+    auto sortedPass = TopologicalSort(passNodes); //만든 걸로 node 정렬
+    auto barrierMap = PlanBarriers(sortedPass); // 배리어 '위치'와 '실물 정보' 완벽히 선점하기(베리어 먼저 만들어보기)
 
-    auto passNodes = BuildDependencyGraph();
-    auto sortedPass = TopologicalSort(passNodes);
+    auto tasks = BuildCompiledTasks(passNodes, sortedPass, barrierMap);
+    BuildDependents(tasks);
 
-    std::unordered_map<int, uint32_t> passToTaskId;
+    return tasks;
+}
 
-    for (auto passIndex : sortedPass)
+std::vector<CompiledTask> RenderGraphV::BuildCompiledTasks(
+    const std::vector<PassNodeV>& passNodes,
+    const std::vector<PassIndex>& sortedPass,
+    const BarrierMap& passToBarriersMap)
+{
+    std::vector<CompiledTask> tasks;
+    tasks.reserve(sortedPass.size() * 2); //여유를 줘서.
+    std::unordered_map<PassIndex, LocalTaskID> passToTaskId;
+    passToTaskId.reserve(sortedPass.size());
+
+    for (PassIndex passIndex : sortedPass)
     {
         auto& pass = m_passes[passIndex];
 
-        std::vector<uint32_t> dependencies;
-        for (auto depPass : passNodes[passIndex].dependencies)
+        // 부모 패스 의존성 수집
+        std::vector<LocalTaskID> baseDependencies;
+
+        for (PassIndex depPass : passNodes[passIndex].dependencies)
         {
             auto it = passToTaskId.find(depPass);
             if (it != passToTaskId.end())
-                dependencies.push_back(it->second);
+                baseDependencies.push_back(it->second);
         }
 
-        Task task{};
-        task.passName = pass.name;
-        task.type = pass.type;
-
-        auto barrierGroups = BuildBarriers(task.type, pass, m_statesTracker);
-        for (auto& [type, barriers] : barrierGroups)
-        {
-            auto barrierTask = CreateBarrierTask(type, barriers);
-            auto barrierId = CreateLocalTaskID();
-
-            compiledTasks.push_back({ barrierId, std::move(barrierTask), dependencies });
-
-            dependencies.clear();
-            dependencies.push_back(barrierId);
-        }
+        std::vector<LocalTaskID> currentPassDependencies =
+            BuildBarrierTasks(passIndex, baseDependencies, passToBarriersMap, tasks);
 
         if (!pass.cpuExecute && !pass.gpuExecute)
             continue;
 
+        Task task{};
+        task.passName = pass.name;
+        task.type = pass.type;
         task.cpuExecute = pass.cpuExecute;
         task.gpuExecute = pass.gpuExecute;
 
-        auto taskId = CreateLocalTaskID();
-
-        compiledTasks.push_back({ taskId, std::move(task), dependencies });
+        LocalTaskID taskId = CreateLocalTaskID();
+        tasks.push_back({ taskId, std::move(task), currentPassDependencies });
 
         passToTaskId[passIndex] = taskId;
     }
-    BuildDependents(compiledTasks);
 
-    return compiledTasks;
+    return tasks;
+}
+
+std::vector<LocalTaskID> RenderGraphV::BuildBarrierTasks(
+    PassIndex passIndex,
+    const std::vector<LocalTaskID>& baseDependencies,
+    const BarrierMap& passToBarriersMap,
+    std::vector<CompiledTask>& outTasks)
+{
+    auto barrierIt = passToBarriersMap.find(passIndex);
+    if (barrierIt == passToBarriersMap.end() || barrierIt->second.empty())
+        return baseDependencies; // 배리어가 없으면 부모 의존성을 그대로 반환
+
+    std::vector<LocalTaskID> currentPassDependencies;
+    currentPassDependencies.reserve(barrierIt->second.size());
+
+    for (auto& planned : barrierIt->second)
+    {
+        if (planned->generatedTaskId == 0) // 아직 배리어 태스크가 생성되지 않은 경우에만 새로 생성 (캐싱 로직 유지)
+        {
+            std::vector<LocalTaskID> barrierDependencies = baseDependencies;
+            for (auto& [type, barriers] : planned->groups)
+            {
+                auto barrierTask = CreateBarrierTask(type, barriers);
+                LocalTaskID barrierId = CreateLocalTaskID();
+                outTasks.push_back({ barrierId, std::move(barrierTask), std::move(barrierDependencies) });
+
+                barrierDependencies.clear();
+                barrierDependencies.push_back(barrierId); // 체이닝: 다음 그룹 배리어는 방금 생성한 배리어 태스크에 의존하도록 설정
+            }
+            planned->generatedTaskId = barrierDependencies.back();
+        }
+        currentPassDependencies.push_back(planned->generatedTaskId);
+    }
+    RemoveVectorDuplicates(currentPassDependencies);
+
+    return currentPassDependencies;
 }
 
 std::vector<PassNodeV> RenderGraphV::BuildDependencyGraph()
@@ -126,23 +157,23 @@ std::vector<PassNodeV> RenderGraphV::BuildDependencyGraph()
     for (int i = 0; i < passCount; ++i)
         nodes[i].index = i;
 
-    std::unordered_map<uint32_t, int> lastWriter; // resource -> 마지막 writer pass. waw, raw(write->read)를 하기위한 변수.
-    std::unordered_map<uint32_t, std::vector<int>> activeReaders; //war(read->write) 에 필요한 변수. war은 조금 까다롭다.
+    std::unordered_map<RGResourceID, PassIndex> lastWriter; // resource -> 마지막 writer pass. waw, raw(write->read)를 하기위한 변수.
+    std::unordered_map<RGResourceID, std::vector<PassIndex>> activeReaders; //war(read->write) 에 필요한 변수. war은 조금 까다롭다.
 
-    for (int passIndex = 0; passIndex < passCount; ++passIndex)
+    for (PassIndex passIndex = 0; passIndex < passCount; ++passIndex)
     {
         auto& pass = m_passes[passIndex];
 
         for (auto& usage : pass.usages)
         {
-            const auto resourceId = usage.handle.id;
+            const auto resourceID = usage.resID;
 
             switch (usage.access)
             {
             case AccessType::Read:
             {
                 // RAW(write->read)
-                auto writerIt = lastWriter.find(resourceId);
+                auto writerIt = lastWriter.find(resourceID);
                 if (writerIt != lastWriter.end())
                 {
                     int writerPass = writerIt->second;
@@ -151,14 +182,14 @@ std::vector<PassNodeV> RenderGraphV::BuildDependencyGraph()
                     nodes[writerPass].dependents.push_back(passIndex);
                 }
 
-                activeReaders[resourceId].push_back(passIndex);
+                activeReaders[resourceID].push_back(passIndex);
                 break;
             }
 
             case AccessType::Write:
             {
                 // WAW(write->write)
-                auto writerIt = lastWriter.find(resourceId);
+                auto writerIt = lastWriter.find(resourceID);
                 if (writerIt != lastWriter.end())
                 {
                     int writerPass = writerIt->second;
@@ -168,7 +199,7 @@ std::vector<PassNodeV> RenderGraphV::BuildDependencyGraph()
                 }
 
                 // WAR(read->write). 참고로 RAR은 하지 않는다.
-                auto readerIt = activeReaders.find(resourceId);
+                auto readerIt = activeReaders.find(resourceID);
                 if (readerIt != activeReaders.end())
                 {
                     for (int readerPass : readerIt->second)
@@ -180,7 +211,7 @@ std::vector<PassNodeV> RenderGraphV::BuildDependencyGraph()
                     readerIt->second.clear();
                 }
 
-                lastWriter[resourceId] = passIndex;
+                lastWriter[resourceID] = passIndex;
                 break;
             }
             }
@@ -189,15 +220,8 @@ std::vector<PassNodeV> RenderGraphV::BuildDependencyGraph()
 
     for (auto& node : nodes)
     {
-        // 정방향 간선 중복 제거
-        std::sort(node.dependencies.begin(), node.dependencies.end());
-        node.dependencies.erase(
-            std::unique(node.dependencies.begin(), node.dependencies.end()), node.dependencies.end());
-
-        // 역방향 간선 중복 제거
-        std::sort(node.dependents.begin(), node.dependents.end());
-        node.dependents.erase(
-            std::unique(node.dependents.begin(), node.dependents.end()), node.dependents.end());
+        RemoveVectorDuplicates(node.dependencies); // 정방향 간선 중복 제거
+        RemoveVectorDuplicates(node.dependents); // 역방향 간선 중복 제거
 
         node.indegree = static_cast<int>(node.dependencies.size());
     }
@@ -207,10 +231,10 @@ std::vector<PassNodeV> RenderGraphV::BuildDependencyGraph()
 
 void RenderGraphV::ValidateGraph()
 {
-    std::unordered_set<uint32_t> produced;
+    std::unordered_set<RGResourceID> produced;
 
-    for (auto& [id, state] : m_statesTracker)
-        produced.insert(id);
+    for (auto& [resID, state] : m_statesTracker)
+        produced.insert(resID);
 
     for (auto& pass : m_passes)
     {
@@ -218,56 +242,58 @@ void RenderGraphV::ValidateGraph()
         {
             if (usage.access == AccessType::Read)
             {
-                Assert(produced.contains(usage.handle.id)); //read pass는 import가 있거나 write pass가 있어야 한다.(즉, 읽을게 있어야 읽지)
+                Assert(produced.contains(usage.resID)); //read pass는 import가 있거나 write pass가 있어야 한다.(즉, 읽을게 있어야 읽지)
             }
 
             if (usage.access == AccessType::Write)
             {
-                produced.insert(usage.handle.id);
+                produced.insert(usage.resID);
             }
         }
     }
 }
 
-std::vector<int> RenderGraphV::TopologicalSort(const std::vector<PassNodeV>& graph)
+RenderGraphV::BarrierMap RenderGraphV::PlanBarriers(const std::vector<PassIndex>& sortedPass)
 {
-    const int n = (int)graph.size();
+    std::unordered_map<PassIndex, std::vector<std::shared_ptr<PlannedBarrier>>> passToBarriersMap;
+    std::unordered_map<RGResourceID, std::shared_ptr<PlannedBarrier>> lastResourceBarrier;
 
-    std::vector<int> indegree(n);
+    auto tempTracker = m_statesTracker;
 
-    for (int i = 0; i < n; ++i) // indegree 복사
-        indegree[i] = graph[i].indegree;
-
-    std::queue<int> q;
-    std::vector<int> result;
-    result.reserve(n);
-
-    // 1. indegree 0부터 시작
-    for (int i = 0; i < n; ++i)
+    for (PassIndex passIndex : sortedPass)
     {
-        if (indegree[i] == 0)
-            q.push(i);
-    }
+        auto& pass = m_passes[passIndex];
+        BarrierGroups barrierGroups = BuildBarriers(pass.type, pass, tempTracker, passIndex);
 
-    while (!q.empty()) 
-    {
-        int cur = q.front();
-        q.pop();
-        result.push_back(cur);
-
-        for (int nextPass : graph[cur].dependents) 
+        if (!barrierGroups.empty())
         {
-            indegree[nextPass]--;
-            if (indegree[nextPass] == 0) 
-                q.push(nextPass);
+            auto planned = std::make_shared<PlannedBarrier>();
+            planned->groups = std::move(barrierGroups);
+
+            passToBarriersMap[passIndex].push_back(planned);
+            for (const auto& usage : pass.usages)
+            {
+                if (tempTracker[usage.resID].lastUpdatedPass == passIndex) //이번 패스에서 실제로 트랜지션 배리어가 생성된 "자원"만 Fork용 이정표로 등록.
+                    lastResourceBarrier[usage.resID] = planned;
+            }
+        }
+        else
+        {
+            // (Fork 핵심) 배리어가 새로 안 만들어졌다면, 형제 pass가 이미 선점해둔 배리어가 있는지 공유 엮기
+            for (const auto& usage : pass.usages)
+            {
+                if (usage.access == AccessType::Read && lastResourceBarrier.contains(usage.resID))
+                    passToBarriersMap[passIndex].push_back(lastResourceBarrier[usage.resID]);
+            }
         }
     }
 
-    return result;
+    m_statesTracker = std::move(tempTracker); // 시뮬레이션이 끝난 최종 자원 상태를 전역 트래커에 동기화
+    return passToBarriersMap;
 }
 
-uint32_t RenderGraphV::CreateLocalTaskID()
+LocalTaskID RenderGraphV::CreateLocalTaskID()
 {
-    return m_nextTaskId++;
+    return m_localTaskID++;
 }
 
