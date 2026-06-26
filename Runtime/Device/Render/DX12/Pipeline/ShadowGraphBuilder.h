@@ -14,12 +14,12 @@ public:
         ShadowRenderer& shadowRenderer, 
         DescriptorFactory& descFactory,
         ShadowResource& shadowRes,
-        RGHandle hShadow);
+        RGResourceID shadowResID);
     void Build(RenderGraph& graph);
 
 private:
     ShadowRenderer& m_shadowRenderer;
     DescriptorFactory& m_descFactory;
     ShadowResource& m_shadowRes;
-    RGHandle m_hShadow;
+    RGResourceID m_shadowResID;
 };

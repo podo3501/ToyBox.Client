@@ -9,10 +9,10 @@ class DebugSurfaceGraphBuilder
 public:
     ~DebugSurfaceGraphBuilder();
     DebugSurfaceGraphBuilder() = delete;
-    DebugSurfaceGraphBuilder(DebugSurfaceRenderer& debugSurfRenderer, RGHandle hBb);
+    DebugSurfaceGraphBuilder(DebugSurfaceRenderer& debugSurfRenderer, RGResourceID backBufferResID);
     void Build(RenderGraph& graph);
 
 private:
     DebugSurfaceRenderer& m_debugSurfRenderer;
-    RGHandle m_hBb;
+    RGResourceID m_backBufferResID;
 };

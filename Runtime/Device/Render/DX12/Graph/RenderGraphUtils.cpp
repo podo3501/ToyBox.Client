@@ -1,9 +1,10 @@
 #include "pch.h"
 #include "RenderGraphUtils.h"
+#include "Task.h"
 
 std::vector<PassIndex> TopologicalSort(const std::vector<PassNodeV>& graph)
 {
-    const int n = (int)graph.size();
+    const int n = static_cast<int>(graph.size());
 
     std::vector<int> indegree(n);
 
@@ -38,4 +39,24 @@ std::vector<PassIndex> TopologicalSort(const std::vector<PassNodeV>& graph)
     Assert(result.size() == graph.size());
 
     return result;
+}
+
+void BuildDependents(std::vector<CompiledTask>& tasks)
+{
+    std::unordered_map<LocalTaskID, size_t> indexMap;
+    indexMap.reserve(tasks.size());
+
+    for (size_t i = 0; i < tasks.size(); ++i)
+        indexMap[tasks[i].localId] = i;
+
+    for (const auto& task : tasks)
+    {
+        for (const auto& dep : task.dependencies)
+        {
+            auto it = indexMap.find(dep);
+            if (it == indexMap.end()) continue;
+
+            tasks[it->second].dependents.push_back(task.localId);
+        }
+    }
 }

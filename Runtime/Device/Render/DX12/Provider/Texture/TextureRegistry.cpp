@@ -1,14 +1,14 @@
 #include "pch.h"
 #include "TextureRegistry.h"
 
-void TextureRegistry::Register(uint32_t id, std::shared_ptr<ITextureResource> resource)
+void TextureRegistry::Register(RGResourceID resID, std::shared_ptr<ITextureResource> resource)
 {
-    m_textures[id] = resource;
+    m_textures[resID] = resource;
 }
 
-TextureResource* TextureRegistry::GetTextureResource(uint32_t id)
+TextureResource* TextureRegistry::GetTextureResource(RGResourceID resID)
 {
-    auto it = m_textures.find(id);
+    auto it = m_textures.find(resID);
     if (it == m_textures.end()) return nullptr;
 
     auto res = it->second.lock();
@@ -18,9 +18,9 @@ TextureResource* TextureRegistry::GetTextureResource(uint32_t id)
     return static_cast<TextureResource*>(res.get());
 }
 
-void TextureRegistry::FinalizeTexture(uint32_t id)
+void TextureRegistry::FinalizeTexture(RGResourceID resID)
 {
-    auto it = m_textures.find(id);
+    auto it = m_textures.find(resID);
     if (it == m_textures.end()) return;
     
     auto res = it->second.lock();

@@ -11,7 +11,7 @@ struct PassNodeV
     int indegree{ 0 };
 };
 
-struct ResourceStateTrackerV
+struct ResourceStateTracker
 {
     D3D12_RESOURCE_STATES state{ D3D12_RESOURCE_STATE_COMMON };
     PassIndex lastUpdatedPass{ -1 };

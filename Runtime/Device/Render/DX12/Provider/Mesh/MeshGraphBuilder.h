@@ -1,9 +1,6 @@
 #pragma once
-#include "Graph/RGTypes.h"
 #include "MeshRegistry.h"
-#include "d3dx12.h"
 
-struct MeshAsset;
 struct MeshLoadRequest;
 struct MeshUploadEntry;
 struct MeshFinalizeEntry;
@@ -23,15 +20,11 @@ public:
     void LoadMeshes(const std::vector<MeshLoadRequest>& requests);
 
 private:
-    void BuildUploadPass(RenderGraph& graph, std::vector<MeshUploadEntry>& meshUploads, RGHandle hUploadRes);
+    void BuildUploadPass(RenderGraph& graph, std::vector<MeshUploadEntry>& meshUploads, RGResourceID uploadResID);
     void BuildFinalizePass(RenderGraph& graph, std::vector<MeshFinalizeEntry>& finalizes);
-
-    RGHandle CreateRGHandle();
 
     TaskScheduler& m_taskScheduler;
     ResourceFactory& m_resFactory;
     DescriptorFactory& m_descFactory;
-
     MeshRegistry m_registry;
-    uint32_t m_nextId{ 1 };
 };

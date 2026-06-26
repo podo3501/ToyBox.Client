@@ -7,12 +7,12 @@
 class MeshRegistry
 {
 public:
-    void Register(uint32_t id, std::shared_ptr<IMeshResource> resource);
-    void FinalizeMesh(uint32_t id, VertexFormat format,
+    void Register(RGResourceID resID, std::shared_ptr<IMeshResource> resource);
+    void FinalizeMesh(RGResourceID resID, VertexFormat format,
         Resource vRes, UINT vHeapIndex, UINT vCount,
         Resource iRes, UINT iHeapIndex, UINT iCount);
 
 private:
-    std::unordered_map<uint32_t, std::weak_ptr<IMeshResource>> m_meshes;
+    std::unordered_map<RGResourceID, std::weak_ptr<IMeshResource>> m_meshes;
 };
 

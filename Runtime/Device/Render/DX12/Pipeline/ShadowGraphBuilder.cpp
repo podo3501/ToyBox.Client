@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "ShadowGraphBuilder.h"
-#include "Graph/RenderPass.h"
 #include "Graph/RenderGraph.h"
 #include "Renderer/ShadowRenderer.h"
 #include "Command/CommandListHelpers.h"
@@ -15,17 +14,17 @@ ShadowGraphBuilder::ShadowGraphBuilder(
     ShadowRenderer& shadowRenderer, 
     DescriptorFactory& descFactory,
     ShadowResource& shadowRes,
-    RGHandle hShadow) :
+    RGResourceID shadowResID) :
     m_shadowRenderer{ shadowRenderer },
     m_descFactory{ descFactory },
     m_shadowRes{ shadowRes },
-    m_hShadow{ hShadow }
+    m_shadowResID{ shadowResID }
 {}
 
 void ShadowGraphBuilder::Build(RenderGraph& graph)
 {
-    auto& shadow = graph.AddPass("Shadow", CommandType::Direct);
-    shadow.writes.push_back({ m_hShadow, RGAccess::DepthWrite });
+    auto& shadow = graph.AddGraphicsPass("Shadow");
+    shadow.Write(m_shadowResID, RGAccess::DepthWrite);
 
     shadow.gpuExecute =
         [

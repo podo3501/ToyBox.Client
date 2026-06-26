@@ -1,39 +1,60 @@
 #pragma once
-#include "Graph/RGTypes.h"
-#include "GameClient/Service/Render/Desc/TextureDesc.h"
-#include "TaskHandle.h"
 #include "RenderPass.h"
-#include <d3d12.h>
-
-struct ResourceStateTracker
-{
-    D3D12_RESOURCE_STATES state{ D3D12_RESOURCE_STATE_COMMON };
-};
-
-struct PassNode;
-struct TaskContext;
-struct CompiledTask;
-class CommandList;
-enum class CommandType;
+#include "RenderGraphDefinitions.h"
+#include "Task.h"
 
 class RenderGraph
 {
 public:
     ~RenderGraph();
-    RenderPass& AddPass(const std::string& name, CommandType type);
+    static RGResourceID CreateRGResourceID() noexcept;
+    void ImportResource(RGResourceID resID, RGAccess access); //초기상태는 이렇다고 가정함.
+    void ExportResource(RGResourceID resID, RGAccess access); //끝날때는 이럴꺼라고 가정함.
+
+    RenderPass& AddGraphicsPass(std::string name);
+    RenderPass& AddCopyPass(std::string name);
+    RenderPass& AddComputePass(std::string name);
+    RenderPass& AddCpuPass(std::string name);
+
     std::vector<CompiledTask> Compile();
-    RGHandle CreateRGHandle();
-    void ImportResource(RGHandle h, RGAccess access);
-    void Execute(CommandList& cmd, const vector<CompiledTask>& compiledTasks, TaskContext& ctx);
 
 private:
-    int FindPassIndex(const std::string& name);
-    std::vector<PassNode> BuildDependencyGraph();
-    std::vector<int> TopologicalSort(const std::vector<PassNode>& graph);
-    uint32_t CreateLocalTaskID();
+    struct PlannedBarrier 
+    {
+        BarrierGroups groups;
+        LocalTaskID generatedTaskId{ 0 }; // 실제 테스크가 생성되면 여기에 기록됨
+    };
+    using BarrierMap = std::unordered_map<PassIndex, std::vector<std::shared_ptr<PlannedBarrier>>>;
+
+    struct ExportResourceState
+    {
+        RGResourceID resID;
+        RGAccess access;
+    };
+
+    RenderPass& AddPass(std::string name, CommandType type);
+    void ValidateGraph();
+    void BuildExportPass();
+    std::vector<PassNodeV> BuildDependencyGraph();
+    BarrierMap PlanBarriers(const std::vector<PassIndex>& sortedPass); //배리어 계획 단계를 담당
+
+    std::vector<CompiledTask> BuildCompiledTasks(
+        const std::vector<PassNodeV>& passNodes,
+        const std::vector<PassIndex>& sortedPass,
+        const BarrierMap& passToBarriersMap);
+
+    std::vector<LocalTaskID> BuildBarrierTasks(
+        PassIndex passIndex,
+        const std::vector<LocalTaskID>& baseDependencies,
+        const BarrierMap& passToBarriersMap,
+        std::vector<CompiledTask>& outTasks);
+
+    LocalTaskID CreateLocalTaskID();
+
+    static std::atomic<RGResourceID> s_resourceID; //리소스 id를 발급해 주는 변수
 
     std::vector<RenderPass> m_passes;
-    std::unordered_map<uint32_t, ResourceStateTracker> m_statesTracker;
-    uint32_t m_nextId{ 1 };
-    uint32_t m_nextTaskId{ 1 };
+    std::unordered_map<RGResourceID, ResourceStateTracker> m_statesTracker;
+    std::vector<ExportResourceState> m_exportResources;
+    LocalTaskID m_localTaskID{ 1 }; //그래프에서 발급하는 임시 테스크 ID
 };

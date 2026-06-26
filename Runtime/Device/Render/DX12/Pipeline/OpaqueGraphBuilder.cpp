@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "OpaqueGraphBuilder.h"
 #include "SwapChainPresenter.h"
-#include "Graph/RenderPass.h"
 #include "Graph/RenderGraph.h"
 #include "Renderer/SurfaceRenderer.h"
 #include "Resource/Mesh/MeshResource.h"
@@ -14,20 +13,20 @@ OpaqueGraphBuilder::OpaqueGraphBuilder(
     SurfaceRenderer& surfRenderer, 
     SwapChainPresenter& swapChain,
     ShadowResource& shadowRes,
-    RGHandle hBb, RGHandle hShadow) :
+    RGResourceID backBufferResID, 
+    RGResourceID shadowResID) :
     m_surfRenderer{ surfRenderer },
     m_swapChain{ swapChain },
     m_shadowRes{ shadowRes },
-    m_hBb { hBb },
-    m_hShadow{ hShadow }
+    m_backBufferResID { backBufferResID },
+    m_shadowResID{ shadowResID }
 {}
 
 void OpaqueGraphBuilder::Build(RenderGraph& graph)
 {
-    auto& opaque = graph.AddPass("Opaque", CommandType::Direct);
-    opaque.dependsOn.push_back("Shadow");
-    opaque.writes.push_back({ m_hShadow, RGAccess::SRV });
-    opaque.writes.push_back({ m_hBb, RGAccess::RTV });
+    auto& opaque = graph.AddGraphicsPass("Opaque");
+    opaque.Read(m_shadowResID, RGAccess::SRV);
+    opaque.Write(m_backBufferResID, RGAccess::RTV);
     opaque.gpuExecute =
         [
             &swapChain = m_swapChain,

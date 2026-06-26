@@ -1,12 +1,12 @@
 #pragma once
-#include "RenderPassV.h"
+#include "RenderPass.h"
 #include "Task.h"
 
-struct ResourceStateTrackerV;
+struct ResourceStateTracker;
 
 BarrierGroups BuildBarriers(
     CommandType cmdType,
-    const RenderPassV& pass,
-    std::unordered_map<RGResourceID, ResourceStateTrackerV>& resStateTracker,
+    const RenderPass& pass,
+    std::unordered_map<RGResourceID, ResourceStateTracker>& resStateTracker,
     PassIndex passIndex);
-Task CreateBarrierTask(CommandType type, const std::vector<BarrierPlanV>& barriers);
+Task CreateBarrierTask(CommandType type, const std::vector<BarrierPlan>& barriers);

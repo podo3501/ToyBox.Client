@@ -205,12 +205,6 @@
     <ClInclude Include="Render\DX12\Resource\ShadowResource.h">
       <Filter>Render\DX12\Resource</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\Graph\RenderGraph.h">
-      <Filter>Render\DX12\Graph</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\DX12\Graph\RenderPass.h">
-      <Filter>Render\DX12\Graph</Filter>
-    </ClInclude>
     <ClInclude Include="Render\DX12\Graph\RGTypes.h">
       <Filter>Render\DX12\Graph</Filter>
     </ClInclude>
@@ -230,9 +224,6 @@
       <Filter>Render\DX12\Pipeline</Filter>
     </ClInclude>
     <ClInclude Include="Render\DX12\Pipeline\ForwardRenderPipeline.h">
-      <Filter>Render\DX12\Pipeline</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\DX12\Pipeline\FrameEndGraphBuilder.h">
       <Filter>Render\DX12\Pipeline</Filter>
     </ClInclude>
     <ClInclude Include="Render\DX12\Pipeline\OpaqueGraphBuilder.h">
@@ -394,10 +385,10 @@
     <ClInclude Include="Render\DX12\ResourceProvider.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\Graph\RenderGraphV.h">
+    <ClInclude Include="Render\DX12\Graph\RenderGraph.h">
       <Filter>Render\DX12\Graph</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\Graph\RenderPassV.h">
+    <ClInclude Include="Render\DX12\Graph\RenderPass.h">
       <Filter>Render\DX12\Graph</Filter>
     </ClInclude>
     <ClInclude Include="Render\DX12\Graph\BarrierBuilder.h">
@@ -407,6 +398,9 @@
       <Filter>Render\DX12\Graph</Filter>
     </ClInclude>
     <ClInclude Include="Render\DX12\Graph\RenderGraphDefinitions.h">
+      <Filter>Render\DX12\Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Graph\TaskUtils.h">
       <Filter>Render\DX12\Graph</Filter>
     </ClInclude>
   </ItemGroup>
@@ -508,9 +502,6 @@
     <ClCompile Include="Render\DX12\Resource\ShadowResource.cpp">
       <Filter>Render\DX12\Resource</Filter>
     </ClCompile>
-    <ClCompile Include="Render\DX12\Graph\RenderGraph.cpp">
-      <Filter>Render\DX12\Graph</Filter>
-    </ClCompile>
     <ClCompile Include="Render\DX12\Graph\TaskScheduler.cpp">
       <Filter>Render\DX12\Graph</Filter>
     </ClCompile>
@@ -518,9 +509,6 @@
       <Filter>Render\DX12\Pipeline</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\Pipeline\ForwardRenderPipeline.cpp">
-      <Filter>Render\DX12\Pipeline</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\DX12\Pipeline\FrameEndGraphBuilder.cpp">
       <Filter>Render\DX12\Pipeline</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\Pipeline\OpaqueGraphBuilder.cpp">
@@ -649,13 +637,16 @@
     <ClCompile Include="Render\DX12\ResourceProvider.cpp">
       <Filter>Render\DX12</Filter>
     </ClCompile>
-    <ClCompile Include="Render\DX12\Graph\RenderGraphV.cpp">
+    <ClCompile Include="Render\DX12\Graph\RenderGraph.cpp">
       <Filter>Render\DX12\Graph</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\Graph\BarrierBuilder.cpp">
       <Filter>Render\DX12\Graph</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\Graph\RenderGraphUtils.cpp">
+      <Filter>Render\DX12\Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Graph\TaskUtils.cpp">
       <Filter>Render\DX12\Graph</Filter>
     </ClCompile>
   </ItemGroup>

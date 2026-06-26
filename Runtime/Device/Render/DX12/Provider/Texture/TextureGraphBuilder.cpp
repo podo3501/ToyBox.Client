@@ -2,20 +2,16 @@
 #include "TextureGraphBuilder.h"
 #include "MipGenerator.h"
 #include "Graph/RenderGraph.h"
-#include "Graph/RenderPass.h"
 #include "Graph/TaskScheduler.h"
 #include "Factory/DescriptorFactory.h"
 #include "Factory/ResourceFactory.h"
-#include "Factory/DescriptorAllocator.h"
-#include "Command/CommandListHelpers.h"
-#include "Command/CommandList.h"
 #include "TextureLoadRequest.h"
 #include "Helpers/CommonHelpers.h"
 #include "TextureUtils.h"
 
 struct TextureUploadEntry
 {
-    RGHandle handle;
+    RGResourceID resID;
     Resource resource;
     std::shared_ptr<TextureAsset> asset;
 
@@ -25,7 +21,7 @@ struct TextureUploadEntry
 
 struct TextureFinalizeEntry
 {
-    RGHandle handle;
+    RGResourceID resID;
     bool generateMips{ false };
 };
 
@@ -49,8 +45,8 @@ void TextureGraphBuilder::LoadTextures(const std::vector<TextureLoadRequest>& re
     bool hasMipTask = false;
     for (const auto& req : requests)
     {
-        RGHandle hTex = CreateRGHandle();
-        m_registry.Register(hTex.id, req.resource);
+        RGResourceID texResID = RenderGraph::CreateRGResourceID();
+        m_registry.Register(texResID, req.resource);
 
         auto& texDesc = req.resource->GetDesc();
         auto mips = CanGenerateMips(*req.asset, texDesc.generateMips);
@@ -64,15 +60,15 @@ void TextureGraphBuilder::LoadTextures(const std::vector<TextureLoadRequest>& re
         hasMipTask |= mips;
         offset = AlignSize(offset, AlignTexture);
 
-        textureUploads.push_back({ hTex, texRes, req.asset, offset, mips });
-        finalizeEntries.push_back({ hTex, mips });
+        textureUploads.push_back({ texResID, texRes, req.asset, offset, mips });
+        finalizeEntries.push_back({ texResID, mips });
 
         auto requiredSize = m_resFactory.GetRequiredIntermediateSize(resDesc, 0, 1, offset);
         offset += requiredSize;
     }
-    RGHandle hUploadRes = CreateRGHandle();
+    RGResourceID uploadResID = RenderGraph::CreateRGResourceID();
 
-    BuildUploadPass(graph, textureUploads, hUploadRes);
+    BuildUploadPass(graph, textureUploads, uploadResID);
     if (hasMipTask) BuildMipPass(graph, textureUploads);
     BuildFinalizePass(graph, finalizeEntries);
 
@@ -80,46 +76,41 @@ void TextureGraphBuilder::LoadTextures(const std::vector<TextureLoadRequest>& re
 
     size_t totalUploadSize = AlignSize(offset, AlignTexture);
     auto resCtx = std::make_shared<ResourceContext>();
-    resCtx->Set(hUploadRes, m_resFactory.CreateResource(totalUploadSize, ResInitType::Upload));
+    resCtx->Set(uploadResID, m_resFactory.CreateResource(totalUploadSize, ResInitType::Upload));
 
     m_taskScheduler.Submit(compiledTasks, resCtx);
 }
 
-void TextureGraphBuilder::BuildUploadPass(RenderGraph& graph, std::vector<TextureUploadEntry>& textureUploads, RGHandle hUploadRes)
+void TextureGraphBuilder::BuildUploadPass(RenderGraph& graph, std::vector<TextureUploadEntry>& textureUploads, RGResourceID uploadResID)
 {
-    auto& upload = graph.AddPass("TextureUpload", CommandType::Copy);
+    auto& upload = graph.AddCopyPass("TextureUpload");
 
     for (auto& tex : textureUploads)
-        upload.writes.push_back({ tex.handle, RGAccess::CopyDest });
+        upload.Write(tex.resID, RGAccess::CopyDest);
 
-    upload.gpuExecute = [this, textureUploads, hUploadRes](CommandList& cmd, TaskContext& ctx) mutable {
-        auto& uploadRes = ctx.GetResource(hUploadRes);
+    upload.gpuExecute = [this, textureUploads, uploadResID](CommandList& cmd, TaskContext& ctx) mutable {
+        auto& uploadRes = ctx.GetResource(uploadResID);
         for (auto& tex : textureUploads)
         {
             UploadTexture(cmd, *tex.asset, tex.resource, uploadRes, tex.offset);
-            ctx.SetResource(tex.handle, std::move(tex.resource));
+            ctx.SetResource(tex.resID, std::move(tex.resource));
         }
         };
 }
 
 void TextureGraphBuilder::BuildMipPass(RenderGraph& graph, std::vector<TextureUploadEntry>& textureUploads)
 {
-    auto& mip = graph.AddPass("GenerateMips", CommandType::Compute);
+    auto& mip = graph.AddComputePass("GenerateMips");
 
     for (auto& tex : textureUploads)
-    {
-        if (!tex.generateMips) continue;
-
-        mip.reads.push_back({ tex.handle, RGAccess::CopyDest });
-        mip.writes.push_back({ tex.handle, RGAccess::UAV });
-    }
+        mip.Write(tex.resID, RGAccess::UAV); 
 
     mip.gpuExecute = [this, textureUploads](CommandList& cmd, TaskContext& ctx) {
         for (auto& tex : textureUploads)
         {
             if (!tex.generateMips) continue;
 
-            auto texRes = m_registry.GetTextureResource(tex.handle.id);
+            auto texRes = m_registry.GetTextureResource(tex.resID);
             m_mipGenerator.GenerateMips(cmd, m_descFactory.GetBindlessAllocator(), texRes);
         }
         };
@@ -127,24 +118,15 @@ void TextureGraphBuilder::BuildMipPass(RenderGraph& graph, std::vector<TextureUp
 
 void TextureGraphBuilder::BuildFinalizePass(RenderGraph& graph, std::vector<TextureFinalizeEntry>& finalizeEntries)
 {
-    auto& finalize = graph.AddPass("FinalizeTexture", CommandType::None);
+    auto& finalize = graph.AddCpuPass("FinalizeTexture");
 
     for (auto& tex : finalizeEntries)
-    {
-        finalize.reads.push_back({ tex.handle, tex.generateMips ? RGAccess::UAV : RGAccess::CopyDest });
-        finalize.writes.push_back({ tex.handle, RGAccess::SRV });
-    }
+        finalize.Read(tex.resID, RGAccess::SRV);
 
     finalize.cpuExecute = [this, finalizeEntries](TaskContext& ctx) {
         for (auto& tex : finalizeEntries)
-            m_registry.FinalizeTexture(tex.handle.id);
+            m_registry.FinalizeTexture(tex.resID);
 
         m_descFactory.GetBindlessAllocator().ResetTransient(); //mipmap때 임시로 만든 srv/uav 정리.
         };
-}
-
-RGHandle TextureGraphBuilder::CreateRGHandle()
-{
-    RGHandle handle{ m_nextId++ };
-    return handle;
 }

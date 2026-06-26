@@ -1,7 +1,5 @@
 #pragma once
-#include "Graph/RGTypes.h"
 #include "TextureRegistry.h"
-#include "d3dx12.h"
 
 struct TextureLoadRequest;
 struct TextureUploadEntry;
@@ -25,17 +23,13 @@ public:
     void LoadTextures(const std::vector<TextureLoadRequest>& requests);
 
 private:
-    void BuildUploadPass(RenderGraph& graph, std::vector<TextureUploadEntry>& textureUploads, RGHandle hUploadRes);
+    void BuildUploadPass(RenderGraph& graph, std::vector<TextureUploadEntry>& textureUploads, RGResourceID uploadResID);
     void BuildMipPass(RenderGraph& graph, std::vector<TextureUploadEntry>& textureUploads);
     void BuildFinalizePass(RenderGraph& graph, std::vector<TextureFinalizeEntry>& finalizeEntries);
-
-    RGHandle CreateRGHandle();
 
     TaskScheduler& m_taskScheduler;
     MipGenerator& m_mipGenerator;
     DescriptorFactory& m_descFactory;
     ResourceFactory& m_resFactory;
-
     TextureRegistry m_registry;
-    uint32_t m_nextId{ 1 }; //?!? mesh graph builder에도 있기 때문에 나중에 하나로 합치자.
 };

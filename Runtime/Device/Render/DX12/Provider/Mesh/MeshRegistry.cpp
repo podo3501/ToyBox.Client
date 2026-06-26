@@ -1,16 +1,16 @@
 #include "pch.h"
 #include "MeshRegistry.h"
 
-void MeshRegistry::Register(uint32_t id, std::shared_ptr<IMeshResource> resource)
+void MeshRegistry::Register(RGResourceID resID, std::shared_ptr<IMeshResource> resource)
 {
-    m_meshes[id] = resource;
+    m_meshes[resID] = resource;
 }
 
-void MeshRegistry::FinalizeMesh(uint32_t id, VertexFormat format,
+void MeshRegistry::FinalizeMesh(RGResourceID resID, VertexFormat format,
     Resource vRes, UINT vHeapIndex, UINT vCount,
     Resource iRes, UINT iHeapIndex, UINT iCount)
 {
-    auto it = m_meshes.find(id);
+    auto it = m_meshes.find(resID);
     if (it == m_meshes.end()) return;
 
     auto res = it->second.lock();

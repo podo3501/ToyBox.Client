@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "TaskScheduler.h"
+#include "TaskUtils.h"
 #include "Command/CommandScheduler.h"
 
 TaskScheduler::~TaskScheduler() = default;
@@ -71,37 +72,21 @@ void TaskScheduler::Execute()
     }
 }
 
-//void TaskScheduler::Execute() 
-//{
-//    for (auto handle : m_executionOrder) 
-//    {
-//        Task* task = Find(handle); 
-//        if (!task) continue; 
-//
-//        if (AreDependenciesDone(*task)) // dependency 
-//            ExecuteTask(*task); 
-//    } 
-//}
-
 void TaskScheduler::ExecuteTask(TaskEntry& entry)
 {
-    // CPU TASK
-    if (entry.task.type == CommandType::None)
-    {
-        entry.task.cpuExecute(entry.context); // no command list
-        entry.fenceValue = 0;
-        entry.started = true;
-        return;
-    }
-    
-    // GPU TASK
-    auto cmd = m_cmdScheduler.Begin(entry.task.type);
-    AssertMsg(cmd, "해당 CommandList 가 없음. 할당을 못 받았거나 사용 가능한 것이 없거나 등등");
-    if (!cmd) 
-        return;
+    CommandList* cmd = nullptr;
+    const bool isGpuTask = (entry.task.type != CommandType::None);
 
-    entry.task.gpuExecute(*cmd, entry.context);
-    entry.fenceValue = m_cmdScheduler.End();
+    if (isGpuTask)
+    {
+        cmd = m_cmdScheduler.Begin(entry.task.type);
+        Assert(cmd); // 해당 CommandList 가 없음. 할당을 못 받았거나 사용 가능한 것이 없거나 등등
+        if (!cmd) return;
+    }
+
+    ExecuteImmediate(cmd, entry.task, entry.context);
+
+    entry.fenceValue = isGpuTask ? m_cmdScheduler.End() : 0;
     entry.started = true;
 }
 

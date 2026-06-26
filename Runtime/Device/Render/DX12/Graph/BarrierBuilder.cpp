@@ -46,8 +46,8 @@ static CommandType ResolveCommandType(CommandType type,
 
 BarrierGroups BuildBarriers(
     CommandType cmdType,
-    const RenderPassV& pass,
-    std::unordered_map<RGResourceID, ResourceStateTrackerV>& stateTracker,
+    const RenderPass& pass,
+    std::unordered_map<RGResourceID, ResourceStateTracker>& stateTracker,
     PassIndex passIndex)
 {
     BarrierGroups groups;
@@ -70,7 +70,7 @@ BarrierGroups BuildBarriers(
     return groups;
 }
 
-Task CreateBarrierTask(CommandType type, const std::vector<BarrierPlanV>& barriers)
+Task CreateBarrierTask(CommandType type, const std::vector<BarrierPlan>& barriers)
 {
     Task task{};
     task.passName = "Barrier";
@@ -81,7 +81,7 @@ Task CreateBarrierTask(CommandType type, const std::vector<BarrierPlanV>& barrie
 
         for (auto& barrier : barriers)
         {
-            auto& res = ctx.GetResource(RGHandle(barrier.resID)); //?!? 이거 나중에 RGHandle 타입 없어지면 수정해야함.
+            auto& res = ctx.GetResource(barrier.resID);
 
             barrierBatch.push_back(
                 CommandUtils::CreateTransitionBarrier(res, barrier.before, barrier.after));

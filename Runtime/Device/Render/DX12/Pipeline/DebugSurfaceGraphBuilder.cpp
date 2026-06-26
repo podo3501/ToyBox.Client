@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "DebugSurfaceGraphBuilder.h"
-#include "Graph/RenderPass.h"
 #include "Graph/RenderGraph.h"
 #include "Scene/RenderScene.h"
 #include "Renderer/DebugSurfaceRenderer.h"
@@ -8,16 +7,17 @@
 #include "Resource/Material/GridMaterialResource.h"
 
 DebugSurfaceGraphBuilder::~DebugSurfaceGraphBuilder() = default;
-DebugSurfaceGraphBuilder::DebugSurfaceGraphBuilder(DebugSurfaceRenderer& debugSurfRenderer, RGHandle hBb) :
+DebugSurfaceGraphBuilder::DebugSurfaceGraphBuilder(
+    DebugSurfaceRenderer& debugSurfRenderer, 
+    RGResourceID backBufferResID) :
     m_debugSurfRenderer{ debugSurfRenderer },
-    m_hBb{ hBb }
+    m_backBufferResID{ backBufferResID }
 {}
 
 void DebugSurfaceGraphBuilder::Build(RenderGraph& graph)
 {
-    auto& grid = graph.AddPass("DebugSurface", CommandType::Direct);
-    grid.dependsOn.push_back("Opaque");
-    grid.writes.push_back({ m_hBb, RGAccess::RTV });
+    auto& grid = graph.AddGraphicsPass("DebugSurface");
+    grid.Write(m_backBufferResID, RGAccess::RTV);
     grid.gpuExecute =
         [
             &debugSurfRenderer = m_debugSurfRenderer

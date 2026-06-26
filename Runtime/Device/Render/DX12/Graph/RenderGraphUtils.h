@@ -1,8 +1,11 @@
 #pragma once
-#include "RenderPassV.h"
+#include "RenderPass.h"
 #include "RenderGraphDefinitions.h"
 
+struct CompiledTask;
+
 std::vector<PassIndex> TopologicalSort(const std::vector<PassNodeV>& graph);
+void BuildDependents(std::vector<CompiledTask>& tasks);
 
 template <typename T>
 static void RemoveVectorDuplicates(std::vector<T>& vec)

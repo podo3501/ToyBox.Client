@@ -15,13 +15,14 @@ public:
         SurfaceRenderer& surfRenderer, 
         SwapChainPresenter& swapChain,
         ShadowResource& shadowRes,
-        RGHandle hBb, RGHandle hShadow);
+        RGResourceID backBufferResID, 
+        RGResourceID shadowResID);
     void Build(RenderGraph& graph);
     
 private:
     SurfaceRenderer& m_surfRenderer;
     SwapChainPresenter& m_swapChain;
     ShadowResource&m_shadowRes;
-    RGHandle m_hBb;
-    RGHandle m_hShadow;
+    RGResourceID m_backBufferResID;
+    RGResourceID m_shadowResID;
 };

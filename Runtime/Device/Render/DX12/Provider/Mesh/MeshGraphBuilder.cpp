@@ -1,30 +1,27 @@
 #include "pch.h"
 #include "MeshGraphBuilder.h"
 #include "Graph/RenderGraph.h"
-#include "Graph/RenderPass.h"
 #include "Graph/TaskScheduler.h"
-#include "Resource/Resource.h"
 #include "Factory/DescriptorFactory.h"
 #include "Factory/ResourceFactory.h"
 #include "MeshLoadRequest.h"
 #include "Helpers/CommonHelpers.h"
-#include "GameClient/Service/Asset/Assets/MeshAsset.h"
 #include "MeshUtils.h"
 
 struct MeshUploadEntry
 {
-    RGHandle handle;
-    Resource resource;
-    UploadRegion region;
+    RGResourceID resID{ 0 };
+    Resource resource{};
+    UploadRegion region{};
 };
 
 struct MeshFinalizeEntry
 {
-    std::shared_ptr<MeshAsset> asset;
+    std::shared_ptr<MeshAsset> asset{ nullptr };
 
-    RGHandle hMesh;
-    RGHandle hVb;
-    RGHandle hIb;
+    RGResourceID meshResID{ 0 };
+    RGResourceID vbResID{ 0 };
+    RGResourceID ibResID{ 0 };
 };
 
 MeshGraphBuilder::~MeshGraphBuilder() = default;
@@ -47,11 +44,11 @@ void MeshGraphBuilder::LoadMeshes(
 
     for (const auto& req : requests)
     {
-        RGHandle hVb = CreateRGHandle();
-        RGHandle hIb = CreateRGHandle();
-        RGHandle hMesh = CreateRGHandle();
+        RGResourceID vbResID = RenderGraph::CreateRGResourceID();
+        RGResourceID ibResID = RenderGraph::CreateRGResourceID();
+        RGResourceID meshResID = RenderGraph::CreateRGResourceID();
 
-        m_registry.Register(hMesh.id, req.resource);
+        m_registry.Register(meshResID, req.resource);
 
         auto vbRes = m_resFactory.CreateResource(static_cast<UINT64>(req.vbBytes), ResInitType::Default);
         auto ibRes = m_resFactory.CreateResource(static_cast<UINT64>(req.ibBytes), ResInitType::Default);
@@ -60,7 +57,7 @@ void MeshGraphBuilder::LoadMeshes(
         size_t ibOffset = offset + req.vbBytes;
 
         uploads.push_back({
-            hVb, vbRes,
+            vbResID, vbRes,
             req.asset->vertices.data(),
             req.asset->vertices.size(),
             static_cast<UINT64>(vbOffset),
@@ -68,65 +65,63 @@ void MeshGraphBuilder::LoadMeshes(
             });
 
         uploads.push_back({
-            hIb, ibRes,
+            ibResID, ibRes,
             req.asset->indices.data(),
             req.asset->indices.size() * sizeof(uint32_t),
             static_cast<UINT64>(ibOffset),
             ibRes
             });
 
-        finalizes.push_back({ req.asset, hMesh, hVb, hIb });
+        finalizes.push_back({ req.asset, meshResID, vbResID, ibResID });
 
         offset += req.vbBytes + req.ibBytes;
     }
-    RGHandle hUploadRes = CreateRGHandle();
+    RGResourceID uploadResID = RenderGraph::CreateRGResourceID();
 
-    BuildUploadPass(graph, uploads, hUploadRes);
+    BuildUploadPass(graph, uploads, uploadResID);
     BuildFinalizePass(graph, finalizes);
 
     auto compiledTasks = graph.Compile();
 
     size_t totalUploadSize = AlignSize(offset, AlignVertexIndex);
     auto resCtx = std::make_shared<ResourceContext>();
-    resCtx->Set(hUploadRes, m_resFactory.CreateResource(totalUploadSize, ResInitType::Upload));
+    resCtx->Set(uploadResID, m_resFactory.CreateResource(totalUploadSize, ResInitType::Upload));
 
     m_taskScheduler.Submit(compiledTasks, resCtx);
 }
 
-void MeshGraphBuilder::BuildUploadPass(RenderGraph& graph, std::vector<MeshUploadEntry>& meshUploads, RGHandle hUploadRes)
+void MeshGraphBuilder::BuildUploadPass(RenderGraph& graph, std::vector<MeshUploadEntry>& meshUploads, RGResourceID uploadResID)
 {
-    auto& pass = graph.AddPass("MeshUpload", CommandType::Copy);
+    auto& pass = graph.AddCopyPass("MeshUpload");
 
     for (auto& mesh : meshUploads)
-        pass.writes.push_back({ mesh.handle, RGAccess::CopyDest });
+        pass.Write(mesh.resID, RGAccess::CopyDest);
     
-    pass.gpuExecute = [this, meshUploads, hUploadRes](CommandList& cmd, TaskContext& ctx) mutable {
-        auto& uploadRes = ctx.GetResource(hUploadRes);
+    pass.gpuExecute = [this, meshUploads, uploadResID](CommandList& cmd, TaskContext& ctx) mutable {
+        auto& uploadRes = ctx.GetResource(uploadResID);
         for (auto& mesh : meshUploads)
         {
             UploadBufferRegion(cmd, uploadRes, mesh.region);
-            ctx.SetResource(mesh.handle, std::move(mesh.resource));
+            ctx.SetResource(mesh.resID, std::move(mesh.resource));
         }
         };
 }
 
 void MeshGraphBuilder::BuildFinalizePass(RenderGraph& graph, std::vector<MeshFinalizeEntry>& finalizes)
 {
-    auto& finalize = graph.AddPass("FinalizeMeshes", CommandType::None);
+    auto& finalize = graph.AddCpuPass("FinalizeMeshes");
 
     for (auto& mesh : finalizes)
     {
-        finalize.reads.push_back({ mesh.hVb, RGAccess::CopyDest });
-        finalize.reads.push_back({ mesh.hIb, RGAccess::CopyDest });
-        finalize.writes.push_back({ mesh.hVb, RGAccess::SRV });
-        finalize.writes.push_back({ mesh.hIb, RGAccess::SRV });
+        finalize.Read(mesh.vbResID, RGAccess::SRV);
+        finalize.Read(mesh.ibResID, RGAccess::SRV);
     }
-
+    //?!? 이 finalize.cpuExecute는 m_registry로 옮겨도 되지 않을까? 그래픽 처리라기 보다는 cpu 처리니까. 음.. 생각해보자.
     finalize.cpuExecute = [this, finalizes](TaskContext& ctx) {
         for (auto& mesh : finalizes)
         {
-            auto& vb = ctx.GetResource(mesh.hVb);
-            auto& ib = ctx.GetResource(mesh.hIb);
+            auto& vb = ctx.GetResource(mesh.vbResID);
+            auto& ib = ctx.GetResource(mesh.ibResID);
 
             auto vertexCount = static_cast<uint32_t>(mesh.asset->vertices.size());
             auto indexCount = static_cast<uint32_t>(mesh.asset->indices.size());
@@ -135,16 +130,10 @@ void MeshGraphBuilder::BuildFinalizePass(RenderGraph& graph, std::vector<MeshFin
             auto ibHeapIndex = m_descFactory.CreateBufferSRV(ib, indexCount, sizeof(uint32_t));
 
             m_registry.FinalizeMesh(
-                mesh.hMesh.id,
+                mesh.meshResID,
                 mesh.asset->format,
                 std::move(vb), vbHeapIndex, vertexCount,
                 std::move(ib), ibHeapIndex, indexCount);
         }
         };
-}
-
-RGHandle MeshGraphBuilder::CreateRGHandle()
-{
-    RGHandle handle{ m_nextId++ };
-    return handle;
 }

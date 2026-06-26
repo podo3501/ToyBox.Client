@@ -47,8 +47,9 @@
     <ClInclude Include="Render\DX12\Graph\BarrierBuilder.h" />
     <ClInclude Include="Render\DX12\Graph\RenderGraphDefinitions.h" />
     <ClInclude Include="Render\DX12\Graph\RenderGraphUtils.h" />
-    <ClInclude Include="Render\DX12\Graph\RenderGraphV.h" />
-    <ClInclude Include="Render\DX12\Graph\RenderPassV.h" />
+    <ClInclude Include="Render\DX12\Graph\RenderGraph.h" />
+    <ClInclude Include="Render\DX12\Graph\RenderPass.h" />
+    <ClInclude Include="Render\DX12\Graph\TaskUtils.h" />
     <ClInclude Include="Render\DX12\RenderFrame.h" />
     <ClInclude Include="Render\DX12\Command\CommandList.h" />
     <ClInclude Include="Render\DX12\Command\CommandListHelpers.h" />
@@ -67,8 +68,6 @@
     <ClInclude Include="Render\DX12\Factory\DescriptorAllocator.h" />
     <ClInclude Include="Render\DX12\Factory\DescriptorFactory.h" />
     <ClInclude Include="Render\DX12\Factory\ResourceFactory.h" />
-    <ClInclude Include="Render\DX12\Graph\RenderGraph.h" />
-    <ClInclude Include="Render\DX12\Graph\RenderPass.h" />
     <ClInclude Include="Render\DX12\Graph\RGTypes.h" />
     <ClInclude Include="Render\DX12\Graph\Task.h" />
     <ClInclude Include="Render\DX12\Graph\TaskHandle.h" />
@@ -79,7 +78,6 @@
     <ClInclude Include="Render\DX12\Helpers\TextureHelpers.h" />
     <ClInclude Include="Render\DX12\Pipeline\DebugSurfaceGraphBuilder.h" />
     <ClInclude Include="Render\DX12\Pipeline\ForwardRenderPipeline.h" />
-    <ClInclude Include="Render\DX12\Pipeline\FrameEndGraphBuilder.h" />
     <ClInclude Include="Render\DX12\Pipeline\OpaqueGraphBuilder.h" />
     <ClInclude Include="Render\DX12\Pipeline\Renderer\DebugSurfaceRenderer.h" />
     <ClInclude Include="Render\DX12\Pipeline\Renderer\FrameUploadAllocator.h" />
@@ -157,7 +155,8 @@
     </ClCompile>
     <ClCompile Include="Render\DX12\Graph\BarrierBuilder.cpp" />
     <ClCompile Include="Render\DX12\Graph\RenderGraphUtils.cpp" />
-    <ClCompile Include="Render\DX12\Graph\RenderGraphV.cpp" />
+    <ClCompile Include="Render\DX12\Graph\RenderGraph.cpp" />
+    <ClCompile Include="Render\DX12\Graph\TaskUtils.cpp" />
     <ClCompile Include="Render\DX12\RenderFrame.cpp" />
     <ClCompile Include="Render\DX12\Command\CommandList.cpp" />
     <ClCompile Include="Render\DX12\Command\CommandQueue.cpp" />
@@ -170,14 +169,12 @@
     <ClCompile Include="Render\DX12\Factory\DescriptorAllocator.cpp" />
     <ClCompile Include="Render\DX12\Factory\DescriptorFactory.cpp" />
     <ClCompile Include="Render\DX12\Factory\ResourceFactory.cpp" />
-    <ClCompile Include="Render\DX12\Graph\RenderGraph.cpp" />
     <ClCompile Include="Render\DX12\Graph\TaskScheduler.cpp" />
     <ClCompile Include="Render\DX12\Helpers\CommonHelpers.cpp" />
     <ClCompile Include="Render\DX12\Helpers\MathHelpers.cpp" />
     <ClCompile Include="Render\DX12\Helpers\TextureHelpers.cpp" />
     <ClCompile Include="Render\DX12\Pipeline\DebugSurfaceGraphBuilder.cpp" />
     <ClCompile Include="Render\DX12\Pipeline\ForwardRenderPipeline.cpp" />
-    <ClCompile Include="Render\DX12\Pipeline\FrameEndGraphBuilder.cpp" />
     <ClCompile Include="Render\DX12\Pipeline\OpaqueGraphBuilder.cpp" />
     <ClCompile Include="Render\DX12\Pipeline\Renderer\DebugSurfaceRenderer.cpp" />
     <ClCompile Include="Render\DX12\Pipeline\Renderer\FrameUploadAllocator.cpp" />

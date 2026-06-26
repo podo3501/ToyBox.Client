@@ -21,22 +21,20 @@ struct ResourceContext
 {
     std::unordered_map<uint32_t, Resource> resources;
 
-    void Set(RGHandle h, const Resource& resource) { resources[h.id] = resource; }
-    void Set(RGHandle h, Resource&& resource) { resources[h.id] = std::move(resource); }
+    void Set(RGResourceID id, const Resource& resource) { resources[id] = resource; }
+    void Set(RGResourceID id, Resource&& resource) { resources[id] = std::move(resource); }
 
-    Resource& Get(RGHandle h)
+    Resource& Get(RGResourceID id)
     {
-        auto it = resources.find(h.id);
+        auto it = resources.find(id);
         Assert(it != resources.end());
-
         return it->second;
     }
 
-    const Resource& Get(RGHandle h) const
+    const Resource& Get(RGResourceID id) const
     {
-        auto it = resources.find(h.id);
+        auto it = resources.find(id);
         Assert(it != resources.end());
-
         return it->second;
     }
 };
@@ -47,9 +45,9 @@ struct TaskContext
     FrameData frame;
     shared_ptr<ResourceContext> resources; //중요한 리소스. 공유됨.
 
-    void SetResource(RGHandle h, const Resource& resource) const { resources->Set(h, resource); }
-    void SetResource(RGHandle h, Resource&& resource) const { resources->Set(h, std::move(resource)); }
-    Resource& GetResource(RGHandle h) const { return resources->Get(h); }
+    void SetResource(RGResourceID id, const Resource& resource) const { resources->Set(id, resource); }
+    void SetResource(RGResourceID id, Resource&& resource) const { resources->Set(id, std::move(resource)); }
+    Resource& GetResource(RGResourceID id) const { return resources->Get(id); }
 };
 
 struct Task

@@ -1,15 +1,13 @@
 #include "pch.h"
 #include "ForwardRenderPipeline.h"
-#include "Renderer/Renderers.h"
-#include "Resource/ShadowResource.h"
+#include "Graph/RenderGraph.h"
+#include "Graph/TaskUtils.h"
 #include "ShadowGraphBuilder.h"
 #include "OpaqueGraphBuilder.h"
 #include "DebugSurfaceGraphBuilder.h"
 #include "UIGraphBuilder.h"
-#include "FrameEndGraphBuilder.h"
 #include "SwapChainPresenter.h"
 #include "Factory/DescriptorFactory.h"
-#include "Factory/DescriptorAllocator.h"
 #include "Command/CommandList.h"
 
 ForwardRenderPipeline::~ForwardRenderPipeline() = default;
@@ -29,11 +27,13 @@ bool ForwardRenderPipeline::Initialize(const Size& screenSize, const Size& shado
     ReturnIfFalse(m_shadowRes.Initialize(m_device, m_descFactory, shadowMapSize));
     m_renderers.Initialize(screenSize);
 
-    m_hBackBuffer = m_graph.CreateRGHandle();
-    m_hShadow = m_graph.CreateRGHandle();
+    RenderGraph graph;
 
-    m_graph.ImportResource(m_hBackBuffer, RGAccess::Present);
-    m_graph.ImportResource(m_hShadow, RGAccess::DepthWrite);
+    m_hBackBuffer = RenderGraph::CreateRGResourceID();
+    m_hShadow = RenderGraph::CreateRGResourceID();
+
+    graph.ImportResource(m_hBackBuffer, RGAccess::Present);
+    graph.ImportResource(m_hShadow, RGAccess::DepthWrite);
 
     ShadowGraphBuilder shadow(
         m_renderers.GetShadowRenderer(),
@@ -56,17 +56,15 @@ bool ForwardRenderPipeline::Initialize(const Size& screenSize, const Size& shado
         m_renderers.GetUIRenderer(),
         m_hBackBuffer);
 
-    FrameEndGraphBuilder end(
-        m_hBackBuffer,
-        m_hShadow);
+    shadow.Build(graph);
+    opaque.Build(graph);
+    debug.Build(graph);
+    ui.Build(graph);
 
-    shadow.Build(m_graph);
-    opaque.Build(m_graph);
-    debug.Build(m_graph);
-    ui.Build(m_graph);
-    end.Build(m_graph);
+    graph.ExportResource(m_hBackBuffer, RGAccess::Present);
+    graph.ExportResource(m_hShadow, RGAccess::DepthWrite);
 
-    m_compiledTasks = m_graph.Compile();
+    m_compiledTasks = graph.Compile();
 
     return true;
 }
@@ -85,7 +83,7 @@ void ForwardRenderPipeline::Render(CommandList& cmd, const DrawPacket& drawPacke
     auto& bindlessAllocator = m_descFactory.GetBindlessAllocator();
     cmd.SetBindlessHeap(bindlessAllocator.GetHeap());
 
-    m_graph.Execute(cmd, m_compiledTasks, ctx);
+    ExecuteRenderPipeline(cmd, m_compiledTasks, ctx);
 }
 
 void ForwardRenderPipeline::Resize(const Size& size)

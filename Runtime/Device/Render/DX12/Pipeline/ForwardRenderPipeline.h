@@ -1,8 +1,11 @@
 #pragma once
-#include "Graph/RenderGraph.h"
 #include "Resource/ShadowResource.h"
 #include "Renderer/Renderers.h"
+#include "Graph/RGTypes.h"
 
+struct FrameData;
+struct DrawPacket;
+struct CompiledTask;
 class Device;
 class ShaderLibrary;
 class DescriptorFactory;
@@ -26,12 +29,11 @@ private:
     SwapChainPresenter& m_swapChain;
     DescriptorFactory& m_descFactory;
 
-    RenderGraph m_graph;
     ShadowResource m_shadowRes; //이 클래스는 framereseource 클래스중의 하나. 프레임당 render가 필요한 리소스들.
     Renderers m_renderers;
 
-    RGHandle m_hBackBuffer;
-    RGHandle m_hShadow;
+    RGResourceID m_hBackBuffer;
+    RGResourceID m_hShadow;
 
     std::vector<CompiledTask> m_compiledTasks;
 };
