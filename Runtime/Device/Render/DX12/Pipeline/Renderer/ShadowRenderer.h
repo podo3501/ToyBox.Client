@@ -36,7 +36,7 @@ private:
     void CreateConstantBuffers();
     ID3D12PipelineState* CreatePSO(const PipelineState& pipelineState);
 
-    D3D12_GPU_VIRTUAL_ADDRESS UpdateObjectCB(const Core::Math::Matrix& world);
+    D3D12_GPU_VIRTUAL_ADDRESS UploadObjectCB(const Core::Math::Matrix& world);
 
     ShadowRendererConfig m_config;
     PipelineCache& m_pipelineCache;

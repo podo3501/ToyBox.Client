@@ -75,19 +75,24 @@ Task CreateBarrierTask(CommandType type, const std::vector<BarrierPlan>& barrier
     Task task{};
     task.passName = "Barrier";
     task.type = type;
-    task.gpuExecute = [barriers](CommandList& cmd, TaskContext& ctx) {
-        std::vector<D3D12_RESOURCE_BARRIER> barrierBatch;
-        barrierBatch.reserve(barriers.size());
-
-        for (auto& barrier : barriers)
+    task.gpuExecute = 
+        [
+            barriers = std::move(barriers)
+        ]
+        (CommandList& cmd, TaskContext& ctx) 
         {
-            auto& res = ctx.GetResource(barrier.resID);
+            std::vector<D3D12_RESOURCE_BARRIER> barrierBatch;
+            barrierBatch.reserve(barriers.size());
 
-            barrierBatch.push_back(
-                CommandUtils::CreateTransitionBarrier(res, barrier.before, barrier.after));
-        }
+            for (auto& barrier : barriers)
+            {
+                auto& res = ctx.GetResource(barrier.resID);
 
-        CommandUtils::Transition(cmd, barrierBatch);
+                barrierBatch.push_back(
+                    CommandUtils::CreateTransitionBarrier(res, barrier.before, barrier.after));
+            }
+
+            CommandUtils::Transition(cmd, barrierBatch);
         };
 
     return task;

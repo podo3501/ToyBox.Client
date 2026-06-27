@@ -327,22 +327,26 @@
 --팩토리 한군데 모으기
 --Device 함수를 자주 생성해서 한군데 몰아 넣을게 있나 찾아보기
 --provider를 하나의 클래스가 관리하게끔? 가능한지
+--RenderBackend의 init를 보고 의존관계를 파악한뒤 어떻게 폴더를 구성할 것인지 생각해보자.
+--graph 쪽 디펜던시 만드는 부분 보완
+--m_heap ComPtr<ID3D12DescriptorHeap> m_heap; 이것도 device 처럼 처리 해야 할까?
+--resource loader factory로 바꾸고 나머지 함수들은 helper로 만들어서 보내자.
 
-@RenderBackend의 init를 보고 의존관계를 파악한뒤 어떻게 폴더를 구성할 것인지 생각해보자.
 @backend 내부 config 만들기
 @Verify 기능 (release에서 로그 남기는 define)을 어떻게 만들지 생각해보자.
-@graph 쪽 디펜던시 만드는 부분 보완
-
-@m_heap ComPtr<ID3D12DescriptorHeap> m_heap; 이것도 device 처럼 처리 해야 할까?
-@resource loader factory로 바꾸고 나머지 함수들은 helper로 만들어서 보내자.
 @texture asset factory 만들지 말지.
 
 @ui 텍스쳐 거꾸로 나오는 거 수정.
 @텍스쳐 부분 출력되게 구현
 
+    만약 그게 없다면?    그때는 한 번 테스트를 해볼 수 있습니다.    예를 들어 Pixel Shader에
+    for (int i = 0; i < 1000000; ++i)
+    {
+        // 의미 없는 연산
+    }
+    처럼 GPU를 일부러 느리게 만들면,    CPU가 앞서 나가면서 문제가 드러날 가능성이 있습니다
+
 @렌더러 만들기
-    @Backend Draw쪽 정리
-    @코드 정리 및 폴더 만들어서 정리       
     @화면 배경색깔 지정하게끔
     
 @	m_uiModule = CreateUIModule("Demo", layout, "Main", move(storage), move(resBinderOwner));

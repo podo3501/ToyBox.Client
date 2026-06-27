@@ -51,6 +51,7 @@ std::vector<CompiledTask> RenderGraph::Compile()
 
     auto tasks = BuildCompiledTasks(passNodes, sortedPass, barrierMap);
     BuildDependents(tasks);
+    Assert(!tasks.empty()); //일거리가 있어야 한다.
 
     return tasks;
 }

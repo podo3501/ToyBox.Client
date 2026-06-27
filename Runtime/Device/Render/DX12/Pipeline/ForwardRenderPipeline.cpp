@@ -25,7 +25,7 @@ ForwardRenderPipeline::ForwardRenderPipeline(
 bool ForwardRenderPipeline::Initialize(const Size& screenSize, const Size& shadowMapSize)
 {
     ReturnIfFalse(m_shadowRes.Initialize(m_device, m_descFactory, shadowMapSize));
-    m_renderers.Initialize(screenSize);
+    ReturnIfFalse(m_renderers.Initialize(screenSize));
 
     RenderGraph graph;
 

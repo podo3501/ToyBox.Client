@@ -62,8 +62,6 @@ public:
     void Submit(const std::vector<CompiledTask>& compiledTasks, std::shared_ptr<ResourceContext> resources);
     void Execute();
     void Cancel(TaskHandle handle);
-    void Clear();
-    void SetExecutionOrder(const std::vector<TaskHandle>& ordered) { m_executionOrder = ordered; }
 
 private:
     bool AreDependenciesDone(const TaskEntry& task);
@@ -75,6 +73,4 @@ private:
 private:
     CommandScheduler& m_cmdScheduler;
     HandlePool<TaskEntry, struct TaskTag> m_tasks;
-    std::vector<TaskHandle> m_executionOrder;
-    uint32_t m_nextId{ 1 };
 };

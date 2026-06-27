@@ -42,7 +42,7 @@ void TextureGraphBuilder::LoadTextures(const std::vector<TextureLoadRequest>& re
     std::vector<TextureFinalizeEntry> finalizeEntries;
 
     size_t offset = 0;
-    bool hasMipTask = false;
+    bool hasMipTask = false; //로딩하는 텍스쳐들중에 하나라도 mip생성이 있는지 확인
     for (const auto& req : requests)
     {
         RGResourceID texResID = RenderGraph::CreateRGResourceID();
@@ -69,7 +69,7 @@ void TextureGraphBuilder::LoadTextures(const std::vector<TextureLoadRequest>& re
     RGResourceID uploadResID = RenderGraph::CreateRGResourceID();
 
     BuildUploadPass(graph, textureUploads, uploadResID);
-    if (hasMipTask) BuildMipPass(graph, textureUploads);
+    if (hasMipTask) BuildMipPass(graph, textureUploads); //하나라도 있으면 mip pass 생성을 함.
     BuildFinalizePass(graph, finalizeEntries);
 
     auto compiledTasks = graph.Compile();
@@ -103,12 +103,16 @@ void TextureGraphBuilder::BuildMipPass(RenderGraph& graph, std::vector<TextureUp
     auto& mip = graph.AddComputePass("GenerateMips");
 
     for (auto& tex : textureUploads)
-        mip.Write(tex.resID, RGAccess::UAV); 
+    {
+        if (!tex.generateMips) continue; //개별적으로 mip을 할지 말지 여기서 결정
+
+        mip.Write(tex.resID, RGAccess::UAV);
+    }
 
     mip.gpuExecute = [this, textureUploads](CommandList& cmd, TaskContext& ctx) {
         for (auto& tex : textureUploads)
         {
-            if (!tex.generateMips) continue;
+            if (!tex.generateMips) continue; //개별적으로 mip을 할지 말지 여기서 결정
 
             auto texRes = m_registry.GetTextureResource(tex.resID);
             m_mipGenerator.GenerateMips(cmd, m_descFactory.GetBindlessAllocator(), texRes);

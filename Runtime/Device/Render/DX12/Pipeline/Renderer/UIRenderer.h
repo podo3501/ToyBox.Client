@@ -32,7 +32,7 @@ private:
     };
 
     bool CreateRootSignature(Device& device);
-    void CreateDefaultPSOs();
+    bool CreateDefaultPSOs();
     ID3D12PipelineState* CreatePSO(const PipelineState& pipelineState);
     ID3D12PipelineState* GetPipeline(const PipelineState& pipelineState);
 

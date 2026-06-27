@@ -60,19 +60,21 @@ bool SurfaceRenderer::Initialize(Device& device)
     m_frameCBAllocator.Initialize<MeshFrameCB>(device, 1);
 
     ReturnIfFalse(CreateRootSignature(device));
-    CreateDefaultPSOs();
+    ReturnIfFalse(CreateDefaultPSOs());
 
     return true;
 }
 
-void SurfaceRenderer::CreateDefaultPSOs()
+bool SurfaceRenderer::CreateDefaultPSOs()
 {
-    CreatePSO(PipelineLibrary::Get(ShadingModel::Phong, RasterPreset::Default));
-    CreatePSO(PipelineLibrary::Get(ShadingModel::Phong, RasterPreset::NoCull));
-    CreatePSO(PipelineLibrary::Get(ShadingModel::Phong, RasterPreset::Wireframe));
-    CreatePSO(PipelineLibrary::Get(ShadingModel::Phong, RasterPreset::WireframeNoCull));
+    ReturnIfFalse(CreatePSO(PipelineLibrary::Get(ShadingModel::Phong, RasterPreset::Default)) != nullptr);
+    ReturnIfFalse(CreatePSO(PipelineLibrary::Get(ShadingModel::Phong, RasterPreset::NoCull)) != nullptr);
+    ReturnIfFalse(CreatePSO(PipelineLibrary::Get(ShadingModel::Phong, RasterPreset::Wireframe)) != nullptr);
+    ReturnIfFalse(CreatePSO(PipelineLibrary::Get(ShadingModel::Phong, RasterPreset::WireframeNoCull)) != nullptr);
 
-    CreatePSO(PipelineLibrary::Get(ShadingModel::PBR, RasterPreset::Default));
+    ReturnIfFalse(CreatePSO(PipelineLibrary::Get(ShadingModel::PBR, RasterPreset::Default)) != nullptr);
+
+    return true;
 }
 
 ID3D12PipelineState* SurfaceRenderer::CreatePSO(const PipelineState& pipelineState)
@@ -119,8 +121,6 @@ bool SurfaceRenderer::CreateRootSignature(Device& device)
 
 void SurfaceRenderer::PrepareFrame(const DirectionalLightData& light, const CameraData& camera, uint32_t shadowSRVIndex)
 {
-    m_currentPSO = nullptr;
-
     m_objectCBAllocator.Reset();
     m_materialCBAllocator.Reset();
     m_frameCBAllocator.Reset();
@@ -146,6 +146,8 @@ void SurfaceRenderer::PrepareFrame(const DirectionalLightData& light, const Came
 
 void SurfaceRenderer::BeginFrame(CommandList& cmd)
 {
+    m_currentPSO = nullptr;
+
     cmd->SetGraphicsRootSignature(m_rootSignature.Get());
     cmd->SetGraphicsRootConstantBufferView(Core::ToIndex(RootSlot::FrameCB), m_frameCBAddress);
 }
@@ -161,7 +163,7 @@ void SurfaceRenderer::BindPipeline(CommandList& cmd, const PipelineState& pipeli
     m_currentPSO = pso;
 }
 
-D3D12_GPU_VIRTUAL_ADDRESS SurfaceRenderer::UpdateObjectCB(const cm::Matrix& world)
+D3D12_GPU_VIRTUAL_ADDRESS SurfaceRenderer::UploadObjectCB(const cm::Matrix& world)
 {
     ObjectCB obj{};
 
@@ -171,7 +173,7 @@ D3D12_GPU_VIRTUAL_ADDRESS SurfaceRenderer::UpdateObjectCB(const cm::Matrix& worl
     return m_objectCBAllocator.AllocateConstant(obj);
 }
 
-D3D12_GPU_VIRTUAL_ADDRESS SurfaceRenderer::UpdateMaterialCB(MaterialResource& material)
+D3D12_GPU_VIRTUAL_ADDRESS SurfaceRenderer::UploadMaterialCB(MaterialResource& material)
 {
     SurfaceMaterialResource* surfaceMat = static_cast<SurfaceMaterialResource*>(&material);
     auto textureIndices = surfaceMat->GetTextureIndices();
@@ -227,8 +229,8 @@ void SurfaceRenderer::Draw(
     MaterialResource& material,
     const cm::Matrix& world)
 {
-    auto objectCBAddress = UpdateObjectCB(world);
-    auto materialCBAddress = UpdateMaterialCB(material);
+    auto objectCBAddress = UploadObjectCB(world);
+    auto materialCBAddress = UploadMaterialCB(material);
     uint32_t meshIndices[2] = { mesh.GetVertexHeapIndex(), mesh.GetIndexHeapIndex() };
 
     cmd->SetGraphicsRoot32BitConstants(Core::ToIndex(RootSlot::MeshData), 2, meshIndices, 0);

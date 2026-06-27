@@ -23,7 +23,7 @@ bool DebugSurfaceRenderer::Initialize(Device& device)
     m_frameCBAllocator.Initialize<FrameCB>(device, 1);
 
     ReturnIfFalse(CreateRootSignature(device));
-    CreateDefaultPSOs();
+    ReturnIfFalse(CreateDefaultPSOs());
 
     return true;
 }
@@ -32,7 +32,7 @@ bool DebugSurfaceRenderer::CreateRootSignature(Device& device)
 {
     RootSignatureBuilder builder;
 
-    builder.Add32BitConstants(Core::ToIndex(RootSlot::IndexCB), 1);
+    builder.Add32BitConstants(Core::ToIndex(RootSlot::VertexIndex), 1);
     builder.AddCBV(Core::ToIndex(RootSlot::FrameCB));
     builder.AddCBV(Core::ToIndex(RootSlot::ObjectCB));
 
@@ -42,15 +42,15 @@ bool DebugSurfaceRenderer::CreateRootSignature(Device& device)
     return m_rootSignature != nullptr;
 }
 
-void DebugSurfaceRenderer::CreateDefaultPSOs()
+bool DebugSurfaceRenderer::CreateDefaultPSOs()
 {
-    CreatePSO(PipelineLibrary::Get(ShadingModel::Grid, RasterPreset::Default, PrimitiveTopologyType::Line));
+    ReturnIfFalse(CreatePSO(PipelineLibrary::Get(ShadingModel::Grid, RasterPreset::Default, PrimitiveTopologyType::Line)) != nullptr);
+
+    return true;
 }
 
 void DebugSurfaceRenderer::PrepareFrame(const CameraData& camera)
 {
-    m_currentPSO = nullptr;
-
     m_objectCBAllocator.Reset();
     m_frameCBAllocator.Reset();
 
@@ -67,6 +67,8 @@ void DebugSurfaceRenderer::PrepareFrame(const CameraData& camera)
 
 void DebugSurfaceRenderer::BeginFrame(CommandList& cmd)
 {
+    m_currentPSO = nullptr;
+
     cmd->SetGraphicsRootSignature(m_rootSignature.Get());
     cmd->SetGraphicsRootConstantBufferView(Core::ToIndex(RootSlot::FrameCB), m_frameCBAddress);
 }
@@ -99,25 +101,23 @@ ID3D12PipelineState* DebugSurfaceRenderer::CreatePSO(const PipelineState& pipeli
         [&](D3D12_GRAPHICS_PIPELINE_STATE_DESC& pso)
         {
             pso.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
-            pso.DepthStencilState.DepthEnable = TRUE;
             pso.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
-            pso.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS;
             pso.DSVFormat = DXGI_FORMAT_D32_FLOAT;
         });
 }
 
 void DebugSurfaceRenderer::Draw(CommandList& cmd, MeshResource& mesh, const cm::Matrix& world)
 {
-    auto objectCBAddress = UpdateObjectCB(world);
+    auto objectCBAddress = UploadObjectCB(world);
     uint32_t vbIndex = mesh.GetVertexHeapIndex();
 
-    cmd->SetGraphicsRoot32BitConstants(Core::ToIndex(RootSlot::IndexCB), 1, &vbIndex, 0);
+    cmd->SetGraphicsRoot32BitConstants(Core::ToIndex(RootSlot::VertexIndex), 1, &vbIndex, 0);
     cmd->SetGraphicsRootConstantBufferView(Core::ToIndex(RootSlot::ObjectCB), objectCBAddress);
 
     cmd->DrawInstanced(mesh.GetVertexCount(), 1, 0, 0);
 }
 
-D3D12_GPU_VIRTUAL_ADDRESS DebugSurfaceRenderer::UpdateObjectCB(const cm::Matrix& world)
+D3D12_GPU_VIRTUAL_ADDRESS DebugSurfaceRenderer::UploadObjectCB(const cm::Matrix& world)
 {
     ObjectCB obj{};
 

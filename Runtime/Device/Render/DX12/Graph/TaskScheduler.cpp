@@ -23,9 +23,8 @@ void TaskScheduler::Submit(const std::vector<CompiledTask>& compiledTasks, std::
     {
         TaskHandle handle = remap[compiled.localId];
         TaskEntry* entry = m_tasks.Find(handle);
-        if (!entry) continue;
-
-        assert(!entry->submitted);
+        Assert(entry);
+        Assert(!entry->submitted);
 
         entry->task = compiled.task;
         entry->context.resources = resources;
@@ -80,11 +79,24 @@ void TaskScheduler::ExecuteTask(TaskEntry& entry)
     if (isGpuTask)
     {
         cmd = m_cmdScheduler.Begin(entry.task.type);
-        Assert(cmd); // 해당 CommandList 가 없음. 할당을 못 받았거나 사용 가능한 것이 없거나 등등
+#ifdef _DEBUG
+        if (!cmd)
+        {
+            char buffer[128];
+            sprintf_s(buffer,
+                "CommandList unavailable. Type = %d\n",
+                static_cast<int>(entry.task.type));
+            OutputDebugStringA(buffer); // 해당 CommandList 가 없음. 할당을 못 받았거나 사용 가능한 것이 없거나 등등
+        }
+
+        //if(!cmd)
+        //    OutputDebugStringA("CommandList unavailable.\n"); 
+#endif
+
         if (!cmd) return;
     }
 
-    ExecuteImmediate(cmd, entry.task, entry.context);
+    ExecuteTaskImmediate(cmd, entry.task, entry.context);
 
     entry.fenceValue = isGpuTask ? m_cmdScheduler.End() : 0;
     entry.started = true;
@@ -95,7 +107,8 @@ bool TaskScheduler::AreDependenciesDone(const TaskEntry& entry)
     for (auto& dep : entry.task.dependencies)
     {
         const TaskEntry* depEntry = m_tasks.Find(dep);
-        if (!depEntry) return false;
+        Assert(depEntry); //task가 중간에 어디론가 사라졌다는 뜻.
+
         if (!depEntry->finished) return false;
     }
 
@@ -120,7 +133,7 @@ void TaskScheduler::RemoveTask(TaskHandle handle, TaskEntry& entry)
     for (auto& depHandle : entry.task.dependencies)
     {
         if (TaskEntry* parent = m_tasks.Find(depHandle))
-            parent->activeDependents.fetch_sub(1, std::memory_order_release); // 부모의 activeDependents가 0이 되면, 다음 프레임 루프 때 부모도 CanDeleteTask를 통과해 자동으로 삭제.
+            parent->activeDependents.fetch_sub(1, std::memory_order_relaxed); // 부모의 activeDependents가 0이 되면, 다음 프레임 루프 때 부모도 CanDeleteTask를 통과해 자동으로 삭제.
     }
 
     m_tasks.Remove(handle);
@@ -135,7 +148,7 @@ void TaskScheduler::Cancel(TaskHandle handle)
     for (auto& depHandle : entry->task.dependencies)
     {
         if (TaskEntry* parent = m_tasks.Find(depHandle))
-            parent->activeDependents.fetch_sub(1, std::memory_order_release);
+            parent->activeDependents.fetch_sub(1, std::memory_order_relaxed);
     }
 
     for (auto& childHandle : entry->dependents)
@@ -145,20 +158,4 @@ void TaskScheduler::Cancel(TaskHandle handle)
     }
 
     m_tasks.Remove(handle);
-}
-
-void TaskScheduler::Clear()
-{
-    std::vector<TaskHandle> toRemove;
-
-    m_tasks.Visit([this, &toRemove](TaskHandle handle, const TaskEntry& entry) {
-        if (CanDeleteTask(entry))
-            toRemove.push_back(handle);
-        });
-
-    for (auto& handle : toRemove)
-    {
-        if (TaskEntry* entry = m_tasks.Find(handle))
-            RemoveTask(handle, *entry);
-    }
 }

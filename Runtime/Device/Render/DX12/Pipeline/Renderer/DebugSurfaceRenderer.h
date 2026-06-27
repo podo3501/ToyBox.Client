@@ -28,17 +28,17 @@ public:
 private:
     enum class RootSlot : uint32_t
     {
-        IndexCB = 0,
+        VertexIndex = 0,
         FrameCB = 1,
         ObjectCB = 2
     };
 
     bool CreateRootSignature(Device& device);
-    void CreateDefaultPSOs();
+    bool CreateDefaultPSOs();
     ID3D12PipelineState* CreatePSO(const PipelineState& pipelineState);
     ID3D12PipelineState* GetPipeline(const PipelineState& pipelineState);
 
-    D3D12_GPU_VIRTUAL_ADDRESS UpdateObjectCB(const Core::Math::Matrix& world);
+    D3D12_GPU_VIRTUAL_ADDRESS UploadObjectCB(const Core::Math::Matrix& world);
 
     DebugSurfaceRendererConfig m_config;
     PipelineCache& m_pipelineCache;

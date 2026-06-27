@@ -44,14 +44,13 @@ D3D12_GPU_VIRTUAL_ADDRESS FrameUploadAllocator::AllocateConstant(const T& data)
 {
     static_assert(std::is_trivially_copyable_v<T>);
 
-    UINT requiredSize = m_offset + m_stride;
-    Assert(requiredSize <= m_bufferSize);
+    Assert(m_offset + m_stride <= m_bufferSize);
     Assert(sizeof(T) <= m_stride);
 
     memcpy(m_mapped + m_offset, &data, sizeof(T));
 
     auto gpuAddress = m_resource->GetGPUVirtualAddress() + m_offset;
-    m_offset = requiredSize;
+    m_offset += m_stride;
 
     return gpuAddress;
 }

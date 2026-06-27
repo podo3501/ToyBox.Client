@@ -21,6 +21,7 @@ ID3D12PipelineState* PipelineCache::GetOrCreate(
         return it->second.Get();
 
     const ShaderEntry* shaderEntry = m_shaderLibrary.Find(pipelineState.shaderVariant);
+    Assert(shaderEntry);
     if (!shaderEntry)
         return nullptr;
 
@@ -50,7 +51,7 @@ ID3D12PipelineState* PipelineCache::GetOrCreate(
 
     auto result = m_device->CreateGraphicsPipelineState(&pso, IID_PPV_ARGS(&pipeline));
     Assert(SUCCEEDED(result));
-    m_cache[pipelineState] = pipeline;
+    m_cache.emplace(pipelineState, pipeline);
 
     return pipeline.Get();
 }

@@ -214,9 +214,6 @@
     <ClInclude Include="Render\DX12\Graph\TaskHandle.h">
       <Filter>Render\DX12\Graph</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\Graph\TaskNode.h">
-      <Filter>Render\DX12\Graph</Filter>
-    </ClInclude>
     <ClInclude Include="Render\DX12\Graph\TaskScheduler.h">
       <Filter>Render\DX12\Graph</Filter>
     </ClInclude>

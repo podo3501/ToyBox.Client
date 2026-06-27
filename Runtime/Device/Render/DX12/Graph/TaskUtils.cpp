@@ -2,7 +2,7 @@
 #include "TaskUtils.h"
 #include "Task.h"
 
-void ExecuteImmediate(CommandList* cmd, const Task& task, TaskContext& ctx)
+void ExecuteTaskImmediate(CommandList* cmd, const Task& task, TaskContext& ctx)
 {
     if (task.type == CommandType::None)
     {
@@ -25,5 +25,5 @@ void ExecuteImmediate(CommandList* cmd, const Task& task, TaskContext& ctx)
 void ExecuteRenderPipeline(CommandList& cmd, const vector<CompiledTask>& compiledTasks, TaskContext& ctx)
 {
     for (auto& compiled : compiledTasks)
-        ExecuteImmediate(&cmd, compiled.task, ctx); // 렌더링 루프에서는 항상 유효한 CommandList가 있으므로 주소(&cmd)를 넘겨줌.
+        ExecuteTaskImmediate(&cmd, compiled.task, ctx); // 렌더링 루프에서는 항상 유효한 CommandList가 있으므로 주소(&cmd)를 넘겨줌.
 }

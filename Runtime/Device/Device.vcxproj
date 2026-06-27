@@ -71,7 +71,6 @@
     <ClInclude Include="Render\DX12\Graph\RGTypes.h" />
     <ClInclude Include="Render\DX12\Graph\Task.h" />
     <ClInclude Include="Render\DX12\Graph\TaskHandle.h" />
-    <ClInclude Include="Render\DX12\Graph\TaskNode.h" />
     <ClInclude Include="Render\DX12\Graph\TaskScheduler.h" />
     <ClInclude Include="Render\DX12\Helpers\CommonHelpers.h" />
     <ClInclude Include="Render\DX12\Helpers\MathHelpers.h" />

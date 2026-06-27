@@ -5,7 +5,7 @@ struct TaskContext;
 struct CompiledTask;
 class CommandList;
 
-void ExecuteImmediate(CommandList* cmd, const Task& task, TaskContext& ctx);
+void ExecuteTaskImmediate(CommandList* cmd, const Task& task, TaskContext& ctx);
 
 void ExecuteRenderPipeline(
 	CommandList& cmd, 

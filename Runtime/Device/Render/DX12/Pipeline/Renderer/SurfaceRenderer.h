@@ -42,13 +42,13 @@ private:
     };
 
     bool CreateRootSignature(Device& device);
-    void CreateDefaultPSOs();
+    bool CreateDefaultPSOs();
     ID3D12PipelineState* CreatePSO(const PipelineState& pipelineState);
     void CreatePipeline(const PipelineState& pipelineState);
     ID3D12PipelineState* GetPipeline(const PipelineState& pipelineState);
 
-    D3D12_GPU_VIRTUAL_ADDRESS UpdateObjectCB(const Core::Math::Matrix& world);
-    D3D12_GPU_VIRTUAL_ADDRESS UpdateMaterialCB(MaterialResource& material);
+    D3D12_GPU_VIRTUAL_ADDRESS UploadObjectCB(const Core::Math::Matrix& world);
+    D3D12_GPU_VIRTUAL_ADDRESS UploadMaterialCB(MaterialResource& material);
 
     SurfaceRendererConfig m_config;
     PipelineCache& m_pipelineCache;

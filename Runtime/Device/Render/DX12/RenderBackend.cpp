@@ -56,15 +56,15 @@ void RenderBackend::Update()
 void RenderBackend::Render()
 {
     auto* cmd = m_cmdScheduler.Begin(CommandType::Direct);
-    if (!cmd)
-        return;
+    if (cmd)
+    {
+        m_profiler.BeginFrame(*cmd);
+        m_pipeline.Render(*cmd, m_renderFrame.PrepareRenderData(), m_renderFrame.GetFrameData());
+        m_profiler.EndFrame(*cmd);
 
-    m_profiler.BeginFrame(*cmd);
-    m_pipeline.Render(*cmd, m_renderFrame.PrepareRenderData(), m_renderFrame.GetFrameData());
-    m_profiler.EndFrame(*cmd);
-
-    m_cmdScheduler.End();
-    m_swapChain.Present(false);
+        m_cmdScheduler.End();
+        m_swapChain.Present(false);
+    }
 
     m_renderFrame.Clear();
 }

@@ -29,15 +29,17 @@ bool UIRenderer::Initialize(Device& device, const Size& screenSize)
     m_uiDrawCBAllocator.Initialize<UIDrawCB>(device, m_config.maxUI);
 
     ReturnIfFalse(CreateRootSignature(device));
-    CreateDefaultPSOs();
+    ReturnIfFalse(CreateDefaultPSOs());
     SetScreenSize(screenSize);
 
     return true;
 }
 
-void UIRenderer::CreateDefaultPSOs()
+bool UIRenderer::CreateDefaultPSOs()
 {
-    CreatePSO(PipelineLibrary::Get(ShadingModel::UI, RasterPreset::NoCull));
+    ReturnIfFalse(CreatePSO(PipelineLibrary::Get(ShadingModel::UI, RasterPreset::NoCull)) != nullptr);
+
+    return true;
 }
 
 ID3D12PipelineState* UIRenderer::CreatePSO(const PipelineState& pipelineState)
@@ -47,6 +49,7 @@ ID3D12PipelineState* UIRenderer::CreatePSO(const PipelineState& pipelineState)
         m_rootSignature.Get(),
         [&](D3D12_GRAPHICS_PIPELINE_STATE_DESC& pso)
         {
+            pso.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
             pso.DepthStencilState.DepthEnable = FALSE;
             pso.DepthStencilState.StencilEnable = FALSE;
         });
@@ -77,12 +80,12 @@ bool UIRenderer::CreateRootSignature(Device& device)
 
 void UIRenderer::PrepareFrame()
 {
-    m_currentPSO = nullptr;
     m_uiDrawCBAllocator.Reset();
 }
 
 void UIRenderer::BeginFrame(CommandList& cmd)
 {
+    m_currentPSO = nullptr;
     cmd->SetGraphicsRootSignature(m_rootSignature.Get());
 }
 

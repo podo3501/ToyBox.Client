@@ -34,6 +34,7 @@ bool ShadowRenderer::Initialize(Device& device)
 
     ReturnIfFalse(CreateRootSignature(device));
     m_shadowPSO = CreatePSO(PipelineLibrary::Get(ShadingModel::Shadow, RasterPreset::Default));
+    if (!m_shadowPSO) return false;
 
     return true;
 }
@@ -61,17 +62,13 @@ ID3D12PipelineState* ShadowRenderer::CreatePSO(const PipelineState& pipelineStat
         {
             pso.NumRenderTargets = 0;
             pso.RTVFormats[0] = DXGI_FORMAT_UNKNOWN;
-            pso.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
 
             pso.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
-            pso.DepthStencilState.DepthEnable = TRUE;
             pso.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
             pso.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
             pso.DSVFormat = DXGI_FORMAT_D32_FLOAT;
 
             pso.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
-            pso.RasterizerState.CullMode = D3D12_CULL_MODE_BACK;
-
             // 아티팩트 방지를 위한 하드웨어 뎁스 바이어스 설정 (수치는 상황에 따라 미세조정 필요)
             pso.RasterizerState.DepthBias = 3000;
             pso.RasterizerState.DepthBiasClamp = 0.0f;
@@ -104,7 +101,7 @@ void ShadowRenderer::BeginFrame(CommandList& cmd)
     cmd->SetGraphicsRootConstantBufferView(Core::ToIndex(RootSlot::FrameCB), m_frameCBAddress);
 }
 
-D3D12_GPU_VIRTUAL_ADDRESS ShadowRenderer::UpdateObjectCB(const cm::Matrix& world)
+D3D12_GPU_VIRTUAL_ADDRESS ShadowRenderer::UploadObjectCB(const cm::Matrix& world)
 {
     ShadowObjectCB obj{};
     DirectX::XMMATRIX xmWorld = ToDXMatrix(world);
@@ -118,7 +115,7 @@ void ShadowRenderer::Draw(
     MeshResource& mesh,
     const cm::Matrix& world)
 {
-    auto objectCBAddress = UpdateObjectCB(world);
+    auto objectCBAddress = UploadObjectCB(world);
     uint32_t meshData[2] = { mesh.GetVertexHeapIndex(), mesh.GetIndexHeapIndex() };
 
     cmd->SetGraphicsRoot32BitConstants(Core::ToIndex(RootSlot::MeshData), 2, meshData, 0);

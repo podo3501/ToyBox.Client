@@ -36,7 +36,7 @@ std::vector<PassIndex> TopologicalSort(const std::vector<PassNodeV>& graph)
         }
     }
 
-    Assert(result.size() == graph.size());
+    Assert(result.size() == graph.size()); // Dependency graph contains cycle.
 
     return result;
 }
@@ -54,7 +54,7 @@ void BuildDependents(std::vector<CompiledTask>& tasks)
         for (const auto& dep : task.dependencies)
         {
             auto it = indexMap.find(dep);
-            if (it == indexMap.end()) continue;
+            Assert(it != indexMap.end()); //디펜던시가 존재하는데 task가 없다.
 
             tasks[it->second].dependents.push_back(task.localId);
         }

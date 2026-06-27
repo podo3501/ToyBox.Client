@@ -139,7 +139,8 @@ ComPtr<ID3D12RootSignature> RootSignatureBuilder::Build(Device& device)
     }
 
     ComPtr<ID3D12RootSignature> rootSig;
-    device->CreateRootSignature(0, sig->GetBufferPointer(), sig->GetBufferSize(), IID_PPV_ARGS(&rootSig));
+    hr = device->CreateRootSignature(0, sig->GetBufferPointer(), sig->GetBufferSize(), IID_PPV_ARGS(&rootSig));
+    Assert(SUCCEEDED(hr));
 
     return rootSig;
 }
