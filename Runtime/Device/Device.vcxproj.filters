@@ -247,7 +247,7 @@
     <ClInclude Include="Render\DX12\Core\Device.h">
       <Filter>Render\DX12\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\Core\GPUProfiler.h">
+    <ClInclude Include="Render\DX12\Core\FrameProfiler.h">
       <Filter>Render\DX12\Core</Filter>
     </ClInclude>
     <ClInclude Include="Render\DX12\Scene\RenderScene.h">
@@ -526,7 +526,7 @@
     <ClCompile Include="Render\DX12\Core\DX12Link.cpp">
       <Filter>Render\DX12\Core</Filter>
     </ClCompile>
-    <ClCompile Include="Render\DX12\Core\GPUProfiler.cpp">
+    <ClCompile Include="Render\DX12\Core\FrameProfiler.cpp">
       <Filter>Render\DX12\Core</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\Scene\RenderScene.cpp">

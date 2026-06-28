@@ -79,21 +79,8 @@ void TaskScheduler::ExecuteTask(TaskEntry& entry)
     if (isGpuTask)
     {
         cmd = m_cmdScheduler.Begin(entry.task.type);
-#ifdef _DEBUG
-        if (!cmd)
-        {
-            char buffer[128];
-            sprintf_s(buffer,
-                "CommandList unavailable. Type = %d\n",
-                static_cast<int>(entry.task.type));
-            OutputDebugStringA(buffer); // 해당 CommandList 가 없음. 할당을 못 받았거나 사용 가능한 것이 없거나 등등
-        }
-
-        //if(!cmd)
-        //    OutputDebugStringA("CommandList unavailable.\n"); 
-#endif
-
-        if (!cmd) return;
+        if (!cmd) 
+            return;
     }
 
     ExecuteTaskImmediate(cmd, entry.task, entry.context);

@@ -63,7 +63,7 @@
     <ClInclude Include="Render\DX12\Core\DebugHelper.h" />
     <ClInclude Include="Render\DX12\Core\DebugOptions.h" />
     <ClInclude Include="Render\DX12\Core\Device.h" />
-    <ClInclude Include="Render\DX12\Core\GPUProfiler.h" />
+    <ClInclude Include="Render\DX12\Core\FrameProfiler.h" />
     <ClInclude Include="Render\DX12\Core\RenderData.h" />
     <ClInclude Include="Render\DX12\Factory\DescriptorAllocator.h" />
     <ClInclude Include="Render\DX12\Factory\DescriptorFactory.h" />
@@ -164,7 +164,7 @@
     <ClCompile Include="Render\DX12\Core\DebugHelper.cpp" />
     <ClCompile Include="Render\DX12\Core\Device.cpp" />
     <ClCompile Include="Render\DX12\Core\DX12Link.cpp" />
-    <ClCompile Include="Render\DX12\Core\GPUProfiler.cpp" />
+    <ClCompile Include="Render\DX12\Core\FrameProfiler.cpp" />
     <ClCompile Include="Render\DX12\Factory\DescriptorAllocator.cpp" />
     <ClCompile Include="Render\DX12\Factory\DescriptorFactory.cpp" />
     <ClCompile Include="Render\DX12\Factory\ResourceFactory.cpp" />

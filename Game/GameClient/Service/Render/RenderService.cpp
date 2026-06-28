@@ -54,3 +54,10 @@ void RenderService::Resize(const Size& size)
 	m_backend->Resize(size);
 }
 
+RenderMetrics RenderService::GetRenderMetrics()
+{
+	//backend에서는 metrics로 받아와서 여기서 시간값을 조합해서 fps로 만들거나 평균을 만들어서
+	//RenderStats로 내보내게 할 수 도 있다. 현재는 구현 초반부라 바로 내보낸다.
+	return m_backend->GetRenderMetrics();
+}
+

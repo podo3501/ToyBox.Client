@@ -7,7 +7,7 @@
 #include "Factory/DescriptorFactory.h"
 #include "Factory/ResourceFactory.h"
 #include "Shader/ShaderLibrary.h"
-#include "Core/GPUProfiler.h"
+#include "Core/FrameProfiler.h"
 #include "ResourceProvider.h"
 #include "Pipeline/ForwardRenderPipeline.h"
 #include "RenderFrame.h"
@@ -24,6 +24,7 @@ public:
 	virtual void WaitIdle() override;
 	virtual IResourceProvider* GetResourceProvider() override { return &m_resProvider; }
 	virtual IRenderFrame* GetRenderFrame() override { return &m_renderFrame; }
+	virtual RenderMetrics GetRenderMetrics() override;
 
 private:
 	Device m_device;
@@ -35,8 +36,10 @@ private:
 	DescriptorFactory m_descFactory;
 	ResourceFactory m_resFactory;
 	ShaderLibrary m_shaderLibrary;
-	GPUProfiler m_profiler;
+	FrameProfiler m_profiler;
 	ResourceProvider m_resProvider;
 	ForwardRenderPipeline m_pipeline;
 	RenderFrame m_renderFrame;
+
+	uint64_t m_frameIndex{ 0 };
 };

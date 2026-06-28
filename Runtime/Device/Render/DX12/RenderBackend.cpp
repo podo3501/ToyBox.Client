@@ -47,7 +47,7 @@ void RenderBackend::Update()
 {
     m_taskScheduler.Execute();
 
-    m_profiler.Update();
+    m_profiler.Update(m_frameIndex);
     float gpuMs = m_profiler.GetGpuFrameTimeMs();
 
     m_resProvider.Update(gpuMs);
@@ -58,15 +58,27 @@ void RenderBackend::Render()
     auto* cmd = m_cmdScheduler.Begin(CommandType::Direct);
     if (cmd)
     {
-        m_profiler.BeginFrame(*cmd);
+        m_profiler.BeginFrame(*cmd, m_frameIndex);
         m_pipeline.Render(*cmd, m_renderFrame.PrepareRenderData(), m_renderFrame.GetFrameData());
         m_profiler.EndFrame(*cmd);
 
         m_cmdScheduler.End();
         m_swapChain.Present(false);
+
+        m_frameIndex++;
     }
 
     m_renderFrame.Clear();
+}
+
+RenderMetrics RenderBackend::GetRenderMetrics()
+{
+    RenderMetrics metrics;
+
+    metrics.cpuFrameMs = m_profiler.GetCpuFrameTimeMs();
+    metrics.gpuFrameMs = m_profiler.GetGpuFrameTimeMs();
+
+    return metrics;
 }
 
 //////////////////////////////////////////////////////

@@ -151,11 +151,22 @@ public:
         return m_results.Contains(id);
     }
 
+    bool HasPendingWork() const
+    {
+        std::lock_guard<std::mutex> lock(m_pendingMutex);
+
+        const bool hasPending = !m_pending.empty();
+        const bool hasRequests = m_requests.Size() != 0;
+        const bool hasResults = m_results.Size() != 0;
+
+        return hasPending || hasRequests || hasResults;
+    }
+
 private:
     AssetQueue<TRequest> m_requests;
 
     std::queue<AssetRequestID> m_pending;
-    std::mutex m_pendingMutex;
+    mutable std::mutex m_pendingMutex;
 
     AssetQueue<TResult> m_results;
 };

@@ -1,6 +1,7 @@
 #pragma once
 #include "Core/Foundation/Geometry2D.h"
 #include "RenderServiceConfig.h"
+#include "RenderMetrics.h"
 #include "RenderRepository.h"
 #include "SceneRenderer.h"
 #include "../AssetAsync/AssetAsyncTypes.h"
@@ -29,6 +30,7 @@ public:
 
 	RenderRepository* GetRepository() { return m_repository.get(); }
 	SceneRenderer* GetRenderer() { return m_renderer.get(); }
+	RenderMetrics GetRenderMetrics();
 
 private:
 	RenderService(unique_ptr<IRenderBackend> backend, AssetPipelineT* assetPipeline);

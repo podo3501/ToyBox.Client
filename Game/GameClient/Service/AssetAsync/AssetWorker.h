@@ -49,6 +49,12 @@ public:
         m_threads.clear();
     }
 
+    bool IsIdle() const
+    {
+        return m_activeJobs.load(std::memory_order_acquire) == 0
+            && !m_pipeline->HasPendingWork();
+    }
+
 private:
     void ThreadLoop()
     {
@@ -61,14 +67,16 @@ private:
                 continue;
             }
 
+            ++m_activeJobs;
+
             auto reqOpt = m_pipeline->TakeRequest(id); //request 데이터 가져오기
-            if (!reqOpt)
-                continue;
+            if (reqOpt)
+            {
+                TResult result = Process(*reqOpt); //AssetService로 로딩
+                m_pipeline->PushResult(id, std::move(result)); //결과 저장
+            }
 
-            const TRequest& req = *reqOpt;
-            TResult result = Process(req); //AssetService로 로딩
-
-            m_pipeline->PushResult(id, std::move(result)); //결과 저장
+            --m_activeJobs;
         }
     }
 
@@ -84,4 +92,5 @@ private:
 
     std::vector<std::thread> m_threads;
     std::atomic<bool> m_running{ false };
+    std::atomic<int> m_activeJobs{ 0 };
 };

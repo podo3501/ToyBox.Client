@@ -673,6 +673,9 @@
     <ClInclude Include="Service\Render\RenderRepository.h">
       <Filter>Service\Render</Filter>
     </ClInclude>
+    <ClInclude Include="Service\Render\RenderMetrics.h">
+      <Filter>Service\Render</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Locator">

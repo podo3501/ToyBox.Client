@@ -187,6 +187,7 @@
     <ClInclude Include="Service\Render\IRenderBackend.h" />
     <ClInclude Include="Service\Render\IResourceProvider.h" />
     <ClInclude Include="Service\Render\RenderConfig.h" />
+    <ClInclude Include="Service\Render\RenderMetrics.h" />
     <ClInclude Include="Service\Render\SceneRenderer.h" />
     <ClInclude Include="Service\Render\RenderService.h" />
     <ClInclude Include="Service\Render\RenderServiceConfig.h" />

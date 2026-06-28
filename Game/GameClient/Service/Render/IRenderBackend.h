@@ -1,5 +1,6 @@
 #pragma once
 #include "RenderConfig.h"
+#include "RenderMetrics.h"
 #include "Core/Math/Matrix.h"
 #include "Core/Foundation/Geometry2D.h"
 #include "IResourceProvider.h"
@@ -23,6 +24,7 @@ struct IRenderBackend
 	virtual void WaitIdle() = 0;
 	virtual IResourceProvider* GetResourceProvider() = 0;
 	virtual IRenderFrame* GetRenderFrame() = 0;
+	virtual RenderMetrics GetRenderMetrics() = 0;
 };
 
 std::unique_ptr<IRenderBackend> CreateRenderBackend(const RenderConfig& config);
