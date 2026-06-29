@@ -93,35 +93,38 @@ struct ShaderStageDesc
     std::string target;
 };
 
-enum class ShadingModel
+using ShaderKey = uint32_t;
+inline constexpr ShaderKey InvalidShaderKey{ 0 };
+
+namespace BuiltinShader
 {
-    Phong,
-    PBR,
-    UI,
-    Grid,
-    MipGenerator,
-    Shadow,
-    Count
-};
+    constexpr ShaderKey Shadow{ 1 };
+    constexpr ShaderKey Phong{ 2 };
+    constexpr ShaderKey PBR{ 3 };
+    constexpr ShaderKey Grid{ 4 };
+    constexpr ShaderKey UI{ 5 };
+    constexpr ShaderKey MipGenerator{ 6 }; //compute
+}
 
 struct ShaderAsset;
-struct ShaderRegisterDesc
+struct ShaderDesc
 {
-    ShadingModel model;
     std::shared_ptr<ShaderAsset> asset;
     std::vector<ShaderStageDesc> stages;
 };
 
+using BuiltinShaderDesc = std::pair<ShaderKey, ShaderDesc>;
+
 struct ShaderVariant
 {
-    ShadingModel model;
+    ShaderKey shaderKey;
     std::vector<ShaderMacroDesc> runtimeMacros;
 
     bool operator==(const ShaderVariant&) const = default;
 
     size_t GetHash() const
     {
-        size_t h = Core::HashOf(model);
+        size_t h = Core::HashOf(shaderKey);
         for (const auto& macro : runtimeMacros)
             Core::HashCombine(h, macro.GetHash());
         return h;
@@ -172,14 +175,14 @@ class PipelineLibrary
 {
 public:
     static PipelineState Get(
-        ShadingModel model,
+        ShaderKey shaderKey,
         RasterPreset rasterPreset,
         PrimitiveTopologyType topologyType =
         PrimitiveTopologyType::Triangle)
     {
         PipelineState state{};
 
-        state.shaderVariant.model = model;
+        state.shaderVariant.shaderKey = shaderKey;
         state.rasterState = RasterLibrary::Get(rasterPreset);
         state.topologyType = topologyType;
 

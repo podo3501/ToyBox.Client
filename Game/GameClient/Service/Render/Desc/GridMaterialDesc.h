@@ -7,7 +7,7 @@ struct GridMaterialDesc : public DebugSurfaceMaterialDesc
     {
         debugSurfType = DebugSurfaceType::Grid;
         pipelineState = PipelineLibrary::Get(
-            ShadingModel::Grid, 
+            BuiltinShader::Grid, 
             RasterPreset::Default, 
             PrimitiveTopologyType::Line);
     }

@@ -31,32 +31,41 @@ ShaderStageDesc ShaderStageBuilder::CS(std::string entry)
     };
 }
 
-ShaderRegisterDesc ShaderBuilder::Build(
-    ShadingModel model,
+static ShaderDesc Build(
+    std::shared_ptr<ShaderAsset> asset,
+    std::initializer_list<ShaderStageDesc> stages)
+{
+    ShaderDesc desc;
+    desc.asset = std::move(asset);
+    desc.stages.assign(stages.begin(), stages.end());
+    return desc;
+}
+
+ShaderDesc ShaderBuilder::BuildGraphics(std::shared_ptr<ShaderAsset> asset)
+{
+    return Build(std::move(asset), {
+        ShaderStageBuilder::VS(),
+        ShaderStageBuilder::PS()
+        });
+}
+
+BuiltinShaderDesc ShaderBuilder::BuildGraphics(
+    ShaderKey key,
     std::shared_ptr<ShaderAsset> asset)
 {
-    ShaderRegisterDesc regiDesc;
-    regiDesc.model = model;
-    regiDesc.asset = std::move(asset);
+    return { key, BuildGraphics(std::move(asset)) };
+}
 
-    switch (model)
-    {
-    case ShadingModel::Phong:
-    case ShadingModel::PBR:
-    case ShadingModel::UI:
-    case ShadingModel::Grid:
-    case ShadingModel::Shadow:
-    {
-        regiDesc.stages = { ShaderStageBuilder::VS(), ShaderStageBuilder::PS() };
-        break;
-    }
+ShaderDesc ShaderBuilder::BuildCompute(std::shared_ptr<ShaderAsset> asset)
+{
+    return Build(std::move(asset), {
+        ShaderStageBuilder::CS()
+        });
+}
 
-    case ShadingModel::MipGenerator:
-    {
-        regiDesc.stages = { ShaderStageBuilder::CS() };
-        break;
-    }
-    }
-
-    return regiDesc;
+BuiltinShaderDesc ShaderBuilder::BuildCompute(
+    ShaderKey key,
+    std::shared_ptr<ShaderAsset> asset)
+{
+    return { key, BuildCompute(std::move(asset)) };
 }

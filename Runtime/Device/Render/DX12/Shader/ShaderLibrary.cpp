@@ -5,7 +5,10 @@
 #pragma comment(lib, "dxcompiler.lib")
 
 ShaderLibrary::~ShaderLibrary() = default;
-ShaderLibrary::ShaderLibrary() = default;
+ShaderLibrary::ShaderLibrary()
+{
+    m_shaders.resize(1); //런타임이 먼저 들어올수 있기 때문. shaderKey 생성값은 size를 리턴하기 때문이다.
+}
 
 static bool CompileStage(
     const std::string& source, 
@@ -96,38 +99,67 @@ static ComPtr<IDxcBlob> CreateBlobFromBuffer(const Core::ByteBuffer& buffer)
     return nullptr;
 }
 
-bool ShaderLibrary::Initialize(const std::vector<ShaderRegisterDesc>& shaders)
+bool ShaderLibrary::Initialize(std::span<const BuiltinShaderDesc> builtinShaders)
 {
-    for (const ShaderRegisterDesc& desc : shaders)
-    {
-        if (!desc.asset)
-            return false;
+    for (const auto& [key, desc] : builtinShaders)
+        ReturnIfFalse(RegisterShader(key, desc));
+    
+    return true;
+}
 
-        auto& shaderData = m_shaders[static_cast<size_t>(desc.model)];
-        if (shaderData.asset) return false;
+bool ShaderLibrary::RegisterShader(ShaderKey key, const ShaderDesc& desc)
+{
+    if (key == InvalidShaderKey)
+        return false;
 
-        shaderData.asset = desc.asset;
-        shaderData.stages = desc.stages;
+    if (!desc.asset)
+        return false;
 
-        ShaderVariant baseVariant{ desc.model };
-        ShaderEntry entry;
-        
-        if (!CompileVariant(baseVariant, shaderData, entry))
-            return false;
+    if (key >= m_shaders.size())
+        m_shaders.resize(static_cast<size_t>(key) + 1);
 
-        m_variants.emplace(baseVariant, std::move(entry));
-    }
+    ShaderData& shaderData = m_shaders[key];
+
+    if (shaderData.asset)
+        return false;
+
+    shaderData.asset = desc.asset;
+    shaderData.stages = desc.stages;
+
+    ShaderVariant baseVariant{ key };
+    ShaderEntry entry;
+
+    if (!CompileVariant(baseVariant, shaderData, entry))
+        return false;
+
+    m_variants.emplace(baseVariant, std::move(entry));
 
     return true;
 }
 
+ShaderKey ShaderLibrary::RegisterShader(const ShaderDesc& desc)
+{
+    ShaderKey key = static_cast<ShaderKey>(m_shaders.size());
+
+    if (!RegisterShader(key, desc))
+        return InvalidShaderKey;
+
+    return key;
+}
+
 const ShaderEntry* ShaderLibrary::Find(const ShaderVariant& variant) const
 {
+    if (variant.shaderKey == InvalidShaderKey)
+        return nullptr;
+
     auto it = m_variants.find(variant);
     if (it != m_variants.end())
         return &it->second;
 
-    const ShaderData& shaderData = m_shaders[Core::ToIndex(variant.model)];
+    if (variant.shaderKey >= m_shaders.size())
+        return nullptr;
+
+    const ShaderData& shaderData = m_shaders[variant.shaderKey];
     if (!shaderData.asset) return nullptr; // shader가 등록이 안돼 있다.
 
     ShaderEntry entry;

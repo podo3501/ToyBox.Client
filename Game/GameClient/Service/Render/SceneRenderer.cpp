@@ -22,7 +22,7 @@ SceneRenderer::SceneRenderer(IRenderFrame* renderFrame, MeshRepository* meshRepo
 	m_matRepository{ matRepository }
 {}
 
-bool SceneRenderer::Initialize(const DefaultMaterialDescs& defaultMat)
+bool SceneRenderer::RegisterDefaultMaterials(const DefaultMaterialDescs& defaultMat)
 {
 	MeshDesc meshDesc{ Core::ResourceID::MakeBuiltin("ui_quad") };
 	m_uiQuad = m_meshRepository->GetOrCreate(meshDesc, CreateUIQuad());

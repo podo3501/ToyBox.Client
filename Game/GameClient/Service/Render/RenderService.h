@@ -19,10 +19,15 @@ public:
 	RenderService() = delete;
 	static unique_ptr<RenderService> Create(
 		unique_ptr<IRenderBackend> backend,
-		AssetPipelineT* assetPipeline,
-		const DefaultMaterialDescs& defaultMatDescs) noexcept;
+		AssetPipelineT* assetPipeline) noexcept;
 
-	bool Initialize(const DefaultMaterialDescs& defaultMatDescs);
+	bool Initialize(
+		HWND hwnd,
+		const Size& screenSize,
+		std::span<const BuiltinShaderDesc> builtinShaders,
+		const DefaultMaterialDescs& defaultMatDescs);
+
+	ShaderKey RegisterShader(const ShaderDesc& desc);
 	void SetFrameData(const FrameData& frameData);
 	void Update();
 	void Render();

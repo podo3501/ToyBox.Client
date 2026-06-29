@@ -19,7 +19,7 @@ struct UIMaterialDesc : public MaterialDesc
     {
         domain = MaterialDomain::UserInterface;
         pipelineState = PipelineLibrary::Get(
-            ShadingModel::UI, 
+            BuiltinShader::UI,
             RasterPreset::NoCull, 
             PrimitiveTopologyType::Triangle);
     }

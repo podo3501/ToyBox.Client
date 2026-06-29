@@ -19,7 +19,7 @@ namespace SurfaceMatDescFactory
             PhongMaterialDesc desc{};
 
             desc.pipelineState = PipelineLibrary::Get(
-                ShadingModel::Phong,
+                BuiltinShader::Phong,
                 RasterPreset::Wireframe,
                 PrimitiveTopologyType::Triangle);
 

@@ -11,5 +11,11 @@ namespace ShaderStageBuilder
 struct ShaderAsset;
 namespace ShaderBuilder
 {
-	ShaderRegisterDesc Build(ShadingModel model, std::shared_ptr<ShaderAsset> asset);
+	//Runtime
+	ShaderDesc BuildGraphics(std::shared_ptr<ShaderAsset> asset);
+	ShaderDesc BuildCompute(std::shared_ptr<ShaderAsset> asset);
+
+	//Builtin
+	BuiltinShaderDesc BuildGraphics(ShaderKey key, std::shared_ptr<ShaderAsset> asset);
+	BuiltinShaderDesc BuildCompute(ShaderKey key, std::shared_ptr<ShaderAsset> asset);
 }

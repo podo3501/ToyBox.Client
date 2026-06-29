@@ -12,12 +12,12 @@ struct ShaderAsset;
 struct TextureAsset;
 struct IMeshProvider;
 struct IMaterialProvider;
-struct ShaderRegisterDesc;
 
 struct IRenderBackend
 {
 	virtual ~IRenderBackend() = default;
-	virtual bool Initialize(HWND hwnd, const Size& wndSize, const std::vector<ShaderRegisterDesc>& shaders) = 0;
+	virtual bool Initialize(HWND hwnd, const Size& wndSize, std::span<const BuiltinShaderDesc> builtinShaders) = 0;
+	virtual ShaderKey RegisterShader(const ShaderDesc& desc) = 0;
 	virtual void Resize(const Size& size) = 0;
 	virtual void Update() = 0;
 	virtual void Render() = 0;

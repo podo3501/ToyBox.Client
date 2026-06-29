@@ -21,7 +21,7 @@ public:
 	~SceneRenderer();
 	SceneRenderer() = delete;
 	SceneRenderer(IRenderFrame* renderFrame, MeshRepository* meshRepository, MaterialRepository* matRepository);
-	bool Initialize(const DefaultMaterialDescs& defaultMatDescs);
+	bool RegisterDefaultMaterials(const DefaultMaterialDescs& defaultMatDescs);
 
 	void DrawSurface(MeshHandle hM, MaterialHandle hMtl, const Core::Math::Matrix& world);
 	void DrawDebugSurface(MeshHandle hM, MaterialHandle hMtl, const Core::Math::Matrix& world);

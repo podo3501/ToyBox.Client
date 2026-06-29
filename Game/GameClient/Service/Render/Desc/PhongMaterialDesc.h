@@ -32,7 +32,7 @@ struct PhongMaterialDesc : public SurfaceMaterialDesc
     {
         surfType = SurfaceType::Phong;
         pipelineState = PipelineLibrary::Get(
-            ShadingModel::Phong,
+            BuiltinShader::Phong,
             RasterPreset::Default,
             PrimitiveTopologyType::Triangle);
     }

@@ -22,20 +22,29 @@ RenderService::RenderService(unique_ptr<IRenderBackend> backend, AssetPipelineT*
 		m_matRepository.get());
 }
 
-unique_ptr<RenderService> RenderService::Create(
-	unique_ptr<IRenderBackend> backend, 
-	AssetPipelineT* assetPipeline,
-	const DefaultMaterialDescs& defaultMatDescs) noexcept
+unique_ptr<RenderService> RenderService::Create(	
+	unique_ptr<IRenderBackend> backend, 	
+	AssetPipelineT* assetPipeline) noexcept
 {
 	unique_ptr<RenderService> service(new RenderService(move(backend), assetPipeline));
-	if (!service->Initialize(defaultMatDescs)) return nullptr;
-
 	return service;
 }
 
-bool RenderService::Initialize(const DefaultMaterialDescs& defaultMatDescs)
+bool RenderService::Initialize(
+	HWND hwnd,
+	const Size& screenSize,
+	std::span<const BuiltinShaderDesc> builtinShaders,
+	const DefaultMaterialDescs& defaultMatDescs)
 {
-	return m_renderer->Initialize(defaultMatDescs);
+	ReturnIfFalse(m_backend->Initialize(hwnd, screenSize, builtinShaders));
+	ReturnIfFalse(m_renderer->RegisterDefaultMaterials(defaultMatDescs));
+
+	return true;
+}
+
+ShaderKey RenderService::RegisterShader(const ShaderDesc& desc)
+{
+	return m_backend->RegisterShader(desc);
 }
 
 void RenderService::Update()
@@ -60,4 +69,3 @@ RenderMetrics RenderService::GetRenderMetrics()
 	//RenderStats로 내보내게 할 수 도 있다. 현재는 구현 초반부라 바로 내보낸다.
 	return m_backend->GetRenderMetrics();
 }
-

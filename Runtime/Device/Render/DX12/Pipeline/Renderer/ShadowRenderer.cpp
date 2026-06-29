@@ -33,7 +33,7 @@ bool ShadowRenderer::Initialize(Device& device)
     m_frameCBAllocator.Initialize<ShadowFrameCB>(device, 1);
 
     ReturnIfFalse(CreateRootSignature(device));
-    m_shadowPSO = CreatePSO(PipelineLibrary::Get(ShadingModel::Shadow, RasterPreset::Default));
+    m_shadowPSO = CreatePSO(PipelineLibrary::Get(BuiltinShader::Shadow, RasterPreset::Default));
     if (!m_shadowPSO) return false;
 
     return true;

@@ -67,12 +67,12 @@ bool SurfaceRenderer::Initialize(Device& device)
 
 bool SurfaceRenderer::CreateDefaultPSOs()
 {
-    ReturnIfFalse(CreatePSO(PipelineLibrary::Get(ShadingModel::Phong, RasterPreset::Default)) != nullptr);
-    ReturnIfFalse(CreatePSO(PipelineLibrary::Get(ShadingModel::Phong, RasterPreset::NoCull)) != nullptr);
-    ReturnIfFalse(CreatePSO(PipelineLibrary::Get(ShadingModel::Phong, RasterPreset::Wireframe)) != nullptr);
-    ReturnIfFalse(CreatePSO(PipelineLibrary::Get(ShadingModel::Phong, RasterPreset::WireframeNoCull)) != nullptr);
+    ReturnIfFalse(CreatePSO(PipelineLibrary::Get(BuiltinShader::Phong, RasterPreset::Default)) != nullptr);
+    ReturnIfFalse(CreatePSO(PipelineLibrary::Get(BuiltinShader::Phong, RasterPreset::NoCull)) != nullptr);
+    ReturnIfFalse(CreatePSO(PipelineLibrary::Get(BuiltinShader::Phong, RasterPreset::Wireframe)) != nullptr);
+    ReturnIfFalse(CreatePSO(PipelineLibrary::Get(BuiltinShader::Phong, RasterPreset::WireframeNoCull)) != nullptr);
 
-    ReturnIfFalse(CreatePSO(PipelineLibrary::Get(ShadingModel::PBR, RasterPreset::Default)) != nullptr);
+    ReturnIfFalse(CreatePSO(PipelineLibrary::Get(BuiltinShader::PBR, RasterPreset::Default)) != nullptr);
 
     return true;
 }

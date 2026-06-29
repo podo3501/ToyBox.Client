@@ -26,16 +26,17 @@ class ShaderLibrary
 public:
     ~ShaderLibrary();
     ShaderLibrary();
-    bool Initialize(const std::vector<ShaderRegisterDesc>& shaders);
-    
+    bool Initialize(std::span<const BuiltinShaderDesc> builtinShaders);
+    ShaderKey RegisterShader(const ShaderDesc& desc);
     const ShaderEntry* Find(const ShaderVariant& variant) const;
 
 private:
+    bool RegisterShader(ShaderKey key, const ShaderDesc& desc);
     bool CompileVariant(
         const ShaderVariant& variant,
         const ShaderData& shaderData,
         ShaderEntry& outEntry) const;
 
-    std::array<ShaderData, Core::EnumSize<ShadingModel>> m_shaders;
+    std::vector<ShaderData> m_shaders;
     mutable std::unordered_map<ShaderVariant, ShaderEntry, ShaderVariantHasher> m_variants;
 };

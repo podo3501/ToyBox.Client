@@ -44,7 +44,7 @@ bool DebugSurfaceRenderer::CreateRootSignature(Device& device)
 
 bool DebugSurfaceRenderer::CreateDefaultPSOs()
 {
-    ReturnIfFalse(CreatePSO(PipelineLibrary::Get(ShadingModel::Grid, RasterPreset::Default, PrimitiveTopologyType::Line)) != nullptr);
+    ReturnIfFalse(CreatePSO(PipelineLibrary::Get(BuiltinShader::Grid, RasterPreset::Default, PrimitiveTopologyType::Line)) != nullptr);
 
     return true;
 }
