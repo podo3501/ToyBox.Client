@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "MeshJsonLoader.h"
 #include "Platform/Serializer/Serializer.h"
-#include "GameClient/Service/Asset/Assets/MeshAsset.h"
 
 struct JsonVec2
 {
@@ -74,7 +73,7 @@ static MeshVertex ConvertToVertex(const JsonMeshVertex& v)
         v.tangent.x, v.tangent.y, v.tangent.z };
 }
 
-shared_ptr<Asset> MeshJsonLoader::LoadFromMemory(const Core::ByteBuffer& buffer)
+shared_ptr<MeshAsset> MeshJsonLoader::LoadFromMemory(const Core::ByteBuffer& buffer)
 {
 	nlohmann::json rData = nlohmann::json::parse(buffer.begin(), buffer.end());
 

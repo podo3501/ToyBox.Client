@@ -9,7 +9,7 @@ public:
     ~StaticSoundBuffer();
     StaticSoundBuffer() = delete;
     explicit StaticSoundBuffer(MIX_Mixer* mixer) noexcept;
-    virtual bool LoadFromAsset(shared_ptr<Asset> asset) override;
+    virtual bool LoadFromAsset(shared_ptr<AssetData> asset) override;
     inline MIX_Audio* GetAudio() const noexcept { return m_audio; }
 
 private:

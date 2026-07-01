@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "AssetService.h"
-#include "Asset.h"
+#include "AssetData.h"
 #include "Platform/Resource/IResourceManager.h"
 
 AssetService::~AssetService() = default;
@@ -14,7 +14,7 @@ unique_ptr<AssetService> AssetService::Create(IResourceManager* resManager) noex
 	return std::unique_ptr<AssetService>(new AssetService(resManager));
 }
 
-shared_ptr<Asset> AssetService::Load(Core::TypeID type, const Core::ResourceID& resID)
+shared_ptr<AssetData> AssetService::Load(Core::TypeID type, const Core::ResourceID& resID)
 {
 	CacheKey cacheKey{ resID, type };
 
@@ -60,7 +60,7 @@ shared_ptr<Asset> AssetService::Load(Core::TypeID type, const Core::ResourceID& 
 	return asset;
 }
 
-shared_ptr<Asset> AssetService::LoadWithSource(IAssetLoader* loader, const Core::ResourceID& resID)
+shared_ptr<AssetData> AssetService::LoadWithSource(IAssetLoader* loader, const Core::ResourceID& resID)
 {
 	if (resID.GetType() != Core::ResourceIDType::Path) 
 		return nullptr;

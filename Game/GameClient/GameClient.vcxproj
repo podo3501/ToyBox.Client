@@ -40,6 +40,8 @@
     <ClCompile Include="Scenes\Test\ComponentTestScene.cpp" />
     <ClCompile Include="Scenes\Test\TestScene1.cpp" />
     <ClCompile Include="Scenes\Test\TestScene2.cpp" />
+    <ClCompile Include="Service\AssetAsync\AssetPipelineHelper.cpp" />
+    <ClCompile Include="Service\Asset\AssetServiceV.cpp" />
     <ClCompile Include="Service\Audio\AudioService.cpp" />
     <ClCompile Include="Service\Audio\SoundRepository.cpp" />
     <ClCompile Include="Service\Audio\Voice.cpp" />
@@ -136,8 +138,10 @@
     <ClInclude Include="Scenes\Test\TestScene2.h" />
     <ClInclude Include="Service\AssetAsync\AssetAsyncTypes.h" />
     <ClInclude Include="Service\AssetAsync\AssetPipeline.h" />
+    <ClInclude Include="Service\AssetAsync\AssetPipelineHelper.h" />
     <ClInclude Include="Service\AssetAsync\AssetWorker.h" />
     <ClInclude Include="Service\Asset\AssetService.h" />
+    <ClInclude Include="Service\Asset\AssetServiceV.h" />
     <ClInclude Include="Service\Asset\Assets\AudioTypes.h" />
     <ClInclude Include="Service\Asset\Assets\MeshAsset.h" />
     <ClInclude Include="Service\Asset\Assets\ShaderAsset.h" />

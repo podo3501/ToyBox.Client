@@ -1,5 +1,5 @@
 #pragma once
-#include "GameCore/Service/Asset/Asset.h"
+#include "GameCore/Service/Asset/AssetData.h"
 #include <vector>
 
 enum class SampleFormat
@@ -8,7 +8,7 @@ enum class SampleFormat
     Float32
 };
 
-struct StaticSoundAsset : public Asset
+struct StaticSoundAsset : public AssetData
 {
     CORE_DECLARE_TYPE(StaticSoundAsset)
 

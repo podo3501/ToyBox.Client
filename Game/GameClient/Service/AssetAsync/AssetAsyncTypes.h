@@ -2,18 +2,17 @@
 #include <memory>
 #include "Core/Foundation/ResourceID.h"
 
-struct Asset;
-struct AssetRequest;
+struct AssetData;
+using AssetPtr = std::shared_ptr<AssetData>;
 
-template<typename TRequest, typename TResult>
-class AssetPipeline;
+using AssetRequestID = uint64_t;
+inline constexpr AssetRequestID InvalidAssetRequestID = 0;
 
-template<typename TRequest, typename TResult>
-class AssetWorker;
-
-using AssetPtr = std::shared_ptr<Asset>;
-using AssetPipelineT = AssetPipeline<AssetRequest, AssetPtr>;
-using AssetWorkerT = AssetWorker<AssetRequest, AssetPtr>;
+struct AssetRequest
+{
+    Core::ResourceID resID;
+    Core::TypeID type{ Core::InvalidTypeID };
+};
 
 template<typename T>
 AssetRequest MakeAssetRequest(Core::ResourceID resID)
@@ -26,7 +25,7 @@ AssetRequest MakeAssetRequest(Core::ResourceID resID)
 }
 
 template<typename T>
-AssetRequest MakeAssetRequest(const std::filesystem::path& path)
+AssetRequest MakeAssetRequest(std::string_view path)
 {
     return MakeAssetRequest<T>(Core::ResourceID::MakePath(path));
 }

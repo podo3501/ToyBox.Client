@@ -10,6 +10,7 @@ struct MeshAsset;
 struct MeshDesc;
 struct CpuPendingMeshRequest;
 struct GpuPendingMeshRequest;
+class AssetPipeline;
 
 struct MeshEntry
 {
@@ -21,7 +22,7 @@ class MeshRepository
 {
 public:
     ~MeshRepository();
-    MeshRepository(IMeshProvider* meshProvider, AssetPipelineT* assetPipeline);
+    MeshRepository(IMeshProvider* meshProvider, AssetPipeline* assetPipeline);
     
     MeshHandle GetOrCreate(const MeshDesc& desc, std::shared_ptr<MeshAsset> asset = nullptr);
     bool Release(MeshHandle mh);
@@ -35,7 +36,7 @@ private:
     void ProcessLoading();
 
     IMeshProvider* m_meshProvider{ nullptr };
-    AssetPipelineT* m_assetPipeline{ nullptr };
+    AssetPipeline* m_assetPipeline{ nullptr };
 
     std::unordered_map<Core::ResourceID, MeshHandle> m_cache;
     HandlePool<MeshEntry, MeshTag> m_loadedMeshes;

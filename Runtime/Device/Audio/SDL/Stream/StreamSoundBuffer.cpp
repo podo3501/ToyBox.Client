@@ -5,7 +5,7 @@
 #include "Core/Utils/Cast.hpp"
 
 StreamSoundBuffer::StreamSoundBuffer() = default;
-bool StreamSoundBuffer::LoadFromAsset(shared_ptr<Asset> asset)
+bool StreamSoundBuffer::LoadFromAsset(shared_ptr<AssetData> asset)
 {
 	auto streamAsset = Core::Cast<StreamSoundAsset>(asset);
 	if (!streamAsset)

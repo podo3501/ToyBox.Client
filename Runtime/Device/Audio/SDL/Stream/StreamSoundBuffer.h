@@ -6,7 +6,7 @@ class StreamSoundBuffer : public ISoundBuffer
 {
 public:
 	StreamSoundBuffer();
-	virtual bool LoadFromAsset(shared_ptr<Asset> asset) override;
+	virtual bool LoadFromAsset(shared_ptr<AssetData> asset) override;
 	IResourceStream* GetStream() noexcept;
 
 private:

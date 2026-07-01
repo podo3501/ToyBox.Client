@@ -1,7 +1,7 @@
 #pragma once
-#include "GameCore/Service/Asset/Asset.h"
+#include "GameCore/Service/Asset/AssetData.h"
 
-struct ShaderAsset : public Asset
+struct ShaderAsset : public AssetData
 {
     CORE_DECLARE_TYPE(ShaderAsset)
 

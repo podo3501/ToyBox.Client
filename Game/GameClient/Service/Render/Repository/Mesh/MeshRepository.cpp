@@ -17,7 +17,7 @@ struct GpuPendingMeshRequest
 };
 
 MeshRepository::~MeshRepository() { ReleaseAll(); }
-MeshRepository::MeshRepository(IMeshProvider* meshProvider, AssetPipelineT* assetPipeline) :
+MeshRepository::MeshRepository(IMeshProvider* meshProvider, AssetPipeline* assetPipeline) :
 	m_meshProvider{ meshProvider },
 	m_assetPipeline{ assetPipeline }
 {}

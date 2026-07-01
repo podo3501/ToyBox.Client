@@ -14,7 +14,7 @@ StaticSoundBuffer::StaticSoundBuffer(MIX_Mixer* mixer) noexcept :
     m_audio{ nullptr }
 {}
 
-bool StaticSoundBuffer::LoadFromAsset(shared_ptr<Asset> asset)
+bool StaticSoundBuffer::LoadFromAsset(shared_ptr<AssetData> asset)
 {
     auto staticAsset = Core::Cast<StaticSoundAsset>(asset);
     if (!staticAsset)

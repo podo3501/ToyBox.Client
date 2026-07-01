@@ -243,6 +243,12 @@
     <ClCompile Include="Service\Render\RenderRepository.cpp">
       <Filter>Service\Render</Filter>
     </ClCompile>
+    <ClCompile Include="Service\AssetAsync\AssetPipelineHelper.cpp">
+      <Filter>Service\AssetAsync</Filter>
+    </ClCompile>
+    <ClCompile Include="Service\Asset\AssetServiceV.cpp">
+      <Filter>Service\Asset</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameLoop.h" />
@@ -675,6 +681,12 @@
     </ClInclude>
     <ClInclude Include="Service\Render\RenderMetrics.h">
       <Filter>Service\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\AssetAsync\AssetPipelineHelper.h">
+      <Filter>Service\AssetAsync</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Asset\AssetServiceV.h">
+      <Filter>Service\Asset</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

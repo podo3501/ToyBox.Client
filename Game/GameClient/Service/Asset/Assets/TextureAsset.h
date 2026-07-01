@@ -1,5 +1,5 @@
 #pragma once
-#include "GameCore/Service/Asset/Asset.h"
+#include "GameCore/Service/Asset/AssetData.h"
 
 enum class PixelFormat
 {
@@ -7,7 +7,7 @@ enum class PixelFormat
 	RGBA8,
 };
 
-struct TextureAsset : public Asset
+struct TextureAsset : public AssetData
 {
 	CORE_DECLARE_TYPE(TextureAsset)
 

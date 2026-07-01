@@ -2,7 +2,6 @@
 #include "Core/Utils/Handle/HandlePool.h"
 #include "Core/Foundation/ResourceID.h"
 #include "SoundHandle.h"
-#include "../AssetAsync/AssetAsyncTypes.h"
 
 struct IAudioBackend;
 struct ISoundBuffer;
@@ -13,12 +12,14 @@ struct StaticSoundAsset;
 struct StreamSoundAsset;
 struct LoadedSound;
 struct PendingSoundRequest;
+class AssetPipeline;
+
 class SoundRepository
 {
 public:
 	~SoundRepository();
 	SoundRepository() = delete;
-	SoundRepository(IAudioBackend* audioBackend, AssetPipelineT* assetPipeline);
+	SoundRepository(IAudioBackend* audioBackend, AssetPipeline* assetPipeline);
 
 	SoundHandle AcquireStaticSound(const StaticSoundDesc* desc);
 	SoundHandle AcquireStreamSound(const StreamSoundDesc* desc);
@@ -29,7 +30,7 @@ public:
 
 private:
 	IAudioBackend* m_audioBackend{ nullptr };
-	AssetPipelineT* m_assetPipeline{ nullptr };
+	AssetPipeline* m_assetPipeline{ nullptr };
 	unordered_map<Core::ResourceID, weak_ptr<ISoundBuffer>> m_buffers;
 	HandlePool<LoadedSound, SoundTag> m_loadedSounds; //빈 SoundTag 스트럭쳐를 넣어서 handle의 타입을 만든다.
 

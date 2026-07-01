@@ -18,7 +18,7 @@ struct PendingSoundPlay
 };
 
 unique_ptr<AudioService> AudioService::Create(const SoundAssetView& sndAssetView, unique_ptr<IAudioBackend> backend,
-	AssetPipelineT* assetPipeline, int maxVoices, int maxStreams) noexcept
+	AssetPipeline* assetPipeline, int maxVoices, int maxStreams) noexcept
 {
 	if (backend == nullptr) return nullptr;
 	
@@ -32,7 +32,7 @@ AudioService::~AudioService() = default;
 AudioService::AudioService(
 	const SoundAssetView& sndAssetView, 
 	unique_ptr<IAudioBackend> audioBackend,
-	AssetPipelineT* assetPipeline) noexcept :
+	AssetPipeline* assetPipeline) noexcept :
 	m_sndAssetView{ make_unique<SoundAssetView>(sndAssetView) },
 	m_audioBackend{ move(audioBackend) },
 	m_repository{ make_unique<SoundRepository>(m_audioBackend.get(), assetPipeline) },

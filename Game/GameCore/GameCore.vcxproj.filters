@@ -68,7 +68,7 @@
     <ClInclude Include="Service\Asset\AssetService.h">
       <Filter>Service\Asset</Filter>
     </ClInclude>
-    <ClInclude Include="Service\Asset\Asset.h">
+    <ClInclude Include="Service\Asset\AssetData.h">
       <Filter>Service\Asset</Filter>
     </ClInclude>
     <ClInclude Include="Service\Asset\IAssetLoader.h">

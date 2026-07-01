@@ -1,6 +1,6 @@
 #pragma once
 #include "Core/Foundation/ResourceID.h"
-#include "GameCore/Service/Asset/Asset.h"
+#include "GameCore/Service/Asset/AssetData.h"
 #include "AudioTypes.h"
 #include <filesystem>
 #include <unordered_map>
@@ -29,7 +29,7 @@ struct StaticSoundDesc : public SoundDesc
 	//static 항목이 생기면 여기에 추가
 };
 
-struct StaticSoundTable : public Asset
+struct StaticSoundTable : public AssetData
 {
 public:
 	CORE_DECLARE_TYPE(StaticSoundTable)
@@ -49,7 +49,7 @@ struct StreamSoundDesc : public SoundDesc
 	bool loop{ false };
 };
 
-struct StreamSoundTable : public Asset
+struct StreamSoundTable : public AssetData
 {
 public:
 	CORE_DECLARE_TYPE(StreamSoundTable)

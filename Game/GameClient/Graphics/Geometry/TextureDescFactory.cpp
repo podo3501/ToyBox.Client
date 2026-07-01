@@ -11,7 +11,7 @@ TextureDesc TextureDescFactory::CreateDefault(Core::ResourceID resID)
     return desc;
 }
 
-TextureDesc TextureDescFactory::CreatePath(const std::filesystem::path& path)
+TextureDesc TextureDescFactory::CreatePath(std::string_view path)
 {
     return CreateDefault(Core::ResourceID::MakePath(path));
 }

@@ -9,7 +9,7 @@ MeshDesc MeshDescFactory::CreateDefault(Core::ResourceID resID)
     return desc;
 }
 
-MeshDesc MeshDescFactory::CreatePath(const std::filesystem::path& path)
+MeshDesc MeshDescFactory::CreatePath(std::string_view path)
 {
     return CreateDefault(Core::ResourceID::MakePath(path));
 }

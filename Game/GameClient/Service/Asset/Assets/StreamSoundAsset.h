@@ -1,7 +1,7 @@
 #pragma once
-#include "GameCore/Service/Asset/Asset.h"
+#include "GameCore/Service/Asset/AssetData.h"
 
-struct StreamSoundAsset : public Asset
+struct StreamSoundAsset : public AssetData
 {
 	CORE_DECLARE_TYPE(StreamSoundAsset)
 

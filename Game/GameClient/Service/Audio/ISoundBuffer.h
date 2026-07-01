@@ -1,8 +1,8 @@
 #pragma once
 
-struct Asset;
+struct AssetData;
 struct ISoundBuffer
 {
 	virtual ~ISoundBuffer() = default;
-    virtual bool LoadFromAsset(shared_ptr<Asset> asset) = 0;
+    virtual bool LoadFromAsset(shared_ptr<AssetData> asset) = 0;
 };

@@ -8,7 +8,8 @@
 
 struct IRenderBackend;
 struct FrameData;
-struct Asset;
+struct AssetData;
+class AssetPipeline;
 class MeshRepository;
 class MaterialRepository;
 
@@ -19,7 +20,7 @@ public:
 	RenderService() = delete;
 	static unique_ptr<RenderService> Create(
 		unique_ptr<IRenderBackend> backend,
-		AssetPipelineT* assetPipeline) noexcept;
+		AssetPipeline* assetPipeline) noexcept;
 
 	bool Initialize(
 		HWND hwnd,
@@ -38,7 +39,7 @@ public:
 	RenderMetrics GetRenderMetrics();
 
 private:
-	RenderService(unique_ptr<IRenderBackend> backend, AssetPipelineT* assetPipeline);
+	RenderService(unique_ptr<IRenderBackend> backend, AssetPipeline* assetPipeline);
 
 	unique_ptr<IRenderBackend> m_backend;
 

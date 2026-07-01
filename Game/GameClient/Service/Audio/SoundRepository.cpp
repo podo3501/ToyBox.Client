@@ -16,7 +16,7 @@ struct PendingSoundRequest
 };
 
 SoundRepository::~SoundRepository() = default;
-SoundRepository::SoundRepository(IAudioBackend* audioBackend, AssetPipelineT* assetPipeline) :
+SoundRepository::SoundRepository(IAudioBackend* audioBackend, AssetPipeline* assetPipeline) :
     m_audioBackend{ audioBackend },
     m_assetPipeline{ assetPipeline }
 {}

@@ -28,7 +28,7 @@ struct GpuPendingMaterialRequest
 };
 
 MaterialRepository::~MaterialRepository() = default;
-MaterialRepository::MaterialRepository(IMaterialProvider* matProvider, AssetPipelineT* assetPipeline) :
+MaterialRepository::MaterialRepository(IMaterialProvider* matProvider, AssetPipeline* assetPipeline) :
     m_matProvider{ matProvider },
     m_assetPipeline{ assetPipeline }
 {}

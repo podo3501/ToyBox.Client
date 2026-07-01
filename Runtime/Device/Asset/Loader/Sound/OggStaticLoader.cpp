@@ -1,10 +1,9 @@
 #include "pch.h"
 #include "OggStaticLoader.h"
-#include "GameClient/Service/Asset/Assets/StaticSoundAsset.h"
 #include "AudioProcessing.h"
 #include "VorbisDecoder.h"
 
-std::shared_ptr<Asset> OggStaticLoader::LoadFromMemory(const Core::ByteBuffer& buffer)
+std::shared_ptr<StaticSoundAsset> OggStaticLoader::LoadFromMemory(const Core::ByteBuffer& buffer)
 {
     VorbisDecoder decoder;
 

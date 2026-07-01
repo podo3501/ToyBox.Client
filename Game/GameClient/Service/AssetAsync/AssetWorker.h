@@ -7,15 +7,11 @@
 #include "AssetPipeline.h"
 #include "../Asset/AssetService.h"
 
-template<typename TRequest, typename TResult>
 class AssetWorker
 {
 public:
-    using Pipeline = AssetPipeline<TRequest, TResult>;
-
-public:
     AssetWorker() = delete;
-    AssetWorker(AssetService* service, Pipeline* pipeline)
+    AssetWorker(AssetService* service, AssetPipeline* pipeline)
         : m_service(service), m_pipeline(pipeline)
     {}
 
@@ -26,8 +22,9 @@ public:
 
     void Start(size_t threadCount = 1)
     {
-        m_running = true;
+        if (!m_threads.empty()) return;
 
+        m_threads.reserve(threadCount);
         for (size_t i = 0; i < threadCount; ++i)
         {
             m_threads.emplace_back([this]() {
@@ -38,7 +35,10 @@ public:
 
     void Stop()
     {
-        m_running = false;
+        if (m_threads.empty()) return;
+
+        if (m_pipeline)
+            m_pipeline->Shutdown();
 
         for (auto& t : m_threads)
         {
@@ -51,6 +51,8 @@ public:
 
     bool IsIdle() const
     {
+        if (m_threads.empty()) return true;
+
         return m_activeJobs.load(std::memory_order_acquire) == 0
             && !m_pipeline->HasPendingWork();
     }
@@ -58,21 +60,18 @@ public:
 private:
     void ThreadLoop()
     {
-        while (m_running)
+        while (true)
         {
             AssetRequestID id;
-            if (!m_pipeline->TryPopPending(id)) //pending에서 작업 가져오기
-            {
-                std::this_thread::sleep_for(std::chrono::milliseconds(1));
-                continue;
-            }
+            if (!m_pipeline->WaitPopPending(id)) //작업이 있으면 id로 작업을 가져온다.
+                break;
 
             ++m_activeJobs;
 
             auto reqOpt = m_pipeline->TakeRequest(id); //request 데이터 가져오기
             if (reqOpt)
             {
-                TResult result = Process(*reqOpt); //AssetService로 로딩
+                AssetPtr result = Process(*reqOpt); //AssetService로 로딩
                 m_pipeline->PushResult(id, std::move(result)); //결과 저장
             }
 
@@ -80,17 +79,15 @@ private:
         }
     }
 
-    TResult Process(const TRequest& req)
+    AssetPtr Process(const AssetRequest& req)
     {
-        auto asset = m_service->Load(req.type, req.resID); //TResult가 shared_ptr<Asset> 같은 경우를 가정
-        return std::static_pointer_cast<typename TResult::element_type>(asset);
+        return m_service->Load(req.type, req.resID);
     }
 
 private:
     AssetService* m_service{ nullptr };
-    Pipeline* m_pipeline{ nullptr };
+    AssetPipeline* m_pipeline{ nullptr };
 
     std::vector<std::thread> m_threads;
-    std::atomic<bool> m_running{ false };
     std::atomic<int> m_activeJobs{ 0 };
 };

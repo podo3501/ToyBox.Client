@@ -18,7 +18,7 @@ namespace Core
         explicit ResourceID(std::string str) : m_value(std::move(str)) {}
         auto operator<=>(const ResourceID&) const = default;
 
-        static ResourceID MakePath(const std::filesystem::path& path);
+        static ResourceID MakePath(std::string_view path);
         static ResourceID MakeRuntime(std::string_view name);
         static ResourceID MakeBuiltin(std::string_view name);
 

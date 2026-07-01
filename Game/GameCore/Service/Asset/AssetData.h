@@ -2,10 +2,10 @@
 #include "Core/Foundation/Types.h"
 #include <vector>
 
-struct Asset
+struct AssetData
 {
 public:
 	virtual Core::TypeID GetTypeID() const = 0;
 
-	virtual ~Asset() = default;
+	virtual ~AssetData() = default;
 };

@@ -9,10 +9,11 @@
 struct MaterialDesc;
 struct IMaterialProvider;
 struct IMaterialResource;
-struct Asset;
+struct AssetData;
 struct CpuPendingMaterialRequest;
 struct PendingMaterialTextures;
 struct GpuPendingMaterialRequest;
+class AssetPipeline;
 
 struct MaterialEntry
 {
@@ -26,7 +27,7 @@ class MaterialRepository
 public:
     ~MaterialRepository();
     MaterialRepository() = delete;
-    MaterialRepository(IMaterialProvider* matProvider, AssetPipelineT* assetPipeline);
+    MaterialRepository(IMaterialProvider* matProvider, AssetPipeline* assetPipeline);
     MaterialHandle GetOrCreate(const MaterialDesc& desc);
     void Update();
     bool Release(MaterialHandle h);
@@ -39,7 +40,7 @@ private:
     void ProcessLoading();
 
     IMaterialProvider* m_matProvider{ nullptr };
-    AssetPipelineT* m_assetPipeline{ nullptr };
+    AssetPipeline* m_assetPipeline{ nullptr };
 
     std::unordered_map<size_t, MaterialHandle> m_cache;
     HandlePool<MaterialEntry, MaterialTag> m_loadedMaterials;

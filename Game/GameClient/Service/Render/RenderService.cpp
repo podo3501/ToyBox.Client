@@ -5,7 +5,7 @@
 #include "Repository/Mesh/MeshRepository.h"
 
 RenderService::~RenderService() { m_backend->WaitIdle(); } //리소스를 RenderService가 들고 있기 때문에 gpu의 활동을 중지 시키고 리소스 삭제->backend 순으로 된다.
-RenderService::RenderService(unique_ptr<IRenderBackend> backend, AssetPipelineT* assetPipeline) :
+RenderService::RenderService(unique_ptr<IRenderBackend> backend, AssetPipeline* assetPipeline) :
 	m_backend{ move(backend) }
 {
 	auto resProvider = m_backend->GetResourceProvider();
@@ -24,7 +24,7 @@ RenderService::RenderService(unique_ptr<IRenderBackend> backend, AssetPipelineT*
 
 unique_ptr<RenderService> RenderService::Create(	
 	unique_ptr<IRenderBackend> backend, 	
-	AssetPipelineT* assetPipeline) noexcept
+	AssetPipeline* assetPipeline) noexcept
 {
 	unique_ptr<RenderService> service(new RenderService(move(backend), assetPipeline));
 	return service;

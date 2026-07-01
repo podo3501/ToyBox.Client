@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "WavStaticLoader.h"
-#include "GameClient/Service/Asset/Assets/StaticSoundAsset.h"
 #include "AudioProcessing.h"
 
 #pragma warning(push)
@@ -9,7 +8,7 @@
 #include "dr_wav.h"
 #pragma warning(pop)
 
-std::shared_ptr<Asset> WavStaticLoader::LoadFromMemory(const Core::ByteBuffer& buffer)
+std::shared_ptr<StaticSoundAsset> WavStaticLoader::LoadFromMemory(const Core::ByteBuffer& buffer)
 {
     drwav wav;
 

@@ -1,14 +1,14 @@
 #pragma once
 #include "AssetInput.h"
 
-struct Asset;
+struct AssetData;
 struct IAssetLoader
 {
 public:
 	virtual ~IAssetLoader() = default;
 
 	virtual bool PreferStream() const { return false; }
-	virtual std::shared_ptr<Asset> Load(const AssetInput& source) = 0;
+	virtual std::shared_ptr<AssetData> Load(const AssetInput& source) = 0;
 };
 
 template <typename T>

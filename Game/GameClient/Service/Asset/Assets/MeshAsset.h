@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include "GameCore/Service/Asset/Asset.h"
+#include "GameCore/Service/Asset/AssetData.h"
 
 enum class VertexFormat
 {
@@ -30,7 +30,7 @@ struct GridVertex
     float r, g, b;
 };
 
-struct MeshAsset : public Asset
+struct MeshAsset : public AssetData
 {
     CORE_DECLARE_TYPE(MeshAsset)
 

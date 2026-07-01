@@ -50,7 +50,7 @@
     <ClInclude Include="Service\Asset\AssetInput.h" />
     <ClInclude Include="Service\Asset\AssetKeys.h" />
     <ClInclude Include="Service\Asset\AssetService.h" />
-    <ClInclude Include="Service\Asset\Asset.h" />
+    <ClInclude Include="Service\Asset\AssetData.h" />
     <ClInclude Include="Service\Asset\IAssetLoader.h" />
     <ClInclude Include="Session\GameSession.h" />
     <ClInclude Include="System\EventDispatcherManager.h" />

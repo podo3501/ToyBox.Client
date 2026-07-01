@@ -1,7 +1,6 @@
 #pragma once
 #include "SoundHandle.h"
 #include "VoiceHandle.h"
-#include "../AssetAsync/AssetAsyncTypes.h"
 
 struct IAudioBackend;
 struct SoundAssetView;
@@ -11,6 +10,7 @@ struct GroupInfo;
 struct PlaybackParams;
 struct SoundDesc;
 struct PendingSoundPlay;
+class AssetPipeline;
 class SoundRepository;
 class VoicePool;
 enum class PlaybackState;
@@ -22,7 +22,7 @@ public:
 	~AudioService();
 	AudioService() = delete;
 	static unique_ptr<AudioService> Create(const SoundAssetView& sndAssetView, unique_ptr<IAudioBackend> backend,
-		AssetPipelineT* assetPipeline, int maxVoices, int maxStreams) noexcept;
+		AssetPipeline* assetPipeline, int maxVoices, int maxStreams) noexcept;
 	SoundHandle AcquireStaticSound(string_view soundID);
 	SoundHandle AcquireStreamSound(string_view soundID);
 	VoiceHandle Play(SoundHandle sh) noexcept;
@@ -41,7 +41,7 @@ private:
 	AudioService(
 		const SoundAssetView& sndAssetView, 
 		unique_ptr<IAudioBackend> audioBackend, 
-		AssetPipelineT* assetPipeline) noexcept;
+		AssetPipeline* assetPipeline) noexcept;
 	bool Initialize(int maxVoices, int maxStreams) noexcept;
 	void CreateAudioGroup() noexcept;
 	PlaybackParams GetParams(const SoundDesc* desc) noexcept;

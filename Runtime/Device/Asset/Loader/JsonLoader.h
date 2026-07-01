@@ -6,7 +6,7 @@ template<typename T>
 class JsonLoader : public IAssetLoader
 {
 public:
-	virtual std::shared_ptr<Asset> Load(const AssetInput& source) override
+	virtual std::shared_ptr<AssetData> Load(const AssetInput& source) override
 	{
 		if (source.IsStream()) return nullptr;
 
@@ -15,7 +15,7 @@ public:
 	}
 
 private:
-	std::shared_ptr<Asset> LoadFromMemory(const Core::ByteBuffer& buffer)
+	std::shared_ptr<AssetData> LoadFromMemory(const Core::ByteBuffer& buffer)
 	{
 		auto asset = std::make_shared<T>();
 
