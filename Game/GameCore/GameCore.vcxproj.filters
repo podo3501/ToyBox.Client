@@ -20,12 +20,6 @@
     <ClCompile Include="Session\GameSession.cpp">
       <Filter>Session</Filter>
     </ClCompile>
-    <ClCompile Include="Service\Asset\AssetService.cpp">
-      <Filter>Service\Asset</Filter>
-    </ClCompile>
-    <ClCompile Include="Service\Asset\AssetInput.cpp">
-      <Filter>Service\Asset</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -65,24 +59,6 @@
     <ClInclude Include="Session\GameSession.h">
       <Filter>Session</Filter>
     </ClInclude>
-    <ClInclude Include="Service\Asset\AssetService.h">
-      <Filter>Service\Asset</Filter>
-    </ClInclude>
-    <ClInclude Include="Service\Asset\AssetData.h">
-      <Filter>Service\Asset</Filter>
-    </ClInclude>
-    <ClInclude Include="Service\Asset\IAssetLoader.h">
-      <Filter>Service\Asset</Filter>
-    </ClInclude>
-    <ClInclude Include="Service\Asset\AssetHelper.hpp">
-      <Filter>Service\Asset</Filter>
-    </ClInclude>
-    <ClInclude Include="Service\Asset\AssetKeys.h">
-      <Filter>Service\Asset</Filter>
-    </ClInclude>
-    <ClInclude Include="Service\Asset\AssetInput.h">
-      <Filter>Service\Asset</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="System">
@@ -102,12 +78,6 @@
     </Filter>
     <Filter Include="Session">
       <UniqueIdentifier>{5d525835-b1a1-4694-875d-f50e1c8532ad}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Service">
-      <UniqueIdentifier>{8b7f7ef3-f3a7-4dc6-9b44-9e2ddc99e89d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Service\Asset">
-      <UniqueIdentifier>{918991bf-c7f2-4b06-8bec-d27daf356769}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

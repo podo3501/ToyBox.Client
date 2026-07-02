@@ -1,7 +1,6 @@
 #pragma once
 #include "Handle/MaterialHandle.h"
 #include "Handle/MeshHandle.h"
-#include "../AssetAsync/AssetAsyncTypes.h"
 
 struct MeshDesc;
 struct MeshAsset;

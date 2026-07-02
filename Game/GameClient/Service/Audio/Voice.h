@@ -1,7 +1,7 @@
 #pragma once
 #include "VoiceHandle.h"
 #include "Soundhandle.h"
-#include "Service/Asset/Assets/SoundTableAsset.h"
+#include "Asset/SoundTableAsset.h"
 
 struct ISoundInstance;
 enum class SoundType;

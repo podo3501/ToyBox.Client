@@ -1,6 +1,6 @@
 #pragma once
-#include "GameCore/Service/Asset/IAssetLoader.h"
-#include "GameClient/Service/Asset/Assets/MeshAsset.h"
+#include "GameClient/Asset/IAssetLoader.h"
+#include "GameClient/Asset/MeshAsset.h"
 
 class MeshJsonLoader : public IAssetLoader
 {

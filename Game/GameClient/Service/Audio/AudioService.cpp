@@ -18,11 +18,11 @@ struct PendingSoundPlay
 };
 
 unique_ptr<AudioService> AudioService::Create(const SoundAssetView& sndAssetView, unique_ptr<IAudioBackend> backend,
-	AssetPipeline* assetPipeline, int maxVoices, int maxStreams) noexcept
+	IAssetAsyncLoader* asyncLoader, int maxVoices, int maxStreams) noexcept
 {
 	if (backend == nullptr) return nullptr;
 	
-	unique_ptr<AudioService> service(new AudioService(sndAssetView, move(backend), assetPipeline)); //new를 쓰는 이유는 make_unique를 못 쓰기 때문이다. make_unique는 외부함수이기 때문에 private 생성자에 접근할 수 없다.
+	unique_ptr<AudioService> service(new AudioService(sndAssetView, move(backend), asyncLoader)); //new를 쓰는 이유는 make_unique를 못 쓰기 때문이다. make_unique는 외부함수이기 때문에 private 생성자에 접근할 수 없다.
 	if (!service->Initialize(maxVoices, maxStreams)) return nullptr;
 
 	return service; 
@@ -32,10 +32,10 @@ AudioService::~AudioService() = default;
 AudioService::AudioService(
 	const SoundAssetView& sndAssetView, 
 	unique_ptr<IAudioBackend> audioBackend,
-	AssetPipeline* assetPipeline) noexcept :
+	IAssetAsyncLoader* asyncLoader) noexcept :
 	m_sndAssetView{ make_unique<SoundAssetView>(sndAssetView) },
 	m_audioBackend{ move(audioBackend) },
-	m_repository{ make_unique<SoundRepository>(m_audioBackend.get(), assetPipeline) },
+	m_repository{ make_unique<SoundRepository>(m_audioBackend.get(), asyncLoader) },
 	m_voicePool{ make_unique<VoicePool>(m_audioBackend.get()) }
 {}
 

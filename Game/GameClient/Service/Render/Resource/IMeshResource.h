@@ -1,5 +1,5 @@
 #pragma once
-#include "GameClient/Service/Asset/Assets/MeshAsset.h"
+#include "GameClient/Asset/MeshAsset.h"
 
 struct IMeshResource
 {

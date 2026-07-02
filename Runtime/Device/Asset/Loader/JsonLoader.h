@@ -1,5 +1,5 @@
 #pragma once
-#include "GameCore/Service/Asset/IAssetLoader.h"
+#include "GameClient/Asset/IAssetLoader.h"
 #include "Platform/Serializer/Serializer.h"
 
 template<typename T>

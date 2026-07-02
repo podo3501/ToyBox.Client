@@ -4,7 +4,6 @@
 #include "../ResourceTypes.h"
 #include "Service/Render/Handle/MaterialHandle.h"
 #include "Service/Render/Desc/TextureDesc.h"
-#include "Service/AssetAsync/AssetAsyncTypes.h"
 
 struct MaterialDesc;
 struct IMaterialProvider;
@@ -13,7 +12,7 @@ struct AssetData;
 struct CpuPendingMaterialRequest;
 struct PendingMaterialTextures;
 struct GpuPendingMaterialRequest;
-class AssetPipeline;
+struct IAssetAsyncLoader;
 
 struct MaterialEntry
 {
@@ -27,7 +26,7 @@ class MaterialRepository
 public:
     ~MaterialRepository();
     MaterialRepository() = delete;
-    MaterialRepository(IMaterialProvider* matProvider, AssetPipeline* assetPipeline);
+    MaterialRepository(IMaterialProvider* matProvider, IAssetAsyncLoader* asyncLoader);
     MaterialHandle GetOrCreate(const MaterialDesc& desc);
     void Update();
     bool Release(MaterialHandle h);
@@ -40,7 +39,7 @@ private:
     void ProcessLoading();
 
     IMaterialProvider* m_matProvider{ nullptr };
-    AssetPipeline* m_assetPipeline{ nullptr };
+    IAssetAsyncLoader* m_asyncLoader{ nullptr };
 
     std::unordered_map<size_t, MaterialHandle> m_cache;
     HandlePool<MaterialEntry, MaterialTag> m_loadedMaterials;

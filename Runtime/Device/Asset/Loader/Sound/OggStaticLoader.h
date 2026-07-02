@@ -1,6 +1,6 @@
 #pragma once
-#include "GameCore/Service/Asset/IAssetLoader.h"
-#include "GameClient/Service/Asset/Assets/StaticSoundAsset.h"
+#include "GameClient/Asset/IAssetLoader.h"
+#include "GameClient/Asset/StaticSoundAsset.h"
 
 class OggStaticLoader : public IAssetLoader
 {

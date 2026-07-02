@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "StreamSoundBuffer.h"
 #include "Platform/Resource/IResourceStream.h"
-#include "GameClient/Service/Asset/Assets/StreamSoundAsset.h"
+#include "GameClient/Asset/StreamSoundAsset.h"
 #include "Core/Utils/Cast.hpp"
 
 StreamSoundBuffer::StreamSoundBuffer() = default;

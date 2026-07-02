@@ -57,4 +57,16 @@ namespace Core
 
         return std::static_pointer_cast<TargetType>(source);
     }
+
+    template<CastTarget TargetType, TypeCastable SourceType>
+    inline std::vector<std::shared_ptr<TargetType>> CastAll(const std::vector<std::shared_ptr<SourceType>>& sources)
+    {
+        std::vector<std::shared_ptr<TargetType>> results;
+        results.reserve(sources.size());
+
+        for (const auto& source : sources)
+            results.push_back(Core::Cast<TargetType>(source));
+
+        return results;
+    }
 }

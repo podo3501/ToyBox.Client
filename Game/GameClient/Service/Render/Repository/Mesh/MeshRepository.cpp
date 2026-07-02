@@ -2,7 +2,8 @@
 #include "MeshRepository.h"
 #include "IMeshProvider.h"
 #include "Service/Render/Desc/MeshDesc.h"
-#include "Service/AssetAsync/AssetPipeline.h"
+#include "Service/IAssetAsyncLoader.h"
+#include "Service/AssetAsyncHelper.h"
 
 struct CpuPendingMeshRequest
 {
@@ -17,9 +18,9 @@ struct GpuPendingMeshRequest
 };
 
 MeshRepository::~MeshRepository() { ReleaseAll(); }
-MeshRepository::MeshRepository(IMeshProvider* meshProvider, AssetPipeline* assetPipeline) :
+MeshRepository::MeshRepository(IMeshProvider* meshProvider, IAssetAsyncLoader* asyncLoader) :
 	m_meshProvider{ meshProvider },
-	m_assetPipeline{ assetPipeline }
+	m_asyncLoader{ asyncLoader }
 {}
 
 MeshHandle MeshRepository::GetOrCreate(const MeshDesc& desc, std::shared_ptr<MeshAsset> asset)
@@ -44,8 +45,8 @@ MeshHandle MeshRepository::GetOrCreate(const MeshDesc& desc, std::shared_ptr<Mes
 	{
 	case Core::ResourceIDType::Path:
 	{
-		auto requestID = m_assetPipeline->PushRequest(MakeAssetRequest<MeshAsset>(resID));
-		m_cpuPending.push_back({ handle, requestID });
+		auto reqID = Asset::PushRequest<MeshAsset>(m_asyncLoader, resID);
+		m_cpuPending.push_back({ handle, reqID });
 	}
 	break;
 	case Core::ResourceIDType::Runtime:
@@ -69,8 +70,8 @@ void MeshRepository::ProcessCpuPending()
 	for (auto it = m_cpuPending.begin(); it != m_cpuPending.end(); )
 	{
 		auto& req = *it;
-		auto asset = m_assetPipeline->TakeResult(req.requestId);
-		if (!asset.has_value())
+		auto asset = m_asyncLoader->TakeResult(req.requestId);
+		if (!asset)
 		{
 			++it;
 			continue;
@@ -78,7 +79,7 @@ void MeshRepository::ProcessCpuPending()
 
 		GpuPendingMeshRequest gpuReq;
 		gpuReq.handle = req.handle;
-		gpuReq.meshAsset = std::static_pointer_cast<MeshAsset>(*asset);
+		gpuReq.meshAsset = std::static_pointer_cast<MeshAsset>(asset);
 		m_gpuPending.push_back(std::move(gpuReq));
 
 		it = m_cpuPending.erase(it);

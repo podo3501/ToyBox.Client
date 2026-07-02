@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Asset\AssetInput.cpp" />
     <ClCompile Include="GameLoop.cpp" />
     <ClCompile Include="Graphics\Geometry\MaterialDescFactory.cpp" />
     <ClCompile Include="Graphics\Geometry\MeshDescFactory.cpp" />
@@ -40,8 +41,10 @@
     <ClCompile Include="Scenes\Test\ComponentTestScene.cpp" />
     <ClCompile Include="Scenes\Test\TestScene1.cpp" />
     <ClCompile Include="Scenes\Test\TestScene2.cpp" />
-    <ClCompile Include="Service\AssetAsync\AssetPipelineHelper.cpp" />
-    <ClCompile Include="Service\Asset\AssetServiceV.cpp" />
+    <ClCompile Include="Service\AssetAsyncHelper.cpp" />
+    <ClCompile Include="Service\Asset\AssetAsyncLoader.cpp" />
+    <ClCompile Include="Service\Asset\AssetRepository.cpp" />
+    <ClCompile Include="Service\Asset\AssetService.cpp" />
     <ClCompile Include="Service\Audio\AudioService.cpp" />
     <ClCompile Include="Service\Audio\SoundRepository.cpp" />
     <ClCompile Include="Service\Audio\Voice.cpp" />
@@ -115,6 +118,16 @@
     <ClCompile Include="UserInterface\UINameGenerator\UINameGenerator.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Asset\AssetData.h" />
+    <ClInclude Include="Asset\AssetInput.h" />
+    <ClInclude Include="Asset\AudioTypes.h" />
+    <ClInclude Include="Asset\IAssetLoader.h" />
+    <ClInclude Include="Asset\MeshAsset.h" />
+    <ClInclude Include="Asset\ShaderAsset.h" />
+    <ClInclude Include="Asset\SoundTableAsset.h" />
+    <ClInclude Include="Asset\StaticSoundAsset.h" />
+    <ClInclude Include="Asset\StreamSoundAsset.h" />
+    <ClInclude Include="Asset\TextureAsset.h" />
     <ClInclude Include="GameLoop.h" />
     <ClInclude Include="Graphics\Geometry\MaterialDescFactory.h" />
     <ClInclude Include="Graphics\Geometry\MeshDescFactory.h" />
@@ -136,20 +149,14 @@
     <ClInclude Include="Scenes\Test\ComponentTestScene.h" />
     <ClInclude Include="Scenes\Test\TestScene1.h" />
     <ClInclude Include="Scenes\Test\TestScene2.h" />
-    <ClInclude Include="Service\AssetAsync\AssetAsyncTypes.h" />
-    <ClInclude Include="Service\AssetAsync\AssetPipeline.h" />
-    <ClInclude Include="Service\AssetAsync\AssetPipelineHelper.h" />
-    <ClInclude Include="Service\AssetAsync\AssetWorker.h" />
+    <ClInclude Include="Service\AssetAsyncHelper.h" />
+    <ClInclude Include="Service\AssetAsyncTypes.h" />
+    <ClInclude Include="Service\Asset\AssetAsyncLoader.h" />
+    <ClInclude Include="Service\Asset\AssetAsyncStore.h" />
+    <ClInclude Include="Service\Asset\AssetKeys.h" />
+    <ClInclude Include="Service\Asset\AssetLoaderDesc.h" />
+    <ClInclude Include="Service\Asset\AssetRepository.h" />
     <ClInclude Include="Service\Asset\AssetService.h" />
-    <ClInclude Include="Service\Asset\AssetServiceV.h" />
-    <ClInclude Include="Service\Asset\Assets\AudioTypes.h" />
-    <ClInclude Include="Service\Asset\Assets\MeshAsset.h" />
-    <ClInclude Include="Service\Asset\Assets\ShaderAsset.h" />
-    <ClInclude Include="Service\Asset\Assets\StaticSoundAsset.h" />
-    <ClInclude Include="Service\Asset\Assets\SoundTableAsset.h" />
-    <ClInclude Include="Service\Asset\Assets\StreamSoundAsset.h" />
-    <ClInclude Include="Service\Asset\Assets\TextureAsset.h" />
-    <ClInclude Include="Service\Asset\IAssetLoaders.h" />
     <ClInclude Include="Service\Audio\AudioService.h" />
     <ClInclude Include="Service\Audio\LoadedSound.h" />
     <ClInclude Include="Service\Audio\PlaybackTypes.h" />
@@ -166,6 +173,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClInclude>
+    <ClInclude Include="Service\IAssetAsyncLoader.h" />
     <ClInclude Include="Service\Input\IKeyboardInputProvider.h" />
     <ClInclude Include="Service\Input\IMouseInputProvider.h" />
     <ClInclude Include="Service\Input\InputService.h" />

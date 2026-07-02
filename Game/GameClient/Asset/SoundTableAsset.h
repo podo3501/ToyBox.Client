@@ -1,6 +1,6 @@
 #pragma once
 #include "Core/Foundation/ResourceID.h"
-#include "GameCore/Service/Asset/AssetData.h"
+#include "AssetData.h"
 #include "AudioTypes.h"
 #include <filesystem>
 #include <unordered_map>

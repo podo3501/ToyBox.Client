@@ -3,11 +3,11 @@
 #include "IAudioBackend.h"
 #include "ISoundBuffer.h"
 #include "LoadedSound.h"
-#include "Service/Asset/Assets/SoundTableAsset.h"
-#include "Service/Asset/Assets/StaticSoundAsset.h"
-#include "Service/Asset/Assets/StreamSoundAsset.h"
-#include "Service/AssetAsync/AssetPipeline.h"
-#include "Core/Utils/Cast.hpp"
+#include "Asset/SoundTableAsset.h"
+#include "Asset/StaticSoundAsset.h"
+#include "Asset/StreamSoundAsset.h"
+#include "Service/AssetAsyncHelper.h"
+#include "Service/IAssetAsyncLoader.h"
 
 struct PendingSoundRequest
 {
@@ -16,9 +16,9 @@ struct PendingSoundRequest
 };
 
 SoundRepository::~SoundRepository() = default;
-SoundRepository::SoundRepository(IAudioBackend* audioBackend, AssetPipeline* assetPipeline) :
+SoundRepository::SoundRepository(IAudioBackend* audioBackend, IAssetAsyncLoader* asyncLoader) :
     m_audioBackend{ audioBackend },
-    m_assetPipeline{ assetPipeline }
+    m_asyncLoader{ asyncLoader }
 {}
 
 SoundHandle SoundRepository::AcquireStaticSound(const StaticSoundDesc* desc)
@@ -37,7 +37,7 @@ SoundHandle SoundRepository::AcquireStaticSound(const StaticSoundDesc* desc)
     }
 
     auto handle = m_loadedSounds.Emplace(desc, sndBuffer, SoundLoadState::Pending);
-    auto reqID = m_assetPipeline->PushRequest(MakeAssetRequest<StaticSoundAsset>(desc->resID));
+    auto reqID = Asset::PushRequest<StaticSoundAsset>(m_asyncLoader, desc->resID);
     m_pending.push_back({ handle, reqID });
 
     return handle;
@@ -59,7 +59,7 @@ SoundHandle SoundRepository::AcquireStreamSound(const StreamSoundDesc* desc)
     }
 
     auto handle = m_loadedSounds.Emplace(desc, sndBuffer, SoundLoadState::Pending);
-    auto reqID = m_assetPipeline->PushRequest(MakeAssetRequest<StreamSoundAsset>(desc->resID));
+    auto reqID = Asset::PushRequest<StreamSoundAsset>(m_asyncLoader, desc->resID);
     m_pending.push_back({ handle, reqID });
 
     return handle;
@@ -72,8 +72,8 @@ void SoundRepository::Update()
     for (auto it = m_pending.begin(); it != m_pending.end(); )
     {
         auto& req = *it;
-        auto asset = m_assetPipeline->TakeResult(req.requestId);
-        if (!asset.has_value())
+        auto asset = m_asyncLoader->TakeResult(req.requestId);
+        if (!asset)
         {
             ++it;
             continue;
@@ -87,7 +87,7 @@ void SoundRepository::Update()
         }
 
         auto& buffer = sound->buffer;
-        bool result = buffer->LoadFromAsset(*asset);
+        bool result = buffer->LoadFromAsset(asset);
         sound->state = result ? SoundLoadState::Ready : SoundLoadState::Failed;
 
         it = m_pending.erase(it);

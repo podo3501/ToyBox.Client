@@ -243,11 +243,20 @@
     <ClCompile Include="Service\Render\RenderRepository.cpp">
       <Filter>Service\Render</Filter>
     </ClCompile>
-    <ClCompile Include="Service\AssetAsync\AssetPipelineHelper.cpp">
-      <Filter>Service\AssetAsync</Filter>
-    </ClCompile>
-    <ClCompile Include="Service\Asset\AssetServiceV.cpp">
+    <ClCompile Include="Service\Asset\AssetService.cpp">
       <Filter>Service\Asset</Filter>
+    </ClCompile>
+    <ClCompile Include="Service\Asset\AssetRepository.cpp">
+      <Filter>Service\Asset</Filter>
+    </ClCompile>
+    <ClCompile Include="Service\Asset\AssetAsyncLoader.cpp">
+      <Filter>Service\Asset</Filter>
+    </ClCompile>
+    <ClCompile Include="Service\AssetAsyncHelper.cpp">
+      <Filter>Service</Filter>
+    </ClCompile>
+    <ClCompile Include="Asset\AssetInput.cpp">
+      <Filter>Asset</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -523,30 +532,6 @@
     <ClInclude Include="Service\Render\RenderConfig.h">
       <Filter>Service\Render</Filter>
     </ClInclude>
-    <ClInclude Include="Service\Asset\IAssetLoaders.h">
-      <Filter>Service\Asset</Filter>
-    </ClInclude>
-    <ClInclude Include="Service\Asset\AssetService.h">
-      <Filter>Service\Asset</Filter>
-    </ClInclude>
-    <ClInclude Include="Service\Asset\Assets\TextureAsset.h">
-      <Filter>Service\Asset\Assets</Filter>
-    </ClInclude>
-    <ClInclude Include="Service\Asset\Assets\SoundTableAsset.h">
-      <Filter>Service\Asset\Assets</Filter>
-    </ClInclude>
-    <ClInclude Include="Service\Asset\Assets\AudioTypes.h">
-      <Filter>Service\Asset\Assets</Filter>
-    </ClInclude>
-    <ClInclude Include="Service\Asset\Assets\StaticSoundAsset.h">
-      <Filter>Service\Asset\Assets</Filter>
-    </ClInclude>
-    <ClInclude Include="Service\Asset\Assets\StreamSoundAsset.h">
-      <Filter>Service\Asset\Assets</Filter>
-    </ClInclude>
-    <ClInclude Include="Service\Asset\Assets\MeshAsset.h">
-      <Filter>Service\Asset\Assets</Filter>
-    </ClInclude>
     <ClInclude Include="Service\Render\Repository\ResourceTypes.h">
       <Filter>Service\Render\Repository</Filter>
     </ClInclude>
@@ -564,9 +549,6 @@
     </ClInclude>
     <ClInclude Include="Graphics\Geometry\MaterialDescFactory.h">
       <Filter>Graphics\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="Service\Asset\Assets\ShaderAsset.h">
-      <Filter>Service\Asset\Assets</Filter>
     </ClInclude>
     <ClInclude Include="Service\Render\SceneRenderer.h">
       <Filter>Service\Render</Filter>
@@ -622,15 +604,6 @@
     <ClInclude Include="Graphics\Geometry\TextureDescFactory.h">
       <Filter>Graphics\Geometry</Filter>
     </ClInclude>
-    <ClInclude Include="Service\AssetAsync\AssetPipeline.h">
-      <Filter>Service\AssetAsync</Filter>
-    </ClInclude>
-    <ClInclude Include="Service\AssetAsync\AssetWorker.h">
-      <Filter>Service\AssetAsync</Filter>
-    </ClInclude>
-    <ClInclude Include="Service\AssetAsync\AssetAsyncTypes.h">
-      <Filter>Service\AssetAsync</Filter>
-    </ClInclude>
     <ClInclude Include="Service\Render\Desc\MeshDesc.h">
       <Filter>Service\Render\Desc</Filter>
     </ClInclude>
@@ -682,11 +655,62 @@
     <ClInclude Include="Service\Render\RenderMetrics.h">
       <Filter>Service\Render</Filter>
     </ClInclude>
-    <ClInclude Include="Service\AssetAsync\AssetPipelineHelper.h">
-      <Filter>Service\AssetAsync</Filter>
-    </ClInclude>
-    <ClInclude Include="Service\Asset\AssetServiceV.h">
+    <ClInclude Include="Service\Asset\AssetService.h">
       <Filter>Service\Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Asset\AssetRepository.h">
+      <Filter>Service\Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Asset\AssetLoaderDesc.h">
+      <Filter>Service\Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Asset\AssetAsyncLoader.h">
+      <Filter>Service\Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Asset\AssetAsyncStore.h">
+      <Filter>Service\Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\IAssetAsyncLoader.h">
+      <Filter>Service</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Asset\AssetKeys.h">
+      <Filter>Service\Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\AssetAsyncTypes.h">
+      <Filter>Service</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\AssetAsyncHelper.h">
+      <Filter>Service</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\AssetData.h">
+      <Filter>Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\AssetInput.h">
+      <Filter>Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\AudioTypes.h">
+      <Filter>Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\IAssetLoader.h">
+      <Filter>Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\MeshAsset.h">
+      <Filter>Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\ShaderAsset.h">
+      <Filter>Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\SoundTableAsset.h">
+      <Filter>Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\StaticSoundAsset.h">
+      <Filter>Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\StreamSoundAsset.h">
+      <Filter>Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\TextureAsset.h">
+      <Filter>Asset</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -759,9 +783,6 @@
     <Filter Include="Service\Asset">
       <UniqueIdentifier>{c54a3847-74ea-4edb-8bbc-64483cc22ace}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Service\Asset\Assets">
-      <UniqueIdentifier>{f79ae1e7-337f-44e7-99df-8326f2020e96}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Service\Render\Repository">
       <UniqueIdentifier>{30138ba1-74c3-45a6-8dc3-a9d6068fb07c}</UniqueIdentifier>
     </Filter>
@@ -792,8 +813,8 @@
     <Filter Include="Service\Render\Repository\Mesh">
       <UniqueIdentifier>{31a6befa-ed82-42da-b785-70ff8f4bccf6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Service\AssetAsync">
-      <UniqueIdentifier>{c98e6e45-0e8e-4a3f-a21d-0c731a519f05}</UniqueIdentifier>
+    <Filter Include="Asset">
+      <UniqueIdentifier>{9b9b0837-7b96-4ac7-bd03-ef8ccaa71157}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

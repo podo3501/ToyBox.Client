@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "StaticSoundBuffer.h"
 #include "SDL3_mixer/SDL_mixer.h"
-#include "GameClient/Service/Asset/Assets/StaticSoundAsset.h"
+#include "GameClient/Asset/StaticSoundAsset.h"
 #include "Core/Utils/Cast.hpp"
 
 StaticSoundBuffer::~StaticSoundBuffer()

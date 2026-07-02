@@ -1,8 +1,8 @@
 #pragma once
 #include "Core/Utils/Handle/HandlePool.h"
+#include "Core/Foundation/ResourceID.h"
 #include "Service/Render/Handle/MeshHandle.h"
 #include "../ResourceTypes.h"
-#include "Service/AssetAsync/AssetAsyncTypes.h"
 
 struct IMeshProvider;
 struct IMeshResource;
@@ -10,7 +10,7 @@ struct MeshAsset;
 struct MeshDesc;
 struct CpuPendingMeshRequest;
 struct GpuPendingMeshRequest;
-class AssetPipeline;
+struct IAssetAsyncLoader;
 
 struct MeshEntry
 {
@@ -22,7 +22,7 @@ class MeshRepository
 {
 public:
     ~MeshRepository();
-    MeshRepository(IMeshProvider* meshProvider, AssetPipeline* assetPipeline);
+    MeshRepository(IMeshProvider* meshProvider, IAssetAsyncLoader* asyncLoader);
     
     MeshHandle GetOrCreate(const MeshDesc& desc, std::shared_ptr<MeshAsset> asset = nullptr);
     bool Release(MeshHandle mh);
@@ -36,7 +36,7 @@ private:
     void ProcessLoading();
 
     IMeshProvider* m_meshProvider{ nullptr };
-    AssetPipeline* m_assetPipeline{ nullptr };
+    IAssetAsyncLoader* m_asyncLoader{ nullptr };
 
     std::unordered_map<Core::ResourceID, MeshHandle> m_cache;
     HandlePool<MeshEntry, MeshTag> m_loadedMeshes;

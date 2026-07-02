@@ -4,12 +4,11 @@
 #include "RenderMetrics.h"
 #include "RenderRepository.h"
 #include "SceneRenderer.h"
-#include "../AssetAsync/AssetAsyncTypes.h"
 
 struct IRenderBackend;
 struct FrameData;
 struct AssetData;
-class AssetPipeline;
+struct IAssetAsyncLoader;
 class MeshRepository;
 class MaterialRepository;
 
@@ -20,7 +19,7 @@ public:
 	RenderService() = delete;
 	static unique_ptr<RenderService> Create(
 		unique_ptr<IRenderBackend> backend,
-		AssetPipeline* assetPipeline) noexcept;
+		IAssetAsyncLoader* asyncLoader) noexcept;
 
 	bool Initialize(
 		HWND hwnd,
@@ -39,7 +38,7 @@ public:
 	RenderMetrics GetRenderMetrics();
 
 private:
-	RenderService(unique_ptr<IRenderBackend> backend, AssetPipeline* assetPipeline);
+	RenderService(unique_ptr<IRenderBackend> backend, IAssetAsyncLoader* asyncLoader);
 
 	unique_ptr<IRenderBackend> m_backend;
 

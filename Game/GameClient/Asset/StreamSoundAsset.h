@@ -1,5 +1,5 @@
 #pragma once
-#include "GameCore/Service/Asset/AssetData.h"
+#include "AssetData.h"
 
 struct StreamSoundAsset : public AssetData
 {

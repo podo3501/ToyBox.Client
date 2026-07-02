@@ -2,7 +2,7 @@
 #include "Resource/Mesh/MeshResource.h"
 #include "Resource/Resource.h"
 #include "Graph/RGTypes.h"
-#include "GameClient/Service/Asset/Assets/MeshAsset.h"
+#include "GameClient/Asset/MeshAsset.h"
 
 class MeshRegistry
 {

@@ -10,7 +10,7 @@ struct GroupInfo;
 struct PlaybackParams;
 struct SoundDesc;
 struct PendingSoundPlay;
-class AssetPipeline;
+struct IAssetAsyncLoader;
 class SoundRepository;
 class VoicePool;
 enum class PlaybackState;
@@ -22,7 +22,7 @@ public:
 	~AudioService();
 	AudioService() = delete;
 	static unique_ptr<AudioService> Create(const SoundAssetView& sndAssetView, unique_ptr<IAudioBackend> backend,
-		AssetPipeline* assetPipeline, int maxVoices, int maxStreams) noexcept;
+		IAssetAsyncLoader* asyncLoader, int maxVoices, int maxStreams) noexcept;
 	SoundHandle AcquireStaticSound(string_view soundID);
 	SoundHandle AcquireStreamSound(string_view soundID);
 	VoiceHandle Play(SoundHandle sh) noexcept;
@@ -41,7 +41,7 @@ private:
 	AudioService(
 		const SoundAssetView& sndAssetView, 
 		unique_ptr<IAudioBackend> audioBackend, 
-		AssetPipeline* assetPipeline) noexcept;
+		IAssetAsyncLoader* asyncLoader) noexcept;
 	bool Initialize(int maxVoices, int maxStreams) noexcept;
 	void CreateAudioGroup() noexcept;
 	PlaybackParams GetParams(const SoundDesc* desc) noexcept;

@@ -4,7 +4,7 @@
 #include "Helpers/TextureHelpers.h"
 #include "Command/CommandList.h"
 #include "Core/D3D12Conversions.h"
-#include "GameClient/Service/Asset/Assets/TextureAsset.h"
+#include "GameClient/Asset/TextureAsset.h"
 
 static bool IsUAVCompatibleFormat(DXGI_FORMAT format)
 {

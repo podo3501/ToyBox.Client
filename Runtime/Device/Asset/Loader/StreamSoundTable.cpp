@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "JsonLoader.h"
-#include "GameClient/Service/Asset/Assets/SoundTableAsset.h"
+#include "GameClient/Asset/SoundTableAsset.h"
 #include "Platform/Serializer/Serializer.h"
 
 StreamSoundDesc::StreamSoundDesc() :

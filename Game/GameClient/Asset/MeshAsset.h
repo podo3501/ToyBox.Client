@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include "GameCore/Service/Asset/AssetData.h"
+#include "AssetData.h"
 
 enum class VertexFormat
 {

@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "ShaderLibrary.h"
 #include "Core/Utils/StringUtils.h"
-#include "GameClient/Service/Asset/Assets/ShaderAsset.h"
+#include "GameClient/Asset/ShaderAsset.h"
 #pragma comment(lib, "dxcompiler.lib")
 
 ShaderLibrary::~ShaderLibrary() = default;

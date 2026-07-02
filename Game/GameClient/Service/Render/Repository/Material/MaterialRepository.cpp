@@ -2,7 +2,8 @@
 #include "MaterialRepository.h"
 #include "IMaterialProvider.h"
 #include "Service/Render/Resource/IMaterialResource.h"
-#include "Service/AssetAsync/AssetPipeline.h"
+#include "Service/IAssetAsyncLoader.h"
+#include "Service/AssetAsyncHelper.h"
 
 struct CpuPendingMaterialRequest
 {
@@ -28,9 +29,9 @@ struct GpuPendingMaterialRequest
 };
 
 MaterialRepository::~MaterialRepository() = default;
-MaterialRepository::MaterialRepository(IMaterialProvider* matProvider, AssetPipeline* assetPipeline) :
+MaterialRepository::MaterialRepository(IMaterialProvider* matProvider, IAssetAsyncLoader* asyncLoader) :
     m_matProvider{ matProvider },
-    m_assetPipeline{ assetPipeline }
+    m_asyncLoader{ asyncLoader }
 {}
 
 MaterialHandle MaterialRepository::GetOrCreate(const MaterialDesc& desc)
@@ -81,8 +82,8 @@ MaterialHandle MaterialRepository::GetOrCreate(const MaterialDesc& desc)
         {
         case Core::ResourceIDType::Path:
         {
-            auto requestID = m_assetPipeline->PushRequest(MakeAssetRequest<TextureAsset>(tex.resID));
-            m_cpuPending.push_back({ handle, slot, requestID });
+            auto reqID = Asset::PushRequest<TextureAsset>(m_asyncLoader, tex.resID);
+            m_cpuPending.push_back({ handle, slot, reqID });
             break;
         }
         case Core::ResourceIDType::Builtin:
@@ -112,8 +113,8 @@ void MaterialRepository::ProcessCpuPending()
     for (auto it = m_cpuPending.begin(); it != m_cpuPending.end();)
     {
         auto& req = *it;
-        auto asset = m_assetPipeline->TakeResult(req.requestId);
-        if (!asset.has_value())
+        auto asset = m_asyncLoader->TakeResult(req.requestId);
+        if (!asset)
         {
             ++it;
             continue;
@@ -123,7 +124,7 @@ void MaterialRepository::ProcessCpuPending()
         if (pendingIt != m_pendingTextures.end())
         {
             auto& pending = pendingIt->second;
-            pending.textures[req.slot] = std::static_pointer_cast<TextureAsset>(*asset);
+            pending.textures[req.slot] = std::static_pointer_cast<TextureAsset>(asset);
             pending.loadedCount++;
 
             if (pending.loadedCount == pending.expectedCount)
