@@ -1,8 +1,8 @@
 #pragma once
-#include "GameClient/Service/Render/Desc/PhongMaterialDesc.h"
-#include "GameClient/Service/Render/Desc/PbrMaterialDesc.h"
-#include "GameClient/Service/Render/Desc/GridMaterialDesc.h"
-#include "GameClient/Service/Render/Desc/UIMaterialDesc.h"
+#include "PhongMaterialDesc.h"
+#include "PbrMaterialDesc.h"
+#include "GridMaterialDesc.h"
+#include "UIMaterialDesc.h"
 #include "TextureDescFactory.h"
 
 struct PhongTextureArgs

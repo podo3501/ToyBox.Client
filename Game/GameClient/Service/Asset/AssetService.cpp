@@ -1,8 +1,9 @@
 #include "pch.h"
 #include "AssetService.h"
 #include "AssetRepository.h"
-#include <thread>
+#include "AssetLoaderRegistry.h"
 #include "AssetAsyncLoader.h"
+#include <thread>
 
 AssetService::~AssetService() { StopWorkers(); }
 AssetService::AssetService(IResourceManager* resManager) noexcept :
@@ -16,7 +17,7 @@ unique_ptr<AssetService> AssetService::Create(IResourceManager* resManager) noex
 	return std::unique_ptr<AssetService>(new AssetService(resManager));
 }
 
-bool AssetService::Initialize(std::span<AssetLoaderDesc> loaders, size_t threadCount)
+bool AssetService::Initialize(size_t threadCount)
 {
     if (threadCount == 0)
     {
@@ -24,10 +25,10 @@ bool AssetService::Initialize(std::span<AssetLoaderDesc> loaders, size_t threadC
             std::max<size_t>(1, std::thread::hardware_concurrency() - 1),
             8);
     }
-
-	for (auto& desc : loaders)
-		ReturnIfFalse(m_repository->RegisterLoader(std::move(desc)));
     ReturnIfFalse(StartWorkers(threadCount));
+
+    AssetLoaderRegistry loaderRegistry(*m_repository);
+    ReturnIfFalse(loaderRegistry.RegisterDefaultLoaders());
 
 	return true;
 }

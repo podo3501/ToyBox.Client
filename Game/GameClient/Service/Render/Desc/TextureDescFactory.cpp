@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "TextureDescFactory.h"
-#include "Core/Foundation/ResourceID.h"
 
 TextureDesc TextureDescFactory::CreateDefault(Core::ResourceID resID)
 {

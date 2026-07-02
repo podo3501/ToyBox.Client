@@ -213,9 +213,6 @@
     <ClCompile Include="Graphics\Geometry\MeshFactory.cpp">
       <Filter>Graphics\Geometry</Filter>
     </ClCompile>
-    <ClCompile Include="Graphics\Geometry\MaterialDescFactory.cpp">
-      <Filter>Graphics\Geometry</Filter>
-    </ClCompile>
     <ClCompile Include="Service\Render\SceneRenderer.cpp">
       <Filter>Service\Render</Filter>
     </ClCompile>
@@ -224,15 +221,6 @@
     </ClCompile>
     <ClCompile Include="Service\Render\Repository\Mesh\MeshRepository.cpp">
       <Filter>Service\Render\Repository\Mesh</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphics\ShaderStageBuilder.cpp">
-      <Filter>Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphics\Geometry\TextureDescFactory.cpp">
-      <Filter>Graphics\Geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphics\Geometry\MeshDescFactory.cpp">
-      <Filter>Graphics\Geometry</Filter>
     </ClCompile>
     <ClCompile Include="Graphics\World\CameraController.cpp">
       <Filter>Graphics\World</Filter>
@@ -257,6 +245,30 @@
     </ClCompile>
     <ClCompile Include="Asset\AssetInput.cpp">
       <Filter>Asset</Filter>
+    </ClCompile>
+    <ClCompile Include="Service\Asset\AssetLoaderRegistry.cpp">
+      <Filter>Service\Asset</Filter>
+    </ClCompile>
+    <ClCompile Include="Service\Render\Desc\MaterialDescFactory.cpp">
+      <Filter>Service\Render\Desc</Filter>
+    </ClCompile>
+    <ClCompile Include="Service\Render\Desc\MeshDescFactory.cpp">
+      <Filter>Service\Render\Desc</Filter>
+    </ClCompile>
+    <ClCompile Include="Service\Render\Desc\TextureDescFactory.cpp">
+      <Filter>Service\Render\Desc</Filter>
+    </ClCompile>
+    <ClCompile Include="Service\Render\Desc\ShaderStageBuilder.cpp">
+      <Filter>Service\Render\Desc</Filter>
+    </ClCompile>
+    <ClCompile Include="Service\Render\Builtin\BuiltinShaders.cpp">
+      <Filter>Service\Render\Builtin</Filter>
+    </ClCompile>
+    <ClCompile Include="Service\Render\Builtin\BuiltinMeshes.cpp">
+      <Filter>Service\Render\Builtin</Filter>
+    </ClCompile>
+    <ClCompile Include="Service\Render\Builtin\BuiltinMaterials.cpp">
+      <Filter>Service\Render\Builtin</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -547,9 +559,6 @@
     <ClInclude Include="Graphics\Geometry\MeshFactory.h">
       <Filter>Graphics\Geometry</Filter>
     </ClInclude>
-    <ClInclude Include="Graphics\Geometry\MaterialDescFactory.h">
-      <Filter>Graphics\Geometry</Filter>
-    </ClInclude>
     <ClInclude Include="Service\Render\SceneRenderer.h">
       <Filter>Service\Render</Filter>
     </ClInclude>
@@ -598,17 +607,8 @@
     <ClInclude Include="Service\Render\Repository\Mesh\MeshRepository.h">
       <Filter>Service\Render\Repository\Mesh</Filter>
     </ClInclude>
-    <ClInclude Include="Graphics\ShaderStageBuilder.h">
-      <Filter>Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\Geometry\TextureDescFactory.h">
-      <Filter>Graphics\Geometry</Filter>
-    </ClInclude>
     <ClInclude Include="Service\Render\Desc\MeshDesc.h">
       <Filter>Service\Render\Desc</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\Geometry\MeshDescFactory.h">
-      <Filter>Graphics\Geometry</Filter>
     </ClInclude>
     <ClInclude Include="Graphics\World\CameraInputState.h">
       <Filter>Graphics\World</Filter>
@@ -711,6 +711,30 @@
     </ClInclude>
     <ClInclude Include="Asset\TextureAsset.h">
       <Filter>Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Asset\AssetLoaderRegistry.h">
+      <Filter>Service\Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Desc\MaterialDescFactory.h">
+      <Filter>Service\Render\Desc</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Desc\MeshDescFactory.h">
+      <Filter>Service\Render\Desc</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Desc\TextureDescFactory.h">
+      <Filter>Service\Render\Desc</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Desc\ShaderStageBuilder.h">
+      <Filter>Service\Render\Desc</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Builtin\BuiltinShaders.h">
+      <Filter>Service\Render\Builtin</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Builtin\BuiltinMeshes.h">
+      <Filter>Service\Render\Builtin</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Builtin\BuiltinMaterials.h">
+      <Filter>Service\Render\Builtin</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -815,6 +839,9 @@
     </Filter>
     <Filter Include="Asset">
       <UniqueIdentifier>{9b9b0837-7b96-4ac7-bd03-ef8ccaa71157}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Service\Render\Builtin">
+      <UniqueIdentifier>{9124a634-45d9-4f80-a85f-2d0bfdfae79d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

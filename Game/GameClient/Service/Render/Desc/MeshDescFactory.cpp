@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "MeshDescFactory.h"
-#include "Core/Foundation/ResourceID.h"
 
 MeshDesc MeshDescFactory::CreateDefault(Core::ResourceID resID)
 {

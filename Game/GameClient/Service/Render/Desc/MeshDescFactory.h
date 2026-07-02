@@ -1,5 +1,5 @@
 #pragma once
-#include "GameClient/Service/Render/Desc/MeshDesc.h"
+#include "MeshDesc.h"
 
 class MeshDescFactory
 {

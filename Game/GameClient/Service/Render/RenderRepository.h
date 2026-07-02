@@ -1,6 +1,8 @@
 #pragma once
 #include "Handle/MaterialHandle.h"
 #include "Handle/MeshHandle.h"
+#include "Desc/MeshDescFactory.h"
+#include "Desc/MaterialDescFactory.h"
 
 struct MeshDesc;
 struct MeshAsset;

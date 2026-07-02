@@ -1,13 +1,12 @@
 #pragma once
 #include "Core/Foundation/Geometry2D.h"
-#include "RenderServiceConfig.h"
 #include "RenderMetrics.h"
 #include "RenderRepository.h"
 #include "SceneRenderer.h"
+#include "Desc/ShaderStageBuilder.h"
 
 struct IRenderBackend;
 struct FrameData;
-struct AssetData;
 struct IAssetAsyncLoader;
 class MeshRepository;
 class MaterialRepository;
@@ -21,12 +20,7 @@ public:
 		unique_ptr<IRenderBackend> backend,
 		IAssetAsyncLoader* asyncLoader) noexcept;
 
-	bool Initialize(
-		HWND hwnd,
-		const Size& screenSize,
-		std::span<const BuiltinShaderDesc> builtinShaders,
-		const DefaultMaterialDescs& defaultMatDescs);
-
+	bool Initialize(HWND hwnd, const Size& screenSize);
 	ShaderKey RegisterShader(const ShaderDesc& desc);
 	void SetFrameData(const FrameData& frameData);
 	void Update();
@@ -41,6 +35,7 @@ private:
 	RenderService(unique_ptr<IRenderBackend> backend, IAssetAsyncLoader* asyncLoader);
 
 	unique_ptr<IRenderBackend> m_backend;
+	IAssetAsyncLoader* m_asyncLoader{ nullptr };
 
 	unique_ptr<MeshRepository> m_meshRepository;
 	unique_ptr<MaterialRepository> m_matRepository;

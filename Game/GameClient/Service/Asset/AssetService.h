@@ -14,7 +14,7 @@ public:
 	AssetService() = delete;
 	static unique_ptr<AssetService> Create(IResourceManager* resManager) noexcept;
 	
-	bool Initialize(std::span<AssetLoaderDesc> loaders, size_t threadCount = 0);
+	bool Initialize(size_t threadCount = 0);
 	bool IsIdle() const;
 
 	IAssetAsyncLoader* GetAsyncLoader() noexcept;

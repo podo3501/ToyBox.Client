@@ -1,11 +1,10 @@
 #include "pch.h"
 #include "SceneRenderer.h"
 #include "IRenderFrame.h"
-#include "RenderServiceConfig.h"
-#include "Resource/IMeshResource.h"
 #include "Repository/Material/MaterialRepository.h"
 #include "Repository/Mesh/MeshRepository.h"
-#include "Desc/MeshDesc.h"
+#include "Builtin/BuiltinMeshes.h"
+#include "Builtin/BuiltinMaterials.h"
 
 struct ResolvedDrawData
 {
@@ -20,18 +19,9 @@ SceneRenderer::SceneRenderer(IRenderFrame* renderFrame, MeshRepository* meshRepo
 	m_renderFrame{ renderFrame },
 	m_meshRepository{ meshRepository },
 	m_matRepository{ matRepository }
-{}
-
-bool SceneRenderer::RegisterDefaultMaterials(const DefaultMaterialDescs& defaultMat)
 {
-	MeshDesc meshDesc{ Core::ResourceID::MakeBuiltin("ui_quad") };
-	m_uiQuad = m_meshRepository->GetOrCreate(meshDesc, CreateUIQuad());
-
-	m_defaultMaterials[(size_t)MaterialDomain::Surface] = m_matRepository->GetOrCreate(defaultMat.surface);
-	m_defaultMaterials[(size_t)MaterialDomain::DebugSurface] = m_matRepository->GetOrCreate(defaultMat.debugSurface);
-	m_defaultMaterials[(size_t)MaterialDomain::UserInterface] = m_matRepository->GetOrCreate(defaultMat.userInterface);
-
-	return true;
+	m_uiQuad = CreateBuiltinUIQuad(m_meshRepository);
+	m_defaultMaterials = CreateBuiltinMaterials(m_matRepository);
 }
 
 void SceneRenderer::DrawSurface(MeshHandle hM, MaterialHandle hMtl, const cm::Matrix& world)
@@ -108,31 +98,6 @@ std::optional<ResolvedDrawData> SceneRenderer::ResolveResources(MeshHandle hM, M
 void SceneRenderer::SetFrameData(const FrameData& frameData)
 {
 	m_renderFrame->SetFrameData(frameData);
-}
-
-std::shared_ptr<MeshAsset> SceneRenderer::CreateUIQuad()
-{
-	auto asset = std::make_shared<MeshAsset>();
-	asset->format = VertexFormat::UI;
-
-	std::vector<UIVertex> vertices =
-	{
-		{ -0.5f, -0.5f, 0, 1,1,1,1, 0,1 },
-		{ -0.5f,  0.5f, 0, 1,1,1,1, 0,0 },
-		{  0.5f, -0.5f, 0, 1,1,1,1, 1,1 },
-		{  0.5f,  0.5f, 0, 1,1,1,1, 1,0 },
-	};
-
-	std::vector<uint32_t> indices =
-	{
-		0,1,2,
-		2,1,3
-	};
-
-	asset->SetVertices(vertices);
-	asset->indices = std::move(indices);
-
-	return asset;
 }
 
 MaterialHandle SceneRenderer::GetDefaultMaterial(MaterialDomain matDomain) const

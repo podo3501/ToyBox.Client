@@ -1,6 +1,5 @@
 #pragma once
-#include "GameClient/Service/Render/Desc/TextureDesc.h"
-#include "Core/Foundation/ResourceID.h"
+#include "TextureDesc.h"
 
 class TextureDescFactory
 {

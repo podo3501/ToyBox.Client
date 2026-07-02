@@ -21,11 +21,7 @@
   <ItemGroup>
     <ClCompile Include="Asset\AssetInput.cpp" />
     <ClCompile Include="GameLoop.cpp" />
-    <ClCompile Include="Graphics\Geometry\MaterialDescFactory.cpp" />
-    <ClCompile Include="Graphics\Geometry\MeshDescFactory.cpp" />
     <ClCompile Include="Graphics\Geometry\MeshFactory.cpp" />
-    <ClCompile Include="Graphics\Geometry\TextureDescFactory.cpp" />
-    <ClCompile Include="Graphics\ShaderStageBuilder.cpp" />
     <ClCompile Include="Graphics\World\Camera.cpp" />
     <ClCompile Include="Graphics\World\CameraController.cpp" />
     <ClCompile Include="Graphics\World\CameraInputMapper.cpp" />
@@ -43,6 +39,7 @@
     <ClCompile Include="Scenes\Test\TestScene2.cpp" />
     <ClCompile Include="Service\AssetAsyncHelper.cpp" />
     <ClCompile Include="Service\Asset\AssetAsyncLoader.cpp" />
+    <ClCompile Include="Service\Asset\AssetLoaderRegistry.cpp" />
     <ClCompile Include="Service\Asset\AssetRepository.cpp" />
     <ClCompile Include="Service\Asset\AssetService.cpp" />
     <ClCompile Include="Service\Audio\AudioService.cpp" />
@@ -55,6 +52,13 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="Service\Input\InputService.cpp" />
+    <ClCompile Include="Service\Render\Builtin\BuiltinMaterials.cpp" />
+    <ClCompile Include="Service\Render\Builtin\BuiltinMeshes.cpp" />
+    <ClCompile Include="Service\Render\Builtin\BuiltinShaders.cpp" />
+    <ClCompile Include="Service\Render\Desc\MaterialDescFactory.cpp" />
+    <ClCompile Include="Service\Render\Desc\MeshDescFactory.cpp" />
+    <ClCompile Include="Service\Render\Desc\ShaderStageBuilder.cpp" />
+    <ClCompile Include="Service\Render\Desc\TextureDescFactory.cpp" />
     <ClCompile Include="Service\Render\SceneRenderer.cpp" />
     <ClCompile Include="Service\Render\RenderService.cpp" />
     <ClCompile Include="Service\Render\Repository\Material\MaterialRepository.cpp" />
@@ -129,14 +133,10 @@
     <ClInclude Include="Asset\StreamSoundAsset.h" />
     <ClInclude Include="Asset\TextureAsset.h" />
     <ClInclude Include="GameLoop.h" />
-    <ClInclude Include="Graphics\Geometry\MaterialDescFactory.h" />
-    <ClInclude Include="Graphics\Geometry\MeshDescFactory.h" />
     <ClInclude Include="Graphics\Geometry\MeshFactory.h" />
-    <ClInclude Include="Graphics\Geometry\TextureDescFactory.h" />
     <ClInclude Include="Graphics\RenderData\CameraData.h" />
     <ClInclude Include="Graphics\RenderData\DirectionalLightData.h" />
     <ClInclude Include="Graphics\RenderData\FrameData.h" />
-    <ClInclude Include="Graphics\ShaderStageBuilder.h" />
     <ClInclude Include="Graphics\World\Camera.h" />
     <ClInclude Include="Graphics\World\CameraController.h" />
     <ClInclude Include="Graphics\World\CameraInputMapper.h" />
@@ -155,6 +155,7 @@
     <ClInclude Include="Service\Asset\AssetAsyncStore.h" />
     <ClInclude Include="Service\Asset\AssetKeys.h" />
     <ClInclude Include="Service\Asset\AssetLoaderDesc.h" />
+    <ClInclude Include="Service\Asset\AssetLoaderRegistry.h" />
     <ClInclude Include="Service\Asset\AssetRepository.h" />
     <ClInclude Include="Service\Asset\AssetService.h" />
     <ClInclude Include="Service\Audio\AudioService.h" />
@@ -182,15 +183,22 @@
     <ClInclude Include="Service\Input\KeyCode.h" />
     <ClInclude Include="Service\Input\MouseButton.h" />
     <ClInclude Include="Service\Input\MouseState.h" />
+    <ClInclude Include="Service\Render\Builtin\BuiltinMaterials.h" />
+    <ClInclude Include="Service\Render\Builtin\BuiltinMeshes.h" />
+    <ClInclude Include="Service\Render\Builtin\BuiltinShaders.h" />
     <ClInclude Include="Service\Render\Desc\DebugSurfaceMaterialDesc.h" />
     <ClInclude Include="Service\Render\Desc\GridMaterialDesc.h" />
     <ClInclude Include="Service\Render\Desc\MaterialDesc.h" />
+    <ClInclude Include="Service\Render\Desc\MaterialDescFactory.h" />
     <ClInclude Include="Service\Render\Desc\MeshDesc.h" />
+    <ClInclude Include="Service\Render\Desc\MeshDescFactory.h" />
     <ClInclude Include="Service\Render\Desc\PhongMaterialDesc.h" />
+    <ClInclude Include="Service\Render\Desc\ShaderStageBuilder.h" />
     <ClInclude Include="Service\Render\Desc\SurfaceMaterialDesc.h" />
     <ClInclude Include="Service\Render\Desc\PbrMaterialDesc.h" />
     <ClInclude Include="Service\Render\Desc\RenderState.h" />
     <ClInclude Include="Service\Render\Desc\TextureDesc.h" />
+    <ClInclude Include="Service\Render\Desc\TextureDescFactory.h" />
     <ClInclude Include="Service\Render\Desc\UIMaterialDesc.h" />
     <ClInclude Include="Service\Render\Handle\MaterialHandle.h" />
     <ClInclude Include="Service\Render\Handle\MeshHandle.h" />
