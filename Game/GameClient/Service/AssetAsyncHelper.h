@@ -43,6 +43,12 @@ namespace Asset
         return std::static_pointer_cast<T>(ptr);
     }
 
+    template <typename T>
+    std::shared_ptr<T> Wait(IAssetAsyncLoader* asyncLoader, AssetRequestID id)
+    {
+        return Core::Cast<T>(asyncLoader->Wait(id));
+    }
+
     std::vector<AssetRequestID> PushRequests(
         IAssetAsyncLoader* asyncLoader,
         std::span<const AssetRequest> requests);

@@ -15,8 +15,13 @@ struct MaterialDesc
     virtual ~MaterialDesc() = default;
 
     MaterialDomain domain{ MaterialDomain::Surface };
-    PipelineState pipelineState { PipelineLibrary::Get(BuiltinShader::Phong, RasterPreset::Default) };
+    PipelineState pipelineState { PipelineLibrary::Get(RegistryShader::Phong, RasterPreset::Default) };
     std::unordered_map<TextureSlot, TextureDesc> textures;
+
+    void SetShaderID(ShaderID shaderID)
+    {
+        pipelineState.shaderVariant.shaderID = shaderID;
+    }
 
     bool operator==(const MaterialDesc&) const = default;
 

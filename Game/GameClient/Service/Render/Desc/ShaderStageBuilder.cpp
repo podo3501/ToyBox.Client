@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "ShaderStageBuilder.h"
 
-ShaderStageDesc ShaderStageBuilder::VS(std::string entry)
+static ShaderStageDesc VS(std::string entry = "VSMain")
 {
     return
     {
@@ -11,7 +11,7 @@ ShaderStageDesc ShaderStageBuilder::VS(std::string entry)
     };
 }
 
-ShaderStageDesc ShaderStageBuilder::PS(std::string entry)
+static ShaderStageDesc PS(std::string entry = "PSMain")
 {
     return
     {
@@ -21,7 +21,7 @@ ShaderStageDesc ShaderStageBuilder::PS(std::string entry)
     };
 }
 
-ShaderStageDesc ShaderStageBuilder::CS(std::string entry)
+static ShaderStageDesc CS(std::string entry = "CSMain")
 {
     return
     {
@@ -41,31 +41,15 @@ static ShaderDesc Build(
     return desc;
 }
 
-ShaderDesc ShaderBuilder::BuildGraphics(std::shared_ptr<ShaderAsset> asset)
+ShaderDesc BuildShader(ShaderType type, std::shared_ptr<ShaderAsset> asset)
 {
-    return Build(std::move(asset), {
-        ShaderStageBuilder::VS(),
-        ShaderStageBuilder::PS()
-        });
+    switch (type)
+    {
+    case ShaderType::Graphics: return Build(std::move(asset), { VS(), PS() });
+    case ShaderType::Compute: return Build(std::move(asset), { CS() });
+    }
+
+    return {};
 }
 
-BuiltinShaderDesc ShaderBuilder::BuildGraphics(
-    ShaderKey key,
-    std::shared_ptr<ShaderAsset> asset)
-{
-    return { key, BuildGraphics(std::move(asset)) };
-}
 
-ShaderDesc ShaderBuilder::BuildCompute(std::shared_ptr<ShaderAsset> asset)
-{
-    return Build(std::move(asset), {
-        ShaderStageBuilder::CS()
-        });
-}
-
-BuiltinShaderDesc ShaderBuilder::BuildCompute(
-    ShaderKey key,
-    std::shared_ptr<ShaderAsset> asset)
-{
-    return { key, BuildCompute(std::move(asset)) };
-}

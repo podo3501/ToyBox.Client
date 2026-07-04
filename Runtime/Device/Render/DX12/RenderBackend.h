@@ -17,8 +17,8 @@ class RenderBackend : public IRenderBackend
 public:
 	~RenderBackend();
 	RenderBackend(const RenderConfig& config);
-	virtual bool Initialize(HWND hwnd, const Size& wndSize, std::span<const BuiltinShaderDesc> builtinShaders) override;
-	virtual ShaderKey RegisterShader(const ShaderDesc& desc) override { return m_shaderLibrary.RegisterShader(desc); }
+	virtual bool Initialize(HWND hwnd, const Size& wndSize, std::span<const RegistryShaderDesc> registryShaders) override;
+	virtual ShaderID RegisterShader(const ShaderDesc& desc) override { return m_shaderLibrary.RegisterShader(desc); }
 	virtual void Resize(const Size& size) override;
 	virtual void Update() override;
 	virtual void Render() override;

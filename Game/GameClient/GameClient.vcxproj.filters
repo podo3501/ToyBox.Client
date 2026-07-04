@@ -261,9 +261,6 @@
     <ClCompile Include="Service\Render\Desc\ShaderStageBuilder.cpp">
       <Filter>Service\Render\Desc</Filter>
     </ClCompile>
-    <ClCompile Include="Service\Render\Builtin\BuiltinShaders.cpp">
-      <Filter>Service\Render\Builtin</Filter>
-    </ClCompile>
     <ClCompile Include="Service\Render\Builtin\BuiltinMeshes.cpp">
       <Filter>Service\Render\Builtin</Filter>
     </ClCompile>
@@ -726,9 +723,6 @@
     </ClInclude>
     <ClInclude Include="Service\Render\Desc\ShaderStageBuilder.h">
       <Filter>Service\Render\Desc</Filter>
-    </ClInclude>
-    <ClInclude Include="Service\Render\Builtin\BuiltinShaders.h">
-      <Filter>Service\Render\Builtin</Filter>
     </ClInclude>
     <ClInclude Include="Service\Render\Builtin\BuiltinMeshes.h">
       <Filter>Service\Render\Builtin</Filter>

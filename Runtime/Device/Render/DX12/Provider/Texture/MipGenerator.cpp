@@ -49,7 +49,7 @@ bool MipGenerator::LoadShader(ShaderLibrary& shaderLibrary)
     size_t loadedCount = 0;
     for (auto& desc : g_mipShaders)
     {
-        ShaderVariant variant{ BuiltinShader::MipGenerator };
+        ShaderVariant variant{ RegistryShader::MipGenerator };
         variant.runtimeMacros = desc.macros;
 
         if (const auto* entry = shaderLibrary.Find(variant))

@@ -37,7 +37,7 @@ bool UIRenderer::Initialize(Device& device, const Size& screenSize)
 
 bool UIRenderer::CreateDefaultPSOs()
 {
-    ReturnIfFalse(CreatePSO(PipelineLibrary::Get(BuiltinShader::UI, RasterPreset::NoCull)) != nullptr);
+    ReturnIfFalse(CreatePSO(PipelineLibrary::Get(RegistryShader::UI, RasterPreset::NoCull)) != nullptr);
 
     return true;
 }

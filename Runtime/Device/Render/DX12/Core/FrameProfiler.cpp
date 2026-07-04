@@ -10,7 +10,7 @@ bool FrameProfiler::Initialize(Device& device, CommandScheduler& cmdScheduler,
 {
     m_frameCount = frameCount;
 
-    auto queue = cmdScheduler.GetCommandQueue(CommandType::Direct);
+    auto queue = cmdScheduler.GetQueue(CommandType::Direct)->GetQueue();
     queue->GetTimestampFrequency(&m_timestampFreq);
 
     m_queryHeap = device.CreateQueryHeap(

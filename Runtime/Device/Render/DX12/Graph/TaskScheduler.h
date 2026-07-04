@@ -65,6 +65,7 @@ public:
 
 private:
     bool AreDependenciesDone(const TaskEntry& task);
+    bool IsFenceReady(const TaskEntry& entry) const;
     bool IsTaskFinished(const TaskEntry& task);
     void ExecuteTask(TaskEntry& task);
     bool CanDeleteTask(const TaskEntry& task);

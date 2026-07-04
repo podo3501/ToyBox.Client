@@ -16,8 +16,8 @@ struct IMaterialProvider;
 struct IRenderBackend
 {
 	virtual ~IRenderBackend() = default;
-	virtual bool Initialize(HWND hwnd, const Size& wndSize, std::span<const BuiltinShaderDesc> builtinShaders) = 0;
-	virtual ShaderKey RegisterShader(const ShaderDesc& desc) = 0;
+	virtual bool Initialize(HWND hwnd, const Size& wndSize, std::span<const RegistryShaderDesc> registryShaders) = 0;
+	virtual ShaderID RegisterShader(const ShaderDesc& desc) = 0;
 	virtual void Resize(const Size& size) = 0;
 	virtual void Update() = 0;
 	virtual void Render() = 0;

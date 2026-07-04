@@ -54,7 +54,6 @@
     <ClCompile Include="Service\Input\InputService.cpp" />
     <ClCompile Include="Service\Render\Builtin\BuiltinMaterials.cpp" />
     <ClCompile Include="Service\Render\Builtin\BuiltinMeshes.cpp" />
-    <ClCompile Include="Service\Render\Builtin\BuiltinShaders.cpp" />
     <ClCompile Include="Service\Render\Desc\MaterialDescFactory.cpp" />
     <ClCompile Include="Service\Render\Desc\MeshDescFactory.cpp" />
     <ClCompile Include="Service\Render\Desc\ShaderStageBuilder.cpp" />
@@ -185,7 +184,6 @@
     <ClInclude Include="Service\Input\MouseState.h" />
     <ClInclude Include="Service\Render\Builtin\BuiltinMaterials.h" />
     <ClInclude Include="Service\Render\Builtin\BuiltinMeshes.h" />
-    <ClInclude Include="Service\Render\Builtin\BuiltinShaders.h" />
     <ClInclude Include="Service\Render\Desc\DebugSurfaceMaterialDesc.h" />
     <ClInclude Include="Service\Render\Desc\GridMaterialDesc.h" />
     <ClInclude Include="Service\Render\Desc\MaterialDesc.h" />

@@ -27,7 +27,7 @@ bool SwapChainPresenter::Initialize(Device& device, const SwapChainDesc& desc)
     m_size = desc.size;
     m_tearing = desc.allowTearing;
 
-    auto queue = m_cmdScheduler.GetCommandQueue(CommandType::Direct);
+    auto queue = m_cmdScheduler.GetQueue(CommandType::Direct)->GetQueue();
     ReturnIfFalse(CreateSwapChain(device, queue, desc));
 
     ReturnIfFalse(CreateRTV(device));

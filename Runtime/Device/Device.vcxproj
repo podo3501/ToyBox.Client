@@ -56,7 +56,6 @@
     <ClInclude Include="Render\DX12\Command\CommandQueue.h" />
     <ClInclude Include="Render\DX12\Command\CommandScheduler.h" />
     <ClInclude Include="Render\DX12\Command\CommandType.h" />
-    <ClInclude Include="Render\DX12\Command\FenceTypes.h" />
     <ClInclude Include="Render\DX12\Core\BuildConfig.h" />
     <ClInclude Include="Render\DX12\Core\D3D12Conversions.h" />
     <ClInclude Include="Render\DX12\Core\Debug.h" />

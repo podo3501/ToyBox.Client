@@ -52,8 +52,10 @@ struct TaskContext
 
 struct Task
 {
-    std::string passName;
-    CommandType type;
+    std::string passName{};
+    CommandType type{ CommandType::None };
+    CommandType waitFence{ CommandType::None }; //command type의 fence값을 넣어서 그 fence 이후에 실행되도록 함.
+    uint64_t waitFenceValue{ 0 };
     std::vector<TaskHandle> dependencies; //앞에 Task에 의존하는지. Task의 시작지점을 알게 해 준다.
     std::function<void(CommandList&, TaskContext&)> gpuExecute{ nullptr };
     std::function<void(TaskContext&)> cpuExecute{ nullptr };
@@ -64,7 +66,7 @@ using LocalTaskID = uint32_t;
 struct CompiledTask //RenderGraph에서 pass를 가지고 계산해서 tasks로 만든 결과물.
 {
     LocalTaskID localId{ 0 };
-    Task task;
+    Task task{};
     std::vector<uint32_t> dependencies;
     std::vector<uint32_t> dependents;
 };

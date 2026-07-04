@@ -63,11 +63,6 @@ bool CommandScheduler::IsFenceComplete(CommandType type, uint64_t fenceValue)
     return GetQueue(type)->GetCompletedFence() >= fenceValue;
 }
 
-ID3D12CommandQueue* CommandScheduler::GetCommandQueue(CommandType type)
-{
-    return GetQueue(type)->GetQueue();
-}
-
 CommandQueue* CommandScheduler::GetQueue(CommandType type) noexcept
 {
     switch (type)
@@ -78,20 +73,4 @@ CommandQueue* CommandScheduler::GetQueue(CommandType type) noexcept
     }
 
     return nullptr;
-}
-
-QueueFences CommandScheduler::GetLastSubmittedFences() const noexcept
-{
-    return QueueFences{
-        m_directQueue.GetLastSubmittedFence(),
-        m_copyQueue.GetLastSubmittedFence(),
-        m_computeQueue.GetLastSubmittedFence()};
-}
-
-QueueFences CommandScheduler::GetCompletedFences() const noexcept
-{
-    return QueueFences{
-        m_directQueue.GetCompletedFence(),
-        m_copyQueue.GetCompletedFence(),
-        m_computeQueue.GetCompletedFence() };
 }

@@ -196,9 +196,6 @@
     <ClInclude Include="Render\DX12\Command\CommandType.h">
       <Filter>Render\DX12\Command</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\Command\FenceTypes.h">
-      <Filter>Render\DX12\Command</Filter>
-    </ClInclude>
     <ClInclude Include="Render\DX12\Resource\Resource.h">
       <Filter>Render\DX12\Resource</Filter>
     </ClInclude>

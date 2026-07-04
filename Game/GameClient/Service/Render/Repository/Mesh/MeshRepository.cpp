@@ -30,7 +30,7 @@ MeshHandle MeshRepository::GetOrCreate(const MeshDesc& desc, std::shared_ptr<Mes
 	if (it != m_cache.end())
 		return it->second;
 
-	auto meshRes = m_meshProvider->CreateMeshResource();
+	auto meshRes = m_meshProvider->CreateResource();
 	if (!meshRes) return MeshHandle::Invalid();
 
 	MeshEntry entry;
@@ -94,7 +94,7 @@ void MeshRepository::ProcessGpuPending()
 		if (!entry || !entry->meshRes) continue;
 		if (entry->state != LoadState::Pending) continue; // 중복으로 들어온 경우 이미 Loading/Ready 라면 처리안함.
 
-		if (!m_meshProvider->LoadFromAsset(entry->meshRes, work.meshAsset))
+		if (!m_meshProvider->LoadResource(entry->meshRes, work.meshAsset))
 		{
 			entry->state = LoadState::Failed;
 			continue;
@@ -120,8 +120,16 @@ bool MeshRepository::Release(MeshHandle h)
 			++it;
 	}
 	std::erase(m_loadingList, h);
+
+	m_meshProvider->ReleaseResource(entry->meshRes);
 	return m_loadedMeshes.Remove(h);
 }
+
+//Release 함수구현
+//지우라고 하면 일단 m_loadedMeshes 여기서 제거를 하고
+//meshProvider(backend 레이어에 있는)에 지우라고 하면
+//meshProvider는 큐에 넣어놓고 지울 타이밍을 upload 하면서 찾는다.
+//meshProvider에서 update 하면서 삭제함.
 
 void MeshRepository::Update()
 {

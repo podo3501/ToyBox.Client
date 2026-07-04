@@ -14,12 +14,17 @@ class MeshProvider : public IMeshProvider
 public:
     ~MeshProvider();
     MeshProvider(DescriptorFactory& descFactory, TaskScheduler& taskScheduler, ResourceFactory& resFactory);
-    virtual shared_ptr<IMeshResource> CreateMeshResource() override;
-    virtual bool LoadFromAsset(std::shared_ptr<IMeshResource> resource, std::shared_ptr<MeshAsset> asset) override;
+    virtual shared_ptr<IMeshResource> CreateResource() override;
+    virtual bool LoadResource(std::shared_ptr<IMeshResource> resource, std::shared_ptr<MeshAsset> asset) override;
+    virtual void ReleaseResource(std::shared_ptr<IMeshResource> resource) override;
 
     void Update(size_t uploadBudgetBytes);
 
 private:
+    void FlushPendingLoads(size_t uploadBudgetBytes);
+    void FlushPendingRelease();
+
     MeshGraphBuilder m_builder;
-    std::queue<MeshLoadRequest> m_pending;
+    std::queue<MeshLoadRequest> m_pendingLoads;
+    std::vector<std::shared_ptr<IMeshResource>> m_pendingReleases;
 };

@@ -8,6 +8,7 @@
 struct IRenderBackend;
 struct FrameData;
 struct IAssetAsyncLoader;
+struct RegistryShaderEntry;
 class MeshRepository;
 class MaterialRepository;
 
@@ -21,7 +22,7 @@ public:
 		IAssetAsyncLoader* asyncLoader) noexcept;
 
 	bool Initialize(HWND hwnd, const Size& screenSize);
-	ShaderKey RegisterShader(const ShaderDesc& desc);
+	ShaderID RegisterShader(const Core::ResourceID& resID, ShaderType type);
 	void SetFrameData(const FrameData& frameData);
 	void Update();
 	void Render();
@@ -33,9 +34,12 @@ public:
 
 private:
 	RenderService(unique_ptr<IRenderBackend> backend, IAssetAsyncLoader* asyncLoader);
+	std::vector<RegistryShaderEntry> LoadRegistryShaderEntries();
+	std::vector<RegistryShaderDesc> SetupRegistryShaders();
 
 	unique_ptr<IRenderBackend> m_backend;
 	IAssetAsyncLoader* m_asyncLoader{ nullptr };
+	std::unordered_map<Core::ResourceID, ShaderID> m_shaderCache;
 
 	unique_ptr<MeshRepository> m_meshRepository;
 	unique_ptr<MaterialRepository> m_matRepository;

@@ -73,6 +73,12 @@ enum class ShaderStage
     Compute
 };
 
+enum class ShaderType
+{
+    Graphics,
+    Compute
+};
+
 struct ShaderMacroDesc
 {
     std::string name;
@@ -93,17 +99,17 @@ struct ShaderStageDesc
     std::string target;
 };
 
-using ShaderKey = uint32_t;
-inline constexpr ShaderKey InvalidShaderKey{ 0 };
+using ShaderID = uint32_t;
+inline constexpr ShaderID InvalidShaderID{ 0 };
 
-namespace BuiltinShader
+namespace RegistryShader
 {
-    constexpr ShaderKey Shadow{ 1 };
-    constexpr ShaderKey Phong{ 2 };
-    constexpr ShaderKey PBR{ 3 };
-    constexpr ShaderKey Grid{ 4 };
-    constexpr ShaderKey UI{ 5 };
-    constexpr ShaderKey MipGenerator{ 6 }; //compute
+    constexpr ShaderID Shadow{ 1 };
+    constexpr ShaderID Phong{ 2 };
+    constexpr ShaderID PBR{ 3 };
+    constexpr ShaderID Grid{ 4 };
+    constexpr ShaderID UI{ 5 };
+    constexpr ShaderID MipGenerator{ 6 }; //compute
 }
 
 struct ShaderAsset;
@@ -112,19 +118,18 @@ struct ShaderDesc
     std::shared_ptr<ShaderAsset> asset;
     std::vector<ShaderStageDesc> stages;
 };
-
-using BuiltinShaderDesc = std::pair<ShaderKey, ShaderDesc>;
+using RegistryShaderDesc = std::pair<ShaderID, ShaderDesc>;
 
 struct ShaderVariant
 {
-    ShaderKey shaderKey;
+    ShaderID shaderID;
     std::vector<ShaderMacroDesc> runtimeMacros;
 
     bool operator==(const ShaderVariant&) const = default;
 
     size_t GetHash() const
     {
-        size_t h = Core::HashOf(shaderKey);
+        size_t h = Core::HashOf(shaderID);
         for (const auto& macro : runtimeMacros)
             Core::HashCombine(h, macro.GetHash());
         return h;
@@ -175,14 +180,14 @@ class PipelineLibrary
 {
 public:
     static PipelineState Get(
-        ShaderKey shaderKey,
+        ShaderID shaderID,
         RasterPreset rasterPreset,
         PrimitiveTopologyType topologyType =
         PrimitiveTopologyType::Triangle)
     {
         PipelineState state{};
 
-        state.shaderVariant.shaderKey = shaderKey;
+        state.shaderVariant.shaderID = shaderID;
         state.rasterState = RasterLibrary::Get(rasterPreset);
         state.topologyType = topologyType;
 

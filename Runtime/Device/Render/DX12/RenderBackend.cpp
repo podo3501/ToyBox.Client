@@ -18,7 +18,7 @@ void RenderBackend::WaitIdle()
     m_cmdScheduler.WaitIdle();
 }
 
-bool RenderBackend::Initialize(HWND hwnd, const Size& screenSize, std::span<const BuiltinShaderDesc> builtinShaders)
+bool RenderBackend::Initialize(HWND hwnd, const Size& screenSize, std::span<const RegistryShaderDesc> registryShaders)
 {
     Size shadowMapSize = { 2048, 2048 };
 
@@ -26,7 +26,7 @@ bool RenderBackend::Initialize(HWND hwnd, const Size& screenSize, std::span<cons
     SwapChainDesc desc{ hwnd, screenSize, m_config.allowTearing };
     ReturnIfFalse(m_swapChain.Initialize(m_device, desc));
     ReturnIfFalse(m_descFactory.Initialize(m_config.descriptors));
-    ReturnIfFalse(m_shaderLibrary.Initialize(builtinShaders));
+    ReturnIfFalse(m_shaderLibrary.Initialize(registryShaders));
     ReturnIfFalse(m_profiler.Initialize(m_device, m_cmdScheduler, m_resFactory));
     ReturnIfFalse(m_resProvider.Initialize(m_shaderLibrary));
     ReturnIfFalse(m_pipeline.Initialize(screenSize, shadowMapSize));

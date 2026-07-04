@@ -1,6 +1,5 @@
 #pragma once
 #include "CommandType.h"
-#include "FenceTypes.h"
 #include "CommandQueue.h"
 
 struct CommandPoolConfig;
@@ -21,14 +20,9 @@ public:
     void WaitIdle(CommandType type);
     void WaitIdle();
     bool IsFenceComplete(CommandType type, uint64_t fenceValue);
-
-    ID3D12CommandQueue* GetCommandQueue(CommandType type);
-    QueueFences GetLastSubmittedFences() const noexcept;
-    QueueFences GetCompletedFences() const noexcept;
-
-private:
     CommandQueue* GetQueue(CommandType type) noexcept;
 
+private:
     CommandQueue m_directQueue;
     CommandQueue m_copyQueue;
     CommandQueue m_computeQueue;

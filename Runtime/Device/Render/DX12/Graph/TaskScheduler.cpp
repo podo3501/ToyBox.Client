@@ -27,6 +27,11 @@ void TaskScheduler::Submit(const std::vector<CompiledTask>& compiledTasks, std::
         Assert(!entry->submitted);
 
         entry->task = compiled.task;
+        if (entry->task.waitFence != CommandType::None)
+        {
+            auto currQueue = m_cmdScheduler.GetQueue(entry->task.waitFence);
+            entry->task.waitFenceValue = currQueue->GetCurrentFence();
+        }
         entry->context.resources = resources;
 
         for (auto& depLocalId : compiled.dependencies)
@@ -52,9 +57,13 @@ void TaskScheduler::Execute()
     m_tasks.Visit([this, &toRemove](TaskHandle handle, TaskEntry& entry) {
         if (!entry.started)
         {
-            if (AreDependenciesDone(entry))
-                ExecuteTask(entry);
-            return;
+            if (!AreDependenciesDone(entry))
+                return;
+
+            if (!IsFenceReady(entry))
+                return;
+
+            ExecuteTask(entry);
         }
 
         if (!entry.finished && IsTaskFinished(entry))
@@ -102,9 +111,21 @@ bool TaskScheduler::AreDependenciesDone(const TaskEntry& entry)
     return true;
 }
 
+bool TaskScheduler::IsFenceReady(const TaskEntry& entry) const
+{
+    if (entry.task.waitFence == CommandType::None)
+        return true;
+
+    auto queue = m_cmdScheduler.GetQueue(entry.task.waitFence);
+    return queue->GetCompletedFence() >= entry.task.waitFenceValue;
+}
+
 bool TaskScheduler::IsTaskFinished(const TaskEntry& entry)
 {
     if (!entry.started) return false;
+    if (entry.task.type == CommandType::None) //cpu task라면 fence 값을 비교해 볼 필요가 없다.
+        return true;
+
     return m_cmdScheduler.IsFenceComplete(entry.task.type, entry.fenceValue);
 }
 

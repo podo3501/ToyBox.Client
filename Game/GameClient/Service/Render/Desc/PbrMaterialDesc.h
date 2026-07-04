@@ -33,7 +33,7 @@ struct PbrMaterialDesc : public SurfaceMaterialDesc
     {
         surfType = SurfaceType::PBR;
         pipelineState = PipelineLibrary::Get(
-            BuiltinShader::PBR,
+            RegistryShader::PBR,
             RasterPreset::Default,
             PrimitiveTopologyType::Triangle);
     }

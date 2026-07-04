@@ -5,6 +5,7 @@
 struct IMeshProvider
 {
     virtual ~IMeshProvider() = default;
-    virtual shared_ptr<IMeshResource> CreateMeshResource() = 0;
-    virtual bool LoadFromAsset(std::shared_ptr<IMeshResource> resource, std::shared_ptr<MeshAsset> asset) = 0;
+    virtual shared_ptr<IMeshResource> CreateResource() = 0;
+    virtual bool LoadResource(std::shared_ptr<IMeshResource> resource, std::shared_ptr<MeshAsset> asset) = 0;
+    virtual void ReleaseResource(std::shared_ptr<IMeshResource> resource) = 0;
 };

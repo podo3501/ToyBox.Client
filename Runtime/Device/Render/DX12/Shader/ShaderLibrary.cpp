@@ -99,26 +99,26 @@ static ComPtr<IDxcBlob> CreateBlobFromBuffer(const Core::ByteBuffer& buffer)
     return nullptr;
 }
 
-bool ShaderLibrary::Initialize(std::span<const BuiltinShaderDesc> builtinShaders)
+bool ShaderLibrary::Initialize(std::span<const RegistryShaderDesc> registryShaders)
 {
-    for (const auto& [key, desc] : builtinShaders)
-        ReturnIfFalse(RegisterShader(key, desc));
+    for (const auto& [id, desc] : registryShaders)
+        ReturnIfFalse(RegisterShader(id, desc));
     
     return true;
 }
 
-bool ShaderLibrary::RegisterShader(ShaderKey key, const ShaderDesc& desc)
+bool ShaderLibrary::RegisterShader(ShaderID id, const ShaderDesc& desc)
 {
-    if (key == InvalidShaderKey)
+    if (id == InvalidShaderID)
         return false;
 
     if (!desc.asset)
         return false;
 
-    if (key >= m_shaders.size())
-        m_shaders.resize(static_cast<size_t>(key) + 1);
+    if (id >= m_shaders.size())
+        m_shaders.resize(static_cast<size_t>(id) + 1);
 
-    ShaderData& shaderData = m_shaders[key];
+    ShaderData& shaderData = m_shaders[id];
 
     if (shaderData.asset)
         return false;
@@ -126,7 +126,7 @@ bool ShaderLibrary::RegisterShader(ShaderKey key, const ShaderDesc& desc)
     shaderData.asset = desc.asset;
     shaderData.stages = desc.stages;
 
-    ShaderVariant baseVariant{ key };
+    ShaderVariant baseVariant{ id };
     ShaderEntry entry;
 
     if (!CompileVariant(baseVariant, shaderData, entry))
@@ -137,29 +137,29 @@ bool ShaderLibrary::RegisterShader(ShaderKey key, const ShaderDesc& desc)
     return true;
 }
 
-ShaderKey ShaderLibrary::RegisterShader(const ShaderDesc& desc)
+ShaderID ShaderLibrary::RegisterShader(const ShaderDesc& desc)
 {
-    ShaderKey key = static_cast<ShaderKey>(m_shaders.size());
+    ShaderID id = static_cast<ShaderID>(m_shaders.size());
 
-    if (!RegisterShader(key, desc))
-        return InvalidShaderKey;
+    if (!RegisterShader(id, desc))
+        return InvalidShaderID;
 
-    return key;
+    return id;
 }
 
 const ShaderEntry* ShaderLibrary::Find(const ShaderVariant& variant) const
 {
-    if (variant.shaderKey == InvalidShaderKey)
+    if (variant.shaderID == InvalidShaderID)
         return nullptr;
 
     auto it = m_variants.find(variant);
     if (it != m_variants.end())
         return &it->second;
 
-    if (variant.shaderKey >= m_shaders.size())
+    if (variant.shaderID >= m_shaders.size())
         return nullptr;
 
-    const ShaderData& shaderData = m_shaders[variant.shaderKey];
+    const ShaderData& shaderData = m_shaders[variant.shaderID];
     if (!shaderData.asset) return nullptr; // shader가 등록이 안돼 있다.
 
     ShaderEntry entry;

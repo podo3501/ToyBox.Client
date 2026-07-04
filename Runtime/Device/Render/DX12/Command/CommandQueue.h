@@ -21,7 +21,7 @@ public:
     void WaitIdle();
 
     ID3D12CommandQueue* GetQueue() const { return m_queue.Get(); }
-    uint64_t GetLastSubmittedFence() const noexcept { return m_lastSubmittedFence; }
+    uint64_t GetCurrentFence() const noexcept { return m_fenceValue; }
     uint64_t GetCompletedFence() const noexcept { return m_fence->GetCompletedValue(); }
 
 private:

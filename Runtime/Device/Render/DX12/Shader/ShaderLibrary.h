@@ -26,12 +26,12 @@ class ShaderLibrary
 public:
     ~ShaderLibrary();
     ShaderLibrary();
-    bool Initialize(std::span<const BuiltinShaderDesc> builtinShaders);
-    ShaderKey RegisterShader(const ShaderDesc& desc);
+    bool Initialize(std::span<const RegistryShaderDesc> registryShaders);
+    ShaderID RegisterShader(const ShaderDesc& desc);
     const ShaderEntry* Find(const ShaderVariant& variant) const;
 
 private:
-    bool RegisterShader(ShaderKey key, const ShaderDesc& desc);
+    bool RegisterShader(ShaderID id, const ShaderDesc& desc);
     bool CompileVariant(
         const ShaderVariant& variant,
         const ShaderData& shaderData,

@@ -99,6 +99,7 @@ std::vector<CompiledTask> RenderGraph::BuildCompiledTasks(
         Task task{};
         task.passName = pass.name;
         task.type = pass.type;
+        task.waitFence = pass.waitFence;
         task.cpuExecute = pass.cpuExecute;
         task.gpuExecute = pass.gpuExecute;
 

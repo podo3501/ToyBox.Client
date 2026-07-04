@@ -18,6 +18,7 @@ public:
     MeshGraphBuilder() = delete;
     MeshGraphBuilder(TaskScheduler& taskScheduler, ResourceFactory& resFactory, DescriptorFactory& descFactory);
     void LoadMeshes(const std::vector<MeshLoadRequest>& requests);
+    void ReleaseMeshes(std::vector<std::shared_ptr<IMeshResource>> meshes);
 
 private:
     void BuildUploadPass(RenderGraph& graph, std::vector<MeshUploadEntry>& meshUploads, RGResourceID uploadResID);

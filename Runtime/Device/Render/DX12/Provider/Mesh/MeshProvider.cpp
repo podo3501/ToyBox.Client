@@ -11,7 +11,7 @@ MeshProvider::MeshProvider(DescriptorFactory& descFactory, TaskScheduler& taskSc
     m_builder{ taskScheduler, resFactory, descFactory }
 {}
 
-shared_ptr<IMeshResource> MeshProvider::CreateMeshResource()
+shared_ptr<IMeshResource> MeshProvider::CreateResource()
 {
     return make_shared<MeshResource>();
 }
@@ -27,7 +27,7 @@ static std::pair<size_t, size_t> EstimateBytes(const MeshAsset& mesh)
     return { vb, ib };
 }
 
-bool MeshProvider::LoadFromAsset(std::shared_ptr<IMeshResource> resource, std::shared_ptr<MeshAsset> asset)
+bool MeshProvider::LoadResource(std::shared_ptr<IMeshResource> resource, std::shared_ptr<MeshAsset> asset)
 {
     auto [vbBytes, ibBytes] = EstimateBytes(*asset);
 
@@ -38,31 +38,53 @@ bool MeshProvider::LoadFromAsset(std::shared_ptr<IMeshResource> resource, std::s
     req.ibBytes = ibBytes;
     req.estimatedBytes = vbBytes + ibBytes;
 
-    m_pending.push(req);
+    m_pendingLoads.push(req);
     return true;
+}
+
+void MeshProvider::ReleaseResource(std::shared_ptr<IMeshResource> resource)
+{
+    if (!resource)
+        return;
+
+    m_pendingReleases.emplace_back(std::move(resource));
 }
 
 void MeshProvider::Update(size_t uploadBudgetBytes)
 {
+    FlushPendingLoads(uploadBudgetBytes);
+    FlushPendingRelease();
+}
+
+void MeshProvider::FlushPendingLoads(size_t uploadBudgetBytes)
+{
     size_t usedBytes = 0;
     std::vector<MeshLoadRequest> batch;
-    size_t maxBatch = std::min<size_t>(m_pending.size(), 64);
+    size_t maxBatch = std::min<size_t>(m_pendingLoads.size(), size_t(64));
     batch.reserve(maxBatch);
 
-    while (!m_pending.empty())
+    while (!m_pendingLoads.empty())
     {
-        MeshLoadRequest req = m_pending.front();
+        MeshLoadRequest req = m_pendingLoads.front();
 
-        if (usedBytes > uploadBudgetBytes && !batch.empty()) //최초에 한번은 사이즈보다 큰게 있어도 로딩시킨다.
+        if (usedBytes > uploadBudgetBytes && !batch.empty())
             break;
 
         usedBytes += req.estimatedBytes;
-        batch.push_back(req);
-        m_pending.pop();
+        batch.push_back(std::move(req));
+        m_pendingLoads.pop();
     }
 
     if (batch.empty())
         return;
 
     m_builder.LoadMeshes(batch);
+}
+
+void MeshProvider::FlushPendingRelease()
+{
+    if (m_pendingReleases.empty())
+        return;
+
+    m_builder.ReleaseMeshes(std::move(m_pendingReleases));
 }

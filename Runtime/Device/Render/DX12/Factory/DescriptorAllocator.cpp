@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "DescriptorAllocator.h"
 #include "Core/Device.h"
-#include "Command/FenceTypes.h"
 
 DescriptorAllocator::~DescriptorAllocator() = default;
 DescriptorAllocator::DescriptorAllocator() noexcept = default;

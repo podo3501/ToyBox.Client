@@ -90,6 +90,25 @@ void MeshGraphBuilder::LoadMeshes(
     m_taskScheduler.Submit(compiledTasks, resCtx);
 }
 
+void MeshGraphBuilder::ReleaseMeshes(std::vector<std::shared_ptr<IMeshResource>> resources)
+{
+    if (resources.empty())
+        return;
+
+    RenderGraph graph;
+
+    auto& pass = graph.AddCpuPass("ReleaseMeshes");
+    pass.WaitFence(CommandType::Direct);
+    pass.cpuExecute = [resources = std::move(resources)](TaskContext&) {
+        // Fence 이후 여기까지 오기만 하면 자동으로 Release됨.
+        int a = 1;
+        };
+
+    auto compiledTasks = graph.Compile();
+    auto ctx = std::make_shared<ResourceContext>();
+    m_taskScheduler.Submit(compiledTasks, ctx);
+}
+
 void MeshGraphBuilder::BuildUploadPass(RenderGraph& graph, std::vector<MeshUploadEntry>& meshUploads, RGResourceID uploadResID)
 {
     auto& pass = graph.AddCopyPass("MeshUpload");
@@ -97,7 +116,13 @@ void MeshGraphBuilder::BuildUploadPass(RenderGraph& graph, std::vector<MeshUploa
     for (auto& mesh : meshUploads)
         pass.Write(mesh.resID, RGAccess::CopyDest);
     
-    pass.gpuExecute = [this, meshUploads, uploadResID](CommandList& cmd, TaskContext& ctx) mutable {
+    pass.gpuExecute = 
+        [
+            this, 
+            meshUploads = std::move(meshUploads), 
+            uploadResID
+        ]
+        (CommandList& cmd, TaskContext& ctx) mutable {
         auto& uploadRes = ctx.GetResource(uploadResID);
         for (auto& mesh : meshUploads)
         {
