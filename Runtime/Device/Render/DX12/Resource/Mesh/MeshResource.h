@@ -8,7 +8,6 @@ public:
 	~MeshResource();
 	MeshResource();
 	virtual bool IsReady() const noexcept override { return m_ready; }
-	virtual VertexFormat GetVertexFormat() const noexcept override { return m_format; }
 
 	void SetVertexFormat(VertexFormat format) noexcept { m_format = format; }
 	void SetResource(Resource vb, Resource ib, UINT vertexCount, UINT indexCount) noexcept;

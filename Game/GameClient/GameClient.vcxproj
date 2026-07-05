@@ -206,6 +206,7 @@
     <ClInclude Include="Service\Render\IResourceProvider.h" />
     <ClInclude Include="Service\Render\RenderConfig.h" />
     <ClInclude Include="Service\Render\RenderMetrics.h" />
+    <ClInclude Include="Service\Render\Resource\IResource.h" />
     <ClInclude Include="Service\Render\SceneRenderer.h" />
     <ClInclude Include="Service\Render\RenderService.h" />
     <ClInclude Include="Service\Render\RenderServiceConfig.h" />
@@ -217,7 +218,6 @@
     <ClInclude Include="Service\Render\RenderRepository.h" />
     <ClInclude Include="Service\Render\Resource\IMaterialResource.h" />
     <ClInclude Include="Service\Render\Resource\IMeshResource.h" />
-    <ClInclude Include="Service\Render\Resource\ITextureResource.h" />
     <ClInclude Include="UserInterface\CommandHistory\Command.h" />
     <ClInclude Include="UserInterface\CommandHistory\CommandHistory.h" />
     <ClInclude Include="UserInterface\CommandHistory\CommandType.h" />

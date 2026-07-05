@@ -5,10 +5,10 @@
 class TextureRegistry
 {
 public:
-    void Register(RGResourceID resID, std::shared_ptr<ITextureResource> resource);
+    void Register(RGResourceID resID, std::shared_ptr<TextureResource> resource);
     TextureResource* GetTextureResource(RGResourceID resID);
     void FinalizeTexture(RGResourceID resID);
 
 private:
-    std::unordered_map<RGResourceID, std::weak_ptr<ITextureResource>> m_textures;
+    std::unordered_map<RGResourceID, std::weak_ptr<TextureResource>> m_textures;
 };

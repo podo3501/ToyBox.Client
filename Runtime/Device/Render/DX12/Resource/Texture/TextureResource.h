@@ -1,15 +1,14 @@
 #pragma once
-#include "GameClient/Service/Render/Resource/ITextureResource.h"
 #include "GameClient/Service/Render/Desc/TextureDesc.h"
 #include "Resource/Resource.h"
 
-class TextureResource : public ITextureResource
+class TextureResource
 {
 public:
 	~TextureResource();
 	TextureResource() = delete;
 	TextureResource(const TextureDesc& desc);
-	virtual bool IsReady() const noexcept { return m_ready; }
+	bool IsReady() const noexcept { return m_ready; }
 	void MarkReady() { m_ready = true; }
 
 	const TextureDesc& GetDesc() const noexcept { return m_desc; }

@@ -1,5 +1,5 @@
 ﻿#include "pch.h"
-#include "TextureGraphBuilder.h"
+#include "TextureCreateGraphBuilder.h"
 #include "MipGenerator.h"
 #include "Graph/RenderGraph.h"
 #include "Graph/TaskScheduler.h"
@@ -25,16 +25,24 @@ struct TextureFinalizeEntry
     bool generateMips{ false };
 };
 
-TextureGraphBuilder::~TextureGraphBuilder() = default;
-TextureGraphBuilder::TextureGraphBuilder(TaskScheduler& taskScheduler, ResourceFactory& resFactory,
-    MipGenerator& mipGenerator, DescriptorFactory& descFactory) :
+TextureCreateGraphBuilder::~TextureCreateGraphBuilder() = default;
+TextureCreateGraphBuilder::TextureCreateGraphBuilder(
+    Device& device,
+    TaskScheduler& taskScheduler, 
+    ResourceFactory& resFactory,
+    DescriptorFactory& descFactory) :
+    m_mipGenerator{ device },
     m_taskScheduler{ taskScheduler },
     m_resFactory{ resFactory },
-    m_mipGenerator{ mipGenerator },
     m_descFactory{ descFactory }
 {}
 
-void TextureGraphBuilder::LoadTextures(const std::vector<TextureLoadRequest>& requests)
+bool TextureCreateGraphBuilder::Initialize(ShaderLibrary& shaderLibrary)
+{
+    return m_mipGenerator.Initialize(shaderLibrary);
+}
+
+void TextureCreateGraphBuilder::LoadTextures(const std::vector<TextureLoadRequest>& requests)
 {
     RenderGraph graph;
 
@@ -78,10 +86,10 @@ void TextureGraphBuilder::LoadTextures(const std::vector<TextureLoadRequest>& re
     auto resCtx = std::make_shared<ResourceContext>();
     resCtx->Set(uploadResID, m_resFactory.CreateResource(totalUploadSize, ResInitType::Upload));
 
-    m_taskScheduler.Submit(compiledTasks, resCtx);
+    m_taskScheduler.SubmitTask(compiledTasks, resCtx);
 }
 
-void TextureGraphBuilder::BuildUploadPass(RenderGraph& graph, std::vector<TextureUploadEntry>& textureUploads, RGResourceID uploadResID)
+void TextureCreateGraphBuilder::BuildUploadPass(RenderGraph& graph, std::vector<TextureUploadEntry>& textureUploads, RGResourceID uploadResID)
 {
     auto& upload = graph.AddCopyPass("TextureUpload");
 
@@ -98,7 +106,7 @@ void TextureGraphBuilder::BuildUploadPass(RenderGraph& graph, std::vector<Textur
         };
 }
 
-void TextureGraphBuilder::BuildMipPass(RenderGraph& graph, std::vector<TextureUploadEntry>& textureUploads)
+void TextureCreateGraphBuilder::BuildMipPass(RenderGraph& graph, std::vector<TextureUploadEntry>& textureUploads)
 {
     auto& mip = graph.AddComputePass("GenerateMips");
 
@@ -120,7 +128,7 @@ void TextureGraphBuilder::BuildMipPass(RenderGraph& graph, std::vector<TextureUp
         };
 }
 
-void TextureGraphBuilder::BuildFinalizePass(RenderGraph& graph, std::vector<TextureFinalizeEntry>& finalizeEntries)
+void TextureCreateGraphBuilder::BuildFinalizePass(RenderGraph& graph, std::vector<TextureFinalizeEntry>& finalizeEntries)
 {
     auto& finalize = graph.AddCpuPass("FinalizeTexture");
 

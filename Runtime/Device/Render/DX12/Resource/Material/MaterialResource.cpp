@@ -32,7 +32,7 @@ bool MaterialResource::IsTextureReady() const noexcept
     return true;
 }
 
-void MaterialResource::SetTexture(TextureSlot texSlot, std::shared_ptr<ITextureResource> texRes) noexcept
+void MaterialResource::SetTexture(TextureSlot texSlot, std::shared_ptr<TextureResource> texRes) noexcept
 {
     Assert(texSlot < m_texResources.size());
     m_texResources[texSlot] = texRes;

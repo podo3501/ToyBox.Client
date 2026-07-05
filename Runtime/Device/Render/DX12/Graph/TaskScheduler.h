@@ -13,7 +13,8 @@ struct TaskEntry
     bool submitted{ false };
     bool started{ false };
     bool finished{ false };
-    uint64_t fenceValue{ 0 };
+    FenceID fenceID{ InvalidFenceID };
+    FenceID waitFenceID{ InvalidFenceID }; //이 펜스 값이 올때까지 실행하지 않는다.
 
     std::atomic<int> activeDependents{ 0 }; // 나를 의존하는 자식 노드들 중, 아직 해제(Remove)되지 않고 살아있는 자식들의 총 개수. 이게 0이 되면 자신도 해제된다.
 
@@ -29,7 +30,7 @@ struct TaskEntry
         , submitted(other.submitted)
         , started(other.started)
         , finished(other.finished)
-        , fenceValue(other.fenceValue)
+        , fenceID(other.fenceID)
     {
         activeDependents.store(other.activeDependents.load(std::memory_order_relaxed), std::memory_order_relaxed);
     }
@@ -44,7 +45,7 @@ struct TaskEntry
             submitted = other.submitted;
             started = other.started;
             finished = other.finished;
-            fenceValue = other.fenceValue;
+            fenceID = other.fenceID;
 
             activeDependents.store(other.activeDependents.load(std::memory_order_relaxed), std::memory_order_relaxed);
         }
@@ -59,13 +60,14 @@ public:
     ~TaskScheduler();
 
     TaskHandle AllocateHandle();
-    void Submit(const std::vector<CompiledTask>& compiledTasks, std::shared_ptr<ResourceContext> resources);
+    void SubmitTask(const std::vector<CompiledTask>& compiledTasks, std::shared_ptr<ResourceContext> resources);
+    void SubmitReleaseTask(const Task& task);
     void Execute();
     void Cancel(TaskHandle handle);
 
 private:
     bool AreDependenciesDone(const TaskEntry& task);
-    bool IsFenceReady(const TaskEntry& entry) const;
+    bool IsDirectFenceReady(const TaskEntry& entry) const;
     bool IsTaskFinished(const TaskEntry& task);
     void ExecuteTask(TaskEntry& task);
     bool CanDeleteTask(const TaskEntry& task);

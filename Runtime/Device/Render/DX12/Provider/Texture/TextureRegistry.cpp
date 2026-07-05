@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "TextureRegistry.h"
 
-void TextureRegistry::Register(RGResourceID resID, std::shared_ptr<ITextureResource> resource)
+void TextureRegistry::Register(RGResourceID resID, std::shared_ptr<TextureResource> resource)
 {
     m_textures[resID] = resource;
 }

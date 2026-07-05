@@ -20,10 +20,10 @@ void CommandList::Reset()
 {
     Assert(!m_recording);
 
-    if (m_lastFenceValue != 0)
+    if (m_lastFenceID != 0)
     {
         Assert(m_fence);
-        Assert(m_fence->GetCompletedValue() >= m_lastFenceValue); //이전 gpu 작업이 끝났는지 확인.
+        Assert(m_fence->GetCompletedValue() >= m_lastFenceID); //이전 gpu 작업이 끝났는지 확인.
     }
 
     DxCheck(m_allocator->Reset());
@@ -48,14 +48,14 @@ void CommandList::SetBindlessHeap(ID3D12DescriptorHeap* heap)
     m_command->SetDescriptorHeaps(1, heaps);
 }
 
-void CommandList::MarkSubmitted(ID3D12Fence* fence, uint64_t value)
+void CommandList::MarkSubmitted(ID3D12Fence* fence, FenceID fenceID)
 {
     Assert(!m_recording);
     Assert(fence);
-    Assert(value != 0);
+    Assert(fenceID != 0);
 
     m_fence = fence;
-    m_lastFenceValue = value;
+    m_lastFenceID = fenceID;
 }
 
 bool CommandList::IsAvailable() const
@@ -63,11 +63,11 @@ bool CommandList::IsAvailable() const
     if (m_recording)
         return false;
 
-    if (m_lastFenceValue == 0) //한번도 쓴적이 없다면
+    if (m_lastFenceID == 0) //한번도 쓴적이 없다면
         return true;
 
     Assert(m_fence);
 
-    bool completed = m_fence->GetCompletedValue() >= m_lastFenceValue; //시킨 일이 끝나 있는지
+    bool completed = m_fence->GetCompletedValue() >= m_lastFenceID; //시킨 일이 끝나 있는지
     return completed;
 }

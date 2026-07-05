@@ -1,25 +1,31 @@
 #pragma once
 #include "TextureRegistry.h"
+#include "MipGenerator.h"
 
 struct TextureLoadRequest;
 struct TextureUploadEntry;
 struct TextureFinalizeEntry;
+class Device;
 class TaskScheduler;
 class ResourceFactory;
-class MipGenerator;
 class DescriptorFactory;
 class RenderGraph;
+class ShaderLibrary;
 
 using Microsoft::WRL::ComPtr;
 
-class TextureGraphBuilder
+class TextureCreateGraphBuilder
 {
 public:
-    ~TextureGraphBuilder();
-    TextureGraphBuilder() = delete;
-    TextureGraphBuilder(TaskScheduler& taskScheduler, ResourceFactory& resFactory,
-        MipGenerator& mipGenerator, DescriptorFactory& descFactory);
+    ~TextureCreateGraphBuilder();
+    TextureCreateGraphBuilder() = delete;
+    TextureCreateGraphBuilder(
+        Device& device,
+        TaskScheduler& taskScheduler, 
+        ResourceFactory& resFactory,
+        DescriptorFactory& descFactory);
 
+    bool Initialize(ShaderLibrary& shaderLibrary);
     void LoadTextures(const std::vector<TextureLoadRequest>& requests);
 
 private:
@@ -28,7 +34,7 @@ private:
     void BuildFinalizePass(RenderGraph& graph, std::vector<TextureFinalizeEntry>& finalizeEntries);
 
     TaskScheduler& m_taskScheduler;
-    MipGenerator& m_mipGenerator;
+    MipGenerator m_mipGenerator;
     DescriptorFactory& m_descFactory;
     ResourceFactory& m_resFactory;
     TextureRegistry m_registry;

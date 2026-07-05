@@ -41,7 +41,7 @@ CommandList* CommandQueue::Begin()
     return entry;
 }
 
-uint64_t CommandQueue::End()
+FenceID CommandQueue::End()
 {
     Assert(m_currentCmdEntry);
 
@@ -50,26 +50,26 @@ uint64_t CommandQueue::End()
     ID3D12CommandList* lists[] = { m_currentCmdEntry->Get() };
     m_queue->ExecuteCommandLists(1, lists);
 
-    uint64_t fenceValue = Signal();
-    m_lastSubmittedFence = fenceValue;
+    FenceID fenceID = Signal();
+    m_lastSubmittedFence = fenceID;
 
-    m_currentCmdEntry->MarkSubmitted(m_fence.Get(), fenceValue); // 재사용하기 위해서 fence 기록
+    m_currentCmdEntry->MarkSubmitted(m_fence.Get(), fenceID); // 재사용하기 위해서 fence 기록
 
     m_currentCmdEntry = nullptr;
-    return fenceValue;
+    return fenceID;
 }
 
-uint64_t CommandQueue::Signal()
+FenceID CommandQueue::Signal()
 {
-    uint64_t value = ++m_fenceValue;
-    DxCheck(m_queue->Signal(m_fence.Get(), value));
-    return value;
+    FenceID id = ++m_fenceID;
+    DxCheck(m_queue->Signal(m_fence.Get(), id));
+    return id;
 }
 
 void CommandQueue::WaitIdle()
 {
-    if (m_fenceValue > 1)
-        WaitFence(m_fenceValue - 1);
+    if (m_fenceID > 1)
+        WaitFence(m_fenceID - 1);
 }
 
 bool CommandQueue::CreateQueue(Device& device, CommandType type)
@@ -105,11 +105,11 @@ CommandList* CommandQueue::GetAvailableCommandList()
     return nullptr; // 사용 가능한 context 없음 여기서 만약 while로 기다리게 되면 cpu, gpu 동기화가 되기 때문에 일부러 nullptr 리턴함. begin에서 nullptr이면 present 안하고 리턴. 의도한 바임.
 }
 
-void CommandQueue::WaitFence(uint64_t value)
+void CommandQueue::WaitFence(FenceID fenceID)
 {
-    if (m_fence->GetCompletedValue() < value)
+    if (m_fence->GetCompletedValue() < fenceID)
     {
-        m_fence->SetEventOnCompletion(value, m_event);
+        m_fence->SetEventOnCompletion(fenceID, m_event);
         WaitForSingleObject(m_event, INFINITE);
     }
 }

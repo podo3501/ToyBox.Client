@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "MeshGraphBuilder.h"
+#include "MeshCreateGraphBuilder.h"
 #include "Graph/RenderGraph.h"
 #include "Graph/TaskScheduler.h"
 #include "Factory/DescriptorFactory.h"
@@ -24,15 +24,15 @@ struct MeshFinalizeEntry
     RGResourceID ibResID{ 0 };
 };
 
-MeshGraphBuilder::~MeshGraphBuilder() = default;
-MeshGraphBuilder::MeshGraphBuilder(TaskScheduler& taskScheduler, ResourceFactory& resFactory,
+MeshCreateGraphBuilder::~MeshCreateGraphBuilder() = default;
+MeshCreateGraphBuilder::MeshCreateGraphBuilder(TaskScheduler& taskScheduler, ResourceFactory& resFactory,
     DescriptorFactory& descFactory) :
     m_taskScheduler{ taskScheduler },
     m_resFactory{ resFactory },
     m_descFactory{ descFactory }
 {}
 
-void MeshGraphBuilder::LoadMeshes(
+void MeshCreateGraphBuilder::LoadMeshes(
     const std::vector<MeshLoadRequest>& requests)
 {
     RenderGraph graph;
@@ -87,29 +87,10 @@ void MeshGraphBuilder::LoadMeshes(
     auto resCtx = std::make_shared<ResourceContext>();
     resCtx->Set(uploadResID, m_resFactory.CreateResource(totalUploadSize, ResInitType::Upload));
 
-    m_taskScheduler.Submit(compiledTasks, resCtx);
+    m_taskScheduler.SubmitTask(compiledTasks, resCtx);
 }
 
-void MeshGraphBuilder::ReleaseMeshes(std::vector<std::shared_ptr<IMeshResource>> resources)
-{
-    if (resources.empty())
-        return;
-
-    RenderGraph graph;
-
-    auto& pass = graph.AddCpuPass("ReleaseMeshes");
-    pass.WaitFence(CommandType::Direct);
-    pass.cpuExecute = [resources = std::move(resources)](TaskContext&) {
-        // Fence 이후 여기까지 오기만 하면 자동으로 Release됨.
-        int a = 1;
-        };
-
-    auto compiledTasks = graph.Compile();
-    auto ctx = std::make_shared<ResourceContext>();
-    m_taskScheduler.Submit(compiledTasks, ctx);
-}
-
-void MeshGraphBuilder::BuildUploadPass(RenderGraph& graph, std::vector<MeshUploadEntry>& meshUploads, RGResourceID uploadResID)
+void MeshCreateGraphBuilder::BuildUploadPass(RenderGraph& graph, std::vector<MeshUploadEntry>& meshUploads, RGResourceID uploadResID)
 {
     auto& pass = graph.AddCopyPass("MeshUpload");
 
@@ -132,7 +113,7 @@ void MeshGraphBuilder::BuildUploadPass(RenderGraph& graph, std::vector<MeshUploa
         };
 }
 
-void MeshGraphBuilder::BuildFinalizePass(RenderGraph& graph, std::vector<MeshFinalizeEntry>& finalizes)
+void MeshCreateGraphBuilder::BuildFinalizePass(RenderGraph& graph, std::vector<MeshFinalizeEntry>& finalizes)
 {
     auto& finalize = graph.AddCpuPass("FinalizeMeshes");
 

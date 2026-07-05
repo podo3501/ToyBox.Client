@@ -9,8 +9,9 @@
 
 
 MaterialProvider::~MaterialProvider() = default;
-MaterialProvider::MaterialProvider(TextureProvider& texProvider) :
-	m_texProvider{ texProvider }
+MaterialProvider::MaterialProvider(TextureProvider& texProvider, ResourceReleaseBuilder release) noexcept :
+	m_texProvider{ texProvider },
+    m_releaseBuilder{ std::move(release) }
 {}
 
 static std::shared_ptr<MaterialResource> CreateSurfaceResource(const SurfaceMaterialDesc& surfaceDesc)
@@ -24,7 +25,7 @@ static std::shared_ptr<MaterialResource> CreateSurfaceResource(const SurfaceMate
     return nullptr;
 }
 
-shared_ptr<IMaterialResource> MaterialProvider::CreateMaterialResource(const MaterialDesc& matDesc)
+shared_ptr<IMaterialResource> MaterialProvider::CreateResource(const MaterialDesc& matDesc)
 {
     shared_ptr<MaterialResource> matRes{ nullptr };
 
@@ -61,7 +62,7 @@ void MaterialProvider::SetDefaultTextures(MaterialResource* matRes)
     }
 }
 
-bool MaterialProvider::LoadFromAsset(
+bool MaterialProvider::LoadResource(
     std::shared_ptr<IMaterialResource> res,
     std::unordered_map<TextureSlot, std::shared_ptr<TextureAsset>> texAssets)
 {
@@ -76,11 +77,11 @@ bool MaterialProvider::LoadFromAsset(
         if (it == texAssets.end() || !it->second)
             continue;
 
-        auto texRes = m_texProvider.CreateTextureResource(texDesc);
+        auto texRes = m_texProvider.CreateResource(texDesc);
         if (!texRes)
             return false;
 
-        if (!m_texProvider.LoadFromAsset(texRes, it->second))
+        if (!m_texProvider.LoadResource(texRes, it->second))
             return false;
 
         matRes->SetTexture(slot, texRes);
@@ -90,12 +91,26 @@ bool MaterialProvider::LoadFromAsset(
     return true;
 }
 
+void MaterialProvider::ReleaseResource(std::shared_ptr<IMaterialResource> resource)
+{
+    if (!resource)
+        return;
+
+    m_pendingReleases.emplace_back(std::move(resource));
+}
+
 void MaterialProvider::Update()
+{
+    FlushPendingMaterials();
+    FlushPendingRelease();
+}
+
+void MaterialProvider::FlushPendingMaterials()
 {
     for (auto it = m_pendingMaterials.begin(); it != m_pendingMaterials.end();)
     {
         auto& matRes = *it;
-        if(!matRes->IsTextureReady())
+        if (!matRes->IsTextureReady())
         {
             ++it;
             continue;
@@ -104,4 +119,12 @@ void MaterialProvider::Update()
         matRes->MarkReady();
         it = m_pendingMaterials.erase(it);
     }
+}
+
+void MaterialProvider::FlushPendingRelease()
+{
+    if (m_pendingReleases.empty())
+        return;
+
+    m_releaseBuilder.ReleaseResources(std::move(m_pendingReleases));
 }

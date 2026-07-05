@@ -34,6 +34,7 @@ MeshHandle MeshRepository::GetOrCreate(const MeshDesc& desc, std::shared_ptr<Mes
 	if (!meshRes) return MeshHandle::Invalid();
 
 	MeshEntry entry;
+	entry.resID = resID;
 	entry.meshRes = move(meshRes);
 	entry.state = LoadState::Pending;
 
@@ -112,24 +113,13 @@ bool MeshRepository::Release(MeshHandle h)
 	auto entry = m_loadedMeshes.Find(h);
 	if (!entry) return false;
 
-	for (auto it = m_cache.begin(); it != m_cache.end();)
-	{
-		if (it->second == h)
-			it = m_cache.erase(it);
-		else
-			++it;
-	}
+	m_cache.erase(entry->resID);
 	std::erase(m_loadingList, h);
 
-	m_meshProvider->ReleaseResource(entry->meshRes);
+	auto meshRes = std::move(entry->meshRes);
+	m_meshProvider->ReleaseResource(meshRes);
 	return m_loadedMeshes.Remove(h);
 }
-
-//Release 함수구현
-//지우라고 하면 일단 m_loadedMeshes 여기서 제거를 하고
-//meshProvider(backend 레이어에 있는)에 지우라고 하면
-//meshProvider는 큐에 넣어놓고 지울 타이밍을 upload 하면서 찾는다.
-//meshProvider에서 update 하면서 삭제함.
 
 void MeshRepository::Update()
 {

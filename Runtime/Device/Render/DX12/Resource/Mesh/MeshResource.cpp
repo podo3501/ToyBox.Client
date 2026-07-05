@@ -1,10 +1,7 @@
 #include "pch.h"
 #include "MeshResource.h"
 
-MeshResource::~MeshResource()
-{
-    int a = 1;
-}
+MeshResource::~MeshResource() = default;
 MeshResource::MeshResource() = default;
 
 void MeshResource::SetResource(Resource vb, Resource ib, UINT vertexCount, UINT indexCount) noexcept

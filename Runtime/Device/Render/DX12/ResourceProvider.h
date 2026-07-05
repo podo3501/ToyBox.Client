@@ -17,9 +17,9 @@ public:
 	~ResourceProvider();
 	ResourceProvider(
 		Device& device,
-		DescriptorFactory& descFactory,
+		TaskScheduler& taskScheduler,
 		ResourceFactory& resFactory,
-		TaskScheduler& taskScheduler);
+		DescriptorFactory& descFactory);
 
 	virtual IMeshProvider* GetMeshProvider() override { return &m_meshProvider; }
 	virtual IMaterialProvider* GetMaterialProvider() override { return &m_matProvider; }

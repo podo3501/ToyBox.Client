@@ -1,7 +1,6 @@
 #pragma once
 #include "TextureLoadRequest.h"
-#include "MipGenerator.h"
-#include "TextureGraphBuilder.h"
+#include "TextureCreateGraphBuilder.h"
 #include "Resource/Texture/DefaultTextureType.h"
 #include <queue>
 
@@ -16,9 +15,10 @@ class TextureProvider
 {
 public:
     ~TextureProvider();
-    TextureProvider(Device& device, DescriptorFactory& descFactory, TaskScheduler& taskScheduler, ResourceFactory& resFactory);
-    shared_ptr<TextureResource> CreateTextureResource(const TextureDesc& desc);
-    bool LoadFromAsset(std::shared_ptr<TextureResource> resource, std::shared_ptr<TextureAsset> asset);
+    TextureProvider() = delete;
+    explicit TextureProvider(TextureCreateGraphBuilder create) noexcept;
+    shared_ptr<TextureResource> CreateResource(const TextureDesc& desc);
+    bool LoadResource(std::shared_ptr<TextureResource> resource, std::shared_ptr<TextureAsset> asset);
 
     bool Initialize(ShaderLibrary& shaderLibrary);
     void Update(size_t uploadBudgetBytes);
@@ -29,8 +29,7 @@ private:
     std::shared_ptr<TextureResource> CreateDefaultTexture(const TextureDesc& desc, std::shared_ptr<TextureAsset> asset);
     std::shared_ptr<TextureAsset> CreateColorAsset(uint32_t pixelColor);
 
-    MipGenerator m_mipGenerator;
-    TextureGraphBuilder m_builder;
+    TextureCreateGraphBuilder m_createBuilder;
     std::queue<TextureLoadRequest> m_pending;
     std::array<std::shared_ptr<TextureResource>, Core::EnumSize<DefaultTextureType>> m_defaultTextures;
 };

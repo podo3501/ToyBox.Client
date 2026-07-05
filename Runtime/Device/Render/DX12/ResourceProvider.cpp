@@ -66,14 +66,22 @@ namespace
 
 ResourceProvider::~ResourceProvider() = default;
 ResourceProvider::ResourceProvider(
-	Device& device, 
-	DescriptorFactory& descFactory,
-	ResourceFactory& resFactory,
-	TaskScheduler& taskScheduler) :
-	m_device{ device },
-	m_texProvider{ m_device, descFactory, taskScheduler, resFactory },
-	m_meshProvider{ descFactory, taskScheduler, resFactory },
-	m_matProvider{ m_texProvider }
+    Device& device,
+    TaskScheduler& taskScheduler,
+    ResourceFactory& resFactory,
+    DescriptorFactory& descFactory) :
+    m_device{ device },
+    m_texProvider{
+        TextureCreateGraphBuilder{ m_device, taskScheduler, resFactory, descFactory }
+        },
+    m_meshProvider{ 
+        MeshCreateGraphBuilder{ taskScheduler, resFactory, descFactory },
+        ResourceReleaseBuilder{ taskScheduler }
+        },
+    m_matProvider{ 
+        m_texProvider, 
+        ResourceReleaseBuilder{ taskScheduler }, 
+        }
 {}
 
 bool ResourceProvider::Initialize(ShaderLibrary& shaderLibrary)

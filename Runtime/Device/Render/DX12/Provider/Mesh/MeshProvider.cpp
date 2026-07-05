@@ -7,8 +7,9 @@
 #include "Helpers/CommonHelpers.h"
 
 MeshProvider::~MeshProvider() = default;
-MeshProvider::MeshProvider(DescriptorFactory& descFactory, TaskScheduler& taskScheduler, ResourceFactory& resFactory) :
-    m_builder{ taskScheduler, resFactory, descFactory }
+MeshProvider::MeshProvider(MeshCreateGraphBuilder create, ResourceReleaseBuilder release) noexcept :
+    m_createBuilder{ std::move(create) },
+    m_releaseBuilder{ std::move(release) }
 {}
 
 shared_ptr<IMeshResource> MeshProvider::CreateResource()
@@ -78,7 +79,7 @@ void MeshProvider::FlushPendingLoads(size_t uploadBudgetBytes)
     if (batch.empty())
         return;
 
-    m_builder.LoadMeshes(batch);
+    m_createBuilder.LoadMeshes(batch);
 }
 
 void MeshProvider::FlushPendingRelease()
@@ -86,5 +87,5 @@ void MeshProvider::FlushPendingRelease()
     if (m_pendingReleases.empty())
         return;
 
-    m_builder.ReleaseMeshes(std::move(m_pendingReleases));
+    m_releaseBuilder.ReleaseResources(std::move(m_pendingReleases));
 }

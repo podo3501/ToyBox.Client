@@ -41,3 +41,6 @@ void RenderRepository::ReleaseAll()
 	m_meshRepository->ReleaseAll();
 	m_matRepository->ReleaseAll();
 }
+
+//자원을 릴리즈 하는 코드가 다 똑같은데 이걸 어떻게 릴리즈 하는게 좋을지 생각해보자.
+//스케쥴러에 테스크를 만들어 던질지, 아니면 그래프로 wait을 걸어줄지. 생각해보자.

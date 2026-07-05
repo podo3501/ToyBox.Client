@@ -29,16 +29,16 @@ CommandList* CommandScheduler::Begin(CommandType type)
     return cmd;
 }
 
-uint64_t CommandScheduler::End()
+FenceID CommandScheduler::End()
 {
     Assert(m_currentQueue);
 
-    auto fenceValue = m_currentQueue->End();
+    auto fenceID = m_currentQueue->End();
     m_currentQueue = nullptr;
-    return fenceValue;
+    return fenceID;
 }
 
-uint64_t CommandScheduler::SignalQueue(CommandType type)
+FenceID CommandScheduler::SignalQueue(CommandType type)
 {
     return GetQueue(type)->Signal();
 }
@@ -55,12 +55,12 @@ void CommandScheduler::WaitIdle()
     m_computeQueue.WaitIdle();
 }
 
-bool CommandScheduler::IsFenceComplete(CommandType type, uint64_t fenceValue)
+bool CommandScheduler::IsFenceComplete(CommandType type, FenceID fenceID)
 {
-    if (fenceValue == 0)
+    if (fenceID == 0)
         return true;
 
-    return GetQueue(type)->GetCompletedFence() >= fenceValue;
+    return GetQueue(type)->GetCompletedFence() >= fenceID;
 }
 
 CommandQueue* CommandScheduler::GetQueue(CommandType type) noexcept

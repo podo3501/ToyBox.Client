@@ -337,7 +337,7 @@
     <ClInclude Include="Render\DX12\Provider\Material\MaterialProvider.h">
       <Filter>Render\DX12\Provider\Material</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\Provider\Mesh\MeshGraphBuilder.h">
+    <ClInclude Include="Render\DX12\Provider\Mesh\MeshCreateGraphBuilder.h">
       <Filter>Render\DX12\Provider\Mesh</Filter>
     </ClInclude>
     <ClInclude Include="Render\DX12\Provider\Mesh\MeshLoadRequest.h">
@@ -355,7 +355,7 @@
     <ClInclude Include="Render\DX12\Provider\Texture\MipGenerator.h">
       <Filter>Render\DX12\Provider\Texture</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\Provider\Texture\TextureGraphBuilder.h">
+    <ClInclude Include="Render\DX12\Provider\Texture\TextureCreateGraphBuilder.h">
       <Filter>Render\DX12\Provider\Texture</Filter>
     </ClInclude>
     <ClInclude Include="Render\DX12\Provider\Texture\TextureLoadRequest.h">
@@ -396,6 +396,9 @@
     </ClInclude>
     <ClInclude Include="Render\DX12\Graph\TaskUtils.h">
       <Filter>Render\DX12\Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Provider\ResourceReleaseBuilder.h">
+      <Filter>Render\DX12\Provider</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -598,7 +601,7 @@
     <ClCompile Include="Render\DX12\Provider\Material\MaterialProvider.cpp">
       <Filter>Render\DX12\Provider\Material</Filter>
     </ClCompile>
-    <ClCompile Include="Render\DX12\Provider\Mesh\MeshGraphBuilder.cpp">
+    <ClCompile Include="Render\DX12\Provider\Mesh\MeshCreateGraphBuilder.cpp">
       <Filter>Render\DX12\Provider\Mesh</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\Provider\Mesh\MeshProvider.cpp">
@@ -613,7 +616,7 @@
     <ClCompile Include="Render\DX12\Provider\Texture\MipGenerator.cpp">
       <Filter>Render\DX12\Provider\Texture</Filter>
     </ClCompile>
-    <ClCompile Include="Render\DX12\Provider\Texture\TextureGraphBuilder.cpp">
+    <ClCompile Include="Render\DX12\Provider\Texture\TextureCreateGraphBuilder.cpp">
       <Filter>Render\DX12\Provider\Texture</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\Provider\Texture\TextureProvider.cpp">
@@ -642,6 +645,9 @@
     </ClCompile>
     <ClCompile Include="Render\DX12\Graph\TaskUtils.cpp">
       <Filter>Render\DX12\Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Provider\ResourceReleaseBuilder.cpp">
+      <Filter>Render\DX12\Provider</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

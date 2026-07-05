@@ -13,7 +13,7 @@ TaskHandle TaskScheduler::AllocateHandle()
     return m_tasks.Emplace(TaskEntry{});
 }
 
-void TaskScheduler::Submit(const std::vector<CompiledTask>& compiledTasks, std::shared_ptr<ResourceContext> resources)
+void TaskScheduler::SubmitTask(const std::vector<CompiledTask>& compiledTasks, std::shared_ptr<ResourceContext> resources)
 {
     std::unordered_map<LocalTaskID, TaskHandle> remap; //RenderGraph에서 만든 일시적인 handle을 실제 사용가능한 task handle로 바꾼다.
     for (auto& compiled : compiledTasks)
@@ -27,11 +27,6 @@ void TaskScheduler::Submit(const std::vector<CompiledTask>& compiledTasks, std::
         Assert(!entry->submitted);
 
         entry->task = compiled.task;
-        if (entry->task.waitFence != CommandType::None)
-        {
-            auto currQueue = m_cmdScheduler.GetQueue(entry->task.waitFence);
-            entry->task.waitFenceValue = currQueue->GetCurrentFence();
-        }
         entry->context.resources = resources;
 
         for (auto& depLocalId : compiled.dependencies)
@@ -50,6 +45,27 @@ void TaskScheduler::Submit(const std::vector<CompiledTask>& compiledTasks, std::
     }
 }
 
+void TaskScheduler::SubmitReleaseTask(const Task& task)
+{
+    Assert(task.type == CommandType::None);
+
+    TaskHandle handle = AllocateHandle();
+    TaskEntry* entry = m_tasks.Find(handle);
+    Assert(entry);
+    Assert(!entry->submitted);
+
+    entry->task = task;
+
+    // Release는 dependency가 없음 (명시적으로 제거)
+    entry->task.dependencies.clear();
+    entry->dependents.clear();
+
+    auto queue = m_cmdScheduler.GetQueue(CommandType::Direct);
+    entry->waitFenceID = queue->GetCurrentFence();
+    entry->context.resources = nullptr; // resource context 불필요
+    entry->submitted = true;
+}
+
 void TaskScheduler::Execute()
 {
     std::vector<TaskHandle> toRemove;
@@ -60,7 +76,7 @@ void TaskScheduler::Execute()
             if (!AreDependenciesDone(entry))
                 return;
 
-            if (!IsFenceReady(entry))
+            if (!IsDirectFenceReady(entry)) //release task용
                 return;
 
             ExecuteTask(entry);
@@ -94,7 +110,7 @@ void TaskScheduler::ExecuteTask(TaskEntry& entry)
 
     ExecuteTaskImmediate(cmd, entry.task, entry.context);
 
-    entry.fenceValue = isGpuTask ? m_cmdScheduler.End() : 0;
+    entry.fenceID = isGpuTask ? m_cmdScheduler.End() : 0;
     entry.started = true;
 }
 
@@ -111,13 +127,13 @@ bool TaskScheduler::AreDependenciesDone(const TaskEntry& entry)
     return true;
 }
 
-bool TaskScheduler::IsFenceReady(const TaskEntry& entry) const
+bool TaskScheduler::IsDirectFenceReady(const TaskEntry& entry) const
 {
-    if (entry.task.waitFence == CommandType::None)
+    if (entry.waitFenceID == InvalidFenceID)
         return true;
 
-    auto queue = m_cmdScheduler.GetQueue(entry.task.waitFence);
-    return queue->GetCompletedFence() >= entry.task.waitFenceValue;
+    auto queue = m_cmdScheduler.GetQueue(CommandType::Direct);
+    return queue->GetCompletedFence() >= entry.waitFenceID;
 }
 
 bool TaskScheduler::IsTaskFinished(const TaskEntry& entry)
@@ -126,7 +142,7 @@ bool TaskScheduler::IsTaskFinished(const TaskEntry& entry)
     if (entry.task.type == CommandType::None) //cpu task라면 fence 값을 비교해 볼 필요가 없다.
         return true;
 
-    return m_cmdScheduler.IsFenceComplete(entry.task.type, entry.fenceValue);
+    return m_cmdScheduler.IsFenceComplete(entry.task.type, entry.fenceID);
 }
 
 bool TaskScheduler::CanDeleteTask(const TaskEntry& entry)

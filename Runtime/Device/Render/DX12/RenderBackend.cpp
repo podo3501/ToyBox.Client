@@ -9,7 +9,7 @@ RenderBackend::RenderBackend(const RenderConfig& config) :
     m_swapChain{ m_cmdScheduler },
     m_descFactory{ m_device },
     m_resFactory{ m_device },
-    m_resProvider{ m_device, m_descFactory, m_resFactory, m_taskScheduler },
+    m_resProvider{ m_device, m_taskScheduler, m_resFactory, m_descFactory },
     m_pipeline{ m_device, m_swapChain, m_descFactory, m_shaderLibrary }
 {}
 

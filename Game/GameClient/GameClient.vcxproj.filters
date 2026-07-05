@@ -589,9 +589,6 @@
     <ClInclude Include="Service\Render\Resource\IMeshResource.h">
       <Filter>Service\Render\Resource</Filter>
     </ClInclude>
-    <ClInclude Include="Service\Render\Resource\ITextureResource.h">
-      <Filter>Service\Render\Resource</Filter>
-    </ClInclude>
     <ClInclude Include="Service\Render\Repository\Material\IMaterialProvider.h">
       <Filter>Service\Render\Repository\Material</Filter>
     </ClInclude>
@@ -729,6 +726,9 @@
     </ClInclude>
     <ClInclude Include="Service\Render\Builtin\BuiltinMaterials.h">
       <Filter>Service\Render\Builtin</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Resource\IResource.h">
+      <Filter>Service\Render\Resource</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

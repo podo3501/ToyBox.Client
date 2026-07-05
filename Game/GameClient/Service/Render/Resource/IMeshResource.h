@@ -1,9 +1,8 @@
 #pragma once
+#include "IResource.h"
 #include "GameClient/Asset/MeshAsset.h"
 
-struct IMeshResource
+struct IMeshResource : public IResource
 {
 	virtual ~IMeshResource() = default;
-	virtual bool IsReady() const noexcept = 0;
-	virtual VertexFormat GetVertexFormat() const noexcept = 0;
 };

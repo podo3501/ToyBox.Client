@@ -13,13 +13,13 @@ public:
     CommandScheduler();
     bool Initialize(Device& device, const CommandPoolConfig& config);
     CommandList* Begin(CommandType type);
-    uint64_t End();
+    FenceID End();
     
     // End -> Close + Signal, PendingRelease µî·Ï
-    uint64_t SignalQueue(CommandType type);
+    FenceID SignalQueue(CommandType type);
     void WaitIdle(CommandType type);
     void WaitIdle();
-    bool IsFenceComplete(CommandType type, uint64_t fenceValue);
+    bool IsFenceComplete(CommandType type, FenceID fenceID);
     CommandQueue* GetQueue(CommandType type) noexcept;
 
 private:

@@ -41,7 +41,7 @@ MaterialHandle MaterialRepository::GetOrCreate(const MaterialDesc& desc)
     if (it != m_cache.end())
         return it->second;
 
-    auto matRes = m_matProvider->CreateMaterialResource(desc);
+    auto matRes = m_matProvider->CreateResource(desc);
     if (!matRes)
         return MaterialHandle::Invalid();
 
@@ -149,7 +149,7 @@ void MaterialRepository::ProcessGpuPending()
         auto entry = m_loadedMaterials.Find(work.handle);
         if (!entry || !entry->matRes) continue;
 
-        if (!m_matProvider->LoadFromAsset(entry->matRes, work.textures))
+        if (!m_matProvider->LoadResource(entry->matRes, work.textures))
         {
             entry->state = LoadState::Failed;
             continue;
@@ -191,6 +191,9 @@ bool MaterialRepository::Release(MaterialHandle h)
 
     m_cache.erase(entry->key);
     std::erase(m_loadingList, h);
+
+    auto matRes = std::move(entry->matRes);
+    m_matProvider->ReleaseResource(matRes);
     return m_loadedMaterials.Remove(h);
 }
 

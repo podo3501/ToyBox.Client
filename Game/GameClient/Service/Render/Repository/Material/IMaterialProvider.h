@@ -7,7 +7,8 @@
 struct IMaterialProvider
 {
     virtual ~IMaterialProvider() = default;
-	virtual shared_ptr<IMaterialResource> CreateMaterialResource(const MaterialDesc& matDesc) = 0;
-	virtual bool LoadFromAsset(std::shared_ptr<IMaterialResource> resource,
+	virtual shared_ptr<IMaterialResource> CreateResource(const MaterialDesc& matDesc) = 0;
+	virtual bool LoadResource(std::shared_ptr<IMaterialResource> resource,
 		std::unordered_map<TextureSlot, std::shared_ptr<TextureAsset>> texAssets) = 0;
+	virtual void ReleaseResource(std::shared_ptr<IMaterialResource> resource) = 0;
 };

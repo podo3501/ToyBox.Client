@@ -24,7 +24,7 @@ public:
 
     bool IsAvailable() const;
     void SetBindlessHeap(ID3D12DescriptorHeap* heap);
-    void MarkSubmitted(ID3D12Fence* fence, uint64_t value);
+    void MarkSubmitted(ID3D12Fence* fence, FenceID fenceID);
 
     ID3D12GraphicsCommandList* operator->() const { return m_command.Get(); }
     ID3D12GraphicsCommandList* Get() { return m_command.Get(); }
@@ -37,5 +37,5 @@ private:
     ComPtr<ID3D12GraphicsCommandList> m_command;
 
     ID3D12Fence* m_fence{ nullptr }; //gpu가 쓰는중
-    uint64_t m_lastFenceValue{ 0 }; // 0값은 초기값.
+    FenceID m_lastFenceID{ InvalidFenceID }; // 0값은 초기값.
 };

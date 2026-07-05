@@ -32,7 +32,6 @@ struct RenderPass
 {
     std::string name;
     CommandType type;
-    CommandType waitFence{ CommandType::None }; //command type의 fence값을 넣어서 그 fence 이후에 실행되도록 함.
 
     std::vector<RGUsage> usages;
 
@@ -49,12 +48,6 @@ struct RenderPass
     { 
         Assert(!HasUsage(resID)); //같은 패스에서 리소스를 중복해서 쓰면 안된다.
         usages.push_back({ resID, AccessType::Write, s });
-    }
-
-    void WaitFence(CommandType fenceType)
-    {
-        Assert(type == CommandType::None); //cpu pass에서만 사용됨.
-        waitFence = fenceType;
     }
 
 private:

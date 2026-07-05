@@ -2,7 +2,7 @@
 #include "GameClient/Service/Render/Resource/IMaterialResource.h"
 #include "Resource/Texture/DefaultTextureType.h"
 
-struct ITextureResource;
+class TextureResource;
 
 class MaterialResource : public IMaterialResource //backend용 material resource 인터페이스.
 {
@@ -17,10 +17,10 @@ public:
 	const PipelineState& GetPipelineState() const;
 	MaterialDomain GetDomain() const noexcept;
 	bool IsTextureReady() const noexcept;
-	void SetTexture(TextureSlot texSlot, std::shared_ptr<ITextureResource> texRes) noexcept;
+	void SetTexture(TextureSlot texSlot, std::shared_ptr<TextureResource> texRes) noexcept;
 	std::vector<UINT> GetTextureIndices() const noexcept;
 
 private:
 	bool m_ready{ false };
-	std::vector<std::shared_ptr<ITextureResource>> m_texResources;
+	std::vector<std::shared_ptr<TextureResource>> m_texResources;
 };

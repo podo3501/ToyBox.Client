@@ -1,8 +1,8 @@
 #pragma once
+#include "IResource.h"
 #include "GameClient/Service/Render/Desc/MaterialDesc.h"
 
-struct IMaterialResource
+struct IMaterialResource : public IResource
 {
 	virtual ~IMaterialResource() = default;
-	virtual bool IsReady() const noexcept = 0;
 };

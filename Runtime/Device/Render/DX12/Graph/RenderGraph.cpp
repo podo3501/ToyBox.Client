@@ -47,7 +47,7 @@ std::vector<CompiledTask> RenderGraph::Compile()
     BuildExportPass();
     auto passNodes = BuildDependencyGraph(); //dependency 만들기
     auto sortedPass = TopologicalSort(passNodes); //만든 걸로 node 정렬
-    auto barrierMap = PlanBarriers(sortedPass); // 배리어 '위치'와 '실물 정보' 완벽히 선점하기(베리어 먼저 만들어보기)
+    auto barrierMap = PlanBarriers(sortedPass); // 배리어 '위치'와 '실물 정보' 선점하기(베리어 먼저 만들어보기)
 
     auto tasks = BuildCompiledTasks(passNodes, sortedPass, barrierMap);
     BuildDependents(tasks);
@@ -99,7 +99,6 @@ std::vector<CompiledTask> RenderGraph::BuildCompiledTasks(
         Task task{};
         task.passName = pass.name;
         task.type = pass.type;
-        task.waitFence = pass.waitFence;
         task.cpuExecute = pass.cpuExecute;
         task.gpuExecute = pass.gpuExecute;
 

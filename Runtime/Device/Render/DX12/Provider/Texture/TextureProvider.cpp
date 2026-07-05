@@ -4,20 +4,19 @@
 #include "Resource/Texture/TextureResource.h"
 
 TextureProvider::~TextureProvider() = default;
-TextureProvider::TextureProvider(Device& device, DescriptorFactory& descFactory, TaskScheduler& taskScheduler, ResourceFactory& resFactory) :
-    m_mipGenerator{ device },
-    m_builder{ taskScheduler, resFactory, m_mipGenerator, descFactory }
+TextureProvider::TextureProvider(TextureCreateGraphBuilder create) noexcept :
+    m_createBuilder{ std::move(create) }
 {}
 
 bool TextureProvider::Initialize(ShaderLibrary& shaderLibrary)
 {
     ReturnIfFalse(CreateBuiltinTextures());
-    ReturnIfFalse(m_mipGenerator.Initialize(shaderLibrary));
+    ReturnIfFalse(m_createBuilder.Initialize(shaderLibrary));
 
     return true;
 }
 
-shared_ptr<TextureResource> TextureProvider::CreateTextureResource(const TextureDesc& desc)
+shared_ptr<TextureResource> TextureProvider::CreateResource(const TextureDesc& desc)
 {
     return make_shared<TextureResource>(desc);
 }
@@ -72,11 +71,11 @@ std::shared_ptr<TextureResource> TextureProvider::CreateDefaultTexture(
     const TextureDesc& desc,
     std::shared_ptr<TextureAsset> asset)
 {
-    auto texRes = CreateTextureResource(desc);
+    auto texRes = CreateResource(desc);
     if (!texRes)
         return nullptr;
 
-    if (!LoadFromAsset(texRes, asset))
+    if (!LoadResource(texRes, asset))
         return nullptr;
 
     return texRes;
@@ -99,7 +98,7 @@ static size_t EstimateBytes(const TextureAsset& asset, const TextureDesc& desc)
     return static_cast<size_t>(baseBytes * 4 / 3); //mip 비용은 정확 계산 대신 안정적인 근사 (1.33x)
 }
 
-bool TextureProvider::LoadFromAsset(
+bool TextureProvider::LoadResource(
     std::shared_ptr<TextureResource> resource, 
     std::shared_ptr<TextureAsset> asset)
 {
@@ -137,5 +136,5 @@ void TextureProvider::Update(size_t uploadBudgetBytes)
     if (batch.empty())
         return;
 
-    m_builder.LoadTextures(batch);
+    m_createBuilder.LoadTextures(batch);
 }
