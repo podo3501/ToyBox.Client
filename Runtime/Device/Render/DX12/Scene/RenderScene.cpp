@@ -9,36 +9,31 @@ void RenderScene::AddSurface(const DrawItem& item)
     auto material = static_cast<MaterialResource*>(item.material.get());
     newItem.sortKey = RenderSortKey::Build(material->GetPipelineState().GetHash());
 
-    m_drawLists[static_cast<size_t>(material->GetDomain())].push_back(newItem);
+    switch (material->GetMaterialDesc().domain)
+    {
+    case MaterialDomain::Surface: m_surfaceDraws.push_back(newItem); break;
+    case MaterialDomain::DebugSurface: m_debugSurfaceDraws.push_back(newItem); break;
+    default: Assert(false); break; //여긴 surface 종류만 호출해야 한다.
+    }
 }
 
-void RenderScene::AddUI(const DrawItem& item)
+void RenderScene::AddUI(const DrawUIItem& uiItem)
 {
     //UI Batching & Layer Breaking 문제가 있기 때문에 z-order 값을 만들고 그것을 넣어주면 그 z값으로 sorting 해야 한다.
     //sorting 후 batch가 가능하면 batch 해 주기.
-    auto material = static_cast<MaterialResource*>(item.material.get());
-    m_drawLists[static_cast<size_t>(material->GetDomain())].push_back(item);
+    auto material = static_cast<MaterialResource*>(uiItem.material.get());
+    m_uiDraws.push_back(uiItem);
 }
 
 DrawPacket RenderScene::BuildDrawPacket()
 {
     DrawPacket packet;
 
-    packet.surface = m_drawLists[Core::ToIndex(MaterialDomain::Surface)];
-    packet.debugSurface = m_drawLists[Core::ToIndex(MaterialDomain::DebugSurface)];
-    packet.ui = m_drawLists[Core::ToIndex(MaterialDomain::UserInterface)];
+    packet.surface = m_surfaceDraws;
+    packet.debugSurface = m_debugSurfaceDraws;
+    packet.ui = m_uiDraws;
 
     return packet;
-}
-
-void RenderScene::SortDraws()
-{
-    for (size_t i = 0; i < Core::EnumSize<MaterialDomain>; ++i)
-    {
-        SortDrawList(
-            static_cast<MaterialDomain>(i),
-            m_drawLists[i]);
-    }
 }
 
 static bool SurfaceSort(const DrawItem& a, const DrawItem& b)
@@ -51,18 +46,15 @@ static bool DebugSurfaceSort(const DrawItem& a, const DrawItem& b)
     return a.sortKey < b.sortKey;
 }
 
-void RenderScene::SortDrawList(MaterialDomain domain, std::vector<DrawItem>& drawList)
+void RenderScene::SortDraws()
 {
-    switch (domain)
-    {
-    case MaterialDomain::Surface: std::sort(drawList.begin(), drawList.end(), SurfaceSort); break;
-    case MaterialDomain::DebugSurface: std::sort(drawList.begin(), drawList.end(), DebugSurfaceSort); break;
-    case MaterialDomain::UserInterface: break;
-    }
+    std::sort(m_surfaceDraws.begin(), m_surfaceDraws.end(), SurfaceSort);
+    std::sort(m_debugSurfaceDraws.begin(), m_debugSurfaceDraws.end(), DebugSurfaceSort);
 }
 
 void RenderScene::Clear()
 {
-    for (auto& drawList : m_drawLists)
-        drawList.clear();
+    m_surfaceDraws.clear();
+    m_debugSurfaceDraws.clear();
+    m_uiDraws.clear();
 }

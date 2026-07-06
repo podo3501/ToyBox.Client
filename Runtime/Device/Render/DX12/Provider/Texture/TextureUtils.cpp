@@ -38,7 +38,7 @@ static void ApplyMipSettings(D3D12_RESOURCE_DESC& desc, bool canGenerateMips)
 
 D3D12_RESOURCE_DESC CreateTexture2DDesc(const TextureAsset& asset, bool mips)
 {
-    auto texDesc = CreateTextureDescriptor(asset.width, asset.height, ToDXGIFormat(asset.format));
+    auto texDesc = CreateTextureDescriptor(asset.size.width, asset.size.height, ToDXGIFormat(asset.format));
     ApplyMipSettings(texDesc, mips);
 
     return texDesc;
@@ -60,7 +60,7 @@ void UploadTexture(
     D3D12_SUBRESOURCE_DATA subresource{};
     subresource.pData = asset.pixels.data();
     subresource.RowPitch = asset.stride;
-    subresource.SlicePitch = asset.stride * asset.height;
+    subresource.SlicePitch = asset.stride * asset.size.height;
 
     UpdateSubresources(
         uploadCmd.Get(),

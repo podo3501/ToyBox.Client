@@ -1,7 +1,18 @@
 #include "pch.h"
 #include "MathHelpers.h"
-#include "Core/Math/Matrix.h"
 #include "Core/Math/Vector3.h"
+#include "Core/Math/Vector4.h"
+#include "Core/Math/Matrix.h"
+
+DirectX::XMFLOAT3 ToXMFLOAT3(const Core::Math::Vector3& vec)
+{
+    return DirectX::XMFLOAT3(vec.x, vec.y, vec.z);
+}
+
+DirectX::XMFLOAT4 ToXMFLOAT4(const Core::Math::Vector4& vec)
+{
+    return DirectX::XMFLOAT4(vec.x, vec.y, vec.z, vec.w);
+}
 
 XMMATRIX ToDXMatrix(const Core::Math::Matrix& m)
 {
@@ -10,9 +21,4 @@ XMMATRIX ToDXMatrix(const Core::Math::Matrix& m)
         m.m[1][0], m.m[1][1], m.m[1][2], m.m[1][3],
         m.m[2][0], m.m[2][1], m.m[2][2], m.m[2][3],
         m.m[3][0], m.m[3][1], m.m[3][2], m.m[3][3]);
-}
-
-DirectX::XMFLOAT3 ToXMFLOAT3(const Core::Math::Vector3& vec)
-{
-    return DirectX::XMFLOAT3(vec.x, vec.y, vec.z);
 }

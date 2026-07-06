@@ -38,6 +38,12 @@ void MaterialResource::SetTexture(TextureSlot texSlot, std::shared_ptr<TextureRe
     m_texResources[texSlot] = texRes;
 }
 
+TextureResource* MaterialResource::GetTexture(TextureSlot texSlot) const noexcept
+{
+    Assert(texSlot < m_texResources.size());
+    return m_texResources[texSlot].get();
+}
+
 std::vector<UINT> MaterialResource::GetTextureIndices() const noexcept
 {
     std::vector<UINT> indices;

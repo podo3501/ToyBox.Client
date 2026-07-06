@@ -14,6 +14,7 @@ struct UIDrawCB
 {
     DirectX::XMFLOAT4X4 world;
     DirectX::XMFLOAT4X4 projection;
+    DirectX::XMFLOAT4 uvTransform; //x=u0, y=v0, z=u1, w=v1
 };
 
 using Microsoft::WRL::ComPtr;
@@ -104,30 +105,37 @@ void UIRenderer::Draw(
     CommandList& cmd,
     MeshResource& mesh,
     UIMaterialResource& material,
-    const cm::Matrix& quadWorld)
+    const cm::Matrix& quadWorld,
+    const std::optional<Rect>& source)
 {
-    auto texIndices = material.GetTextureIndices();
+    auto drawCBAddress = UploadDrawCB(material, quadWorld, source);
 
-    uint32_t resIndices[3] = {
-        mesh.GetVertexHeapIndex(),
-        mesh.GetIndexHeapIndex(),
-        texIndices[0]
-    };
+    auto texIndices = material.GetTextureIndices();
+    uint32_t resIndices[3] = { mesh.GetVertexHeapIndex(), mesh.GetIndexHeapIndex(), texIndices[0] };
 
     cmd->SetGraphicsRoot32BitConstants(Core::ToIndex(RootSlot::ResourceIndices), 3, resIndices, 0);
-
-    DirectX::XMMATRIX world = ToDXMatrix(quadWorld);
-    DirectX::XMMATRIX proj = ToDXMatrix(m_projection);
-
-    UIDrawCB drawCB{};
-
-    XMStoreFloat4x4(&drawCB.world, DirectX::XMMatrixTranspose(world));
-    XMStoreFloat4x4(&drawCB.projection, DirectX::XMMatrixTranspose(proj));
-
-    auto gpuAddress = m_uiDrawCBAllocator.AllocateConstant(drawCB);
-    cmd->SetGraphicsRootConstantBufferView(Core::ToIndex(RootSlot::DrawCB), gpuAddress);
+    cmd->SetGraphicsRootConstantBufferView(Core::ToIndex(RootSlot::DrawCB), drawCBAddress);
 
     cmd->DrawInstanced(mesh.GetIndexCount(), 1, 0, 0);
+}
+
+D3D12_GPU_VIRTUAL_ADDRESS UIRenderer::UploadDrawCB(
+    UIMaterialResource& material,
+    const Core::Math::Matrix& world,
+    const std::optional<Rect>& source)
+{
+    UIDrawCB drawCB{};
+
+    DirectX::XMMATRIX xmWorld = ToDXMatrix(world);
+    XMStoreFloat4x4(&drawCB.world, DirectX::XMMatrixTranspose(xmWorld));
+
+    DirectX::XMMATRIX xmProj = ToDXMatrix(m_projection);
+    XMStoreFloat4x4(&drawCB.projection, DirectX::XMMatrixTranspose(xmProj));
+
+    const auto& uv = material.CalcUVTransform(source);
+    drawCB.uvTransform = ToXMFLOAT4(uv);
+
+    return m_uiDrawCBAllocator.AllocateConstant(drawCB);
 }
 
 void UIRenderer::SetScreenSize(const Size& size)

@@ -7,14 +7,14 @@ class RenderScene
 {
 public:
     void AddSurface(const DrawItem& item);   
-    void AddUI(const DrawItem& item);
+    void AddUI(const DrawUIItem& uiItem);
     DrawPacket BuildDrawPacket();
 
     void SortDraws();
     void Clear();
 
 private:
-    void SortDrawList(MaterialDomain domain, std::vector<DrawItem>& drawList);
-
-    std::array<std::vector<DrawItem>, Core::EnumSize<MaterialDomain>> m_drawLists;
+    std::vector<DrawItem> m_surfaceDraws;
+    std::vector<DrawItem> m_debugSurfaceDraws;
+    std::vector<DrawUIItem> m_uiDraws;
 };

@@ -1,6 +1,8 @@
 #pragma once
 #include "MaterialResource.h"
 #include "GameClient/Service/Render/Desc/UIMaterialDesc.h"
+#include "Core/Math/Vector4.h"
+#include "Core/Foundation/Geometry2D.h"
 
 struct ITextureResource;
 
@@ -13,7 +15,9 @@ public:
 
 	virtual std::vector<DefaultTextureBinding> GetDefaultTextureBindings() const override;
 	virtual const MaterialDesc& GetMaterialDesc() const noexcept override { return m_desc; }
+	Core::Math::Vector4 CalcUVTransform(const std::optional<Rect>& source);
 
 private:
 	UIMaterialDesc m_desc;
+	Core::Math::Vector4 m_uvTransform{ 0.0f, 0.0f, 1.0f, 1.0f };
 };

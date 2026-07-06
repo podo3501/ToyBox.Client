@@ -21,7 +21,14 @@ public:
     void PrepareFrame();
     void BeginFrame(CommandList& cmd);
     void BindPipeline(CommandList& cmd, const PipelineState& pipelineState);
-    void Draw(CommandList& cmd, MeshResource& mesh, UIMaterialResource& material, const Core::Math::Matrix& world);
+
+    void Draw(
+        CommandList& cmd, 
+        MeshResource& mesh, 
+        UIMaterialResource& material, 
+        const Core::Math::Matrix& world,
+        const std::optional<Rect>& source);
+
     void SetScreenSize(const Size& size);
 
 private:
@@ -35,6 +42,10 @@ private:
     bool CreateDefaultPSOs();
     ID3D12PipelineState* CreatePSO(const PipelineState& pipelineState);
     ID3D12PipelineState* GetPipeline(const PipelineState& pipelineState);
+    D3D12_GPU_VIRTUAL_ADDRESS UploadDrawCB(
+        UIMaterialResource& material,
+        const Core::Math::Matrix& world, 
+        const std::optional<Rect>& source);
 
     UIRendererConfig m_config;
     PipelineCache& m_pipelineCache;

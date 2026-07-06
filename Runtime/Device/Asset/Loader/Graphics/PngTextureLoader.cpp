@@ -20,8 +20,7 @@ shared_ptr<TextureAsset> PngTextureLoader::LoadFromMemory(const Core::ByteBuffer
         return nullptr;
 
     auto asset = std::make_shared<TextureAsset>();
-    asset->width = width;
-    asset->height = height;
+    asset->size = ToSize(width, height);
     asset->stride = static_cast<uint32_t>(width * 4);
     asset->format = PixelFormat::RGBA8;
 

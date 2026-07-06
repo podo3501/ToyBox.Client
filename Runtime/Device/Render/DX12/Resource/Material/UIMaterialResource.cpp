@@ -11,6 +11,25 @@ UIMaterialResource::UIMaterialResource(const MaterialDesc& desc) :
     m_desc = static_cast<const UIMaterialDesc&>(desc);
 }
 
+Core::Math::Vector4 UIMaterialResource::CalcUVTransform(const std::optional<Rect>& source)
+{
+    if (!source)
+        return Core::Math::Vector4(0.0f, 0.0f, 1.0f, 1.0f);
+
+    auto texture = GetTexture(Resolve(UITextureSlot::Normal));
+    const auto& size = texture->GetSize();
+
+    float texW = static_cast<float>(size.width);
+    float texH = static_cast<float>(size.height);
+
+    return Core::Math::Vector4(
+        source->x / texW,
+        source->y / texH,
+        (source->x + source->width) / texW,
+        (source->y + source->height) / texH
+    );
+}
+
 std::vector<DefaultTextureBinding> UIMaterialResource::GetDefaultTextureBindings() const
 {
     return {

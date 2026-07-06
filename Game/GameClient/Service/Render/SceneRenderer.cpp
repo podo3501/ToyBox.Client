@@ -6,6 +6,12 @@
 #include "Builtin/BuiltinMeshes.h"
 #include "Builtin/BuiltinMaterials.h"
 
+struct ResolvedEntries
+{
+	const MeshEntry* mesh{ nullptr };
+	const MaterialEntry* material{ nullptr };
+};
+
 struct ResolvedDrawData
 {
 	std::shared_ptr<IMeshResource> meshRes;
@@ -57,27 +63,11 @@ void SceneRenderer::DrawUI(MaterialHandle hMtl, const Rect& dest, const Rect* so
 	float width = static_cast<float>(dest.width);
 	float height = static_cast<float>(dest.height);
 
-	float centerX = dest.x + width * 0.5f;
-	float centerY = dest.y + height * 0.5f;
-
-	cm::Matrix translation = cm::Matrix::Translation(centerX, centerY, 0.0f);
 	cm::Matrix scale = cm::Matrix::Scale(width, height, 1.0f);
+	cm::Matrix translation = cm::Matrix::Translation(static_cast<float>(dest.x), static_cast<float>(dest.y), 0.0f);
 	cm::Matrix world = scale * translation;
-	
-	if (source) // 텍스쳐의 부분을 가지고 올때 사용함. 
-	{
-		// float u0 = source->x / textureWidth;
-		// float v0 = source->y / textureHeight;
-		// float u1 = (source->x + source->w) / textureWidth;
-		// float v1 = (source->y + source->h) / textureHeight;
-		//
-		// Vector2 uvScale  = { u1 - u0, v1 - v0 };
-		// Vector2 uvOffset = { u0, v0 };
-		//
-		// matRes->SetUVTransform(uvScale, uvOffset);
-	}
 
-	m_renderFrame->DrawUI(data->meshRes, data->matRes, world);
+	m_renderFrame->DrawUI(data->meshRes, data->matRes, world, source);
 }
 
 std::optional<ResolvedDrawData> SceneRenderer::ResolveResources(MeshHandle hM, MaterialHandle hMtl)
@@ -85,8 +75,6 @@ std::optional<ResolvedDrawData> SceneRenderer::ResolveResources(MeshHandle hM, M
 	auto mesh = m_meshRepository->Get(hM);
 	if (!mesh || mesh->state != LoadState::Ready)
 		return std::nullopt;
-
-	std::shared_ptr<IMaterialResource> matRes;
 
 	auto material = m_matRepository->Get(hMtl);
 	if (!material || material->state != LoadState::Ready)

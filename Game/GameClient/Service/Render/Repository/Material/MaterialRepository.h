@@ -4,6 +4,7 @@
 #include "../ResourceTypes.h"
 #include "Service/Render/Handle/MaterialHandle.h"
 #include "Service/Render/Desc/TextureDesc.h"
+#include "Service/Render/Desc/MaterialDesc.h"
 
 struct MaterialDesc;
 struct IMaterialProvider;

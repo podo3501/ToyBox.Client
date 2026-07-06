@@ -10,6 +10,8 @@ public:
 	MaterialResource() = delete;
 	MaterialResource(uint32_t texSlotCount);
 	virtual bool IsReady() const noexcept override { return m_ready; }
+
+	//backend interface
 	virtual const MaterialDesc& GetMaterialDesc() const noexcept = 0;
 	virtual std::vector<DefaultTextureBinding> GetDefaultTextureBindings() const { return {}; }
 
@@ -18,6 +20,7 @@ public:
 	MaterialDomain GetDomain() const noexcept;
 	bool IsTextureReady() const noexcept;
 	void SetTexture(TextureSlot texSlot, std::shared_ptr<TextureResource> texRes) noexcept;
+	TextureResource* GetTexture(TextureSlot texSlot) const noexcept;
 	std::vector<UINT> GetTextureIndices() const noexcept;
 
 private:

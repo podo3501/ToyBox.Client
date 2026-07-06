@@ -11,32 +11,17 @@ static std::shared_ptr<MeshAsset> CreateUIQuadAsset()
 
 	std::vector<UIVertex> vertices =
 	{
-		{ -0.5f, -0.5f, 0, 1,1,1,1, 0,1 },
-		{ -0.5f,  0.5f, 0, 1,1,1,1, 0,0 },
-		{  0.5f, -0.5f, 0, 1,1,1,1, 1,1 },
-		{  0.5f,  0.5f, 0, 1,1,1,1, 1,0 },
+		{ 0.0f, 0.0f, 0.0f,    1.0f,1.0f,1.0f,1.0f,  0.0f, 0.0f }, // 0, 좌상단
+		{ 1.0f, 0.0f, 0.0f,    1.0f,1.0f,1.0f,1.0f,  1.0f, 0.0f }, // 1, 우상단
+		{ 1.0f, 1.0f, 0.0f,    1.0f,1.0f,1.0f,1.0f,  1.0f, 1.0f }, // 2, 우하단
+		{ 0.0f, 1.0f, 0.0f,    1.0f,1.0f,1.0f,1.0f,  0.0f, 1.0f }, // 3, 좌하단
 	};
 
 	std::vector<uint32_t> indices =
 	{
 		0,1,2,
-		2,1,3
+		0,2,3
 	};
-
-	//std::vector<UIVertex> vertices =
-	//{
-	//	//   [Pos X, Y, Z]          [RGBA]         [U, V]
-	//	{ 0.0f, 0.0f, 0.0f,    1.0f,1.0f,1.0f,1.0f,  0.0f, 0.0f }, // 0: 좌상단
-	//	{ 1.0f, 0.0f, 0.0f,    1.0f,1.0f,1.0f,1.0f,  1.0f, 0.0f }, // 1: 우상단
-	//	{ 1.0f, 1.0f, 0.0f,    1.0f,1.0f,1.0f,1.0f,  1.0f, 1.0f }, // 2: 우하단
-	//	{ 0.0f, 1.0f, 0.0f,    1.0f,1.0f,1.0f,1.0f,  0.0f, 1.0f }, // 3: 좌하단
-	//};
-
-	//std::vector<uint32_t> indices =
-	//{
-	//	0,1,2,
-	//	0,2,3
-	//};
 
 	asset->SetVertices(vertices);
 	asset->indices = std::move(indices);

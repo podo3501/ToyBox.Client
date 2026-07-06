@@ -24,9 +24,7 @@ shared_ptr<TextureResource> TextureProvider::CreateResource(const TextureDesc& d
 std::shared_ptr<TextureAsset> TextureProvider::CreateColorAsset(uint32_t pixelColor)
 {
     auto asset = std::make_shared<TextureAsset>();
-
-    asset->width = 1;
-    asset->height = 1;
+    asset->size = ToSize(1, 1);
     asset->pixels.resize(sizeof(uint32_t));
 
     // 비트 연산을 통해 엔디안에 무관하게 항상 R, G, B, A 순서로 메모리 배치

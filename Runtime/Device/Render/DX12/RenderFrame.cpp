@@ -25,12 +25,15 @@ void RenderFrame::DrawSurface(
 void RenderFrame::DrawUI(
     std::shared_ptr<IMeshResource> meshRes,
     std::shared_ptr<IMaterialResource> matRes,
-    const Core::Math::Matrix& world)
+    const Core::Math::Matrix& world,
+    const Rect* source)
 {
-    DrawItem item;
+    DrawUIItem item;
     item.mesh = meshRes;
     item.material = matRes;
     item.world = world;
+    if (source)
+        item.source = *source;
 
     m_scene.AddUI(item);
 }

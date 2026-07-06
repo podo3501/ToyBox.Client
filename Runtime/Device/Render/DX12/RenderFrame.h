@@ -16,7 +16,8 @@ public:
 	virtual void DrawUI(
 		std::shared_ptr<IMeshResource> meshRes,
 		std::shared_ptr<IMaterialResource> matRes,
-		const Core::Math::Matrix& world) override;
+		const Core::Math::Matrix& world,
+		const Rect* source) override;
 
 	DrawPacket PrepareRenderData();
 	void Clear();

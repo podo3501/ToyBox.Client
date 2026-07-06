@@ -1,5 +1,6 @@
 #pragma once
 #include "AssetData.h"
+#include "Core/Foundation/Geometry2D.h"
 
 enum class PixelFormat
 {
@@ -11,8 +12,7 @@ struct TextureAsset : public AssetData
 {
 	CORE_DECLARE_TYPE(TextureAsset)
 
-	uint32_t width{ 0 };
-	uint32_t height{ 0 };
+	Size size;
 	uint32_t stride{ 0 };
 	PixelFormat format{ PixelFormat::RGBA8 };
 	std::vector<uint8_t> pixels{};

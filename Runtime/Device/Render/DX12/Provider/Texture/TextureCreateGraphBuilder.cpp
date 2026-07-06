@@ -61,8 +61,9 @@ void TextureCreateGraphBuilder::LoadTextures(const std::vector<TextureLoadReques
         auto resDesc = CreateTexture2DDesc(*req.asset, mips);
         auto texRes = m_resFactory.CreateTextureResource(resDesc);
 
-        auto textureResource = std::static_pointer_cast<TextureResource>(req.resource);
+        auto& textureResource = req.resource;
         textureResource->Set(texRes);
+        textureResource->SetSize(req.asset->size);
         m_descFactory.CreateTextureViews(textureResource.get(), mips);
 
         hasMipTask |= mips;

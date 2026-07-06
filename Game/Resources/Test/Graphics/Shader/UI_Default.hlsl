@@ -18,6 +18,7 @@ cbuffer UIDrawCB : register(b1)
 {
     float4x4 world;
     float4x4 projection;
+    float4 uvTransform; // x=u0, y=v0, z=u1, w=v1
 };
 
 struct PSInput
@@ -42,8 +43,9 @@ PSInput VSMain(uint vID : SV_VertexID)
     float4 clipPos = mul(worldPos, projection);
 
     output.pos = clipPos;
-    output.uv = input.uv;
     output.color = input.color;
+    output.uv.x = lerp(uvTransform.x, uvTransform.z, input.uv.x);
+    output.uv.y = lerp(uvTransform.y, uvTransform.w, input.uv.y);
 
     return output;
 }

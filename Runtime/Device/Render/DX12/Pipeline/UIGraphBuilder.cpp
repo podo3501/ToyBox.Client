@@ -24,13 +24,13 @@ void UIGraphBuilder::Build(RenderGraph& graph)
             uiRenderer.PrepareFrame();
             uiRenderer.BeginFrame(cmd);
 
-            for (auto& item : ctx.drawPacket.ui)
+            for (auto& uiItem : ctx.drawPacket.ui)
             {
-                auto mesh = static_cast<MeshResource*>(item.mesh.get());
-                auto material = static_cast<UIMaterialResource*>(item.material.get());
+                auto mesh = static_cast<MeshResource*>(uiItem.mesh.get());
+                auto material = static_cast<UIMaterialResource*>(uiItem.material.get());
 
                 uiRenderer.BindPipeline(cmd, material->GetPipelineState());
-                uiRenderer.Draw(cmd, *mesh, *material, item.world);
+                uiRenderer.Draw(cmd, *mesh, *material, uiItem.world, uiItem.source);
             }
         };
 }

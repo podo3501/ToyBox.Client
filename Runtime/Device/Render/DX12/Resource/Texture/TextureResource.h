@@ -1,6 +1,7 @@
 #pragma once
 #include "GameClient/Service/Render/Desc/TextureDesc.h"
 #include "Resource/Resource.h"
+#include "Core/Foundation/Geometry2D.h"
 
 class TextureResource
 {
@@ -14,6 +15,9 @@ public:
 	const TextureDesc& GetDesc() const noexcept { return m_desc; }
 	const Resource& Get() { return m_texture; }
 	void Set(Resource resource) { m_texture = std::move(resource); }
+
+	void SetSize(const Size& size) { m_size = size; }
+	const Size& GetSize() const noexcept { return m_size; }
 
 	void SetHeapIndex(UINT index) noexcept { m_heapIndex = index; }
 	UINT GetHeapIndex() const noexcept { return m_heapIndex; }
@@ -36,6 +40,8 @@ public:
 private:
 	TextureDesc m_desc;
 	Resource m_texture;
+
+	Size m_size;
 	UINT m_heapIndex{ UINT_MAX };
 	bool m_ready{ false };
 
