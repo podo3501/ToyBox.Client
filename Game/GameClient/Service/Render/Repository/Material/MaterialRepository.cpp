@@ -187,7 +187,8 @@ void MaterialRepository::ProcessLoading()
 bool MaterialRepository::Release(MaterialHandle h)
 {
     auto entry = m_loadedMaterials.Find(h);
-    if (!entry) return false;
+    if (!entry) 
+        return false;
 
     m_cache.erase(entry->key);
     std::erase(m_loadingList, h);
@@ -199,10 +200,14 @@ bool MaterialRepository::Release(MaterialHandle h)
 
 void MaterialRepository::ReleaseAll()
 {
+    m_loadedMaterials.Visit([this](MaterialHandle h, MaterialEntry&) {
+        Release(h);
+        });
+
     m_cpuPending.clear();
     m_gpuPending.clear();
-    m_loadingList.clear();
 
+    m_loadingList.clear();
     m_cache.clear();
     m_loadedMaterials.Clear();
 }

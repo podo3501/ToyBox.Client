@@ -22,15 +22,12 @@ namespace Core
         return ResourceID(std::string(kRuntimePrefix) + std::string(name));
     }
 
-    static ResourceID MakePathImpl(const std::filesystem::path& path)
-    {
-        Assert(path.has_extension());
-        return ResourceID(std::string(kPathPrefix) + NormalizePath(path));
-    }
-
     ResourceID ResourceID::MakePath(std::string_view path)
     {
-        return MakePathImpl(std::filesystem::path(path));
+        std::filesystem::path fsPath(path);
+
+        Assert(fsPath.has_extension());
+        return ResourceID(std::string(kPathPrefix) + NormalizePath(fsPath));
     }
 
     ResourceIDType ResourceID::GetType() const

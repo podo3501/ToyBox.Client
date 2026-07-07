@@ -44,12 +44,14 @@
     <ClInclude Include="Input\DirectX\InputManager.h" />
     <ClInclude Include="Input\IInputManager.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="Render\DX12\Core\FreeTypeLibrary.h" />
     <ClInclude Include="Render\DX12\Graph\BarrierBuilder.h" />
     <ClInclude Include="Render\DX12\Graph\RenderGraphDefinitions.h" />
     <ClInclude Include="Render\DX12\Graph\RenderGraphUtils.h" />
     <ClInclude Include="Render\DX12\Graph\RenderGraph.h" />
     <ClInclude Include="Render\DX12\Graph\RenderPass.h" />
     <ClInclude Include="Render\DX12\Graph\TaskUtils.h" />
+    <ClInclude Include="Render\DX12\Provider\Font\FontProvider.h" />
     <ClInclude Include="Render\DX12\Provider\ResourceReleaseBuilder.h" />
     <ClInclude Include="Render\DX12\RenderFrame.h" />
     <ClInclude Include="Render\DX12\Command\CommandList.h" />
@@ -103,6 +105,7 @@
     <ClInclude Include="Render\DX12\Provider\Texture\TextureRegistry.h" />
     <ClInclude Include="Render\DX12\Provider\Texture\TextureUtils.h" />
     <ClInclude Include="Render\DX12\ResourceProvider.h" />
+    <ClInclude Include="Render\DX12\Resource\Font\FontResource.h" />
     <ClInclude Include="Render\DX12\Resource\Material\DebugSurfaceMaterialResource.h" />
     <ClInclude Include="Render\DX12\Resource\Material\GridMaterialResource.h" />
     <ClInclude Include="Render\DX12\Resource\Material\MaterialResource.h" />
@@ -152,10 +155,12 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Render\DX12\Core\FreeTypeLibrary.cpp" />
     <ClCompile Include="Render\DX12\Graph\BarrierBuilder.cpp" />
     <ClCompile Include="Render\DX12\Graph\RenderGraphUtils.cpp" />
     <ClCompile Include="Render\DX12\Graph\RenderGraph.cpp" />
     <ClCompile Include="Render\DX12\Graph\TaskUtils.cpp" />
+    <ClCompile Include="Render\DX12\Provider\Font\FontProvider.cpp" />
     <ClCompile Include="Render\DX12\Provider\ResourceReleaseBuilder.cpp" />
     <ClCompile Include="Render\DX12\RenderFrame.cpp" />
     <ClCompile Include="Render\DX12\Command\CommandList.cpp" />
@@ -197,6 +202,7 @@
     <ClCompile Include="Render\DX12\Provider\Texture\TextureRegistry.cpp" />
     <ClCompile Include="Render\DX12\Provider\Texture\TextureUtils.cpp" />
     <ClCompile Include="Render\DX12\ResourceProvider.cpp" />
+    <ClCompile Include="Render\DX12\Resource\Font\FontResource.cpp" />
     <ClCompile Include="Render\DX12\Resource\Material\GridMaterialResource.cpp" />
     <ClCompile Include="Render\DX12\Resource\Material\MaterialResource.cpp" />
     <ClCompile Include="Render\DX12\Resource\Material\PbrMaterialResource.cpp" />
@@ -278,7 +284,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir);$(SolutionDir)Game;$(SolutionDir)Runtime;$(SolutionDir)ThirdParty\Include;$(SolutionDir)ThirdParty\SDL3\include;$(ProjectDir)\Render\DX12;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir);$(SolutionDir)Game;$(SolutionDir)Runtime;$(SolutionDir)ThirdParty\Include;$(SolutionDir)ThirdParty\SDL3\include;$(SolutionDir)ThirdParty\FreeType\include;$(ProjectDir)\Render\DX12;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -301,7 +307,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir);$(SolutionDir)Game;$(SolutionDir)Runtime;$(SolutionDir)ThirdParty\Include;$(SolutionDir)ThirdParty\SDL3\include;$(ProjectDir)\Render\DX12;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir);$(SolutionDir)Game;$(SolutionDir)Runtime;$(SolutionDir)ThirdParty\Include;$(SolutionDir)ThirdParty\SDL3\include;$(SolutionDir)ThirdParty\FreeType\include;$(ProjectDir)\Render\DX12;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -322,7 +328,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir);$(SolutionDir)Game;$(SolutionDir)Runtime;$(SolutionDir)ThirdParty\Include;$(SolutionDir)ThirdParty\SDL3\include;$(ProjectDir)\Render\DX12;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir);$(SolutionDir)Game;$(SolutionDir)Runtime;$(SolutionDir)ThirdParty\Include;$(SolutionDir)ThirdParty\SDL3\include;$(SolutionDir)ThirdParty\FreeType\include;$(ProjectDir)\Render\DX12;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -345,7 +351,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir);$(SolutionDir)Game;$(SolutionDir)Runtime;$(SolutionDir)ThirdParty\Include;$(SolutionDir)ThirdParty\SDL3\include;$(ProjectDir)\Render\DX12;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir);$(SolutionDir)Game;$(SolutionDir)Runtime;$(SolutionDir)ThirdParty\Include;$(SolutionDir)ThirdParty\SDL3\include;$(SolutionDir)ThirdParty\FreeType\include;$(ProjectDir)\Render\DX12;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>

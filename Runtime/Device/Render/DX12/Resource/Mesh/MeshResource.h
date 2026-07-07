@@ -1,5 +1,6 @@
 #pragma once
 #include "GameClient/Service/Render/Resource/IMeshResource.h"
+#include "GameClient/Asset/MeshAsset.h"
 #include "Resource/Resource.h"
 
 class MeshResource : public IMeshResource

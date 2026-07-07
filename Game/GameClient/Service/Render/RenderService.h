@@ -9,6 +9,7 @@ struct IRenderBackend;
 struct FrameData;
 struct IAssetAsyncLoader;
 struct RegistryShaderEntry;
+class FontRepository;
 class MeshRepository;
 class MaterialRepository;
 
@@ -41,6 +42,7 @@ private:
 	IAssetAsyncLoader* m_asyncLoader{ nullptr };
 	std::unordered_map<Core::ResourceID, ShaderID> m_shaderCache;
 
+	unique_ptr<FontRepository> m_fontRepository;
 	unique_ptr<MeshRepository> m_meshRepository;
 	unique_ptr<MaterialRepository> m_matRepository;
 

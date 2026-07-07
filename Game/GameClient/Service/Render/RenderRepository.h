@@ -1,4 +1,5 @@
 #pragma once
+#include "Handle/FontHandle.h"
 #include "Handle/MaterialHandle.h"
 #include "Handle/MeshHandle.h"
 #include "Desc/MeshDescFactory.h"
@@ -7,6 +8,7 @@
 struct MeshDesc;
 struct MeshAsset;
 struct MaterialDesc;
+class FontRepository;
 class MeshRepository;
 class MaterialRepository;
 
@@ -15,8 +17,12 @@ class RenderRepository
 {
 public:
 	~RenderRepository();
-	RenderRepository(MeshRepository* meshRepository, MaterialRepository* matRepository);
+	RenderRepository(
+		FontRepository* fontRepository,
+		MeshRepository* meshRepository, 
+		MaterialRepository* matRepository);
 
+	FontHandle LoadFont(const Core::ResourceID& resID);
 	MeshHandle LoadMesh(const MeshDesc& desc, std::shared_ptr<MeshAsset> asset = nullptr);
 	MaterialHandle LoadMaterial(const MaterialDesc& desc);
 
@@ -27,6 +33,7 @@ public:
 	void ReleaseAll();
 
 private:
+	FontRepository* m_fontRepository{ nullptr };
 	MeshRepository* m_meshRepository{ nullptr };
 	MaterialRepository* m_matRepository{ nullptr };
 };

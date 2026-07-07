@@ -58,6 +58,7 @@
     <ClCompile Include="Service\Render\Desc\MeshDescFactory.cpp" />
     <ClCompile Include="Service\Render\Desc\ShaderStageBuilder.cpp" />
     <ClCompile Include="Service\Render\Desc\TextureDescFactory.cpp" />
+    <ClCompile Include="Service\Render\Repository\Font\FontRepository.cpp" />
     <ClCompile Include="Service\Render\SceneRenderer.cpp" />
     <ClCompile Include="Service\Render\RenderService.cpp" />
     <ClCompile Include="Service\Render\Repository\Material\MaterialRepository.cpp" />
@@ -124,6 +125,7 @@
     <ClInclude Include="Asset\AssetData.h" />
     <ClInclude Include="Asset\AssetInput.h" />
     <ClInclude Include="Asset\AudioTypes.h" />
+    <ClInclude Include="Asset\FontAsset.h" />
     <ClInclude Include="Asset\IAssetLoader.h" />
     <ClInclude Include="Asset\MeshAsset.h" />
     <ClInclude Include="Asset\ShaderAsset.h" />
@@ -198,6 +200,7 @@
     <ClInclude Include="Service\Render\Desc\TextureDesc.h" />
     <ClInclude Include="Service\Render\Desc\TextureDescFactory.h" />
     <ClInclude Include="Service\Render\Desc\UIMaterialDesc.h" />
+    <ClInclude Include="Service\Render\Handle\FontHandle.h" />
     <ClInclude Include="Service\Render\Handle\MaterialHandle.h" />
     <ClInclude Include="Service\Render\Handle\MeshHandle.h" />
     <ClInclude Include="Service\Render\Handle\TextureHandle.h" />
@@ -206,6 +209,9 @@
     <ClInclude Include="Service\Render\IResourceProvider.h" />
     <ClInclude Include="Service\Render\RenderConfig.h" />
     <ClInclude Include="Service\Render\RenderMetrics.h" />
+    <ClInclude Include="Service\Render\Repository\Font\FontRepository.h" />
+    <ClInclude Include="Service\Render\Repository\Font\IFontProvider.h" />
+    <ClInclude Include="Service\Render\Resource\IFontResource.h" />
     <ClInclude Include="Service\Render\Resource\IResource.h" />
     <ClInclude Include="Service\Render\SceneRenderer.h" />
     <ClInclude Include="Service\Render\RenderService.h" />

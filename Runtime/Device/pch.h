@@ -46,6 +46,12 @@ using namespace DirectX::SimpleMath;
 #pragma comment(lib, "vorbisfile_Release.lib")
 #endif
 
+#ifdef _DEBUG
+#pragma comment(lib, "freetype_Debug.lib")
+#else
+#pragma comment(lib, "freetype_Release.lib")
+#endif
+
 #define CHECK_ALIGN16(StructName) \
     static_assert(sizeof(StructName) % 16 == 0, #StructName "의 크기는 반드시 16바이트의 배수여야 합니다.")
 

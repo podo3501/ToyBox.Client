@@ -267,6 +267,9 @@
     <ClCompile Include="Service\Render\Builtin\BuiltinMaterials.cpp">
       <Filter>Service\Render\Builtin</Filter>
     </ClCompile>
+    <ClCompile Include="Service\Render\Repository\Font\FontRepository.cpp">
+      <Filter>Service\Render\Repository\Font</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameLoop.h" />
@@ -730,6 +733,21 @@
     <ClInclude Include="Service\Render\Resource\IResource.h">
       <Filter>Service\Render\Resource</Filter>
     </ClInclude>
+    <ClInclude Include="Service\Render\Handle\FontHandle.h">
+      <Filter>Service\Render\Handle</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Repository\Font\IFontProvider.h">
+      <Filter>Service\Render\Repository\Font</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Repository\Font\FontRepository.h">
+      <Filter>Service\Render\Repository\Font</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Resource\IFontResource.h">
+      <Filter>Service\Render\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\FontAsset.h">
+      <Filter>Asset</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Locator">
@@ -836,6 +854,9 @@
     </Filter>
     <Filter Include="Service\Render\Builtin">
       <UniqueIdentifier>{9124a634-45d9-4f80-a85f-2d0bfdfae79d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Service\Render\Repository\Font">
+      <UniqueIdentifier>{2d5988fb-90ed-42ea-a23d-c239406c240a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

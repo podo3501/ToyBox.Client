@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="D:\ProgrammingStudy\ToyBox\ThirdParty\Srcs\freetype-2.14.3\build\CMakeFiles\2e9d68aa27f8655ffa079b95a2530a59\PACKAGE_force.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{D78FEB42-C13B-39F8-B250-900A62DA09F8}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

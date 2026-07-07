@@ -94,6 +94,12 @@
     <Filter Include="Render\DX12\Provider\Texture">
       <UniqueIdentifier>{75558158-3970-4cb8-8881-10a08baf500b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Render\DX12\Provider\Font">
+      <UniqueIdentifier>{486560e0-3322-4a4a-a49d-359c7b979c2c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Render\DX12\Resource\Font">
+      <UniqueIdentifier>{e4bef0ba-1a47-4b30-bd51-f4a4ec72aaa3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Storage\JsonObjectIO.h">
@@ -400,6 +406,15 @@
     <ClInclude Include="Render\DX12\Provider\ResourceReleaseBuilder.h">
       <Filter>Render\DX12\Provider</Filter>
     </ClInclude>
+    <ClInclude Include="Render\DX12\Provider\Font\FontProvider.h">
+      <Filter>Render\DX12\Provider\Font</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Resource\Font\FontResource.h">
+      <Filter>Render\DX12\Resource\Font</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Core\FreeTypeLibrary.h">
+      <Filter>Render\DX12\Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -648,6 +663,15 @@
     </ClCompile>
     <ClCompile Include="Render\DX12\Provider\ResourceReleaseBuilder.cpp">
       <Filter>Render\DX12\Provider</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Provider\Font\FontProvider.cpp">
+      <Filter>Render\DX12\Provider\Font</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Resource\Font\FontResource.cpp">
+      <Filter>Render\DX12\Resource\Font</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Core\FreeTypeLibrary.cpp">
+      <Filter>Render\DX12\Core</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

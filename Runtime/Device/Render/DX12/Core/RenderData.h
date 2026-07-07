@@ -16,14 +16,9 @@ struct DrawItem
     uint64_t sortKey{ 0 };
 };
 
-struct DrawUIItem
+struct DrawUIItem : public DrawItem
 {
-    std::shared_ptr<IMeshResource> mesh;
-    std::shared_ptr<IMaterialResource> material;
-    Core::Math::Matrix world;
-    std::optional<Rect> source{ nullopt };
-
-    uint64_t sortKey{ 0 };
+    std::optional<Rect> source{ std::nullopt };
 };
 
 struct DrawPacket

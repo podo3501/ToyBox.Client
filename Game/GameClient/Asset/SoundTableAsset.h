@@ -15,7 +15,7 @@ struct SoundDesc
 	void Serialize(Serializer& serializer);
 
 	SoundType sndType;
-	Core::ResourceID resID{};
+	Core::ResourceID resID;
 	AudioGroup group;
 	int priority{ 0 };
 	float volume{ 0.f };

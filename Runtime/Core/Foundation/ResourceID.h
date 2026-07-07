@@ -14,8 +14,6 @@ namespace Core
     {
     public:
         ResourceID() = default;
-        explicit ResourceID(const char* str) : m_value(str) {}
-        explicit ResourceID(std::string str) : m_value(std::move(str)) {}
         auto operator<=>(const ResourceID&) const = default;
 
         static ResourceID MakePath(std::string_view path);
@@ -33,6 +31,9 @@ namespace Core
         void clear() { m_value.clear(); }
 
     private:
+        explicit ResourceID(const char* str) : m_value(str) {}
+        explicit ResourceID(std::string str) : m_value(std::move(str)) {}
+
         std::string m_value;
     };
 }

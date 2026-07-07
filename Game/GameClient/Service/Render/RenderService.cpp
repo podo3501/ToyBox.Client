@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "RenderService.h"
 #include "IRenderBackend.h"
+#include "Repository/Font/FontRepository.h"
 #include "Repository/Material/MaterialRepository.h"
 #include "Repository/Mesh/MeshRepository.h"
 #include "Service/AssetAsyncHelper.h"
@@ -18,6 +19,8 @@ RenderService::RenderService(unique_ptr<IRenderBackend> backend, IAssetAsyncLoad
 	m_asyncLoader{ asyncLoader }
 {
 	auto resProvider = m_backend->GetResourceProvider();
+
+	m_fontRepository = make_unique<FontRepository>(resProvider->GetFontProvider(), asyncLoader);
 	m_meshRepository = make_unique<MeshRepository>(resProvider->GetMeshProvider(), asyncLoader);
 	m_matRepository = make_unique<MaterialRepository>(resProvider->GetMaterialProvider(), asyncLoader);
 }
@@ -36,6 +39,7 @@ bool RenderService::Initialize(HWND hwnd, const Size& screenSize)
 	ReturnIfFalse(m_backend->Initialize(hwnd, screenSize, shaderDescs));
 
 	m_repository = make_unique<RenderRepository>(
+		m_fontRepository.get(),
 		m_meshRepository.get(),
 		m_matRepository.get());
 

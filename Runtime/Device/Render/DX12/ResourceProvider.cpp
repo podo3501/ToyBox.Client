@@ -71,12 +71,12 @@ ResourceProvider::ResourceProvider(
     ResourceFactory& resFactory,
     DescriptorFactory& descFactory) :
     m_device{ device },
-    m_texProvider{
-        TextureCreateGraphBuilder{ m_device, taskScheduler, resFactory, descFactory }
-        },
     m_meshProvider{ 
         MeshCreateGraphBuilder{ taskScheduler, resFactory, descFactory },
         ResourceReleaseBuilder{ taskScheduler }
+        },
+    m_texProvider{
+        TextureCreateGraphBuilder{ m_device, taskScheduler, resFactory, descFactory }
         },
     m_matProvider{ 
         m_texProvider, 

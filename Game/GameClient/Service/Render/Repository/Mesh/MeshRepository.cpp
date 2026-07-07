@@ -108,19 +108,6 @@ void MeshRepository::ProcessGpuPending()
 	m_gpuPending.clear();
 }
 
-bool MeshRepository::Release(MeshHandle h)
-{
-	auto entry = m_loadedMeshes.Find(h);
-	if (!entry) return false;
-
-	m_cache.erase(entry->resID);
-	std::erase(m_loadingList, h);
-
-	auto meshRes = std::move(entry->meshRes);
-	m_meshProvider->ReleaseResource(meshRes);
-	return m_loadedMeshes.Remove(h);
-}
-
 void MeshRepository::Update()
 {
 	ProcessCpuPending();
@@ -150,12 +137,29 @@ void MeshRepository::ProcessLoading()
 	}
 }
 
+bool MeshRepository::Release(MeshHandle h)
+{
+	auto entry = m_loadedMeshes.Find(h);
+	if (!entry) return false;
+
+	m_cache.erase(entry->resID);
+	std::erase(m_loadingList, h);
+
+	auto meshRes = std::move(entry->meshRes);
+	m_meshProvider->ReleaseResource(meshRes);
+	return m_loadedMeshes.Remove(h);
+}
+
 void MeshRepository::ReleaseAll()
 {
+	m_loadedMeshes.Visit([this](MeshHandle h, MeshEntry&) {
+		Release(h);
+		});
+
 	m_cpuPending.clear();
 	m_gpuPending.clear();
-	m_loadingList.clear();
 
+	m_loadingList.clear();
 	m_cache.clear();
 	m_loadedMeshes.Clear();
 }
