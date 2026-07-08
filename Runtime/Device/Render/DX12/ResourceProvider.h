@@ -1,6 +1,5 @@
 #pragma once
 #include "GameClient/Service/Render/IResourceProvider.h"
-#include "Core/FreeTypeLibrary.h"
 #include "Provider/Font/FontProvider.h"
 #include "Provider/Mesh/MeshProvider.h"
 #include "Provider/Texture/TextureProvider.h"
@@ -23,7 +22,7 @@ public:
 		ResourceFactory& resFactory,
 		DescriptorFactory& descFactory);
 
-	virtual IFontProvider* GetFontProvider() override { return nullptr; }
+	virtual IFontProvider* GetFontProvider() override { return &m_fontProvider; }
 	virtual IMeshProvider* GetMeshProvider() override { return &m_meshProvider; }
 	virtual IMaterialProvider* GetMaterialProvider() override { return &m_matProvider; }
 	
@@ -32,7 +31,6 @@ public:
 
 private:
 	Device& m_device;
-	FreeTypeLibrary m_ftLibrary;
 
 	FontProvider m_fontProvider;
 	MeshProvider m_meshProvider;

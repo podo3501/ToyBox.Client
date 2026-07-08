@@ -9,8 +9,8 @@ class DescriptorFactory;
 class ShadowResource
 {
 public:
-    ShadowResource() = default;
-    ~ShadowResource() = default;
+    ~ShadowResource();
+    ShadowResource();
     bool Initialize(Device& device, DescriptorFactory& factory, const Size& shadowMapSize);
 
     const Resource& GetResource() const { return m_resource; }

@@ -73,7 +73,7 @@ static MeshVertex ConvertToVertex(const JsonMeshVertex& v)
         v.tangent.x, v.tangent.y, v.tangent.z };
 }
 
-shared_ptr<MeshAsset> MeshJsonLoader::LoadFromMemory(const Core::ByteBuffer& buffer)
+shared_ptr<MeshAsset> MeshJsonLoader::LoadFromMemory(Core::ByteBuffer buffer)
 {
 	nlohmann::json rData = nlohmann::json::parse(buffer.begin(), buffer.end());
 

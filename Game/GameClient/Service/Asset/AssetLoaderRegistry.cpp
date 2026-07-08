@@ -9,6 +9,7 @@
 #include "Asset/StreamSoundAsset.h"
 #include "Asset/SoundTableAsset.h"
 #include "Asset/ShaderAsset.h"
+#include "Asset/FontAsset.h"
 
 AssetLoaderRegistry::~AssetLoaderRegistry() = default;
 AssetLoaderRegistry::AssetLoaderRegistry(AssetRepository& repository) noexcept : 
@@ -35,6 +36,7 @@ bool AssetLoaderRegistry::RegisterDefaultLoaders()
     ReturnIfFalse(RegisterLoader<StreamSoundAsset>(".ogg", CreateOggStreamLoader()));
     ReturnIfFalse(RegisterLoader<StaticSoundAsset>(".wav", CreateWavStaticLoader()));
     ReturnIfFalse(RegisterLoader<ShaderAsset>(".hlsl", CreateHLSLShaderLoader()));
+    ReturnIfFalse(RegisterLoader<FontAsset>(".ttf", CreateFontLoader()));
 
     return true;
 }

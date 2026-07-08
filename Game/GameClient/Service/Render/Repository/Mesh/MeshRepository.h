@@ -29,6 +29,7 @@ public:
     bool Release(MeshHandle mh);
     void ReleaseAll();
     void Update();
+
     const MeshEntry* Get(MeshHandle h) const noexcept { return m_loadedMeshes.Find(h); }
 
 private:

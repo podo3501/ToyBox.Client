@@ -29,8 +29,8 @@ static bool CompileStage(
     sourceBuffer.Encoding = DXC_CP_UTF8; // ANSI/UTF-8 기본값
 
     std::vector<std::wstring> args; // 진입점(-E) 및 타겟 프로필(-T, 예: cs_6_6) 지정
-    args.push_back(L"-E"); args.push_back(Core::ToWString(entry));
-    args.push_back(L"-T"); args.push_back(Core::ToWString(target));
+    args.push_back(L"-E"); args.push_back(Core::UTF8ToWString(entry));
+    args.push_back(L"-T"); args.push_back(Core::UTF8ToWString(target));
 
     // 디버그 플래그 및 최적화 설정
 #if defined(_DEBUG)
@@ -45,7 +45,7 @@ static bool CompileStage(
         if (macro.name.empty())
             continue;
 
-        std::wstring macroStr = Core::ToWString(macro.name) + L"=" + Core::ToWString(macro.value);
+        std::wstring macroStr = Core::UTF8ToWString(macro.name) + L"=" + Core::UTF8ToWString(macro.value);
         args.push_back(L"-D");
         args.push_back(macroStr);
     }

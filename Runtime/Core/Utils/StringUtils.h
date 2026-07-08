@@ -12,6 +12,9 @@ namespace Core
 	std::string ToUpper(std::string_view s);
 
 	std::string_view GetExtension(std::string_view path);
-	std::wstring ToWString(const std::string& str);
+	std::wstring UTF8ToWString(const std::string& str);
+
+	std::vector<char32_t> UTF8ToUTF32(std::string_view text);
+	std::string UTF32ToUTF8(std::span<const char32_t> text);
 }
 

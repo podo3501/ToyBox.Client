@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "SceneRenderer.h"
 #include "IRenderFrame.h"
+#include "Repository/Font/FontRepository.h"
 #include "Repository/Material/MaterialRepository.h"
 #include "Repository/Mesh/MeshRepository.h"
 #include "Builtin/BuiltinMeshes.h"
@@ -21,13 +22,30 @@ struct ResolvedDrawData
 namespace cm = Core::Math;
 
 SceneRenderer::~SceneRenderer() = default;
-SceneRenderer::SceneRenderer(IRenderFrame* renderFrame, MeshRepository* meshRepository, MaterialRepository* matRepository) :
+SceneRenderer::SceneRenderer(
+	IRenderFrame* renderFrame, 
+	FontRepository* fontRepository,
+	MeshRepository* meshRepository, 
+	MaterialRepository* matRepository) :
 	m_renderFrame{ renderFrame },
+	m_fontRepository{ fontRepository },
 	m_meshRepository{ meshRepository },
 	m_matRepository{ matRepository }
 {
 	m_uiQuad = CreateBuiltinUIQuad(m_meshRepository);
 	m_defaultMaterials = CreateBuiltinMaterials(m_matRepository);
+}
+
+void SceneRenderer::DrawText(FontHandle hF, std::string_view text, const Vector2& pos)
+{
+	//if (!hF)
+		//hF = GetDefaultMaterial(MaterialDomain::Surface);
+
+	auto font = m_fontRepository->Get(hF);
+	if (!font || font->state != LoadState::Ready)
+		return;
+
+	//m_renderFrame->DrawText(font->fontRes, text, pos);
 }
 
 void SceneRenderer::DrawSurface(MeshHandle hM, MaterialHandle hMtl, const cm::Matrix& world)
@@ -87,6 +105,8 @@ void SceneRenderer::SetFrameData(const FrameData& frameData)
 {
 	m_renderFrame->SetFrameData(frameData);
 }
+
+
 
 MaterialHandle SceneRenderer::GetDefaultMaterial(MaterialDomain matDomain) const
 {

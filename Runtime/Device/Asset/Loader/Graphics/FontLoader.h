@@ -1,8 +1,8 @@
 #pragma once
 #include "GameClient/Asset/IAssetLoader.h"
-#include "GameClient/Asset/StaticSoundAsset.h"
+#include "GameClient/Asset/FontAsset.h"
 
-class OggStaticLoader : public IAssetLoader
+class FontLoader : public IAssetLoader
 {
 public:
 	virtual std::shared_ptr<AssetData> Load(AssetInput& source) override
@@ -14,5 +14,5 @@ public:
 	}
 
 private:
-	std::shared_ptr<StaticSoundAsset> LoadFromMemory(Core::ByteBuffer buffer);
+	std::shared_ptr<FontAsset> LoadFromMemory(Core::ByteBuffer buffer);
 };

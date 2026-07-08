@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "RenderFrame.h"
+#include "Core/Utils/StringUtils.h"
 
 RenderFrame::~RenderFrame() = default;
 RenderFrame::RenderFrame() = default;
@@ -7,6 +8,19 @@ RenderFrame::RenderFrame() = default;
 void RenderFrame::SetFrameData(const FrameData& frameData) noexcept
 {
     m_frameData = frameData;
+}
+
+void RenderFrame::DrawText(
+    std::shared_ptr<IFontResource> fontRes,
+    std::string_view text,
+    const Vector2& pos)
+{
+    /*DrawTextItem item;
+    item.font = fontRes;
+    item.codePoints = Core::UTF8ToUTF32(text);
+    item.position = pos;*/
+
+    //m_scene.AddText(item);
 }
 
 void RenderFrame::DrawSurface(

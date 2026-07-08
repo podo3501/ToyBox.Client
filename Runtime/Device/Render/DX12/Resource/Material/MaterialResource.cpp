@@ -2,6 +2,7 @@
 #include "MaterialResource.h"
 #include "Resource/Texture/TextureResource.h"
 
+MaterialResource::~MaterialResource() = default;
 MaterialResource::MaterialResource(uint32_t texSlotCount)
 {
     m_texResources.resize(texSlotCount);

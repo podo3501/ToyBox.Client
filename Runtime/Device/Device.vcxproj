@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Asset\Loader\Graphics\FontLoader.h" />
     <ClInclude Include="Asset\Loader\Graphics\HLSLShaderLoader.h" />
     <ClInclude Include="Asset\Loader\Graphics\MeshJsonLoader.h" />
     <ClInclude Include="Asset\Loader\Graphics\PngTextureLoader.h" />
@@ -126,6 +127,7 @@
     <ClInclude Include="Storage\JsonObjectIO.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Asset\Loader\Graphics\FontLoader.cpp" />
     <ClCompile Include="Asset\Loader\Graphics\HLSLShaderLoader.cpp" />
     <ClCompile Include="Asset\Loader\Graphics\MeshJsonLoader.cpp" />
     <ClCompile Include="Asset\Loader\Graphics\PngTextureLoader.cpp" />

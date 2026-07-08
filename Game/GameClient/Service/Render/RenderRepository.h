@@ -26,6 +26,7 @@ public:
 	MeshHandle LoadMesh(const MeshDesc& desc, std::shared_ptr<MeshAsset> asset = nullptr);
 	MaterialHandle LoadMaterial(const MaterialDesc& desc);
 
+	bool ReleaseFont(FontHandle fh);
 	bool ReleaseMesh(MeshHandle mh);
 	bool ReleaseMaterial(MaterialHandle mh);
 

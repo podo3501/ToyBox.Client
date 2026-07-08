@@ -82,7 +82,7 @@ namespace Core::Math
     void Vector3::Normalize()
     {
         float len = Length();
-        if (len == 0.0f)
+        if (len <= 0.00001f)
             return;
 
         x /= len;

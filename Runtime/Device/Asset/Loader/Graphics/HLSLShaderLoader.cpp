@@ -1,8 +1,7 @@
 #include "pch.h"
 #include "HLSLShaderLoader.h"
 
-std::shared_ptr<ShaderAsset> HLSLShaderLoader::LoadFromMemory(
-    const Core::ByteBuffer& buffer)
+std::shared_ptr<ShaderAsset> HLSLShaderLoader::LoadFromMemory(Core::ByteBuffer buffer)
 {
     auto asset = std::make_shared<ShaderAsset>();
 

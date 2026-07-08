@@ -193,8 +193,7 @@ bool MaterialRepository::Release(MaterialHandle h)
     m_cache.erase(entry->key);
     std::erase(m_loadingList, h);
 
-    auto matRes = std::move(entry->matRes);
-    m_matProvider->ReleaseResource(matRes);
+    m_matProvider->ReleaseResource(std::move(entry->matRes));
     return m_loadedMaterials.Remove(h);
 }
 

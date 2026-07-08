@@ -20,6 +20,11 @@ FontHandle RenderRepository::LoadFont(const Core::ResourceID& resID)
 	return m_fontRepository->GetOrCreate(resID);
 }
 
+bool RenderRepository::ReleaseFont(FontHandle fh)
+{
+	return m_fontRepository->Release(fh);
+}
+
 MeshHandle RenderRepository::LoadMesh(const MeshDesc& desc, std::shared_ptr<MeshAsset> asset)
 {
 	return m_meshRepository->GetOrCreate(desc, asset);
@@ -42,12 +47,14 @@ bool RenderRepository::ReleaseMaterial(MaterialHandle mh)
 
 void RenderRepository::Update()
 {
+	m_fontRepository->Update();
 	m_meshRepository->Update();
 	m_matRepository->Update();
 }
 
 void RenderRepository::ReleaseAll()
 {
+	m_fontRepository->ReleaseAll();
 	m_meshRepository->ReleaseAll();
 	m_matRepository->ReleaseAll();
 }

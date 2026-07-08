@@ -45,6 +45,7 @@ bool RenderService::Initialize(HWND hwnd, const Size& screenSize)
 
 	m_renderer = make_unique<SceneRenderer>(
 		m_backend->GetRenderFrame(),
+		m_fontRepository.get(),
 		m_meshRepository.get(),
 		m_matRepository.get());
 

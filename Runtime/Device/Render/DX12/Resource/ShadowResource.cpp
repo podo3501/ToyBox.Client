@@ -23,6 +23,9 @@ static Resource CreateShadowResource(Device& device, const Size& shadowMapSize)
         &clearValue);
 }
 
+ShadowResource::~ShadowResource() = default;
+ShadowResource::ShadowResource() = default;
+
 bool ShadowResource::Initialize(Device& device, DescriptorFactory& factory, const Size& shadowMapSize)
 {
 	m_resource = CreateShadowResource(device, shadowMapSize);

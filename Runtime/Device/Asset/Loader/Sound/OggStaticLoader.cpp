@@ -3,7 +3,7 @@
 #include "AudioProcessing.h"
 #include "VorbisDecoder.h"
 
-std::shared_ptr<StaticSoundAsset> OggStaticLoader::LoadFromMemory(const Core::ByteBuffer& buffer)
+std::shared_ptr<StaticSoundAsset> OggStaticLoader::LoadFromMemory(Core::ByteBuffer buffer)
 {
     VorbisDecoder decoder;
 

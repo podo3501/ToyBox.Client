@@ -7,7 +7,7 @@
 struct IFontProvider;
 struct IFontResource;
 struct IAssetAsyncLoader;
-struct CpuPendingFontRequest;
+struct PendingFontRequest;
 
 struct FontEntry
 {
@@ -23,13 +23,20 @@ public:
 	FontRepository() = delete;
 	FontRepository(IFontProvider* fontProvider, IAssetAsyncLoader* asyncLoader);
 	FontHandle GetOrCreate(const Core::ResourceID& resID);
+	bool Release(FontHandle h);
+	void ReleaseAll();
+	void Update();
+
+	const FontEntry* Get(FontHandle h) const noexcept { return m_loadedFonts.Find(h); }
 
 private:
+	void ProcessPendingRequests();
+
 	IFontProvider* m_fontProvider{ nullptr };
 	IAssetAsyncLoader* m_asyncLoader{ nullptr };
 
 	std::unordered_map<Core::ResourceID, FontHandle> m_cache;
 	HandlePool<FontEntry, FontTag> m_loadedFonts;
 
-	std::vector<CpuPendingFontRequest> m_cpuPending;
+	std::vector<PendingFontRequest> m_pending;
 };

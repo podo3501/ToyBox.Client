@@ -9,7 +9,7 @@ public:
 	virtual ~IAssetLoader() = default;
 
 	virtual bool PreferStream() const { return false; }
-	virtual std::shared_ptr<AssetData> Load(const AssetInput& source) = 0;
+	virtual std::shared_ptr<AssetData> Load(AssetInput& source) = 0;
 };
 
 template <typename T>
@@ -29,3 +29,4 @@ std::unique_ptr<IAssetLoader> CreateStaticSoundTableLoader();
 std::unique_ptr<IAssetLoader> CreateStreamSoundTableLoader();
 std::unique_ptr<IAssetLoader> CreateOggStreamLoader();
 std::unique_ptr<IAssetLoader> CreateHLSLShaderLoader();
+std::unique_ptr<IAssetLoader> CreateFontLoader();

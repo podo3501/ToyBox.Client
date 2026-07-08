@@ -7,6 +7,7 @@ class TextureResource;
 class MaterialResource : public IMaterialResource //backend용 material resource 인터페이스.
 {
 public:
+	virtual ~MaterialResource() override;
 	MaterialResource() = delete;
 	MaterialResource(uint32_t texSlotCount);
 	virtual bool IsReady() const noexcept override { return m_ready; }

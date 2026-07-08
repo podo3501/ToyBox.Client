@@ -56,7 +56,7 @@ std::string_view Core::GetExtension(std::string_view path)
     return path.substr(dotPos);
 }
 
-std::wstring Core::ToWString(const std::string& str)
+std::wstring Core::UTF8ToWString(const std::string& str)
 {
     if (str.empty())
         return L"";
@@ -124,6 +124,115 @@ std::wstring Core::ToWString(const std::string& str)
             i += 1;
         }
     }
+
+    return result;
+}
+
+std::vector<char32_t> Core::UTF8ToUTF32(std::string_view text)
+{
+    std::vector<char32_t> result;
+    result.reserve(text.size());
+
+    const auto* bytes =
+        reinterpret_cast<const unsigned char*>(text.data());
+
+    size_t i = 0;
+
+    while (i < text.size())
+    {
+        char32_t codePoint = 0;
+        unsigned char c = bytes[i];
+
+        if (c <= 0x7F) // 1 byte (ASCII)
+        {
+            codePoint = c;
+            i += 1;
+        }
+        else if ((c & 0xE0) == 0xC0) // 2 bytes
+        {
+            if (i + 1 >= text.size())
+                break;
+
+            codePoint =
+                ((c & 0x1F) << 6) |
+                (bytes[i + 1] & 0x3F);
+
+            i += 2;
+        }
+        else if ((c & 0xF0) == 0xE0) // 3 bytes (한글 대부분)
+        {
+            if (i + 2 >= text.size())
+                break;
+
+            codePoint =
+                ((c & 0x0F) << 12) |
+                ((bytes[i + 1] & 0x3F) << 6) |
+                (bytes[i + 2] & 0x3F);
+
+            i += 3;
+        }
+        else if ((c & 0xF8) == 0xF0) // 4 bytes
+        {
+            if (i + 3 >= text.size())
+                break;
+
+            codePoint =
+                ((c & 0x07) << 18) |
+                ((bytes[i + 1] & 0x3F) << 12) |
+                ((bytes[i + 2] & 0x3F) << 6) |
+                (bytes[i + 3] & 0x3F);
+
+            i += 4;
+        }
+        else
+        {
+            ++i;
+            continue; // 잘못된 UTF-8
+        }
+
+        result.push_back(codePoint);
+    }
+
+    return result;
+}
+
+std::string Core::UTF32ToUTF8(std::span<const char32_t> text)
+{
+    std::string result;
+    result.reserve(text.size() * 3);
+
+    for (char32_t c : text)
+    {
+        uint32_t codePoint = static_cast<uint32_t>(c);
+
+        if (codePoint <= 0x7F)
+        {
+            result.push_back(static_cast<char>(codePoint));
+        }
+        else if (codePoint <= 0x7FF)
+        {
+            result.push_back(static_cast<char>(0xC0 | (codePoint >> 6)));
+            result.push_back(static_cast<char>(0x80 | (codePoint & 0x3F)));
+        }
+        else if (codePoint <= 0xFFFF)
+        {
+            result.push_back(static_cast<char>(0xE0 | (codePoint >> 12)));
+            result.push_back(static_cast<char>(0x80 | ((codePoint >> 6) & 0x3F)));
+            result.push_back(static_cast<char>(0x80 | (codePoint & 0x3F)));
+        }
+        else if (codePoint <= 0x10FFFF)
+        {
+            result.push_back(static_cast<char>(0xF0 | (codePoint >> 18)));
+            result.push_back(static_cast<char>(0x80 | ((codePoint >> 12) & 0x3F)));
+            result.push_back(static_cast<char>(0x80 | ((codePoint >> 6) & 0x3F)));
+            result.push_back(static_cast<char>(0x80 | (codePoint & 0x3F)));
+        }
+        else
+        {
+            result.push_back('?');
+        }
+    }
+    result.shrink_to_fit(); 
 
     return result;
 }

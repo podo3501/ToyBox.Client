@@ -8,7 +8,7 @@
 #include "dr_wav.h"
 #pragma warning(pop)
 
-std::shared_ptr<StaticSoundAsset> WavStaticLoader::LoadFromMemory(const Core::ByteBuffer& buffer)
+std::shared_ptr<StaticSoundAsset> WavStaticLoader::LoadFromMemory(Core::ByteBuffer buffer)
 {
     drwav wav;
 

@@ -1,5 +1,6 @@
 #pragma once
 #include "GameClient/Graphics/RenderData/FrameData.h"
+#include "GameClient/Service/Render/Resource/IFontResource.h"
 #include "GameClient/Service/Render/Resource/IMeshResource.h"
 #include "GameClient/Service/Render/Resource/IMaterialResource.h"
 #include "Core/Foundation/Geometry2D.h"
@@ -8,6 +9,11 @@ struct IRenderFrame
 {
 	virtual ~IRenderFrame() = default;
 	virtual void SetFrameData(const FrameData& frameData) noexcept = 0;
+
+	virtual void DrawText(
+		std::shared_ptr<IFontResource> fontRes,
+		std::string_view text,
+		const Vector2& pos) = 0;
 
 	virtual void DrawSurface(
 		std::shared_ptr<IMeshResource> meshRes,

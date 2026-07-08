@@ -6,7 +6,7 @@
 class MeshResource : public IMeshResource
 {
 public:
-	~MeshResource();
+	virtual ~MeshResource() override;
 	MeshResource();
 	virtual bool IsReady() const noexcept override { return m_ready; }
 

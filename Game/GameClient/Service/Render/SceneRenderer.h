@@ -1,4 +1,5 @@
 #pragma once
+#include "Handle/FontHandle.h"
 #include "Handle/MeshHandle.h"
 #include "Handle/MaterialHandle.h"
 #include "Desc/MaterialDesc.h"
@@ -11,6 +12,7 @@ struct MeshAsset;
 struct MeshDesc;
 struct ResolvedDrawData;
 struct FrameData;
+class FontRepository;
 class MaterialRepository;
 class MeshRepository;
 
@@ -19,8 +21,13 @@ class SceneRenderer
 public:
 	~SceneRenderer();
 	SceneRenderer() = delete;
-	SceneRenderer(IRenderFrame* renderFrame, MeshRepository* meshRepository, MaterialRepository* matRepository);
+	SceneRenderer(
+		IRenderFrame* renderFrame, 
+		FontRepository* fontRepository,
+		MeshRepository* meshRepository, 
+		MaterialRepository* matRepository);
 
+	void DrawText(FontHandle hF, std::string_view text, const Vector2& pos);
 	void DrawSurface(MeshHandle hM, MaterialHandle hMtl, const Core::Math::Matrix& world);
 	void DrawDebugSurface(MeshHandle hM, MaterialHandle hMtl, const Core::Math::Matrix& world);
 	void DrawUI(MaterialHandle hMtl, const Rect& dest, const Rect* source = nullptr);
@@ -31,6 +38,7 @@ private:
 	MaterialHandle GetDefaultMaterial(MaterialDomain matDomain) const;
 
 	IRenderFrame* m_renderFrame{ nullptr };
+	FontRepository* m_fontRepository{ nullptr };
 	MeshRepository* m_meshRepository{ nullptr };
 	MaterialRepository* m_matRepository{ nullptr };
 

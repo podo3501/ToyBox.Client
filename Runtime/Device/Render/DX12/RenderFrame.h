@@ -9,6 +9,10 @@ public:
 	RenderFrame();
 
 	virtual void SetFrameData(const FrameData& frameData) noexcept override;
+	virtual void DrawText(
+		std::shared_ptr<IFontResource> fontRes,
+		std::string_view text,
+		const Vector2& pos) override;
 	virtual void DrawSurface(
 		std::shared_ptr<IMeshResource> meshRes,
 		std::shared_ptr<IMaterialResource> matRes,

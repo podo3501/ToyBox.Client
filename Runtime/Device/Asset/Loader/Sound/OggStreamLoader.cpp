@@ -2,12 +2,12 @@
 #include "OggStreamLoader.h"
 #include "Platform/Resource/IResourceStream.h"
 
-std::shared_ptr<AssetData> OggStreamLoader::Load(const AssetInput& source)
+std::shared_ptr<AssetData> OggStreamLoader::Load(AssetInput& source)
 {
     if (!source.IsStream()) return nullptr;
 
-    const StreamInput* streamInput = static_cast<const StreamInput*>(&source);
-    return LoadFromStream(std::move(const_cast<StreamInput*>(streamInput)->stream));
+    auto& streamInput = static_cast<StreamInput&>(source);
+    return LoadFromStream(std::move(streamInput.stream));
 }
 
 std::shared_ptr<StreamSoundAsset> OggStreamLoader::LoadFromStream(unique_ptr<IResourceStream> stream)
