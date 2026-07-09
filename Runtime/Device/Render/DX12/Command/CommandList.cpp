@@ -10,7 +10,7 @@ bool CommandList::Initialize(Device& device, CommandType type)
 {
     ReturnIfFailed(device->CreateCommandAllocator(ToD3D12(type), IID_PPV_ARGS(&m_allocator)));
     ReturnIfFailed(device->CreateCommandList(0, ToD3D12(type), m_allocator.Get(), nullptr, IID_PPV_ARGS(&m_command)));
-    m_command->Close(); // ÃÊ±â »óÅÂ´Â ´İ¾ÆµÒ
+    m_command->Close(); // ì´ˆê¸° ìƒíƒœëŠ” ë‹«ì•„ë‘ 
 
     m_type = type;
     return true;
@@ -23,7 +23,7 @@ void CommandList::Reset()
     if (m_lastFenceID != 0)
     {
         Assert(m_fence);
-        Assert(m_fence->GetCompletedValue() >= m_lastFenceID); //ÀÌÀü gpu ÀÛ¾÷ÀÌ ³¡³µ´ÂÁö È®ÀÎ.
+        Assert(m_fence->GetCompletedValue() >= m_lastFenceID); //ì´ì „ gpu ì‘ì—…ì´ ëë‚¬ëŠ”ì§€ í™•ì¸.
     }
 
     DxCheck(m_allocator->Reset());
@@ -63,11 +63,11 @@ bool CommandList::IsAvailable() const
     if (m_recording)
         return false;
 
-    if (m_lastFenceID == 0) //ÇÑ¹øµµ ¾´ÀûÀÌ ¾ø´Ù¸é
+    if (m_lastFenceID == 0) //í•œë²ˆë„ ì“´ì ì´ ì—†ë‹¤ë©´
         return true;
 
     Assert(m_fence);
 
-    bool completed = m_fence->GetCompletedValue() >= m_lastFenceID; //½ÃÅ² ÀÏÀÌ ³¡³ª ÀÖ´ÂÁö
+    bool completed = m_fence->GetCompletedValue() >= m_lastFenceID; //ì‹œí‚¨ ì¼ì´ ëë‚˜ ìˆëŠ”ì§€
     return completed;
 }

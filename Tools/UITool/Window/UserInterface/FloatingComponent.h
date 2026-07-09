@@ -6,7 +6,7 @@ class RenderTexture;
 class UIComponent;
 class MouseTracker;
 
-//ÆË¾÷ ¸Ş´º¿Í floatingComponent µÎ°³ÀÇ ¿ªÇÒÀÌ ÀÖ´Ù ³ª´­ ÇÊ¿ä°¡ ÀÖÀ»µí
+//íŒì—… ë©”ë‰´ì™€ floatingComponent ë‘ê°œì˜ ì—­í• ì´ ìˆë‹¤ ë‚˜ëˆŒ í•„ìš”ê°€ ìˆì„ë“¯
 class FloatingComponent
 {
 	enum class MakeComponent

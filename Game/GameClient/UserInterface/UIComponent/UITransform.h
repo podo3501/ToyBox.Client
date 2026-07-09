@@ -21,6 +21,6 @@ public:
 
 private:
 	Vector2 m_ratio{};
-	XMINT2 m_relativePosition{}; //ºÎ¸ðÀÇ °ü°è¿¡ ºñ·ÊÇØ¼­ »ó´ëÀûÀÎ ÁÂÇ¥
-	XMINT2 m_absolutePosition{}; //LeftTopÀÌ¸ç, °è»êµÇ¾îÁ®¼­ ½ÇÁ¦ÀÎ ÁÂÇ¥
+	XMINT2 m_relativePosition{}; //ë¶€ëª¨ì˜ ê´€ê³„ì— ë¹„ë¡€í•´ì„œ ìƒëŒ€ì ì¸ ì¢Œí‘œ
+	XMINT2 m_absolutePosition{}; //LeftTopì´ë©°, ê³„ì‚°ë˜ì–´ì ¸ì„œ ì‹¤ì œì¸ ì¢Œí‘œ
 };

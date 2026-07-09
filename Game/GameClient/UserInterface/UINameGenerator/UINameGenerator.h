@@ -30,6 +30,6 @@ public:
 private:
     ComponentNameGenerator* GetComponentNameGen(string_view region) const noexcept;
 
-    unordered_svmap<string, unique_ptr<AutoNamer>> m_regionGens; //Generator ÇØ¼­ Å° °ªÀ» »ı¼ºÇÔ. ÀÌ Å°°ª°ú regionÅ° °ªÀÌ ´Ù¸§. ¿©±â´Â base name À¸·Î Å°°ªÀ» »ı¼ºÇÏ´Â °÷.
+    unordered_svmap<string, unique_ptr<AutoNamer>> m_regionGens; //Generator í•´ì„œ í‚¤ ê°’ì„ ìƒì„±í•¨. ì´ í‚¤ê°’ê³¼ regioní‚¤ ê°’ì´ ë‹¤ë¦„. ì—¬ê¸°ëŠ” base name ìœ¼ë¡œ í‚¤ê°’ì„ ìƒì„±í•˜ëŠ” ê³³.
     unordered_svmap<string, unique_ptr<ComponentNameGenerator>> m_componentNameGens;
 };

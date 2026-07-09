@@ -58,7 +58,7 @@ void DebugSurfaceRenderer::PrepareFrame(const CameraData& camera)
     DirectX::XMMATRIX view = ToDXMatrix(camera.view);
     DirectX::XMMATRIX proj = ToDXMatrix(camera.proj);
 
-    // GPU¿ëÀ¸·Î transposeÇØ¼­ ÀúÀå
+    // GPUìš©ìœ¼ë¡œ transposeí•´ì„œ ì €ìž¥
     XMStoreFloat4x4(&frame.view, DirectX::XMMatrixTranspose(view));
     XMStoreFloat4x4(&frame.proj, DirectX::XMMatrixTranspose(proj));
 

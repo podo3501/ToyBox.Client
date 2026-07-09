@@ -65,7 +65,7 @@ bool DetachComponentCommand::Execute()
 	if (!component) return false;
 
 	m_position = pos;
-	m_component = move(component); //¿øº»Àº ÀúÀåÇÏ°í Å¬·ĞÀº ¹ÛÀ¸·Î 
+	m_component = move(component); //ì›ë³¸ì€ ì €ì¥í•˜ê³  í´ë¡ ì€ ë°–ìœ¼ë¡œ 
 	m_parent = parent;
 
 	m_result = { Clone(m_component.get()), parent };
@@ -89,7 +89,7 @@ bool DetachComponentCommand::Redo()
 	if (!component) return false;
 
 	m_component = move(component);
-	//if(!CompareUniquePtr(m_result.first, m_component)) //Undo, Redo¸¦ °è¼ÓÇÏ¸é m_result¿¡ °ªÀÌ ÀÖ¾î¼­ ¼Ò¸êÀÚ°¡ È£ÃâµÈ´Ù. ±×·¡¼­ textureÀÇ reference count°¡ ²¿ÀÌ°Ô µÈ´Ù.
+	//if(!CompareUniquePtr(m_result.first, m_component)) //Undo, Redoë¥¼ ê³„ì†í•˜ë©´ m_resultì— ê°’ì´ ìˆì–´ì„œ ì†Œë©¸ìê°€ í˜¸ì¶œëœë‹¤. ê·¸ë˜ì„œ textureì˜ reference countê°€ ê¼¬ì´ê²Œ ëœë‹¤.
 	m_result = { Clone(m_component.get()), parent };
 
 	return m_result.first != nullptr;

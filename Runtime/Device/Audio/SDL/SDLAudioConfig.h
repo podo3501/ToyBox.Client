@@ -6,7 +6,7 @@ struct VoiceLimits
 	static constexpr int MaxStreams = 16;
 };
 
-struct StreamAudioRequestDevice //½ºÆ®¸²¿ë Device¸¦ ¸¸µé¶§ ¿äÃ»ÇÏ´Â °ª(½ÇÁ¦·Î´Â ÀÌ·¸°Ô ¾È ¸¸µé¾îÁú¼öµµ ÀÖÀ½. ÄÚµå¿¡¼­ È®ÀÎ)
+struct StreamAudioRequestDevice //ìŠ¤íŠ¸ë¦¼ìš© Deviceë¥¼ ë§Œë“¤ë•Œ ìš”ì²­í•˜ëŠ” ê°’(ì‹¤ì œë¡œëŠ” ì´ë ‡ê²Œ ì•ˆ ë§Œë“¤ì–´ì§ˆìˆ˜ë„ ìˆìŒ. ì½”ë“œì—ì„œ í™•ì¸)
 { 
 	int freq = 48000; 
 	SDL_AudioFormat format = SDL_AUDIO_F32; 

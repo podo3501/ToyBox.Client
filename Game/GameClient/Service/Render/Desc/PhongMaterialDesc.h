@@ -4,7 +4,7 @@
 enum class PhongTextureSlot : uint32_t
 {
     Albedo,
-    Normal, //specular ÅØ½ºÃÄ¸¦ ²À ¾²°í ½Í´Ù¸é ³ë¸Ö ¾ËÆÄÃ¤³Î¿¡ °ªÀ» ³Ö¾î³õ°í ±×°É °¡Á®´Ù ¾²ÀÚ.
+    Normal, //specular í…ìŠ¤ì³ë¥¼ ê¼­ ì“°ê³  ì‹¶ë‹¤ë©´ ë…¸ë©€ ì•ŒíŒŒì±„ë„ì— ê°’ì„ ë„£ì–´ë†“ê³  ê·¸ê±¸ ê°€ì ¸ë‹¤ ì“°ì.
     Count
 };
 
@@ -15,10 +15,10 @@ constexpr TextureSlot Resolve(PhongTextureSlot s)
 
 struct PhongSurface
 {
-    float normal{ 1.0f };    // 1. Normal MapÀÇ °­µµ Á¶Àı (PBR°ú µ¿ÀÏ)
-    float shininess{ 32.0f }; // 2. ÇÏÀÌ¶óÀÌÆ® µ¿±×¶ó¹ÌÀÇ Å©±â/¼±¸íµµ (´ëÃ¼·Î 1.0 ~ 256.0)
-    float specular{ 0.5f };  // 3. ÇÏÀÌ¶óÀÌÆ®ÀÇ ÀüÃ¼ÀûÀÎ ¹à±â/¼¼±â (0.0 ~ 1.0)
-    float ambient{ 0.015f };   // 4. È¯°æ±¤/±âº» À½¿µ ¹à±â (¼±ÅÃ »çÇ×, 0.0 ~ 1.0)
+    float normal{ 1.0f };    // 1. Normal Mapì˜ ê°•ë„ ì¡°ì ˆ (PBRê³¼ ë™ì¼)
+    float shininess{ 32.0f }; // 2. í•˜ì´ë¼ì´íŠ¸ ë™ê·¸ë¼ë¯¸ì˜ í¬ê¸°/ì„ ëª…ë„ (ëŒ€ì²´ë¡œ 1.0 ~ 256.0)
+    float specular{ 0.5f };  // 3. í•˜ì´ë¼ì´íŠ¸ì˜ ì „ì²´ì ì¸ ë°ê¸°/ì„¸ê¸° (0.0 ~ 1.0)
+    float ambient{ 0.015f };   // 4. í™˜ê²½ê´‘/ê¸°ë³¸ ìŒì˜ ë°ê¸° (ì„ íƒ ì‚¬í•­, 0.0 ~ 1.0)
 
     bool operator==(const PhongSurface&) const = default;
     size_t GetHash() const { return Core::HashOf(normal, shininess, specular, ambient); }

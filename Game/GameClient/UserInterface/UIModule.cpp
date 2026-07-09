@@ -81,7 +81,7 @@ void UIModule::Serialize(Serializer& serializer)
 bool UIModule::Read(const filesystem::path filename) noexcept
 {
 	JsonObjectIO::Read(*this, filename, m_resManager);
-	PropagateRoot(m_mainPanel.get()); //¸ðµç ÄÄÆ÷³ÍÆ®µé¿¡ root¸¦ ÁöÁ¤.
+	PropagateRoot(m_mainPanel.get()); //ëª¨ë“  ì»´í¬ë„ŒíŠ¸ë“¤ì— rootë¥¼ ì§€ì •.
 	m_mouseEventRouter->SetComponent(m_mainPanel.get());
 	m_filename = filename;
 

@@ -14,7 +14,7 @@ public:
     TextureRepo(DX::DeviceResources* deviceRes,
         DescriptorHeap* descriptorHeap,
         ResourceUploadBatch* upload, 
-        SpriteBatch* sprite); //SpriteBatch´Â ¿©±â¼­ ¸¸µé¾î ÁÙ ¼ö ÀÖ´Ù.
+        SpriteBatch* sprite); //SpriteBatchëŠ” ì—¬ê¸°ì„œ ë§Œë“¤ì–´ ì¤„ ìˆ˜ ìˆë‹¤.
     ~TextureRepo();
 
     //ITextureLoad
@@ -56,6 +56,6 @@ private:
     function<void(size_t index, ITextureRender*)> m_textureRenderer;
     array<unique_ptr<TextureRes>, MAX_DESC> m_texResources;
     array<int, MAX_DESC> m_refCount{};
-    vector<size_t> m_freeDescIndices; //ÇØÁ¦µÇ°í³ª¼­ ÀçÈ°¿ëµÉ ÀÎµ¦½º ¸ğÀ½
-    size_t m_nextDescIdx{ 0 };  //»õ·Ó°Ô ÇÒ´çÇÒ ÀÎµ¦½º
+    vector<size_t> m_freeDescIndices; //í•´ì œë˜ê³ ë‚˜ì„œ ì¬í™œìš©ë  ì¸ë±ìŠ¤ ëª¨ìŒ
+    size_t m_nextDescIdx{ 0 };  //ìƒˆë¡­ê²Œ í• ë‹¹í•  ì¸ë±ìŠ¤
 };

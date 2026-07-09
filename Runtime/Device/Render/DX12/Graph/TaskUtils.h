@@ -10,4 +10,4 @@ void ExecuteTaskImmediate(CommandList* cmd, const Task& task, TaskContext& ctx);
 void ExecuteRenderPipeline(
 	CommandList& cmd, 
 	const vector<CompiledTask>& compiledTasks, 
-	TaskContext& ctx); // ·»´õ¸µÀ» À§ÇØ ÄÄÆÄÀÏµÈ ÅÂ½ºÅ©µéÀ» ÀÏ°ı ¼øÂ÷ ½ÇÇà
+	TaskContext& ctx); // ë Œë”ë§ì„ ìœ„í•´ ì»´íŒŒì¼ëœ íƒœìŠ¤í¬ë“¤ì„ ì¼ê´„ ìˆœì°¨ ì‹¤í–‰

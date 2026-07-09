@@ -29,7 +29,7 @@ enum class KeyCode : uint8_t
     Left,
     Right,
 
-    // --- QWER À§¿¡ ºÙ¾î ÀÖ´Â ¼ıÀÚ. NumPad0°ú ´Ù¸§. ---
+    // --- QWER ìœ„ì— ë¶™ì–´ ìˆëŠ” ìˆ«ì. NumPad0ê³¼ ë‹¤ë¦„. ---
     Digit0,
     Digit1,
     Digit2,

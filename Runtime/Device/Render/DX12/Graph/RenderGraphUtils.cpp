@@ -8,14 +8,14 @@ std::vector<PassIndex> TopologicalSort(const std::vector<PassNodeV>& graph)
 
     std::vector<int> indegree(n);
 
-    for (int i = 0; i < n; ++i) // indegree º¹»ç
+    for (int i = 0; i < n; ++i) // indegree ë³µì‚¬
         indegree[i] = graph[i].indegree;
 
     std::queue<PassIndex> q;
     std::vector<PassIndex> result;
     result.reserve(n);
 
-    // 1. indegree 0ºÎÅÍ ½ÃÀÛ
+    // 1. indegree 0ë¶€í„° ì‹œìž‘
     for (PassIndex i = 0; i < n; ++i)
     {
         if (indegree[i] == 0)
@@ -54,7 +54,7 @@ void BuildDependents(std::vector<CompiledTask>& tasks)
         for (const auto& dep : task.dependencies)
         {
             auto it = indexMap.find(dep);
-            Assert(it != indexMap.end()); //µðÆæ´ø½Ã°¡ Á¸ÀçÇÏ´Âµ¥ task°¡ ¾ø´Ù.
+            Assert(it != indexMap.end()); //ë””íŽœë˜ì‹œê°€ ì¡´ìž¬í•˜ëŠ”ë° taskê°€ ì—†ë‹¤.
 
             tasks[it->second].dependents.push_back(task.localId);
         }

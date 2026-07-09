@@ -13,11 +13,11 @@ inline std::unique_ptr<Environment> InitializeEnvironment(
 {
     auto env = std::make_unique<Environment>(resourcePath, resolution);
     EnvironmentLocator::Provide(env.get());
-    return env; //Å¬·¡½º¸¦ »ı¼ºÇÏ°í ¸®ÅÏÇØ¼­ »ı¼ºµÈ Å¬·¡½º°¡ Á¾·áµÉ¶§ ¼Ò¸êÀÚ È£Ãâ
+    return env; //í´ë˜ìŠ¤ë¥¼ ìƒì„±í•˜ê³  ë¦¬í„´í•´ì„œ ìƒì„±ëœ í´ë˜ìŠ¤ê°€ ì¢…ë£Œë ë•Œ ì†Œë©¸ì í˜¸ì¶œ
 }
 
-//EnvironmentLocator::GetService() ÇØ¼­ È£ÃâÇÏ´Â°Ô ½È¾î¼­ °£´ÜÇÏ°Ô ÇÑ °ÍÀÌ¶ó ÀÌ ÇÔ¼öµéÀº ÆíÀÇ¸¦ 
-//À§ÇØ¼­ ¸¸µç°Å¶ó ±»ÀÌ ½Å°æ¾²Áö ¾Ê¾Æµµ µÊ.
+//EnvironmentLocator::GetService() í•´ì„œ í˜¸ì¶œí•˜ëŠ”ê²Œ ì‹«ì–´ì„œ ê°„ë‹¨í•˜ê²Œ í•œ ê²ƒì´ë¼ ì´ í•¨ìˆ˜ë“¤ì€ í¸ì˜ë¥¼ 
+//ìœ„í•´ì„œ ë§Œë“ ê±°ë¼ êµ³ì´ ì‹ ê²½ì“°ì§€ ì•Šì•„ë„ ë¨.
 template <typename Fn, typename... Args>
 decltype(auto) EnvCall(Fn&& fn, Args&&... args) noexcept
 {
@@ -26,8 +26,8 @@ decltype(auto) EnvCall(Fn&& fn, Args&&... args) noexcept
         std::forward<Args>(args)...);
 }
 
-//Locator¸¦ Àü¿ªÇÔ¼öÈ­ ½ÃÅ´. ÀÌ·¸°Ô ÇÏ´Â ÀÌÀ¯´Â ³»ºÎÀûÀ¸·Î Locator ÆĞÅÏÀ» ¾²´Â °ÍÀ» °¨Ãß±â À§ÇØ¼­.
-//·±Å¸ÀÓ¿¡ ±³Ã¼°¡ ÀÏ¾î³ªÁö ¾Ê´Â ¼³Á¤ ºÎºĞÀÌ±â ¶§¹®¿¡ Locator¸¦ °¨Ãß´Â°Ô ¿Ã¹Ù¸¥ °Í °°´Ù.
+//Locatorë¥¼ ì „ì—­í•¨ìˆ˜í™” ì‹œí‚´. ì´ë ‡ê²Œ í•˜ëŠ” ì´ìœ ëŠ” ë‚´ë¶€ì ìœ¼ë¡œ Locator íŒ¨í„´ì„ ì“°ëŠ” ê²ƒì„ ê°ì¶”ê¸° ìœ„í•´ì„œ.
+//ëŸ°íƒ€ì„ì— êµì²´ê°€ ì¼ì–´ë‚˜ì§€ ì•ŠëŠ” ì„¤ì • ë¶€ë¶„ì´ê¸° ë•Œë¬¸ì— Locatorë¥¼ ê°ì¶”ëŠ”ê²Œ ì˜¬ë°”ë¥¸ ê²ƒ ê°™ë‹¤.
 inline const filesystem::path& GetResourcePath() noexcept { return EnvCall(&Environment::GetResourcePath); }
 inline const filesystem::path& GetResourceFontPath() noexcept { return EnvCall(&Environment::GetResourceFontPath); }
 inline const DirectX::SimpleMath::Vector2& GetResolution() noexcept { return EnvCall(&Environment::GetResolution); }

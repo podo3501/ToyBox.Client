@@ -53,5 +53,5 @@ private:
 	unordered_map<wstring, TextureFontInfo> m_bindingFontTable;
 	unordered_map<string, TextureSourceInfo> m_bindingTexTable;
 };
-//renderer°¡ nullptr ÀÌ¸é ÅØ½ºÃÄ¸¦ ¸Ş¸ğ¸®¿¡ ¿Ã¸®Áö ¾Ê´Â´Ù.
+//rendererê°€ nullptr ì´ë©´ í…ìŠ¤ì³ë¥¼ ë©”ëª¨ë¦¬ì— ì˜¬ë¦¬ì§€ ì•ŠëŠ”ë‹¤.
 unique_ptr<TextureResourceBinder> CreateTextureResourceBinder(const filesystem::path& filename, IResourceManager* resManager, IRenderer* renderer = nullptr);

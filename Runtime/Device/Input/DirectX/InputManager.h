@@ -3,8 +3,8 @@
 #include "DirectXTK12/Keyboard.h"
 #include "DirectXTK12/Mouse.h"
 
-//IInputManager´Â °ÔÀÓ³»¿¡¼­ »ç¿ë, IToolInputManager´Â Åø¿¡¼­ »ç¿ëÇÑ´Ù. 
-//IInputManager¸¦ »ó¼Ó¹Ş¾Ò±â ¶§¹®¿¡ IInputManagerµµ »ç¿ëÇÒ ¼öÀÖ´Ù.
+//IInputManagerëŠ” ê²Œì„ë‚´ì—ì„œ ì‚¬ìš©, IToolInputManagerëŠ” íˆ´ì—ì„œ ì‚¬ìš©í•œë‹¤. 
+//IInputManagerë¥¼ ìƒì†ë°›ì•˜ê¸° ë•Œë¬¸ì— IInputManagerë„ ì‚¬ìš©í•  ìˆ˜ìˆë‹¤.
 class InputManager : public IToolInputManager, private NoCopyNoMove
 {
 public:

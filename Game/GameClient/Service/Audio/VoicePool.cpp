@@ -7,9 +7,9 @@
 static void SortStealCandidateList(vector<Voice*>& stealCandidates)
 {
 	ranges::sort(stealCandidates, [](Voice* lhs, Voice* rhs) {
-		if (lhs->desc.priority != rhs->desc.priority) return lhs->desc.priority < rhs->desc.priority; //³·Àº priority ºÎÅÍ ¾ø¾Ø´Ù.
+		if (lhs->desc.priority != rhs->desc.priority) return lhs->desc.priority < rhs->desc.priority; //ë‚®ì€ priority ë¶€í„° ì—†ì•¤ë‹¤.
 		return lhs->playbackTime > rhs->playbackTime ||
-			(lhs->playbackTime == rhs->playbackTime && lhs < rhs); // ¿À·¡µÈ Àç»ı ¸ÕÀú ¾ø¾Ø´Ù.
+			(lhs->playbackTime == rhs->playbackTime && lhs < rhs); // ì˜¤ë˜ëœ ì¬ìƒ ë¨¼ì € ì—†ì•¤ë‹¤.
 		});
 }
 
@@ -206,14 +206,14 @@ PlaybackState VoicePool::GetState(VoiceHandle vh) const noexcept
 		return EnumUtil::Invalid<PlaybackState>;
 
 	if (!voice->instance)
-		return PlaybackState::Pending; //sh(sound handle)´Â ÀÖÁö¸¸ ¾ÆÁ÷ µ¥ÀÌÅÍ°¡ ·ÎµåµÇÁö ¾Ê¾Æ¼­ instance°¡ »ı¼ºµÇÁö ¾Ê¾Ò´Ù.
+		return PlaybackState::Pending; //sh(sound handle)ëŠ” ìˆì§€ë§Œ ì•„ì§ ë°ì´í„°ê°€ ë¡œë“œë˜ì§€ ì•Šì•„ì„œ instanceê°€ ìƒì„±ë˜ì§€ ì•Šì•˜ë‹¤.
 
 	return voice->instance->GetState();
 }
 
 void VoicePool::UpdateVoices() noexcept
 {
-	std::vector<VoiceHandle> toStop; //»èÁ¦ÇÒ °ÍÀ» ³Ö¾î³õ´Â ÀÌÀ¯´Â visit¾È¿¡¼­ »èÁ¦ÇÏ°Ô µÇ¸é iterator°¡ ²¿¿©¼­ ±úÁö±â ¶§¹®ÀÌ´Ù.
+	std::vector<VoiceHandle> toStop; //ì‚­ì œí•  ê²ƒì„ ë„£ì–´ë†“ëŠ” ì´ìœ ëŠ” visitì•ˆì—ì„œ ì‚­ì œí•˜ê²Œ ë˜ë©´ iteratorê°€ ê¼¬ì—¬ì„œ ê¹¨ì§€ê¸° ë•Œë¬¸ì´ë‹¤.
 
 	m_voices.Visit([&](VoiceHandle h, Voice& voice) {
 		if (!voice.instance) return;

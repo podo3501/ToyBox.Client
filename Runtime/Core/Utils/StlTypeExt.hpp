@@ -2,12 +2,12 @@
 #include <string_view>     // std::string_view
 #include <unordered_map>   // std::unordered_map
 #include <functional>      // std::hash, std::equal_to<>
-//ÀÌ ÆÄÀÏÀº type¸¸ Á¤ÀÇÇÒ °ÍÀÌ±â ¶§¹®¿¡ Çì´õ¿¡ include ÇØµµ »ó°ü ¾ø´Ù. 
+//ì´ íŒŒì¼ì€ typeë§Œ ì •ì˜í•  ê²ƒì´ê¸° ë•Œë¬¸ì— í—¤ë”ì— include í•´ë„ ìƒê´€ ì—†ë‹¤. 
 
-// mapÀº c++14ºÎÅÍ string_view°¡ Áö¿øµÇ±â ¶§¹®¿¡ ±»ÀÌ ÀÌ·¸°Ô ¾È ¸¸µé¾îµµ ¹Ù·Î string_view¸¦ ³Ö¾îµµ µÈ´Ù.
-// Áö±İÀº unordered_mapÀº ¹ÌÁö¿øÀÌ±â ¶§¹®¿¡ ÀÌ·¸°Ô ±¸ÇöÇØ¾ß string_view¸¦ »ç¿ëÇÒ ¼ö ÀÖ´Ù.
-// ´ëºÎºĞÀº Å°°ªÀ» Ã£À»¶§ ¸¶Áö¸·¿¡ string(string_view) ÀÌ·¸°Ô °­Á¦ Çüº¯È¯ÀÌ ´õ ÁÁ´Ù.
-// ÇÏÁö¸¸ Å° °ªÀ» ºü¸£°Ô Ã£°Å³ª Àç±Í È£ÃâÀÌ°Å³ª µîµî ÇØ¼­ ¸¹À¸ ¿¬»êµ¿ÀÛÀÌ µÉ °Í °°´Ù¸é ÀÌ svmapÀ» »ç¿ëÇÏ´Â°Ô ÁÁ´Ù.
+// mapì€ c++14ë¶€í„° string_viewê°€ ì§€ì›ë˜ê¸° ë•Œë¬¸ì— êµ³ì´ ì´ë ‡ê²Œ ì•ˆ ë§Œë“¤ì–´ë„ ë°”ë¡œ string_viewë¥¼ ë„£ì–´ë„ ëœë‹¤.
+// ì§€ê¸ˆì€ unordered_mapì€ ë¯¸ì§€ì›ì´ê¸° ë•Œë¬¸ì— ì´ë ‡ê²Œ êµ¬í˜„í•´ì•¼ string_viewë¥¼ ì‚¬ìš©í•  ìˆ˜ ìˆë‹¤.
+// ëŒ€ë¶€ë¶„ì€ í‚¤ê°’ì„ ì°¾ì„ë•Œ ë§ˆì§€ë§‰ì— string(string_view) ì´ë ‡ê²Œ ê°•ì œ í˜•ë³€í™˜ì´ ë” ì¢‹ë‹¤.
+// í•˜ì§€ë§Œ í‚¤ ê°’ì„ ë¹ ë¥´ê²Œ ì°¾ê±°ë‚˜ ì¬ê·€ í˜¸ì¶œì´ê±°ë‚˜ ë“±ë“± í•´ì„œ ë§ìœ¼ ì—°ì‚°ë™ì‘ì´ ë  ê²ƒ ê°™ë‹¤ë©´ ì´ svmapì„ ì‚¬ìš©í•˜ëŠ”ê²Œ ì¢‹ë‹¤.
 struct TransparentStringHash {
     using is_transparent = void;
     size_t operator()(std::string_view sv) const noexcept { return std::hash<std::string_view>{}(sv); }

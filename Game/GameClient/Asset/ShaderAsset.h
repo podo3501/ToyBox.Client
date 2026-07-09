@@ -5,7 +5,7 @@ struct ShaderAsset : public AssetData
 {
     CORE_DECLARE_TYPE(ShaderAsset)
 
-    std::string hlslSource; // file ÀüÃ¼
+    std::string hlslSource; // file ì „ì²´
 
     Core::ByteBuffer vs;
     Core::ByteBuffer ps;

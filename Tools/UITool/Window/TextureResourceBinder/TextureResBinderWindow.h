@@ -22,7 +22,7 @@ public:
     virtual bool SaveScene(const wstring& filename) override;
     virtual wstring GetSaveFilename() const noexcept override;
     
-    bool Create(const wstring& filename = L""); //JsonÆÄÀÏ
+    bool Create(const wstring& filename = L""); //JsoníŒŒì¼
     void SetTexture(PatchTextureStd1* pTex1) noexcept;
     void Update();
     bool IsOpen() const noexcept { return m_isOpen; }
@@ -42,8 +42,8 @@ private:
     wstring m_saveFilename;
     unique_ptr<TextureResourceBinder> m_resBinder;
     unique_ptr<TexResCommandHistory> m_cmdHistory;
-    unique_ptr<RenderTexture> m_renderTex; //InnerWindow¸¦ ±×¸®´Â ÅØ½ºÃÄ
-    PatchTextureStd1* m_sourceTexture; //ÀÛ¾÷ÇÒ ÅØ½ºÃÄ
+    unique_ptr<RenderTexture> m_renderTex; //InnerWindowë¥¼ ê·¸ë¦¬ëŠ” í…ìŠ¤ì³
+    PatchTextureStd1* m_sourceTexture; //ì‘ì—…í•  í…ìŠ¤ì³
     unique_ptr<EditFontTexture> m_editFontTexture;
     unique_ptr<EditSourceTexture> m_editSourceTexture;
     ImVec2 m_windowPosition{};

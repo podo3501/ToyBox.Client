@@ -15,7 +15,7 @@ public:
     CommandList* Begin(CommandType type);
     FenceID End();
     
-    // End -> Close + Signal, PendingRelease µÓ∑œ
+    // End -> Close + Signal, PendingRelease Îì±Î°ù
     FenceID SignalQueue(CommandType type);
     void WaitIdle(CommandType type);
     void WaitIdle();

@@ -16,7 +16,7 @@ wstring JsonTraitsBase<wstring>::DeserializeFromJson(const nlohmann::json& dataJ
 }
 
 /////////////////////////////////////////////////////////////////
-// filesystem::path´Â utf-8·Î ÀúÀåÇÏ°í ÀĞ¾îµéÀÎ´Ù.
+// filesystem::pathëŠ” utf-8ë¡œ ì €ì¥í•˜ê³  ì½ì–´ë“¤ì¸ë‹¤.
 nlohmann::json JsonTraitsBase<filesystem::path>::SerializeToJson(const filesystem::path& data) { return data.string(); }
 filesystem::path JsonTraitsBase<filesystem::path>::DeserializeFromJson(const nlohmann::json& dataJ) 
 { 

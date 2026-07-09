@@ -19,8 +19,8 @@
 #include <iterator>
 
 using namespace EnumUtil;
-using FactoryFunc = unique_ptr<UIComponent>(*)();   //constexprÀ» ¾²±â ¶§¹®¿¡ function(µ¿ÀûÇÒ´ç)À» ¾µ ¼ö¾ø´Ù.
-constexpr FactoryFunc ComponentFactory[] = //enumÀÇ °ª°ú ÀÏÄ¡°¡ µÇ¾î¾ß ÇÑ´Ù. ¾Æ´Ï¸é if·Î ÇØ¾ß ÇÑ´Ù.
+using FactoryFunc = unique_ptr<UIComponent>(*)();   //constexprì„ ì“°ê¸° ë•Œë¬¸ì— function(ë™ì í• ë‹¹)ì„ ì“¸ ìˆ˜ì—†ë‹¤.
+constexpr FactoryFunc ComponentFactory[] = //enumì˜ ê°’ê³¼ ì¼ì¹˜ê°€ ë˜ì–´ì•¼ í•œë‹¤. ì•„ë‹ˆë©´ ifë¡œ í•´ì•¼ í•œë‹¤.
 {
     []() -> unique_ptr<UIComponent> { return make_unique<Panel>(); },
     []() -> unique_ptr<UIComponent> { return make_unique<PatchTextureStd1>(); },
@@ -38,10 +38,10 @@ constexpr FactoryFunc ComponentFactory[] = //enumÀÇ °ª°ú ÀÏÄ¡°¡ µÇ¾î¾ß ÇÑ´Ù. ¾Æ´
     []() -> unique_ptr<UIComponent> { return make_unique<ScrollBar>(); },
     []() -> unique_ptr<UIComponent> { return make_unique<TextureSwitcher>(); },
     []() -> unique_ptr<UIComponent> { return make_unique<UIModuleAsComponent>(); },
-    //[]() -> unique_ptr<UIComponent> { return make_unique<Unknown>(); } //ÀÌ·±°Ç ¾ø´Ù.
+    //[]() -> unique_ptr<UIComponent> { return make_unique<Unknown>(); } //ì´ëŸ°ê±´ ì—†ë‹¤.
 };
 
-static_assert((size(ComponentFactory) + 1) == EnumSize<ComponentID>(), "ComponentFactory Å©±â¿Í ComponentID enum Å©±â°¡ ÀÏÄ¡ÇÏÁö ¾Ê½À´Ï´Ù!");
+static_assert((size(ComponentFactory) + 1) == EnumSize<ComponentID>(), "ComponentFactory í¬ê¸°ì™€ ComponentID enum í¬ê¸°ê°€ ì¼ì¹˜í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤!");
 
 unique_ptr<UIComponent> CreateComponent(const string& typeName)
 {

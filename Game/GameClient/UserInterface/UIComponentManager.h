@@ -13,7 +13,7 @@ class UIComponentManager : private NoCopyNoMove
 public:
 	~UIComponentManager();
 	UIComponentManager() = delete;
-	//?!? UI¸¦ ·ÎµùÇÏ°í Release ÇØ¾ß µÎ¹ø ·ÎµùÀÌ ÀÏ¾î³ªÁö ¾Ê´Â´Ù ±×·¯±â À§ÇØ¼­´Â ·¹ÆÛ·±½º Ä«¿îÅÍ¸¦ ´Ş¾Æ¼­ ¸î¹ø ·ÎµùµÇ¾ú´ÂÁö Ã¼Å©ÇØ¼­ Áö¿ö¾ß ÇÑ´Ù.
+	//?!? UIë¥¼ ë¡œë”©í•˜ê³  Release í•´ì•¼ ë‘ë²ˆ ë¡œë”©ì´ ì¼ì–´ë‚˜ì§€ ì•ŠëŠ”ë‹¤ ê·¸ëŸ¬ê¸° ìœ„í•´ì„œëŠ” ë ˆí¼ëŸ°ìŠ¤ ì¹´ìš´í„°ë¥¼ ë‹¬ì•„ì„œ ëª‡ë²ˆ ë¡œë”©ë˜ì—ˆëŠ”ì§€ ì²´í¬í•´ì„œ ì§€ì›Œì•¼ í•œë‹¤.
 	bool AddUIModule(const string& moduleName, unique_ptr<UIModule> uiModule);
 	bool ReleaseUIModule(const string& moduleName) noexcept;
 	bool CreateRenderTexture(UIComponent* c, const Rectangle& targetRect, size_t& outIndex, UINT64* outGfxMemOffset);
@@ -31,6 +31,6 @@ private:
 
 	IRenderer* m_renderer{ nullptr };
 	ITextureController* m_texController{ nullptr };
-	map<size_t, UIComponent*> m_renderTextures; //moduleº¸´Ù ´Ê°Ô »èÁ¦µÇ¾î¾ß ÇÑ´Ù.
+	map<size_t, UIComponent*> m_renderTextures; //moduleë³´ë‹¤ ëŠ¦ê²Œ ì‚­ì œë˜ì–´ì•¼ í•œë‹¤.
 	unordered_map<string, unique_ptr<UIModule>> m_uiModules;
 };

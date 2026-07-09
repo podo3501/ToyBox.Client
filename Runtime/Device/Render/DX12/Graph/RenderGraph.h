@@ -8,8 +8,8 @@ class RenderGraph
 public:
     ~RenderGraph();
     static RGResourceID CreateRGResourceID() noexcept;
-    void ImportResource(RGResourceID resID, RGAccess access); //ÃÊ±â»óÅÂ´Â ÀÌ·¸´Ù°í °¡Á¤ÇÔ.
-    void ExportResource(RGResourceID resID, RGAccess access); //³¡³¯¶§´Â ÀÌ·²²¨¶ó°í °¡Á¤ÇÔ.
+    void ImportResource(RGResourceID resID, RGAccess access); //ì´ˆê¸°ìƒíƒœëŠ” ì´ë ‡ë‹¤ê³  ê°€ì •í•¨.
+    void ExportResource(RGResourceID resID, RGAccess access); //ëë‚ ë•ŒëŠ” ì´ëŸ´êº¼ë¼ê³  ê°€ì •í•¨.
 
     RenderPass& AddGraphicsPass(std::string name);
     RenderPass& AddCopyPass(std::string name);
@@ -22,7 +22,7 @@ private:
     struct PlannedBarrier 
     {
         BarrierGroups groups;
-        LocalTaskID generatedTaskId{ 0 }; // ½ÇÁ¦ Å×½ºÅ©°¡ »ı¼ºµÇ¸é ¿©±â¿¡ ±â·ÏµÊ
+        LocalTaskID generatedTaskId{ 0 }; // ì‹¤ì œ í…ŒìŠ¤í¬ê°€ ìƒì„±ë˜ë©´ ì—¬ê¸°ì— ê¸°ë¡ë¨
     };
     using BarrierMap = std::unordered_map<PassIndex, std::vector<std::shared_ptr<PlannedBarrier>>>;
 
@@ -36,7 +36,7 @@ private:
     void ValidateGraph();
     void BuildExportPass();
     std::vector<PassNodeV> BuildDependencyGraph();
-    BarrierMap PlanBarriers(const std::vector<PassIndex>& sortedPass); //¹è¸®¾î °èÈ¹ ´Ü°è¸¦ ´ã´ç
+    BarrierMap PlanBarriers(const std::vector<PassIndex>& sortedPass); //ë°°ë¦¬ì–´ ê³„íš ë‹¨ê³„ë¥¼ ë‹´ë‹¹
 
     std::vector<CompiledTask> BuildCompiledTasks(
         const std::vector<PassNodeV>& passNodes,
@@ -51,10 +51,10 @@ private:
 
     LocalTaskID CreateLocalTaskID();
 
-    static std::atomic<RGResourceID> s_resourceID; //¸®¼Ò½º id¸¦ ¹ß±ŞÇØ ÁÖ´Â º¯¼ö
+    static std::atomic<RGResourceID> s_resourceID; //ë¦¬ì†ŒìŠ¤ idë¥¼ ë°œê¸‰í•´ ì£¼ëŠ” ë³€ìˆ˜
 
     std::vector<RenderPass> m_passes;
     std::unordered_map<RGResourceID, ResourceStateTracker> m_statesTracker;
     std::vector<ExportResourceState> m_exportResources;
-    LocalTaskID m_localTaskID{ 1 }; //±×·¡ÇÁ¿¡¼­ ¹ß±ŞÇÏ´Â ÀÓ½Ã Å×½ºÅ© ID
+    LocalTaskID m_localTaskID{ 1 }; //ê·¸ë˜í”„ì—ì„œ ë°œê¸‰í•˜ëŠ” ì„ì‹œ í…ŒìŠ¤í¬ ID
 };

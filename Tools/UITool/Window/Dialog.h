@@ -2,8 +2,8 @@
 
 enum class FileDialogType
 {
-	Open,  // ÆÄÀÏ ¿­±â
-	Save,   // ÆÄÀÏ ÀúÀå
+	Open,  // íŒŒì¼ ì—´ê¸°
+	Save,   // íŒŒì¼ ì €ì¥
 	Count
 };
 

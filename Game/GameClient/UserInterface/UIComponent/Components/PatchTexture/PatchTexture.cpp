@@ -55,8 +55,8 @@ bool PatchTexture::ApplySizeAndPosition(DirectionType dirType, const XMUINT2& si
 	return true;
 }
 
-//°¢ Å¬·¡½º¿¡ ¸Â´Â µ¿ÀÏÇÑ ÀÎÅÍÆäÀÌ½º ÇÔ¼ö¸¦ »ó¼Ó¾øÀÌ ´ÙÇü¼ºÀ» ÇÏ°í ½ÍÀ»¶§ Ã³¸®ÇÏ´Â ÇÔ¼öÀÎµ¥ ÀÌ°É utility·Î
-//¿Ã¸®¸é UIComponent¿¡¼­ ºÎ¸ğ°¡ ´Ù¸£Áö¸¸ ÀÎÅÍÆäÀÌ½º°¡ °°Àº ÇÔ¼öµéÀÇ ´ÙÇü¼ºÀ» Ã³¸®ÇÒ ¼ö ÀÖ´Ù.
+//ê° í´ë˜ìŠ¤ì— ë§ëŠ” ë™ì¼í•œ ì¸í„°í˜ì´ìŠ¤ í•¨ìˆ˜ë¥¼ ìƒì†ì—†ì´ ë‹¤í˜•ì„±ì„ í•˜ê³  ì‹¶ì„ë•Œ ì²˜ë¦¬í•˜ëŠ” í•¨ìˆ˜ì¸ë° ì´ê±¸ utilityë¡œ
+//ì˜¬ë¦¬ë©´ UIComponentì—ì„œ ë¶€ëª¨ê°€ ë‹¤ë¥´ì§€ë§Œ ì¸í„°í˜ì´ìŠ¤ê°€ ê°™ì€ í•¨ìˆ˜ë“¤ì˜ ë‹¤í˜•ì„±ì„ ì²˜ë¦¬í•  ìˆ˜ ìˆë‹¤.
 template<typename FuncT>
 decltype(auto) PatchTexture::GetSourceByType(UIComponent* component, FuncT&& Func) const noexcept
 {
@@ -65,7 +65,7 @@ decltype(auto) PatchTexture::GetSourceByType(UIComponent* component, FuncT&& Fun
 	case ComponentID::PatchTextureLite3: return Func(static_cast<PatchTextureLite3*>(component));
 	case ComponentID::PatchTextureStd1: return Func(static_cast<PatchTextureStd1*>(component));
 	case ComponentID::PatchTextureStd3: return Func(static_cast<PatchTextureStd3*>(component));
-	default: return decltype(Func(declval<PatchTextureLite1*>())){}; //±âº»Å¸ÀÔÀÌ ÀÖÀ»¶§¿¡´Â ±âº»Å¸ÀÔ ¸®ÅÏ RectangleÀ» ¸®ÅÏÇÏ´Ï±î ÀÌ°Ç Rectangle{}À» ¸®ÅÏ.
+	default: return decltype(Func(declval<PatchTextureLite1*>())){}; //ê¸°ë³¸íƒ€ì…ì´ ìˆì„ë•Œì—ëŠ” ê¸°ë³¸íƒ€ì… ë¦¬í„´ Rectangleì„ ë¦¬í„´í•˜ë‹ˆê¹Œ ì´ê±´ Rectangle{}ì„ ë¦¬í„´.
 	}
 }
 
@@ -124,7 +124,7 @@ bool PatchTexture::ArrangeTextures() noexcept
 		AccumulateSize(*dirType, size, totalSize);
 		return true;
 		});
-	ReturnIfFalse(allFitted); //allFitted º¯¼ö¸¦ ½á¼­ ReturnIfFalse¸¦ ÇÑ ÀÌÀ¯´Â ¶÷´Ù¿¡ µğ¹ö±ë(ºê·¹ÀÌÅ© Æ÷ÀÎÅÍ)ÀÌ ¾ÈµÇ±â ¶§¹®ÀÌ´Ù.
+	ReturnIfFalse(allFitted); //allFitted ë³€ìˆ˜ë¥¼ ì¨ì„œ ReturnIfFalseë¥¼ í•œ ì´ìœ ëŠ” ëŒë‹¤ì— ë””ë²„ê¹…(ë¸Œë ˆì´í¬ í¬ì¸í„°)ì´ ì•ˆë˜ê¸° ë•Œë¬¸ì´ë‹¤.
 	ReturnIfFalse(ApplyPositions(*dirType, totalSize, individualSizes));
 
 	SetSize(totalSize);

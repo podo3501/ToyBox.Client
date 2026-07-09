@@ -16,6 +16,6 @@ private:
 	void ProcessMouseWheel(int wheelValue) noexcept;
 
 	UIComponent* m_component{ nullptr };
-	vector<MouseEventReceiver*> m_hoveredReceivers; //ÀÌÀü È£¹öµÈ ÄÄÆ÷³ÍÆ®¿Í ºñ±³ÇØ¼­ OnNormal È£ÃâÇÔ.
+	vector<MouseEventReceiver*> m_hoveredReceivers; //ì´ì „ í˜¸ë²„ëœ ì»´í¬ë„ŒíŠ¸ì™€ ë¹„êµí•´ì„œ OnNormal í˜¸ì¶œí•¨.
 	MouseEventReceiver* m_capture{ nullptr };
 };

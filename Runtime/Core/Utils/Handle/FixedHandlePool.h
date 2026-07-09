@@ -14,13 +14,13 @@ public:
 
     void Setup(uint16_t maxCount)
     {
-        if (maxCount > MaxCount) // ÃÖ´ë usable Á¦ÇÑ
+        if (maxCount > MaxCount) // ìµœëŒ€ usable ì œí•œ
             maxCount = MaxCount;
-        m_capacity = maxCount + 1; // ³»ºÎ capacity = usable + dummy
+        m_capacity = maxCount + 1; // ë‚´ë¶€ capacity = usable + dummy
 
         m_freeList.clear();
         for (uint16_t i = 1; i < m_capacity; ++i) 
-            m_freeList.push_back(i); // index 1 ~ maxCount »ç¿ë °¡´É
+            m_freeList.push_back(i); // index 1 ~ maxCount ì‚¬ìš© ê°€ëŠ¥
     }
 
     template<typename... Args>
@@ -49,7 +49,7 @@ public:
         slot.alive = false;
 
         ++slot.generation;
-        if (slot.generation == 0) slot.generation = 1; // generation Áõ°¡ (0 ¹æÁö)
+        if (slot.generation == 0) slot.generation = 1; // generation ì¦ê°€ (0 ë°©ì§€)
 
         m_freeList.push_back(h.Index());
         return true;
@@ -129,7 +129,7 @@ private:
         bool alive = false;
     };
 
-    std::array<Slot, MaxCount + 1> m_slots{}; // +1 ÇØ¼­ index 0 dummy È®º¸
+    std::array<Slot, MaxCount + 1> m_slots{}; // +1 í•´ì„œ index 0 dummy í™•ë³´
     std::vector<uint16_t> m_freeList;
-    uint16_t m_capacity{ 1 }; // Ç×»ó ÃÖ¼Ò 1 (dummy¸¸ ÀÖ´Â »óÅÂ)
+    uint16_t m_capacity{ 1 }; // í•­ìƒ ìµœì†Œ 1 (dummyë§Œ ìˆëŠ” ìƒíƒœ)
 };

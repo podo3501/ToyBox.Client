@@ -46,7 +46,7 @@ bool ComponentTestScene::LoadResources()
     AttachComponentToPanel(CreateComponent<TextureSwitcher>(UILayout{ {180, 48}, Origin::Center }, TextureSlice::ThreeH, GetStateKeyMap("ScrollButton3_H")), { 400, 240 });
     vector<wstring> bindFontKeys{ L"English", L"Hangle" };
     auto texController = m_renderer->GetTextureController();
-    AttachComponentToPanel(CreateComponent<TextArea>(texController, UILayout{ {250, 120}, Origin::Center }, L"<Hangle>�׽�Ʈ �Դϴ�!</Hangle> <English><Red>Test!</Red></English>", bindFontKeys), { 160, 420 });
+    AttachComponentToPanel(CreateComponent<TextArea>(texController, UILayout{ {250, 120}, Origin::Center }, L"<Hangle>테스트 입니다!</Hangle> <English><Red>Test!</Red></English>", bindFontKeys), { 160, 420 });
     AttachComponentToPanel(CreateComponent<PatchTextureStd9>(UILayout{ {210, 150}, Origin::LeftTop }, "BackImage9"), { 400, 300 });
     AttachComponentToPanel(CreateSampleListArea({ {200, 170}, Origin::Center }), { 600, 200 });
     ReturnIfFalse(m_uiModule->BindTextureResources());

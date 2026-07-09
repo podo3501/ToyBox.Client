@@ -98,7 +98,7 @@ bool AddComponentFromScreenPos(UICommandHistory* cmdHistory, UIComponent* parent
 	const XMINT2& leftTop = parent->GetLeftTop();
 	XMINT2 relativePos = pos - leftTop;
 	unique_ptr<UIComponent> failed = cmdHistory->AttachComponent(parent, floater->GetComponent(), relativePos);
-	if (failed) //Á¦´ë·Î ºÙÁö ¾Ê¾Ò´Ù¸é ÀÎÀÚ·Î º¸³½ Component°¡ ¸®ÅÏ°ªÀ¸·Î µ¹¾Æ¿Â´Ù.
+	if (failed) //ì œëŒ€ë¡œ ë¶™ì§€ ì•Šì•˜ë‹¤ë©´ ì¸ìžë¡œ ë³´ë‚¸ Componentê°€ ë¦¬í„´ê°’ìœ¼ë¡œ ëŒì•„ì˜¨ë‹¤.
 	{
 		floater->SetComponent(move(failed));
 		return false;

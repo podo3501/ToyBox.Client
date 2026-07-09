@@ -45,7 +45,7 @@ FontHandle FontRepository::GetOrCreate(const Core::ResourceID& resID)
 	case Core::ResourceIDType::Runtime:
 	case Core::ResourceIDType::Builtin:
 	{
-		//ÀÏ´Ü º¸·ù
+		//ì¼ë‹¨ ë³´ë¥˜
 	}
 	break;
 	default:
@@ -96,14 +96,14 @@ void FontRepository::ProcessPendingRequests()
 			continue;
 		}
 
-		// CPU ºñµ¿±â ÆÄÀÏ ½ºÆ®¸®¹ÖÀÌ ¿Ï·áµÈ ½ÃÁ¡
+		// CPU ë¹„ë™ê¸° íŒŒì¼ ìŠ¤íŠ¸ë¦¬ë°ì´ ì™„ë£Œëœ ì‹œì 
 		auto entry = m_loadedFonts.Find(req.handle);
 		if (entry && entry->fontRes)
 		{
 			auto fontAsset = std::static_pointer_cast<FontAsset>(asset);
 			if (m_fontProvider->LoadResource(entry->fontRes, fontAsset))
 			{
-				Assert(entry->fontRes->IsReady()); //·ÎµùÇß´Ù¸é ÁØºñ»óÅÂ¿©¾ß ÇÑ´Ù.
+				Assert(entry->fontRes->IsReady()); //ë¡œë”©í–ˆë‹¤ë©´ ì¤€ë¹„ìƒíƒœì—¬ì•¼ í•œë‹¤.
 				entry->state = LoadState::Ready;
 			}
 			else

@@ -5,7 +5,7 @@
 
 XMUINT2 BaseTraverser::GetChildrenBoundsSize(UIComponent* c) noexcept
 {
-	Rectangle totalArea{ c->GetArea() }; //ÃÊ±â°ªÀ» ÁöÁ¤ÇÏÁö ¾ÊÀ¸¸é 0, 0 ºÎÅÍ ½ÃÀÛÇÏ´Â Å« »ç°¢ÇüÀÌ unionµÈ´Ù.
+	Rectangle totalArea{ c->GetArea() }; //ì´ˆê¸°ê°’ì„ ì§€ì •í•˜ì§€ ì•Šìœ¼ë©´ 0, 0 ë¶€í„° ì‹œì‘í•˜ëŠ” í° ì‚¬ê°í˜•ì´ unionëœë‹¤.
 	ForEachChildConst(c, [&totalArea](const UIComponent* child) {
 		const auto& area = child->GetArea();
 		totalArea = Rectangle::Union(totalArea, area);
@@ -21,14 +21,14 @@ vector<UIComponent*> BaseTraverser::PickComponents(UIComponent* c, const XMINT2&
 		const bool inside = Contains(comp->GetArea(), pos);
 
 		if (comp->GetTypeID() == ComponentID::RenderTexture && !inside)
-			return TraverseResult::ChildrenSkip; // RenderTexture´Â ¿µ¿ª ¹ÛÀÌ¸é ÀÚ½Ä Å½»ö Áß´Ü
+			return TraverseResult::ChildrenSkip; // RenderTextureëŠ” ì˜ì—­ ë°–ì´ë©´ ìì‹ íƒìƒ‰ ì¤‘ë‹¨
 
-		if (inside) // ¿µ¿ª ¾ÈÀÌ¸é ¸®½ºÆ®¿¡ Ãß°¡
+		if (inside) // ì˜ì—­ ì•ˆì´ë©´ ë¦¬ìŠ¤íŠ¸ì— ì¶”ê°€
 			findList.push_back(comp);
 
 		return TraverseResult::Continue;
 		});
-	ranges::reverse(findList); //¾ÕÀ¸·Î ³Ö¾îÁÖ´Â °Íº¸´Ù push_back ÇÏ°í reverse ÇÏ´Â°Ô ´õ ºü¸£´Ù. vector°¡ ´Ü¼ø ¹è¿­ÀÌ¶ó Ä³½¬°¡ ÁÁ±â ¶§¹®¿¡ ÀÌ°É·Î ÇÑ´Ù.	 
+	ranges::reverse(findList); //ì•ìœ¼ë¡œ ë„£ì–´ì£¼ëŠ” ê²ƒë³´ë‹¤ push_back í•˜ê³  reverse í•˜ëŠ”ê²Œ ë” ë¹ ë¥´ë‹¤. vectorê°€ ë‹¨ìˆœ ë°°ì—´ì´ë¼ ìºì‰¬ê°€ ì¢‹ê¸° ë•Œë¬¸ì— ì´ê±¸ë¡œ í•œë‹¤.	 
 	return findList;
 }
 
@@ -37,15 +37,15 @@ vector<MouseEventReceiver*> BaseTraverser::PickMouseReceivers(UIComponent* c, co
 	vector<MouseEventReceiver*> findList;
 	ForEachChildToRender(c, [&findList, &pos](UIComponent* comp) {
 		if (comp->GetTypeID() == ComponentID::RenderTexture && !Contains(comp->GetArea(), pos))
-			return TraverseResult::ChildrenSkip; // RenderTexture ¿µ¿ª ¹ÛÀÌ¸é ÀÚ½Ä Å½»ö Áß´Ü
+			return TraverseResult::ChildrenSkip; // RenderTexture ì˜ì—­ ë°–ì´ë©´ ìì‹ íƒìƒ‰ ì¤‘ë‹¨
 
-		if (auto eventReceiver = comp->AsMouseEventReceiver(); eventReceiver) { // ¸¶¿ì½º ÀÌº¥Æ® ¼ö½Å °¡´ÉÇÑÁö ¸ÕÀú È®ÀÎ
+		if (auto eventReceiver = comp->AsMouseEventReceiver(); eventReceiver) { // ë§ˆìš°ìŠ¤ ì´ë²¤íŠ¸ ìˆ˜ì‹  ê°€ëŠ¥í•œì§€ ë¨¼ì € í™•ì¸
 			if (Contains(comp->GetArea(), pos))
 				findList.push_back(eventReceiver);
 		}
 
 		return TraverseResult::Continue;
 		});
-	ranges::reverse(findList); //¾ÕÀ¸·Î ³Ö¾îÁÖ´Â °Íº¸´Ù push_back ÇÏ°í reverse ÇÏ´Â°Ô ´õ ºü¸£´Ù. vector°¡ ´Ü¼ø ¹è¿­ÀÌ¶ó Ä³½¬°¡ ÁÁ±â ¶§¹®¿¡ ÀÌ°É·Î ÇÑ´Ù.	 
+	ranges::reverse(findList); //ì•ìœ¼ë¡œ ë„£ì–´ì£¼ëŠ” ê²ƒë³´ë‹¤ push_back í•˜ê³  reverse í•˜ëŠ”ê²Œ ë” ë¹ ë¥´ë‹¤. vectorê°€ ë‹¨ìˆœ ë°°ì—´ì´ë¼ ìºì‰¬ê°€ ì¢‹ê¸° ë•Œë¬¸ì— ì´ê±¸ë¡œ í•œë‹¤.	 
 	return findList;
 }

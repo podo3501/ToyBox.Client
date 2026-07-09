@@ -35,6 +35,6 @@ private:
 	ITextureController* m_texController{ nullptr };
 	vector<wstring> m_bindKeys;
 	wstring m_text{};
-	map<wstring, size_t> m_font; //core»óÅÂ¿¡ µû¶ó¼­ ÀÎµ¦½º´Â º¯ÇÒ¼ö ÀÖ±â ¶§¹®¿¡ ÀúÀåÇÏÁö ¾Ê´Â´Ù.
+	map<wstring, size_t> m_font; //coreìƒíƒœì— ë”°ë¼ì„œ ì¸ë±ìŠ¤ëŠ” ë³€í• ìˆ˜ ìˆê¸° ë•Œë¬¸ì— ì €ì¥í•˜ì§€ ì•ŠëŠ”ë‹¤.
 	vector<TextData> m_lines;
 };

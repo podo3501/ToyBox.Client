@@ -57,10 +57,10 @@ UINT DescriptorFactory::CreateTextureDSV(const Resource& res, DXGI_FORMAT format
     D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc{};
     dsvDesc.Format = format;
     dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
-    dsvDesc.Texture2D.MipSlice = mipSlice; // ±âº»°ª 0, ÇÊ¿ä½Ã Æ¯Á¤ ¹Ó½½¶óÀÌ½º ÁöÁ¤ °¡´É
+    dsvDesc.Texture2D.MipSlice = mipSlice; // ê¸°ë³¸ê°’ 0, í•„ìš”ì‹œ íŠ¹ì • ë°‰ìŠ¬ë¼ì´ìŠ¤ ì§€ì • ê°€ëŠ¥
     dsvDesc.Flags = D3D12_DSV_FLAG_NONE;
 
-    // ¾Õ¼­ ¼³°èÇÑ DSV Àü¿ë ÇÒ´çÀÚ(m_dsvAllocator)¿¡¼­ °ø°£ È®º¸
+    // ì•ì„œ ì„¤ê³„í•œ DSV ì „ìš© í• ë‹¹ì(m_dsvAllocator)ì—ì„œ ê³µê°„ í™•ë³´
     UINT index = m_dsvAllocator.Allocate();
     if (index == UINT_MAX) return UINT_MAX;
 
@@ -99,7 +99,7 @@ bool DescriptorFactory::CreateTextureViews(TextureResource* texRes, bool generat
             if (mipSrvIndex == UINT_MAX) return false;
             mipSrvIndices.push_back(mipSrvIndex);
 
-            UINT mipUavIndex = CreateMipUAV(res, resDesc.Format, i); //UAV´Â sRGB Æ÷¸ËÀ» ¾µ ¼ö ¾øÀ¸¹Ç·Î ¿øº» Æ÷¸Ë ¸®½º »ç¿ë
+            UINT mipUavIndex = CreateMipUAV(res, resDesc.Format, i); //UAVëŠ” sRGB í¬ë§·ì„ ì“¸ ìˆ˜ ì—†ìœ¼ë¯€ë¡œ ì›ë³¸ í¬ë§· ë¦¬ìŠ¤ ì‚¬ìš©
             if (mipUavIndex == UINT_MAX) return false;
             mipUavIndices.push_back(mipUavIndex);
         }
@@ -118,11 +118,11 @@ D3D12_SHADER_RESOURCE_VIEW_DESC DescriptorFactory::CreateStructuredBufferSRVDesc
 
     desc.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
     desc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-    desc.Format = DXGI_FORMAT_UNKNOWN; // StructuredBuffer·Î ÀÎ½Ä½ÃÅ°±â À§ÇØ FormatÀº UNKNOWNÀ¸·Î ¼³Á¤
+    desc.Format = DXGI_FORMAT_UNKNOWN; // StructuredBufferë¡œ ì¸ì‹ì‹œí‚¤ê¸° ìœ„í•´ Formatì€ UNKNOWNìœ¼ë¡œ ì„¤ì •
 
     desc.Buffer.FirstElement = 0;
     desc.Buffer.NumElements = numElements;
-    desc.Buffer.StructureByteStride = stride; // ±¸Á¶Ã¼(Vertex µî)ÀÇ Å©±â
+    desc.Buffer.StructureByteStride = stride; // êµ¬ì¡°ì²´(Vertex ë“±)ì˜ í¬ê¸°
     desc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
 
     return desc;
@@ -134,8 +134,8 @@ UINT DescriptorFactory::CreateMipSRV(const Resource& res, DXGI_FORMAT format, UI
     srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
     srvDesc.Format = format;
     srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-    srvDesc.Texture2D.MostDetailedMip = mipLevel;  // ÀÎÀÚ·Î ³Ñ¾î¿Â Å¸°Ù ¹Ó½½¶óÀÌ½º °íÁ¤
-    srvDesc.Texture2D.MipLevels = 1;  // ¹«Á¶°Ç 1°³ ¹Ó ·¹º§ ¿µ¿ª¸¸ Å¸°ÙÆÃ
+    srvDesc.Texture2D.MostDetailedMip = mipLevel;  // ì¸ìë¡œ ë„˜ì–´ì˜¨ íƒ€ê²Ÿ ë°‰ìŠ¬ë¼ì´ìŠ¤ ê³ ì •
+    srvDesc.Texture2D.MipLevels = 1;  // ë¬´ì¡°ê±´ 1ê°œ ë°‰ ë ˆë²¨ ì˜ì—­ë§Œ íƒ€ê²ŸíŒ…
     //srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
 
     UINT index = m_bindlessAllocator.AllocateTransient();

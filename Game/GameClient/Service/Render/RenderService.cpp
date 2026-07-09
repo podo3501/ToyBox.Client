@@ -13,7 +13,7 @@ struct RegistryShaderEntry
 	RegistryShaderDesc desc;
 };
 
-RenderService::~RenderService() { m_backend->WaitIdle(); } //¸®¼Ò½º¸¦ RenderService°¡ µé°í ÀÖ±â ¶§¹®¿¡ gpuÀÇ È°µ¿À» ÁßÁö ½ÃÅ°°í ¸®¼Ò½º »èÁ¦->backend ¼øÀ¸·Î µÈ´Ù.
+RenderService::~RenderService() { m_backend->WaitIdle(); } //ë¦¬ì†ŒìŠ¤ë¥¼ RenderServiceê°€ ë“¤ê³  ìˆê¸° ë•Œë¬¸ì— gpuì˜ í™œë™ì„ ì¤‘ì§€ ì‹œí‚¤ê³  ë¦¬ì†ŒìŠ¤ ì‚­ì œ->backend ìˆœìœ¼ë¡œ ëœë‹¤.
 RenderService::RenderService(unique_ptr<IRenderBackend> backend, IAssetAsyncLoader* asyncLoader) :
 	m_backend{ move(backend) },
 	m_asyncLoader{ asyncLoader }
@@ -87,8 +87,8 @@ void RenderService::Resize(const Size& size)
 
 RenderMetrics RenderService::GetRenderMetrics()
 {
-	//backend¿¡¼­´Â metrics·Î ¹Ş¾Æ¿Í¼­ ¿©±â¼­ ½Ã°£°ªÀ» Á¶ÇÕÇØ¼­ fps·Î ¸¸µé°Å³ª Æò±ÕÀ» ¸¸µé¾î¼­
-	//RenderStats·Î ³»º¸³»°Ô ÇÒ ¼ö µµ ÀÖ´Ù. ÇöÀç´Â ±¸Çö ÃÊ¹İºÎ¶ó ¹Ù·Î ³»º¸³½´Ù.
+	//backendì—ì„œëŠ” metricsë¡œ ë°›ì•„ì™€ì„œ ì—¬ê¸°ì„œ ì‹œê°„ê°’ì„ ì¡°í•©í•´ì„œ fpsë¡œ ë§Œë“¤ê±°ë‚˜ í‰ê· ì„ ë§Œë“¤ì–´ì„œ
+	//RenderStatsë¡œ ë‚´ë³´ë‚´ê²Œ í•  ìˆ˜ ë„ ìˆë‹¤. í˜„ì¬ëŠ” êµ¬í˜„ ì´ˆë°˜ë¶€ë¼ ë°”ë¡œ ë‚´ë³´ë‚¸ë‹¤.
 	return m_backend->GetRenderMetrics();
 }
 
@@ -132,7 +132,7 @@ std::vector<RegistryShaderEntry> RenderService::LoadRegistryShaderEntries()
 
 		shaderEntries.emplace_back(RegistryShaderEntry{
 			.resID = info.resID,
-			.desc = { info.id, BuildShader(info.type, shaderAssets[i]) } //Request ¿äÃ»ÇÑ °Í°ú WaitAll ¿¡¼­ ¹Ş¾Æ¿Â °ÍÀº ¼ø¼­°¡ ¶È°°´Ù.
+			.desc = { info.id, BuildShader(info.type, shaderAssets[i]) } //Request ìš”ì²­í•œ ê²ƒê³¼ WaitAll ì—ì„œ ë°›ì•„ì˜¨ ê²ƒì€ ìˆœì„œê°€ ë˜‘ê°™ë‹¤.
 			});
 	}
 
@@ -149,7 +149,7 @@ std::vector<RegistryShaderDesc> RenderService::SetupRegistryShaders()
 	for (const auto& shader : shaderEntries)
 	{
 		shaderDescs.emplace_back(shader.desc);
-		m_shaderCache.emplace(shader.resID, shader.desc.first); //¼º°ø¿©ºÎ¿Í °ü°è¾øÀÌ ÀÏ´Ü ³Ö´Â´Ù. ÃÊ±âÈ­¿¡ ½ÇÆĞÇÑ´Ù¸é µ¥ÀÌÅÍ°¡ ÀÖµç¾øµç ÀÇ¹Ì°¡ ¾ø±â ¶§¹®ÀÌ´Ù.
+		m_shaderCache.emplace(shader.resID, shader.desc.first); //ì„±ê³µì—¬ë¶€ì™€ ê´€ê³„ì—†ì´ ì¼ë‹¨ ë„£ëŠ”ë‹¤. ì´ˆê¸°í™”ì— ì‹¤íŒ¨í•œë‹¤ë©´ ë°ì´í„°ê°€ ìˆë“ ì—†ë“  ì˜ë¯¸ê°€ ì—†ê¸° ë•Œë¬¸ì´ë‹¤.
 	}
 
 	return shaderDescs;

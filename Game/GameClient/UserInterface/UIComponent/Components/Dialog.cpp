@@ -12,5 +12,5 @@ Dialog::Dialog(const Dialog& other) :
 
 unique_ptr<UIComponent> Dialog::CreateClone() const
 {
-	return unique_ptr<Dialog>(new Dialog(*this)); //º¹»ç»ı¼ºÀÚ¸¦ protected·Î ¸¸µé·Á¸é make_unique´ë½Å new¸¦ »ç¿ëÇØ¾ßÇÑ´Ù.
+	return unique_ptr<Dialog>(new Dialog(*this)); //ë³µì‚¬ìƒì„±ìë¥¼ protectedë¡œ ë§Œë“¤ë ¤ë©´ make_uniqueëŒ€ì‹  newë¥¼ ì‚¬ìš©í•´ì•¼í•œë‹¤.
 }

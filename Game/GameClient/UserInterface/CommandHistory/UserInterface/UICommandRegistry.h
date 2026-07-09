@@ -134,7 +134,7 @@ protected:
 	virtual bool IsMerge(UICommand*) noexcept { return false; }
 
 private:
-	TextArea* m_textArea; //UIComponent* °¡ ¾Æ´Ñ ÀÌ»óÀº template »ó¼ÓÀÏ¶§ ¹®Á¦°¡ µÇ¾î¼­ º¯¼ö¸¦ µÎ¾ú´Ù. ³ªÁß¿¡ ÇØ°áÇÒ ¼ö ÀÖ´ÂÁö ºÁµµ ÁÁÀ» °ÍÀÌ´Ù.
+	TextArea* m_textArea; //UIComponent* ê°€ ì•„ë‹Œ ì´ìƒì€ template ìƒì†ì¼ë•Œ ë¬¸ì œê°€ ë˜ì–´ì„œ ë³€ìˆ˜ë¥¼ ë‘ì—ˆë‹¤. ë‚˜ì¤‘ì— í•´ê²°í•  ìˆ˜ ìˆëŠ”ì§€ ë´ë„ ì¢‹ì„ ê²ƒì´ë‹¤.
 	CommandRecord<wstring> m_record;
 };
 

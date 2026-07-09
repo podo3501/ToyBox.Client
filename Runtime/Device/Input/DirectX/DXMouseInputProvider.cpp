@@ -42,7 +42,7 @@ void DXMouseInputProvider::Update() noexcept
 {
     const auto& raw = m_mouse.GetState();
 
-    if (!m_initialized) //Ã³À½¿¡ ¸¶¿ì½º Æ¢´Â°Å ¹æÁö.
+    if (!m_initialized) //ì²˜ìŒì— ë§ˆìš°ìŠ¤ íŠ€ëŠ”ê±° ë°©ì§€.
     {
         UpdateButton(raw, UpdateMode::Sync);
 

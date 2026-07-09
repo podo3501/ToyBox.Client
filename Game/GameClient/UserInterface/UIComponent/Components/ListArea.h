@@ -7,8 +7,8 @@ class TextureSwitcher;
 class ScrollBar;
 namespace DX { class StepTimer; }
 
-//RenderTexture¿Í Prototype TextureSwitcher, ScrollBar¸¦ Á¶ÇÕÇØ¼­ ¸¸µé¾îÁö´Â ÄÄÆ÷³ÍÆ®
-//°¢ ÄÄÆ÷³ÍÆ®¿¡¼­ ÇÊ¿äÇÑ °ÍÀ» µé°í¿Í¼­ ¿©±â¼­ Á¶ÇÕÇÑ´Ù. °¢ ÄÄÆ÷³ÍÆ®´Â µ¶¸³ÀûÀ¸·Î ÀÛµ¿ÇÑ´Ù.
+//RenderTextureì™€ Prototype TextureSwitcher, ScrollBarë¥¼ ì¡°í•©í•´ì„œ ë§Œë“¤ì–´ì§€ëŠ” ì»´í¬ë„ŒíŠ¸
+//ê° ì»´í¬ë„ŒíŠ¸ì—ì„œ í•„ìš”í•œ ê²ƒì„ ë“¤ê³ ì™€ì„œ ì—¬ê¸°ì„œ ì¡°í•©í•œë‹¤. ê° ì»´í¬ë„ŒíŠ¸ëŠ” ë…ë¦½ì ìœ¼ë¡œ ì‘ë™í•œë‹¤.
 class ListArea : public UIComponent, public MouseEventReceiver
 {
 public:
@@ -59,6 +59,6 @@ private:
 	RenderTexture* m_renderTex;
 	uint32_t m_scrollPadding{ 2 };
 	
-	vector<UIComponent*> m_containers; //ÀÌ°Ç ÀúÀåÇÏÁö ¾Ê´Â´Ù. ½ÇÇà½Ã¿¡ Ã¤¿öÁö´Â µ¥ÀÌÅÍÀÌ´Ù.
+	vector<UIComponent*> m_containers; //ì´ê±´ ì €ì¥í•˜ì§€ ì•ŠëŠ”ë‹¤. ì‹¤í–‰ì‹œì— ì±„ì›Œì§€ëŠ” ë°ì´í„°ì´ë‹¤.
 	bool m_containerActiveFlag{ true };
 };

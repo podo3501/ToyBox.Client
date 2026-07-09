@@ -13,7 +13,7 @@ enum class SoundLoadState
 
 struct LoadedSound
 {
-	const SoundDesc* desc{ nullptr }; //´ÙÇü¼ºÀ» À§ÇÑ Æ÷ÀÎÅÍ. ÀÌ°ªÀÇ ¿øº»Àº ÇÁ·Î±×·¥ÀÌ Á×À»¶§±îÁö »ì¾ÆÀÖ´Ù´Â°Ô º¸ÀåµÊ.
+	const SoundDesc* desc{ nullptr }; //ë‹¤í˜•ì„±ì„ ìœ„í•œ í¬ì¸í„°. ì´ê°’ì˜ ì›ë³¸ì€ í”„ë¡œê·¸ë¨ì´ ì£½ì„ë•Œê¹Œì§€ ì‚´ì•„ìˆë‹¤ëŠ”ê²Œ ë³´ì¥ë¨.
 	std::shared_ptr<ISoundBuffer> buffer;
     SoundLoadState state{ SoundLoadState::Pending };
 };

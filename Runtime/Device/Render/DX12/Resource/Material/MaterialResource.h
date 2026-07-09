@@ -4,7 +4,7 @@
 
 class TextureResource;
 
-class MaterialResource : public IMaterialResource //backend¿ë material resource ÀÎÅÍÆäÀÌ½º.
+class MaterialResource : public IMaterialResource //backendìš© material resource ì¸í„°í˜ì´ìŠ¤.
 {
 public:
 	virtual ~MaterialResource() override;

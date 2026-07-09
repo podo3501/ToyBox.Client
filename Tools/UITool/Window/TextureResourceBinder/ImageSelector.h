@@ -36,7 +36,7 @@ private:
 	TextureResBinderWindow* m_textureWindow;
 	unique_ptr<RenameNotifier> m_renameNotifier;
 	TextureSlice m_selectImagePart;
-	vector<Rectangle> m_areaList; //ÀÚµ¿À¸·Î Ã£¾Æ³õÀº ±¸¿ªµé
-	vector<Rectangle> m_hoveredAreas{}; //¸¶¿ì½º¸¦ °®´ë´òÀ»¶§ÀÇ ±¸¿ªµé
+	vector<Rectangle> m_areaList; //ìë™ìœ¼ë¡œ ì°¾ì•„ë†“ì€ êµ¬ì—­ë“¤
+	vector<Rectangle> m_hoveredAreas{}; //ë§ˆìš°ìŠ¤ë¥¼ ê°–ëŒ€ëŒ”ì„ë•Œì˜ êµ¬ì—­ë“¤
 	unique_ptr<TextureSourceInfo> m_selectedArea;
 };

@@ -20,7 +20,7 @@ void RenderGraph::ImportResource(RGResourceID resID, RGAccess access)
 
 void RenderGraph::ExportResource(RGResourceID resID, RGAccess access)
 {
-    Assert(m_statesTracker.contains(resID)); // ÃÊ±â»óÅÂ°¡ ÀÖ¾î¾ß ÇÔ.
+    Assert(m_statesTracker.contains(resID)); // ì´ˆê¸°ìƒíƒœê°€ ìˆì–´ì•¼ í•¨.
     m_exportResources.emplace_back(resID, access);
 }
 
@@ -45,13 +45,13 @@ std::vector<CompiledTask> RenderGraph::Compile()
     ValidateGraph();
 
     BuildExportPass();
-    auto passNodes = BuildDependencyGraph(); //dependency ¸¸µé±â
-    auto sortedPass = TopologicalSort(passNodes); //¸¸µç °É·Î node Á¤·Ä
-    auto barrierMap = PlanBarriers(sortedPass); // ¹è¸®¾î 'À§Ä¡'¿Í '½Ç¹° Á¤º¸' ¼±Á¡ÇÏ±â(º£¸®¾î ¸ÕÀú ¸¸µé¾îº¸±â)
+    auto passNodes = BuildDependencyGraph(); //dependency ë§Œë“¤ê¸°
+    auto sortedPass = TopologicalSort(passNodes); //ë§Œë“  ê±¸ë¡œ node ì •ë ¬
+    auto barrierMap = PlanBarriers(sortedPass); // ë°°ë¦¬ì–´ 'ìœ„ì¹˜'ì™€ 'ì‹¤ë¬¼ ì •ë³´' ì„ ì í•˜ê¸°(ë² ë¦¬ì–´ ë¨¼ì € ë§Œë“¤ì–´ë³´ê¸°)
 
     auto tasks = BuildCompiledTasks(passNodes, sortedPass, barrierMap);
     BuildDependents(tasks);
-    Assert(!tasks.empty()); //ÀÏ°Å¸®°¡ ÀÖ¾î¾ß ÇÑ´Ù.
+    Assert(!tasks.empty()); //ì¼ê±°ë¦¬ê°€ ìˆì–´ì•¼ í•œë‹¤.
 
     return tasks;
 }
@@ -72,7 +72,7 @@ std::vector<CompiledTask> RenderGraph::BuildCompiledTasks(
     const BarrierMap& passToBarriersMap)
 {
     std::vector<CompiledTask> tasks;
-    tasks.reserve(sortedPass.size() * 2); //¿©À¯¸¦ Áà¼­.
+    tasks.reserve(sortedPass.size() * 2); //ì—¬ìœ ë¥¼ ì¤˜ì„œ.
     std::unordered_map<PassIndex, LocalTaskID> passToTaskId;
     passToTaskId.reserve(sortedPass.size());
 
@@ -80,7 +80,7 @@ std::vector<CompiledTask> RenderGraph::BuildCompiledTasks(
     {
         auto& pass = m_passes[passIndex];
 
-        // ºÎ¸ğ ÆĞ½º ÀÇÁ¸¼º ¼öÁı
+        // ë¶€ëª¨ íŒ¨ìŠ¤ ì˜ì¡´ì„± ìˆ˜ì§‘
         std::vector<LocalTaskID> baseDependencies;
 
         for (PassIndex depPass : passNodes[passIndex].dependencies)
@@ -119,14 +119,14 @@ std::vector<LocalTaskID> RenderGraph::BuildBarrierTasks(
 {
     auto barrierIt = passToBarriersMap.find(passIndex);
     if (barrierIt == passToBarriersMap.end() || barrierIt->second.empty())
-        return baseDependencies; // ¹è¸®¾î°¡ ¾øÀ¸¸é ºÎ¸ğ ÀÇÁ¸¼ºÀ» ±×´ë·Î ¹İÈ¯
+        return baseDependencies; // ë°°ë¦¬ì–´ê°€ ì—†ìœ¼ë©´ ë¶€ëª¨ ì˜ì¡´ì„±ì„ ê·¸ëŒ€ë¡œ ë°˜í™˜
 
     std::vector<LocalTaskID> currentPassDependencies;
     currentPassDependencies.reserve(barrierIt->second.size());
 
     for (auto& planned : barrierIt->second)
     {
-        if (planned->generatedTaskId == 0) // ¾ÆÁ÷ ¹è¸®¾î ÅÂ½ºÅ©°¡ »ı¼ºµÇÁö ¾ÊÀº °æ¿ì¿¡¸¸ »õ·Î »ı¼º (Ä³½Ì ·ÎÁ÷ À¯Áö)
+        if (planned->generatedTaskId == 0) // ì•„ì§ ë°°ë¦¬ì–´ íƒœìŠ¤í¬ê°€ ìƒì„±ë˜ì§€ ì•Šì€ ê²½ìš°ì—ë§Œ ìƒˆë¡œ ìƒì„± (ìºì‹± ë¡œì§ ìœ ì§€)
         {
             std::vector<LocalTaskID> barrierDependencies = baseDependencies;
             for (auto& [type, barriers] : planned->groups)
@@ -136,7 +136,7 @@ std::vector<LocalTaskID> RenderGraph::BuildBarrierTasks(
                 outTasks.push_back({ barrierId, std::move(barrierTask), std::move(barrierDependencies) });
 
                 barrierDependencies.clear();
-                barrierDependencies.push_back(barrierId); // Ã¼ÀÌ´×: ´ÙÀ½ ±×·ì ¹è¸®¾î´Â ¹æ±İ »ı¼ºÇÑ ¹è¸®¾î ÅÂ½ºÅ©¿¡ ÀÇÁ¸ÇÏµµ·Ï ¼³Á¤
+                barrierDependencies.push_back(barrierId); // ì²´ì´ë‹: ë‹¤ìŒ ê·¸ë£¹ ë°°ë¦¬ì–´ëŠ” ë°©ê¸ˆ ìƒì„±í•œ ë°°ë¦¬ì–´ íƒœìŠ¤í¬ì— ì˜ì¡´í•˜ë„ë¡ ì„¤ì •
             }
             planned->generatedTaskId = barrierDependencies.back();
         }
@@ -156,8 +156,8 @@ std::vector<PassNodeV> RenderGraph::BuildDependencyGraph()
     for (int i = 0; i < passCount; ++i)
         nodes[i].index = i;
 
-    std::unordered_map<RGResourceID, PassIndex> lastWriter; // resource -> ¸¶Áö¸· writer pass. waw, raw(write->read)¸¦ ÇÏ±âÀ§ÇÑ º¯¼ö.
-    std::unordered_map<RGResourceID, std::vector<PassIndex>> activeReaders; //war(read->write) ¿¡ ÇÊ¿äÇÑ º¯¼ö. warÀº Á¶±İ ±î´Ù·Ó´Ù.
+    std::unordered_map<RGResourceID, PassIndex> lastWriter; // resource -> ë§ˆì§€ë§‰ writer pass. waw, raw(write->read)ë¥¼ í•˜ê¸°ìœ„í•œ ë³€ìˆ˜.
+    std::unordered_map<RGResourceID, std::vector<PassIndex>> activeReaders; //war(read->write) ì— í•„ìš”í•œ ë³€ìˆ˜. warì€ ì¡°ê¸ˆ ê¹Œë‹¤ë¡­ë‹¤.
 
     for (PassIndex passIndex = 0; passIndex < passCount; ++passIndex)
     {
@@ -197,7 +197,7 @@ std::vector<PassNodeV> RenderGraph::BuildDependencyGraph()
                     nodes[writerPass].dependents.push_back(passIndex);
                 }
 
-                // WAR(read->write). Âü°í·Î RARÀº ÇÏÁö ¾Ê´Â´Ù.
+                // WAR(read->write). ì°¸ê³ ë¡œ RARì€ í•˜ì§€ ì•ŠëŠ”ë‹¤.
                 auto readerIt = activeReaders.find(resourceID);
                 if (readerIt != activeReaders.end())
                 {
@@ -219,8 +219,8 @@ std::vector<PassNodeV> RenderGraph::BuildDependencyGraph()
 
     for (auto& node : nodes)
     {
-        RemoveVectorDuplicates(node.dependencies); // Á¤¹æÇâ °£¼± Áßº¹ Á¦°Å
-        RemoveVectorDuplicates(node.dependents); // ¿ª¹æÇâ °£¼± Áßº¹ Á¦°Å
+        RemoveVectorDuplicates(node.dependencies); // ì •ë°©í–¥ ê°„ì„  ì¤‘ë³µ ì œê±°
+        RemoveVectorDuplicates(node.dependents); // ì—­ë°©í–¥ ê°„ì„  ì¤‘ë³µ ì œê±°
 
         node.indegree = static_cast<int>(node.dependencies.size());
     }
@@ -241,7 +241,7 @@ void RenderGraph::ValidateGraph()
         {
             if (usage.access == AccessType::Read)
             {
-                Assert(produced.contains(usage.resID)); //read pass´Â import°¡ ÀÖ°Å³ª write pass°¡ ÀÖ¾î¾ß ÇÑ´Ù.(Áï, ÀĞÀ»°Ô ÀÖ¾î¾ß ÀĞÁö)
+                Assert(produced.contains(usage.resID)); //read passëŠ” importê°€ ìˆê±°ë‚˜ write passê°€ ìˆì–´ì•¼ í•œë‹¤.(ì¦‰, ì½ì„ê²Œ ìˆì–´ì•¼ ì½ì§€)
             }
 
             if (usage.access == AccessType::Write)
@@ -272,13 +272,13 @@ RenderGraph::BarrierMap RenderGraph::PlanBarriers(const std::vector<PassIndex>& 
             passToBarriersMap[passIndex].push_back(planned);
             for (const auto& usage : pass.usages)
             {
-                if (tempTracker[usage.resID].lastUpdatedPass == passIndex) //ÀÌ¹ø ÆĞ½º¿¡¼­ ½ÇÁ¦·Î Æ®·£Áö¼Ç ¹è¸®¾î°¡ »ı¼ºµÈ "ÀÚ¿ø"¸¸ Fork¿ë ÀÌÁ¤Ç¥·Î µî·Ï.
+                if (tempTracker[usage.resID].lastUpdatedPass == passIndex) //ì´ë²ˆ íŒ¨ìŠ¤ì—ì„œ ì‹¤ì œë¡œ íŠ¸ëœì§€ì…˜ ë°°ë¦¬ì–´ê°€ ìƒì„±ëœ "ìì›"ë§Œ Forkìš© ì´ì •í‘œë¡œ ë“±ë¡.
                     lastResourceBarrier[usage.resID] = planned;
             }
         }
         else
         {
-            // (Fork ÇÙ½É) ¹è¸®¾î°¡ »õ·Î ¾È ¸¸µé¾îÁ³´Ù¸é, ÇüÁ¦ pass°¡ ÀÌ¹Ì ¼±Á¡ÇØµĞ ¹è¸®¾î°¡ ÀÖ´ÂÁö °øÀ¯ ¿«±â
+            // (Fork í•µì‹¬) ë°°ë¦¬ì–´ê°€ ìƒˆë¡œ ì•ˆ ë§Œë“¤ì–´ì¡Œë‹¤ë©´, í˜•ì œ passê°€ ì´ë¯¸ ì„ ì í•´ë‘” ë°°ë¦¬ì–´ê°€ ìˆëŠ”ì§€ ê³µìœ  ì—®ê¸°
             for (const auto& usage : pass.usages)
             {
                 if (usage.access == AccessType::Read && lastResourceBarrier.contains(usage.resID))
@@ -287,7 +287,7 @@ RenderGraph::BarrierMap RenderGraph::PlanBarriers(const std::vector<PassIndex>& 
         }
     }
 
-    m_statesTracker = std::move(tempTracker); // ½Ã¹Ä·¹ÀÌ¼ÇÀÌ ³¡³­ ÃÖÁ¾ ÀÚ¿ø »óÅÂ¸¦ Àü¿ª Æ®·¡Ä¿¿¡ µ¿±âÈ­
+    m_statesTracker = std::move(tempTracker); // ì‹œë®¬ë ˆì´ì…˜ì´ ëë‚œ ìµœì¢… ìì› ìƒíƒœë¥¼ ì „ì—­ íŠ¸ë˜ì»¤ì— ë™ê¸°í™”
     return passToBarriersMap;
 }
 

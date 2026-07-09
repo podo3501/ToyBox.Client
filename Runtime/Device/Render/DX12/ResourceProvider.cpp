@@ -10,10 +10,10 @@ namespace
 
     struct BudgetRange
     {
-        float fastGpuMs; // ÃÖ´ë ¿¹»êÀ» Àû¿ëÇÏ´Â GPU ½Ã°£
-        float slowGpuMs; // ÃÖ¼Ò ¿¹»êÀ» Àû¿ëÇÏ´Â GPU ½Ã°£
-        size_t maxBudget; // fastGpuMs ÀÌÇÏÀÏ ¶§ÀÇ ¿¹»ê
-        size_t minBudget; // slowGpuMs ÀÌ»óÀÏ ¶§ÀÇ ¿¹»ê
+        float fastGpuMs; // ìµœëŒ€ ì˜ˆì‚°ì„ ì ìš©í•˜ëŠ” GPU ì‹œê°„
+        float slowGpuMs; // ìµœì†Œ ì˜ˆì‚°ì„ ì ìš©í•˜ëŠ” GPU ì‹œê°„
+        size_t maxBudget; // fastGpuMs ì´í•˜ì¼ ë•Œì˜ ì˜ˆì‚°
+        size_t minBudget; // slowGpuMs ì´ìƒì¼ ë•Œì˜ ì˜ˆì‚°
     };
 
     constexpr BudgetRange TextureBudgetRange

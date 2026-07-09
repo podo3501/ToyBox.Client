@@ -1,6 +1,7 @@
 #pragma once
-//»õ·Î¿î Å°°ªÀ» ¸¸µé¶§¿¡´Â ÀÌ ÆÄÀÏ¿¡¼­ »õ·Î¿î Å°°ªÀ» Á¤ÀÇÇØ¼­ ¸¸µç´Ù.
-//Å° º¯È¯À» °£´ÜÇÏ°Ô ¼±¾ğÇÏ´Â Define ÄÚµå. Å°°¡ ÅÛÇÃ¸´ Æ¯¼öÈ­·Î µÅ ÀÖ¾î¼­ ¶È°°Àº ¼±¾ğÀ» °è¼Ó ÇØ¾ß ÇÏ±â ¶§¹®.
+
+//ìƒˆë¡œìš´ í‚¤ê°’ì„ ë§Œë“¤ë•Œì—ëŠ” ì´ íŒŒì¼ì—ì„œ ìƒˆë¡œìš´ í‚¤ê°’ì„ ì •ì˜í•´ì„œ ë§Œë“ ë‹¤.
+//í‚¤ ë³€í™˜ì„ ê°„ë‹¨í•˜ê²Œ ì„ ì–¸í•˜ëŠ” Define ì½”ë“œ. í‚¤ê°€ í…œí”Œë¦¿ íŠ¹ìˆ˜í™”ë¡œ ë¼ ìˆì–´ì„œ ë˜‘ê°™ì€ ì„ ì–¸ì„ ê³„ì† í•´ì•¼ í•˜ê¸° ë•Œë¬¸.
 #ifndef DECLARE_KEY_CONVERTER
 #define DECLARE_KEY_CONVERTER(Type)                 \
 	template<>                                         \
@@ -10,14 +11,14 @@
 	};
 #endif //DECLARE_KEY_CONVERTER
 
-//Key º¯È¯ ÇïÆÛ
+//Key ë³€í™˜ í—¬í¼
 template<typename K>
 struct KeyConverter {
 	static string ToKey(const K& key) { return key; }
 	static K FromKey(const string& key) { return key; }
 };
 
-//Key Æ¯¼öÈ­
+//Key íŠ¹ìˆ˜í™”
 DECLARE_KEY_CONVERTER(int)
 DECLARE_KEY_CONVERTER(wstring)
 

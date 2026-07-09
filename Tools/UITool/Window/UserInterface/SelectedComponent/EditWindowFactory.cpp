@@ -29,10 +29,10 @@ optional<unordered_map<ComponentID, FactoryFunction>> EditWindowFactory::m_facto
 
 void EditWindowFactory::RegisterFactories()
 {
-    if (m_factoryMap) return; //¿©·¯¹ø È£ÃâÇØµµ ÇÑ¹ø¸¸ µî·ÏÀÌ µÇ°Ô²û nullopt(°ªÀÌ ¾øÀ»¶§)¸¸ µÇ°Ô²û ÇÑ´Ù.
-    m_factoryMap.emplace(unordered_map<ComponentID, FactoryFunction>()); //ºó »óÅÂ·Î ÃÊ±â°ªÀ» ¸¸µç´Ù.
+    if (m_factoryMap) return; //ì—¬ëŸ¬ë²ˆ í˜¸ì¶œí•´ë„ í•œë²ˆë§Œ ë“±ë¡ì´ ë˜ê²Œë” nullopt(ê°’ì´ ì—†ì„ë•Œ)ë§Œ ë˜ê²Œë” í•œë‹¤.
+    m_factoryMap.emplace(unordered_map<ComponentID, FactoryFunction>()); //ë¹ˆ ìƒíƒœë¡œ ì´ˆê¸°ê°’ì„ ë§Œë“ ë‹¤.
 
-    //UIComponent*, UICommandHistory*°¡ ÀÎÀÚ·Î µé¾î°¡´Â »õ·Î¿î EditWindow´Â ¿©±â¼­ Ãß°¡
+    //UIComponent*, UICommandHistory*ê°€ ì¸ìë¡œ ë“¤ì–´ê°€ëŠ” ìƒˆë¡œìš´ EditWindowëŠ” ì—¬ê¸°ì„œ ì¶”ê°€
     RegisterEditWindow<EditPanel, Panel*>(ComponentID::Panel);
     RegisterEditWindow<EditButton, Button*>(ComponentID::Button);
     RegisterEditWindow<EditContainer, Container*>(ComponentID::Container);
@@ -44,13 +44,13 @@ void EditWindowFactory::RegisterFactories()
     RegisterEditWindow<EditScrollBar, ScrollBar*>(ComponentID::ScrollBar);
     RegisterEditWindow<EditTextArea, TextArea*>(ComponentID::TextArea);
 
-    //UIComponent*, UICommandHistory*, TextureResourceBinder*°¡ ÀÎÀÚ·Î µé¾î°¡´Â »õ·Î¿î EditWindow´Â ¿©±â¼­ Ãß°¡
+    //UIComponent*, UICommandHistory*, TextureResourceBinder*ê°€ ì¸ìë¡œ ë“¤ì–´ê°€ëŠ” ìƒˆë¡œìš´ EditWindowëŠ” ì—¬ê¸°ì„œ ì¶”ê°€
     RegisterEditWindowWithBinder<EditPatchTextureStd1, PatchTextureStd1*>(ComponentID::PatchTextureStd1);
     RegisterEditWindowWithBinder<EditPatchTextureStd3, PatchTextureStd3*>(ComponentID::PatchTextureStd3);
     RegisterEditWindowWithBinder<EditPatchTextureStd9, PatchTextureStd9*>(ComponentID::PatchTextureStd9);
     RegisterEditWindowWithBinder<EditTextureSwitcher, TextureSwitcher*>(ComponentID::TextureSwitcher);
 
-    //´Ù¸¥ ÀÎÀÚ¸¦ ´õ ³Ö°Ô µÈ´Ù¸é RegisterEditWindow¿¡ °¡º¯ÀÎÀÚ¸¦ ³Ö°Ô ¸¸µé¾î¼­ RegisterEditWindow ÇÔ¼ö¸¦ ÇÏ³ª·Î ¸¸µéÀÚ.
+    //ë‹¤ë¥¸ ì¸ìë¥¼ ë” ë„£ê²Œ ëœë‹¤ë©´ RegisterEditWindowì— ê°€ë³€ì¸ìë¥¼ ë„£ê²Œ ë§Œë“¤ì–´ì„œ RegisterEditWindow í•¨ìˆ˜ë¥¼ í•˜ë‚˜ë¡œ ë§Œë“¤ì.
 }
 
 unique_ptr<EditWindow> EditWindowFactory::CreateEditWindow(UIComponent* component, 

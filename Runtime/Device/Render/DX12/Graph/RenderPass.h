@@ -40,13 +40,13 @@ struct RenderPass
 
     void Read(RGResourceID resID, RGAccess s) 
     { 
-        Assert(!HasUsage(resID)); //°°Àº ÆĞ½º¿¡¼­ ¸®¼Ò½º¸¦ Áßº¹ÇØ¼­ ¾²¸é ¾ÈµÈ´Ù.
+        Assert(!HasUsage(resID)); //ê°™ì€ íŒ¨ìŠ¤ì—ì„œ ë¦¬ì†ŒìŠ¤ë¥¼ ì¤‘ë³µí•´ì„œ ì“°ë©´ ì•ˆëœë‹¤.
         usages.push_back({ resID, AccessType::Read, s });
     }
 
     void Write(RGResourceID resID, RGAccess s) 
     { 
-        Assert(!HasUsage(resID)); //°°Àº ÆĞ½º¿¡¼­ ¸®¼Ò½º¸¦ Áßº¹ÇØ¼­ ¾²¸é ¾ÈµÈ´Ù.
+        Assert(!HasUsage(resID)); //ê°™ì€ íŒ¨ìŠ¤ì—ì„œ ë¦¬ì†ŒìŠ¤ë¥¼ ì¤‘ë³µí•´ì„œ ì“°ë©´ ì•ˆëœë‹¤.
         usages.push_back({ resID, AccessType::Write, s });
     }
 

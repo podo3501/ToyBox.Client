@@ -2,15 +2,15 @@
 #include "ClassSerialize.hpp"
 #include  "Concepts.h"
 
-//JsonOperationÀ» »ç¿ëÇØ¾ß ÇÏ´Â Å¸ÀÔÀº ¿©±â¼­ ºĞ±âÇØ ÁØ´Ù. ±×·¸Áö ¾ÊÀ¸¸é JsonTraits¿¡¼­ ºĞ±â
+//JsonOperationì„ ì‚¬ìš©í•´ì•¼ í•˜ëŠ” íƒ€ì…ì€ ì—¬ê¸°ì„œ ë¶„ê¸°í•´ ì¤€ë‹¤. ê·¸ë ‡ì§€ ì•Šìœ¼ë©´ JsonTraitsì—ì„œ ë¶„ê¸°
 template<typename T>
 void Serializer::Process(const string& key, T& data) noexcept
 {
 	auto writeFunc = [this, &data](nlohmann::json& j) {
-		if constexpr (HasSerialize<T>) SerializeClass(j, data); //SerializeIO °¡ ÀÖ´Â Å¬·¡½º. unique_ptrµµ Æ÷ÇÔÇØ¼­.
-		else if constexpr (SequenceLike<T>) SerializeSeqContainer(j, data); //½ÃÄö½º ÄÁÅ×ÀÌ³ÊÀÏ¶§ Ã³¸®
-		else if constexpr (MapLike<T>) SerializeMapContainer(j, data); //Map ÄÁÅ×ÀÌ³ÊÀÏ¶§ Ã³¸®
-		else j = JsonTraits<T>::SerializeToJson(data); }; //ÀÏ¹İÀûÀÎ µ¥ÀÌÅÍ Çü½ÄÀÏ¶§ Ã³¸®
+		if constexpr (HasSerialize<T>) SerializeClass(j, data); //SerializeIO ê°€ ìˆëŠ” í´ë˜ìŠ¤. unique_ptrë„ í¬í•¨í•´ì„œ.
+		else if constexpr (SequenceLike<T>) SerializeSeqContainer(j, data); //ì‹œí€€ìŠ¤ ì»¨í…Œì´ë„ˆì¼ë•Œ ì²˜ë¦¬
+		else if constexpr (MapLike<T>) SerializeMapContainer(j, data); //Map ì»¨í…Œì´ë„ˆì¼ë•Œ ì²˜ë¦¬
+		else j = JsonTraits<T>::SerializeToJson(data); }; //ì¼ë°˜ì ì¸ ë°ì´í„° í˜•ì‹ì¼ë•Œ ì²˜ë¦¬
 
 	auto readFunc = [this, &data](const nlohmann::json& j) {
 		if constexpr (HasSerialize<T>) DeserializeClass(j, data);

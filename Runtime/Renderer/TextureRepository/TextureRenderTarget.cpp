@@ -63,7 +63,7 @@ bool TextureRenderTarget::ModifySize(const XMUINT2& size)
 
 bool TextureRenderTarget::CreateTextureResource(DXGI_FORMAT texFormat, const XMUINT2& size)
 {
-    //·»´õ¸µÇÒ Äµ¹ö½º(ÅØ½ºÃÄ)¸¦ ¸¸µç´Ù.
+    //ë Œë”ë§í•  ìº”ë²„ìŠ¤(í…ìŠ¤ì³)ë¥¼ ë§Œë“ ë‹¤.
     m_resDesc = GetResourceDesc(texFormat, size);
     const CD3DX12_HEAP_PROPERTIES heapProperties(D3D12_HEAP_TYPE_DEFAULT);
     D3D12_CLEAR_VALUE clear = GetClearValue();
@@ -84,7 +84,7 @@ bool TextureRenderTarget::CreateTextureResource(DXGI_FORMAT texFormat, const XMU
 
 void TextureRenderTarget::Render(ID3D12GraphicsCommandList* commandList, ITextureRender* renderer, SpriteBatch* sprite)
 {
-    //¼Óµµ¸¦ À§ÇØ¼­ ÇÊ¿äÇÑ ºÎºÐÀ» Á¦¿ÜÇÑ ´Ù¸¥ ºÎºÐÀº Àß¶ó³½´Ù.
+    //ì†ë„ë¥¼ ìœ„í•´ì„œ í•„ìš”í•œ ë¶€ë¶„ì„ ì œì™¸í•œ ë‹¤ë¥¸ ë¶€ë¶„ì€ ìž˜ë¼ë‚¸ë‹¤.
     //D3D12_RECT scissorRect{};
     //scissorRect.left = 0;
     //scissorRect.top = 0;
@@ -100,9 +100,9 @@ void TextureRenderTarget::Render(ID3D12GraphicsCommandList* commandList, ITextur
     commandList->OMSetRenderTargets(1, &rtvHandle, FALSE, nullptr);
     commandList->ClearRenderTargetView(rtvHandle, ClearColor, 0, nullptr);
 
-    //Âï´Â°ÍÀº À§Ä¡°ªÀ» 0, 0·Î ¿Å±ä´Ù. 100, 100¿¡¼­ Âï´Â´Ù¸é ÅØ½ºÃÄ´Â ÁÂÇ¥°¡ 0, 0ºÎÅÍ ½ÃÀÛÇÏ´Â°Ô °íÁ¤ÀÌ±â ¶§¹®¿¡ ³¶ºñ°¡ µÈ´Ù.
-    //ÁÂÇ¥¸¦ ¿Å°Ü¼­ Âï´Â °Í°ú ÀüÃ¼ÀûÀ¸·Î ÁÂÇ¥¸¦ ¿Å±â´Â ¹æ¹ýÀÌ ÀÖ´Âµ¥ ÁÂÇ¥¸¦ ¿Å°Ü¼­ ÂïÀ¸¸é Update ÁÂÇ¥µµ ¿Å°ÜÁà¾ß ÇÏ±â ¶§¹®¿¡ °è»êÀÌ ¸¹ÀÌ µé¾î°£´Ù.
-    //¿©±â¼­ ÂïÀ»¶§ ÁÂÇ¥¸¸ ¿Å±â¸é XMMatrixTranslationÇÑ¹ø¸¸ °è»ê ÇÏ¸é µÇ°í, ÁÂÇ¥¸¦ ¿Å°Ü ÂïÀ¸¸é °è»êÀûÀ¸·Î´Â ¹®Á¦°¡ ¾ø´Ù°í ÇØµµ Áß°£Áß°£¿¡ if¹®°ú º¹Àâµµ°¡ ¿Ã¶ó°£´Ù.
+    //ì°ëŠ”ê²ƒì€ ìœ„ì¹˜ê°’ì„ 0, 0ë¡œ ì˜®ê¸´ë‹¤. 100, 100ì—ì„œ ì°ëŠ”ë‹¤ë©´ í…ìŠ¤ì³ëŠ” ì¢Œí‘œê°€ 0, 0ë¶€í„° ì‹œìž‘í•˜ëŠ”ê²Œ ê³ ì •ì´ê¸° ë•Œë¬¸ì— ë‚­ë¹„ê°€ ëœë‹¤.
+    //ì¢Œí‘œë¥¼ ì˜®ê²¨ì„œ ì°ëŠ” ê²ƒê³¼ ì „ì²´ì ìœ¼ë¡œ ì¢Œí‘œë¥¼ ì˜®ê¸°ëŠ” ë°©ë²•ì´ ìžˆëŠ”ë° ì¢Œí‘œë¥¼ ì˜®ê²¨ì„œ ì°ìœ¼ë©´ Update ì¢Œí‘œë„ ì˜®ê²¨ì¤˜ì•¼ í•˜ê¸° ë•Œë¬¸ì— ê³„ì‚°ì´ ë§Žì´ ë“¤ì–´ê°„ë‹¤.
+    //ì—¬ê¸°ì„œ ì°ì„ë•Œ ì¢Œí‘œë§Œ ì˜®ê¸°ë©´ XMMatrixTranslationí•œë²ˆë§Œ ê³„ì‚° í•˜ë©´ ë˜ê³ , ì¢Œí‘œë¥¼ ì˜®ê²¨ ì°ìœ¼ë©´ ê³„ì‚°ì ìœ¼ë¡œëŠ” ë¬¸ì œê°€ ì—†ë‹¤ê³  í•´ë„ ì¤‘ê°„ì¤‘ê°„ì— ifë¬¸ê³¼ ë³µìž¡ë„ê°€ ì˜¬ë¼ê°„ë‹¤.
     XMMATRIX transform = XMMatrixTranslation(-static_cast<float>(m_position.x), -static_cast<float>(m_position.y), 0.0f);
 
     sprite->Begin(commandList, SpriteSortMode_Deferred, transform);

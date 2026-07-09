@@ -35,7 +35,7 @@ struct Rect
     bool Contains(float px, float py) const;
     bool Contains(const Point& p) const;
     bool Contains(const Rect& other) const;
-    void Normalize(); //µÚÁıÈù »ç°¢Çü( width, height°¡ À½¼öÀÎ °æ¿ì) ÀÏ °æ¿ì¿¡ Á¤»óÀûÀÎ »ç°¢ÇüÀ¸·Î ¸¸µé¾îÁÜ.
+    void Normalize(); //ë’¤ì§‘íŒ ì‚¬ê°í˜•( width, heightê°€ ìŒìˆ˜ì¸ ê²½ìš°) ì¼ ê²½ìš°ì— ì •ìƒì ì¸ ì‚¬ê°í˜•ìœ¼ë¡œ ë§Œë“¤ì–´ì¤Œ.
     bool Intersects(const Rect& other) const;
     Rect Intersect(const Rect& other) const;
 };

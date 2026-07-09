@@ -102,7 +102,7 @@ namespace Core::Math
         return r;
     }
 
-    Matrix Matrix::TRS(const Matrix& t, const Matrix& r, const Matrix& s) //Çà·Ä °öÀº ¿À¸¥ÂÊºÎÅÍ Àû¿ë ±×·¡¼­ °á°úÀûÀ¸·Î s r t·Î Àû¿ëµÊ
+    Matrix Matrix::TRS(const Matrix& t, const Matrix& r, const Matrix& s) //í–‰ë ¬ ê³±ì€ ì˜¤ë¥¸ìª½ë¶€í„° ì ìš© ê·¸ë˜ì„œ ê²°ê³¼ì ìœ¼ë¡œ s r të¡œ ì ìš©ë¨
     {
         return t * r * s;
     }

@@ -8,21 +8,21 @@ struct TaskEntry
 {
     Task task;
     TaskContext context;
-    std::vector<TaskHandle> dependents; //´Ù¸¥ Task°¡ ³ª¸¦ ÀÇÁ¸ÇÏ°í ÀÖ´ÂÁö. ÀÌ°Ô ¾øÀ¸¸é Áö¿ï¶§ µÚ¿¡ Task »ı°¢¾ÈÇÏ°í ¹Ù·Î »èÁ¦µÇ¹ö¸².
+    std::vector<TaskHandle> dependents; //ë‹¤ë¥¸ Taskê°€ ë‚˜ë¥¼ ì˜ì¡´í•˜ê³  ìˆëŠ”ì§€. ì´ê²Œ ì—†ìœ¼ë©´ ì§€ìš¸ë•Œ ë’¤ì— Task ìƒê°ì•ˆí•˜ê³  ë°”ë¡œ ì‚­ì œë˜ë²„ë¦¼.
 
     bool submitted{ false };
     bool started{ false };
     bool finished{ false };
     FenceID fenceID{ InvalidFenceID };
-    FenceID waitFenceID{ InvalidFenceID }; //ÀÌ Ææ½º °ªÀÌ ¿Ã¶§±îÁö ½ÇÇàÇÏÁö ¾Ê´Â´Ù.
+    FenceID waitFenceID{ InvalidFenceID }; //ì´ íœìŠ¤ ê°’ì´ ì˜¬ë•Œê¹Œì§€ ì‹¤í–‰í•˜ì§€ ì•ŠëŠ”ë‹¤.
 
-    std::atomic<int> activeDependents{ 0 }; // ³ª¸¦ ÀÇÁ¸ÇÏ´Â ÀÚ½Ä ³ëµåµé Áß, ¾ÆÁ÷ ÇØÁ¦(Remove)µÇÁö ¾Ê°í »ì¾ÆÀÖ´Â ÀÚ½ÄµéÀÇ ÃÑ °³¼ö. ÀÌ°Ô 0ÀÌ µÇ¸é ÀÚ½Åµµ ÇØÁ¦µÈ´Ù.
+    std::atomic<int> activeDependents{ 0 }; // ë‚˜ë¥¼ ì˜ì¡´í•˜ëŠ” ìì‹ ë…¸ë“œë“¤ ì¤‘, ì•„ì§ í•´ì œ(Remove)ë˜ì§€ ì•Šê³  ì‚´ì•„ìˆëŠ” ìì‹ë“¤ì˜ ì´ ê°œìˆ˜. ì´ê²Œ 0ì´ ë˜ë©´ ìì‹ ë„ í•´ì œëœë‹¤.
 
     TaskEntry() = default;
     TaskEntry(const TaskEntry&) = delete;
     TaskEntry& operator=(const TaskEntry&) = delete;
 
-    //atomic º¯¼ö ¶§¹®¿¡ ÀÌµ¿ ¹× ´ëÀÔ ¿¬»êÀÚ ÀÛ¼º.
+    //atomic ë³€ìˆ˜ ë•Œë¬¸ì— ì´ë™ ë° ëŒ€ì… ì—°ì‚°ì ì‘ì„±.
     TaskEntry(TaskEntry&& other) noexcept
         : task(std::move(other.task))
         , context(std::move(other.context))

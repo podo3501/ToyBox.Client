@@ -1,7 +1,7 @@
 #pragma once
 
 struct MIX_Mixer;
-class AudioMixer //RAII¸¦ À§ÇØ¼­ ÀÛÀº Å¬·¡½º·Î ¸¸µê.
+class AudioMixer //RAIIë¥¼ ìœ„í•´ì„œ ì‘ì€ í´ë˜ìŠ¤ë¡œ ë§Œë“¦.
 { 
 public:
     ~AudioMixer();
@@ -13,5 +13,5 @@ public:
     inline MIX_Mixer* Get() const noexcept { return m_mixer; }
 
 private:
-    MIX_Mixer* m_mixer{ nullptr }; //¹Í¼­ ¾È¿¡ Device°¡ µé¾î°¡ ÀÖ´Ù. 
+    MIX_Mixer* m_mixer{ nullptr }; //ë¯¹ì„œ ì•ˆì— Deviceê°€ ë“¤ì–´ê°€ ìˆë‹¤. 
 };

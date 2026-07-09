@@ -7,6 +7,7 @@ class RenderScene
 {
 public:
     void AddSurface(const DrawItem& item);   
+    void AddUI(const std::vector<DrawUIItem>& uiItems);
     void AddUI(const DrawUIItem& uiItem);
     DrawPacket BuildDrawPacket();
 

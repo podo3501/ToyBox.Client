@@ -54,8 +54,8 @@ bool Imgui::Initialize(ID3D12Device* device, DescriptorHeap* descHeap, DXGI_FORM
         descHeap->GetCpuHandle(srvOffset),
         descHeap->GetGpuHandle(srvOffset)));
 
-    //ÀÓ½Ã·Î ÆùÆ® À§Ä¡¸¦ ³Ö¾îÁØ´Ù.
-    //ÆùÆ® ¼³Á¤(Á¦ÀÏ À§¿¡ ÀÖ´Â ÆùÆ®°¡ index 0¸¦ °¡Áö¸ç default ÆùÆ®ÀÌ´Ù.
+    //ì„ì‹œë¡œ í°íŠ¸ ìœ„ì¹˜ë¥¼ ë„£ì–´ì¤€ë‹¤.
+    //í°íŠ¸ ì„¤ì •(ì œì¼ ìœ„ì— ìˆëŠ” í°íŠ¸ê°€ index 0ë¥¼ ê°€ì§€ë©° default í°íŠ¸ì´ë‹¤.
     
     string ttfFilename = m_resourcePath + "Fonts/DroidSans.ttf";
     if (!filesystem::exists(ttfFilename))
@@ -93,7 +93,7 @@ void Imgui::PrepareRender()
     ImGui_ImplWin32_NewFrame();
     ImGui::NewFrame();
 
-    //¿©±â¼­ ui ¸¸µå´Â ºÎºĞ È£ÃâÇÑ´Ù.
+    //ì—¬ê¸°ì„œ ui ë§Œë“œëŠ” ë¶€ë¶„ í˜¸ì¶œí•œë‹¤.
     ranges::for_each(m_components, [this](const auto& item) 
         { 
             item->Render(m_io); 
@@ -113,7 +113,7 @@ void Imgui::PrepareRender()
 
 void Imgui::Reset()
 {
-    //imgui ¸®¼Â¿¡ ´ëÇØ¼­ Ã³¸®ÇØ¾ßÇÒ °ÍÀÌ ÀÖÀ» ¼ö ÀÖ´Ù.
+    //imgui ë¦¬ì…‹ì— ëŒ€í•´ì„œ ì²˜ë¦¬í•´ì•¼í•  ê²ƒì´ ìˆì„ ìˆ˜ ìˆë‹¤.
 }
 
 ////////////////////////////////////////////////////////

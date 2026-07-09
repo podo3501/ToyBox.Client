@@ -84,7 +84,7 @@ bool EditSourceTexture::ExecuteAction() noexcept
     default: break;
     }
 
-    m_pendingAction.reset(); // »óÅÂ ÃÊ±âÈ­
+    m_pendingAction.reset(); // ìƒíƒœ ì´ˆê¸°í™”
 
     return result;
 }

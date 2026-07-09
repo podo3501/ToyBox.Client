@@ -3,7 +3,7 @@
 #include "UserInterface/Serializer/Serializer.h"
 #include "../Traverser/UITraverser.h"
 
-//ÀÌ Å¬·¡½º´Â ´çÀå¿¡´Â ÇÏ´Â°Ô ¾ø´Ù. container°¡ ÇÒ ÀÏÀ» ´Ù °¡Á®°¬´Ù. ÃßÈÄ¿¡ ÀÌ Å¬·¡½º°¡ ¾î¶»°Ô µÉÁö ÁöÄÑº¸ÀÚ.
+//ì´ í´ë˜ìŠ¤ëŠ” ë‹¹ì¥ì—ëŠ” í•˜ëŠ”ê²Œ ì—†ë‹¤. containerê°€ í•  ì¼ì„ ë‹¤ ê°€ì ¸ê°”ë‹¤. ì¶”í›„ì— ì´ í´ë˜ìŠ¤ê°€ ì–´ë–»ê²Œ ë ì§€ ì§€ì¼œë³´ì.
 Button::~Button() = default;
 Button::Button() :
 	m_container{ nullptr }
@@ -31,7 +31,7 @@ bool Button::ChangeSize(const XMUINT2& size, bool isForce) noexcept
 	return UITraverser::ChangeSize(m_container, size, isForce);
 }
 
-//holdToKeepPressed´Â ³ªÁß¿¡ ¿É¼ÇÀ» ÁöÁ¤ÇÏ´Â º¯¼ö·Î ¹Ù²ğ¿¹Á¤. ¹öÆ°Àº ´Ù¾çÇÑ ¹öÆ°µéÀÌ Á¸ÀçÇÏ±â ¶§¹®.
+//holdToKeepPressedëŠ” ë‚˜ì¤‘ì— ì˜µì…˜ì„ ì§€ì •í•˜ëŠ” ë³€ìˆ˜ë¡œ ë°”ë€”ì˜ˆì •. ë²„íŠ¼ì€ ë‹¤ì–‘í•œ ë²„íŠ¼ë“¤ì´ ì¡´ì¬í•˜ê¸° ë•Œë¬¸.
 bool Button::Setup(const UILayout& layout, unique_ptr<UIComponent> container) noexcept
 {
 	SetLayout(layout);

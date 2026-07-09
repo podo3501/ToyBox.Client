@@ -72,14 +72,14 @@ bool FloatingComponent::Excute()
 	case MTextArea: result = LoadComponent(CreateComponent<TextArea>(texController, UILayout{ { 200, 30 }, Origin::LeftTop }, L"<English><White>Test text.</White></English>", fontKeys)); break;
 	case MListArea: result = LoadComponent(CreateSampleListArea({ { 200, 170 }, Origin::LeftTop })); break;
 	}
-	m_currentAction.reset(); // »óÅÂ ÃÊ±âÈ­
+	m_currentAction.reset(); // ìƒíƒœ ì´ˆê¸°í™”
 
 	return result;
 }
 
 void FloatingComponent::DrawMakeComponent()
 {
-	// ÅØ½ºÃ³¸¦ »ç°¢Çü ÇüÅÂ·Î ±×¸®±â
+	// í…ìŠ¤ì²˜ë¥¼ ì‚¬ê°í˜• í˜•íƒœë¡œ ê·¸ë¦¬ê¸°
 	m_position = ImGui::GetMousePos();
 	ImDrawList* drawList = ImGui::GetWindowDrawList();
 
@@ -89,8 +89,8 @@ void FloatingComponent::DrawMakeComponent()
 	const auto& texSize = m_renderTex->GetSize();
 	drawList->AddImage(
 		m_renderTex->GetGraphicMemoryOffset(),
-		{ m_position.x, m_position.y },                      // ½ÃÀÛ ÁÂÇ¥
-		{ m_position.x + texSize.x, m_position.y + texSize.y },    // Á¾·á ÁÂÇ¥
+		{ m_position.x, m_position.y },                      // ì‹œì‘ ì¢Œí‘œ
+		{ m_position.x + texSize.x, m_position.y + texSize.y },    // ì¢…ë£Œ ì¢Œí‘œ
 		ImVec2(0, 0),
 		ImVec2(1, 1),
 		colorU32
@@ -105,7 +105,7 @@ void FloatingComponent::Render()
 		return;
 	}
 
-	// ¸¶¿ì½º ¿À¸¥ÂÊ ¹öÆ° Å¬¸¯ ½Ã ÆË¾÷ ¸Ş´º ¶ç¿ì±â
+	// ë§ˆìš°ìŠ¤ ì˜¤ë¥¸ìª½ ë²„íŠ¼ í´ë¦­ ì‹œ íŒì—… ë©”ë‰´ ë„ìš°ê¸°
 	if (!ImGui::BeginPopupContextWindow(m_name.c_str()))
 	{
 		m_isActive = false;

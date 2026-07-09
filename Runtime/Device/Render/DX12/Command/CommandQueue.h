@@ -37,8 +37,8 @@ private:
     HANDLE m_event{ nullptr };
 
     vector<CommandList> m_pool;
-    size_t m_next{ 0 }; //command pool¿¡¼­ ´ÙÀ½¿¡ ¾î¶² command¸¦ »ç¿ëÇÒÁö.
-    FenceID m_lastSubmittedFence{ InvalidFenceID }; //¿©±â±îÁö ¸í·É¾î°¡ µé¾î°¡ ÀÖ´Â Ææ½º°ª. GetCompletedValue() °ªÀº ½ÇÁ¦·Î ´Ù ³¡³­ Ææ½º°ª.
+    size_t m_next{ 0 }; //command poolì—ì„œ ë‹¤ìŒì— ì–´ë–¤ commandë¥¼ ì‚¬ìš©í• ì§€.
+    FenceID m_lastSubmittedFence{ InvalidFenceID }; //ì—¬ê¸°ê¹Œì§€ ëª…ë ¹ì–´ê°€ ë“¤ì–´ê°€ ìˆëŠ” íœìŠ¤ê°’. GetCompletedValue() ê°’ì€ ì‹¤ì œë¡œ ë‹¤ ëë‚œ íœìŠ¤ê°’.
 
     CommandList* m_currentCmdEntry{ nullptr };
 };

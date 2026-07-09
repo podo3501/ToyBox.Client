@@ -32,18 +32,18 @@ void MergeRectangles(vector<Rectangle>& rects) noexcept
             Rectangle current = rects.back();
             rects.pop_back();
 
-            // ±âÁ¸¿¡ ÇÕÃÄÁø Á÷»ç°¢ÇüÀ» Ã£´Â ÇÔ¼ö
+            // ê¸°ì¡´ì— í•©ì³ì§„ ì§ì‚¬ê°í˜•ì„ ì°¾ëŠ” í•¨ìˆ˜
             auto it = ranges::find_if(tempResult, [&current](const Rectangle& res) {
                 return res.Intersects(current); 
                 });
 
-            if (it != tempResult.end()) // ÇÕÃÄÁú Á÷»ç°¢ÇüÀ» Ã£Àº °æ¿ì
+            if (it != tempResult.end()) // í•©ì³ì§ˆ ì§ì‚¬ê°í˜•ì„ ì°¾ì€ ê²½ìš°
             {
-                *it = Rectangle::Union(*it, current); // ÇÕÄ£ Á÷»ç°¢Çü ¾÷µ¥ÀÌÆ®
+                *it = Rectangle::Union(*it, current); // í•©ì¹œ ì§ì‚¬ê°í˜• ì—…ë°ì´íŠ¸
                 merged = true;
             }
             else
-                tempResult.push_back(current); // ÇÕÃÄÁöÁö ¾ÊÀº Á÷»ç°¢ÇüÀº Ãß°¡
+                tempResult.push_back(current); // í•©ì³ì§€ì§€ ì•Šì€ ì§ì‚¬ê°í˜•ì€ ì¶”ê°€
         }
 
         rects = std::move(tempResult);

@@ -39,14 +39,14 @@ void Rect::Normalize()
 {
     if (width < 0)
     {
-        x += width;  // x¸¦ ¿ÞÂÊ ³¡À¸·Î ¿Å±è
-        width = -width;  // width¸¦ ¾ç¼ö·Î
+        x += width;  // xë¥¼ ì™¼ìª½ ëìœ¼ë¡œ ì˜®ê¹€
+        width = -width;  // widthë¥¼ ì–‘ìˆ˜ë¡œ
     }
 
     if (height < 0)
     {
-        y += height;  // y¸¦ À§ÂÊ ³¡À¸·Î ¿Å±è
-        height = -height;  // height¸¦ ¾ç¼ö·Î
+        y += height;  // yë¥¼ ìœ„ìª½ ëìœ¼ë¡œ ì˜®ê¹€
+        height = -height;  // heightë¥¼ ì–‘ìˆ˜ë¡œ
     }
 }
 
@@ -58,7 +58,7 @@ bool Rect::Intersects(const Rect& other) const
         other.Bottom() <= Top());
 }
 
-Rect Rect::Intersect(const Rect& other) const //°á°ú°¡ À½¼ö°¡ ³ª¿Ã ¼ö ÀÖ´Âµ¥, °á°úÀ½¼ö Ã³¸®ÇÏ¸é ¿¬»êÀÌ µé¾î°¡±â ¶§¹®¿¡ À½¼ö°¡ ³ª°¡´Â°É Çã¿ë.
+Rect Rect::Intersect(const Rect& other) const //ê²°ê³¼ê°€ ìŒìˆ˜ê°€ ë‚˜ì˜¬ ìˆ˜ ìžˆëŠ”ë°, ê²°ê³¼ìŒìˆ˜ ì²˜ë¦¬í•˜ë©´ ì—°ì‚°ì´ ë“¤ì–´ê°€ê¸° ë•Œë¬¸ì— ìŒìˆ˜ê°€ ë‚˜ê°€ëŠ”ê±¸ í—ˆìš©.
 { 
     int l1 = x, t1 = y, r1 = x + width, b1 = y + height;
     int l2 = other.x, t2 = other.y, r2 = other.x + other.width, b2 = other.y + other.height;

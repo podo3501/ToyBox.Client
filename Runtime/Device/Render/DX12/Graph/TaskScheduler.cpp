@@ -15,7 +15,7 @@ TaskHandle TaskScheduler::AllocateHandle()
 
 void TaskScheduler::SubmitTask(const std::vector<CompiledTask>& compiledTasks, std::shared_ptr<ResourceContext> resources)
 {
-    std::unordered_map<LocalTaskID, TaskHandle> remap; //RenderGraph¿¡¼­ ¸¸µç ÀÏ½ÃÀûÀÎ handleÀ» ½ÇÁ¦ »ç¿ë°¡´ÉÇÑ task handle·Î ¹Ù²Û´Ù.
+    std::unordered_map<LocalTaskID, TaskHandle> remap; //RenderGraphì—ì„œ ë§Œë“  ì¼ì‹œì ì¸ handleì„ ì‹¤ì œ ì‚¬ìš©ê°€ëŠ¥í•œ task handleë¡œ ë°”ê¾¼ë‹¤.
     for (auto& compiled : compiledTasks)
         remap[compiled.localId] = AllocateHandle();
 
@@ -34,11 +34,11 @@ void TaskScheduler::SubmitTask(const std::vector<CompiledTask>& compiledTasks, s
         for (auto& depLocalId : compiled.dependents)
             entry->dependents.push_back(remap[depLocalId]);
 
-        // (ÃÖÀûÈ­ÄÚµå) ÀÚ½ÅÀÌ ÆÄ±«µÉ ¶§¸¸ ºÎ¸ğÀÇ Ä«¿îÆ®¸¦ ±ğ¾ÆÁÖ¸é µÇ¹Ç·Î std::erase°¡ ÇÊ¿ä ¾ø¾îÁü.
+        // (ìµœì í™”ì½”ë“œ) ìì‹ ì´ íŒŒê´´ë  ë•Œë§Œ ë¶€ëª¨ì˜ ì¹´ìš´íŠ¸ë¥¼ ê¹ì•„ì£¼ë©´ ë˜ë¯€ë¡œ std::eraseê°€ í•„ìš” ì—†ì–´ì§.
         for (auto& depHandle : entry->task.dependencies)
         {
             if (TaskEntry* parent = m_tasks.Find(depHandle))
-                parent->activeDependents.fetch_add(1, std::memory_order_relaxed); //ºÎ¸ğµéÀÇ »ì¾ÆÀÖ´Â ÀÚ½Ä ¼ö Ä«¿îÆ®¸¦ 1¾¿ Áõ°¡.
+                parent->activeDependents.fetch_add(1, std::memory_order_relaxed); //ë¶€ëª¨ë“¤ì˜ ì‚´ì•„ìˆëŠ” ìì‹ ìˆ˜ ì¹´ìš´íŠ¸ë¥¼ 1ì”© ì¦ê°€.
         }
         
         entry->submitted = true;
@@ -56,13 +56,13 @@ void TaskScheduler::SubmitReleaseTask(const Task& task)
 
     entry->task = task;
 
-    // Release´Â dependency°¡ ¾øÀ½ (¸í½ÃÀûÀ¸·Î Á¦°Å)
+    // ReleaseëŠ” dependencyê°€ ì—†ìŒ (ëª…ì‹œì ìœ¼ë¡œ ì œê±°)
     entry->task.dependencies.clear();
     entry->dependents.clear();
 
     auto queue = m_cmdScheduler.GetQueue(CommandType::Direct);
     entry->waitFenceID = queue->GetCurrentFence();
-    entry->context.resources = nullptr; // resource context ºÒÇÊ¿ä
+    entry->context.resources = nullptr; // resource context ë¶ˆí•„ìš”
     entry->submitted = true;
 }
 
@@ -76,7 +76,7 @@ void TaskScheduler::Execute()
             if (!AreDependenciesDone(entry))
                 return;
 
-            if (!IsDirectFenceReady(entry)) //release task¿ë
+            if (!IsDirectFenceReady(entry)) //release taskìš©
                 return;
 
             ExecuteTask(entry);
@@ -119,7 +119,7 @@ bool TaskScheduler::AreDependenciesDone(const TaskEntry& entry)
     for (auto& dep : entry.task.dependencies)
     {
         const TaskEntry* depEntry = m_tasks.Find(dep);
-        Assert(depEntry); //task°¡ Áß°£¿¡ ¾îµğ·Ğ°¡ »ç¶óÁ³´Ù´Â ¶æ.
+        Assert(depEntry); //taskê°€ ì¤‘ê°„ì— ì–´ë””ë¡ ê°€ ì‚¬ë¼ì¡Œë‹¤ëŠ” ëœ».
 
         if (!depEntry->finished) return false;
     }
@@ -139,7 +139,7 @@ bool TaskScheduler::IsDirectFenceReady(const TaskEntry& entry) const
 bool TaskScheduler::IsTaskFinished(const TaskEntry& entry)
 {
     if (!entry.started) return false;
-    if (entry.task.type == CommandType::None) //cpu task¶ó¸é fence °ªÀ» ºñ±³ÇØ º¼ ÇÊ¿ä°¡ ¾ø´Ù.
+    if (entry.task.type == CommandType::None) //cpu taskë¼ë©´ fence ê°’ì„ ë¹„êµí•´ ë³¼ í•„ìš”ê°€ ì—†ë‹¤.
         return true;
 
     return m_cmdScheduler.IsFenceComplete(entry.task.type, entry.fenceID);
@@ -147,17 +147,17 @@ bool TaskScheduler::IsTaskFinished(const TaskEntry& entry)
 
 bool TaskScheduler::CanDeleteTask(const TaskEntry& entry)
 {
-    // ³» ÀÛ¾÷ÀÌ ³¡³µ°í, ³ª¸¦ ¹°°í ´Ã¾îÁö´Â ÀÚ½Ä ÅÂ½ºÅ©°¡ ÇÏ³ªµµ ¾øÀ» ¶§¸¸ ¾ÈÀüÇÏ°Ô ÆÄ±« °¡´É
+    // ë‚´ ì‘ì—…ì´ ëë‚¬ê³ , ë‚˜ë¥¼ ë¬¼ê³  ëŠ˜ì–´ì§€ëŠ” ìì‹ íƒœìŠ¤í¬ê°€ í•˜ë‚˜ë„ ì—†ì„ ë•Œë§Œ ì•ˆì „í•˜ê²Œ íŒŒê´´ ê°€ëŠ¥
     return entry.finished && (entry.activeDependents.load(std::memory_order_relaxed) == 0);
 }
 
 void TaskScheduler::RemoveTask(TaskHandle handle, TaskEntry& entry)
 {
-    //Ã£¾Æ¼­ Áö¿ì´Â ºÎºĞ(erase)À» Áö¿ì°í Ä«¿îÆ®¸¦ °¨¼Ò½ÃÅ°´Ù°¡ 0ÀÌ µÇ¸é »èÁ¦ÇÏ°Ô ¼öÁ¤.
+    //ì°¾ì•„ì„œ ì§€ìš°ëŠ” ë¶€ë¶„(erase)ì„ ì§€ìš°ê³  ì¹´ìš´íŠ¸ë¥¼ ê°ì†Œì‹œí‚¤ë‹¤ê°€ 0ì´ ë˜ë©´ ì‚­ì œí•˜ê²Œ ìˆ˜ì •.
     for (auto& depHandle : entry.task.dependencies)
     {
         if (TaskEntry* parent = m_tasks.Find(depHandle))
-            parent->activeDependents.fetch_sub(1, std::memory_order_relaxed); // ºÎ¸ğÀÇ activeDependents°¡ 0ÀÌ µÇ¸é, ´ÙÀ½ ÇÁ·¹ÀÓ ·çÇÁ ¶§ ºÎ¸ğµµ CanDeleteTask¸¦ Åë°úÇØ ÀÚµ¿À¸·Î »èÁ¦.
+            parent->activeDependents.fetch_sub(1, std::memory_order_relaxed); // ë¶€ëª¨ì˜ activeDependentsê°€ 0ì´ ë˜ë©´, ë‹¤ìŒ í”„ë ˆì„ ë£¨í”„ ë•Œ ë¶€ëª¨ë„ CanDeleteTaskë¥¼ í†µê³¼í•´ ìë™ìœ¼ë¡œ ì‚­ì œ.
     }
 
     m_tasks.Remove(handle);
@@ -168,7 +168,7 @@ void TaskScheduler::Cancel(TaskHandle handle)
     TaskEntry* entry = m_tasks.Find(handle);
     if (!entry) return;
 
-    // ÀÚ½ÅÀÌ Ãë¼ÒµÇ¹Ç·Î ³» ºÎ¸ğµé¿¡°Ô¼­ ³ªÀÇ ÀÚ½Ä ÁöºĞÀ» Á¦°Å.
+    // ìì‹ ì´ ì·¨ì†Œë˜ë¯€ë¡œ ë‚´ ë¶€ëª¨ë“¤ì—ê²Œì„œ ë‚˜ì˜ ìì‹ ì§€ë¶„ì„ ì œê±°.
     for (auto& depHandle : entry->task.dependencies)
     {
         if (TaskEntry* parent = m_tasks.Find(depHandle))
@@ -178,7 +178,7 @@ void TaskScheduler::Cancel(TaskHandle handle)
     for (auto& childHandle : entry->dependents)
     {
         if (TaskEntry* child = m_tasks.Find(childHandle))
-            std::erase(child->task.dependencies, handle); // ÀÚ½ÄÀÇ Á¤¹æÇâ µğÆæ´ø½Ã¿¡¼­ Ãë¼ÒµÈ ³ª¸¦ Áö¿öÁÖ¾î ÀÚ½ÄÀÌ ¹«ÇÑ ´ë±â¿¡ ºüÁöÁö ¾Ê°Ô ÇÔ.
+            std::erase(child->task.dependencies, handle); // ìì‹ì˜ ì •ë°©í–¥ ë””íœë˜ì‹œì—ì„œ ì·¨ì†Œëœ ë‚˜ë¥¼ ì§€ì›Œì£¼ì–´ ìì‹ì´ ë¬´í•œ ëŒ€ê¸°ì— ë¹ ì§€ì§€ ì•Šê²Œ í•¨.
     }
 
     m_tasks.Remove(handle);

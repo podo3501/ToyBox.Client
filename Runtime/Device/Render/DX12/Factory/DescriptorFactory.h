@@ -15,14 +15,14 @@ public:
     DescriptorFactory() = delete;
     explicit DescriptorFactory(Device& device);
     bool Initialize(const DescriptorConfig& config);
-    UINT CreateBufferSRV(const Resource& resBuffer, UINT elementCount, UINT elementStride); //vb, ib ¸¸µé¶§
+    UINT CreateBufferSRV(const Resource& resBuffer, UINT elementCount, UINT elementStride); //vb, ib ë§Œë“¤ë•Œ
     UINT CreateTextureSRV(const Resource& res, DXGI_FORMAT format, UINT mipLevels = 1);
     UINT CreateTextureDSV(const Resource& res, DXGI_FORMAT format, UINT mipSlice = 0);
     bool CreateTextureViews(TextureResource* texRes, bool generateMips);
     DescriptorAllocator& GetBindlessAllocator() noexcept { return m_bindlessAllocator; }
     DescriptorAllocator& GetDSVAllocator() noexcept { return m_dsvAllocator; }
 
-    D3D12_CPU_DESCRIPTOR_HANDLE GetDSVHandle(UINT index); //dsv´Â gpu ÇÚµé api¸¦ Á¦°øÇÏÁö ¾Ê´Â´Ù.
+    D3D12_CPU_DESCRIPTOR_HANDLE GetDSVHandle(UINT index); //dsvëŠ” gpu í•¸ë“¤ apië¥¼ ì œê³µí•˜ì§€ ì•ŠëŠ”ë‹¤.
     D3D12_CPU_DESCRIPTOR_HANDLE GetBindlessCpuHandle(UINT index);
     D3D12_GPU_DESCRIPTOR_HANDLE GetBindlessGpuHandle(UINT index);
 
@@ -32,6 +32,6 @@ private:
     UINT CreateMipUAV(const Resource& res, DXGI_FORMAT format, UINT mipLevel);
 
     Device& m_device;
-    DescriptorAllocator m_bindlessAllocator; // srv/uav/cbv ¼Â´Ù ÇÏ³ªÀÇ Å« Èü¿¡ µé¾î°¨. cbv´Â °ÅÀÇ ¾È¾¸.
+    DescriptorAllocator m_bindlessAllocator; // srv/uav/cbv ì…‹ë‹¤ í•˜ë‚˜ì˜ í° í™ì— ë“¤ì–´ê°. cbvëŠ” ê±°ì˜ ì•ˆì”€.
     DescriptorAllocator m_dsvAllocator;
 };

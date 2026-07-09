@@ -8,8 +8,8 @@ struct TextureSourceInfo : public TextureInfo
 {
 	~TextureSourceInfo();
 	TextureSourceInfo() noexcept;
-	TextureSourceInfo(const TextureSourceInfo&) = default; //stl container¸¦ ¾´´Ù¸é ±âº» º¹»ç »ı¼ºÀÚ°¡ »ı¼ºµÇ¾î¼­ ¿øÇÏÁö ¾Ê´Â °ª º¹»ç°¡ ÀÏ¾î³¯ ¼ö ÀÖ´Ù.
-	TextureSourceInfo(TextureSourceInfo&&) = default;//emplaceÇÒ¶§ º¹»ç»ı¼ºÀÚ¸¸ ÀÖÀ¸¸é ÀÌµ¿ÀÌ ¾ÈµÊ.
+	TextureSourceInfo(const TextureSourceInfo&) = default; //stl containerë¥¼ ì“´ë‹¤ë©´ ê¸°ë³¸ ë³µì‚¬ ìƒì„±ìê°€ ìƒì„±ë˜ì–´ì„œ ì›í•˜ì§€ ì•ŠëŠ” ê°’ ë³µì‚¬ê°€ ì¼ì–´ë‚  ìˆ˜ ìˆë‹¤.
+	TextureSourceInfo(TextureSourceInfo&&) = default;//emplaceí• ë•Œ ë³µì‚¬ìƒì„±ìë§Œ ìˆìœ¼ë©´ ì´ë™ì´ ì•ˆë¨.
 	explicit TextureSourceInfo(const wstring& _filename) noexcept;
 	TextureSourceInfo(const wstring& _filename, TextureSlice _texSlice, const vector<Rectangle>& _sources) noexcept;
 	TextureSourceInfo& operator=(const TextureSourceInfo&) = default;

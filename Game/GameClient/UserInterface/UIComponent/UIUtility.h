@@ -29,14 +29,14 @@ private:
 	vector<TextData> m_data;
 };
 
-//L"<Hangle><Red>Å×½ºÆ®, </Red>!@#$%</Hangle><English>Test. ^<Blue>&*</Blue>()</English>"
+//L"<Hangle><Red>í…ŒìŠ¤íŠ¸, </Red>!@#$%</Hangle><English>Test. ^<Blue>&*</Blue>()</English>"
 bool Parser(const wstring& context, TextProperty& outTextProperty) noexcept;
 
 vector<optional<StateFlag::Type>> GetStateFlagsForDirection(DirectionType dirType) noexcept;
 vector<XMUINT2> StretchSize(DirectionType dirType, const XMUINT2& size, const vector<UIComponent*>& components) noexcept;
 vector<XMINT2> ExtractStartPosFromSizes(DirectionType dirType, const vector<XMUINT2>& sizes) noexcept;
 bool IsBiggerThanSource(DirectionType dirType, const XMUINT2& size, const vector<Rectangle>& list);
-//ÇÏ³ªÀÇ »ç°¢Çü°ú µÎ°³ÀÇ Á¡ÀÌ ÀÖÀ»¶§ 3°³ÀÇ »ç°¢ÇüÀ» Ã£´Â ÇÔ¼ö
+//í•˜ë‚˜ì˜ ì‚¬ê°í˜•ê³¼ ë‘ê°œì˜ ì ì´ ìˆì„ë•Œ 3ê°œì˜ ì‚¬ê°í˜•ì„ ì°¾ëŠ” í•¨ìˆ˜
 vector<Rectangle> GetSourcesFromArea(
 	const Rectangle& area, const vector<int>& widths, const vector<int>& heights) noexcept;
 bool IsContains(const vector<Rectangle>& rectangles, const XMINT2& position) noexcept;

@@ -122,7 +122,7 @@ void MeshCreateGraphBuilder::BuildFinalizePass(RenderGraph& graph, std::vector<M
         finalize.Read(mesh.vbResID, RGAccess::SRV);
         finalize.Read(mesh.ibResID, RGAccess::SRV);
     }
-    //?!? ÀÌ finalize.cpuExecute´Â m_registry·Î ¿Å°Üµµ µÇÁö ¾ÊÀ»±î? ±×·¡ÇÈ Ã³¸®¶ó±â º¸´Ù´Â cpu Ã³¸®´Ï±î. À½.. »ý°¢ÇØº¸ÀÚ.
+    //?!? ì´ finalize.cpuExecuteëŠ” m_registryë¡œ ì˜®ê²¨ë„ ë˜ì§€ ì•Šì„ê¹Œ? ê·¸ëž˜í”½ ì²˜ë¦¬ë¼ê¸° ë³´ë‹¤ëŠ” cpu ì²˜ë¦¬ë‹ˆê¹Œ. ìŒ.. ìƒê°í•´ë³´ìž.
     finalize.cpuExecute = [this, finalizes](TaskContext& ctx) {
         for (auto& mesh : finalizes)
         {

@@ -18,7 +18,7 @@ enum class ComponentID
 	ScrollBar,
 	TextureSwitcher,
 	UIModuleAsComponent,
-	Unknown, //ºÎ¸ğ ±âº» UIComponent. ÀÌ°Ô ¹®Á¦°¡ µÇ¸é UICompnent°¡ È¥ÀÚ¼­ »ı¼ºµÇ¾ú´Ù´Â °Çµ¥, »ı¼ºÀÚ°¡ protected¿¡¼­ publicÀÌ µÇ¾úÀ» °ÍÀÌ´Ù. ¾Æ´Ï¸é enum¿¡¼­ Ãß°¡¸¦ ¾È½ÃÄ×´øÁö.
+	Unknown, //ë¶€ëª¨ ê¸°ë³¸ UIComponent. ì´ê²Œ ë¬¸ì œê°€ ë˜ë©´ UICompnentê°€ í˜¼ìì„œ ìƒì„±ë˜ì—ˆë‹¤ëŠ” ê±´ë°, ìƒì„±ìê°€ protectedì—ì„œ publicì´ ë˜ì—ˆì„ ê²ƒì´ë‹¤. ì•„ë‹ˆë©´ enumì—ì„œ ì¶”ê°€ë¥¼ ì•ˆì‹œì¼°ë˜ì§€.
 	Count
 };
 
@@ -73,7 +73,7 @@ ASSERT_ENUM_COUNT(Origin);
 
 ///////////////////////////////////////////////////////////////
 
-enum class InteractState : int //ÀÌ¹ÌÁö°°Àº º¸¿©ÁÖ´Â »óÅÂ º¯È­ InputKeyState´Â Å°ÀÇ »óÅÂ º¯È­ÀÌ±â ¶§¹®¿¡ ºñ½ÁÇØ º¸¿©µµ µÑÀÌ ´Ù¸£´Ù.
+enum class InteractState : int //ì´ë¯¸ì§€ê°™ì€ ë³´ì—¬ì£¼ëŠ” ìƒíƒœ ë³€í™” InputKeyStateëŠ” í‚¤ì˜ ìƒíƒœ ë³€í™”ì´ê¸° ë•Œë¬¸ì— ë¹„ìŠ·í•´ ë³´ì—¬ë„ ë‘˜ì´ ë‹¤ë¥´ë‹¤.
 {
 	Normal,
 	Hovered,
@@ -91,10 +91,10 @@ ASSERT_ENUM_COUNT(InteractState);
 
 ///////////////////////////////////////////////////////////////
 
-//·»´õ¸µ½Ã Å½»öÀ» ¹Ù²ã°¡¸é¼­ ÇØ¾ßÇÑ´Ù. ±×·¸Áö ¾ÊÀ¸¸é ÀÌ¹ÌÁö°¡ µ¤ÇôÁö°Å³ª ¼ø¼­°¡ ²¿ÀÌ°Ô µÈ´Ù.
+//ë Œë”ë§ì‹œ íƒìƒ‰ì„ ë°”ê¿”ê°€ë©´ì„œ í•´ì•¼í•œë‹¤. ê·¸ë ‡ì§€ ì•Šìœ¼ë©´ ì´ë¯¸ì§€ê°€ ë®í˜€ì§€ê±°ë‚˜ ìˆœì„œê°€ ê¼¬ì´ê²Œ ëœë‹¤.
 enum class RenderTraversal
 {
-	Inherited, //À­ ³ëµå°¡ »ç¿ëÇÑ ¹æ½ÄÀ» µû¶ó¼­. ±âº»¼³Á¤. ÀÌ ¼³Á¤ÀÌ¸é BFS°¡ µ¹¾Æ°£´Ù.
+	Inherited, //ìœ— ë…¸ë“œê°€ ì‚¬ìš©í•œ ë°©ì‹ì„ ë”°ë¼ì„œ. ê¸°ë³¸ì„¤ì •. ì´ ì„¤ì •ì´ë©´ BFSê°€ ëŒì•„ê°„ë‹¤.
 	BFS,
 	DFS,
 	Count
@@ -102,13 +102,13 @@ enum class RenderTraversal
 
 enum class TraverseResult : int
 {
-	Continue, //°è¼Ó Å½»öÇÑ´Ù.
-	Stop, //Å½»öÀ» Áß´ÜÇÏ°í ½ÍÀ»¶§.
-	ChildrenSkip, //ÀÚ½Ä¸¸ ½ºÅµ ´Ù¸¥ ³ëµåµéÀº µ¹¾Æ°£´Ù.
+	Continue, //ê³„ì† íƒìƒ‰í•œë‹¤.
+	Stop, //íƒìƒ‰ì„ ì¤‘ë‹¨í•˜ê³  ì‹¶ì„ë•Œ.
+	ChildrenSkip, //ìì‹ë§Œ ìŠ¤í‚µ ë‹¤ë¥¸ ë…¸ë“œë“¤ì€ ëŒì•„ê°„ë‹¤.
 	Count
 };
 
-//bit enumÀ» ÅÛÇÃ¸´È­ ÇØ¼­ ´Ù¸¥ bit enumµéµµ µ¿ÀÏÇÏ°Ô ÇÔ¼ö¸¦ »ç¿ëÇÏ°Ô²û ÇÑ´Ù.
+//bit enumì„ í…œí”Œë¦¿í™” í•´ì„œ ë‹¤ë¥¸ bit enumë“¤ë„ ë™ì¼í•˜ê²Œ í•¨ìˆ˜ë¥¼ ì‚¬ìš©í•˜ê²Œë” í•œë‹¤.
 namespace BitEnum
 {
 	template <typename EnumType>
@@ -132,7 +132,7 @@ namespace BitEnum
 		return static_cast<EnumType>(~static_cast<UnderlyingType>(flag));
 	}
 
-	// SetBitEnum & HasBitEnum ÇÔ¼ö ÅÛÇÃ¸´È­
+	// SetBitEnum & HasBitEnum í•¨ìˆ˜ í…œí”Œë¦¿í™”
 	template <typename EnumType>
 	inline bool Set(EnumType& stateFlag, EnumType flag, bool enabled) noexcept {
 		EnumType previous = stateFlag;
@@ -146,12 +146,12 @@ namespace BitEnum
 	}
 }
 
-// namespac + enumÀ» ¾²´Â ÀÌÀ¯´Â ÇÔ¼ö ÀÎÀÚ·Î int¸¦ ¾²´Â °Íº¸´Ù ³ª¾Æ¼­. enum¸¸ ¾²¸é À÷µé ÀÌ¸§ÀÌ ÈçÇØ¼­ ÀÚ²Ù ÀÌ¸§ Ãæµ¹µÈ´Ù.
-// enum class´Â ¿ÀÆÛ·¹ÀÌÅÍ ÇÔ¼ö°¡ ¸¹ÀÌ »ı¼ºµÇ°í Å¸ÀÔ º¯È¯À» °è¼Ó ÇØ Áà¾ß ÇØ¼­ ±ÍÂú´Ù.
-// ºñÆ®ÇÃ·¡±×´Â ÄÄÆ÷³ÍÆ®°¡ º¯ÇÒ ¼ö ÀÖ´Â '»óÅÂ'¸¦ Ç¥ÇöÇÒ¶§ »ç¿ë. ¿¹¸¦ µé¸é pickable Å¬·¡½º¸¦ »ó¼Ó¹Ş¾Ò´Â°¡?(¿Ö³Ä¸é º¯ÇÏÁö ¾Ê´Â°Å´Ï±î) ÀÌ·±°É ¿©±â¿¡ Ãß°¡ÇÏ¸é ¾ÈµÊ.
+// namespac + enumì„ ì“°ëŠ” ì´ìœ ëŠ” í•¨ìˆ˜ ì¸ìë¡œ intë¥¼ ì“°ëŠ” ê²ƒë³´ë‹¤ ë‚˜ì•„ì„œ. enumë§Œ ì“°ë©´ ìŸ¤ë“¤ ì´ë¦„ì´ í”í•´ì„œ ìê¾¸ ì´ë¦„ ì¶©ëŒëœë‹¤.
+// enum classëŠ” ì˜¤í¼ë ˆì´í„° í•¨ìˆ˜ê°€ ë§ì´ ìƒì„±ë˜ê³  íƒ€ì… ë³€í™˜ì„ ê³„ì† í•´ ì¤˜ì•¼ í•´ì„œ ê·€ì°®ë‹¤.
+// ë¹„íŠ¸í”Œë˜ê·¸ëŠ” ì»´í¬ë„ŒíŠ¸ê°€ ë³€í•  ìˆ˜ ìˆëŠ” 'ìƒíƒœ'ë¥¼ í‘œí˜„í• ë•Œ ì‚¬ìš©. ì˜ˆë¥¼ ë“¤ë©´ pickable í´ë˜ìŠ¤ë¥¼ ìƒì†ë°›ì•˜ëŠ”ê°€?(ì™œëƒë©´ ë³€í•˜ì§€ ì•ŠëŠ”ê±°ë‹ˆê¹Œ) ì´ëŸ°ê±¸ ì—¬ê¸°ì— ì¶”ê°€í•˜ë©´ ì•ˆë¨.
 namespace StateFlag
 {
-	enum Type : int //°¹¼ö´Â 32°³±îÁö °¡´É. 
+	enum Type : int //ê°¯ìˆ˜ëŠ” 32ê°œê¹Œì§€ ê°€ëŠ¥. 
 	{
 		Update = 1 << 0,
 		Render = 1 << 1,
@@ -159,9 +159,9 @@ namespace StateFlag
 		Detach = 1 << 3,
 		X_SizeLocked = 1 << 4,
 		Y_SizeLocked = 1 << 5,
-		LockPosOnResize = 1 << 6, //»çÀÌÁî¸¦ Á¶ÀıÇÒ¶§ ÀÚ½Ä Å¬·¡½ºÀÇ À§Ä¡°ªÀ» º¯ÇÏÁö ¾Ê°Ô ÇÑ´Ù.
+		LockPosOnResize = 1 << 6, //ì‚¬ì´ì¦ˆë¥¼ ì¡°ì ˆí• ë•Œ ìì‹ í´ë˜ìŠ¤ì˜ ìœ„ì¹˜ê°’ì„ ë³€í•˜ì§€ ì•Šê²Œ í•œë‹¤.
 		Active = Update | Render,
-		Default = Active | Attach | Detach, // ±âº» ¿É¼Ç(¸ğµç ¿É¼Ç Æ÷ÇÔ)
+		Default = Active | Attach | Detach, // ê¸°ë³¸ ì˜µì…˜(ëª¨ë“  ì˜µì…˜ í¬í•¨)
 	};
 
 	constexpr StateFlag::Type operator|(StateFlag::Type lhs, StateFlag::Type rhs) { return static_cast<StateFlag::Type>(static_cast<int>(lhs) | static_cast<int>(rhs)); }

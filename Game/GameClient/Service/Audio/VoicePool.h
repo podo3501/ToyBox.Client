@@ -23,8 +23,8 @@ public:
 	bool Pause(VoiceHandle vh) noexcept;
 	bool Resume(VoiceHandle vh) noexcept;
 	bool StopVoice(VoiceHandle vh) noexcept;
-	bool StopVoices(SoundHandle sh) noexcept; //µ¿ÀÏÇÑ µ¥ÀÌÅÍ¸¦ °¡Áø°Å ÀüºÎ ½ºÅé
-	bool StopVoices(SoundType type) noexcept; // µ¿ÀÏÇÑ Å¸ÀÔ ÀüºÎ ½ºÅé
+	bool StopVoices(SoundHandle sh) noexcept; //ë™ì¼í•œ ë°ì´í„°ë¥¼ ê°€ì§„ê±° ì „ë¶€ ìŠ¤í†±
+	bool StopVoices(SoundType type) noexcept; // ë™ì¼í•œ íƒ€ì… ì „ë¶€ ìŠ¤í†±
 	bool SetVolume(VoiceHandle vh, float volume) noexcept;
 	PlaybackState GetState(VoiceHandle vh) const noexcept;
 	void UpdateVoices() noexcept;
@@ -41,7 +41,7 @@ private:
 	IAudioBackend* m_audioBackend{ nullptr };
 	int m_maxVoices{ 0 };
 	int m_maxStreams{ 0 };
-	static const int MaxHandles{ 64 }; //ÇÚµéÀÇ ÃÖÁ¾ Å©±â. Setup½Ã voice Å©±â°¡ ´õ Å©¸é ¿À·ù.
+	static const int MaxHandles{ 64 }; //í•¸ë“¤ì˜ ìµœì¢… í¬ê¸°. Setupì‹œ voice í¬ê¸°ê°€ ë” í¬ë©´ ì˜¤ë¥˜.
 
 	FixedHandlePool<Voice, VoiceTag, MaxHandles> m_voices;
 	vector<Voice*> m_stealStatics;

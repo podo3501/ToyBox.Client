@@ -36,7 +36,7 @@ struct MeshAsset : public AssetData
 
     VertexFormat format;
 
-    uint32_t vertexStride{ 0 }; //genericÇÏ°Ô byte·Î ¹Ù²î¾ú±â ¶§¹®¿¡ º¸ÆøÀ» ÀúÀåÇØ¾ß ÇÑ´Ù.
+    uint32_t vertexStride{ 0 }; //genericí•˜ê²Œ byteë¡œ ë°”ë€Œì—ˆê¸° ë•Œë¬¸ì— ë³´í­ì„ ì €ì¥í•´ì•¼ í•œë‹¤.
     uint32_t vertexCount{ 0 };
 
     std::vector<std::byte> vertices;

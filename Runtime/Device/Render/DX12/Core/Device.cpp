@@ -13,8 +13,8 @@ Device::Device(bool enableDebug)
 #if defined(_DEBUG)
     DebugOptions opt;
     opt.enableDebugLayer = true;
-    opt.enableGpuValidation = false;   //ÇÊ¿äÇÒ ¶§¸¸ true. °è¼Ó ÄÑ ³õÀ¸¸é ¿À·¡ °É¸°´Ù.
-    opt.breakOnWarning = false; // Warningµµ Àâ´Â´Ù.
+    opt.enableGpuValidation = false;   //í•„ìš”í•  ë•Œë§Œ true. ê³„ì† ì¼œ ë†“ìœ¼ë©´ ì˜¤ë˜ ê±¸ë¦°ë‹¤.
+    opt.breakOnWarning = false; // Warningë„ ì¡ëŠ”ë‹¤.
 
     if (enableDebug)
         DebugHelper::EnableDebugLayer(opt);

@@ -16,8 +16,8 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance,
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif
 
-	//°ýÈ£·Î °¨½Ñ ÀÌÀ¯´Â MainLoopÀÇ ½º¸¶Æ® Æ÷ÀÎÅÍ ¼Ò¸êÀÚ¸¦ È£ÃâÇØ ÁÖ±â À§ÇØ¼­ÀÌ¸ç,
-	//DirectX °ü·Ã ¸®¼Ò½º°¡ Àß ¼Ò¸êµÆ´ÂÁö ReportLiveObjectsÇÔ¼ö·Î È®ÀÎÇÏ±â ¶§¹®ÀÌ´Ù.
+	//ê´„í˜¸ë¡œ ê°ì‹¼ ì´ìœ ëŠ” MainLoopì˜ ìŠ¤ë§ˆíŠ¸ í¬ì¸í„° ì†Œë©¸ìžë¥¼ í˜¸ì¶œí•´ ì£¼ê¸° ìœ„í•´ì„œì´ë©°,
+	//DirectX ê´€ë ¨ ë¦¬ì†ŒìŠ¤ê°€ ìž˜ ì†Œë©¸ëëŠ”ì§€ ReportLiveObjectsí•¨ìˆ˜ë¡œ í™•ì¸í•˜ê¸° ë•Œë¬¸ì´ë‹¤.
 	int nResult = { 0 };
 	{
 		RECT windowRect = { 0, 0, 1280, 960 };

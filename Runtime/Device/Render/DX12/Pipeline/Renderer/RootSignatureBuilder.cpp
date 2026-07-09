@@ -31,21 +31,21 @@ void RootSignatureBuilder::AddLinearSampler(UINT shaderRegister)
 void RootSignatureBuilder::AddComparisonSampler(UINT shaderRegister)
 {
     D3D12_STATIC_SAMPLER_DESC samplerDesc{};
-    samplerDesc.Filter = D3D12_FILTER_COMPARISON_MIN_MAG_LINEAR_MIP_POINT; //ºñ±³(Comparison) ÇÊÅÍ ¼³Á¤
-    samplerDesc.AddressU = D3D12_TEXTURE_ADDRESS_MODE_BORDER; // ±×¸²ÀÚ ¸Ê ¿µ¿ª ¹Û Ã³¸®
+    samplerDesc.Filter = D3D12_FILTER_COMPARISON_MIN_MAG_LINEAR_MIP_POINT; //ë¹„êµ(Comparison) í•„í„° ì„¤ì •
+    samplerDesc.AddressU = D3D12_TEXTURE_ADDRESS_MODE_BORDER; // ê·¸ë¦¼ì ë§µ ì˜ì—­ ë°– ì²˜ë¦¬
     samplerDesc.AddressV = D3D12_TEXTURE_ADDRESS_MODE_BORDER;
     samplerDesc.AddressW = D3D12_TEXTURE_ADDRESS_MODE_BORDER;
     samplerDesc.MipLODBias = 0.0f;
     samplerDesc.MaxAnisotropy = 1;
 
-    // "ÇöÀç ±×¸®·Á´Â ±íÀÌ°¡ ¼¨µµ¿ì ¸ÊÀÇ ±íÀÌº¸´Ù ÀÛ°Å³ª °°À¸¸é(¾Õ¿¡ ÀÖÀ¸¸é) ºûÀ» ¹Ş´Â´Ù"
+    // "í˜„ì¬ ê·¸ë¦¬ë ¤ëŠ” ê¹Šì´ê°€ ì„€ë„ìš° ë§µì˜ ê¹Šì´ë³´ë‹¤ ì‘ê±°ë‚˜ ê°™ìœ¼ë©´(ì•ì— ìˆìœ¼ë©´) ë¹›ì„ ë°›ëŠ”ë‹¤"
     samplerDesc.ComparisonFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
-    samplerDesc.BorderColor = D3D12_STATIC_BORDER_COLOR_OPAQUE_WHITE; // ¿µ¿ª ¹ÛÀº Èò»ö(±×¸²ÀÚ ¾øÀ½) Ã³¸®
+    samplerDesc.BorderColor = D3D12_STATIC_BORDER_COLOR_OPAQUE_WHITE; // ì˜ì—­ ë°–ì€ í°ìƒ‰(ê·¸ë¦¼ì ì—†ìŒ) ì²˜ë¦¬
     samplerDesc.MinLOD = 0.0f;
     samplerDesc.MaxLOD = D3D12_FLOAT32_MAX;
-    samplerDesc.ShaderRegister = shaderRegister; // ÀÎÀÚ·Î ¹ŞÀº ·¹Áö½ºÅÍ ¹øÈ£ (¿¹: 1¹øÀÌ¸é s1)
+    samplerDesc.ShaderRegister = shaderRegister; // ì¸ìë¡œ ë°›ì€ ë ˆì§€ìŠ¤í„° ë²ˆí˜¸ (ì˜ˆ: 1ë²ˆì´ë©´ s1)
     samplerDesc.RegisterSpace = 0;
-    samplerDesc.ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; // ÇÈ¼¿ ¼ÎÀÌ´õ¿¡¼­¸¸ »ç¿ë
+    samplerDesc.ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; // í”½ì…€ ì…°ì´ë”ì—ì„œë§Œ ì‚¬ìš©
 
     m_staticSamplers.push_back(samplerDesc);
 }
@@ -65,7 +65,7 @@ ComPtr<ID3D12RootSignature> RootSignatureBuilder::Build(Device& device)
     params.reserve(m_constants.size() + m_cbvs.size() + m_srvs.size() + m_srvTables.size());
     samplers.reserve(m_samplers.size() + m_staticSamplers.size());
 
-    // ÀÏ¹İÀûÀ¸·Î °¡Àå ÀÚÁÖ ¹Ù²î´Â ·çÆ® »ó¼ö¸¦ ¾ÕÂÊ ÆÄ¶ó¹ÌÅÍ »öÀÎ¿¡ µÎ´Â °ÍÀÌ ¼º´É»ó À¯¸®.
+    // ì¼ë°˜ì ìœ¼ë¡œ ê°€ì¥ ìì£¼ ë°”ë€ŒëŠ” ë£¨íŠ¸ ìƒìˆ˜ë¥¼ ì•ìª½ íŒŒë¼ë¯¸í„° ìƒ‰ì¸ì— ë‘ëŠ” ê²ƒì´ ì„±ëŠ¥ìƒ ìœ ë¦¬.
     for (const auto& c : m_constants)
     {
         CD3DX12_ROOT_PARAMETER param;
@@ -80,14 +80,14 @@ ComPtr<ID3D12RootSignature> RootSignatureBuilder::Build(Device& device)
         params.push_back(param);
     }
 
-    for (const auto& s : m_srvs) // ÈüÀ» °ÅÄ¡Áö ¾Ê°í °¡»ó ÁÖ¼Ò¸¦ ´ÙÀÌ·ºÆ®·Î ´øÁú ¹öÆÛµéÀ» À§ÇÑ Åë·Î. ÁÖÀÇ! srvTableÀÌ¶û ´Ù¸§
+    for (const auto& s : m_srvs) // í™ì„ ê±°ì¹˜ì§€ ì•Šê³  ê°€ìƒ ì£¼ì†Œë¥¼ ë‹¤ì´ë ‰íŠ¸ë¡œ ë˜ì§ˆ ë²„í¼ë“¤ì„ ìœ„í•œ í†µë¡œ. ì£¼ì˜! srvTableì´ë‘ ë‹¤ë¦„
     {
         CD3DX12_ROOT_PARAMETER param;
         param.InitAsShaderResourceView(s.shaderRegister, s.registerSpace);
         params.push_back(param);
     }
 
-    for (const auto& t : m_srvTables) //6.6 ÀÌÀü¿¡ ¾²´ø ¹æ½Ä. ¸¸¾à¿¡ ¾È¾²ÀÎ´Ù¸é ¾ø¾Öµµ ¹«¹æÇÏ´Ù.
+    for (const auto& t : m_srvTables) //6.6 ì´ì „ì— ì“°ë˜ ë°©ì‹. ë§Œì•½ì— ì•ˆì“°ì¸ë‹¤ë©´ ì—†ì• ë„ ë¬´ë°©í•˜ë‹¤.
     {
         ranges.emplace_back();
         ranges.back().Init(

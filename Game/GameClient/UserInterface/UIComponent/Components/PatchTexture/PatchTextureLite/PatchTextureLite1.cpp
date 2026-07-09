@@ -12,7 +12,7 @@ PatchTextureLite1::PatchTextureLite1(const PatchTextureLite1& o) :
 	PatchTextureLite{ o },
 	m_coord{ o.m_coord }
 {
-	m_coord.SetOwner(this); //»ı¼ºµÉ¶§ PatchTextureCoord m_coord{ this }; ¸¦ ½ÇÇàÇÏÁö ¾Ê±â ¶§¹®¿¡ ¸í½ÃÀûÀ¸·Î ³Ö¾îÁØ´Ù.
+	m_coord.SetOwner(this); //ìƒì„±ë ë•Œ PatchTextureCoord m_coord{ this }; ë¥¼ ì‹¤í–‰í•˜ì§€ ì•Šê¸° ë•Œë¬¸ì— ëª…ì‹œì ìœ¼ë¡œ ë„£ì–´ì¤€ë‹¤.
 }
 
 unique_ptr<UIComponent> PatchTextureLite1::CreateClone() const

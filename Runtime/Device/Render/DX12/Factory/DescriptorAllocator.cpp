@@ -31,7 +31,7 @@ UINT DescriptorAllocator::Allocate() noexcept
 {
     if (m_allocFront + m_allocBack + 1 > m_capacity)
     {
-        Assert(false); //µğ½ºÅ©¸³ÅÍ ÈüÀÌ °¡µæ Âü. Áö¿ö¼­ »õ·Î ¸¸µé´øÁö, ÈüÀ» ´Ã¸®´øÁö.
+        Assert(false); //ë””ìŠ¤í¬ë¦½í„° í™ì´ ê°€ë“ ì°¸. ì§€ì›Œì„œ ìƒˆë¡œ ë§Œë“¤ë˜ì§€, í™ì„ ëŠ˜ë¦¬ë˜ì§€.
         return UINT_MAX;
     }
 
@@ -45,16 +45,16 @@ UINT DescriptorAllocator::AllocateTransient(UINT count) noexcept
 {
     std::lock_guard<std::mutex> lock(m_allocBackMutex);
 
-    UINT start = m_capacity - (m_allocBack + count); // ¿¹: capacity°¡ 1000ÀÌ°í 1°³ ¿äÃ»Çß´Ù¸é -> m_allocatedTransient´Â 1ÀÌ µÊ -> index´Â 999¹ø ¹æ ¹İÈ¯
+    UINT start = m_capacity - (m_allocBack + count); // ì˜ˆ: capacityê°€ 1000ì´ê³  1ê°œ ìš”ì²­í–ˆë‹¤ë©´ -> m_allocatedTransientëŠ” 1ì´ ë¨ -> indexëŠ” 999ë²ˆ ë°© ë°˜í™˜
     UINT used = m_allocFront + m_allocBack;
 
-    if (used + count > m_capacity) // µÎ ¿µ¿ªÀÌ Ãæµ¹Çß´ÂÁö Ã¼Å©
+    if (used + count > m_capacity) // ë‘ ì˜ì—­ì´ ì¶©ëŒí–ˆëŠ”ì§€ ì²´í¬
     {
         Assert(false);
         return UINT_MAX;
     }
 
-    m_allocBack += count; //count¸¸Å­ ¹æÀ» È®º¸
+    m_allocBack += count; //countë§Œí¼ ë°©ì„ í™•ë³´
     return start;
 }
 
@@ -88,7 +88,7 @@ D3D12_GPU_DESCRIPTOR_HANDLE DescriptorAllocator::GetGpuHandle(UINT index) const 
 {
     if (!m_shaderVisible)
     {
-        Assert(false); //shader¿¡¼­ ÀĞÁö ¸øÇÏ°Ô²û ÃÊ±âÈ­ µÅ ÀÖÀ½. dsv°Å³ª rtv °Å³ª..
+        Assert(false); //shaderì—ì„œ ì½ì§€ ëª»í•˜ê²Œë” ì´ˆê¸°í™” ë¼ ìˆìŒ. dsvê±°ë‚˜ rtv ê±°ë‚˜..
         return InvalidGpuHandle();
     }
 

@@ -18,7 +18,7 @@ public:
         Task releaseTask;
         releaseTask.passName = "ReleaseResource";
         releaseTask.cpuExecute = [resources = std::move(resources)](TaskContext&) {
-            // Fence ÀÌÈÄ ¿©±â±îÁö ¿À±â¸¸ ÇÏ¸é ÀÚµ¿À¸·Î ReleaseµÊ.
+            // Fence ì´í›„ ì—¬ê¸°ê¹Œì§€ ì˜¤ê¸°ë§Œ í•˜ë©´ ìë™ìœ¼ë¡œ Releaseë¨.
             };
 
         m_taskScheduler.SubmitReleaseTask(releaseTask);

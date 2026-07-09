@@ -12,7 +12,7 @@ unique_ptr<UIComponent> DerivedTraverser::Clone(UIComponent* c)
 	UpdatePositionsManually(clone.get());
 	return clone;
 }
-//Å©±â¸¦ ¹Ù²Ù¸é ÀÌ ÄÄÆ÷³ÍÆ®ÀÇ ÀÚ½ÄµéÀÇ À§Ä¡°ªµµ ¹Ù²ãÁØ´Ù.
+//í¬ê¸°ë¥¼ ë°”ê¾¸ë©´ ì´ ì»´í¬ë„ŒíŠ¸ì˜ ìì‹ë“¤ì˜ ìœ„ì¹˜ê°’ë„ ë°”ê¿”ì¤€ë‹¤.
 bool DerivedTraverser::ChangeSize(UIComponent* c, const XMUINT2& size, bool isForce) noexcept
 {
 	XMUINT2 lockedSize{ size };
@@ -65,14 +65,14 @@ bool DerivedTraverser::Update(UIComponent* c, const DX::StepTimer& timer) noexce
 
 void DerivedTraverser::Render(UIComponent* c, ITextureRender* render)
 {
-	//9¹æÇâ ÀÌ¹ÌÁö´Â °°Àº ·¹º§ÀÎµ¥ 9¹æÇâ ÀÌ¹ÌÁö À§¿¡ ´Ù¸¥ ÀÌ¹ÌÁö¸¦ ¿Ã·ÈÀ» °æ¿ì BFS°¡ ¾Æ´Ï¸é ¹Ø¿¡ ÀÌ¹ÌÁö°¡ ¿Ã¶ó¿Â´Ù.
-	//°¡Àå ¹Ø¿¡ ·¹º§ÀÌ °¡Àå À§¿¡ ¿Ã¶ó¿À´Âµ¥ DFS(Depth First Search)ÀÌ¸é °¡Àå ¹Ø¿¡ ÀÖ´Â°Ô °¡Àå ³ªÁß¿¡ ±×·ÁÁöÁö ¾Ê°Ô µÈ´Ù.
+	//9ë°©í–¥ ì´ë¯¸ì§€ëŠ” ê°™ì€ ë ˆë²¨ì¸ë° 9ë°©í–¥ ì´ë¯¸ì§€ ìœ„ì— ë‹¤ë¥¸ ì´ë¯¸ì§€ë¥¼ ì˜¬ë ¸ì„ ê²½ìš° BFSê°€ ì•„ë‹ˆë©´ ë°‘ì— ì´ë¯¸ì§€ê°€ ì˜¬ë¼ì˜¨ë‹¤.
+	//ê°€ì¥ ë°‘ì— ë ˆë²¨ì´ ê°€ì¥ ìœ„ì— ì˜¬ë¼ì˜¤ëŠ”ë° DFS(Depth First Search)ì´ë©´ ê°€ì¥ ë°‘ì— ìˆëŠ”ê²Œ ê°€ì¥ ë‚˜ì¤‘ì— ê·¸ë ¤ì§€ì§€ ì•Šê²Œ ëœë‹¤.
 	ForEachChildToRender(c, [render](UIComponent* component) {
 		component->Render(render);
 
 		return (component->GetTypeID() != ComponentID::RenderTexture)
 			? TraverseResult::Continue
-			: TraverseResult::ChildrenSkip; //RenderTextureÀÌ¸é ÀÚ½ÄµéÀº ·£´õÇÏÁö ¾Ê´Â´Ù. RenderTexture¿¡ ·£´õ¸µ µÆ±â ¶§¹®¿¡.
+			: TraverseResult::ChildrenSkip; //RenderTextureì´ë©´ ìì‹ë“¤ì€ ëœë”í•˜ì§€ ì•ŠëŠ”ë‹¤. RenderTextureì— ëœë”ë§ ëê¸° ë•Œë¬¸ì—.
 		});
 }
 

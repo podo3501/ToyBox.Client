@@ -74,21 +74,21 @@ bool ProcessTag(const wstring& tag, stack<wstring>& tagStack, wstring& fontStyle
 {
 	if (tag.empty()) return false;
 
-	if (tag[0] == '/') // ´İ´Â ÅÂ±×
+	if (tag[0] == '/') // ë‹«ëŠ” íƒœê·¸
 	{
 		wstring closingTag = tag.substr(1);
 		if (tagStack.empty() || tagStack.top() != closingTag)
-			return false; // ÅÂ±× ºÒÀÏÄ¡
+			return false; // íƒœê·¸ ë¶ˆì¼ì¹˜
 
 		tagStack.pop();
 		if (IsFontStyle(closingTag)) fontStyle.clear();
 		if (IsColor(closingTag)) color = {};
 	}
-	else if (tag == L"br") // ÁÙ¹Ù²Ş ÅÂ±×
+	else if (tag == L"br") // ì¤„ë°”ê¿ˆ íƒœê·¸
 	{
-		return true; // ÁÙ¹Ù²ŞÀ» º°µµ·Î Ã³¸®
+		return true; // ì¤„ë°”ê¿ˆì„ ë³„ë„ë¡œ ì²˜ë¦¬
 	}
-	else // ¿©´Â ÅÂ±×
+	else // ì—¬ëŠ” íƒœê·¸
 	{
 		tagStack.push(tag);
 		if (IsFontStyle(tag)) fontStyle = tag;
@@ -107,42 +107,42 @@ bool Parser(const wstring& context, TextProperty& outTextProperty) noexcept
 	auto c = context.begin();
 	while (c != context.end())
 	{
-		if (*c == '<') // ÅÂ±× ½ÃÀÛ
+		if (*c == '<') // íƒœê·¸ ì‹œì‘
 		{
 			auto tagStart = c + 1;
 			auto tagEnd = find(c, context.end(), '>');
-			if (tagEnd == context.end()) return false; // Àß¸øµÈ ÅÂ±×
+			if (tagEnd == context.end()) return false; // ì˜ëª»ëœ íƒœê·¸
 
 			wstring tag(tagStart, tagEnd);
-			c = tagEnd + 1; // ÅÂ±× ³¡ ´ÙÀ½ ¹®ÀÚ·Î ÀÌµ¿
+			c = tagEnd + 1; // íƒœê·¸ ë ë‹¤ìŒ ë¬¸ìë¡œ ì´ë™
 
 			if (!ProcessTag(tag, tagStack, fontStyle, color))
-				return false; // ÅÂ±× Ã³¸® ½ÇÆĞ ½Ã Á¾·á
+				return false; // íƒœê·¸ ì²˜ë¦¬ ì‹¤íŒ¨ ì‹œ ì¢…ë£Œ
 
 			if (tag == L"br")
 				outTextProperty.Set(fontStyle, color, tag);
 
-			continue; // ÅÂ±× Ã³¸® ÈÄ ´ÙÀ½ ·çÇÁ·Î ÀÌµ¿
+			continue; // íƒœê·¸ ì²˜ë¦¬ í›„ ë‹¤ìŒ ë£¨í”„ë¡œ ì´ë™
 		}
 
-		// ÀÏ¹İ ÅØ½ºÆ® Ã³¸®
+		// ì¼ë°˜ í…ìŠ¤íŠ¸ ì²˜ë¦¬
 		size_t start = distance(context.begin(), c);
 		size_t end = context.find_first_of(L" <", start);
 
-		if (end == wstring::npos) // <ÅÂÅ©¸¦ ¸ø Ã£À¸¸é ÀÌ»óÇÑ °Í
+		if (end == wstring::npos) // <íƒœí¬ë¥¼ ëª» ì°¾ìœ¼ë©´ ì´ìƒí•œ ê²ƒ
 			return false;
 
 		outTextProperty.Set(fontStyle, color, context.substr(start, end - start));
-		c = context.begin() + end; // Ä¿¼­ À§Ä¡ ¾÷µ¥ÀÌÆ®
+		c = context.begin() + end; // ì»¤ì„œ ìœ„ì¹˜ ì—…ë°ì´íŠ¸
 
-		if (*c == ' ') // °ø¹é Ã³¸®
+		if (*c == ' ') // ê³µë°± ì²˜ë¦¬
 		{
 			outTextProperty.AddText(L" ");
 			++c;
 		}
 	}
 
-	return tagStack.empty(); // ÅÂ±×°¡ ³²¾Æ ÀÖÀ¸¸é false
+	return tagStack.empty(); // íƒœê·¸ê°€ ë‚¨ì•„ ìˆìœ¼ë©´ false
 }
 
 vector<optional<StateFlag::Type>> GetStateFlagsForDirection(DirectionType dirType) noexcept
@@ -175,7 +175,7 @@ vector<XMUINT2> StretchSize(DirectionType dirType, const XMUINT2& size, const ve
 	return sizes;
 }
 
-//»çÀÌÁî ¸®½ºÆ®¸¦ ÀÌ¿ëÇØ¼­ À§Ä¡°ªÀ» ¾ò¾î³»´Â ÇÔ¼ö
+//ì‚¬ì´ì¦ˆ ë¦¬ìŠ¤íŠ¸ë¥¼ ì´ìš©í•´ì„œ ìœ„ì¹˜ê°’ì„ ì–»ì–´ë‚´ëŠ” í•¨ìˆ˜
 vector<XMINT2> ExtractStartPosFromSizes(DirectionType dirType, const vector<XMUINT2>& sizes) noexcept
 {
 	vector<XMINT2> positions;

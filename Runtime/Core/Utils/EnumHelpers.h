@@ -5,7 +5,7 @@
 
 namespace EnumUtil
 {
-	//¸¶Áö¸· ¿ø¼Ò´Â Count°¡ µÇ¾î¾ß ÇÔ. Invaild´Â Á¦ÀÏ Å« °ªÀ¸·Î °­Á¦ ¼³Á¤. ±×·¡¼­ IsValid¿¡¼­ false°¡ ³ª¿À°Ô µÊ.
+	//ë§ˆì§€ë§‰ ì›ì†ŒëŠ” Countê°€ ë˜ì–´ì•¼ í•¨. InvaildëŠ” ì œì¼ í° ê°’ìœ¼ë¡œ ê°•ì œ ì„¤ì •. ê·¸ë˜ì„œ IsValidì—ì„œ falseê°€ ë‚˜ì˜¤ê²Œ ë¨.
 	template<typename T>
 	concept CountEnum =
 	std::is_enum_v<T> &&
@@ -65,7 +65,7 @@ namespace EnumUtil
 	}
 
 	template <CountEnum T>
-	constexpr auto EtoV(T enumerator) noexcept	//EnumToValue ÀÌ¸§ÀÌ ±æ¾î¼­ ÁÙÀÎ´Ù.
+	constexpr auto EtoV(T enumerator) noexcept	//EnumToValue ì´ë¦„ì´ ê¸¸ì–´ì„œ ì¤„ì¸ë‹¤.
 	{
 		return static_cast<std::underlying_type_t<T>>(enumerator);
 	}
@@ -83,7 +83,7 @@ namespace EnumUtil
 	}
 
 	template<CountEnum T>
-	constexpr auto EnumValues() //for¿¡¼­ »ç¿ëÇÏ±â ÁÁÀ½.
+	constexpr auto EnumValues() //forì—ì„œ ì‚¬ìš©í•˜ê¸° ì¢‹ìŒ.
 	{
 		constexpr size_t count = static_cast<size_t>(T::Count);
 
@@ -94,21 +94,21 @@ namespace EnumUtil
 		return values;
 	}
 
-//defineÀ¸·Î ÇÑ ÀÌÀ¯´Â h¿¡¼­ Å¸ÀÔÃ¼Å©¸¦ »ç¿ëÇÏ°í ½ÍÀºµ¥ h¿¡¼­´Â ÇÔ¼öÇü½ÄÀ¸·Î È£ÃâÇÏ¸é ¾ÈµÇ±â ¶§¹®¿¡ DefineÀ¸·Î Ã³¸®.
+//defineìœ¼ë¡œ í•œ ì´ìœ ëŠ” hì—ì„œ íƒ€ì…ì²´í¬ë¥¼ ì‚¬ìš©í•˜ê³  ì‹¶ì€ë° hì—ì„œëŠ” í•¨ìˆ˜í˜•ì‹ìœ¼ë¡œ í˜¸ì¶œí•˜ë©´ ì•ˆë˜ê¸° ë•Œë¬¸ì— Defineìœ¼ë¡œ ì²˜ë¦¬.
 #define ASSERT_ENUM_COUNT(EnumType) \
     static_assert(EnumUtil::EnumToStringMap<EnumType>.size() == EnumUtil::EnumSize<EnumType>(), "EnumToStringMap size mismatch")
 }
 
 namespace Core
 {
-	//¸¶Áö¸· ¿ø¼Ò´Â Count°¡ µÇ¾î¾ß ÇÔ. Invaild´Â Á¦ÀÏ Å« °ªÀ¸·Î °­Á¦ ¼³Á¤. ±×·¡¼­ IsValid¿¡¼­ false°¡ ³ª¿À°Ô µÊ.
+	//ë§ˆì§€ë§‰ ì›ì†ŒëŠ” Countê°€ ë˜ì–´ì•¼ í•¨. InvaildëŠ” ì œì¼ í° ê°’ìœ¼ë¡œ ê°•ì œ ì„¤ì •. ê·¸ë˜ì„œ IsValidì—ì„œ falseê°€ ë‚˜ì˜¤ê²Œ ë¨.
 	template<typename T>
 	concept CountEnum =
 		std::is_enum_v<T> &&
 		requires { T::Count; };
 
 	template<CountEnum T>
-	inline constexpr std::size_t EnumSize = static_cast<std::size_t>(T::Count); //»ç¿ë¹ı EnumSize<xxx> µÚ¿¡ °ıÈ£°¡ ¾ø´Ù.
+	inline constexpr std::size_t EnumSize = static_cast<std::size_t>(T::Count); //ì‚¬ìš©ë²• EnumSize<xxx> ë’¤ì— ê´„í˜¸ê°€ ì—†ë‹¤.
 
 	template <CountEnum T>
 	constexpr auto ToIndex(T enumerator) noexcept
@@ -116,7 +116,7 @@ namespace Core
 		return static_cast<std::underlying_type_t<T>>(enumerator);
 	}
 
-	// ÀÏ¹İ EnumÀÏ ¶§ È£ÃâµÊ
+	// ì¼ë°˜ Enumì¼ ë•Œ í˜¸ì¶œë¨
 	template<typename T>
 		requires std::is_enum_v<T> && (!CountEnum<T>)
 	constexpr auto ToIndex(T value) noexcept

@@ -7,7 +7,7 @@
 ShaderLibrary::~ShaderLibrary() = default;
 ShaderLibrary::ShaderLibrary()
 {
-    m_shaders.resize(1); //·±Å¸ÀÓÀÌ ¸ÕÀú µé¾î¿Ã¼ö ÀÖ±â ¶§¹®. shaderKey »ı¼º°ªÀº size¸¦ ¸®ÅÏÇÏ±â ¶§¹®ÀÌ´Ù.
+    m_shaders.resize(1); //ëŸ°íƒ€ì„ì´ ë¨¼ì € ë“¤ì–´ì˜¬ìˆ˜ ìˆê¸° ë•Œë¬¸. shaderKey ìƒì„±ê°’ì€ sizeë¥¼ ë¦¬í„´í•˜ê¸° ë•Œë¬¸ì´ë‹¤.
 }
 
 static bool CompileStage(
@@ -26,21 +26,21 @@ static bool CompileStage(
     DxcBuffer sourceBuffer{};
     sourceBuffer.Ptr = source.data();
     sourceBuffer.Size = source.size();
-    sourceBuffer.Encoding = DXC_CP_UTF8; // ANSI/UTF-8 ±âº»°ª
+    sourceBuffer.Encoding = DXC_CP_UTF8; // ANSI/UTF-8 ê¸°ë³¸ê°’
 
-    std::vector<std::wstring> args; // ÁøÀÔÁ¡(-E) ¹× Å¸°Ù ÇÁ·ÎÇÊ(-T, ¿¹: cs_6_6) ÁöÁ¤
+    std::vector<std::wstring> args; // ì§„ì…ì (-E) ë° íƒ€ê²Ÿ í”„ë¡œí•„(-T, ì˜ˆ: cs_6_6) ì§€ì •
     args.push_back(L"-E"); args.push_back(Core::UTF8ToWString(entry));
     args.push_back(L"-T"); args.push_back(Core::UTF8ToWString(target));
 
-    // µğ¹ö±× ÇÃ·¡±× ¹× ÃÖÀûÈ­ ¼³Á¤
+    // ë””ë²„ê·¸ í”Œë˜ê·¸ ë° ìµœì í™” ì„¤ì •
 #if defined(_DEBUG)
-    args.push_back(L"-Zi"); // µğ¹ö±× Á¤º¸ Æ÷ÇÔ
-    args.push_back(L"-Od"); // ÃÖÀûÈ­ ÇØÁ¦ (Skip Optimization)
+    args.push_back(L"-Zi"); // ë””ë²„ê·¸ ì •ë³´ í¬í•¨
+    args.push_back(L"-Od"); // ìµœì í™” í•´ì œ (Skip Optimization)
 #else
-    args.push_back(L"-O3"); // ÃÖ´ë ÃÖÀûÈ­
+    args.push_back(L"-O3"); // ìµœëŒ€ ìµœì í™”
 #endif
 
-    for (const auto& macro : runtimeMacros) // ·±Å¸ÀÓ ¸ÅÅ©·Î ÀÎÀÚ Àü°³ (-D ÀÌ¸§=°ª)
+    for (const auto& macro : runtimeMacros) // ëŸ°íƒ€ì„ ë§¤í¬ë¡œ ì¸ì ì „ê°œ (-D ì´ë¦„=ê°’)
     {
         if (macro.name.empty())
             continue;
@@ -50,7 +50,7 @@ static bool CompileStage(
         args.push_back(macroStr);
     }
 
-    // std::wstring ¸ñ·ÏÀ» DXC È£È¯ LPCWSTR ¹è¿­·Î Ä³½ºÆÃ
+    // std::wstring ëª©ë¡ì„ DXC í˜¸í™˜ LPCWSTR ë°°ì—´ë¡œ ìºìŠ¤íŒ…
     std::vector<LPCWSTR> dxcArgs;
     dxcArgs.reserve(args.size());
     for (const auto& arg : args)
@@ -61,7 +61,7 @@ static bool CompileStage(
         &sourceBuffer,
         dxcArgs.data(),
         static_cast<UINT32>(dxcArgs.size()),
-        nullptr, // ºôµå È¯°æ¿¡ Include Handler°¡ ÇÊ¿äÇÏ´Ù¸é ¿©±â¿¡ ¼¼ÆÃ
+        nullptr, // ë¹Œë“œ í™˜ê²½ì— Include Handlerê°€ í•„ìš”í•˜ë‹¤ë©´ ì—¬ê¸°ì— ì„¸íŒ…
         IID_PPV_ARGS(&compileResult)
     );
 
@@ -160,13 +160,13 @@ const ShaderEntry* ShaderLibrary::Find(const ShaderVariant& variant) const
         return nullptr;
 
     const ShaderData& shaderData = m_shaders[variant.shaderID];
-    if (!shaderData.asset) return nullptr; // shader°¡ µî·ÏÀÌ ¾ÈµÅ ÀÖ´Ù.
+    if (!shaderData.asset) return nullptr; // shaderê°€ ë“±ë¡ì´ ì•ˆë¼ ìˆë‹¤.
 
     ShaderEntry entry;
     if (!CompileVariant(variant, shaderData, entry))
         return nullptr;
 
-    auto [iter, inserted] = m_variants.emplace(variant, std::move(entry)); //lazy cache ÀÌ±â ¶§¹®¿¡ mutable Ã³¸®.
+    auto [iter, inserted] = m_variants.emplace(variant, std::move(entry)); //lazy cache ì´ê¸° ë•Œë¬¸ì— mutable ì²˜ë¦¬.
 
     return &iter->second;
 }

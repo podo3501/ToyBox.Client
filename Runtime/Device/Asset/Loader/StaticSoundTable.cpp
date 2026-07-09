@@ -11,7 +11,7 @@ void StaticSoundDesc::Serialize(Serializer& serializer)
 {
 	SoundDesc::Serialize(serializer);
 
-	//static Ç×¸ñÀÌ »ı±â¸é ¿©±â¿¡ Ãß°¡
+	//static í•­ëª©ì´ ìƒê¸°ë©´ ì—¬ê¸°ì— ì¶”ê°€
 }
 
 //////////////////////////////////////////////////////////

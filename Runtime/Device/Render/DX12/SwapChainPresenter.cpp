@@ -91,10 +91,10 @@ bool SwapChainPresenter::Resize(Device& device, const Size& size)
     if (size.width == 0 || size.height == 0) return false;
     if (m_size == size) return true;
 
-    m_cmdScheduler.WaitIdle(); // GPU ÀÛ¾÷ ³¡³¯ ¶§±îÁö ´ë±â
+    m_cmdScheduler.WaitIdle(); // GPU ì‘ì—… ëë‚  ë•Œê¹Œì§€ ëŒ€ê¸°
 
     for (UINT i = 0; i < m_frameCount; ++i)
-        m_renderTargets[i].Reset(); //±âÁ¸ RTV ¸®¼Ò½º ÇØÁ¦
+        m_renderTargets[i].Reset(); //ê¸°ì¡´ RTV ë¦¬ì†ŒìŠ¤ í•´ì œ
     m_depthBuffer.Reset();
 
     DXGI_SWAP_CHAIN_DESC desc{}; //SwapChain Resize
@@ -251,17 +251,17 @@ bool SwapChainPresenter::CreateDepthBuffer(Device& device)
 
 void SwapChainPresenter::HandleDeviceLost()
 {
-    // GPU device lost ¹ß»ı ½Ã ÁøÀÔ
-    // ÇöÀç´Â ÃÖ¼Ò cleanup¸¸ ¼öÇàÇÏ°í, ½ÇÁ¦ Àç»ı¼º ·ÎÁ÷Àº »óÀ§ ½Ã½ºÅÛ¿¡¼­ Ã³¸®
+    // GPU device lost ë°œìƒ ì‹œ ì§„ì…
+    // í˜„ì¬ëŠ” ìµœì†Œ cleanupë§Œ ìˆ˜í–‰í•˜ê³ , ì‹¤ì œ ì¬ìƒì„± ë¡œì§ì€ ìƒìœ„ ì‹œìŠ¤í…œì—ì„œ ì²˜ë¦¬
 
     // NOTE:
-    // - DXGI_ERROR_DEVICE_REMOVED / RESET ´ëÀÀ¿ë
-    // - ¿©±â¼­´Â GPU ¸®¼Ò½º release + pointer invalidate±îÁö¸¸ ¼öÇà
-    // - Device + SwapChain Àç»ı¼ºÀº DeviceManager ·¹º§¿¡¼­ ´ã´ç
+    // - DXGI_ERROR_DEVICE_REMOVED / RESET ëŒ€ì‘ìš©
+    // - ì—¬ê¸°ì„œëŠ” GPU ë¦¬ì†ŒìŠ¤ release + pointer invalidateê¹Œì§€ë§Œ ìˆ˜í–‰
+    // - Device + SwapChain ì¬ìƒì„±ì€ DeviceManager ë ˆë²¨ì—ì„œ ë‹´ë‹¹
 
     m_cmdScheduler.WaitIdle();
 
-    // GPU ¸®¼Ò½º invalidate
+    // GPU ë¦¬ì†ŒìŠ¤ invalidate
     for (auto& rt : m_renderTargets)
         rt.Reset();
     m_renderTargets.resize(m_frameCount);
@@ -272,7 +272,7 @@ void SwapChainPresenter::HandleDeviceLost()
     m_swapChain.Reset();
 
     // TODO:
-    // - HandleDeviceLost Å×½ºÆ®¿ë fault injection Ãß°¡ ½Ã
-    //   ÀÌ ÇÔ¼ö°¡ Á¤»óÀûÀ¸·Î È£ÃâµÇ´ÂÁö °ËÁõ ÇÊ¿ä
-    // ÀÌ°É Á¤È®È÷ ÇÏ·Á¸é ÄÚµùÀÌ ¸¹ÀÌ ÇÊ¿äÇÏ°í Å×½ºÆ® È¯°æÀÌ ÇÊ¿äÇØ¼­ ÀÏ´Ü ÀÌ·¸°Ô¸¸.
+    // - HandleDeviceLost í…ŒìŠ¤íŠ¸ìš© fault injection ì¶”ê°€ ì‹œ
+    //   ì´ í•¨ìˆ˜ê°€ ì •ìƒì ìœ¼ë¡œ í˜¸ì¶œë˜ëŠ”ì§€ ê²€ì¦ í•„ìš”
+    // ì´ê±¸ ì •í™•íˆ í•˜ë ¤ë©´ ì½”ë”©ì´ ë§ì´ í•„ìš”í•˜ê³  í…ŒìŠ¤íŠ¸ í™˜ê²½ì´ í•„ìš”í•´ì„œ ì¼ë‹¨ ì´ë ‡ê²Œë§Œ.
 }

@@ -14,8 +14,8 @@ public:
 	void SetPositionRatio(float ratio) noexcept;
 
 private:
-	int m_min{ 0 }; // -°ªÀ» °¡Áø´Ù.
-	int m_max{ 0 }; // max´Â °ªÀÌ 0ÀÌ´Ù.
+	int m_min{ 0 }; // -ê°’ì„ ê°€ì§„ë‹¤.
+	int m_max{ 0 }; // maxëŠ” ê°’ì´ 0ì´ë‹¤.
 	int m_unit{ 0 };
 
 	int m_target{ 0 };

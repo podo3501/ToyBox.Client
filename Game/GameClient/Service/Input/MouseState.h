@@ -12,7 +12,7 @@ struct MouseState
     int prevWheel{ 0 };
     int wheel{ 0 };
 
-    static constexpr float WHEEL_STEP = 120.f; // À©µµ¿ì ±âº» ´ÜÀ§
+    static constexpr float WHEEL_STEP = 120.f; // ìœˆë„ìš° ê¸°ë³¸ ë‹¨ìœ„
 
     Point GetDelta() const noexcept { return { position.x - prevPosition.x, position.y - prevPosition.y }; }
     float GetWheelDelta() const noexcept { return static_cast<float>(wheel - prevWheel) / WHEEL_STEP; }

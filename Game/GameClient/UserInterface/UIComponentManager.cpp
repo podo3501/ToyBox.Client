@@ -13,7 +13,7 @@ UIComponentManager::UIComponentManager(IRenderer* renderer, bool isTool) :
 	m_renderer{ renderer },
 	m_texController{ renderer->GetTextureController() }
 {
-	if(!isTool) //ÅøÀº RenderTexture¿¡ ±×¸®±â ¶§¹®¿¡ ·»´õ¿Í ¿¬°áÇÏÁö ¾Ê´Â´Ù.
+	if(!isTool) //íˆ´ì€ RenderTextureì— ê·¸ë¦¬ê¸° ë•Œë¬¸ì— ë Œë”ì™€ ì—°ê²°í•˜ì§€ ì•ŠëŠ”ë‹¤.
 		m_renderer->SetComponentRenderer([this](ITextureRender* r) { this->RenderComponent(r); });
 	m_texController->SetTextureRenderer([this](size_t index, ITextureRender* r) {
 		this->RenderTextureComponent(index, r); });

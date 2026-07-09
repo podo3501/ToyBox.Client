@@ -34,7 +34,7 @@ bool AssetAsyncLoader::WaitPopPending(AssetRequestID& outId)
     std::unique_lock lock(m_pendingMutex);
 
     m_pendingCV.wait(lock, [&] {
-        return m_shutdown || !m_pending.empty(); //Á¶°ÇÀÌ ÂüÀÌ¸é ±ú¾î³­´Ù. ¶÷´Ù·Î predicate¸¦ ³Ö¾î³õÀº°Ç Çã»ó ±ş? ÀÌ ÀÖ±â ¶§¹®.
+        return m_shutdown || !m_pending.empty(); //ì¡°ê±´ì´ ì°¸ì´ë©´ ê¹¨ì–´ë‚œë‹¤. ëŒë‹¤ë¡œ predicateë¥¼ ë„£ì–´ë†“ì€ê±´ í—ˆìƒ ê¹¸? ì´ ìˆê¸° ë•Œë¬¸.
         });
 
     if (m_shutdown)

@@ -39,7 +39,7 @@ shared_ptr<AssetData> AssetRepository::Load(Core::TypeID type, const Core::Resou
 
 	IAssetLoader* loader = nullptr;
 	auto loaderIt = m_loaders.find(loaderKey);
-	Assert(loaderIt != m_loaders.end()); //ÆÄÀÏ È®ÀåÀÚ¿¡ ¸Â´Â ·Î´õ µî·ÏÀÌ ¾ÈµÅ ÀÖ´Ù.
+	Assert(loaderIt != m_loaders.end()); //íŒŒì¼ í™•ì¥ìì— ë§ëŠ” ë¡œë” ë“±ë¡ì´ ì•ˆë¼ ìˆë‹¤.
 	if (loaderIt == m_loaders.end())
 		return nullptr;
 
@@ -51,7 +51,7 @@ shared_ptr<AssetData> AssetRepository::Load(Core::TypeID type, const Core::Resou
 		std::lock_guard lock(m_cacheMutex);
 
 		auto it = m_cache.find(cacheKey);
-		if (it != m_cache.end()) // ´Ù¸¥ thread°¡ ¸ÕÀú ³Ö¾úÀ» ¼öµµ ÀÖÀ½
+		if (it != m_cache.end()) // ë‹¤ë¥¸ threadê°€ ë¨¼ì € ë„£ì—ˆì„ ìˆ˜ë„ ìˆìŒ
 		{
 			if (auto existing = it->second.lock())
 				return existing;

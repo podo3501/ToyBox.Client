@@ -58,7 +58,7 @@ bool RenderTexture::operator==(const UIComponent& rhs) const noexcept
 	return true;
 }
 
-//?!? rendertexture¸¦ µî·ÏÇÏ´Â °ÍÀ» bind¸¦ ÅëÇØ¼­ ³ÖÀ¸¸é ÅØ½ºÃÄ °ü¸®¸¦ ÇÑ±ºµ¥¿¡ ¸ô¾Æ¼­ ÇÒ ¼ö ÀÖÀ»²¨ °°Àºµ¥.
+//?!? rendertextureë¥¼ ë“±ë¡í•˜ëŠ” ê²ƒì„ bindë¥¼ í†µí•´ì„œ ë„£ìœ¼ë©´ í…ìŠ¤ì³ ê´€ë¦¬ë¥¼ í•œêµ°ë°ì— ëª°ì•„ì„œ í•  ìˆ˜ ìˆì„êº¼ ê°™ì€ë°.
 bool RenderTexture::BindSourceInfo(TextureResourceBinder*) noexcept
 {
 	if (GetSize() == XMUINT2{})

@@ -6,7 +6,7 @@
 #include "LoadedSound.h"
 #include "PlaybackTypes.h"
 
-struct GroupInfo //Áö±İÀº º¼·ı ÇÏ³ªÁö¸¸ Á¶±İ¾¿ È®ÀåµÉ °¡´É¼ºÀÌ Å©´Ù.
+struct GroupInfo //ì§€ê¸ˆì€ ë³¼ë¥¨ í•˜ë‚˜ì§€ë§Œ ì¡°ê¸ˆì”© í™•ì¥ë  ê°€ëŠ¥ì„±ì´ í¬ë‹¤.
 {
 	float volume{ 1.f };
 };
@@ -22,7 +22,7 @@ unique_ptr<AudioService> AudioService::Create(const SoundAssetView& sndAssetView
 {
 	if (backend == nullptr) return nullptr;
 	
-	unique_ptr<AudioService> service(new AudioService(sndAssetView, move(backend), asyncLoader)); //new¸¦ ¾²´Â ÀÌÀ¯´Â make_unique¸¦ ¸ø ¾²±â ¶§¹®ÀÌ´Ù. make_unique´Â ¿ÜºÎÇÔ¼öÀÌ±â ¶§¹®¿¡ private »ı¼ºÀÚ¿¡ Á¢±ÙÇÒ ¼ö ¾ø´Ù.
+	unique_ptr<AudioService> service(new AudioService(sndAssetView, move(backend), asyncLoader)); //newë¥¼ ì“°ëŠ” ì´ìœ ëŠ” make_uniqueë¥¼ ëª» ì“°ê¸° ë•Œë¬¸ì´ë‹¤. make_uniqueëŠ” ì™¸ë¶€í•¨ìˆ˜ì´ê¸° ë•Œë¬¸ì— private ìƒì„±ìì— ì ‘ê·¼í•  ìˆ˜ ì—†ë‹¤.
 	if (!service->Initialize(maxVoices, maxStreams)) return nullptr;
 
 	return service; 
@@ -78,7 +78,7 @@ SoundHandle AudioService::AcquireStreamSound(string_view soundID)
 
 static void ApplyStaticParams(const StaticSoundDesc* desc, PlaybackParams& params) noexcept
 {
-	//¿©±â¿¡ »õ·Î Ãß°¡µÇ´Â °ÍµéÀ» params¿¡ Ãß°¡.
+	//ì—¬ê¸°ì— ìƒˆë¡œ ì¶”ê°€ë˜ëŠ” ê²ƒë“¤ì„ paramsì— ì¶”ê°€.
 }
 
 static void ApplyStreamParams(const StreamSoundDesc* desc, PlaybackParams& params) noexcept

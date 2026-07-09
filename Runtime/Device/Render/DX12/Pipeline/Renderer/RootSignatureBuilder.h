@@ -13,7 +13,7 @@ public:
     void Add32BitConstants(UINT shaderRegister, UINT numConstants);
     void AddCBV(UINT shaderRegister);
     void AddSRV(UINT shaderRegister, UINT registerSpace);
-    void AddBindlessSRVTable(UINT numDescriptors, UINT baseRegister, UINT registerSpace); //6.6 ÀÌÀü¿¡´Â t·¹Áö½ºÅÍ¸¦ ÀÌ¿ëÇØ¼­ Bindless¸¦ ±¸ÇöÇß´Âµ¥, ±×¶§ »ç¿ëÇÏ´Â ÇÔ¼ö. ±¸Çü¹öÀüÀÌ¶ó Áö¿öµµ »ó°ü¾øÀ½.
+    void AddBindlessSRVTable(UINT numDescriptors, UINT baseRegister, UINT registerSpace); //6.6 ì´ì „ì—ëŠ” të ˆì§€ìŠ¤í„°ë¥¼ ì´ìš©í•´ì„œ Bindlessë¥¼ êµ¬í˜„í–ˆëŠ”ë°, ê·¸ë•Œ ì‚¬ìš©í•˜ëŠ” í•¨ìˆ˜. êµ¬í˜•ë²„ì „ì´ë¼ ì§€ì›Œë„ ìƒê´€ì—†ìŒ.
     
     void AddLinearSampler(UINT shaderRegister);
     void AddComparisonSampler(UINT shaderRegister);
@@ -27,10 +27,10 @@ private:
     struct ConstantDesc { UINT shaderRegister; UINT numConstants; };
     struct SamplerDesc { UINT shaderRegister{ 0 }; };
 
-    std::vector<ConstantDesc> m_constants; //ÀÎµ¦½º °°Àº ¾ÆÁÖ °¡º­¿î °Íµé.
-    std::vector<CBVDesc> m_cbvs; //Àü¿ªÀûÀÎ µ¥ÀÌÅÍµé(ºûÀÌ³ª Ä«¸Ş¶ó°°Àº)
-    std::vector<SRVDesc> m_srvs; //¹°Ã¼µéÀÇ °íÀ¯ÇÑ µ¥ÀÌÅÍµé
-    std::vector<SRVTableDesc> m_srvTables; //¾ÆÁÖ Å« µ¥ÀÌÅÍ(ÅØ½ºÃÄ³ª ¸Ş½¬ °°Àº). 6.6 ÀÌÀü¿¡ ¾²ÀÌ´ø °Í.
+    std::vector<ConstantDesc> m_constants; //ì¸ë±ìŠ¤ ê°™ì€ ì•„ì£¼ ê°€ë²¼ìš´ ê²ƒë“¤.
+    std::vector<CBVDesc> m_cbvs; //ì „ì—­ì ì¸ ë°ì´í„°ë“¤(ë¹›ì´ë‚˜ ì¹´ë©”ë¼ê°™ì€)
+    std::vector<SRVDesc> m_srvs; //ë¬¼ì²´ë“¤ì˜ ê³ ìœ í•œ ë°ì´í„°ë“¤
+    std::vector<SRVTableDesc> m_srvTables; //ì•„ì£¼ í° ë°ì´í„°(í…ìŠ¤ì³ë‚˜ ë©”ì‰¬ ê°™ì€). 6.6 ì´ì „ì— ì“°ì´ë˜ ê²ƒ.
     std::vector<SamplerDesc> m_samplers;
     std::vector<D3D12_STATIC_SAMPLER_DESC> m_staticSamplers;
     D3D12_ROOT_SIGNATURE_FLAGS m_flags{ D3D12_ROOT_SIGNATURE_FLAG_NONE };

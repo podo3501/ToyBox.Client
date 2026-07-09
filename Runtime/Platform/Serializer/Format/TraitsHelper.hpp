@@ -6,7 +6,7 @@ static void SafeRead(T& out, const J& value)
 	Assert(!value.is_null());
 	out = value.get<T>();
 }
-// x, y °øÅë Ã³¸® ÇïÆÛ
+// x, y ê³µí†µ ì²˜ë¦¬ í—¬í¼
 template<typename T>
 nlohmann::json SerializeXY(const T& data)
 {

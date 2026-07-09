@@ -13,7 +13,7 @@ shared_ptr<TextureAsset> PngTextureLoader::LoadFromMemory(Core::ByteBuffer buffe
         &width,
         &height,
         &channels,
-        4 // RGBA °­Á¦. ¿¹¸¦µé¸é jpg´Â 3Ã¤³ÎÀÌ¶ó ¾ËÆÄ(A)°¡ ¾ø´Ù.
+        4 // RGBA ê°•ì œ. ì˜ˆë¥¼ë“¤ë©´ jpgëŠ” 3ì±„ë„ì´ë¼ ì•ŒíŒŒ(A)ê°€ ì—†ë‹¤.
     );
 
     if (!data)

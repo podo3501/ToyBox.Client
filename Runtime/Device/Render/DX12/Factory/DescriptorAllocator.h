@@ -14,10 +14,10 @@ public:
     explicit DescriptorAllocator() noexcept;
     bool Initialize(Device& device, D3D12_DESCRIPTOR_HEAP_TYPE type, UINT maxCount) noexcept;
     UINT Allocate() noexcept;
-    UINT AllocateTransient(UINT count = 1) noexcept; // µÚ¿¡¼­ºÎÅÍ Ã¤¿ì´Â ÀÓ½Ã ÇÒ´ç(mipmap °°ÀÌ Àá½Ã °è»ê¶§ ¾²°í ¹ö¸®´Â °Å)
+    UINT AllocateTransient(UINT count = 1) noexcept; // ë’¤ì—ì„œë¶€í„° ì±„ìš°ëŠ” ì„ì‹œ í• ë‹¹(mipmap ê°™ì´ ì ì‹œ ê³„ì‚°ë•Œ ì“°ê³  ë²„ë¦¬ëŠ” ê±°)
 
     void Reset() noexcept;
-    void ResetTransient() noexcept; // ÀÓ½ÃÇÒ´ç Áö¿ì±â.
+    void ResetTransient() noexcept; // ì„ì‹œí• ë‹¹ ì§€ìš°ê¸°.
 
     D3D12_CPU_DESCRIPTOR_HANDLE GetCpuHandle(UINT index) const noexcept;
     D3D12_GPU_DESCRIPTOR_HANDLE GetGpuHandle(UINT index) const noexcept;
@@ -28,12 +28,12 @@ public:
 private:
     ComPtr<ID3D12DescriptorHeap> m_heap;
 
-    bool m_shaderVisible{ false }; //dsv¶û Á¡Á¡ ´Ù¸¥°Ô ¸¹¾ÆÁö¸é Å¬·¡½º¸¦ ºĞ¸®ÇØ¾ß ÇÔ.
+    bool m_shaderVisible{ false }; //dsvë‘ ì ì  ë‹¤ë¥¸ê²Œ ë§ì•„ì§€ë©´ í´ë˜ìŠ¤ë¥¼ ë¶„ë¦¬í•´ì•¼ í•¨.
     UINT m_descriptorSize{ 0 };
     UINT m_capacity{ 0 };
-    UINT m_allocFront{ 0 }; //¾Õ¿¡¼­ºÎÅÍ Ã¤¿öÁö´Â°Í. Áö¿öÁöÁö ¾ÊÀ»°Í. ½ºÅÃ ´À³¦
-    UINT m_allocBack{ 0 }; //µÚ¿¡¼­ºÎÅÍ Ã¤¿öÁö´Â °Í. ÀÓ½Ã·Î ¸¸µé¾ú´Ù°¡ Áö¿öÁö´Â°Íµé. Èü ´À³¦.
-    std::mutex m_allocBackMutex; //µÚ¿¡¼­ ºÎÅÍ Ã¤¿öÁö´Â °Ç °øÀ¯ °¡´ÉÇÑ ÀÓ½Ã ¿µ¿ªÀÌ¶ó mutex°¡ ÇÊ¿äÇÔ.
+    UINT m_allocFront{ 0 }; //ì•ì—ì„œë¶€í„° ì±„ì›Œì§€ëŠ”ê²ƒ. ì§€ì›Œì§€ì§€ ì•Šì„ê²ƒ. ìŠ¤íƒ ëŠë‚Œ
+    UINT m_allocBack{ 0 }; //ë’¤ì—ì„œë¶€í„° ì±„ì›Œì§€ëŠ” ê²ƒ. ì„ì‹œë¡œ ë§Œë“¤ì—ˆë‹¤ê°€ ì§€ì›Œì§€ëŠ”ê²ƒë“¤. í™ ëŠë‚Œ.
+    std::mutex m_allocBackMutex; //ë’¤ì—ì„œ ë¶€í„° ì±„ì›Œì§€ëŠ” ê±´ ê³µìœ  ê°€ëŠ¥í•œ ì„ì‹œ ì˜ì—­ì´ë¼ mutexê°€ í•„ìš”í•¨.
 
     D3D12_CPU_DESCRIPTOR_HANDLE m_cpuStart{};
     D3D12_GPU_DESCRIPTOR_HANDLE m_gpuStart{};

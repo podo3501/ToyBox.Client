@@ -8,8 +8,8 @@ constexpr bool hasEmptyValue(const std::array<const char*, N>& arr)
 		if (item == nullptr || item[0] == '\0') return true;
 	return false;
 }
-//ÇÑ¹ø¸¸ error¸¦ Ãâ·ÂÇÏ±â À§ÇØ¼­ cpp¿¡¼­ ¹«°á¼º °Ë»ç¸¦ ÇÑ´Ù.
-static_assert(!hasEmptyValue(EnumUtil::EnumToStringMap<ComponentID>), "¹è¿­¿¡ ºñ¾îÀÖ´Â °ªÀÌ Á¸ÀçÇÕ´Ï´Ù!");
+//í•œë²ˆë§Œ errorë¥¼ ì¶œë ¥í•˜ê¸° ìœ„í•´ì„œ cppì—ì„œ ë¬´ê²°ì„± ê²€ì‚¬ë¥¼ í•œë‹¤.
+static_assert(!hasEmptyValue(EnumUtil::EnumToStringMap<ComponentID>), "ë°°ì—´ì— ë¹„ì–´ìˆëŠ” ê°’ì´ ì¡´ì¬í•©ë‹ˆë‹¤!");
 
 TextureSlice DirTypeToTextureSlice(DirectionType dirType) noexcept
 {

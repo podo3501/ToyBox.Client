@@ -20,7 +20,7 @@ SDL_AudioSpec VorbisToSDLAudioSpec(OggVorbis_File& vf)
         spec.channels = 2;
         spec.freq = 44100;
     }
-    spec.format = SDL_AUDIO_S16; // ov_read()´Â Ç×»ó signed 16bit PCMÀ» ¹İÈ¯
+    spec.format = SDL_AUDIO_S16; // ov_read()ëŠ” í•­ìƒ signed 16bit PCMì„ ë°˜í™˜
 
     return spec;
 }
@@ -101,8 +101,8 @@ bool StreamSoundInstance::Play()
     {
         if (!PushChunk())
         {
-            if (!m_draining) return false; //µ¥ÀÌÅÍ¸¦ ´Ù ³Ö°í ³¡³­°Ô ¾Æ´Ï¶ó¸é ¿À·ù.
-            break; //¼Ò¸® ¹öÆÛ°¡ ¿ø·¡ ÀÛÀº°Å.
+            if (!m_draining) return false; //ë°ì´í„°ë¥¼ ë‹¤ ë„£ê³  ëë‚œê²Œ ì•„ë‹ˆë¼ë©´ ì˜¤ë¥˜.
+            break; //ì†Œë¦¬ ë²„í¼ê°€ ì›ë˜ ì‘ì€ê±°.
         }
     }
 
@@ -180,9 +180,9 @@ bool StreamSoundInstance::PushChunk()
   
     int bitstream = 0;
     long bytes = ov_read(&m_vorbisFile, m_decodeBuffer.data(), static_cast<int>(m_decodeBuffer.size()),
-        0, // little endian (window¿¡¼­´Â ¸®Æ²¿£µğ¾ğ) 0x1234 °¡ 34 12·Î µÅ ÀÖ´Â ¹æ½Ä
-        2, // »ùÇÃÅ©±â 16ºñÆ® PCM
-        1, // 0 = unsigned, 1 = signed. 16bit PCMÀº ÀÏ¹İÀûÀ¸·Î signed¸¦ »ç¿ë
+        0, // little endian (windowì—ì„œëŠ” ë¦¬í‹€ì—”ë””ì–¸) 0x1234 ê°€ 34 12ë¡œ ë¼ ìˆëŠ” ë°©ì‹
+        2, // ìƒ˜í”Œí¬ê¸° 16ë¹„íŠ¸ PCM
+        1, // 0 = unsigned, 1 = signed. 16bit PCMì€ ì¼ë°˜ì ìœ¼ë¡œ signedë¥¼ ì‚¬ìš©
         &bitstream);
 
     if (bytes > 0)
@@ -196,7 +196,7 @@ bool StreamSoundInstance::PushChunk()
         if (m_loop)
         {
             if (ov_pcm_seek(&m_vorbisFile, 0) == 0)
-                return true; //·çÇÁÀÏ °æ¿ì¿¡´Â µ¥ÀÌÅÍ ³¡ÀÌ ÁøÂ¥ ³¡ÀÌ ¾Æ´Ï±â ¶§¹®¿¡ ´Ù½Ã ÀĞ°Ô ÇÑ´Ù.
+                return true; //ë£¨í”„ì¼ ê²½ìš°ì—ëŠ” ë°ì´í„° ëì´ ì§„ì§œ ëì´ ì•„ë‹ˆê¸° ë•Œë¬¸ì— ë‹¤ì‹œ ì½ê²Œ í•œë‹¤.
         }
         else
         {
@@ -207,7 +207,7 @@ bool StreamSoundInstance::PushChunk()
         return false;
     }
 
-    //bytes < 0 -> µğÄÚµù ¿À·ù½Ã Ã³¸®.
+    //bytes < 0 -> ë””ì½”ë”© ì˜¤ë¥˜ì‹œ ì²˜ë¦¬.
     m_draining = false;
     m_state = Stopped;
     SDL_ClearAudioStream(m_stream);

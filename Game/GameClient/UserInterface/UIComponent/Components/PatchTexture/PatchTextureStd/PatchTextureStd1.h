@@ -23,7 +23,7 @@ public:
 
 	optional<vector<Rectangle>> GetTextureAreaList();
 	bool Setup(const UILayout& layout, const string& bindKey, size_t sourceIndex = 0u) noexcept;
-	bool Setup(const TextureSourceInfo& sourceInfo, ITextureController* texController) noexcept; //ÅØ½ºÃÄ¸¦ ´Üµ¶À¸·Î »ç¿ëÇÒ¶§. ÅØ½ºÃÄ png¸¦ ÀĞ¾îµéÀÏ¶§ »ç¿ëÇÑ´Ù.
+	bool Setup(const TextureSourceInfo& sourceInfo, ITextureController* texController) noexcept; //í…ìŠ¤ì³ë¥¼ ë‹¨ë…ìœ¼ë¡œ ì‚¬ìš©í• ë•Œ. í…ìŠ¤ì³ pngë¥¼ ì½ì–´ë“¤ì¼ë•Œ ì‚¬ìš©í•œë‹¤.
 	inline  bool Setup(const string& bindKey, size_t sourceIndex = 0u) noexcept { return Setup({}, bindKey, sourceIndex); }
 
 	inline const Rectangle& GetSource() const noexcept { return m_coord.GetSource(); }
@@ -33,7 +33,7 @@ public:
 protected:
 	PatchTextureStd1(const PatchTextureStd1& other);
 	virtual unique_ptr<UIComponent> CreateClone() const override;
-	virtual bool BindSourceInfo(TextureResourceBinder*) noexcept override; //Binder°¡ ·ÎµùÀ» ´Ù ÇÏ°í ¿©±â¼­ °ª¸¸ ¿¬°áÇÑ´Ù.
+	virtual bool BindSourceInfo(TextureResourceBinder*) noexcept override; //Binderê°€ ë¡œë”©ì„ ë‹¤ í•˜ê³  ì—¬ê¸°ì„œ ê°’ë§Œ ì—°ê²°í•œë‹¤.
 	virtual void Render(ITextureRender* render) const override { m_coord.Render(render); }
 	virtual bool ResizeAndAdjustPos(const XMUINT2& size) noexcept override { return UIComponent::ResizeAndAdjustPos(size); }
 	virtual bool ChangeBindKeyWithIndex(const string& key, const TextureSourceInfo& sourceInfo, size_t sourceIndex) noexcept override;
@@ -42,10 +42,10 @@ private:
 	bool SetSourceInfo(const TextureSourceInfo& sourceInfo) noexcept;
 
 	string m_bindKey;
-	size_t m_sourceIndex{ 0 }; //1, 3, 9 Patch ÀÏ¶§ ¸î¹øÂ° ÀÎÁö ±â·ÏÇÏ´Â ÀÎµ¦½º. 1 Patch ÀÏ¶§¿¡´Â 0°ª.
+	size_t m_sourceIndex{ 0 }; //1, 3, 9 Patch ì¼ë•Œ ëª‡ë²ˆì§¸ ì¸ì§€ ê¸°ë¡í•˜ëŠ” ì¸ë±ìŠ¤. 1 Patch ì¼ë•Œì—ëŠ” 0ê°’.
 
 	ITextureController* m_texController{ nullptr };
 	wstring m_filename;
-	UINT64 m_gfxOffset{}; //Åø¿¡¼­ Imgui window ¸¸µé¶§ »ç¿ë
+	UINT64 m_gfxOffset{}; //íˆ´ì—ì„œ Imgui window ë§Œë“¤ë•Œ ì‚¬ìš©
 	PatchTextureCoord m_coord;
 };

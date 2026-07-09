@@ -22,7 +22,7 @@ private:
 	bool SetupStreamInstances(int maxStreams) noexcept;
 
 	AudioMixer m_mixer;
-	AudioDevice m_streamDevice; //»õ·Î¿î Device¸¦ ¸¸µé¾î¼­ ½ºÆ®¸²À» Ãâ·Â½ÃÅ²´Ù. mixer¿Í streamDeviceÀÇ ¹Í½ÌÀº os¿¡¼­ ÇØ ÁØ´Ù. ¼­·Î ´Ù¸¥ ÀåÄ¡¸¦ »ç¿ëÇÏ±â ¶§¹®¿¡ Ãæµ¹ÀÌ ³ªÁö ¾Ê´Â´Ù.
+	AudioDevice m_streamDevice; //ìƒˆë¡œìš´ Deviceë¥¼ ë§Œë“¤ì–´ì„œ ìŠ¤íŠ¸ë¦¼ì„ ì¶œë ¥ì‹œí‚¨ë‹¤. mixerì™€ streamDeviceì˜ ë¯¹ì‹±ì€ osì—ì„œ í•´ ì¤€ë‹¤. ì„œë¡œ ë‹¤ë¥¸ ì¥ì¹˜ë¥¼ ì‚¬ìš©í•˜ê¸° ë•Œë¬¸ì— ì¶©ëŒì´ ë‚˜ì§€ ì•ŠëŠ”ë‹¤.
 	vector<StaticSoundInstance> m_staticInstances;
 	vector<unique_ptr<StreamSoundInstance>> m_streamInstances;
 };

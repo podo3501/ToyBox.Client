@@ -60,9 +60,9 @@ bool ListArea::operator==(const UIComponent& rhs) const noexcept
 bool ListArea::Setup(const UILayout& layout, unique_ptr<UIComponent> bgImage,
 	unique_ptr<TextureSwitcher> switcher, unique_ptr<ScrollBar> scrollBar) noexcept
 {
-	// ÃßÈÄ¿¡ ´Ù¾çÇÑ ÇüÅÂ(2ÁÙÂ¥¸® ListArea °°Àº)°¡ ³ª¿À¸é ÀÌ bgImageÃ³·³ »õ·Î¿î ÄÄÆ÷³ÍÆ®¸¦ ¸¸µé¾î¼­ ³Ö´Â´Ù.
-	// Áö±İÀº Background·Î °£´ÜÇÏ°Ô ÇßÁö¸¸ ´Ù¾çÇÑ ¸®½ºÆ® ÇüÅÂ°¡ ³ª¿Ã¼ö ÀÖ´Ù.
-	// RenderTexture´Â ´Ü¼øÈ÷ RenderTexture¸¸ ÇÏ´Â ¿ªÇÒ·Î ³ö µÎÀÚ.
+	// ì¶”í›„ì— ë‹¤ì–‘í•œ í˜•íƒœ(2ì¤„ì§œë¦¬ ListArea ê°™ì€)ê°€ ë‚˜ì˜¤ë©´ ì´ bgImageì²˜ëŸ¼ ìƒˆë¡œìš´ ì»´í¬ë„ŒíŠ¸ë¥¼ ë§Œë“¤ì–´ì„œ ë„£ëŠ”ë‹¤.
+	// ì§€ê¸ˆì€ Backgroundë¡œ ê°„ë‹¨í•˜ê²Œ í–ˆì§€ë§Œ ë‹¤ì–‘í•œ ë¦¬ìŠ¤íŠ¸ í˜•íƒœê°€ ë‚˜ì˜¬ìˆ˜ ìˆë‹¤.
+	// RenderTextureëŠ” ë‹¨ìˆœíˆ RenderTextureë§Œ í•˜ëŠ” ì—­í• ë¡œ ë†” ë‘ì.
 	SetLayout(layout);
 	
 	m_bgImage = bgImage.get();
@@ -76,7 +76,7 @@ bool ListArea::Setup(const UILayout& layout, unique_ptr<UIComponent> bgImage,
 	m_prototypeContainer = switcher.get();
 	m_prototypeContainer->SetName("Prototype Container");
 	m_prototypeContainer->SetRegion("ListContainer");
-	m_prototypeContainer->SetVisible(false); //Prototype¸¦ ¸¸µå´Â ÄÁÅ×ÀÌ³ÊÀÌ±â ¶§¹®¿¡ ¾Èº¸ÀÌ°Ô ¼ÂÆÃ.
+	m_prototypeContainer->SetVisible(false); //Prototypeë¥¼ ë§Œë“œëŠ” ì»¨í…Œì´ë„ˆì´ê¸° ë•Œë¬¸ì— ì•ˆë³´ì´ê²Œ ì…‹íŒ….
 	UITraverser::AttachComponent(this, move(switcher), {});
 
 	m_scrollBar = scrollBar.get();
@@ -85,7 +85,7 @@ bool ListArea::Setup(const UILayout& layout, unique_ptr<UIComponent> bgImage,
 	m_scrollBar->AddScrollChangedCB([this](float ratio) { OnScrollChangedCB(ratio); });
 	UITraverser::AttachComponent(this, move(scrollBar), { static_cast<int32_t>(layout.GetSize().x), 0 });
 
-	//ÀÚ½ÄµéÀº attach detach°¡ µÇ´Âµ¥ prototypeÀº ÀÚ½ÄÀÌÁö¸¸ detach°¡ ¾È µÇ¾î¾ß ÇÑ´Ù. ¼ÂÆÃÇÊ¿ä
+	//ìì‹ë“¤ì€ attach detachê°€ ë˜ëŠ”ë° prototypeì€ ìì‹ì´ì§€ë§Œ detachê°€ ì•ˆ ë˜ì–´ì•¼ í•œë‹¤. ì…‹íŒ…í•„ìš”
 
 	return true;
 }
@@ -105,7 +105,7 @@ bool ListArea::BindSourceInfo(TextureResourceBinder*) noexcept
 
 void ListArea::OnMove(const XMINT2& pos) noexcept
 {
-	//À§Ä¡°ª¿¡ ¸Â´Â ÄÁÅ×ÀÌ³Ê¸¦ Ã£¾Æ¼­ OnHover¸¦ ÇØ ÁØ´Ù.
+	//ìœ„ì¹˜ê°’ì— ë§ëŠ” ì»¨í…Œì´ë„ˆë¥¼ ì°¾ì•„ì„œ OnHoverë¥¼ í•´ ì¤€ë‹¤.
 	pos;
 }
 

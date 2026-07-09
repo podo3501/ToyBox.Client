@@ -31,11 +31,11 @@ public:
 
 private:
     CommandType m_type{ CommandType::None };
-    bool m_recording{ false }; //cpu°¡ ¸í·É¾î¸¦ ¾²´Â Áß.
+    bool m_recording{ false }; //cpuê°€ ëª…ë ¹ì–´ë¥¼ ì“°ëŠ” ì¤‘.
 
     ComPtr<ID3D12CommandAllocator> m_allocator;
     ComPtr<ID3D12GraphicsCommandList> m_command;
 
-    ID3D12Fence* m_fence{ nullptr }; //gpu°¡ ¾²´ÂÁß
-    FenceID m_lastFenceID{ InvalidFenceID }; // 0°ªÀº ÃÊ±â°ª.
+    ID3D12Fence* m_fence{ nullptr }; //gpuê°€ ì“°ëŠ”ì¤‘
+    FenceID m_lastFenceID{ InvalidFenceID }; // 0ê°’ì€ ì´ˆê¸°ê°’.
 };

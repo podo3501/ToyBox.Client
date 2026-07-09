@@ -10,7 +10,7 @@ static D3D12_RESOURCE_STATES AccessToState(CommandType cmdType, RGAccess access)
     if (access == RGAccess::CopyDest)
     {
         if (cmdType == CommandType::Copy)
-            return D3D12_RESOURCE_STATE_COMMON; //copy queue ÀÏ¶§¿¡´Â common¿¡¼­ Ã³¸®ÇÏ±â ¶§¹®ÀÌ´Ù.
+            return D3D12_RESOURCE_STATE_COMMON; //copy queue ì¼ë•Œì—ëŠ” commonì—ì„œ ì²˜ë¦¬í•˜ê¸° ë•Œë¬¸ì´ë‹¤.
 
         return D3D12_RESOURCE_STATE_COPY_DEST;
     }

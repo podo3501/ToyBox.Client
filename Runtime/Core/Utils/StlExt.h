@@ -7,8 +7,8 @@ inline pair<unique_ptr<PointerType>, PointerType*> GetPtrs(unique_ptr<PointerTyp
 	return make_pair(move(uniquePtr), uniquePtr.get());
 }
 
-//set, unordered_set, map, unordered_map ¿¡ insert¸¦ ÇÒ¶§ ¾øÀ¸¸é insert ÀÖÀ¸¸é false¸¦ ¸®ÅÏÇÏ´Â stl ÇïÆÛÇÔ¼ö(ÀÌ°É ¾²¸é ¼Óµµ°¡ ºü¸£´Ù)
-//´Ù¸¥ stlÀº ¸®ÅÏ°ªÀÌ ´Ù¸£°Å³ª multixxx °°Àº °æ¿ì´Â Áßº¹Å°¸¦ Æ÷ÇÔÇÏ±â ¶§¹®¿¡ ¸®ÅÏ°ªÀÌ true¸¸ ³ª¿À´Ï ºÒÇÊ¿äÇÏ´Ù.
+//set, unordered_set, map, unordered_map ì— insertë¥¼ í• ë•Œ ì—†ìœ¼ë©´ insert ìˆìœ¼ë©´ falseë¥¼ ë¦¬í„´í•˜ëŠ” stl í—¬í¼í•¨ìˆ˜(ì´ê±¸ ì“°ë©´ ì†ë„ê°€ ë¹ ë¥´ë‹¤)
+//ë‹¤ë¥¸ stlì€ ë¦¬í„´ê°’ì´ ë‹¤ë¥´ê±°ë‚˜ multixxx ê°™ì€ ê²½ìš°ëŠ” ì¤‘ë³µí‚¤ë¥¼ í¬í•¨í•˜ê¸° ë•Œë¬¸ì— ë¦¬í„´ê°’ì´ trueë§Œ ë‚˜ì˜¤ë‹ˆ ë¶ˆí•„ìš”í•˜ë‹¤.
 template<typename Container, typename... Args>
 concept InsertReturnsPairWithBool = requires(Container & c, Args&&... args)
 {
@@ -35,7 +35,7 @@ bool Compare(const T& lhs, const T& rhs)
 	return result;
 }
 
-// ½ÃÄö½º ÄÁÅ×ÀÌ³Ê ºñ±³
+// ì‹œí€€ìŠ¤ ì»¨í…Œì´ë„ˆ ë¹„êµ
 template <typename Container>
 bool CompareSeq(const Container& lhs, const Container& rhs)
 {
@@ -82,12 +82,12 @@ bool CompareUnorderedAssoc(const MapType& lhs, const MapType& rhs)
 	return true;
 }
 
-// ¿¬°ü ÄÁÅ×ÀÌ³Ê¸¦ º¹»çÇÒ ¶§ traits »ç¿ë
+// ì—°ê´€ ì»¨í…Œì´ë„ˆë¥¼ ë³µì‚¬í•  ë•Œ traits ì‚¬ìš©
 template<typename Assoc>
 Assoc CopyAssoc(const Assoc& src)
 {
 	using MappedType = typename Assoc::mapped_type;
-	static_assert(!RawPointerLike<MappedType>, "raw pointer Å¸ÀÔÀº CopyAssoc¿¡¼­ Áö¿øµÇÁö ¾Ê½À´Ï´Ù.");
+	static_assert(!RawPointerLike<MappedType>, "raw pointer íƒ€ì…ì€ CopyAssocì—ì„œ ì§€ì›ë˜ì§€ ì•ŠìŠµë‹ˆë‹¤.");
 
 	if constexpr (!SmartPointerLike<MappedType>)
 		return src;
@@ -99,12 +99,12 @@ Assoc CopyAssoc(const Assoc& src)
 	return dst;
 }
 
-// try_emplace ±¸¹®»ó first->second ¶ó´Â°Ô Çì±ò¸®°Ô ¸¸µé ¼ö ÀÖ±â ¶§¹®¿¡ helper ÇÔ¼ö ÇÊ¿ä
+// try_emplace êµ¬ë¬¸ìƒ first->second ë¼ëŠ”ê²Œ í—¤ê¹”ë¦¬ê²Œ ë§Œë“¤ ìˆ˜ ìˆê¸° ë•Œë¬¸ì— helper í•¨ìˆ˜ í•„ìš”
 template<typename Assoc, typename Key, typename... Args>
 auto& TryEmplaceAssoc(Assoc& map, const Key& key, Args&&... args)
 {
 	using MappedType = typename Assoc::mapped_type;
-	static_assert(!RawPointerLike<MappedType>, "raw pointer Å¸ÀÔÀº TryEmplaceAssoc¿¡¼­ Áö¿øµÇÁö ¾Ê½À´Ï´Ù.");
+	static_assert(!RawPointerLike<MappedType>, "raw pointer íƒ€ì…ì€ TryEmplaceAssocì—ì„œ ì§€ì›ë˜ì§€ ì•ŠìŠµë‹ˆë‹¤.");
 
 	if constexpr (!SmartPointerLike<MappedType>)
 		return map.try_emplace(key, MappedType(std::forward<Args>(args)...)).first->second;
@@ -112,7 +112,7 @@ auto& TryEmplaceAssoc(Assoc& map, const Key& key, Args&&... args)
 	return map.try_emplace(key, StlExtDetail::SmartMake<MappedType>::make(std::forward<Args>(args)...)).first->second;
 }
 
-//¿ø¼Ò°¡ ¸î¹øÂ°¿¡ ÀÖ´ÂÁö È®ÀÎ
+//ì›ì†Œê°€ ëª‡ë²ˆì§¸ì— ìˆëŠ”ì§€ í™•ì¸
 template <typename Container, typename T>
 optional<int> FindIndex(const Container& container, const T& target)
 {

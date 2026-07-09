@@ -75,5 +75,5 @@ void UILayout::Serialize(Serializer& serializer)
 	serializer.Process("Origin", m_origin);
 
 	if (serializer.IsWrite()) return;
-	m_originPoint = GetOriginPoint(m_origin);	//load ÇßÀ»¶§¿¡´Â m_originPoint¸¦ °è»êÇØÁØ´Ù.
+	m_originPoint = GetOriginPoint(m_origin);	//load í–ˆì„ë•Œì—ëŠ” m_originPointë¥¼ ê³„ì‚°í•´ì¤€ë‹¤.
 }

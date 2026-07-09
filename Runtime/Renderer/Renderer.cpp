@@ -32,7 +32,7 @@ Renderer::Renderer(HWND hwnd, int width, int height) noexcept(false) :
     //    DXGI_FORMAT_D32_FLOAT,
     //    2,
     //    D3D_FEATURE_LEVEL_11_0,
-    //    DX::DeviceResources::c_AllowTearing); //?!? ÀÌ°É ÇÏ¸é ÇÁ·¹ÀÓ Á¦ÇÑÀÌ Ç®¸®Áö¸¸ µð¹ö±× Ã¢¿¡ ¾²·¹µå Á¾·á ¸Þ¼¼Áö°¡ °è¼Ó ¿Ã¶ó¿Â´Ù.
+    //    DX::DeviceResources::c_AllowTearing); //?!? ì´ê±¸ í•˜ë©´ í”„ë ˆìž„ ì œí•œì´ í’€ë¦¬ì§€ë§Œ ë””ë²„ê·¸ ì°½ì— ì“°ë ˆë“œ ì¢…ë£Œ ë©”ì„¸ì§€ê°€ ê³„ì† ì˜¬ë¼ì˜¨ë‹¤.
 
     // TODO: Provide parameters for swapchain format, depth/stencil format, and backbuffer count.
     //   Add DX::DeviceResources::c_AllowTearing to opt-in to variable rate displays.
@@ -54,7 +54,7 @@ Renderer::~Renderer()
 // Initialize the Direct3D resources required to run.
 bool Renderer::Initialize()
 {
-    //comÀ» »ý¼ºÇÒ¶§ ´ÙÁß¾²·¹µå·Î »ý¼ºÇÏ°Ô²û ÃÊ±âÈ­ ÇÑ´Ù. RAIIÀÌ±â ¶§¹®¿¡ comÀ» »ç¿ëÇÒ¶§ ÃÊ±âÈ­ ÇÑ´Ù.
+    //comì„ ìƒì„±í• ë•Œ ë‹¤ì¤‘ì“°ë ˆë“œë¡œ ìƒì„±í•˜ê²Œë” ì´ˆê¸°í™” í•œë‹¤. RAIIì´ê¸° ë•Œë¬¸ì— comì„ ì‚¬ìš©í• ë•Œ ì´ˆê¸°í™” í•œë‹¤.
 #ifdef __MINGW32__
     if (FAILED(CoInitializeEx(nullptr, COINITBASE_MULTITHREADED))) return false;
 #else
@@ -123,7 +123,7 @@ void Renderer::CreateDeviceDependentResources()
 
     RenderTargetState rtState(m_deviceResources->GetBackBufferFormat(), m_deviceResources->GetDepthBufferFormat());
 
-    //±âº»Àº ¾ËÆÄ°¡ °öÇØÁø Çü½Ä(R*A, G*A, B*A, A)ÀÌ¶ó°í °¡Á¤ÇÏ´Âµ¥ ±×·¯¸é PNGÆÄÀÏ¿¡¼­ÀÇ ¾ËÆÄ°ªÀÌ ¾È ¸Ô´Â´Ù. µ¥ÀÌÅÍ¿¡¼­ Àú·¸°Ô »ÌÀ¸¸é Ã³¸®ÇÒ ÀÏÀÌ ÁÙ¾î¼­ ºü¸£±ä ÇÏ°ÚÁö.(DDSÇü½ÄÀº ¾ËÆÄ°¡ °öÇØÁ® ÀÖÀ½)
+    //ê¸°ë³¸ì€ ì•ŒíŒŒê°€ ê³±í•´ì§„ í˜•ì‹(R*A, G*A, B*A, A)ì´ë¼ê³  ê°€ì •í•˜ëŠ”ë° ê·¸ëŸ¬ë©´ PNGíŒŒì¼ì—ì„œì˜ ì•ŒíŒŒê°’ì´ ì•ˆ ë¨¹ëŠ”ë‹¤. ë°ì´í„°ì—ì„œ ì €ë ‡ê²Œ ë½‘ìœ¼ë©´ ì²˜ë¦¬í•  ì¼ì´ ì¤„ì–´ì„œ ë¹ ë¥´ê¸´ í•˜ê² ì§€.(DDSí˜•ì‹ì€ ì•ŒíŒŒê°€ ê³±í•´ì ¸ ìžˆìŒ)
     SpriteBatchPipelineStateDescription pd(rtState, &CommonStates::NonPremultiplied);   
     m_spriteBatch = make_unique<SpriteBatch>(device, resourceUpload, pd);
 
@@ -164,7 +164,7 @@ void Renderer::OnDeviceRestored()
 bool Renderer::LoadTextureBinder(ITextureBinder* textureBinder)
 {
     ReturnIfFalse(textureBinder);
-    //comÀ» »ý¼ºÇÒ¶§ ´ÙÁß¾²·¹µå·Î »ý¼ºÇÏ°Ô²û ÃÊ±âÈ­ ÇÑ´Ù. RAIIÀÌ±â ¶§¹®¿¡ comÀ» »ç¿ëÇÒ¶§ ÃÊ±âÈ­ ÇÑ´Ù.
+    //comì„ ìƒì„±í• ë•Œ ë‹¤ì¤‘ì“°ë ˆë“œë¡œ ìƒì„±í•˜ê²Œë” ì´ˆê¸°í™” í•œë‹¤. RAIIì´ê¸° ë•Œë¬¸ì— comì„ ì‚¬ìš©í• ë•Œ ì´ˆê¸°í™” í•œë‹¤.
 #ifdef __MINGW32__
     if (FAILED(CoInitializeEx(nullptr, COINITBASE_MULTITHREADED))) return false;
 #else
@@ -219,7 +219,7 @@ void Renderer::Draw()
 
     m_spriteBatch->End();
 
-    //imguiµéÀ» ·»´õ¸µ ÇÑ´Ù.
+    //imguië“¤ì„ ë Œë”ë§ í•œë‹¤.
     m_imguiRenderer->PrepareRender();
     m_imguiRenderer->Render(commandList);
 

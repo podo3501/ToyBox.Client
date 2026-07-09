@@ -20,13 +20,13 @@ public:
 private:
     std::atomic<bool> m_shutdown{ false };
 
-    // Pending ±×·ì (pendingMutex·Î ÀÏ°ı º¸È£)
+    // Pending ê·¸ë£¹ (pendingMutexë¡œ ì¼ê´„ ë³´í˜¸)
     mutable std::mutex m_pendingMutex;
     AssetAsyncStore<AssetRequest> m_requests;
     std::queue<AssetRequestID> m_pending;
     std::condition_variable m_pendingCV;
 
-    // Wait/Result ±×·ì (waitMutex·Î ÀÏ°ı º¸È£)
+    // Wait/Result ê·¸ë£¹ (waitMutexë¡œ ì¼ê´„ ë³´í˜¸)
     mutable std::mutex m_waitMutex;
     AssetAsyncStore<AssetPtr> m_results;
     std::condition_variable m_waitCV;

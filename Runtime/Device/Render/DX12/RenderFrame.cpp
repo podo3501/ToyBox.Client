@@ -15,12 +15,14 @@ void RenderFrame::DrawText(
     std::string_view text,
     const Vector2& pos)
 {
-    /*DrawTextItem item;
-    item.font = fontRes;
-    item.codePoints = Core::UTF8ToUTF32(text);
-    item.position = pos;*/
+    Assert(fontRes);
 
-    //m_scene.AddText(item);
+    auto uiItems = m_textSystem.DrawText(
+        std::move(fontRes),
+        text,
+        pos);
+
+    m_scene.AddUI(uiItems);
 }
 
 void RenderFrame::DrawSurface(

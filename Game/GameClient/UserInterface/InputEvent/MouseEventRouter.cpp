@@ -7,14 +7,14 @@
 using namespace UITraverser;
 void MouseEventRouter::UpdateMouseState() noexcept
 {
-	//hover´Â °øÅëÀ¸·Î È£Ãâ
+	//hoverëŠ” ê³µí†µìœ¼ë¡œ í˜¸ì¶œ
 	auto input = InputLocator::GetService();
 	auto mouseState = input->GetMouseState();
 	auto receivers = PickMouseReceivers(m_component, mouseState.pos);
 
 	UpdateHoverState(receivers, mouseState.pos);
-	ProcessCaptureComponent(mouseState); //Ä¸ÃÄµÈ ÄÄÆ÷³ÍÆ®¸¦ ¸¶¿ì½º ÀÔ·Â¿¡ µû¶ó Ã³¸®
-	CaptureComponent(mouseState);	//Å¬¸¯ÇÏ¸é Ä¸ÃÄÇÏ°í pressÈ£Ãâ
+	ProcessCaptureComponent(mouseState); //ìº¡ì³ëœ ì»´í¬ë„ŒíŠ¸ë¥¼ ë§ˆìš°ìŠ¤ ì…ë ¥ì— ë”°ë¼ ì²˜ë¦¬
+	CaptureComponent(mouseState);	//í´ë¦­í•˜ë©´ ìº¡ì³í•˜ê³  pressí˜¸ì¶œ
 	ProcessMouseWheel(input->GetMouseWheelValue());
 }
 
@@ -31,7 +31,7 @@ void MouseEventRouter::UpdateHoverState(vector<MouseEventReceiver*> receivers, c
 	for (auto& prevComp : m_hoveredReceivers)
 	{
 		if (ranges::find(receivers, prevComp) == receivers.end())
-			prevComp->OnNormal(); //¿µ¿ªÀÌ ¾Æ´Ñ ¾ÖµéÀº OnNormal È£Ãâ
+			prevComp->OnNormal(); //ì˜ì—­ì´ ì•„ë‹Œ ì• ë“¤ì€ OnNormal í˜¸ì¶œ
 	}
 
 	m_hoveredReceivers = hoveredReceivers;
@@ -41,15 +41,15 @@ void MouseEventRouter::ProcessCaptureComponent(const MouseDataState& mouseState)
 {
 	if (!m_capture) return;
 
-	bool inside = (ranges::find(m_hoveredReceivers, m_capture) != m_hoveredReceivers.end()); //hovered¿¡¼­ Ã£À¸¸é inside.
-	if (mouseState.leftButton == InputKeyState::Released) //3. ¸¶¿ì½º¸¦ ¶¼¸é releaseÈ£ÃâÇÏ°í Ä¸ÃÄÇØÁ¦
+	bool inside = (ranges::find(m_hoveredReceivers, m_capture) != m_hoveredReceivers.end()); //hoveredì—ì„œ ì°¾ìœ¼ë©´ inside.
+	if (mouseState.leftButton == InputKeyState::Released) //3. ë§ˆìš°ìŠ¤ë¥¼ ë–¼ë©´ releaseí˜¸ì¶œí•˜ê³  ìº¡ì³í•´ì œ
 	{
 		m_capture->OnRelease(inside);
 		m_capture = nullptr;
 	}
 
 	if (mouseState.leftButton == InputKeyState::Held)
-		m_capture->OnHold(mouseState.pos, inside); //2. Ä¸ÃÄÇÑ°É hold·Î È£ÃâÇÑ´Ù.
+		m_capture->OnHold(mouseState.pos, inside); //2. ìº¡ì³í•œê±¸ holdë¡œ í˜¸ì¶œí•œë‹¤.
 }
 
 static inline bool IsHandled(InputResult result) noexcept
@@ -65,16 +65,16 @@ void MouseEventRouter::CaptureComponent(const MouseDataState& mouseState) noexce
 	for (auto& receiver : m_hoveredReceivers)
 	{
 		const auto result = receiver->OnPress(mouseState.pos);
-		if (!IsHandled(result)) continue; //Ã³¸®µÇÁö ¾Ê¾Ò´Ù¸é Render»ó ¹ØÀÇ ÄÄÆ÷³ÍÆ®
+		if (!IsHandled(result)) continue; //ì²˜ë¦¬ë˜ì§€ ì•Šì•˜ë‹¤ë©´ Renderìƒ ë°‘ì˜ ì»´í¬ë„ŒíŠ¸
 
-		if (result == InputResult::Consumed) //ÀÌ ÄÄÆ÷³ÍÆ®°¡ ¼ÒºñÇÏ°í ´ÙÀ½ ÄÄÆ÷³ÍÆ®·Î °¡Áö ¾Ê´Â´Ù.
+		if (result == InputResult::Consumed) //ì´ ì»´í¬ë„ŒíŠ¸ê°€ ì†Œë¹„í•˜ê³  ë‹¤ìŒ ì»´í¬ë„ŒíŠ¸ë¡œ ê°€ì§€ ì•ŠëŠ”ë‹¤.
 		{
 			m_capture = receiver;
 			break;
 		}
 
 		if (!m_capture && result == InputResult::Propagate)
-			m_capture = receiver; //Ä¸ÃÄµÈ°Ô ¾øÀ¸¸é ÀÏ´Ü ¾ê¸¦ Ä¸ÃÄ
+			m_capture = receiver; //ìº¡ì³ëœê²Œ ì—†ìœ¼ë©´ ì¼ë‹¨ ì–˜ë¥¼ ìº¡ì³
 	}
 }
 
@@ -84,5 +84,5 @@ void MouseEventRouter::ProcessMouseWheel(int wheelValue) noexcept
 
 	for (const auto& receiver : m_hoveredReceivers)
 		if (receiver->OnWheel(wheelValue))
-			return; //À§ÀÇ ÄÄÆ÷³ÍÆ®°¡ ¹İÀÀÇÏ¸é ±× ¹Ø¿¡ ÄÄÆ÷³ÍÆ®µéÀº ½ÇÇàÇÏÁö ¾Ê´Â´Ù.
+			return; //ìœ„ì˜ ì»´í¬ë„ŒíŠ¸ê°€ ë°˜ì‘í•˜ë©´ ê·¸ ë°‘ì— ì»´í¬ë„ŒíŠ¸ë“¤ì€ ì‹¤í–‰í•˜ì§€ ì•ŠëŠ”ë‹¤.
 }

@@ -3,8 +3,8 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
-// ÇÏ³ªÀÇ ÆùÆ® ÆÄÀÏ(.ttf)¿¡ ´ëÀÀÇÏ´Â ·±Å¸ÀÓ ÆùÆ® °´Ã¼. gpuÀÇ resource´Â ¾Æ´Ô. Áï Ææ½º·Î release ÇÒ ÇÊ¿ä°¡ ¾øÀ½.
-// FreeTypeÀÇ FT_Face¸¦ °ü¸®
+// í•˜ë‚˜ì˜ í°íŠ¸ íŒŒì¼(.ttf)ì— ëŒ€ì‘í•˜ëŠ” ëŸ°íƒ€ì„ í°íŠ¸ ê°ì²´. gpuì˜ resourceëŠ” ì•„ë‹˜. ì¦‰ íœìŠ¤ë¡œ release í•  í•„ìš”ê°€ ì—†ìŒ.
+// FreeTypeì˜ FT_Faceë¥¼ ê´€ë¦¬
 class FontResource : public IFontResource
 {
 public:
@@ -12,8 +12,9 @@ public:
 	FontResource();
 	virtual bool IsReady() const noexcept override { return m_ready; }
 
-	void SetFace(FT_Face face) { m_ftFace = face; }
 	void MarkReady() noexcept { m_ready = true; }
+	void SetFace(FT_Face face) { m_ftFace = face; }
+	FT_Face GetFace() const { return m_ftFace; }
 
 private:
 	FT_Face m_ftFace{ nullptr };

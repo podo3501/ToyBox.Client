@@ -43,7 +43,7 @@ void UITransform::ChangeRelativePosition(const XMUINT2& size, const XMINT2& rela
 
 void UITransform::AdjustPosition(const XMUINT2& size, bool lockPosition) noexcept
 {
-	if (!lockPosition) //lockPositionÀÇ ±âº»°ªÀº falseÀÌ´Ù.
+	if (!lockPosition) //lockPositionì˜ ê¸°ë³¸ê°’ì€ falseì´ë‹¤.
 	{
 		m_relativePosition = {
 			static_cast<int32_t>(static_cast<float>(size.x) * m_ratio.x),

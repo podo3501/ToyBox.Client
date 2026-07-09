@@ -124,6 +124,11 @@
     <ClInclude Include="Render\DX12\Shader\ShaderLibrary.h" />
     <ClInclude Include="Render\DX12\SwapChainPresenter.h" />
     <ClInclude Include="Render\DX12\RenderBackend.h" />
+    <ClInclude Include="Render\DX12\TextSystem\AtlasPacker.h" />
+    <ClInclude Include="Render\DX12\TextSystem\FontAtlas.h" />
+    <ClInclude Include="Render\DX12\TextSystem\GlyphCache.h" />
+    <ClInclude Include="Render\DX12\TextSystem\TextSystem.h" />
+    <ClInclude Include="Render\DX12\TextSystem\TextTypes.h" />
     <ClInclude Include="Storage\JsonObjectIO.h" />
   </ItemGroup>
   <ItemGroup>
@@ -219,6 +224,10 @@
     <ClCompile Include="Render\DX12\Shader\ShaderLibrary.cpp" />
     <ClCompile Include="Render\DX12\SwapChainPresenter.cpp" />
     <ClCompile Include="Render\DX12\RenderBackend.cpp" />
+    <ClCompile Include="Render\DX12\TextSystem\AtlasPacker.cpp" />
+    <ClCompile Include="Render\DX12\TextSystem\FontAtlas.cpp" />
+    <ClCompile Include="Render\DX12\TextSystem\GlyphCache.cpp" />
+    <ClCompile Include="Render\DX12\TextSystem\TextSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Platform\Platform.vcxproj">
@@ -287,6 +296,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir);$(SolutionDir)Game;$(SolutionDir)Runtime;$(SolutionDir)ThirdParty\Include;$(SolutionDir)ThirdParty\SDL3\include;$(SolutionDir)ThirdParty\FreeType\include;$(ProjectDir)\Render\DX12;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -310,6 +320,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir);$(SolutionDir)Game;$(SolutionDir)Runtime;$(SolutionDir)ThirdParty\Include;$(SolutionDir)ThirdParty\SDL3\include;$(SolutionDir)ThirdParty\FreeType\include;$(ProjectDir)\Render\DX12;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -331,6 +342,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir);$(SolutionDir)Game;$(SolutionDir)Runtime;$(SolutionDir)ThirdParty\Include;$(SolutionDir)ThirdParty\SDL3\include;$(SolutionDir)ThirdParty\FreeType\include;$(ProjectDir)\Render\DX12;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -354,6 +366,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir);$(SolutionDir)Game;$(SolutionDir)Runtime;$(SolutionDir)ThirdParty\Include;$(SolutionDir)ThirdParty\SDL3\include;$(SolutionDir)ThirdParty\FreeType\include;$(ProjectDir)\Render\DX12;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>

@@ -30,5 +30,5 @@ private:
 
 	ToolLoop* m_toolLoop;
 	unique_ptr<RecentFiles> m_recentFiles;
-	optional<FileMenuAction> m_currentAction; // ÇöÀç ¸Ş´º »óÅÂ¸¦ ÀúÀå
+	optional<FileMenuAction> m_currentAction; // í˜„ì¬ ë©”ë‰´ ìƒíƒœë¥¼ ì €ì¥
 };

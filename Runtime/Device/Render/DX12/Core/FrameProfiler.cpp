@@ -57,7 +57,7 @@ void FrameProfiler::EndFrame(CommandList& cmd)
 
 void FrameProfiler::Update(uint64_t frameIndex)
 {
-    const auto slot = static_cast<UINT>((frameIndex + m_frameCount - 1) % m_frameCount); // ÀÌÀü ÇÁ·¹ÀÓÀÇ GPU ÃøÁ¤ °á°ú¸¦ ÀĞ´Â´Ù.
+    const auto slot = static_cast<UINT>((frameIndex + m_frameCount - 1) % m_frameCount); // ì´ì „ í”„ë ˆì„ì˜ GPU ì¸¡ì • ê²°ê³¼ë¥¼ ì½ëŠ”ë‹¤.
     uint64_t* data = nullptr;
 
     D3D12_RANGE range = 

@@ -1,7 +1,7 @@
 #pragma once
 #include "EditClass.h"
-//edit´Â °ªÀÌ ¹Ù²î¸é true¸¦ ¸®ÅÏÇÏ°í ¹Ù²îÁö ¾ÊÀ¸¸é false¸¦ ¸®ÅÏÇÑ´Ù.
-//&°¡ ¾Æ´Ñ const &°¡ ÀÎÀÚ·Î µé¾î¿Â´Ù¸é °ªÀÌ ¹Ù²ğ¼ö ¾øÀ¸¹Ç·Î void ÇÔ¼ö°¡ µÈ´Ù.
+//editëŠ” ê°’ì´ ë°”ë€Œë©´ trueë¥¼ ë¦¬í„´í•˜ê³  ë°”ë€Œì§€ ì•Šìœ¼ë©´ falseë¥¼ ë¦¬í„´í•œë‹¤.
+//&ê°€ ì•„ë‹Œ const &ê°€ ì¸ìë¡œ ë“¤ì–´ì˜¨ë‹¤ë©´ ê°’ì´ ë°”ë€”ìˆ˜ ì—†ìœ¼ë¯€ë¡œ void í•¨ìˆ˜ê°€ ëœë‹¤.
 
 template<typename T>
 concept SignedIntegral = std::is_integral_v<T> && std::is_signed_v<T>;

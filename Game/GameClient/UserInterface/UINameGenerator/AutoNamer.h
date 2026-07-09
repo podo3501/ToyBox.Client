@@ -2,7 +2,7 @@
 
 class Serializer;
 
-class AutoNamer //ÀÌ¸§Àº base, base_1... Áï, base_0 ÀÌ¶ó´Â ÀÚµ¿ ÀÌ¸§Àº ¾ø´Ù.
+class AutoNamer //ì´ë¦„ì€ base, base_1... ì¦‰, base_0 ì´ë¼ëŠ” ìë™ ì´ë¦„ì€ ì—†ë‹¤.
 {
 public:
     ~AutoNamer();

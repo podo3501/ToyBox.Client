@@ -3,7 +3,7 @@
 
 GridMaterialResource::~GridMaterialResource() = default;
 GridMaterialResource::GridMaterialResource(const MaterialDesc& desc) :
-    DebugSurfaceMaterialResource{ 0 } //ÅØ½ºÃÄ¸¦ ¾²Áö ¾Ê´Â´Ù.
+    DebugSurfaceMaterialResource{ 0 } //í…ìŠ¤ì³ë¥¼ ì“°ì§€ ì•ŠëŠ”ë‹¤.
 {
     Assert(desc.domain == MaterialDomain::DebugSurface);
     m_desc = static_cast<const GridMaterialDesc&>(desc);

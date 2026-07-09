@@ -27,7 +27,7 @@ std::shared_ptr<TextureAsset> TextureProvider::CreateColorAsset(uint32_t pixelCo
     asset->size = ToSize(1, 1);
     asset->pixels.resize(sizeof(uint32_t));
 
-    // ºñÆ® ¿¬»êÀ» ÅëÇØ ¿£µğ¾È¿¡ ¹«°üÇÏ°Ô Ç×»ó R, G, B, A ¼ø¼­·Î ¸Ş¸ğ¸® ¹èÄ¡
+    // ë¹„íŠ¸ ì—°ì‚°ì„ í†µí•´ ì—”ë””ì•ˆì— ë¬´ê´€í•˜ê²Œ í•­ìƒ R, G, B, A ìˆœì„œë¡œ ë©”ëª¨ë¦¬ ë°°ì¹˜
     asset->pixels[0] = static_cast<uint8_t>((pixelColor >> 24) & 0xFF); // R
     asset->pixels[1] = static_cast<uint8_t>((pixelColor >> 16) & 0xFF); // G
     asset->pixels[2] = static_cast<uint8_t>((pixelColor >> 8) & 0xFF); // B
@@ -40,8 +40,8 @@ bool TextureProvider::CreateBuiltinTextures()
 {
     std::array<std::shared_ptr<TextureAsset>, Core::EnumSize<DefaultTextureType>> defaultAssets;
 
-    defaultAssets[Core::ToIndex(DefaultTextureType::White)] = CreateColorAsset(0xFFFFFFFF); // Èò»ö
-    defaultAssets[Core::ToIndex(DefaultTextureType::FlatNormal)] = CreateColorAsset(0x8080FFFF); // ÆòÆòÇÑ ³ë¸Ö (128, 128, 255)
+    defaultAssets[Core::ToIndex(DefaultTextureType::White)] = CreateColorAsset(0xFFFFFFFF); // í°ìƒ‰
+    defaultAssets[Core::ToIndex(DefaultTextureType::FlatNormal)] = CreateColorAsset(0x8080FFFF); // í‰í‰í•œ ë…¸ë©€ (128, 128, 255)
     defaultAssets[Core::ToIndex(DefaultTextureType::Orange)] = CreateColorAsset(0xFF8000FF);
 
     struct BuiltinConfig { DefaultTextureType defaultType; const char* name; TextureType texType; };
@@ -93,7 +93,7 @@ static size_t EstimateBytes(const TextureAsset& asset, const TextureDesc& desc)
     if (!desc.generateMips)
         return baseBytes;
 
-    return static_cast<size_t>(baseBytes * 4 / 3); //mip ºñ¿ëÀº Á¤È® °è»ê ´ë½Å ¾ÈÁ¤ÀûÀÎ ±Ù»ç (1.33x)
+    return static_cast<size_t>(baseBytes * 4 / 3); //mip ë¹„ìš©ì€ ì •í™• ê³„ì‚° ëŒ€ì‹  ì•ˆì •ì ì¸ ê·¼ì‚¬ (1.33x)
 }
 
 bool TextureProvider::LoadResource(
@@ -123,7 +123,7 @@ void TextureProvider::Update(size_t uploadBudgetBytes)
     {
         auto& req = m_pending.front();
 
-        if (usedBytes + req.estimatedBytes > uploadBudgetBytes && !batch.empty()) // ÃÖ¼Ò 1°³ÀÇ ¿äÃ»Àº Ç×»ó Ã³¸®ÇÑ´Ù. ±×·¸Áö ¾ÊÀ¸¸é budgetº¸´Ù Å« ÅØ½ºÃ³°¡ ¿µ¿øÈ÷ ´ë±â¿­¿¡ ³²À» ¼ö ÀÖ´Ù.
+        if (usedBytes + req.estimatedBytes > uploadBudgetBytes && !batch.empty()) // ìµœì†Œ 1ê°œì˜ ìš”ì²­ì€ í•­ìƒ ì²˜ë¦¬í•œë‹¤. ê·¸ë ‡ì§€ ì•Šìœ¼ë©´ budgetë³´ë‹¤ í° í…ìŠ¤ì²˜ê°€ ì˜ì›íˆ ëŒ€ê¸°ì—´ì— ë‚¨ì„ ìˆ˜ ìˆë‹¤.
             break; 
 
         usedBytes += req.estimatedBytes;

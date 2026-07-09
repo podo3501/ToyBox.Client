@@ -8,7 +8,7 @@
 
 TextureRepo::~TextureRepo()
 {
-    Assert(ranges::all_of(m_texResources, [](const auto& ptr) { return ptr == nullptr; })); //Àß Áö¿öÁ³´ÂÁö È®ÀÎ
+    Assert(ranges::all_of(m_texResources, [](const auto& ptr) { return ptr == nullptr; })); //ì˜ ì§€ì›Œì¡ŒëŠ”ì§€ í™•ì¸
 }
 
 TextureRepo::TextureRepo(DX::DeviceResources* deviceRes, DescriptorHeap* descriptorHeap, ResourceUploadBatch* upload, SpriteBatch* sprite) :
@@ -135,15 +135,15 @@ TextureRes* TextureRepo::FindTextureResource(size_t index) const noexcept
 
 void TextureRepo::Render(size_t index, const RECT& dest, const RECT* source)
 {
-    assert(!m_texResources.empty() && index <= m_texResources.size() - 1); //assert·Î ÇÑ ÀÌÀ¯´Â releaseÀÏ¶§´Â Á¶±İÀÌ¶óµµ µ¿ÀÛÀ» ¾ÈÇÏ°Ô ÇÏ±â À§ÇØ¼­ÀÌ´Ù.
+    assert(!m_texResources.empty() && index <= m_texResources.size() - 1); //assertë¡œ í•œ ì´ìœ ëŠ” releaseì¼ë•ŒëŠ” ì¡°ê¸ˆì´ë¼ë„ ë™ì‘ì„ ì•ˆí•˜ê²Œ í•˜ê¸° ìœ„í•´ì„œì´ë‹¤.
     assert(m_texResources[index]->GetTypeID() != CFont::GetTypeStatic());
 
-    //ÅØ½ºÃç Å©±â´Â °íÁ¤À¸·Î ÇÔ
-    //dest´Â È­¸é¿¡ º¸¿©ÁÖ´Â »ç°¢Çü(Å©±â°¡ ¾È ¸ÂÀ¸¸é °­Á¦·Î ´Ã¸²)
-    //source´Â ÅØ½ºÃç¿¡¼­ °¡Á®¿À´Â ÇÈ¼¿ »ç°¢Çü
-    //originÀº 0, 0À¸·Î °íÁ¤. Áß°£À¸·Î ÇßÀ» °æ¿ì ´Ã¸±¶§ À§Ä¡°¡ ¾î±ß³²
-    //ÅØ½ºÃç°¡ ´Ã¾î³ª¸é ÅØ½ºÃç°¡ ¿©·¯ÀåÀÏ °æ¿ì origin °ªÀ¸·Î ¼³Á¤ÇßÀ»¶§ Á¶±İ¾¿ ¾î±ß³ª´Â Çö»óÀÌ ¹ú¾îÁø´Ù.
-    //originÀ» 0, 0 ·Î °íÁ¤ÈÄ À§Ä¡°ªÀ» °è»êÇØ¼­ ³Ñ°ÜÁÖ´Â ½ÄÀ¸·Î ÇØ¾ß°Ú´Ù.
+    //í…ìŠ¤ì¶° í¬ê¸°ëŠ” ê³ ì •ìœ¼ë¡œ í•¨
+    //destëŠ” í™”ë©´ì— ë³´ì—¬ì£¼ëŠ” ì‚¬ê°í˜•(í¬ê¸°ê°€ ì•ˆ ë§ìœ¼ë©´ ê°•ì œë¡œ ëŠ˜ë¦¼)
+    //sourceëŠ” í…ìŠ¤ì¶°ì—ì„œ ê°€ì ¸ì˜¤ëŠ” í”½ì…€ ì‚¬ê°í˜•
+    //originì€ 0, 0ìœ¼ë¡œ ê³ ì •. ì¤‘ê°„ìœ¼ë¡œ í–ˆì„ ê²½ìš° ëŠ˜ë¦´ë•Œ ìœ„ì¹˜ê°€ ì–´ê¸‹ë‚¨
+    //í…ìŠ¤ì¶°ê°€ ëŠ˜ì–´ë‚˜ë©´ í…ìŠ¤ì¶°ê°€ ì—¬ëŸ¬ì¥ì¼ ê²½ìš° origin ê°’ìœ¼ë¡œ ì„¤ì •í–ˆì„ë•Œ ì¡°ê¸ˆì”© ì–´ê¸‹ë‚˜ëŠ” í˜„ìƒì´ ë²Œì–´ì§„ë‹¤.
+    //originì„ 0, 0 ë¡œ ê³ ì •í›„ ìœ„ì¹˜ê°’ì„ ê³„ì‚°í•´ì„œ ë„˜ê²¨ì£¼ëŠ” ì‹ìœ¼ë¡œ í•´ì•¼ê² ë‹¤.
 
     m_sprite->Draw(m_descHeap->GetGpuHandle(index), m_texResources[index]->GetSize(), dest, source, Colors::White, 0.f);
 }

@@ -63,7 +63,7 @@ void ComponentSelector::SelectComponent(IToolInputManager* input) noexcept
 
 	if (preComponentList == componentList)
 		RepeatedSelection(componentList);
-	else //¸¶¿ì½º°¡ ´Ù¸¥ ÄÄÆ÷³ÍÆ®¸¦ ¼±ÅÃÇØ¼­ ¸®½ºÆ®°¡ ¹Ù²î¾ú´Ù¸é Á¦ÀÏ Ã¹¹øÂ° ¿ø¼Ò¸¦ Âï¾îÁØ´Ù.
+	else //ë§ˆìš°ìŠ¤ê°€ ë‹¤ë¥¸ ì»´í¬ë„ŒíŠ¸ë¥¼ ì„ íƒí•´ì„œ ë¦¬ìŠ¤íŠ¸ê°€ ë°”ë€Œì—ˆë‹¤ë©´ ì œì¼ ì²«ë²ˆì§¸ ì›ì†Œë¥¼ ì°ì–´ì¤€ë‹¤.
 	{
 		SetComponent(componentList.front());
 		preComponentList = move(componentList);

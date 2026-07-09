@@ -99,7 +99,7 @@ static float DegToRad(float deg)
 
 void Camera::UpdateMatrices() const
 {
-    // Forward direction (Y-up, left-handed ±‚¡ÿ ∞°¡§)
+    // Forward direction (Y-up, left-handed Í∏∞Ï§Ä Í∞ÄÏ†ï)
     float cosPitch = cosf(m_pitch);
     float sinPitch = sinf(m_pitch);
     float cosYaw = cosf(m_yaw);

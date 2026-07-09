@@ -49,11 +49,11 @@ static bool AddBindingImpl(auto& bindingTable, const auto& bindingKey, const aut
 
     if (auto it = bindingTable.find(bindingKey); it != bindingTable.end())
     {
-        if (it->second != value) return false; // °°Àº ÀÌ¸§ÀÌ ÀÖÁö¸¸ °ªÀÌ ´Ù¸¦ °æ¿ì
-        return true; // °°Àº ÀÌ¸§ÀÌ°í °ªµµ °°À¸¸é Ã³¸® ¾ÈÇÔ
+        if (it->second != value) return false; // ê°™ì€ ì´ë¦„ì´ ìˆì§€ë§Œ ê°’ì´ ë‹¤ë¥¼ ê²½ìš°
+        return true; // ê°™ì€ ì´ë¦„ì´ê³  ê°’ë„ ê°™ìœ¼ë©´ ì²˜ë¦¬ ì•ˆí•¨
     }
 
-    bindingTable.emplace(bindingKey, value); // »õ·Î¿î Ç×¸ñ »ğÀÔ
+    bindingTable.emplace(bindingKey, value); // ìƒˆë¡œìš´ í•­ëª© ì‚½ì…
     return true;
 }
 
@@ -127,7 +127,7 @@ vector<wstring> TextureResourceBinder::GetTextureFiles() const noexcept
 {
     unordered_set<wstring> seenFilenames;
 
-    for (const auto& entry : m_bindingTexTable) //Áßº¹ ¹æÁö¸¦ À§ÇØ¼­ set¿¡ ³ÖÀ½
+    for (const auto& entry : m_bindingTexTable) //ì¤‘ë³µ ë°©ì§€ë¥¼ ìœ„í•´ì„œ setì— ë„£ìŒ
         seenFilenames.insert(entry.second.filename);
 
     return vector<wstring>(seenFilenames.begin(), seenFilenames.end());

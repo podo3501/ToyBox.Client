@@ -47,8 +47,8 @@ wstring EditFontTexture::GetSelectFontFile() const noexcept
     return GetResourceFontPath().wstring() + m_fontFiles[m_fontIndex];
 }
 
-//?!? Å°°¡ ÀÖ´Âµ¥ ÆùÆ®¿¡¼­´Â Å°¸¦ º¸¿©ÁÖÁö ¾Ê±â ¶§¹®¿¡ Ãæµ¹ÀÌ ³ª°Å³ª ºÒÇÊ¿äÇÑ Å°°¡ ¿Ã¶ó°¡ ÀÖÀ» ¼ö ÀÖ´Ù.
-//Å°¸¦ ´Ù Áö¿öÁÖ´Â ±â´ÉÀÌ ÇÊ¿ä
+//?!? í‚¤ê°€ ìžˆëŠ”ë° í°íŠ¸ì—ì„œëŠ” í‚¤ë¥¼ ë³´ì—¬ì£¼ì§€ ì•Šê¸° ë•Œë¬¸ì— ì¶©ëŒì´ ë‚˜ê±°ë‚˜ ë¶ˆí•„ìš”í•œ í‚¤ê°€ ì˜¬ë¼ê°€ ìžˆì„ ìˆ˜ ìžˆë‹¤.
+//í‚¤ë¥¼ ë‹¤ ì§€ì›Œì£¼ëŠ” ê¸°ëŠ¥ì´ í•„ìš”
 void EditFontTexture::Render()
 {
     m_listboxFont->Render([this](int index) { m_fontIndex = index; });

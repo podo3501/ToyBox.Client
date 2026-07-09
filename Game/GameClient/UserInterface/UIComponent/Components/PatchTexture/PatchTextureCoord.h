@@ -19,7 +19,7 @@ public:
 
 private:
 	UIComponent* m_component;
-	optional<size_t> m_index; //ÅØ½ºÃÄ ÀÎµ¦½º. 0°ªµµ ÀÎµ¦½º·Î »ç¿ëÇÏ±â ¶§¹®¿¡ optional
+	optional<size_t> m_index; //í…ìŠ¤ì³ ì¸ë±ìŠ¤. 0ê°’ë„ ì¸ë±ìŠ¤ë¡œ ì‚¬ìš©í•˜ê¸° ë•Œë¬¸ì— optional
 	Rectangle m_source{};
 };
 

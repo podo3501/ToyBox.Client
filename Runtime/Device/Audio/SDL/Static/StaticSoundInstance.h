@@ -21,7 +21,7 @@ public:
 
     bool Setup(MIX_Mixer* mixer);
     bool SetBuffer(StaticSoundBuffer* buffer);
-    void OnStopped(); //callback ÇÔ¼ö
+    void OnStopped(); //callback í•¨ìˆ˜
 
 private:
     MIX_Track* m_track{ nullptr };

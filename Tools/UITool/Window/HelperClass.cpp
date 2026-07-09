@@ -13,7 +13,7 @@ void RenameNotifier::EditName(const string& nameLabel, const string& currName, f
         m_displayResult = true;
     }
     ShowEditNameResult();
-    UpdateName(currName); //¹Ù²Ù´Âµ¥ ½ÇÆĞÇÏ¸é ÀÌÀü ÀÌ¸§À¸·Î µ¹¸². ±×¸®°í Undo ÇßÀ»¶§ ÀÌ¸§ÀÌ ¹Ù²î¸é ¾÷µ¥ÀÌÆ® µÈ´Ù.
+    UpdateName(currName); //ë°”ê¾¸ëŠ”ë° ì‹¤íŒ¨í•˜ë©´ ì´ì „ ì´ë¦„ìœ¼ë¡œ ëŒë¦¼. ê·¸ë¦¬ê³  Undo í–ˆì„ë•Œ ì´ë¦„ì´ ë°”ë€Œë©´ ì—…ë°ì´íŠ¸ ëœë‹¤.
 }
 
 void RenameNotifier::ShowEditNameResult() noexcept

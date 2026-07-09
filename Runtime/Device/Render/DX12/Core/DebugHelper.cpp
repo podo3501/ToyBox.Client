@@ -44,7 +44,7 @@ void DebugHelper::SetupInfoQueue(ID3D12Device* device, const DebugOptions& opt)
             infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_WARNING, TRUE);
         }
 
-        // ╪╠ец: noisy ╦ч╫цаЖ гйем╦╣
+        // Л└═М┐²: noisy К╘■Л▀°Л╖─ М∙└М└╟К╖│
         D3D12_MESSAGE_ID denyIds[] =
         {
             D3D12_MESSAGE_ID_CLEARRENDERTARGETVIEW_MISMATCHINGCLEARVALUE,

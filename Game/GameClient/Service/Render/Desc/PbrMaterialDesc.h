@@ -16,10 +16,10 @@ constexpr TextureSlot Resolve(PbrTextureSlot s)
 
 struct PbrSurface
 {
-    float normal{ 1.f }; //¼¼±â°ª
-    float ao{ 1.f }; //¼¼±â°ª
-    float roughness{ 0.5f }; //1ÀÌ °ÅÄ£°Í
-    float metallic{ 0.0f }; //1ÀÌ ¸ŞÅ»¸¯
+    float normal{ 1.f }; //ì„¸ê¸°ê°’
+    float ao{ 1.f }; //ì„¸ê¸°ê°’
+    float roughness{ 0.5f }; //1ì´ ê±°ì¹œê²ƒ
+    float metallic{ 0.0f }; //1ì´ ë©”íƒˆë¦­
 
     bool operator==(const PbrSurface&) const = default;
     size_t GetHash() const { return Core::HashOf(normal, ao, roughness, metallic); }

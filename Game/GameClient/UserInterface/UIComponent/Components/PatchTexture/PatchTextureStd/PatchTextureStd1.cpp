@@ -42,14 +42,14 @@ bool PatchTextureStd1::operator==(const UIComponent& rhs) const noexcept
 
 bool PatchTextureStd1::SetSourceInfo(const TextureSourceInfo& sourceInfo) noexcept
 {
-	if (!sourceInfo.GetIndex()) return false; //¿©±â¼­ ¸®ÅÏµÇ´Â °Ç m_renderer->LoadTextureBinder(resBinder); ÀÌ°É ¾ÈÇÑ ¹®Á¦ÀÏ °¡´É¼ºÀÌ ³ô´Ù.
+	if (!sourceInfo.GetIndex()) return false; //ì—¬ê¸°ì„œ ë¦¬í„´ë˜ëŠ” ê±´ m_renderer->LoadTextureBinder(resBinder); ì´ê±¸ ì•ˆí•œ ë¬¸ì œì¼ ê°€ëŠ¥ì„±ì´ ë†’ë‹¤.
 
 	m_filename = sourceInfo.filename;
 	m_coord.SetIndexedSource(*sourceInfo.GetIndex(), { sourceInfo.GetSource(m_sourceIndex) });
 	if (auto gfxOffset = sourceInfo.GetGfxOffset(); gfxOffset)
 		m_gfxOffset = *gfxOffset;
 
-	if (GetSize() == XMUINT2{}) //»çÀÌÁî°¡ ¾ø´Ù¸é source »çÀÌÁî·Î ÃÊ±âÈ­ ÇÑ´Ù.
+	if (GetSize() == XMUINT2{}) //ì‚¬ì´ì¦ˆê°€ ì—†ë‹¤ë©´ source ì‚¬ì´ì¦ˆë¡œ ì´ˆê¸°í™” í•œë‹¤.
 		ReturnIfFalse(FitToTextureSource());
 
 	return true;

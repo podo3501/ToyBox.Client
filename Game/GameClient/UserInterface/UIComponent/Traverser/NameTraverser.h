@@ -3,7 +3,7 @@
 
 class UIComponent;
 class UINameGenerator;
-class NameTraverser : private HierarchyTraverser //ÀÌ¸§°ü·Ã. TraverserÀº ¸âº­º¯¼ö¸¦ °¡Áú ¼ö ¾ø´Ù.
+class NameTraverser : private HierarchyTraverser //ì´ë¦„ê´€ë ¨. Traverserì€ ë©¤ë²¼ë³€ìˆ˜ë¥¼ ê°€ì§ˆ ìˆ˜ ì—†ë‹¤.
 {
 public:
 	NameTraverser();

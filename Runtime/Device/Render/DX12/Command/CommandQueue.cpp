@@ -53,7 +53,7 @@ FenceID CommandQueue::End()
     FenceID fenceID = Signal();
     m_lastSubmittedFence = fenceID;
 
-    m_currentCmdEntry->MarkSubmitted(m_fence.Get(), fenceID); // Àç»ç¿ëÇÏ±â À§ÇØ¼­ fence ±â·Ï
+    m_currentCmdEntry->MarkSubmitted(m_fence.Get(), fenceID); // ì¬ì‚¬ìš©í•˜ê¸° ìœ„í•´ì„œ fence ê¸°ë¡
 
     m_currentCmdEntry = nullptr;
     return fenceID;
@@ -102,7 +102,7 @@ CommandList* CommandQueue::GetAvailableCommandList()
             return entry;
     }
 
-    return nullptr; // »ç¿ë °¡´ÉÇÑ context ¾øÀ½ ¿©±â¼­ ¸¸¾à while·Î ±â´Ù¸®°Ô µÇ¸é cpu, gpu µ¿±âÈ­°¡ µÇ±â ¶§¹®¿¡ ÀÏºÎ·¯ nullptr ¸®ÅÏÇÔ. begin¿¡¼­ nullptrÀÌ¸é present ¾ÈÇÏ°í ¸®ÅÏ. ÀÇµµÇÑ ¹ÙÀÓ.
+    return nullptr; // ì‚¬ìš© ê°€ëŠ¥í•œ context ì—†ìŒ ì—¬ê¸°ì„œ ë§Œì•½ whileë¡œ ê¸°ë‹¤ë¦¬ê²Œ ë˜ë©´ cpu, gpu ë™ê¸°í™”ê°€ ë˜ê¸° ë•Œë¬¸ì— ì¼ë¶€ëŸ¬ nullptr ë¦¬í„´í•¨. beginì—ì„œ nullptrì´ë©´ present ì•ˆí•˜ê³  ë¦¬í„´. ì˜ë„í•œ ë°”ì„.
 }
 
 void CommandQueue::WaitFence(FenceID fenceID)

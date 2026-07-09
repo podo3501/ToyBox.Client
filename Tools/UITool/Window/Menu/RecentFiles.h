@@ -6,8 +6,8 @@ class FileTab;
 class Serializer;
 class RecentFiles
 {
-    static constexpr size_t MaxRecentFiles = 20;    //More ¿Í ÇÕÄ£ ÃÑ °¹¼ö
-    static constexpr size_t MaxShownFiles = 7;    // "Open Recent" ¸Ş´º¿¡ Ç¥½ÃÇÒ ÆÄÀÏ °³¼ö
+    static constexpr size_t MaxRecentFiles = 20;    //More ì™€ í•©ì¹œ ì´ ê°¯ìˆ˜
+    static constexpr size_t MaxShownFiles = 7;    // "Open Recent" ë©”ë‰´ì— í‘œì‹œí•  íŒŒì¼ ê°œìˆ˜
     static constexpr const wchar_t* RecentFilename = L"Tool/OpenRecentFiles.json";
 
 public:

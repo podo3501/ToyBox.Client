@@ -28,7 +28,7 @@ public:
     void Insert(AssetRequestID id, T value)
     {
         auto [_, inserted] = m_entries.emplace(id, std::move(value));
-        Assert(inserted); //id°¡ Áßº¹µÇ¾î¼­´Â ¾ÈµÈ´Ù. result·Î ÀÌ ÇÔ¼ö´Â »ç¿ëµÇ´Âµ¥ Áßº¹µÈ´Ù¸é ÀÌÀü ¾ÆÀÌµğ °ª¿¡ µé°íÀÖ´ø ·ÎµùµÈ µ¥ÀÌÅÍ°¡ ³¯¶ó°£´Ù.
+        Assert(inserted); //idê°€ ì¤‘ë³µë˜ì–´ì„œëŠ” ì•ˆëœë‹¤. resultë¡œ ì´ í•¨ìˆ˜ëŠ” ì‚¬ìš©ë˜ëŠ”ë° ì¤‘ë³µëœë‹¤ë©´ ì´ì „ ì•„ì´ë”” ê°’ì— ë“¤ê³ ìˆë˜ ë¡œë”©ëœ ë°ì´í„°ê°€ ë‚ ë¼ê°„ë‹¤.
     }
 
     std::optional<T> Take(AssetRequestID id)

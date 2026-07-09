@@ -72,13 +72,13 @@ std::wstring Core::UTF8ToWString(const std::string& str)
     {
         char8_t c = u8Str[i];
 
-        // ASCII øµø™ (1πŸ¿Ã∆Æ πÆ¿⁄: 0xxxxxxx)
+        // ASCII ÏòÅÏó≠ (1Î∞îÏù¥Ìä∏ Î¨∏Ïûê: 0xxxxxxx)
         if ((c & 0x80) == 0)
         {
             result.push_back(static_cast<wchar_t>(c));
             i += 1;
         }
-        // 2πŸ¿Ã∆Æ πÆ¿⁄ (110xxxxx 10xxxxxx)
+        // 2Î∞îÏù¥Ìä∏ Î¨∏Ïûê (110xxxxx 10xxxxxx)
         else if ((c & 0xE0) == 0xC0)
         {
             if (i + 1 < length)
@@ -89,7 +89,7 @@ std::wstring Core::UTF8ToWString(const std::string& str)
             }
             i += 2;
         }
-        // 3πŸ¿Ã∆Æ πÆ¿⁄ («—±€ øµø™ «ŸΩ…: 1110xxxx 10xxxxxx 10xxxxxx)
+        // 3Î∞îÏù¥Ìä∏ Î¨∏Ïûê (ÌïúÍ∏Ä ÏòÅÏó≠ ÌïµÏã¨: 1110xxxx 10xxxxxx 10xxxxxx)
         else if ((c & 0xF0) == 0xE0)
         {
             if (i + 2 < length)
@@ -101,12 +101,12 @@ std::wstring Core::UTF8ToWString(const std::string& str)
             }
             i += 3;
         }
-        // 4πŸ¿Ã∆Æ πÆ¿⁄ (¿Ã∏¡ˆ π◊ ∞Ì¥Î πÆ¿⁄: 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx)
+        // 4Î∞îÏù¥Ìä∏ Î¨∏Ïûê (Ïù¥Î™®ÏßÄ Î∞è Í≥†ÎåÄ Î¨∏Ïûê: 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx)
         else if ((c & 0xF8) == 0xF0)
         {
             if (i + 3 < length)
             {
-                // UTF-16 ¥Î∏Æ Ω÷(Surrogate Pair) √≥∏Æ
+                // UTF-16 ÎåÄÎ¶¨ Ïåç(Surrogate Pair) Ï≤òÎ¶¨
                 uint32_t utf32 = (u8Str[i] & 0x07) << 18;
                 utf32 |= (u8Str[i + 1] & 0x3F) << 12;
                 utf32 |= (u8Str[i + 2] & 0x3F) << 6;
@@ -120,7 +120,7 @@ std::wstring Core::UTF8ToWString(const std::string& str)
         }
         else
         {
-            // ¿ﬂ∏¯µ» ¿ﬂ∏¯µ» πŸ¿Ã∆ÆΩ∫∆Æ∏≤ øπø‹ √≥∏Æ
+            // ÏûòÎ™ªÎêú ÏûòÎ™ªÎêú Î∞îÏù¥Ìä∏Ïä§Ìä∏Î¶º ÏòàÏô∏ Ï≤òÎ¶¨
             i += 1;
         }
     }
@@ -128,72 +128,125 @@ std::wstring Core::UTF8ToWString(const std::string& str)
     return result;
 }
 
+char32_t Core::UTF8ToUTF32Char(std::string_view text, size_t& offset)
+{
+    if (offset >= text.size())
+        return U'\0';
+
+    const auto* bytes =
+        reinterpret_cast<const unsigned char*>(text.data());
+
+    unsigned char c = bytes[offset];
+
+    if (c <= 0x7F)
+    {
+        offset += 1;
+        return c;
+    }
+
+    if ((c & 0xE0) == 0xC0)
+    {
+        if (offset + 1 >= text.size())
+        {
+            offset = text.size();
+            return U'\0';
+        }
+
+        char32_t codePoint =
+            ((c & 0x1F) << 6) |
+            (bytes[offset + 1] & 0x3F);
+
+        offset += 2;
+        return codePoint;
+    }
+
+    if ((c & 0xF0) == 0xE0)
+    {
+        if (offset + 2 >= text.size())
+        {
+            offset = text.size();
+            return U'\0';
+        }
+
+        char32_t codePoint =
+            ((c & 0x0F) << 12) |
+            ((bytes[offset + 1] & 0x3F) << 6) |
+            (bytes[offset + 2] & 0x3F);
+
+        offset += 3;
+        return codePoint;
+    }
+
+    if ((c & 0xF8) == 0xF0)
+    {
+        if (offset + 3 >= text.size())
+        {
+            offset = text.size();
+            return U'\0';
+        }
+
+        char32_t codePoint =
+            ((c & 0x07) << 18) |
+            ((bytes[offset + 1] & 0x3F) << 12) |
+            ((bytes[offset + 2] & 0x3F) << 6) |
+            (bytes[offset + 3] & 0x3F);
+
+        offset += 4;
+        return codePoint;
+    }
+
+    ++offset;
+    return U'\0';
+}
+
 std::vector<char32_t> Core::UTF8ToUTF32(std::string_view text)
 {
     std::vector<char32_t> result;
     result.reserve(text.size());
 
-    const auto* bytes =
-        reinterpret_cast<const unsigned char*>(text.data());
+    size_t offset = 0;
 
-    size_t i = 0;
-
-    while (i < text.size())
+    while (offset < text.size())
     {
-        char32_t codePoint = 0;
-        unsigned char c = bytes[i];
+        char32_t codePoint = UTF8ToUTF32Char(text, offset);
 
-        if (c <= 0x7F) // 1 byte (ASCII)
-        {
-            codePoint = c;
-            i += 1;
-        }
-        else if ((c & 0xE0) == 0xC0) // 2 bytes
-        {
-            if (i + 1 >= text.size())
-                break;
-
-            codePoint =
-                ((c & 0x1F) << 6) |
-                (bytes[i + 1] & 0x3F);
-
-            i += 2;
-        }
-        else if ((c & 0xF0) == 0xE0) // 3 bytes («—±€ ¥Î∫Œ∫–)
-        {
-            if (i + 2 >= text.size())
-                break;
-
-            codePoint =
-                ((c & 0x0F) << 12) |
-                ((bytes[i + 1] & 0x3F) << 6) |
-                (bytes[i + 2] & 0x3F);
-
-            i += 3;
-        }
-        else if ((c & 0xF8) == 0xF0) // 4 bytes
-        {
-            if (i + 3 >= text.size())
-                break;
-
-            codePoint =
-                ((c & 0x07) << 18) |
-                ((bytes[i + 1] & 0x3F) << 12) |
-                ((bytes[i + 2] & 0x3F) << 6) |
-                (bytes[i + 3] & 0x3F);
-
-            i += 4;
-        }
-        else
-        {
-            ++i;
-            continue; // ¿ﬂ∏¯µ» UTF-8
-        }
-
-        result.push_back(codePoint);
+        if (codePoint != U'\0')
+            result.push_back(codePoint);
     }
 
     return result;
+}
+
+void Core::UTF32ToUTF8Char(char32_t c, std::string& out)
+{
+    uint32_t codePoint = static_cast<uint32_t>(c);
+
+    if (codePoint <= 0x7F)
+    {
+        out.push_back(static_cast<char>(codePoint));
+    }
+    else if (codePoint <= 0x7FF)
+    {
+        out.push_back(static_cast<char>(0xC0 | (codePoint >> 6)));
+        out.push_back(static_cast<char>(0x80 | (codePoint & 0x3F)));
+    }
+    else if (codePoint <= 0xFFFF)
+    {
+        out.push_back(static_cast<char>(0xE0 | (codePoint >> 12)));
+        out.push_back(static_cast<char>(0x80 | ((codePoint >> 6) & 0x3F)));
+        out.push_back(static_cast<char>(0x80 | (codePoint & 0x3F)));
+    }
+    else if (codePoint <= 0x10FFFF)
+    {
+        out.push_back(static_cast<char>(0xF0 | (codePoint >> 18)));
+        out.push_back(static_cast<char>(0x80 | ((codePoint >> 12) & 0x3F)));
+        out.push_back(static_cast<char>(0x80 | ((codePoint >> 6) & 0x3F)));
+        out.push_back(static_cast<char>(0x80 | (codePoint & 0x3F)));
+    }
+    else
+    {
+        out.push_back('?');
+    }
 }
 
 std::string Core::UTF32ToUTF8(std::span<const char32_t> text)
@@ -202,37 +255,9 @@ std::string Core::UTF32ToUTF8(std::span<const char32_t> text)
     result.reserve(text.size() * 3);
 
     for (char32_t c : text)
-    {
-        uint32_t codePoint = static_cast<uint32_t>(c);
+        UTF32ToUTF8Char(c, result);
 
-        if (codePoint <= 0x7F)
-        {
-            result.push_back(static_cast<char>(codePoint));
-        }
-        else if (codePoint <= 0x7FF)
-        {
-            result.push_back(static_cast<char>(0xC0 | (codePoint >> 6)));
-            result.push_back(static_cast<char>(0x80 | (codePoint & 0x3F)));
-        }
-        else if (codePoint <= 0xFFFF)
-        {
-            result.push_back(static_cast<char>(0xE0 | (codePoint >> 12)));
-            result.push_back(static_cast<char>(0x80 | ((codePoint >> 6) & 0x3F)));
-            result.push_back(static_cast<char>(0x80 | (codePoint & 0x3F)));
-        }
-        else if (codePoint <= 0x10FFFF)
-        {
-            result.push_back(static_cast<char>(0xF0 | (codePoint >> 18)));
-            result.push_back(static_cast<char>(0x80 | ((codePoint >> 12) & 0x3F)));
-            result.push_back(static_cast<char>(0x80 | ((codePoint >> 6) & 0x3F)));
-            result.push_back(static_cast<char>(0x80 | (codePoint & 0x3F)));
-        }
-        else
-        {
-            result.push_back('?');
-        }
-    }
-    result.shrink_to_fit(); 
+    result.shrink_to_fit();
 
     return result;
 }

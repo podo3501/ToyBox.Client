@@ -13,8 +13,8 @@ public:
     static std::shared_ptr<MeshAsset> CreateCube(float size = 1.f);
 
     static std::shared_ptr<MeshAsset> CreateTorus(
-        float radius = 1.0f, //ÀüÃ¼ ¹İÁö¸§
-        float tubeRadius = 0.3f, //µµ³Ó µÎ²²
+        float radius = 1.0f, //ì „ì²´ ë°˜ì§€ë¦„
+        float tubeRadius = 0.3f, //ë„ë„› ë‘ê»˜
         uint32_t radialSegments = 32,
         uint32_t tubularSegments = 16);
 

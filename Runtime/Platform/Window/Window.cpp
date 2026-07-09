@@ -5,7 +5,7 @@ LPCWSTR g_szAppName = L"Toy";
 
 void ExitGame() noexcept;
 
-//È¤½Ã³ª ÀÖÀ» Å¥ ¾È¿¡ ¸Þ¼¼Áö ³»¿ëÀ» ºñ¿î´Ù.
+//í˜¹ì‹œë‚˜ ìžˆì„ í ì•ˆì— ë©”ì„¸ì§€ ë‚´ìš©ì„ ë¹„ìš´ë‹¤.
 void ClearWindowMessageQueue()
 {
     MSG msg;
@@ -46,7 +46,7 @@ Window* gWindow = nullptr;
 bool Window::WindowRegisterClass(HINSTANCE hInstance, const std::wstring& className)
 {
     gWindow = this;
-    //Ä¸ÃÄ°¡ ÀÖÀ¸¸é( [this]ÇÏ¸é µÉ°Í °°À¸³ª ) WNDPROCÀ¸·Î º¯È¯ÀÌ µÇÁö ¾Ê´Â´Ù. ±×·¡¼­ Á¤Àûº¯¼öÈ°¿ë
+    //ìº¡ì³ê°€ ìžˆìœ¼ë©´( [this]í•˜ë©´ ë ê²ƒ ê°™ìœ¼ë‚˜ ) WNDPROCìœ¼ë¡œ ë³€í™˜ì´ ë˜ì§€ ì•ŠëŠ”ë‹¤. ê·¸ëž˜ì„œ ì •ì ë³€ìˆ˜í™œìš©
     auto windowProc = [](HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)->LRESULT {
         return gWindow->WndProc(hwnd, msg, wParam, lParam);
         };

@@ -9,10 +9,10 @@ std::shared_ptr<MeshAsset> MeshFactory::CreateSphere(float radius, uint32_t slic
     std::vector<MeshVertex> vertices;
     std::vector<uint32_t> indices;
 
-    // sliceCount: ¼¼·Î ºĞÇÒ ¼ö (°æµµ, ÃàÀ» Áß½ÉÀ¸·Î µµ´Â È¸Àü ºĞÇÒ)
-    // stackCount: °¡·Î ºĞÇÒ ¼ö (À§µµ, ºÏ±Ø¿¡¼­ ³²±ØÀ¸·Î ³»·Á°¡´Â Ãş ºĞÇÒ)
+    // sliceCount: ì„¸ë¡œ ë¶„í•  ìˆ˜ (ê²½ë„, ì¶•ì„ ì¤‘ì‹¬ìœ¼ë¡œ ë„ëŠ” íšŒì „ ë¶„í• )
+    // stackCount: ê°€ë¡œ ë¶„í•  ìˆ˜ (ìœ„ë„, ë¶ê·¹ì—ì„œ ë‚¨ê·¹ìœ¼ë¡œ ë‚´ë ¤ê°€ëŠ” ì¸µ ë¶„í• )
 
-    // Á¤Á¡°ú ÀÎµ¦½º °ø°£ ¿¹¾à
+    // ì •ì ê³¼ ì¸ë±ìŠ¤ ê³µê°„ ì˜ˆì•½
     uint32_t vertexCount = (stackCount + 1) * (sliceCount + 1);
     uint32_t indexCount = stackCount * sliceCount * 6;
     vertices.reserve(vertexCount);
@@ -21,43 +21,43 @@ std::shared_ptr<MeshAsset> MeshFactory::CreateSphere(float radius, uint32_t slic
     const float PI = 3.14159265359f;
     const float TWO_PI = 6.28318530718f;
 
-    // 1. Vertex (Á¤Á¡) »ı¼º
+    // 1. Vertex (ì •ì ) ìƒì„±
     for (uint32_t i = 0; i <= stackCount; ++i)
     {
-        // ºÏ±Ø(0)¿¡¼­ ³²±Ø(PI)±îÁöÀÇ °¢µµ (À§µµ)
+        // ë¶ê·¹(0)ì—ì„œ ë‚¨ê·¹(PI)ê¹Œì§€ì˜ ê°ë„ (ìœ„ë„)
         float phi = ((float)i / stackCount) * PI;
         float sinPhi = sinf(phi);
         float cosPhi = cosf(phi);
 
         for (uint32_t j = 0; j <= sliceCount; ++j)
         {
-            // ÇÑ ¹ÙÄû È¸ÀüÇÏ´Â °¢µµ (°æµµ)
+            // í•œ ë°”í€´ íšŒì „í•˜ëŠ” ê°ë„ (ê²½ë„)
             float theta = ((float)j / sliceCount) * TWO_PI;
             float sinTheta = sinf(theta);
             float cosTheta = cosf(theta);
 
             MeshVertex vert;
 
-            // ¹ı¼± º¤ÅÍ (Normal) : ¿øÁ¡¿¡¼­ Á¤Á¡À» ÇâÇÏ´Â ¹æÇâ ´ÜÀ§ º¤ÅÍ
+            // ë²•ì„  ë²¡í„° (Normal) : ì›ì ì—ì„œ ì •ì ì„ í–¥í•˜ëŠ” ë°©í–¥ ë‹¨ìœ„ ë²¡í„°
             vert.nx = sinPhi * cosTheta;
-            vert.ny = cosPhi; // YÃàÀ» À§(Up)·Î Àâ´Â ÀÏ¹İÀûÀÎ 3D °ø°£ ±âÁØ
+            vert.ny = cosPhi; // Yì¶•ì„ ìœ„(Up)ë¡œ ì¡ëŠ” ì¼ë°˜ì ì¸ 3D ê³µê°„ ê¸°ì¤€
             vert.nz = sinPhi * sinTheta;
 
-            // À§Ä¡ ÁÂÇ¥ (Position) : ¹ı¼± º¤ÅÍ¿¡ ¹İÁö¸§À» °öÇÔ
+            // ìœ„ì¹˜ ì¢Œí‘œ (Position) : ë²•ì„  ë²¡í„°ì— ë°˜ì§€ë¦„ì„ ê³±í•¨
             vert.px = radius * vert.nx;
             vert.py = radius * vert.ny;
             vert.pz = radius * vert.nz;
 
-            // UV ÁÂÇ¥
+            // UV ì¢Œí‘œ
             vert.u = (float)j / sliceCount;
             vert.v = (float)i / stackCount;
 
-            // Á¢¼± º¤ÅÍ (Tangent) : U(°æµµ theta)°¡ Áõ°¡ÇÏ´Â ¹æÇâÀ¸·ÎÀÇ Æí¹ÌºĞ º¤ÅÍ
+            // ì ‘ì„  ë²¡í„° (Tangent) : U(ê²½ë„ theta)ê°€ ì¦ê°€í•˜ëŠ” ë°©í–¥ìœ¼ë¡œì˜ í¸ë¯¸ë¶„ ë²¡í„°
             vert.tx = -sinPhi * sinTheta;
             vert.ty = 0.0f;
             vert.tz = sinPhi * cosTheta;
 
-            // Tangent Á¤±ÔÈ­
+            // Tangent ì •ê·œí™”
             float tLen = sqrtf(vert.tx * vert.tx + vert.ty * vert.ty + vert.tz * vert.tz);
             if (tLen > 0.00001f)
             {
@@ -67,7 +67,7 @@ std::shared_ptr<MeshAsset> MeshFactory::CreateSphere(float radius, uint32_t slic
             }
             else
             {
-                // ±ØÁ¡(ºÏ±Ø/³²±Ø)Ã³·³ ¼ö½ÄÀÌ ±úÁö´Â °÷ÀÇ ¿¹¿Ü Ã³¸® ±âº»°ª
+                // ê·¹ì (ë¶ê·¹/ë‚¨ê·¹)ì²˜ëŸ¼ ìˆ˜ì‹ì´ ê¹¨ì§€ëŠ” ê³³ì˜ ì˜ˆì™¸ ì²˜ë¦¬ ê¸°ë³¸ê°’
                 vert.tx = 1.0f; vert.ty = 0.0f; vert.tz = 0.0f;
             }
 
@@ -75,34 +75,34 @@ std::shared_ptr<MeshAsset> MeshFactory::CreateSphere(float radius, uint32_t slic
         }
     }
 
-    // 2. Index (ÀÎµ¦½º) »ı¼º - DirectX Ç¥ÁØ (CW ½Ã°è ¹æÇâ)
-    // ±×¸®µå »óÀÇ Á¤Á¡ ÀÎµ¦½º °è»êÀ» À§ÇØ ÇÑ ÁÙ(¸µ)¿¡ µé¾î°¡´Â Á¤Á¡ ¼ö
+    // 2. Index (ì¸ë±ìŠ¤) ìƒì„± - DirectX í‘œì¤€ (CW ì‹œê³„ ë°©í–¥)
+    // ê·¸ë¦¬ë“œ ìƒì˜ ì •ì  ì¸ë±ìŠ¤ ê³„ì‚°ì„ ìœ„í•´ í•œ ì¤„(ë§)ì— ë“¤ì–´ê°€ëŠ” ì •ì  ìˆ˜
     uint32_t ringVertexCount = sliceCount + 1;
 
     for (uint32_t i = 0; i < stackCount; ++i)
     {
         for (uint32_t j = 0; j < sliceCount; ++j)
         {
-            // »ç°¢ÇüÀ» ÀÌ·ç´Â 4°³ ¸ğ¼­¸®ÀÇ Á¤Á¡ ÀÎµ¦½º ÃßÃâ
+            // ì‚¬ê°í˜•ì„ ì´ë£¨ëŠ” 4ê°œ ëª¨ì„œë¦¬ì˜ ì •ì  ì¸ë±ìŠ¤ ì¶”ì¶œ
             uint32_t current_row_left = i * ringVertexCount + j;
             uint32_t current_row_right = current_row_left + 1;
             uint32_t next_row_left = (i + 1) * ringVertexCount + j;
             uint32_t next_row_right = next_row_left + 1;
 
-            // »ç°¢Çü ¸éÀ» 2°³ÀÇ »ï°¢ÇüÀ¸·Î ÂÉ°³¼­ CW ¼ø¼­·Î Á¶¸³
-            // Ã¹ ¹øÂ° »ï°¢Çü
+            // ì‚¬ê°í˜• ë©´ì„ 2ê°œì˜ ì‚¼ê°í˜•ìœ¼ë¡œ ìª¼ê°œì„œ CW ìˆœì„œë¡œ ì¡°ë¦½
+            // ì²« ë²ˆì§¸ ì‚¼ê°í˜•
             indices.push_back(current_row_left);
             indices.push_back(current_row_right);
             indices.push_back(next_row_left);
 
-            // µÎ ¹øÂ° »ï°¢Çü
+            // ë‘ ë²ˆì§¸ ì‚¼ê°í˜•
             indices.push_back(current_row_right);
             indices.push_back(next_row_right);
             indices.push_back(next_row_left);
         }
     }
 
-    // µ¥ÀÌÅÍ º¹»ç ¹× ÀÌµ¿
+    // ë°ì´í„° ë³µì‚¬ ë° ì´ë™
     mesh->SetVertices(vertices);
     mesh->indices = std::move(indices);
 
@@ -117,50 +117,50 @@ std::shared_ptr<MeshAsset> MeshFactory::CreateCube(float size)
     std::vector<MeshVertex> vertices;
     std::vector<uint32_t> indices;
 
-    // Á¤À°¸éÃ¼ÀÇ ¹İ Áö¸§(Áß½É¿¡¼­ ¸é±îÁöÀÇ °Å¸®)
+    // ì •ìœ¡ë©´ì²´ì˜ ë°˜ ì§€ë¦„(ì¤‘ì‹¬ì—ì„œ ë©´ê¹Œì§€ì˜ ê±°ë¦¬)
     float h = size * 0.5f;
 
-    // 6°³ ¸é Á¤ÀÇ¸¦ À§ÇÑ ±¸Á¶Ã¼ µ¥ÀÌÅÍ
+    // 6ê°œ ë©´ ì •ì˜ë¥¼ ìœ„í•œ êµ¬ì¡°ì²´ ë°ì´í„°
     struct FaceInfo
     {
-        float nx, ny, nz; // ¸éÀÇ Normal
-        float tx, ty, tz; // ¸éÀÇ Tangent
-        float p0[3], p1[3], p2[3], p3[3]; // °¢ ¸éÀÇ 4°³ ¸ğ¼­¸® ÁÂÇ¥ (CCW ¼ø¼­)
+        float nx, ny, nz; // ë©´ì˜ Normal
+        float tx, ty, tz; // ë©´ì˜ Tangent
+        float p0[3], p1[3], p2[3], p3[3]; // ê° ë©´ì˜ 4ê°œ ëª¨ì„œë¦¬ ì¢Œí‘œ (CCW ìˆœì„œ)
     };
 
-    // ÇöÀç »ç¿ë ÁßÀÎ ¿Ş¼Õ ÁÂÇ¥°è ±ÔÄ¢¿¡ ¸ÂÃá 6°³ ¸é Á¤ÀÇ
+    // í˜„ì¬ ì‚¬ìš© ì¤‘ì¸ ì™¼ì† ì¢Œí‘œê³„ ê·œì¹™ì— ë§ì¶˜ 6ê°œ ë©´ ì •ì˜
     FaceInfo faces[6] = {
-        // 1. ¾Õ¸é (Front Face: +Z ¹æÇâÀ» ¹Ù¶óº½)
+        // 1. ì•ë©´ (Front Face: +Z ë°©í–¥ì„ ë°”ë¼ë´„)
         {  0.f,  0.f,  1.f,   1.f,  0.f,  0.f,   { -h, -h,  h }, { -h,  h,  h }, {  h,  h,  h }, {  h, -h,  h } },
-        // 2. µŞ¸é (Back Face: -Z ¹æÇâÀ» ¹Ù¶óº½)
+        // 2. ë’·ë©´ (Back Face: -Z ë°©í–¥ì„ ë°”ë¼ë´„)
         {  0.f,  0.f, -1.f,  -1.f,  0.f,  0.f,   {  h, -h, -h }, {  h,  h, -h }, { -h,  h, -h }, { -h, -h, -h } },
-        // 3. À­¸é (Top Face: +Y ¹æÇâÀ» ¹Ù¶óº½)
+        // 3. ìœ—ë©´ (Top Face: +Y ë°©í–¥ì„ ë°”ë¼ë´„)
         {  0.f,  1.f,  0.f,   1.f,  0.f,  0.f,   { -h,  h,  h }, { -h,  h, -h }, {  h,  h, -h }, {  h,  h,  h } },
-        // 4. ¾Æ·§¸é (Bottom Face: -Y ¹æÇâÀ» ¹Ù¶óº½)
+        // 4. ì•„ë«ë©´ (Bottom Face: -Y ë°©í–¥ì„ ë°”ë¼ë´„)
         {  0.f, -1.f,  0.f,  -1.f,  0.f,  0.f,   { -h, -h, -h }, { -h, -h,  h }, {  h, -h,  h }, {  h, -h, -h } },
-        // 5. ¿ŞÂÊ¸é (Left Face: -X ¹æÇâÀ» ¹Ù¶óº½)
+        // 5. ì™¼ìª½ë©´ (Left Face: -X ë°©í–¥ì„ ë°”ë¼ë´„)
         { -1.f,  0.f,  0.f,   0.f,  0.f,  1.f,   { -h, -h, -h }, { -h,  h, -h }, { -h,  h,  h }, { -h, -h,  h } },
-        // 6. ¿À¸¥ÂÊ¸é (Right Face: +X ¹æÇâÀ» ¹Ù¶óº½)
+        // 6. ì˜¤ë¥¸ìª½ë©´ (Right Face: +X ë°©í–¥ì„ ë°”ë¼ë´„)
         {  1.f,  0.f,  0.f,   0.f,  0.f, -1.f,   {  h, -h,  h }, {  h,  h,  h }, {  h,  h, -h }, {  h, -h, -h } }
     };
 
     vertices.reserve(24);
     indices.reserve(36);
 
-    // °¢ ¸éÀÇ UV ¸ÅÇÎ ±âÁØ ÁÂÇ¥ (»ç°¢ÇüÀÇ ³× ¸ğ¼­¸®)
+    // ê° ë©´ì˜ UV ë§¤í•‘ ê¸°ì¤€ ì¢Œí‘œ (ì‚¬ê°í˜•ì˜ ë„¤ ëª¨ì„œë¦¬)
     float uvs[4][2] = {
-        { 0.f, 1.f }, // ÁÂÃø ÇÏ´Ü
-        { 0.f, 0.f }, // ÁÂÃø »ó´Ü
-        { 1.f, 0.f }, // ¿ìÃø »ó´Ü
-        { 1.f, 1.f }  // ¿ìÃø ÇÏ´Ü
+        { 0.f, 1.f }, // ì¢Œì¸¡ í•˜ë‹¨
+        { 0.f, 0.f }, // ì¢Œì¸¡ ìƒë‹¨
+        { 1.f, 0.f }, // ìš°ì¸¡ ìƒë‹¨
+        { 1.f, 1.f }  // ìš°ì¸¡ í•˜ë‹¨
     };
 
-    // 1. Vertex ¹× Index »ı¼º
+    // 1. Vertex ë° Index ìƒì„±
     for (uint32_t f = 0; f < 6; ++f)
     {
         uint32_t startIndex = static_cast<uint32_t>(vertices.size());
 
-        // ÇÑ ¸é´ç 4°³ÀÇ Á¤Á¡ ¼¼ÆÃ
+        // í•œ ë©´ë‹¹ 4ê°œì˜ ì •ì  ì„¸íŒ…
         float* points[4] = { faces[f].p0, faces[f].p1, faces[f].p2, faces[f].p3 };
 
         for (uint32_t i = 0; i < 4; ++i)
@@ -221,7 +221,7 @@ std::shared_ptr<MeshAsset> MeshFactory::CreateTorus(
 
     const float TWO_PI = 6.28318530718f;
 
-    // 1. Vertex »ı¼º
+    // 1. Vertex ìƒì„±
     for (uint32_t j = 0; j <= radialSegments; ++j)
     {
         float v = (float)j / (float)radialSegments;
@@ -238,7 +238,7 @@ std::shared_ptr<MeshAsset> MeshFactory::CreateTorus(
             float cosTheta = cosf(theta);
             float sinTheta = sinf(theta);
 
-            // Áß½É ¿ø (major circle)
+            // ì¤‘ì‹¬ ì› (major circle)
             float cx = radius * cosPhi;
             float cy = radius * sinPhi;
 
@@ -249,7 +249,7 @@ std::shared_ptr<MeshAsset> MeshFactory::CreateTorus(
             vert.py = (radius + tubeRadius * cosTheta) * sinPhi;
             vert.pz = tubeRadius * sinTheta;
 
-            // normal (center - vertex ¹æÇâ)
+            // normal (center - vertex ë°©í–¥)
             float nx = vert.px - cx;
             float ny = vert.py - cy;
             float nz = vert.pz;
@@ -266,7 +266,7 @@ std::shared_ptr<MeshAsset> MeshFactory::CreateTorus(
             vert.ny = ny;
             vert.nz = nz;
 
-            // Tangent °è»ê: U(theta)°¡ Áõ°¡ÇÏ´Â ¹æÇâÀ¸·ÎÀÇ Æí¹ÌºĞ º¤ÅÍ
+            // Tangent ê³„ì‚°: U(theta)ê°€ ì¦ê°€í•˜ëŠ” ë°©í–¥ìœ¼ë¡œì˜ í¸ë¯¸ë¶„ ë²¡í„°
             float tx = -sinTheta * cosPhi;
             float ty = -sinTheta * sinPhi;
             float tz = cosTheta;
@@ -290,7 +290,7 @@ std::shared_ptr<MeshAsset> MeshFactory::CreateTorus(
         }
     }
 
-    // 2. Index »ı¼º
+    // 2. Index ìƒì„±
     const uint32_t ring = tubularSegments + 1;
 
     for (uint32_t j = 0; j < radialSegments; ++j)
@@ -314,7 +314,7 @@ std::shared_ptr<MeshAsset> MeshFactory::CreateTorus(
         }
     }
 
-    // 3. MeshAsset ¼¼ÆÃ
+    // 3. MeshAsset ì„¸íŒ…
     mesh->SetVertices(vertices);
     mesh->indices = std::move(indices);
 
@@ -332,16 +332,16 @@ std::shared_ptr<MeshAsset> MeshFactory::CreateGrid(
     std::vector<GridVertex> vertices;
     std::vector<uint32_t> indices;
 
-    const uint32_t lineCount = (halfExtent * 2 + 1); // ¶óÀÎ °³¼ö
-    vertices.reserve(lineCount * 4); // °¢ ¶óÀÎÀº vertex 2°³
-    indices.reserve(lineCount * 4); // °¢ ¶óÀÎÀº index 2°³
+    const uint32_t lineCount = (halfExtent * 2 + 1); // ë¼ì¸ ê°œìˆ˜
+    vertices.reserve(lineCount * 4); // ê° ë¼ì¸ì€ vertex 2ê°œ
+    indices.reserve(lineCount * 4); // ê° ë¼ì¸ì€ index 2ê°œ
 
     uint32_t index = 0;
 
     const float min = -static_cast<float>(halfExtent) * cellSize;
     const float max = static_cast<float>(halfExtent) * cellSize;
 
-    // Z ¹æÇâ ¶óÀÎ (¼¼·ÎÁÙ)
+    // Z ë°©í–¥ ë¼ì¸ (ì„¸ë¡œì¤„)
     for (uint32_t i = 0; i < lineCount; ++i)
     {
         float x =
@@ -370,7 +370,7 @@ std::shared_ptr<MeshAsset> MeshFactory::CreateGrid(
         indices.push_back(index++);
     }
 
-    // X ¹æÇâ ¶óÀÎ (°¡·ÎÁÙ)
+    // X ë°©í–¥ ë¼ì¸ (ê°€ë¡œì¤„)
     for (uint32_t i = 0; i < lineCount; ++i)
     {
         float z = min + static_cast<float>(i) * cellSize;

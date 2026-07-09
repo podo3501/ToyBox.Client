@@ -10,7 +10,7 @@ public:
 
     HandlePool()
     {
-        m_slots.emplace_back(); // index 0Àº dummy¸¦ ÇÏ³ª ³Ö¾î¼­ Àı´ë 0 ÀÎµ¦½º°¡ »ı¼ºµÇÁö ¾Ê°Ô ÇÑ´Ù. ¾Æ´Ï¸é ÀÎµ¦½º¿¡ °è»ê½ÄÀÌ µé¾î°¡¾ß ÇÑ´Ù.
+        m_slots.emplace_back(); // index 0ì€ dummyë¥¼ í•˜ë‚˜ ë„£ì–´ì„œ ì ˆëŒ€ 0 ì¸ë±ìŠ¤ê°€ ìƒì„±ë˜ì§€ ì•Šê²Œ í•œë‹¤. ì•„ë‹ˆë©´ ì¸ë±ìŠ¤ì— ê³„ì‚°ì‹ì´ ë“¤ì–´ê°€ì•¼ í•œë‹¤.
     }
 
     template<typename... Args>
@@ -35,7 +35,7 @@ public:
         slot.data.emplace(std::forward<Args>(args)...);
         slot.alive = true;
 
-        return slot.handle; // generationÀº 1 ÀÌ»ó º¸ÀåµÊ
+        return slot.handle; // generationì€ 1 ì´ìƒ ë³´ì¥ë¨
     }
 
     bool Remove(Handle h)
@@ -48,7 +48,7 @@ public:
         slot.alive = false;
 
         slot.generation++;
-        if (slot.generation == 0) slot.generation = 1; // generation Áõ°¡ (0 ¹æÁö)
+        if (slot.generation == 0) slot.generation = 1; // generation ì¦ê°€ (0 ë°©ì§€)
 
         m_freeList.push_back(h.index);
         return true;
@@ -56,7 +56,7 @@ public:
 
     void Clear()
     {
-        for (uint32_t i = 1; i < m_slots.size(); ++i) // 0Àº dummy
+        for (uint32_t i = 1; i < m_slots.size(); ++i) // 0ì€ dummy
         {
             auto& slot = m_slots[i];
 
@@ -139,7 +139,7 @@ private:
     {
         std::optional<T> data;
         Handle handle{ Handle::Invalid() };
-        uint32_t generation = 1; // 0Àº »ç¿ë ¾È ÇÔ
+        uint32_t generation = 1; // 0ì€ ì‚¬ìš© ì•ˆ í•¨
         bool alive = false;
     };
 

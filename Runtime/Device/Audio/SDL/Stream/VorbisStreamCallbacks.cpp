@@ -52,5 +52,5 @@ long Vorbis::TellFunc(void* datasource)
 
 int Vorbis::CloseFunc(void*)
 {
-    return 0; // ½ºÆ®¸² ¼ÒÀ¯±ÇÀº ¿ÜºÎ
+    return 0; // ìŠ¤íŠ¸ë¦¼ ì†Œìœ ê¶Œì€ ì™¸ë¶€
 }

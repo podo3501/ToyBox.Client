@@ -53,7 +53,7 @@ LRESULT AppLoop::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 OnResuming();
             m_suspend = false;
         }
-        else //if (!m_sizemove) //Ã¢À» º¯°æÇÒ¶§ ¾÷µ¥ÀÌÆ® ÇÏµµ·Ï ¼öÁ¤
+        else //if (!m_sizemove) //ì°½ì„ ë³€ê²½í• ë•Œ ì—…ë°ì´íŠ¸ í•˜ë„ë¡ ìˆ˜ì •
         {
             int width = LOWORD(lParam);
             int height = HIWORD(lParam);

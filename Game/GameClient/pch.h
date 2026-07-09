@@ -109,11 +109,11 @@ inline void PIXEndEvent(T*) {}
 #endif
 
 //Tracy Profiler
-//DefineÀ» ¸ÕÀú Á¤ÀÇÇØ ÁÖ¾î¾ß Tracy.hpp°¡ ÄÄÆÄÀÏµÉ¶§ ±×¿¡ ¸Â°Ô ÄÚµå°¡ Àû¿ëµÈ´Ù.
+//Defineì„ ë¨¼ì € ì •ì˜í•´ ì£¼ì–´ì•¼ Tracy.hppê°€ ì»´íŒŒì¼ë ë•Œ ê·¸ì— ë§žê²Œ ì½”ë“œê°€ ì ìš©ëœë‹¤.
 //#define TRACY_ENABLE
-#define TRACY_NO_CODE_TRANSFER //ÄÚµå¸¦ Àü¼ÛÇÏÁö ¾ÊÀ½. Àü¼ÛÇßÀ»¶§ Á¾·á½Ã ½Ã°£ÀÌ ¸¹ÀÌ ¼Ò¿äµÊ
+#define TRACY_NO_CODE_TRANSFER //ì½”ë“œë¥¼ ì „ì†¡í•˜ì§€ ì•ŠìŒ. ì „ì†¡í–ˆì„ë•Œ ì¢…ë£Œì‹œ ì‹œê°„ì´ ë§Žì´ ì†Œìš”ë¨
 #define TRACY_DELAYED_INIT
-#define TRACY_MANUAL_LIFETIME //µÎ ¿É¼ÇÀº profileÇÒ ±¸¿ªÀ» ÁöÁ¤ÇÒ ¼ö ÀÖ°Ô ÇÔ. ÁöÁ¤ÇÏÁö ¾ÊÀ¸¸é ÃøÁ¤½Ã ½Ã°£¼Ò¿ä°¡ Á¶±Ý ´õ ÀÏ¾î³²
+#define TRACY_MANUAL_LIFETIME //ë‘ ì˜µì…˜ì€ profileí•  êµ¬ì—­ì„ ì§€ì •í•  ìˆ˜ ìžˆê²Œ í•¨. ì§€ì •í•˜ì§€ ì•Šìœ¼ë©´ ì¸¡ì •ì‹œ ì‹œê°„ì†Œìš”ê°€ ì¡°ê¸ˆ ë” ì¼ì–´ë‚¨
 #include "Tracy/tracy/Tracy.hpp"
 
 #ifdef TRACY_ENABLE

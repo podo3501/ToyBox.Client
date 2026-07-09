@@ -83,7 +83,7 @@ bool ScrollBar::BindSourceInfo(TextureResourceBinder*) noexcept
 	if (GetSize() == XMUINT2{})
 		SetSize(GetChildrenBoundsSize(this));
 
-	SetScrollContainerSize(0.5f);	//±âº»°ª
+	SetScrollContainerSize(0.5f);	//ê¸°ë³¸ê°’
 	return true;
 }
 
@@ -161,13 +161,13 @@ ReturnType ScrollBar::GetMaxScrollRange() const noexcept
 	return static_cast<ReturnType>(trackSize.y - containerSize.y);
 }
 
-//ÀÌ ÇÔ¼ö´Â ¼¼·Î¸¸ Àû¿ëµÅ ÀÖ´Ù.
+//ì´ í•¨ìˆ˜ëŠ” ì„¸ë¡œë§Œ ì ìš©ë¼ ìˆë‹¤.
 bool ScrollBar::ChangeSize(const XMUINT2& newSize, bool isForce) noexcept
 {
 	float sizeRatio = static_cast<float>(newSize.y) / static_cast<float>(m_scrollTrack->GetSize().y);
 	ReturnIfFalse(UITraverser::ChangeSize(m_scrollTrack, newSize, isForce));
 
-	//Å©±â°¡ ¹Ù²î¸é »ó´ëÀûÀ¸·Î ¹öÆ° Å©±â°¡ Á¤ÇØÁö±â ¶§¹®¿¡ Á¶Á¤µÇ¾î¾ß ÇÑ´Ù.
+	//í¬ê¸°ê°€ ë°”ë€Œë©´ ìƒëŒ€ì ìœ¼ë¡œ ë²„íŠ¼ í¬ê¸°ê°€ ì •í•´ì§€ê¸° ë•Œë¬¸ì— ì¡°ì •ë˜ì–´ì•¼ í•œë‹¤.
 	uint32_t btnHeight = static_cast<uint32_t>(static_cast<float>(m_scrollButton->GetSize().y) * sizeRatio);
 	auto btnSize = XMUINT2{ newSize.x, btnHeight };
 	UITraverser::ChangeSize(m_scrollButton, btnSize, isForce);

@@ -33,7 +33,7 @@ unique_ptr<UIComponent> NameTraverser::AttachComponent(UIComponent* parent,
 	DerivedTraverser derivedTraverser;
 	derivedTraverser.PropagateRoot(child.get(), parent);
 	auto resChild = parent->AttachComponent(move(child), relativePos);
-	if (resChild != nullptr) //attach°¡ µÇÁö ¸øÇß´Ù¸é
+	if (resChild != nullptr) //attachê°€ ë˜ì§€ ëª»í–ˆë‹¤ë©´
 		return resChild;
 
 	derivedTraverser.UpdatePositionsManually(parent, true);
@@ -49,10 +49,10 @@ pair<unique_ptr<UIComponent>, UIComponent*> NameTraverser::DetachComponent(UICom
 	{
 		bool allRemoved = ForEachChildWithRegion(c, GetMyRegion(parent),
 			[nameGen](const string& region, UIComponent* component, bool isNewRegion) {
-				if (nameGen->IsUnusedRegion(region)) //regionÀÌ ¾ø´Â °æ¿ì´Â detach ÇÏ´Ù°¡ ºÎ¸ğ ³ëµå¿¡¼­ regionÀ» Áö¿î °æ¿ìÀÌ´Ù.
+				if (nameGen->IsUnusedRegion(region)) //regionì´ ì—†ëŠ” ê²½ìš°ëŠ” detach í•˜ë‹¤ê°€ ë¶€ëª¨ ë…¸ë“œì—ì„œ regionì„ ì§€ìš´ ê²½ìš°ì´ë‹¤.
 					return true;
 
-				if (isNewRegion) //³ëµå°¡ »õ·Î¿î regionÀÌ¸é 
+				if (isNewRegion) //ë…¸ë“œê°€ ìƒˆë¡œìš´ regionì´ë©´ 
 					return nameGen->RemoveRegion(region);
 				return nameGen->RemoveName(region, component->GetName());
 			});
@@ -78,7 +78,7 @@ UIComponent* NameTraverser::FindComponent(UIComponent* c, const string& name) no
 
 	ForEachChildBool(root, [this, &find, &name, &region](UIComponent* component) {
 		const string& curRegion = component->GetRegion();
-		if (!curRegion.empty() && region != curRegion) return TraverseResult::Stop; //Region ·çÆ®°¡ ¾Æ´Ñ »õ·Î¿î regionÀÌ ³ª¿ÔÀ»¶§ 
+		if (!curRegion.empty() && region != curRegion) return TraverseResult::Stop; //Region ë£¨íŠ¸ê°€ ì•„ë‹Œ ìƒˆë¡œìš´ regionì´ ë‚˜ì™”ì„ë•Œ 
 
 		if (component->GetName() == name)
 		{
@@ -134,10 +134,10 @@ bool NameTraverser::RenameRegion(UIComponent* c, const string& newRegion) noexce
 		return true;
 
 	UIComponent* parentRoot = GetParentRegionRoot(c);
-	if (newRegion == "") // regionÀÌ "" ¶ó¸é ±âÁ¸ regionÀ» »èÁ¦ Ã³¸®ÇÑ´Ù.
+	if (newRegion == "") // regionì´ "" ë¼ë©´ ê¸°ì¡´ regionì„ ì‚­ì œ ì²˜ë¦¬í•œë‹¤.
 		return RemoveAndMergeRegion(nameGen, c, parentRoot, oldRegion);
 
-	//»õ region ÀÌ¸§ÀÌ ÀÌ¹Ì Á¸ÀçÇÏ¸é Áßº¹ Ã³¸®
+	//ìƒˆ region ì´ë¦„ì´ ì´ë¯¸ ì¡´ì¬í•˜ë©´ ì¤‘ë³µ ì²˜ë¦¬
 	if (!nameGen->IsUnusedRegion(newRegion))
 		return false;
 
@@ -158,11 +158,11 @@ void NameTraverser::AssignNamesInRegion(UINameGenerator* nameGen,
 bool NameTraverser::RemoveAndMergeRegion(UINameGenerator* nameGen, UIComponent* c,
 	UIComponent* parentRoot, const string& oldRegion) noexcept
 {
-	// ±âÁ¸ region Á¦°Å
+	// ê¸°ì¡´ region ì œê±°
 	ReturnIfFalse(nameGen->RemoveRegion(oldRegion));
-	c->SetRegion(""); //regionÀ» »èÁ¦ÇÑ´Ù.
+	c->SetRegion(""); //regionì„ ì‚­ì œí•œë‹¤.
 
-	// root ¿©ºÎ¿¡ µû¶ó ÀçÁ¤·Ä ´ë»ó °áÁ¤
+	// root ì—¬ë¶€ì— ë”°ë¼ ì¬ì •ë ¬ ëŒ€ìƒ ê²°ì •
 	UIComponent* target = (c == parentRoot) ? c : parentRoot;
 	const string& targetRegion = target->GetRegion();
 
@@ -174,11 +174,11 @@ bool NameTraverser::RemoveAndMergeRegion(UINameGenerator* nameGen, UIComponent* 
 bool NameTraverser::ReplaceAndMergeRegion(UINameGenerator* nameGen, UIComponent* c,
 	UIComponent* parentRoot, const string& oldRegion, const string& newRegion) noexcept
 {
-	//±âÁ¸ regionÀ» Á¦°ÅÇÏ°í »õ region ÀçÇÒ´ç
+	//ê¸°ì¡´ regionì„ ì œê±°í•˜ê³  ìƒˆ region ì¬í• ë‹¹
 	ReturnIfFalse(nameGen->RemoveRegion(oldRegion));
 	AssignNamesInRegion(nameGen, c, newRegion);
 
-	//ÀÌÀü¿¡ regionÀÌ ¾ø¾ú´ø °æ¿ì »óÀ§µµ °»½Å
+	//ì´ì „ì— regionì´ ì—†ì—ˆë˜ ê²½ìš° ìƒìœ„ë„ ê°±ì‹ 
 	if (oldRegion == "" && c != parentRoot)
 	{
 		string parentRegion = parentRoot->GetRegion();
@@ -209,9 +209,9 @@ bool NameTraverser::ForEachChildWithRegion(UIComponent* c, const string& parentR
 	const auto Traverse = [&](UIComponent* component, const string& inheritedRegion, auto&& self_ref) -> bool {
 		string currentRegion = component->GetRegion().empty() ? inheritedRegion : component->GetRegion();
 		bool isNewRegion{ currentRegion != inheritedRegion };
-		if (!isNewRegion && !component->GetRegion().empty()) // regionÀÌ °°´õ¶óµµ, component°¡ regionÀ» "¸í½ÃÀûÀ¸·Î" ÁöÁ¤Çß´Ù¸é »õ regionÀ¸·Î °£ÁÖ
+		if (!isNewRegion && !component->GetRegion().empty()) // regionì´ ê°™ë”ë¼ë„, componentê°€ regionì„ "ëª…ì‹œì ìœ¼ë¡œ" ì§€ì •í–ˆë‹¤ë©´ ìƒˆ regionìœ¼ë¡œ ê°„ì£¼
 			isNewRegion = true;
-		ReturnIfFalse(Func(currentRegion, component, isNewRegion)); //»õ·Î¿î regionÀ» »ı¼ºÇÏ·Á¸é isNewRegionÀº true
+		ReturnIfFalse(Func(currentRegion, component, isNewRegion)); //ìƒˆë¡œìš´ regionì„ ìƒì„±í•˜ë ¤ë©´ isNewRegionì€ true
 
 		const string& updatedRegion = component->GetRegion();
 		const string nextRegion = updatedRegion.empty() ? currentRegion : updatedRegion;
@@ -244,10 +244,10 @@ void NameTraverser::ForEachChildInSameRegion(UIComponent* c, const function<void
 
 UIComponent* NameTraverser::GetRegionRoot(UIComponent* c) const noexcept
 {
-	while (c->GetRegion().empty()) //°ªÀÌ ÀÖÀ¸¸é RegionRoot ÀÌ´Ù.
+	while (c->GetRegion().empty()) //ê°’ì´ ìˆìœ¼ë©´ RegionRoot ì´ë‹¤.
 	{
 		auto parent = c->GetParent();
-		if (!parent) break; //³¡±îÁö ¿Ã¶ó°¡¼­ ¾øÀ¸¸é root ¸¦ ¸®ÅÏ
+		if (!parent) break; //ëê¹Œì§€ ì˜¬ë¼ê°€ì„œ ì—†ìœ¼ë©´ root ë¥¼ ë¦¬í„´
 		c = parent;
 	}
 

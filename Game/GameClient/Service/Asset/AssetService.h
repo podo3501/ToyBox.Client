@@ -25,8 +25,8 @@ private:
 	void StopWorkers();
 	void ThreadLoop();
 
-	std::unique_ptr<AssetRepository> m_repository{ nullptr }; //ÇÏ³ªÀÇ ÆÄÀÏÀ» ·Îµù.
-	std::unique_ptr<AssetAsyncLoader> m_asyncLoader{ nullptr }; //¾²·¹µå¸¦ ÅëÇØ¼­ ·Îµù
+	std::unique_ptr<AssetRepository> m_repository{ nullptr }; //í•˜ë‚˜ì˜ íŒŒì¼ì„ ë¡œë”©.
+	std::unique_ptr<AssetAsyncLoader> m_asyncLoader{ nullptr }; //ì“°ë ˆë“œë¥¼ í†µí•´ì„œ ë¡œë”©
 
 	std::vector<std::thread> m_threads;
 	std::atomic<int> m_activeJobs{ 0 };

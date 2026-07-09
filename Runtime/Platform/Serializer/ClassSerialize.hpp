@@ -3,8 +3,8 @@
 #include "Format/KeyConverter.hpp"
 #include "Concepts.h"
 
-//»õ·Î¿î Serialize¸¦ »ç¿ëÇÏ´Â Å¬·¡½º¸¦ ¸¸µé¸é ¿©±â¼­ ExtensionÀ» ¸¸µé¾î¼­ »ç¿ëÇÑ´Ù.
-//SerializeClass ¹× DeserializeClass ÇÔ¼ö¸¦ °¢ Å¬·¡½º¿¡ ¸Â°Ô Á¤ÀÇÇØ¼­ ÆÄÀÏÀ» ¸¸µç´Ù.
+//ìƒˆë¡œìš´ Serializeë¥¼ ì‚¬ìš©í•˜ëŠ” í´ë˜ìŠ¤ë¥¼ ë§Œë“¤ë©´ ì—¬ê¸°ì„œ Extensionì„ ë§Œë“¤ì–´ì„œ ì‚¬ìš©í•œë‹¤.
+//SerializeClass ë° DeserializeClass í•¨ìˆ˜ë¥¼ ê° í´ë˜ìŠ¤ì— ë§ê²Œ ì •ì˜í•´ì„œ íŒŒì¼ì„ ë§Œë“ ë‹¤.
 
 template<typename T>
 inline void SerializeClass_GenerateJson(nlohmann::json& outData, T& data)

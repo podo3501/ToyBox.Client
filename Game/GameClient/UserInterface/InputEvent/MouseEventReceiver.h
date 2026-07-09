@@ -6,7 +6,7 @@ class MouseEventReceiver
 public:
 	virtual ~MouseEventReceiver() = default;
 	virtual void OnNormal() noexcept;
-	virtual InputResult OnHover() noexcept; //¹Ø¿¡ ÄÄÆ÷³ÍÆ®±îÁö ÀÌº¥Æ®¸¦ ³Ñ°ÜÁÖÁö ¾Ê´Â´Ù. ¿¹¸¦µé¸é OnHover »ç¿îµå°¡ Áßº¹ÇØ¼­ ³¯ ¼ö ÀÖ´Ù.
+	virtual InputResult OnHover() noexcept; //ë°‘ì— ì»´í¬ë„ŒíŠ¸ê¹Œì§€ ì´ë²¤íŠ¸ë¥¼ ë„˜ê²¨ì£¼ì§€ ì•ŠëŠ”ë‹¤. ì˜ˆë¥¼ë“¤ë©´ OnHover ì‚¬ìš´ë“œê°€ ì¤‘ë³µí•´ì„œ ë‚  ìˆ˜ ìˆë‹¤.
 	virtual void OnMove(const DirectX::XMINT2& pos) noexcept;
 	virtual InputResult OnPress(const DirectX::XMINT2& pos) noexcept;
 	virtual void OnHold(const DirectX::XMINT2& pos, bool inside) noexcept;

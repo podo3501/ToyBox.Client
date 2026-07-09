@@ -1,11 +1,11 @@
 #include "pch.h"
 #include "InputManager.h"
 
-//¼Óµµ¸¦ À§ÇØ¼­ function´ë½Å¿¡ ÇÔ¼ö Æ÷ÀÎÅÍ¸¦ »ç¿ëÇÔ
+//ì†ë„ë¥¼ ìœ„í•´ì„œ functionëŒ€ì‹ ì— í•¨ìˆ˜ í¬ì¸í„°ë¥¼ ì‚¬ìš©í•¨
 using InputActionFunc = bool(*)(const Keyboard::KeyboardStateTracker&, Keyboard::Keys);
 constexpr InputActionFunc KeyboardActions[] =
 {
-    [](const Keyboard::KeyboardStateTracker&, Keyboard::Keys) { return false; },   //Å°º¸µå¿¡´Â UP¿¡ ´ëÇÑ ÇÔ¼ö°¡ ¾øÀ½.
+    [](const Keyboard::KeyboardStateTracker&, Keyboard::Keys) { return false; },   //í‚¤ë³´ë“œì—ëŠ” UPì— ëŒ€í•œ í•¨ìˆ˜ê°€ ì—†ìŒ.
     [](const Keyboard::KeyboardStateTracker& keyboard, Keyboard::Keys key) { return keyboard.GetLastState().IsKeyDown(key); },
     [](const Keyboard::KeyboardStateTracker& keyboard, Keyboard::Keys key) { return keyboard.IsKeyReleased(key); },
     [](const Keyboard::KeyboardStateTracker& keyboard, Keyboard::Keys key) { return keyboard.IsKeyPressed(key); }
@@ -13,7 +13,7 @@ constexpr InputActionFunc KeyboardActions[] =
 
 /////////////////////////////////////////////////////////////////////////////
 
-//¼Óµµ¸¦ À§ÇØ ÇÔ¼ö Æ÷ÀÎÅÍ·Î ±¸ÇöÇÔ.
+//ì†ë„ë¥¼ ìœ„í•´ í•¨ìˆ˜ í¬ì¸í„°ë¡œ êµ¬í˜„í•¨.
 using MouseButtonStateChecker = bool(*)(const Mouse::ButtonStateTracker&, Mouse::ButtonStateTracker::ButtonState);
 static bool CheckMouseLeftButton(const Mouse::ButtonStateTracker& tracker, Mouse::ButtonStateTracker::ButtonState state) noexcept {
     return tracker.leftButton == state;
@@ -29,7 +29,7 @@ static bool CheckMouseMiddleButton(const Mouse::ButtonStateTracker& tracker, Mou
 
 static inline Mouse::ButtonStateTracker::ButtonState GetMouseKeyState(InputKeyState inputState)
 {
-    //µÎ enumÀÇ °ªÀÌ µ¿ÀÏÇÏ´Ù.
+    //ë‘ enumì˜ ê°’ì´ ë™ì¼í•˜ë‹¤.
     return static_cast<Mouse::ButtonStateTracker::ButtonState>(inputState);
 }
 
@@ -49,7 +49,7 @@ static bool IsMouseButtonState(
 
 /////////////////////////////////////////////////////////////////////////////
 
-//Å°º¸µå¿Í ¸¶¿ì½º´Â ÇÑ¹ø¸¸ »ı¼ºµÇ¾î¾ß ÇÏ±â ¶§¹®¿¡ ÀÌ·¸°Ô »ı¼ºÇÑ´Ù.
+//í‚¤ë³´ë“œì™€ ë§ˆìš°ìŠ¤ëŠ” í•œë²ˆë§Œ ìƒì„±ë˜ì–´ì•¼ í•˜ê¸° ë•Œë¬¸ì— ì´ë ‡ê²Œ ìƒì„±í•œë‹¤.
 //DirectX::Keyboard g_keyboard;
 //DirectX::Mouse g_mouse;
 
@@ -94,7 +94,7 @@ bool InputManager::IsInputAction(Keyboard::Keys key, InputKeyState inputState) n
 
 bool InputManager::IsInputAction(Keyboard::Keys key, MouseButtonState mouseButton) noexcept
 {
-    //¾Õ Å°´Â hold ÇÏ°í µÚ¿¡´Â pressed¸¦ ÇØ¾ß ÇÑ´Ù. µÑ´Ù pressed¸¦ ÇÏ¸é µ¿½Ã¿¡ ´­·¯¾ß ÇÏ±â ¶§¹®¿¡ Å°°¡ ¾È ¸ÔÈù´Ù.
+    //ì• í‚¤ëŠ” hold í•˜ê³  ë’¤ì—ëŠ” pressedë¥¼ í•´ì•¼ í•œë‹¤. ë‘˜ë‹¤ pressedë¥¼ í•˜ë©´ ë™ì‹œì— ëˆŒëŸ¬ì•¼ í•˜ê¸° ë•Œë¬¸ì— í‚¤ê°€ ì•ˆ ë¨¹íŒë‹¤.
     return IsInputAction(key, InputKeyState::Held) && IsInputAction(mouseButton, InputKeyState::Pressed);
 }
 
@@ -104,9 +104,9 @@ bool InputManager::IsInputAction(Keyboard::Keys firstKey, Keyboard::Keys secondK
     bool secondKeyPressed = IsInputAction(secondKey, InputKeyState::Pressed);
 
     return firstKeyHeld && secondKeyPressed;
-    //´­¸®°í ÀÖÀ»¶§ ³Ê¹« »¡¸® ÀÌº¥Æ®°¡ µé¾î°£´Ù. ±×·¡¼­ ½Ã°£ Áö¿¬À» ÁÙ »ı°¢ÀÌ¾ú´Âµ¥ ´­·¶À»¶§¿Í ´­¸®°í ÀÖ
-    //À»¶§ µÎ°³ÀÇ ½Ã°£°£°İÀÌ ¾ø¾î¼­ ÇÑ¹ø¾¿ ´©¸£±â°¡ ¾î·Æ°Ô µÈ´Ù. ÀÏ´ÜÀº ÇÏ³ª¾¿ ÇÏ´Â °É·Î ÇÏ°í ÃßÈÄ¿¡ ÀÌ
-    //ºÎºĞÀ» °³¼±ÇØ¼­ °è¼Ó Å°¸¦ ´­·¶À»¶§ °£°İ°ú, ´­·¶À» ¶§ ´­¸®°í ÀÖÀ»¶§ ÀÌ »çÀÌÀÇ °£°İÀ» ÁöÁ¤ÇÏ°Ô²û ±¸ÇöÇÏÀÚ.
+    //ëˆŒë¦¬ê³  ìˆì„ë•Œ ë„ˆë¬´ ë¹¨ë¦¬ ì´ë²¤íŠ¸ê°€ ë“¤ì–´ê°„ë‹¤. ê·¸ë˜ì„œ ì‹œê°„ ì§€ì—°ì„ ì¤„ ìƒê°ì´ì—ˆëŠ”ë° ëˆŒë €ì„ë•Œì™€ ëˆŒë¦¬ê³  ìˆ
+    //ì„ë•Œ ë‘ê°œì˜ ì‹œê°„ê°„ê²©ì´ ì—†ì–´ì„œ í•œë²ˆì”© ëˆ„ë¥´ê¸°ê°€ ì–´ë µê²Œ ëœë‹¤. ì¼ë‹¨ì€ í•˜ë‚˜ì”© í•˜ëŠ” ê±¸ë¡œ í•˜ê³  ì¶”í›„ì— ì´
+    //ë¶€ë¶„ì„ ê°œì„ í•´ì„œ ê³„ì† í‚¤ë¥¼ ëˆŒë €ì„ë•Œ ê°„ê²©ê³¼, ëˆŒë €ì„ ë•Œ ëˆŒë¦¬ê³  ìˆì„ë•Œ ì´ ì‚¬ì´ì˜ ê°„ê²©ì„ ì§€ì •í•˜ê²Œë” êµ¬í˜„í•˜ì.
 }
 
 bool InputManager::IsInputAction(MouseButtonState mouseButton, InputKeyState inputState) noexcept

@@ -13,14 +13,19 @@ void RenderScene::AddSurface(const DrawItem& item)
     {
     case MaterialDomain::Surface: m_surfaceDraws.push_back(newItem); break;
     case MaterialDomain::DebugSurface: m_debugSurfaceDraws.push_back(newItem); break;
-    default: Assert(false); break; //¿©±ä surface Á¾·ù¸¸ È£ÃâÇØ¾ß ÇÑ´Ù.
+    default: Assert(false); break; //ì—¬ê¸´ surface ì¢…ë¥˜ë§Œ í˜¸ì¶œí•´ì•¼ í•œë‹¤.
     }
+}
+
+void RenderScene::AddUI(const std::vector<DrawUIItem>& uiItems)
+{
+    m_uiDraws.insert(m_uiDraws.end(), uiItems.begin(), uiItems.end());
 }
 
 void RenderScene::AddUI(const DrawUIItem& uiItem)
 {
-    //UI Batching & Layer Breaking ¹®Á¦°¡ ÀÖ±â ¶§¹®¿¡ z-order °ªÀ» ¸¸µé°í ±×°ÍÀ» ³Ö¾îÁÖ¸é ±× z°ªÀ¸·Î sorting ÇØ¾ß ÇÑ´Ù.
-    //sorting ÈÄ batch°¡ °¡´ÉÇÏ¸é batch ÇØ ÁÖ±â.
+    //UI Batching & Layer Breaking ë¬¸ì œê°€ ìˆê¸° ë•Œë¬¸ì— z-order ê°’ì„ ë§Œë“¤ê³  ê·¸ê²ƒì„ ë„£ì–´ì£¼ë©´ ê·¸ zê°’ìœ¼ë¡œ sorting í•´ì•¼ í•œë‹¤.
+    //sorting í›„ batchê°€ ê°€ëŠ¥í•˜ë©´ batch í•´ ì£¼ê¸°.
     auto material = static_cast<MaterialResource*>(uiItem.material.get());
     m_uiDraws.push_back(uiItem);
 }

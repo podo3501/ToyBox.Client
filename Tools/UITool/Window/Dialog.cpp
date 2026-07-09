@@ -30,7 +30,7 @@ bool Dialog::ShowFileDialog(wstring& filename, FileDialogType type)
         return false;
 
     IFileDialog* pFileDialog = nullptr;
-    // ÆÄÀÏ ¿­±â ´ëÈ­»óÀÚ »ı¼º
+    // íŒŒì¼ ì—´ê¸° ëŒ€í™”ìƒì ìƒì„±
     if (type == FileDialogType::Open)
     {
         if (!IsSuccess(CoCreateInstance(CLSID_FileOpenDialog, nullptr, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&pFileDialog))))
@@ -51,7 +51,7 @@ bool Dialog::ShowFileDialog(wstring& filename, FileDialogType type)
     if (type == FileDialogType::Save)
         pFileDialog->SetFileName(L"untitled.json");
 
-    //// ÃÊ±â Æú´õ ¼³Á¤
+    //// ì´ˆê¸° í´ë” ì„¤ì •
     //wstring initialPath = L"D:\\ProgrammingStudy\\ToyBox\\Resources\\Tool";
     //wstring initialPath = std::filesystem::current_path().wstring();
     //if (!initialPath.empty()) 
@@ -62,7 +62,7 @@ bool Dialog::ShowFileDialog(wstring& filename, FileDialogType type)
     //    }
     //}
 
-    // ´ëÈ­»óÀÚ Ç¥½Ã
+    // ëŒ€í™”ìƒì í‘œì‹œ
     if (!IsSuccess(pFileDialog->Show(nullptr)))
         return false;
     
@@ -97,7 +97,7 @@ void Dialog::Render() noexcept
         ImGui::OpenPopup(strDialogType.c_str());
     }
 
-    // ´ÙÀÌ¾ó·Î±× Á¤ÀÇ
+    // ë‹¤ì´ì–¼ë¡œê·¸ ì •ì˜
     if (!ImGui::BeginPopupModal(strDialogType.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
         return;
     

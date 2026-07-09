@@ -27,13 +27,13 @@ TextureInfo::TextureInfo(TextureInfo&& other) noexcept :
     AddRef();
 }
 
-//stlÀº ±âº»ÀÌ ´ëÀÔ º¹»çÀÎµ¥, ÀÌ¶§´Â »ı¼ºÀÚ°¡ È£ÃâÀÌ ¾ÈµÇ¹Ç·Î »ı¼ºÀÚ¿¡¼­ Ã³¸®ÇÑ °Ô ÀÖ´Ù¸é ¿©±â¼­µµ ÇØ Áà¾ß ÇÑ´Ù.
+//stlì€ ê¸°ë³¸ì´ ëŒ€ì… ë³µì‚¬ì¸ë°, ì´ë•ŒëŠ” ìƒì„±ìê°€ í˜¸ì¶œì´ ì•ˆë˜ë¯€ë¡œ ìƒì„±ìì—ì„œ ì²˜ë¦¬í•œ ê²Œ ìˆë‹¤ë©´ ì—¬ê¸°ì„œë„ í•´ ì¤˜ì•¼ í•œë‹¤.
 TextureInfo& TextureInfo::operator=(const TextureInfo& o) noexcept
 {
-    Release(); //±âÁ¸ÀÇ ÅØ½ºÃÄ¸¦ ¸±¸®ÁîÇÏ°í
+    Release(); //ê¸°ì¡´ì˜ í…ìŠ¤ì³ë¥¼ ë¦´ë¦¬ì¦ˆí•˜ê³ 
     tie(m_texLoader, m_index, m_gfxOffset) = tie(o.m_texLoader, o.m_index, o.m_gfxOffset);
 
-    AddRef(); //»õ·Î¿î ÅØ½ºÃÄ¸¦ Add ÇÑ´Ù.
+    AddRef(); //ìƒˆë¡œìš´ í…ìŠ¤ì³ë¥¼ Add í•œë‹¤.
     return *this;
 }
 

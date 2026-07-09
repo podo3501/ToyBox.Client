@@ -1,6 +1,7 @@
 #pragma once
 #include "Platform/Serializer/Format/TraitsHelper.hpp"
-// Rectangle Àü¿ë Ãß°¡ ÇÊµå Ã³¸® ÇïÆÛ
+
+// Rectangle ì „ìš© ì¶”ê°€ í•„ë“œ ì²˜ë¦¬ í—¬í¼
 inline nlohmann::json SerializeRectExtra(const Rectangle& data, nlohmann::json j)
 {
 	j["width"] = data.width;

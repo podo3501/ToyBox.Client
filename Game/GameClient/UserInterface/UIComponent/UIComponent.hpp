@@ -7,25 +7,25 @@ TargetType ComponentCast(UIComponent* component)
 	ComponentID typeId = component->GetTypeID();
 	if (typeId == ComponentID::Unknown) return nullptr;
 
-	using NonPointerTargetType = typename std::remove_pointer<TargetType>::type; //TargetÅ¸ÀÔÀÌ Button* ÀÌ·¸°Ô Æ÷ÀÎÅÍ·Î ³Ñ¾î¿À±â ¶§¹®¿¡ *¸¦ ¶¼¾î³¿
+	using NonPointerTargetType = typename std::remove_pointer<TargetType>::type; //Targetíƒ€ì…ì´ Button* ì´ë ‡ê²Œ í¬ì¸í„°ë¡œ ë„˜ì–´ì˜¤ê¸° ë•Œë¬¸ì— *ë¥¼ ë–¼ì–´ëƒ„
 	if (typeId == NonPointerTargetType::GetTypeStatic())
 		return static_cast<TargetType>(component);
 
 	return nullptr;
 }
 
-//ÆÄ»ı vs ºÎ¸ğ, ºÎ¸ğ vs ÆÄ»ı, ÆÄ»ı vs ÆÄ»ı ºñ±³ ÇÒ ¼ö ÀÖ°Ô²û ÇïÆÛ ÇÔ¼ö.
+//íŒŒìƒ vs ë¶€ëª¨, ë¶€ëª¨ vs íŒŒìƒ, íŒŒìƒ vs íŒŒìƒ ë¹„êµ í•  ìˆ˜ ìˆê²Œë” í—¬í¼ í•¨ìˆ˜.
 template<typename L, typename R>
 bool CompareDerived(const L* lhs, const R* rhs)
 {
-	static_assert(std::is_base_of_v<UIComponent, L>, "CompareDerived: LÀº UIComponent ÆÄ»ıÀÌ¾î¾ß ÇÔ");
-	static_assert(std::is_base_of_v<UIComponent, R>, "CompareDerived: RÀº UIComponent ÆÄ»ıÀÌ¾î¾ß ÇÔ");
+	static_assert(std::is_base_of_v<UIComponent, L>, "CompareDerived: Lì€ UIComponent íŒŒìƒì´ì–´ì•¼ í•¨");
+	static_assert(std::is_base_of_v<UIComponent, R>, "CompareDerived: Rì€ UIComponent íŒŒìƒì´ì–´ì•¼ í•¨");
 
 	if (lhs->GetTypeID() != rhs->GetTypeID()) return false;
 	if (!lhs && !rhs) return true;
 	if (!lhs || !rhs) return false;
 
-	//ºÎ¸ğÀÎ UIComponent&·Î ¾÷Ä³½ºÆÃ ÈÄ ºñ±³
+	//ë¶€ëª¨ì¸ UIComponent&ë¡œ ì—…ìºìŠ¤íŒ… í›„ ë¹„êµ
 	bool result = static_cast<const UIComponent&>(*lhs) ==
 		static_cast<const UIComponent&>(*rhs);
 	Assert(result);
@@ -38,7 +38,7 @@ bool CompareDerived(const unique_ptr<L>& lhs, const unique_ptr<R>& rhs)
 	return CompareDerived(lhs.get(), rhs.get());
 }
 
-//SetupÇÔ¼ö°¡ ÀÖ¾î¾ß ÇÏ¸ç ÀÎÀÚ°¡ ÀÏÄ¡ ÇØ¾ß ÇÑ´Ù. Args´Â ¾Ï¹¬Àû Ä³½ºÆÃÀÌ µÇÁö ¾Ê´Â´Ù.
+//Setupí•¨ìˆ˜ê°€ ìˆì–´ì•¼ í•˜ë©° ì¸ìê°€ ì¼ì¹˜ í•´ì•¼ í•œë‹¤. ArgsëŠ” ì•”ë¬µì  ìºìŠ¤íŒ…ì´ ë˜ì§€ ì•ŠëŠ”ë‹¤.
 template<typename T, typename... Args>
 unique_ptr<T> CreateComponent(Args&&... args)
 {

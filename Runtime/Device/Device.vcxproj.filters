@@ -100,6 +100,9 @@
     <Filter Include="Render\DX12\Resource\Font">
       <UniqueIdentifier>{e4bef0ba-1a47-4b30-bd51-f4a4ec72aaa3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Render\DX12\TextSystem">
+      <UniqueIdentifier>{ad316f76-0d62-43ae-b0f5-591bab1b6140}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Storage\JsonObjectIO.h">
@@ -418,6 +421,21 @@
     <ClInclude Include="Asset\Loader\Graphics\FontLoader.h">
       <Filter>Asset\Loader\Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="Render\DX12\TextSystem\TextSystem.h">
+      <Filter>Render\DX12\TextSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\TextSystem\FontAtlas.h">
+      <Filter>Render\DX12\TextSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\TextSystem\GlyphCache.h">
+      <Filter>Render\DX12\TextSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\TextSystem\TextTypes.h">
+      <Filter>Render\DX12\TextSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\TextSystem\AtlasPacker.h">
+      <Filter>Render\DX12\TextSystem</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -678,6 +696,18 @@
     </ClCompile>
     <ClCompile Include="Asset\Loader\Graphics\FontLoader.cpp">
       <Filter>Asset\Loader\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\TextSystem\TextSystem.cpp">
+      <Filter>Render\DX12\TextSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\TextSystem\FontAtlas.cpp">
+      <Filter>Render\DX12\TextSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\TextSystem\GlyphCache.cpp">
+      <Filter>Render\DX12\TextSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\TextSystem\AtlasPacker.cpp">
+      <Filter>Render\DX12\TextSystem</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

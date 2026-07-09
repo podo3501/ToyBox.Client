@@ -4,7 +4,7 @@
 #include <type_traits>
 #include <utility>
 
-namespace StlExtDetail //ÀÌ¿ÕÀÌ¸é StlUtil¿¡¼­¸¸ ¾µ·Á°í namespace ÇÔ.
+namespace StlExtDetail //ì´ì™•ì´ë©´ StlUtilì—ì„œë§Œ ì“¸ë ¤ê³  namespace í•¨.
 {
 	template<typename T>
 	struct IsSmartPointer : std::false_type {};
@@ -15,14 +15,14 @@ namespace StlExtDetail //ÀÌ¿ÕÀÌ¸é StlUtil¿¡¼­¸¸ ¾µ·Á°í namespace ÇÔ.
 	template<typename T>
 	struct IsSmartPointer<shared_ptr<T>> : std::true_type {};
 
-	// traits ±âº» ÅÛÇÃ¸´Àº Á¤ÀÇÇÏÁö ¾ÊÀ½(ÄÄÆÄÀÏ ¿¡·¯ À¯µµ)
+	// traits ê¸°ë³¸ í…œí”Œë¦¿ì€ ì •ì˜í•˜ì§€ ì•ŠìŒ(ì»´íŒŒì¼ ì—ëŸ¬ ìœ ë„)
 	template<typename SmartPtr>
 	struct SmartMake
 	{
 		static_assert(sizeof(SmartPtr) == 0, "SmartMake is not specialized for this type.");
 	};
 
-	// unique_ptr Æ¯¼öÈ­
+	// unique_ptr íŠ¹ìˆ˜í™”
 	template<typename T>
 	struct SmartMake<unique_ptr<T>>
 	{
@@ -33,7 +33,7 @@ namespace StlExtDetail //ÀÌ¿ÕÀÌ¸é StlUtil¿¡¼­¸¸ ¾µ·Á°í namespace ÇÔ.
 		}
 	};
 
-	// shared_ptr Æ¯¼öÈ­
+	// shared_ptr íŠ¹ìˆ˜í™”
 	template<typename T>
 	struct SmartMake<shared_ptr<T>>
 	{

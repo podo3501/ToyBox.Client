@@ -20,7 +20,7 @@ using namespace UIDetailTraverser;
 int UserInterfaceWindow::m_uiWindowIndex = 0;
 UserInterfaceWindow::~UserInterfaceWindow()
 {
-	InputLocator::Provide(m_inputManager); //null inputÀ¸·Î Á¾·áµÇ¸é ´ÙÀ½¿¡ Ã¢À» ¿­¶§ ¹®Á¦°¡ µÈ´Ù.
+	InputLocator::Provide(m_inputManager); //null inputìœ¼ë¡œ ì¢…ë£Œë˜ë©´ ë‹¤ìŒì— ì°½ì„ ì—´ë•Œ ë¬¸ì œê°€ ëœë‹¤.
 	ReleaseUIModule(GetName());
 	m_imguiRegistry->RemoveComponent(this);
 }
@@ -31,8 +31,8 @@ UserInterfaceWindow::UserInterfaceWindow(IResourceManager* resManager, IRenderer
 	m_renderer{ renderer },
 	m_imguiRegistry{ imguiRegistry }
 {
-	//inputManager¸¦ nullInputManager·Î ´ëÃ¼ÇØ¼­ ¸¶¿ì½º°¡ client ÄÚµå¸¸ ¹İÀÀÇÏÁö ¾Êµµ·Ï ÇÑ´Ù.
-	//ÅøÀÇ ¸¶¿ì½º´Â ToolInputManager¸¦ ÅëÇØ¼­ ¹İÀÀÇÏ°Ô µÈ´Ù. 
+	//inputManagerë¥¼ nullInputManagerë¡œ ëŒ€ì²´í•´ì„œ ë§ˆìš°ìŠ¤ê°€ client ì½”ë“œë§Œ ë°˜ì‘í•˜ì§€ ì•Šë„ë¡ í•œë‹¤.
+	//íˆ´ì˜ ë§ˆìš°ìŠ¤ëŠ” ToolInputManagerë¥¼ í†µí•´ì„œ ë°˜ì‘í•˜ê²Œ ëœë‹¤. 
 	m_inputManager = InputLocator::GetService();
 	m_nullInputManager = CreateNullInputManager();
 	InputLocator::Provide(m_nullInputManager.get());
@@ -53,7 +53,7 @@ bool UserInterfaceWindow::SetupProperty(UIModule* uiModule)
 
 	unique_ptr<UIModuleAsComponent> asComponent = CreateComponent<UIModuleAsComponent>(uiModule);
 	m_mainRenderTexture = CreateComponent<RenderTexture>(move(asComponent));
-	ReturnIfFalse(BindTextureSourceInfo(m_mainRenderTexture.get(), nullptr)); //¸ğµâ¾È¿¡ resBinder°¡ ÀÖ±â ¶§¹®¿¡ ÀÌ°ÍÀº nullptr·Î ÇÑ´Ù.
+	ReturnIfFalse(BindTextureSourceInfo(m_mainRenderTexture.get(), nullptr)); //ëª¨ë“ˆì•ˆì— resBinderê°€ ìˆê¸° ë•Œë¬¸ì— ì´ê²ƒì€ nullptrë¡œ í•œë‹¤.
 
 	ToggleToolMode();
 	m_isOpen = true;
@@ -154,8 +154,8 @@ void UserInterfaceWindow::Update(const DX::StepTimer& timer)
 	if (!m_window) return;
 	
 	auto toolInput = ToolInputLocator::GetService();
-	CheckWindowMoved(toolInput); //?!? Check¶ó´Â ÀÌ¸§À» ¾²´Ï±î Á» ¾î»öÇÏ´Ù bool °ªÀ» ¸®ÅÏÇÏ´Â ÀÌ¸§ÀÌ¶ó.
-	CheckWindowResized(toolInput); //Ã¢ÀÌ º¯ÇßÀ»¶§ RenderTexture¸¦ ´Ù½Ã ¸¸µé¾îÁØ´Ù.
+	CheckWindowMoved(toolInput); //?!? Checkë¼ëŠ” ì´ë¦„ì„ ì“°ë‹ˆê¹Œ ì¢€ ì–´ìƒ‰í•˜ë‹¤ bool ê°’ì„ ë¦¬í„´í•˜ëŠ” ì´ë¦„ì´ë¼.
+	CheckWindowResized(toolInput); //ì°½ì´ ë³€í–ˆì„ë•Œ RenderTextureë¥¼ ë‹¤ì‹œ ë§Œë“¤ì–´ì¤€ë‹¤.
 	CheckActiveUpdate(toolInput);
 		
 	m_controller->Update();
@@ -195,7 +195,7 @@ void UserInterfaceWindow::HandleMouseEvents()
 		Tool::MouseCursor::Render();
 }
 
-void UserInterfaceWindow::ShowStatusBar() const//»óÅÂ Ç¥½ÃÁÙ(ÀÓ½Ã)
+void UserInterfaceWindow::ShowStatusBar() const//ìƒíƒœ í‘œì‹œì¤„(ì„ì‹œ)
 {
 	if (m_isTool)
 	{

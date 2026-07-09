@@ -37,11 +37,11 @@ void PatchTextureStd3::SetDirectionType(DirectionType dirType) noexcept
 
 bool PatchTextureStd3::Setup(const UILayout& layout, DirectionType dirType, const string& bindKey, size_t sourceIndex) noexcept
 {
-    SetLayout({ layout.GetSize(), Origin::LeftTop }); //?!? LeftTopÀÌ °íÁ¤ÀÎµ¥ ÀÌ°Å ¼ÕºÁ¾ß ÇÒµí
+    SetLayout({ layout.GetSize(), Origin::LeftTop }); //?!? LeftTopì´ ê³ ì •ì¸ë° ì´ê±° ì†ë´ì•¼ í• ë“¯
     SetDirectionType(dirType);
 
     vector<optional<StateFlag::Type>> stateFlags = GetStateFlagsForDirection(m_dirType);
-    for (size_t idx : views::iota(0, 3)) //bindKey¸¦ Á¶È¸ÇÒ ¼ö ¾ø¾î ºó ³»¿ëÀÇ ÀÚ½ÄµéÀ» »ı¼ºÇÑ´Ù.
+    for (size_t idx : views::iota(0, 3)) //bindKeyë¥¼ ì¡°íšŒí•  ìˆ˜ ì—†ì–´ ë¹ˆ ë‚´ìš©ì˜ ìì‹ë“¤ì„ ìƒì„±í•œë‹¤.
     {
         size_t childSrcIdx = sourceIndex * 3 + idx;
         auto tex1 = CreateComponent<PatchTextureStd1>(bindKey, childSrcIdx);

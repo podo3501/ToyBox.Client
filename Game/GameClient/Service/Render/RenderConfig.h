@@ -9,8 +9,8 @@ struct CommandPoolConfig
 
 struct DescriptorConfig
 {
-	uint32_t bindlessCount{ 524288 }; //1,000,000°³ (ÃÖ´ëÄ¡) bindless ÀÌ±â ¶§¹®¿¡ ¸¹ÀÌ Àâ¾Æ¾ß ÇÑ´Ù.
-	uint32_t dsvCount{ 64 }; //ÀÌ°É »ç¿ëÇÏ´Â °ÍµéÀº ´ëºÎºĞ ³»ºÎ Frame ResourceÀÌ±â ¶§¹®¿¡ 64¸é ÃæºĞÇÔ.
+	uint32_t bindlessCount{ 524288 }; //1,000,000ê°œ (ìµœëŒ€ì¹˜) bindless ì´ê¸° ë•Œë¬¸ì— ë§ì´ ì¡ì•„ì•¼ í•œë‹¤.
+	uint32_t dsvCount{ 64 }; //ì´ê±¸ ì‚¬ìš©í•˜ëŠ” ê²ƒë“¤ì€ ëŒ€ë¶€ë¶„ ë‚´ë¶€ Frame Resourceì´ê¸° ë•Œë¬¸ì— 64ë©´ ì¶©ë¶„í•¨.
 };
 
 struct RenderConfig

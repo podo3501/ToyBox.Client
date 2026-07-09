@@ -11,7 +11,7 @@ template <typename T>
 static void RemoveVectorDuplicates(std::vector<T>& vec)
 {
     std::ranges::sort(vec);
-    auto [first, last] = std::ranges::unique(vec); // std::ranges::unique´Â Áßº¹ÀÌ Á¦°ÅµÈ µÚ ³²Àº 'Áö¿ö¾ß ÇÒ ±¸°£'À» subrange·Î ¹İÈ¯ÇÔ
+    auto [first, last] = std::ranges::unique(vec); // std::ranges::uniqueëŠ” ì¤‘ë³µì´ ì œê±°ëœ ë’¤ ë‚¨ì€ 'ì§€ì›Œì•¼ í•  êµ¬ê°„'ì„ subrangeë¡œ ë°˜í™˜í•¨
 
     vec.erase(first, last);
 }

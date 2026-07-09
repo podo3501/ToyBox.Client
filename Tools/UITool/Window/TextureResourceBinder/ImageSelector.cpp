@@ -128,7 +128,7 @@ void ImageSelector::CheckSourcePartition() noexcept
     auto input = ToolInputLocator::GetService();
     const XMINT2& pos = input->GetPosition();
     m_hoveredAreas = GetAreas(m_cmdHistory->GetReceiver(), m_sourceTexture->GetFilename(), m_selectImagePart, pos);
-    if (!m_hoveredAreas.empty()) return; //¸ÕÀú ÀúÀåµÅ ÀÖ´Â °ÍÀ» Ã£¾Æº¸°í ¾øÀ¸¸é »õ·Î¿î°É ¸¸µç´Ù.
+    if (!m_hoveredAreas.empty()) return; //ë¨¼ì € ì €ì¥ë¼ ìˆëŠ” ê²ƒì„ ì°¾ì•„ë³´ê³  ì—†ìœ¼ë©´ ìƒˆë¡œìš´ê±¸ ë§Œë“ ë‹¤.
 
     if(auto currRectangle = FindAreaFromMousePos(pos); currRectangle)
         m_hoveredAreas = GenerateSourceAreas(*currRectangle, ImagePartToDivideType(m_selectImagePart));

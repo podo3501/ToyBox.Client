@@ -5,9 +5,9 @@ class CommandList;
 
 struct UploadRegion
 {
-    const void* data{ nullptr }; //º¸³¾ Á¤º¸
+    const void* data{ nullptr }; //ë³´ë‚¼ ì •ë³´
     UINT64 size{ 0 };
-    UINT64 srcOffset{ 0 }; //upload ¾È¿¡ offset
+    UINT64 srcOffset{ 0 }; //upload ì•ˆì— offset
     Resource dstBuffer;
 };
 

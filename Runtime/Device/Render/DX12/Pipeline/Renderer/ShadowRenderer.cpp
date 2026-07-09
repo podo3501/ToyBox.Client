@@ -69,7 +69,7 @@ ID3D12PipelineState* ShadowRenderer::CreatePSO(const PipelineState& pipelineStat
             pso.DSVFormat = DXGI_FORMAT_D32_FLOAT;
 
             pso.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
-            // ¾ÆÆ¼ÆÑÆ® ¹æÁö¸¦ À§ÇÑ ÇÏµå¿þ¾î µª½º ¹ÙÀÌ¾î½º ¼³Á¤ (¼öÄ¡´Â »óÈ²¿¡ µû¶ó ¹Ì¼¼Á¶Á¤ ÇÊ¿ä)
+            // ì•„í‹°íŒ©íŠ¸ ë°©ì§€ë¥¼ ìœ„í•œ í•˜ë“œì›¨ì–´ ëŽìŠ¤ ë°”ì´ì–´ìŠ¤ ì„¤ì • (ìˆ˜ì¹˜ëŠ” ìƒí™©ì— ë”°ë¼ ë¯¸ì„¸ì¡°ì • í•„ìš”)
             pso.RasterizerState.DepthBias = 3000;
             pso.RasterizerState.DepthBiasClamp = 0.0f;
             pso.RasterizerState.SlopeScaledDepthBias = 1.0f;
@@ -85,8 +85,8 @@ void ShadowRenderer::PrepareFrame(const DirectionalLightData& light)
 
     ShadowFrameCB shadowFrame{};
 
-    // Á¶¸í µ¥ÀÌÅÍ(light) ³»ºÎ¿¡ °è»êµÇ¾î ÀúÀåµÇ¾î ÀÖÀ» Light View-Projection Çà·ÄÀ» °¡Á®¿È
-    // ¸¸¾à Matrix Çü½ÄÀÌ ¾Æ´Ï¶ó¸é ÇÁ·ÎÁ§Æ® º¯È¯ ÇïÆÛ(ToDXMatrix) µîÀ» °ÅÃÄ Ã³¸®ÇØÁà
+    // ì¡°ëª… ë°ì´í„°(light) ë‚´ë¶€ì— ê³„ì‚°ë˜ì–´ ì €ìž¥ë˜ì–´ ìžˆì„ Light View-Projection í–‰ë ¬ì„ ê°€ì ¸ì˜´
+    // ë§Œì•½ Matrix í˜•ì‹ì´ ì•„ë‹ˆë¼ë©´ í”„ë¡œì íŠ¸ ë³€í™˜ í—¬í¼(ToDXMatrix) ë“±ì„ ê±°ì³ ì²˜ë¦¬í•´ì¤˜
     DirectX::XMMATRIX lightVP = ToDXMatrix(light.viewProj);
     XMStoreFloat4x4(&shadowFrame.lightViewProj, DirectX::XMMatrixTranspose(lightVP));
 
@@ -121,7 +121,7 @@ void ShadowRenderer::Draw(
     cmd->SetGraphicsRoot32BitConstants(Core::ToIndex(RootSlot::MeshData), 2, meshData, 0);
     cmd->SetGraphicsRootConstantBufferView(Core::ToIndex(RootSlot::ObjectCB), objectCBAddress);
 
-    // ¼¨µµ¿ì ¸ÊÀº Ç×»ó »ï°¢Çü ¸®½ºÆ®·Î ºôµå¾÷
+    // ì„€ë„ìš° ë§µì€ í•­ìƒ ì‚¼ê°í˜• ë¦¬ìŠ¤íŠ¸ë¡œ ë¹Œë“œì—…
     cmd->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     cmd->DrawInstanced(mesh.GetIndexCount(), 1, 0, 0);
 }

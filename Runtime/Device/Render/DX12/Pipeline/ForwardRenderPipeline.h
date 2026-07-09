@@ -29,7 +29,7 @@ private:
     SwapChainPresenter& m_swapChain;
     DescriptorFactory& m_descFactory;
 
-    ShadowResource m_shadowRes; //ÀÌ Å¬·¡½º´Â framereseource Å¬·¡½ºÁßÀÇ ÇÏ³ª. ÇÁ·¹ÀÓ´ç render°¡ ÇÊ¿äÇÑ ¸®¼Ò½ºµé.
+    ShadowResource m_shadowRes; //ì´ í´ë˜ìŠ¤ëŠ” framereseource í´ë˜ìŠ¤ì¤‘ì˜ í•˜ë‚˜. í”„ë ˆì„ë‹¹ renderê°€ í•„ìš”í•œ ë¦¬ì†ŒìŠ¤ë“¤.
     Renderers m_renderers;
 
     RGResourceID m_hBackBuffer;

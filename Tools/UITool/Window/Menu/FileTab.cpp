@@ -34,7 +34,7 @@ FileTab::FileTab(ToolLoop* toolLoop) :
     m_recentFiles{ make_unique<RecentFiles>(toolLoop->GetResourceManager()) }
 {}
 
-//Render¿¡¼­ ½ÇÇà
+//Renderì—ì„œ ì‹¤í–‰
 void FileTab::Show()
 {
     if (ImGui::BeginMenu("New"))
@@ -64,10 +64,10 @@ void FileTab::Show()
 
 void FileTab::HandleFileMenuAction(FileMenuAction action)
 {
-    m_currentAction = action; // ¸Ş´º´Â ÇÑ¹ø¿¡ ÇÏ³ª¾¿ Å¬¸¯ÇÏ±â ¶§¹®¿¡ »óÅÂ°¡ ÇÏ³ª¸¸ ÀúÀåµÈ´Ù.
+    m_currentAction = action; // ë©”ë‰´ëŠ” í•œë²ˆì— í•˜ë‚˜ì”© í´ë¦­í•˜ê¸° ë•Œë¬¸ì— ìƒíƒœê°€ í•˜ë‚˜ë§Œ ì €ì¥ëœë‹¤.
 }
 
-//update¿¡¼­ ½ÇÇàÇØ¾ß ÇÔ.
+//updateì—ì„œ ì‹¤í–‰í•´ì•¼ í•¨.
 bool FileTab::Excute()
 {
     if (!m_currentAction.has_value()) return true;
@@ -88,7 +88,7 @@ bool FileTab::Excute()
     default:
         break;
     }
-    m_currentAction.reset(); // »óÅÂ ÃÊ±âÈ­
+    m_currentAction.reset(); // ìƒíƒœ ì´ˆê¸°í™”
 
     return result;
 }
@@ -169,7 +169,7 @@ static optional<bool> CompareFocusOrder(InnerWindow* lhs, InnerWindow* rhs)
     return wLhs->FocusOrder > wRhs->FocusOrder;
 }
 
-InnerWindow* FileTab::GetFocusWindow() const noexcept //?!? ÀÌ°Ç ToolSystem¿¡ ³ÖÀÚ.
+InnerWindow* FileTab::GetFocusWindow() const noexcept //?!? ì´ê±´ ToolSystemì— ë„£ì.
 {
     UserInterfaceWindow* uiWindow = m_toolLoop->GetFocusUIWindow();
     TextureResBinderWindow* mainTextureWindow = m_toolLoop->GetFocusTextureResBinderWindow();

@@ -37,7 +37,7 @@ inline Vector2 XMINT2ToVector2(const XMINT2& rhs) noexcept {
 }
 
 inline XMINT2 XMUINT2ToXMINT2(const XMUINT2& uint2) noexcept { return XMINT2{ static_cast<int32_t>(uint2.x), static_cast<int32_t>(uint2.y) }; };
-// XMUINT2¿¡ ´ëÇÑ »çÄ¢¿¬»ê ¿À¹ö·Îµù
+// XMUINT2ì— ëŒ€í•œ ì‚¬ì¹™ì—°ì‚° ì˜¤ë²„ë¡œë”©
 inline XMUINT2 operator+(const XMUINT2& lhs, const XMUINT2& rhs) noexcept { return XMUINT2(lhs.x + rhs.x, lhs.y + rhs.y); }
 inline XMUINT2 operator-(const XMUINT2& lhs, const XMUINT2& rhs) noexcept { return XMUINT2(lhs.x - rhs.x, lhs.y - rhs.y); }
 inline XMUINT2 operator*(const XMUINT2& lhs, uint32_t rhs) noexcept { return XMUINT2(lhs.x * rhs, lhs.y * rhs); }

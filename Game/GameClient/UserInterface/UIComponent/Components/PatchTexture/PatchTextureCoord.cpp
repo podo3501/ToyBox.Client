@@ -39,7 +39,7 @@ void PatchTextureCoord::SetIndexedSource(size_t index, const Rectangle& source) 
 
 bool PatchTextureCoord::FitToTextureSource() noexcept
 {
-	Assert(!m_source.IsEmpty()); //ÁÂÇ¥°¡ ¾ø´Â°Çµ¥ ¾Æ¸¶ ·ÎµùÇÏ°í³ª¼­ Bind¸¦ ¾ÈÇØ Áá°Å³ª »ý¼º½Ã ¾ÈÇØÁá°Å³ª attach°¡ ¾ÈµÅ¼­ bind°¡ ¾ÈµÆÀ» °¡´É¼ºÀÌ ÀÖ´Ù.
+	Assert(!m_source.IsEmpty()); //ì¢Œí‘œê°€ ì—†ëŠ”ê±´ë° ì•„ë§ˆ ë¡œë”©í•˜ê³ ë‚˜ì„œ Bindë¥¼ ì•ˆí•´ ì¤¬ê±°ë‚˜ ìƒì„±ì‹œ ì•ˆí•´ì¤¬ê±°ë‚˜ attachê°€ ì•ˆë¼ì„œ bindê°€ ì•ˆëì„ ê°€ëŠ¥ì„±ì´ ìžˆë‹¤.
 	if (m_source.IsEmpty()) return false;
 
 	m_component->SetSize(GetSizeFromRectangle(m_source));

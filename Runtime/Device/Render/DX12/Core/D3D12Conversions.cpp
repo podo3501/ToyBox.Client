@@ -14,7 +14,7 @@ D3D12_COMMAND_LIST_TYPE ToD3D12(CommandType type)
     case CommandType::Direct: return D3D12_COMMAND_LIST_TYPE_DIRECT;
     case CommandType::Copy: return D3D12_COMMAND_LIST_TYPE_COPY;
     case CommandType::Compute: return D3D12_COMMAND_LIST_TYPE_COMPUTE;
-    default: return D3D12_COMMAND_LIST_TYPE_DIRECT; // ¾ÈÀü ±âº»°ª
+    default: return D3D12_COMMAND_LIST_TYPE_DIRECT; // ì•ˆì „ ê¸°ë³¸ê°’
     }
 }
 
@@ -86,7 +86,7 @@ DXGI_FORMAT ToSRGB(DXGI_FORMAT format)
     case DXGI_FORMAT_BC2_UNORM: return DXGI_FORMAT_BC2_UNORM_SRGB;
     case DXGI_FORMAT_BC3_UNORM: return DXGI_FORMAT_BC3_UNORM_SRGB;
     default:
-        return format; // ÀÌ¹Ì SRGB°Å³ª º¯È¯ ºÒ°¡
+        return format; // ì´ë¯¸ SRGBê±°ë‚˜ ë³€í™˜ ë¶ˆê°€
     }
 }
 
@@ -94,7 +94,7 @@ DXGI_FORMAT ToDXGIFormat(PixelFormat format)
 {
     switch (format)
     {
-    case PixelFormat::RGB8: return DXGI_FORMAT_R8G8B8A8_UNORM; //3Ã¤³ÎÀº Áö¿øÇÏÁö ¾Ê´Â´Ù. ÀÏ´Ü ÀÌ°É·Î.
+    case PixelFormat::RGB8: return DXGI_FORMAT_R8G8B8A8_UNORM; //3ì±„ë„ì€ ì§€ì›í•˜ì§€ ì•ŠëŠ”ë‹¤. ì¼ë‹¨ ì´ê±¸ë¡œ.
     case PixelFormat::RGBA8: return DXGI_FORMAT_R8G8B8A8_UNORM;
     }
 

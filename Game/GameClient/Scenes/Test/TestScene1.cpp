@@ -20,8 +20,8 @@ bool TestScene1::Enter()
 		m_resManager, m_renderer);
 	m_uiModule = CreateUIModule("Test1", "Scene/Test/TestScene1.json", move(texResBinder), m_resManager);
 
-	//¾ÀÀÌ ½ÃÀÛµÉ¶§ µî·ÏÇÏ°í ¾ÀÀÌ ³ª°¥¶§ ÇØÁ¦ÇÑ´Ù.
-	//¿©±â¼­ ÇÏ¸é ¾À ÀÌ¸§±îÁö ³Ö¾îÁà¾ß ÇÑ´Ù.
+	//ì”¬ì´ ì‹œìž‘ë ë•Œ ë“±ë¡í•˜ê³  ì”¬ì´ ë‚˜ê°ˆë•Œ í•´ì œí•œë‹¤.
+	//ì—¬ê¸°ì„œ í•˜ë©´ ì”¬ ì´ë¦„ê¹Œì§€ ë„£ì–´ì¤˜ì•¼ í•œë‹¤.
 	auto scene = SceneLocator::GetService();
 	auto eventDispatcher = EventDispatcherLocator::GetService();
 	eventDispatcher->Subscribe("", "TextureSwitcher", [this, scene](UIEvent event) {

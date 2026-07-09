@@ -1,5 +1,6 @@
 #pragma once
 #include "GameClient/Service/Render/IRenderFrame.h"
+#include "TextSystem/TextSystem.h"
 #include "Scene/RenderScene.h"
 
 class RenderFrame : public IRenderFrame
@@ -29,6 +30,7 @@ public:
 	const FrameData& GetFrameData() const { return m_frameData; }
 
 private:
+	TextSystem m_textSystem;
 	RenderScene m_scene;
 	FrameData m_frameData;
 };

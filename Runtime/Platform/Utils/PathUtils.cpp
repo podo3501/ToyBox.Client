@@ -16,7 +16,7 @@ static filesystem::path FindWorkspaceRootByMarkFile(
 		return path;
 
 	auto parent = path.parent_path();
-	if (parent == path) // ÆÄÀÏ ½Ã½ºÅÛ ·çÆ® µµ´Ş
+	if (parent == path) // íŒŒì¼ ì‹œìŠ¤í…œ ë£¨íŠ¸ ë„ë‹¬
 		return {};
 
 	return FindWorkspaceRootByMarkFile(parent, markFile);

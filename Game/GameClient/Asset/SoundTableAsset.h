@@ -26,7 +26,7 @@ struct StaticSoundDesc : public SoundDesc
 	StaticSoundDesc();
 	void Serialize(Serializer& serializer);
 
-	//static Ç×¸ñÀÌ »ı±â¸é ¿©±â¿¡ Ãß°¡
+	//static í•­ëª©ì´ ìƒê¸°ë©´ ì—¬ê¸°ì— ì¶”ê°€
 };
 
 struct StaticSoundTable : public AssetData

@@ -31,7 +31,7 @@ bool CommandHistory<CommandType>::Undo() noexcept
 
 	if (!result)
 	{
-		assert(false && "UndoÇÔ¼ö´Â ½ÇÇàÇÏ´Â °ÍÀ» µ¹¸®´Â °ÍÀÌ±â ¶§¹®¿¡ ½ÇÆĞÇØ¼­´Â ¾ÈµÈ´Ù.");
+		assert(false && "Undoí•¨ìˆ˜ëŠ” ì‹¤í–‰í•˜ëŠ” ê²ƒì„ ëŒë¦¬ëŠ” ê²ƒì´ê¸° ë•Œë¬¸ì— ì‹¤íŒ¨í•´ì„œëŠ” ì•ˆëœë‹¤.");
 		return result;
 	}
 
@@ -49,7 +49,7 @@ bool CommandHistory<CommandType>::Redo() noexcept
 
 	if (!result)
 	{
-		assert(false && "RedoÇÔ¼ö´Â ½ÇÇàÇß´ø °ÍÀ» ´Ù½Ã ½ÇÇàÇÏ´Â °ÍÀÌ±â ¶§¹®¿¡ ½ÇÆĞÇØ¼­´Â ¾ÈµÈ´Ù.");
+		assert(false && "Redoí•¨ìˆ˜ëŠ” ì‹¤í–‰í–ˆë˜ ê²ƒì„ ë‹¤ì‹œ ì‹¤í–‰í•˜ëŠ” ê²ƒì´ê¸° ë•Œë¬¸ì— ì‹¤íŒ¨í•´ì„œëŠ” ì•ˆëœë‹¤.");
 		return result;
 	}
 
@@ -72,8 +72,8 @@ void CommandHistory<CommandType>::AddOrMergeCommand(unique_ptr<CommandType> comm
 	if (m_index < static_cast<int>(m_commandList.size()) - 1)
 		m_commandList.resize(m_index + 1);
 
-	//Merge¸¦ ½ÃµµÇÏ°í ½ÇÆĞÇÏ¸é command´Â ´Ù½Ã µ¹·ÁÁØ´Ù. 
-	// ¾Æ´Ï¸é IsMerge¸¦ ºÒ·¯Áà¾ß ÇÏ´Âµ¥ ÃÖ´ëÇÑ public ÇÔ¼ö¸¦ ¾È ³»³õ´Â°Ô ÁÁÀº ÄÚµù¹ıÀÌ´Ù.
+	//Mergeë¥¼ ì‹œë„í•˜ê³  ì‹¤íŒ¨í•˜ë©´ commandëŠ” ë‹¤ì‹œ ëŒë ¤ì¤€ë‹¤. 
+	// ì•„ë‹ˆë©´ IsMergeë¥¼ ë¶ˆëŸ¬ì¤˜ì•¼ í•˜ëŠ”ë° ìµœëŒ€í•œ public í•¨ìˆ˜ë¥¼ ì•ˆ ë‚´ë†“ëŠ”ê²Œ ì¢‹ì€ ì½”ë”©ë²•ì´ë‹¤.
 	command = TryMergeCommand(move(command));
 	if (!command) return;
 

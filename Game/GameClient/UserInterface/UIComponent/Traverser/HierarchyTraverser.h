@@ -5,11 +5,11 @@ class UIComponent;
 class HierarchyTraverser : private NoCopyNoMove
 {
 public:
-	void ForEachChild(UIComponent* c, const function<void(UIComponent*)>& Func) noexcept; //±âº» foreach
-	bool ForEachChildPostUntilFail(UIComponent* c, const function<bool(UIComponent*)>& Func) noexcept; //ÈÄÀ§ ¼øÈ¸·Î ¸®ÅÏ°ª ¹İÈ¯ Àç±Í(binder¿¡»ç¿ë)
+	void ForEachChild(UIComponent* c, const function<void(UIComponent*)>& Func) noexcept; //ê¸°ë³¸ foreach
+	bool ForEachChildPostUntilFail(UIComponent* c, const function<bool(UIComponent*)>& Func) noexcept; //í›„ìœ„ ìˆœíšŒë¡œ ë¦¬í„´ê°’ ë°˜í™˜ ì¬ê·€(binderì—ì‚¬ìš©)
 	void ForEachChildToRender(UIComponent* c, const function<TraverseResult(UIComponent*)>& Func) noexcept;
-	void ForEachChildConst(UIComponent* c, const function<void(const UIComponent*)>& Func) const noexcept; //ÀĞ±âÀü¿ë
-	void ForEachChildBool(UIComponent* c, const function<TraverseResult(UIComponent*)>& Func) noexcept; //¹«¾ğ°¡¸¦ Ã£¾ÒÀ¸¸é bool ¹İÈ¯À¸·Î ±×¸¸ ÇÏ¶ó´Â ÇÔ¼ö
+	void ForEachChildConst(UIComponent* c, const function<void(const UIComponent*)>& Func) const noexcept; //ì½ê¸°ì „ìš©
+	void ForEachChildBool(UIComponent* c, const function<TraverseResult(UIComponent*)>& Func) noexcept; //ë¬´ì–¸ê°€ë¥¼ ì°¾ì•˜ìœ¼ë©´ bool ë°˜í™˜ìœ¼ë¡œ ê·¸ë§Œ í•˜ë¼ëŠ” í•¨ìˆ˜
 
 private:
 	void ForEachRenderChildBFS(UIComponent* c, const function<TraverseResult(UIComponent*)>& Func) noexcept;

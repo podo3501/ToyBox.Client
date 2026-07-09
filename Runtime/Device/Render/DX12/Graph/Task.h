@@ -43,7 +43,7 @@ struct TaskContext
 {
     DrawPacket drawPacket;
     FrameData frame;
-    shared_ptr<ResourceContext> resources; //Áß¿äÇÑ ¸®¼Ò½º. °øÀ¯µÊ.
+    shared_ptr<ResourceContext> resources; //ì¤‘ìš”í•œ ë¦¬ì†ŒìŠ¤. ê³µìœ ë¨.
 
     void SetResource(RGResourceID id, const Resource& resource) const { resources->Set(id, resource); }
     void SetResource(RGResourceID id, Resource&& resource) const { resources->Set(id, std::move(resource)); }
@@ -55,14 +55,14 @@ struct Task
     std::string passName{};
     CommandType type{ CommandType::None };
 
-    std::vector<TaskHandle> dependencies; //¾Õ¿¡ Task¿¡ ÀÇÁ¸ÇÏ´ÂÁö. TaskÀÇ ½ÃÀÛÁöÁ¡À» ¾Ë°Ô ÇØ ÁØ´Ù.
+    std::vector<TaskHandle> dependencies; //ì•ì— Taskì— ì˜ì¡´í•˜ëŠ”ì§€. Taskì˜ ì‹œì‘ì§€ì ì„ ì•Œê²Œ í•´ ì¤€ë‹¤.
     std::function<void(CommandList&, TaskContext&)> gpuExecute{ nullptr };
     std::function<void(TaskContext&)> cpuExecute{ nullptr };
 };
 
 using LocalTaskID = uint32_t;
 
-struct CompiledTask //RenderGraph¿¡¼­ pass¸¦ °¡Áö°í °è»êÇØ¼­ tasks·Î ¸¸µç °á°ú¹°.
+struct CompiledTask //RenderGraphì—ì„œ passë¥¼ ê°€ì§€ê³  ê³„ì‚°í•´ì„œ tasksë¡œ ë§Œë“  ê²°ê³¼ë¬¼.
 {
     LocalTaskID localId{ 0 };
     Task task{};

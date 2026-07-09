@@ -17,7 +17,7 @@ bool AudioMixer::Initialize()
     ReturnIfFalse(SDL_Init(SDL_INIT_AUDIO));
     ReturnIfFalse(MIX_Init());
 
-    SDL_AudioSpec spec{}; //static sound ¼³Á¤ºÎºÐ.
+    SDL_AudioSpec spec{}; //static sound ì„¤ì •ë¶€ë¶„.
     spec.freq = 48000;
     spec.format = SDL_AUDIO_S16;
     spec.channels = 2;

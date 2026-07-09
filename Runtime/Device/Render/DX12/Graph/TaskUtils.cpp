@@ -6,13 +6,13 @@ void ExecuteTaskImmediate(CommandList* cmd, const Task& task, TaskContext& ctx)
 {
     if (task.type == CommandType::None)
     {
-        Assert(task.cpuExecute != nullptr); // CPU Àü¿ë ÅÂ½ºÅ©(None)ÀÎµ¥ cpuExecute°¡ µî·ÏµÇÁö ¾ÊÀ½.
-        Assert(task.gpuExecute == nullptr); // CPU Àü¿ë ÅÂ½ºÅ©(None)¿¡ gpuExecute°¡ µî·ÏµÇ¾úÀ½.
+        Assert(task.cpuExecute != nullptr); // CPU ì „ìš© íƒœìŠ¤í¬(None)ì¸ë° cpuExecuteê°€ ë“±ë¡ë˜ì§€ ì•ŠìŒ.
+        Assert(task.gpuExecute == nullptr); // CPU ì „ìš© íƒœìŠ¤í¬(None)ì— gpuExecuteê°€ ë“±ë¡ë˜ì—ˆìŒ.
     }
     else
     {
         Assert(cmd);
-        Assert(task.gpuExecute != nullptr); // GPU ÅÂ½ºÅ©ÀÎµ¥ gpuExecute°¡ µî·ÏµÇÁö ¾ÊÀ½.
+        Assert(task.gpuExecute != nullptr); // GPU íƒœìŠ¤í¬ì¸ë° gpuExecuteê°€ ë“±ë¡ë˜ì§€ ì•ŠìŒ.
     }
 
     if (task.cpuExecute)
@@ -25,5 +25,5 @@ void ExecuteTaskImmediate(CommandList* cmd, const Task& task, TaskContext& ctx)
 void ExecuteRenderPipeline(CommandList& cmd, const vector<CompiledTask>& compiledTasks, TaskContext& ctx)
 {
     for (auto& compiled : compiledTasks)
-        ExecuteTaskImmediate(&cmd, compiled.task, ctx); // ·»´õ¸µ ·çÇÁ¿¡¼­´Â Ç×»ó À¯È¿ÇÑ CommandList°¡ ÀÖÀ¸¹Ç·Î ÁÖ¼Ò(&cmd)¸¦ ³Ñ°ÜÁÜ.
+        ExecuteTaskImmediate(&cmd, compiled.task, ctx); // ë Œë”ë§ ë£¨í”„ì—ì„œëŠ” í•­ìƒ ìœ íš¨í•œ CommandListê°€ ìˆìœ¼ë¯€ë¡œ ì£¼ì†Œ(&cmd)ë¥¼ ë„˜ê²¨ì¤Œ.
 }

@@ -4,18 +4,18 @@
 #include <type_traits>
 #include <string>
 
-// SerializeIO Áö¿ø ¿©ºÎ È®ÀÎ
+// SerializeIO ì§€ì› ì—¬ë¶€ í™•ì¸
 class Serializer;
 template<typename T>
 concept HasSerialize =
 	requires(T t, Serializer& serializer) {
-		{ t->Serialize(serializer) };   // ½º¸¶Æ® Æ÷ÀÎÅÍ¿ë
+		{ t->Serialize(serializer) };   // ìŠ¤ë§ˆíŠ¸ í¬ì¸í„°ìš©
 	} ||
 	requires(T t, Serializer& serializer) {
-		{ t.Serialize(serializer) };    // ÀÏ¹İ °´Ã¼¿ë
+		{ t.Serialize(serializer) };    // ì¼ë°˜ ê°ì²´ìš©
 	};
 
-template<typename T> //¸â¹ö begin/end°¡ ÀÖ´Â °æ¿ì
+template<typename T> //ë©¤ë²„ begin/endê°€ ìˆëŠ” ê²½ìš°
 concept HasMemberBeginEnd = requires(T t) {
 	{ t.begin() } -> std::input_iterator;
 	{ t.end() } -> std::sentinel_for<decltype(t.begin())>;
@@ -27,14 +27,14 @@ concept NotBasicString =
 	std::same_as<std::remove_cvref_t<T>, std::wstring> ||
 	std::same_as<std::remove_cvref_t<T>, std::u16string> ||
 	std::same_as<std::remove_cvref_t<T>, std::u32string> ||
-	std::same_as<std::remove_cvref_t<T>, std::filesystem::path>); // path Ãß°¡
+	std::same_as<std::remove_cvref_t<T>, std::filesystem::path>); // path ì¶”ê°€
 
 template<typename T>
 concept SequenceLike =
-	!requires { typename T::key_type; }&&     // key_type ¾ø¾î¾ß ÇÔ (map ¹æÁö)
-	requires { typename T::value_type; }&&    // value_type ÀÖ¾î¾ß ÇÔ (sequence Á¶°Ç)
+	!requires { typename T::key_type; }&&     // key_type ì—†ì–´ì•¼ í•¨ (map ë°©ì§€)
+	requires { typename T::value_type; }&&    // value_type ìˆì–´ì•¼ í•¨ (sequence ì¡°ê±´)
 	HasMemberBeginEnd<T>&&
-	NotBasicString<T>;    // ¹®ÀÚ¿­ °è¿­ Á¦¿Ü
+	NotBasicString<T>;    // ë¬¸ìì—´ ê³„ì—´ ì œì™¸
 
 template<typename T>
 concept MapLike = requires {
@@ -42,6 +42,6 @@ concept MapLike = requires {
 	typename T::mapped_type; }&&
 	HasMemberBeginEnd<T>;
 
-//template<typename T> //ÀÌ°ÍÀÌ unique, shared ¸¸ Ã£¾ÆÁÖ´Â°Ô ¾Æ´Ï¶ó element_type ÀÌ ÀÖ´Â °ÍÀ» Ã£¾ÆÁÖ´Â °Çµ¥, ´ëºÎºĞ ÀÌ Å¸ÀÔÀÌ ÀÖÀ¸¸é smartPtr¸¸ ÀÖ±â ¶§¹®ÀÌ´Ù.
+//template<typename T> //ì´ê²ƒì´ unique, shared ë§Œ ì°¾ì•„ì£¼ëŠ”ê²Œ ì•„ë‹ˆë¼ element_type ì´ ìˆëŠ” ê²ƒì„ ì°¾ì•„ì£¼ëŠ” ê±´ë°, ëŒ€ë¶€ë¶„ ì´ íƒ€ì…ì´ ìˆìœ¼ë©´ smartPtrë§Œ ìˆê¸° ë•Œë¬¸ì´ë‹¤.
 //concept SmartPointerLike = requires {
 //	typename T::element_type; };

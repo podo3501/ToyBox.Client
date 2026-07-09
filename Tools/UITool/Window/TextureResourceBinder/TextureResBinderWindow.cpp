@@ -104,7 +104,7 @@ void TextureResBinderWindow::Render(ImGuiIO* io)
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
     ImGui::SetNextWindowSize({ size.x, size.y + GetFrameHeight() });
     ImGui::Begin(GetName().c_str(), &m_isOpen, ImGuiWindowFlags_AlwaysAutoResize);
-    ImGui::PopStyleVar();   //À©µµ¿ì ½ºÅ¸ÀÏÀ» ÁöÁ¤ÇÑ´Ù.
+    ImGui::PopStyleVar();   //ìœˆë„ìš° ìŠ¤íƒ€ì¼ì„ ì§€ì •í•œë‹¤.
 
     if (ImGui::IsWindowAppearing())
     {

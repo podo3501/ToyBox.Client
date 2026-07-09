@@ -29,12 +29,12 @@ void ComponentTooltip::Render(const ImGuiWindow* window)
 	const ImVec2& mousePos = ImGui::GetMousePos();
 
 	constexpr float tooltipOffsetX = 20.f;
-	constexpr float tooltipGap = 5.f; // ÅøÆÁ °£ °£°Ý
-	float tooltipOffsetY = 20.f; // ÃÊ±â Y ¿ÀÇÁ¼Â
+	constexpr float tooltipGap = 5.f; // íˆ´íŒ ê°„ ê°„ê²©
+	float tooltipOffsetY = 20.f; // ì´ˆê¸° Y ì˜¤í”„ì…‹
 
 	for (int idx{ 0 }; UIComponent * curComponent : componentList)
 	{
-		// ÅøÆÁ À§Ä¡¿Í Å©±â °è»ê
+		// íˆ´íŒ ìœ„ì¹˜ì™€ í¬ê¸° ê³„ì‚°
 		const std::string& tooltipContext = EnumUtil::EnumToString(curComponent->GetTypeID());
 		const ImVec2& tooltipPos = ImVec2(mousePos.x + tooltipOffsetX, mousePos.y + tooltipOffsetY);
 		const ImVec2& textSize = ImGui::CalcTextSize(tooltipContext.c_str());

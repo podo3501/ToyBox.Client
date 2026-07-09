@@ -4,10 +4,10 @@
 enum class CommandType
 {
     None,
-    Direct, //·£´õ¸µ
-    Copy, //¸®¼Ò½º Àü¼Û
-    Compute //°è»ê 
+    Direct, //ëœë”ë§
+    Copy, //ë¦¬ì†ŒìŠ¤ ì „ì†¡
+    Compute //ê³„ì‚° 
 };
 
 using FenceID = uint64_t;
-static constexpr FenceID InvalidFenceID = 0; //fence°ª 0Àº ½ÇÁ¦ °ªÀ¸·Î ¾²Áö ¾Ê´Â´Ù.
+static constexpr FenceID InvalidFenceID = 0; //fenceê°’ 0ì€ ì‹¤ì œ ê°’ìœ¼ë¡œ ì“°ì§€ ì•ŠëŠ”ë‹¤.

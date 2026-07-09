@@ -21,7 +21,7 @@ private:
 	void ProcessImpl(const string& key, WriteFunc&& writeFunc, ReadFunc&& readFunc) noexcept;
 
 	Mode m_mode;
-	nlohmann::json* m_write{ nullptr }; //¸¸µé¶§ »ı¼ºÀÚ¿¡ JsonÀ» ³Ö¾îÁÖ±â ¶§¹®¿¡ ±× jsonÀÇ Æ÷ÀÎÅÍ¸¸ µé°í ÀÖ´Ù.
+	nlohmann::json* m_write{ nullptr }; //ë§Œë“¤ë•Œ ìƒì„±ìì— Jsonì„ ë„£ì–´ì£¼ê¸° ë•Œë¬¸ì— ê·¸ jsonì˜ í¬ì¸í„°ë§Œ ë“¤ê³  ìˆë‹¤.
 	const nlohmann::json* m_read{ nullptr };
 };
 

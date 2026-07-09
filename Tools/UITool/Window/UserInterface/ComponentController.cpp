@@ -52,7 +52,7 @@ bool ComponentController::CheckDetachComponent(IToolInputManager* input) noexcep
 	if (!detachComponent)
 		return true;
 
-	//DetachµÈ Component¸¦ RenderTexture
+	//Detachëœ Componentë¥¼ RenderTexture
 	if (!m_floater->ComponentToFloating(move(detachComponent)))
 	{
 		Tool::Dialog::ShowInfoDialog(DialogType::Error, "Failed to load the resource.");

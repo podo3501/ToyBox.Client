@@ -3,20 +3,20 @@
 #include <chrono>
 #include <thread>
 
-//Startup ¹× ShutdownÀ» ÇØ ÁÖ´Â ÀÌÀ¯´Â tddÇÒ¶§ ¼Óµµ¹®Á¦ ¶§¹®ÀÌ´Ù. tdd°¡ ´À¸®¸é Å×½ºÆ®¸¦ ±ÍÂú°Ô ¿©±æ ¼ö ÀÖ±â ¶§¹®ÀÌ´Ù.
+//Startup ë° Shutdownì„ í•´ ì£¼ëŠ” ì´ìœ ëŠ” tddí• ë•Œ ì†ë„ë¬¸ì œ ë•Œë¬¸ì´ë‹¤. tddê°€ ëŠë¦¬ë©´ í…ŒìŠ¤íŠ¸ë¥¼ ê·€ì°®ê²Œ ì—¬ê¸¸ ìˆ˜ ìˆê¸° ë•Œë¬¸ì´ë‹¤.
 void TracyStartupProfiler()
 {
 #ifdef TRACY_ENABLE
 	tracy::StartupProfiler();
 
-	// ¿¬°á ´ë±â ½Ã°£(¿¬°áÀÌ ¾ÈÁ¤µÉ ¶§±îÁö)
-	constexpr auto connectionTimeout = chrono::milliseconds(1000); // 1ÃÊ Å¸ÀÓ¾Æ¿ô
+	// ì—°ê²° ëŒ€ê¸° ì‹œê°„(ì—°ê²°ì´ ì•ˆì •ë  ë•Œê¹Œì§€)
+	constexpr auto connectionTimeout = chrono::milliseconds(1000); // 1ì´ˆ íƒ€ì„ì•„ì›ƒ
 	auto startTime = chrono::steady_clock::now();
 
 	while (!TracyIsConnected)
 	{
 		this_thread::sleep_for(std::chrono::milliseconds(10));
-		if (std::chrono::steady_clock::now() - startTime > connectionTimeout) // Å¸ÀÓ¾Æ¿ôÀ» Ãß°¡
+		if (std::chrono::steady_clock::now() - startTime > connectionTimeout) // íƒ€ì„ì•„ì›ƒì„ ì¶”ê°€
 			break;
 	}
 #endif
@@ -25,9 +25,9 @@ void TracyStartupProfiler()
 void TracyShutdownProfiler()
 {
 #ifdef TRACY_ENABLE
-	FrameMark; // ¸¶Áö¸· ÇÁ·¹ÀÓ ±¸ºĞ
-	this_thread::sleep_for(chrono::milliseconds(100)); // µ¥ÀÌÅÍ Àü¼Û ½Ã°£ È®º¸
+	FrameMark; // ë§ˆì§€ë§‰ í”„ë ˆì„ êµ¬ë¶„
+	this_thread::sleep_for(chrono::milliseconds(100)); // ë°ì´í„° ì „ì†¡ ì‹œê°„ í™•ë³´
 
-	tracy::ShutdownProfiler(); // ³»ºÎ ¾²·¹µå ¹× ¹öÆÛ Á¤¸®
+	tracy::ShutdownProfiler(); // ë‚´ë¶€ ì“°ë ˆë“œ ë° ë²„í¼ ì •ë¦¬
 #endif
 }

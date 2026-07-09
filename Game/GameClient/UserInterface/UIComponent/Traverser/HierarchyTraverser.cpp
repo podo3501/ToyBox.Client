@@ -43,7 +43,7 @@ void HierarchyTraverser::ForEachRenderChildBFS(UIComponent* c, const function<Tr
 		}
 
 		auto result = Func(current);
-		Assert(result != TraverseResult::Stop); //Stop ¸®ÅÏ°ªÀÌ ¿Í¼­´Â ¾ÈµÈ´Ù. ÀÌ°Ç ¸ÅÇÁ·¹ÀÓ ·»´õ¸µ µÇ´Â ÇÔ¼öÀÌ±â ¶§¹®¿¡ ¼Óµµ°¡ Áß¿äÇÏ´Ù.
+		Assert(result != TraverseResult::Stop); //Stop ë¦¬í„´ê°’ì´ ì™€ì„œëŠ” ì•ˆëœë‹¤. ì´ê±´ ë§¤í”„ë ˆìž„ ë Œë”ë§ ë˜ëŠ” í•¨ìˆ˜ì´ê¸° ë•Œë¬¸ì— ì†ë„ê°€ ì¤‘ìš”í•˜ë‹¤.
 		if (result == TraverseResult::ChildrenSkip) continue;
 
 		for (auto child : current->GetChildren())
@@ -54,7 +54,7 @@ void HierarchyTraverser::ForEachRenderChildBFS(UIComponent* c, const function<Tr
 void HierarchyTraverser::ForEachRenderChildDFS(UIComponent* c, const function<TraverseResult(UIComponent*)>& Func) noexcept
 {
 	auto result = Func(c);
-	Assert(result != TraverseResult::Stop); //Stop ¸®ÅÏ°ªÀÌ ¿Í¼­´Â ¾ÈµÈ´Ù. ÀÌ°Ç ¸ÅÇÁ·¹ÀÓ ·»´õ¸µ µÇ´Â ÇÔ¼öÀÌ±â ¶§¹®¿¡ ¼Óµµ°¡ Áß¿äÇÏ´Ù.
+	Assert(result != TraverseResult::Stop); //Stop ë¦¬í„´ê°’ì´ ì™€ì„œëŠ” ì•ˆëœë‹¤. ì´ê±´ ë§¤í”„ë ˆìž„ ë Œë”ë§ ë˜ëŠ” í•¨ìˆ˜ì´ê¸° ë•Œë¬¸ì— ì†ë„ê°€ ì¤‘ìš”í•˜ë‹¤.
 	if (result == TraverseResult::ChildrenSkip) return;
 
 	for (auto child : c->GetChildren())

@@ -32,7 +32,7 @@ unique_ptr<UINameGenerator> UINameGenerator::Clone() const
 optional<string> UINameGenerator::MakeRegionOf(const string& region) noexcept
 {
     if (region.empty() && !IsUnusedRegion(region))
-        return nullopt; //regionÀÌ ""ÀÎ °æ¿ì´Â º¯ÇüµÈ region nameÀ» ¸¸µéÁö ¾Ê´Â´Ù.
+        return nullopt; //regionì´ ""ì¸ ê²½ìš°ëŠ” ë³€í˜•ëœ region nameì„ ë§Œë“¤ì§€ ì•ŠëŠ”ë‹¤.
 
     auto [name, id] = ExtractNameAndId(region);
     auto& nameGenerator = TryEmplaceAssoc(m_regionGens, name);
@@ -49,7 +49,7 @@ bool UINameGenerator::RemoveRegion(const string& region) noexcept
 
     auto [name, id] = ExtractNameAndId(region);
     auto find = m_regionGens.find(name);
-    if (find == m_regionGens.end()) return false; //Å°°ªÀº ÀÖ´Âµ¥ Generator°¡ ¾øÀ¸¸é ÀÌ»óÇÑ ÀÏÀÌ´Ù.
+    if (find == m_regionGens.end()) return false; //í‚¤ê°’ì€ ìˆëŠ”ë° Generatorê°€ ì—†ìœ¼ë©´ ì´ìƒí•œ ì¼ì´ë‹¤.
 
     auto [result, deletable] = find->second->Recycle(id);
     ReturnIfFalse(result);
@@ -78,7 +78,7 @@ static string GetComponentName(const string& name)
 optional<pair<string, string>> UINameGenerator::MakeNameOf(const string& region, const string& name, bool forceUniqueRegion) noexcept
 {
     string newRegion{ region }, newName{ name };
-    if (IsUnusedRegion(region) || forceUniqueRegion) //ºÙÀÏ regionÀÌ Á¸ÀçÇÏÁö ¾Ê°Å³ª, Á¸ÀçÇÏ´õ¶óµµ À¯´ÏÅ©ÀÌ¾î¾ß ÇÑ´Ù¸é
+    if (IsUnusedRegion(region) || forceUniqueRegion) //ë¶™ì¼ regionì´ ì¡´ì¬í•˜ì§€ ì•Šê±°ë‚˜, ì¡´ì¬í•˜ë”ë¼ë„ ìœ ë‹ˆí¬ì´ì–´ì•¼ í•œë‹¤ë©´
     {
         auto regionOpt = MakeRegionOf(region);
         if (!regionOpt) return nullopt;

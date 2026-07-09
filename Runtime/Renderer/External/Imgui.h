@@ -13,7 +13,7 @@ struct IImguiRenderer : public IImguiRegistry
     virtual void Reset() = 0;
 };
 
-//imgui¸¦ ¾²Áö ¾Ê°í ½ÍÀ»¶§, È£ÃâÇØµµ ¾Æ¹«°Íµµ ÇÏÁö ¾Ê´Â null class»ç¿ë(¸±¸®Áî¹öÀü ¸¸µé¶§ µîµî)
+//imguië¥¼ ì“°ì§€ ì•Šê³  ì‹¶ì„ë•Œ, í˜¸ì¶œí•´ë„ ì•„ë¬´ê²ƒë„ í•˜ì§€ ì•ŠëŠ” null classì‚¬ìš©(ë¦´ë¦¬ì¦ˆë²„ì „ ë§Œë“¤ë•Œ ë“±ë“±)
 class NullImgui : public IImguiRenderer
 {
 public:

@@ -16,8 +16,8 @@ public:
     const Resource& GetResource() const { return m_resource; }
     Resource& GetResource() { return m_resource; }
 
-    UINT GetDSVIndex() const { return m_dsvIndex; } // ¾²±â¿ë ÀÎµ¦½º
-    UINT GetSRVIndex() const { return m_srvIndex; } // ÀĞ±â¿ë Bindless ÀÎµ¦½º
+    UINT GetDSVIndex() const { return m_dsvIndex; } // ì“°ê¸°ìš© ì¸ë±ìŠ¤
+    UINT GetSRVIndex() const { return m_srvIndex; } // ì½ê¸°ìš© Bindless ì¸ë±ìŠ¤
 
 private:
     Resource m_resource;

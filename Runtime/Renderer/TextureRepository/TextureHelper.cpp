@@ -32,7 +32,7 @@ static void CopyTextureToBuffer(ID3D12GraphicsCommandList* commandList, ID3D12Re
     CD3DX12_TEXTURE_COPY_LOCATION srcLocation(texture, 0);
     commandList->CopyTextureRegion(&destLocation, 0, 0, 0, &srcLocation, nullptr);
 
-    // ÅØ½ºÃ³ ¸®¼Ò½º »óÅÂ º¹¿ø
+    // í…ìŠ¤ì²˜ ë¦¬ì†ŒìŠ¤ ìƒíƒœ ë³µì›
     TransitionResource(commandList, texture,
         D3D12_RESOURCE_STATE_COPY_SOURCE, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 }
@@ -45,7 +45,7 @@ static bool WaitForGpuWork(ID3D12Device* device, ID3D12CommandQueue* commandQueu
     if (FAILED(device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence)))) return false;
     if (FAILED(commandQueue->Signal(fence.Get(), fenceValue))) return false;
 
-    if (fence->GetCompletedValue() < fenceValue) // GPU ÀÛ¾÷ ¿Ï·á ´ë±â
+    if (fence->GetCompletedValue() < fenceValue) // GPU ì‘ì—… ì™„ë£Œ ëŒ€ê¸°
     {
         HANDLE eventHandle = CreateEventEx(nullptr, nullptr, false, EVENT_ALL_ACCESS);
         if (eventHandle == nullptr) return false;
@@ -93,7 +93,7 @@ static vector<Rectangle> FindRectangles(const D3D12_SUBRESOURCE_FOOTPRINT& footP
         {
             if (!visited[y][x] && image[y][x] != bgColor)
             {
-                // BFS ½ÃÀÛ
+                // BFS ì‹œì‘
                 int minX = x, minY = y, maxX = x, maxY = y;
                 queue<pair<int, int>> q;
                 q.push({ x, y });
@@ -109,7 +109,7 @@ static vector<Rectangle> FindRectangles(const D3D12_SUBRESOURCE_FOOTPRINT& footP
                     maxX = std::max(maxX, cx);
                     maxY = std::max(maxY, cy);
 
-                    // 4¹æÇâ Å½»ö
+                    // 4ë°©í–¥ íƒìƒ‰
                     const int dx[] = { -1, 1, 0, 0 };
                     const int dy[] = { 0, 0, -1, 1 };
                     for (int d : views::iota(0, 4))
@@ -143,7 +143,7 @@ bool ExtractAreas(DX::DeviceResources* deviceRes, ID3D12Resource* texRes, const 
     auto commandAllocator = deviceRes->GetCommandAllocator();
     auto commandQueue = deviceRes->GetCommandQueue();
 
-    // ÅØ½ºÃ³ ¸®¼Ò½ºÀÇ ¼³¸í °¡Á®¿À±â
+    // í…ìŠ¤ì²˜ ë¦¬ì†ŒìŠ¤ì˜ ì„¤ëª… ê°€ì ¸ì˜¤ê¸°
     D3D12_RESOURCE_DESC textureDesc = texRes->GetDesc();
     D3D12_PLACED_SUBRESOURCE_FOOTPRINT layout{};
     UINT64 totalBytes{ 0 }, rowPitch{ 0 };
@@ -155,15 +155,15 @@ bool ExtractAreas(DX::DeviceResources* deviceRes, ID3D12Resource* texRes, const 
 
     if (FAILED(commandList->Reset(commandAllocator, nullptr))) return false;
 
-    // ÅØ½ºÃ³¸¦ º¹»çÇÏ´Â ¸í·É¾î ½ÇÇà
+    // í…ìŠ¤ì²˜ë¥¼ ë³µì‚¬í•˜ëŠ” ëª…ë ¹ì–´ ì‹¤í–‰
     CopyTextureToBuffer(commandList, texRes, layout, readbackBuffer);
 
-    // ¸í·É ¸®½ºÆ® Á¾·á
+    // ëª…ë ¹ ë¦¬ìŠ¤íŠ¸ ì¢…ë£Œ
     if (FAILED(commandList->Close())) return false;
     ID3D12CommandList* commandLists[] = { commandList };
     commandQueue->ExecuteCommandLists(_countof(commandLists), commandLists);
 
-    // GPU ÀÛ¾÷ ¿Ï·á ´ë±â
+    // GPU ì‘ì—… ì™„ë£Œ ëŒ€ê¸°
     ReturnIfFalse(WaitForGpuWork(device, commandQueue));
 
     UINT8* data{ nullptr };
@@ -171,7 +171,7 @@ bool ExtractAreas(DX::DeviceResources* deviceRes, ID3D12Resource* texRes, const 
     outList = FindRectangles(layout.Footprint, bgColor, data);
     readbackBuffer->Unmap(0, nullptr);
 
-    //»ç°¢ÇüÀÌ ÁßÃ¸µÅ ÀÖ°Å³ª ¹ÙÅÁ»öÀ¸·Î ¼±ÀÌ ±×¾îÁ® ÀÖ´Â °æ¿ì °°Àº ÀÌ¹ÌÁö¶ó°í ÆÇ´Ü ÇÒ ¼ö ÀÖµµ·Ï ±³ÀÚµÇ°Å³ª Æ÷ÇÔµÇ¾î ÀÖ´Ù¸é ÇÕÃÄÁØ´Ù.
+    //ì‚¬ê°í˜•ì´ ì¤‘ì²©ë¼ ìˆê±°ë‚˜ ë°”íƒ•ìƒ‰ìœ¼ë¡œ ì„ ì´ ê·¸ì–´ì ¸ ìˆëŠ” ê²½ìš° ê°™ì€ ì´ë¯¸ì§€ë¼ê³  íŒë‹¨ í•  ìˆ˜ ìˆë„ë¡ êµìë˜ê±°ë‚˜ í¬í•¨ë˜ì–´ ìˆë‹¤ë©´ í•©ì³ì¤€ë‹¤.
     MergeRectangles(outList);
 
     return true;

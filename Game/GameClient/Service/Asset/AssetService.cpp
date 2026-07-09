@@ -77,16 +77,16 @@ void AssetService::ThreadLoop()
     while (true)
     {
         AssetRequestID id;
-        if (!m_asyncLoader->WaitPopPending(id)) //ÀÛ¾÷ÀÌ ÀÖÀ¸¸é id·Î ÀÛ¾÷À» °¡Á®¿Â´Ù.
+        if (!m_asyncLoader->WaitPopPending(id)) //ìž‘ì—…ì´ ìžˆìœ¼ë©´ idë¡œ ìž‘ì—…ì„ ê°€ì ¸ì˜¨ë‹¤.
             break;
 
         ++m_activeJobs;
 
-        auto reqOpt = m_asyncLoader->TakeRequest(id); //request µ¥ÀÌÅÍ °¡Á®¿À±â
+        auto reqOpt = m_asyncLoader->TakeRequest(id); //request ë°ì´í„° ê°€ì ¸ì˜¤ê¸°
         if (reqOpt)
         {
             AssetPtr result = m_repository->Load(reqOpt->type, reqOpt->resID);
-            m_asyncLoader->PushResult(id, std::move(result)); //°á°ú ÀúÀå
+            m_asyncLoader->PushResult(id, std::move(result)); //ê²°ê³¼ ì €ìž¥
         }
 
         --m_activeJobs;

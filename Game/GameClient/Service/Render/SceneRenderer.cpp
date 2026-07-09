@@ -45,7 +45,7 @@ void SceneRenderer::DrawText(FontHandle hF, std::string_view text, const Vector2
 	if (!font || font->state != LoadState::Ready)
 		return;
 
-	//m_renderFrame->DrawText(font->fontRes, text, pos);
+	m_renderFrame->DrawText(font->fontRes, text, pos);
 }
 
 void SceneRenderer::DrawSurface(MeshHandle hM, MaterialHandle hMtl, const cm::Matrix& world)

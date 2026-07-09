@@ -23,7 +23,7 @@ bool FontProvider::LoadResource(std::shared_ptr<IFontResource> resource, std::sh
 		m_ftLibrary.Get(),
 		reinterpret_cast<const FT_Byte*>(asset->fontSource.data()),
 		static_cast<FT_Long>(asset->fontSource.size()),
-		0, // ´ÜÀÏ ÆäÀÌ½º ÀÎµ¦½º
+		0, // ë‹¨ì¼ í˜ì´ìŠ¤ ì¸ë±ìŠ¤
 		&face
 	);
 
@@ -38,6 +38,6 @@ bool FontProvider::LoadResource(std::shared_ptr<IFontResource> resource, std::sh
 
 void FontProvider::ReleaseResource(std::shared_ptr<IFontResource> resource)
 {
-	//resource´Â ¿©±â¸¦ ¹ş¾î³ª¸é »èÁ¦µÈ´Ù.
+	//resourceëŠ” ì—¬ê¸°ë¥¼ ë²—ì–´ë‚˜ë©´ ì‚­ì œëœë‹¤.
 	return;
 }

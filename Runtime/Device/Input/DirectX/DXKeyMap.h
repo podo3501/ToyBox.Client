@@ -75,5 +75,5 @@ constexpr std::pair<DXKey, KeyCode> DXKeyMap[] = {
     { DXKey::F11, KeyCode::F11 },
     { DXKey::F12, KeyCode::F12 },
 
-    // ÇÊ¿äÇÑ Å° Ãß°¡
+    // í•„ìš”í•œ í‚¤ ì¶”ê°€
 };

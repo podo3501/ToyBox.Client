@@ -3,7 +3,7 @@
 
 class UIComponent;
 class MouseEventReceiver;
-class BaseTraverser : private HierarchyTraverser //Derivedµµ Nameµµ ¾Æ´Ñ ÀÏ¹İÀûÀÎ
+class BaseTraverser : private HierarchyTraverser //Derivedë„ Nameë„ ì•„ë‹Œ ì¼ë°˜ì ì¸
 {
 public:
 	XMUINT2 GetChildrenBoundsSize(UIComponent* c) noexcept;

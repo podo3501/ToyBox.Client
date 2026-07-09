@@ -58,7 +58,7 @@ inline Vector2 GetNormalPosition(const XMINT2& position, const XMUINT2& size)
 
 namespace Tool
 {
-	//¸¶¿ì½º »óÅÂ¸¦ ¹Ù²Ù´Â °÷Àº ÁÖ·Î Update ÇÔ¼ö¿¡¼­ ÇÏ´Âµ¥ Render¿¡¼­ ÁöÁ¤À» ÇØ¾ß ÇØ¼­ static À¸·Î ¸¸µê.
+	//ë§ˆìš°ìŠ¤ ìƒíƒœë¥¼ ë°”ê¾¸ëŠ” ê³³ì€ ì£¼ë¡œ Update í•¨ìˆ˜ì—ì„œ í•˜ëŠ”ë° Renderì—ì„œ ì§€ì •ì„ í•´ì•¼ í•´ì„œ static ìœ¼ë¡œ ë§Œë“¦.
 	class MouseCursor
 	{
 	public:

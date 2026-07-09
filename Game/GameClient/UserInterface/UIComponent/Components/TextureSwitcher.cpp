@@ -103,7 +103,7 @@ bool TextureSwitcher::SetSourceInfo(TextureResourceBinder* resBinder, InteractSt
 	auto curIndex = srcInfo.GetIndex();
 	ReturnIfFalse(curIndex);
 
-	//¹Ù·Î indexedSource ÀÔ·ÂÇÏ´Â°Ô ¾Æ´Ï¶ó binder¿Í Å°°ª°ú ÀÎµ¦½º¸¦ ³Ñ°ÜÁà¼­ PatchTexture ³»¿ë±îÁö ´Ù ¹Ù²ã¾ß ÇÏÁö ¾ÊÀ»±î?
+	//ë°”ë¡œ indexedSource ì…ë ¥í•˜ëŠ”ê²Œ ì•„ë‹ˆë¼ binderì™€ í‚¤ê°’ê³¼ ì¸ë±ìŠ¤ë¥¼ ë„˜ê²¨ì¤˜ì„œ PatchTexture ë‚´ìš©ê¹Œì§€ ë‹¤ ë°”ê¿”ì•¼ í•˜ì§€ ì•Šì„ê¹Œ?
 	m_indexes.insert_or_assign(state, *curIndex);
 	m_sources.insert_or_assign(state, srcInfo);
 
@@ -179,7 +179,7 @@ bool TextureSwitcher::FitToTextureSource() noexcept
 
 void TextureSwitcher::ChangeState(InteractState state, bool force) noexcept 
 { 
-	if ((!force) && //°­Á¦·Î ¹Ù²Ù¸é(true¶ó¸é) ¹Ù²ï´Ù. ÇÏÁö¸¸, pressed¿¡¼­ hovered·Î ¹Ù²îÁö ¾Ê´Â´Ù.
+	if ((!force) && //ê°•ì œë¡œ ë°”ê¾¸ë©´(trueë¼ë©´) ë°”ë€ë‹¤. í•˜ì§€ë§Œ, pressedì—ì„œ hoveredë¡œ ë°”ë€Œì§€ ì•ŠëŠ”ë‹¤.
 		(m_state == InteractState::Pressed && state == InteractState::Hovered)) return;
 	if (m_state != state) SetState(state); 
 }

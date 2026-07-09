@@ -7,8 +7,8 @@
 #include "Renderer/Public/IRenderer.h"
 #include "Platform/Utils/GeometryExt.h"
 
-//ÇÑ±ÛÆùÆ®¿Í ¿µ¹®ÆùÆ®´Â °¢°¢ ÇÑ°³¸¸ ·ÎµùÇÏ±â·Î ÇÑ´Ù.
-//Áß°£¿¡ º¼µå³ª ¹ØÁÙ°°Àº °ÍÀº Áö¿øÇÏÁö ¾Ê°í Å©±âµµ °íÁ¤À¸·Î ÇÑ´Ù.
+//í•œê¸€í°íŠ¸ì™€ ì˜ë¬¸í°íŠ¸ëŠ” ê°ê° í•œê°œë§Œ ë¡œë”©í•˜ê¸°ë¡œ í•œë‹¤.
+//ì¤‘ê°„ì— ë³¼ë“œë‚˜ ë°‘ì¤„ê°™ì€ ê²ƒì€ ì§€ì›í•˜ì§€ ì•Šê³  í¬ê¸°ë„ ê³ ì •ìœ¼ë¡œ í•œë‹¤.
 TextArea::~TextArea() = default;
 TextArea::TextArea() = default;
 TextArea::TextArea(const TextArea& other) :
@@ -65,7 +65,7 @@ bool TextArea::ArrangeText(const wstring& text)
 		}
 
 		if (usableArea.height < wordRect.y + wordRect.height)
-			break; // °­Á¦ Á¾·á
+			break; // ê°•ì œ ì¢…ë£Œ
 
 		if (usableArea.width < wordRect.x + wordRect.width)
 			startPos = { 0.0f, startPos.y + lineSpacing };

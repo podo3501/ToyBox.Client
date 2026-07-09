@@ -39,7 +39,7 @@ struct PhongMaterialCB
 
 struct MaterialConstantBuffer
 {
-    uint32_t textureIndices[3]; //ÅØ½ºÃÄ ÀÎµ¦½º
+    uint32_t textureIndices[3]; //í…ìŠ¤ì³ ì¸ë±ìŠ¤
     float    param[5];
 };
 CHECK_ALIGN16(MaterialConstantBuffer);
@@ -130,7 +130,7 @@ void SurfaceRenderer::PrepareFrame(const DirectionalLightData& light, const Came
     DirectX::XMMATRIX proj = ToDXMatrix(camera.proj);
     DirectX::XMMATRIX lightVP = ToDXMatrix(light.viewProj);
 
-    // GPU¿ëÀ¸·Î transposeÇØ¼­ ÀúÀå
+    // GPUìš©ìœ¼ë¡œ transposeí•´ì„œ ì €ì¥
     XMStoreFloat4x4(&meshFrame.view, DirectX::XMMatrixTranspose(view));
     XMStoreFloat4x4(&meshFrame.proj, DirectX::XMMatrixTranspose(proj));
     XMStoreFloat4x4(&meshFrame.lightViewProj, DirectX::XMMatrixTranspose(lightVP));
@@ -217,7 +217,7 @@ D3D12_GPU_VIRTUAL_ADDRESS SurfaceRenderer::UploadMaterialCB(MaterialResource& ma
         std::memcpy(&gpuCB, &cb, sizeof(MaterialConstantBuffer));
         break;
     }
-    default: Assert(false); break; // ¹ÌÁö¿ø ¶Ç´Â ±¸ÇöÀÌ ´©¶ôµÈ SurfaceType
+    default: Assert(false); break; // ë¯¸ì§€ì› ë˜ëŠ” êµ¬í˜„ì´ ëˆ„ë½ëœ SurfaceType
     }
 
     return m_materialCBAllocator.AllocateConstant(gpuCB);

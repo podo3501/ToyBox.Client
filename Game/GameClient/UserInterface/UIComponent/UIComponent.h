@@ -16,20 +16,20 @@ class UIComponent
 	friend class DerivedTraverser;
 
 protected:
-	UIComponent();	//ÀÌ Å¬·¡½º´Â ´Üµ¶À¸·Î ¸¸µé ¼ö ¾ø´Ù. »ó¼Ó ¹ŞÀº Å¬·¡½º¸¸ÀÌ »ı¼º °¡´É
+	UIComponent();	//ì´ í´ë˜ìŠ¤ëŠ” ë‹¨ë…ìœ¼ë¡œ ë§Œë“¤ ìˆ˜ ì—†ë‹¤. ìƒì† ë°›ì€ í´ë˜ìŠ¤ë§Œì´ ìƒì„± ê°€ëŠ¥
 	UIComponent(const string& name, const UILayout& layout) noexcept;
 	UIComponent(const UIComponent& other);
 
 	virtual unique_ptr<UIComponent> CreateClone() const = 0;
-	virtual bool BindSourceInfo(TextureResourceBinder*) noexcept { return true; } //Binder¿¡¼­ Å°°ªÀ¸·Î source ¾ò¾î¿Ã¶§
+	virtual bool BindSourceInfo(TextureResourceBinder*) noexcept { return true; } //Binderì—ì„œ í‚¤ê°’ìœ¼ë¡œ source ì–»ì–´ì˜¬ë•Œ
 	virtual bool Update(const DX::StepTimer&) noexcept { return true; }
 	virtual void Render(ITextureRender*) const {};
-	virtual bool ResizeAndAdjustPos(const XMUINT2& size) noexcept; //»çÀÌÁî ¹Ù²Ù¸é childÀÇ À§Ä¡¸¦ ¹Ù²ã¾ß ÇÑ´Ù.
-	virtual bool ChangeSize(const XMUINT2&, bool) noexcept { return true; } //»çÀÌÁî ¹Ù²Ü¶§
+	virtual bool ResizeAndAdjustPos(const XMUINT2& size) noexcept; //ì‚¬ì´ì¦ˆ ë°”ê¾¸ë©´ childì˜ ìœ„ì¹˜ë¥¼ ë°”ê¿”ì•¼ í•œë‹¤.
+	virtual bool ChangeSize(const XMUINT2&, bool) noexcept { return true; } //ì‚¬ì´ì¦ˆ ë°”ê¿€ë•Œ
 	virtual bool EnterToolMode() noexcept { return true;	}
 	virtual bool ExitToolMode() noexcept { return true; }
 
-	//»ó¼ÓµÇ¾îÁö´Â ÇÔ¼ö´Â ±¸ÇöÇÑ´Ù.
+	//ìƒì†ë˜ì–´ì§€ëŠ” í•¨ìˆ˜ëŠ” êµ¬í˜„í•œë‹¤.
 	bool EqualComponent(const UIComponent* lhs, const UIComponent* rhs) const noexcept;
 	bool ChangePosition(size_t index, const XMUINT2& size, const XMINT2& relativePos) noexcept;
 	UIComponent* GetChildComponent(size_t index) const noexcept;
@@ -38,9 +38,9 @@ protected:
 	
 public:
 	virtual ~UIComponent();
-	UIComponent& operator=(const UIComponent&) = delete;	//»ó¼Ó ¹ŞÀº Å¬·¡½ºµµ ´ëÀÔ»ı¼ºÀÚ ±âº»ÀûÀ¸·Î »èÁ¦µÊ.
+	UIComponent& operator=(const UIComponent&) = delete;	//ìƒì† ë°›ì€ í´ë˜ìŠ¤ë„ ëŒ€ì…ìƒì„±ì ê¸°ë³¸ì ìœ¼ë¡œ ì‚­ì œë¨.
 
-public: //ÀÌ Å¬·¡½ºÀÇ public ÇÔ¼ö´Â ¿Ø¸¸ÇÏ¸é ´Ã¸®Áö ¾Êµµ·Ï ÇÏÀÚ.
+public: //ì´ í´ë˜ìŠ¤ì˜ public í•¨ìˆ˜ëŠ” ì™ ë§Œí•˜ë©´ ëŠ˜ë¦¬ì§€ ì•Šë„ë¡ í•˜ì.
 	static ComponentID GetTypeStatic() { return ComponentID::Unknown; }
 	virtual ComponentID GetTypeID() const noexcept = 0;
 	virtual MouseEventReceiver* AsMouseEventReceiver() noexcept { return nullptr; }
@@ -65,7 +65,7 @@ public: //ÀÌ Å¬·¡½ºÀÇ public ÇÔ¼ö´Â ¿Ø¸¸ÇÏ¸é ´Ã¸®Áö ¾Êµµ·Ï ÇÏÀÚ.
 	inline bool SetStateFlag(StateFlag::Type flag, bool enabled) noexcept { return BitEnum::Set(m_stateFlag, flag, enabled); }
 	inline bool HasStateFlag(StateFlag::Type flag) const noexcept { return BitEnum::Has(m_stateFlag, flag); }
 	inline void SetRegion(const string& region) noexcept { m_region = region; }
-	inline const string& GetRegion() const noexcept { return m_region; } //ÇöÀç ÀÌ ÄÄÆ÷³ÍÆ®ÀÇ region°ª
+	inline const string& GetRegion() const noexcept { return m_region; } //í˜„ì¬ ì´ ì»´í¬ë„ŒíŠ¸ì˜ regionê°’
 	inline void SetName(const string& name) noexcept { m_name = name; }
 	inline const string& GetName() const noexcept { return m_name; }
 	inline UIComponent* GetParent() noexcept { return m_parent; }
@@ -79,11 +79,11 @@ private:
 	inline void SetParent(UIComponent* component) noexcept { m_parent = component; }
 
 	UILayout m_layout;
-	UITransform m_transform; //ÀÌ Component°¡ ÀÌµ¿µÇ¾î¾ß ÇÏ´Â °÷. ºÎ¸ğ°¡ °¡Á®¾ßµÉ µ¥ÀÌÅÍÀÌ³ª ÇÁ·Î±×·¥ÀûÀ¸·Î´Â ÀÚ±â ÀÚ½ÅÀÌ °¡Áö´Â°Ô ÄÚµå°¡ ±ò²ûÇÏ´Ù.
+	UITransform m_transform; //ì´ Componentê°€ ì´ë™ë˜ì–´ì•¼ í•˜ëŠ” ê³³. ë¶€ëª¨ê°€ ê°€ì ¸ì•¼ë  ë°ì´í„°ì´ë‚˜ í”„ë¡œê·¸ë¨ì ìœ¼ë¡œëŠ” ìê¸° ìì‹ ì´ ê°€ì§€ëŠ”ê²Œ ì½”ë“œê°€ ê¹”ë”í•˜ë‹¤.
 	StateFlag::Type m_stateFlag{ StateFlag::Default };
-	string m_region; //UI¿¡¼­ ³×ÀÓ½ºÆäÀÌ½º ¿ªÇÒÀ» ÇÑ´Ù. FindRegionComponent·Î Ã£À» ¼ö ÀÖ´Ù.
+	string m_region; //UIì—ì„œ ë„¤ì„ìŠ¤í˜ì´ìŠ¤ ì—­í• ì„ í•œë‹¤. FindRegionComponentë¡œ ì°¾ì„ ìˆ˜ ìˆë‹¤.
 	string m_name;
-	RenderTraversal m_renderTraversal{ RenderTraversal::Inherited }; //ÀÌ°Ç modeÀÌ±â ¶§¹®¿¡ flag¿Í ¼º°İÀÌ ¸ÂÁö ¾Ê¾Æ¼­ µû·Î ¸¸µê. Áö±İÀº 2°³»ÓÀÌ¶ó flag¿¡ ³Ö¾îµµ µÇ±äÇÑµ¥, ÃßÈÄ È®Àå¼ºÀ» °í·ÁÇØ¼­ ÀÏ´Ü ÀÌ·¸°Ô ³öµÎ±â·Î ÇÏÀÚ.
+	RenderTraversal m_renderTraversal{ RenderTraversal::Inherited }; //ì´ê±´ modeì´ê¸° ë•Œë¬¸ì— flagì™€ ì„±ê²©ì´ ë§ì§€ ì•Šì•„ì„œ ë”°ë¡œ ë§Œë“¦. ì§€ê¸ˆì€ 2ê°œë¿ì´ë¼ flagì— ë„£ì–´ë„ ë˜ê¸´í•œë°, ì¶”í›„ í™•ì¥ì„±ì„ ê³ ë ¤í•´ì„œ ì¼ë‹¨ ì´ë ‡ê²Œ ë†”ë‘ê¸°ë¡œ í•˜ì.
 
 	UIComponent* m_root{ nullptr };
 	UIComponent* m_parent{ nullptr };

@@ -32,7 +32,7 @@ private:
 	IAudioBackend* m_audioBackend{ nullptr };
 	IAssetAsyncLoader* m_asyncLoader{ nullptr };
 	unordered_map<Core::ResourceID, weak_ptr<ISoundBuffer>> m_buffers;
-	HandlePool<LoadedSound, SoundTag> m_loadedSounds; //ºó SoundTag ½ºÆ®·°ÃÄ¸¦ ³Ö¾î¼­ handleÀÇ Å¸ÀÔÀ» ¸¸µç´Ù.
+	HandlePool<LoadedSound, SoundTag> m_loadedSounds; //ë¹ˆ SoundTag ìŠ¤íŠ¸ëŸ­ì³ë¥¼ ë„£ì–´ì„œ handleì˜ íƒ€ì…ì„ ë§Œë“ ë‹¤.
 
 	std::vector<PendingSoundRequest> m_pending;
 };

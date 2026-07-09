@@ -80,7 +80,7 @@ void SoundRepository::Update()
         }
 
         auto sound = m_loadedSounds.Find(req.handle);
-        if (!sound) // ÀÌ¹Ì unload µÇ¾ú°Å³ª Á¦°ÅµÈ °æ¿ì
+        if (!sound) // ì´ë¯¸ unload ë˜ì—ˆê±°ë‚˜ ì œê±°ëœ ê²½ìš°
         {
             it = m_pending.erase(it);
             continue;
@@ -101,7 +101,7 @@ const LoadedSound* SoundRepository::Find(SoundHandle h) const noexcept
 
 bool SoundRepository::Remove(SoundHandle h) noexcept
 {
-    for (auto it = m_pending.begin(); it != m_pending.end();) // pending request Á¤¸®
+    for (auto it = m_pending.begin(); it != m_pending.end();) // pending request ì •ë¦¬
     {
         if (it->handle == h)
             it = m_pending.erase(it);

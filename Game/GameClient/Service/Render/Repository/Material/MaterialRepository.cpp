@@ -60,7 +60,7 @@ MaterialHandle MaterialRepository::GetOrCreate(const MaterialDesc& desc)
             validTextureCount++;
     }
 
-    if (validTextureCount == 0) //ÅØ½ºÃÄ°¡ ¾øÀ»¶§¿¡´Â ·Îµù·ÎÁ÷À» ÇÒ ÇÊ¿ä°¡ ¾ø¾î gpu ·ÎÁ÷À¸·Î º¸³»´Âµ¥ ÅØ½ºÃÄ ¾øÀÌ º¸³½´Ù.
+    if (validTextureCount == 0) //í…ìŠ¤ì³ê°€ ì—†ì„ë•Œì—ëŠ” ë¡œë”©ë¡œì§ì„ í•  í•„ìš”ê°€ ì—†ì–´ gpu ë¡œì§ìœ¼ë¡œ ë³´ë‚´ëŠ”ë° í…ìŠ¤ì³ ì—†ì´ ë³´ë‚¸ë‹¤.
     {
         GpuPendingMaterialRequest gpuReq;
         gpuReq.handle = handle;

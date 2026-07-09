@@ -3,7 +3,7 @@
 struct IComponent;
 struct ITextureBinder;
 struct IImguiRegistry;
-//·ÎµùÇÒ¶§ »ç¿ëÇÏ´Â ÀÎÅÍÆäÀÌ½º
+//ë¡œë”©í• ë•Œ ì‚¬ìš©í•˜ëŠ” ì¸í„°í˜ì´ìŠ¤
 
 struct ITextureLoad
 {
@@ -13,7 +13,7 @@ public:
     virtual bool LoadTexture(const wstring& filename, size_t& outIndex, XMUINT2* outSize, UINT64* outGfxMemOffset) = 0;
     virtual bool LoadFont(const wstring& filename, size_t& outIndex) = 0;
     virtual void ReleaseTexture(size_t idx) noexcept = 0;
-    virtual void AddRef(size_t index) noexcept = 0; //CloneÇßÀ»¶§ refcount¸¦ ¸ÂÃß¾î ÁÖ±âÀ§ÇØ »ç¿ëÇÏ´Â ÇÔ¼öÀÎµ¥, TextureResourceBinder´Â CloneÇÒ ÇÊ¿ä°¡ ¾ø±â ¶§¹®¿¡ Àß ¾È¾²ÀÏ °¡´É¼ºÀÌ ÀÖ´Ù.
+    virtual void AddRef(size_t index) noexcept = 0; //Cloneí–ˆì„ë•Œ refcountë¥¼ ë§ì¶”ì–´ ì£¼ê¸°ìœ„í•´ ì‚¬ìš©í•˜ëŠ” í•¨ìˆ˜ì¸ë°, TextureResourceBinderëŠ” Cloneí•  í•„ìš”ê°€ ì—†ê¸° ë•Œë¬¸ì— ì˜ ì•ˆì“°ì¼ ê°€ëŠ¥ì„±ì´ ìˆë‹¤.
 };
 
 struct ITextureRender
@@ -25,13 +25,13 @@ public:
     virtual void DrawString(size_t index, const wstring& text, const Vector2& pos, const FXMVECTOR& color) const = 0;
 };
 
-//µ¥ÀÌÅÍ¸¦ ¾ò¾î¿Ã¶§ »ç¿ëÇÏ´Â ÀÎÅÍÆäÀÌ½º
+//ë°ì´í„°ë¥¼ ì–»ì–´ì˜¬ë•Œ ì‚¬ìš©í•˜ëŠ” ì¸í„°í˜ì´ìŠ¤
 struct ITextureController
 {
 public:
     virtual ~ITextureController() {};
 
-    //Text°ü·Ã
+    //Textê´€ë ¨
     virtual Rectangle MeasureText(size_t index, const wstring& text, const Vector2& position) = 0;
     virtual float GetLineSpacing(size_t index) const noexcept = 0;
 
@@ -42,10 +42,10 @@ public:
     virtual void ModifyRenderTexturePosition(size_t index, const XMINT2& leftTop) noexcept = 0;
     virtual bool ModifyRenderTextureSize(size_t index, const XMUINT2& size) = 0;
     virtual void ReleaseTexture(size_t idx) noexcept = 0; 
-    virtual void AddRef(size_t index) noexcept = 0; //ÇöÀç´Â ¾²ÀÌÁö ¾ÊÁö¸¸, ¸®¼Ò½º¸¦ °øÀ¯ÇØ¾ßÇÒ¶§ ¾²´Â ÇÔ¼öÀÌ´Ù.
+    virtual void AddRef(size_t index) noexcept = 0; //í˜„ì¬ëŠ” ì“°ì´ì§€ ì•Šì§€ë§Œ, ë¦¬ì†ŒìŠ¤ë¥¼ ê³µìœ í•´ì•¼í• ë•Œ ì“°ëŠ” í•¨ìˆ˜ì´ë‹¤.
 };
 
-//Imgui ui ¸¸µé¶§ »ç¿ë
+//Imgui ui ë§Œë“¤ë•Œ ì‚¬ìš©
 struct ImGuiIO;
 struct IImguiComponent
 {

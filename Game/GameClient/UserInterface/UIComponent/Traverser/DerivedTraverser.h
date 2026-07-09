@@ -6,7 +6,7 @@ struct ITextureController;
 struct IAudioManager;
 class TextureResourceBinder;
 namespace DX { class StepTimer; }
-class DerivedTraverser : private HierarchyTraverser //UIComponent »ó¼ÓµÇ´Â virtual ÇÔ¼ö ¹× private ¸â¹öº¯¼ö
+class DerivedTraverser : private HierarchyTraverser //UIComponent ìƒì†ë˜ëŠ” virtual í•¨ìˆ˜ ë° private ë©¤ë²„ë³€ìˆ˜
 {
 public:
 	~DerivedTraverser();
@@ -14,10 +14,10 @@ public:
 
 	//UITraverser
 	unique_ptr<UIComponent> Clone(UIComponent* c);
-	bool ChangeSize(UIComponent* c, const XMUINT2& size, bool isForce = false) noexcept; //isForce´Â Å©±â°¡ º¯ÇÔÀÌ ¾ø´õ¶óµµ ³¡±îÁö ½ÇÇà½ÃÅ²´Ù.
+	bool ChangeSize(UIComponent* c, const XMUINT2& size, bool isForce = false) noexcept; //isForceëŠ” í¬ê¸°ê°€ ë³€í•¨ì´ ì—†ë”ë¼ë„ ëê¹Œì§€ ì‹¤í–‰ì‹œí‚¨ë‹¤.
 	bool UpdatePositionsManually(UIComponent* c, bool isRoot = false) noexcept;
 
-	//UIDetailTraverser privateÇÑ ÇÔ¼ö°Å³ª protected ÇÔ¼ö¸¦ ºÎ¸¦¶§ »ç¿ëÇÏ´Â Traverser 
+	//UIDetailTraverser privateí•œ í•¨ìˆ˜ê±°ë‚˜ protected í•¨ìˆ˜ë¥¼ ë¶€ë¥¼ë•Œ ì‚¬ìš©í•˜ëŠ” Traverser 
 	bool BindTextureSourceInfo(UIComponent* c, TextureResourceBinder* resBinder) noexcept;
 	bool BindResource(UIComponent* c, TextureResourceBinder* resBinder, IAudioManager* audioManager) noexcept;
 	bool Update(UIComponent* c, const DX::StepTimer& timer) noexcept;

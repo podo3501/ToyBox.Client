@@ -126,7 +126,7 @@ void MeshRepository::ProcessGpuPending()
 	{
 		auto entry = m_loadedMeshes.Find(work.handle);
 		if (!entry || !entry->meshRes) continue;
-		if (entry->state != LoadState::Pending) continue; // Áßº¹À¸·Î µé¾î¿Â °æ¿ì ÀÌ¹Ì Loading/Ready ¶ó¸é Ã³¸®¾ÈÇÔ.
+		if (entry->state != LoadState::Pending) continue; // ì¤‘ë³µìœ¼ë¡œ ë“¤ì–´ì˜¨ ê²½ìš° ì´ë¯¸ Loading/Ready ë¼ë©´ ì²˜ë¦¬ì•ˆí•¨.
 
 		if (!m_meshProvider->LoadResource(entry->meshRes, work.meshAsset))
 		{

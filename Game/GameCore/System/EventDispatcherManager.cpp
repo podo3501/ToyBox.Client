@@ -35,11 +35,11 @@ string EventDispatcherManager::MakeKey(const string& region, const string& name)
 
 unique_ptr<EventDispatcherManager> EventDispatcherManager::Create()
 {
-	//»ı¼ºÀÚ°¡ protectedÀÌ¸é staticÀ¸·Î ¸¸µé¾îµµ Á¢±ÙÀÌ ¾ÈµÇ±â ¶§¹®¿¡ new·Î ÇØ¼­ ¸¸µç´ÙÀ½ Çüº¯È¯.
+	//ìƒì„±ìê°€ protectedì´ë©´ staticìœ¼ë¡œ ë§Œë“¤ì–´ë„ ì ‘ê·¼ì´ ì•ˆë˜ê¸° ë•Œë¬¸ì— newë¡œ í•´ì„œ ë§Œë“ ë‹¤ìŒ í˜•ë³€í™˜.
 	return unique_ptr<EventDispatcherManager>(new EventDispatcherManager());
 }
 
-//Null Å¬·¡½º¸¦ ±»ÀÌ Çì´õ¿¡ ³Ö¾î¼­ »ç¿ëÇÏ´Â »ç¶÷À¸·Î ÇÏ¿©±İ È¥¶õÀ» ÁÙ ÀÌÀ¯°¡ ¾ø´Ù.
+//Null í´ë˜ìŠ¤ë¥¼ êµ³ì´ í—¤ë”ì— ë„£ì–´ì„œ ì‚¬ìš©í•˜ëŠ” ì‚¬ëŒìœ¼ë¡œ í•˜ì—¬ê¸ˆ í˜¼ë€ì„ ì¤„ ì´ìœ ê°€ ì—†ë‹¤.
 class NullEventDispatcherManager : public EventDispatcherManager
 {
 public:
@@ -50,6 +50,6 @@ public:
 
 unique_ptr<EventDispatcherManager> EventDispatcherManager::CreateNull()
 {
-	//ÀÚ±âÀÚ½ÅÀÇ »ı¼ºÀÚ´Â publicÀÌ±â ¶§¹®¿¡ make_unique °¡´É. ¹°·Ğ ºÎ¸ğÃ³·³ new·Î ÇØµµ µÈ´Ù. ±×·¡µµ make_unique·Î ÇØ¼­ ¿Ö ´Ş¶óµµ ÄÄÆÄÀÏ µÇ´ÂÁö »ı°¢ÇØ º¸µµ·Ï ³²°Ü³õ´Â´Ù.
+	//ìê¸°ìì‹ ì˜ ìƒì„±ìëŠ” publicì´ê¸° ë•Œë¬¸ì— make_unique ê°€ëŠ¥. ë¬¼ë¡  ë¶€ëª¨ì²˜ëŸ¼ newë¡œ í•´ë„ ëœë‹¤. ê·¸ë˜ë„ make_uniqueë¡œ í•´ì„œ ì™œ ë‹¬ë¼ë„ ì»´íŒŒì¼ ë˜ëŠ”ì§€ ìƒê°í•´ ë³´ë„ë¡ ë‚¨ê²¨ë†“ëŠ”ë‹¤.
 	return make_unique<NullEventDispatcherManager>();
 }

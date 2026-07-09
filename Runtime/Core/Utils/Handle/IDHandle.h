@@ -13,11 +13,11 @@ struct IDHandle
 
     auto operator<=>(const IDHandle&) const = default;
 
-    constexpr explicit operator bool() const noexcept { return index != 0; } // 0Àº Ç×»ó invalid
+    constexpr explicit operator bool() const noexcept { return index != 0; } // 0ì€ í•­ìƒ invalid
     static constexpr IDHandle Invalid() noexcept { return IDHandle{ 0, 0 }; }
 };
 
-namespace std //unordered_map¿¡¼­ hash¸¦ ¾î¶»°Ô °è»êÇÒÁö Á¤ÇØÁÖ¾î¾ß ÇÑ´Ù.
+namespace std //unordered_mapì—ì„œ hashë¥¼ ì–´ë–»ê²Œ ê³„ì‚°í• ì§€ ì •í•´ì£¼ì–´ì•¼ í•œë‹¤.
 {
     template<typename Tag>
     struct hash<IDHandle<Tag>>
@@ -32,7 +32,7 @@ namespace std //unordered_map¿¡¼­ hash¸¦ ¾î¶»°Ô °è»êÇÒÁö Á¤ÇØÁÖ¾î¾ß ÇÑ´Ù.
 }
 
 /*
-    »ç¿ë¹ı: Name¿¡ ÀÌ¸§ ¹Ù²ã ³Ö±â.
+    ì‚¬ìš©ë²•: Nameì— ì´ë¦„ ë°”ê¿” ë„£ê¸°.
     struct NameTag {};
     using NameHandle = IDHandle<NameTag>;
     inline constexpr NameHandle InvalidNameHandle = IDHandle<NameTag>::Invalid();
