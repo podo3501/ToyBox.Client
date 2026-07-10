@@ -4,6 +4,7 @@
 #include "Handle/MaterialHandle.h"
 #include "Desc/MaterialDesc.h"
 #include "Core/Math/Matrix.h"
+#include "Core/Math/Vector2.h"
 #include "Core/Foundation/Geometry2D.h"
 
 struct IResourceProvider;
@@ -27,7 +28,7 @@ public:
 		MeshRepository* meshRepository, 
 		MaterialRepository* matRepository);
 
-	void DrawText(FontHandle hF, std::string_view text, const Vector2& pos);
+	void DrawText(FontHandle hF, std::string_view text, uint32_t size, const Core::Math::Vector2& pos);
 	void DrawSurface(MeshHandle hM, MaterialHandle hMtl, const Core::Math::Matrix& world);
 	void DrawDebugSurface(MeshHandle hM, MaterialHandle hMtl, const Core::Math::Matrix& world);
 	void DrawUI(MaterialHandle hMtl, const Rect& dest, const Rect* source = nullptr);

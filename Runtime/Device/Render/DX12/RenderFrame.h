@@ -1,19 +1,22 @@
 #pragma once
 #include "GameClient/Service/Render/IRenderFrame.h"
-#include "TextSystem/TextSystem.h"
 #include "Scene/RenderScene.h"
+
+class TextSystem;
 
 class RenderFrame : public IRenderFrame
 {
 public:
 	~RenderFrame();
-	RenderFrame();
+	RenderFrame(TextSystem& textSystem);
 
 	virtual void SetFrameData(const FrameData& frameData) noexcept override;
 	virtual void DrawText(
+		std::shared_ptr<IMeshResource> meshRes,
 		std::shared_ptr<IFontResource> fontRes,
 		std::string_view text,
-		const Vector2& pos) override;
+		uint32_t size,
+		const Core::Math::Vector2& pos) override;
 	virtual void DrawSurface(
 		std::shared_ptr<IMeshResource> meshRes,
 		std::shared_ptr<IMaterialResource> matRes,
@@ -30,7 +33,7 @@ public:
 	const FrameData& GetFrameData() const { return m_frameData; }
 
 private:
-	TextSystem m_textSystem;
+	TextSystem& m_textSystem;
 	RenderScene m_scene;
 	FrameData m_frameData;
 };

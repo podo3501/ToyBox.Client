@@ -4,6 +4,7 @@
 #include "GameClient/Service/Render/Resource/IMeshResource.h"
 #include "GameClient/Service/Render/Resource/IMaterialResource.h"
 #include "Core/Foundation/Geometry2D.h"
+#include "Core/Math/Vector2.h"
 
 struct IRenderFrame
 {
@@ -11,9 +12,11 @@ struct IRenderFrame
 	virtual void SetFrameData(const FrameData& frameData) noexcept = 0;
 
 	virtual void DrawText(
+		std::shared_ptr<IMeshResource> meshRes,
 		std::shared_ptr<IFontResource> fontRes,
 		std::string_view text,
-		const Vector2& pos) = 0;
+		uint32_t size,
+		const Core::Math::Vector2& pos) = 0;
 
 	virtual void DrawSurface(
 		std::shared_ptr<IMeshResource> meshRes,

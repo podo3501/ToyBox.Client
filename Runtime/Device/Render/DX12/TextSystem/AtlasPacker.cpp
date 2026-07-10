@@ -4,12 +4,9 @@
 #include "stb_rect_pack.h"
 
 AtlasPacker::~AtlasPacker() { Reset(); }
-AtlasPacker::AtlasPacker(const Size& textureSize)
-{
-    Initialize(textureSize); //?!? 일단은 생성자에서 initialize 하지만 나중에 이 부분을 호출식으로 고치던지 수정해야 한다.
-}
+AtlasPacker::AtlasPacker() = default;
 
-void AtlasPacker::Initialize(const Size& textureSize)
+bool AtlasPacker::Initialize(const Size& textureSize)
 {
     Reset();
 
@@ -24,6 +21,8 @@ void AtlasPacker::Initialize(const Size& textureSize)
         textureSize.height, 
         m_nodes.data(), 
         static_cast<int>(m_nodes.size())); // stb 패커 초기화
+
+    return true;
 }
 
 std::pair<int, int> AtlasPacker::AllocateRect(int width, int height)

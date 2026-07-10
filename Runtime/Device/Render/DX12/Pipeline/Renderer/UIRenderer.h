@@ -2,6 +2,7 @@
 #include "RendererConfig.h"
 #include "FrameUploadAllocator.h"
 #include "Core/Foundation/Geometry2D.h"
+#include "Core/Math/Vector4.h"
 #include "Core/Math/Matrix.h"
 #include "GameClient/Service/Render/Desc/RenderState.h"
 
@@ -27,7 +28,7 @@ public:
         MeshResource& mesh, 
         UIMaterialResource& material, 
         const Core::Math::Matrix& world,
-        const std::optional<Rect>& source);
+        const Core::Math::Vector4& uvTransform);
 
     void SetScreenSize(const Size& size);
 
@@ -45,7 +46,7 @@ private:
     D3D12_GPU_VIRTUAL_ADDRESS UploadDrawCB(
         UIMaterialResource& material,
         const Core::Math::Matrix& world, 
-        const std::optional<Rect>& source);
+        const Core::Math::Vector4& uvTransform);
 
     UIRendererConfig m_config;
     PipelineCache& m_pipelineCache;

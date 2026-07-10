@@ -13,4 +13,5 @@ public:
 
 private:
     FreeTypeLibrary m_ftLibrary;
+    Core::ByteBuffer m_fontSource;
 };

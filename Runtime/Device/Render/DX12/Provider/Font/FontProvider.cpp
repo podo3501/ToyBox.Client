@@ -16,24 +16,8 @@ bool FontProvider::LoadResource(std::shared_ptr<IFontResource> resource, std::sh
 	if (!resource || !asset || asset->fontSource.empty())
 		return false;
 
-	auto fontResource = std::static_pointer_cast<FontResource>(resource);
-
-	FT_Face face{ nullptr };
-	FT_Error error = FT_New_Memory_Face(
-		m_ftLibrary.Get(),
-		reinterpret_cast<const FT_Byte*>(asset->fontSource.data()),
-		static_cast<FT_Long>(asset->fontSource.size()),
-		0, // 단일 페이스 인덱스
-		&face
-	);
-
-	if (error)
-		return false;
-
-	fontResource->SetFace(face);
-	fontResource->MarkReady();
-
-	return true;
+	auto font = std::static_pointer_cast<FontResource>(resource);
+	return font->Initialize(m_ftLibrary, std::move(asset));
 }
 
 void FontProvider::ReleaseResource(std::shared_ptr<IFontResource> resource)

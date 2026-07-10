@@ -2,6 +2,7 @@
 #include <memory>
 #include <span>
 #include "Core/Math/Matrix.h"
+#include "Core/Math/Vector4.h"
 #include "Core/Foundation/Geometry2D.h"
 
 struct IMeshResource;
@@ -18,7 +19,7 @@ struct DrawItem
 
 struct DrawUIItem : public DrawItem
 {
-    std::optional<Rect> source{ std::nullopt };
+    Core::Math::Vector4 uvTransform{ 0.f, 0.f, 1.f, 1.f };
 };
 
 struct DrawPacket

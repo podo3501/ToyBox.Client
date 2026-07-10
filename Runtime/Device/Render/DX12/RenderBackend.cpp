@@ -10,7 +10,9 @@ RenderBackend::RenderBackend(const RenderConfig& config) :
     m_descFactory{ m_device },
     m_resFactory{ m_device },
     m_resProvider{ m_device, m_taskScheduler, m_resFactory, m_descFactory },
-    m_pipeline{ m_device, m_swapChain, m_descFactory, m_shaderLibrary }
+    m_pipeline{ m_device, m_swapChain, m_descFactory, m_shaderLibrary },
+    m_textSystem{ m_taskScheduler, m_resFactory },
+    m_renderFrame{ m_textSystem }
 {}
 
 void RenderBackend::WaitIdle()
@@ -30,6 +32,7 @@ bool RenderBackend::Initialize(HWND hwnd, const Size& screenSize, std::span<cons
     ReturnIfFalse(m_profiler.Initialize(m_device, m_cmdScheduler, m_resFactory));
     ReturnIfFalse(m_resProvider.Initialize(m_shaderLibrary));
     ReturnIfFalse(m_pipeline.Initialize(screenSize, shadowMapSize));
+    ReturnIfFalse(m_textSystem.Initialize(m_device, m_descFactory, { 1024, 1024 })); //?!? 일단은 이렇게 하고 나중에 config에 넣어야 한다.
 
     return true;
 }

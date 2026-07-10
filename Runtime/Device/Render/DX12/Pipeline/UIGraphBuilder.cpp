@@ -30,7 +30,7 @@ void UIGraphBuilder::Build(RenderGraph& graph)
                 auto material = static_cast<UIMaterialResource*>(uiItem.material.get());
 
                 uiRenderer.BindPipeline(cmd, material->GetPipelineState());
-                uiRenderer.Draw(cmd, *mesh, *material, uiItem.world, uiItem.source);
+                uiRenderer.Draw(cmd, *mesh, *material, uiItem.world, uiItem.uvTransform);
             }
         };
 }

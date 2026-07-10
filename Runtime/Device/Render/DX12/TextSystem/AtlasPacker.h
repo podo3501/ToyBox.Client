@@ -8,14 +8,13 @@ class AtlasPacker
 {
 public:
     ~AtlasPacker();
-    AtlasPacker(const Size& textureSize);
+    AtlasPacker();
+    bool Initialize(const Size& textureSize);
 
     std::pair<int, int> AllocateRect(int width, int height);
     void Reset();
 
 private:
-    void Initialize(const Size& textureSize);
-
     Size m_textureSize;
     stbrp_context* m_context{ nullptr };
     std::vector<stbrp_node> m_nodes;

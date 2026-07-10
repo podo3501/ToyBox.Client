@@ -35,8 +35,6 @@ MeshCreateGraphBuilder::MeshCreateGraphBuilder(TaskScheduler& taskScheduler, Res
 void MeshCreateGraphBuilder::LoadMeshes(
     const std::vector<MeshLoadRequest>& requests)
 {
-    RenderGraph graph;
-
     std::vector<MeshUploadEntry> uploads;
     std::vector<MeshFinalizeEntry> finalizes;
 
@@ -58,7 +56,7 @@ void MeshCreateGraphBuilder::LoadMeshes(
 
         uploads.push_back({
             vbResID, vbRes,
-            req.asset->vertices.data(),
+            req.asset->vertices.data(), //여기서부터 UploadRegion. 즉 Upload buffer에서 어느 부분을 사용하는지 기록
             req.asset->vertices.size(),
             static_cast<UINT64>(vbOffset),
             vbRes
@@ -66,7 +64,7 @@ void MeshCreateGraphBuilder::LoadMeshes(
 
         uploads.push_back({
             ibResID, ibRes,
-            req.asset->indices.data(),
+            req.asset->indices.data(), //여기서부터 UploadRegion. 즉 Upload buffer에서 어느 부분을 사용하는지 기록
             req.asset->indices.size() * sizeof(uint32_t),
             static_cast<UINT64>(ibOffset),
             ibRes
@@ -78,6 +76,7 @@ void MeshCreateGraphBuilder::LoadMeshes(
     }
     RGResourceID uploadResID = RenderGraph::CreateRGResourceID();
 
+    RenderGraph graph;
     BuildUploadPass(graph, uploads, uploadResID);
     BuildFinalizePass(graph, finalizes);
 
@@ -92,12 +91,12 @@ void MeshCreateGraphBuilder::LoadMeshes(
 
 void MeshCreateGraphBuilder::BuildUploadPass(RenderGraph& graph, std::vector<MeshUploadEntry>& meshUploads, RGResourceID uploadResID)
 {
-    auto& pass = graph.AddCopyPass("MeshUpload");
+    auto& upload = graph.AddCopyPass("MeshUpload");
 
     for (auto& mesh : meshUploads)
-        pass.Write(mesh.resID, RGAccess::CopyDest);
+        upload.Write(mesh.resID, RGAccess::CopyDest);
     
-    pass.gpuExecute = 
+    upload.gpuExecute =
         [
             this, 
             meshUploads = std::move(meshUploads), 
@@ -108,7 +107,7 @@ void MeshCreateGraphBuilder::BuildUploadPass(RenderGraph& graph, std::vector<Mes
         for (auto& mesh : meshUploads)
         {
             UploadBufferRegion(cmd, uploadRes, mesh.region);
-            ctx.SetResource(mesh.resID, std::move(mesh.resource));
+            ctx.SetResource(mesh.resID, std::move(mesh.resource)); //mesh.resID는 vbResID, ibResID이다.
         }
         };
 }

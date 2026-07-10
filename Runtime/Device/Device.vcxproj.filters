@@ -424,9 +424,6 @@
     <ClInclude Include="Render\DX12\TextSystem\TextSystem.h">
       <Filter>Render\DX12\TextSystem</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\TextSystem\FontAtlas.h">
-      <Filter>Render\DX12\TextSystem</Filter>
-    </ClInclude>
     <ClInclude Include="Render\DX12\TextSystem\GlyphCache.h">
       <Filter>Render\DX12\TextSystem</Filter>
     </ClInclude>
@@ -698,9 +695,6 @@
       <Filter>Asset\Loader\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\TextSystem\TextSystem.cpp">
-      <Filter>Render\DX12\TextSystem</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\DX12\TextSystem\FontAtlas.cpp">
       <Filter>Render\DX12\TextSystem</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\TextSystem\GlyphCache.cpp">

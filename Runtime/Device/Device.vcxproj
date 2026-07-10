@@ -125,9 +125,8 @@
     <ClInclude Include="Render\DX12\SwapChainPresenter.h" />
     <ClInclude Include="Render\DX12\RenderBackend.h" />
     <ClInclude Include="Render\DX12\TextSystem\AtlasPacker.h" />
-    <ClInclude Include="Render\DX12\TextSystem\FontAtlas.h" />
-    <ClInclude Include="Render\DX12\TextSystem\GlyphCache.h" />
     <ClInclude Include="Render\DX12\TextSystem\TextSystem.h" />
+    <ClInclude Include="Render\DX12\TextSystem\GlyphCache.h" />
     <ClInclude Include="Render\DX12\TextSystem\TextTypes.h" />
     <ClInclude Include="Storage\JsonObjectIO.h" />
   </ItemGroup>
@@ -225,9 +224,8 @@
     <ClCompile Include="Render\DX12\SwapChainPresenter.cpp" />
     <ClCompile Include="Render\DX12\RenderBackend.cpp" />
     <ClCompile Include="Render\DX12\TextSystem\AtlasPacker.cpp" />
-    <ClCompile Include="Render\DX12\TextSystem\FontAtlas.cpp" />
-    <ClCompile Include="Render\DX12\TextSystem\GlyphCache.cpp" />
     <ClCompile Include="Render\DX12\TextSystem\TextSystem.cpp" />
+    <ClCompile Include="Render\DX12\TextSystem\GlyphCache.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Platform\Platform.vcxproj">

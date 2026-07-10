@@ -10,6 +10,7 @@
 #include "Core/FrameProfiler.h"
 #include "ResourceProvider.h"
 #include "Pipeline/ForwardRenderPipeline.h"
+#include "TextSystem/TextSystem.h"
 #include "RenderFrame.h"
 
 class RenderBackend : public IRenderBackend
@@ -40,6 +41,7 @@ private:
 	FrameProfiler m_profiler;
 	ResourceProvider m_resProvider;
 	ForwardRenderPipeline m_pipeline;
+	TextSystem m_textSystem;
 	RenderFrame m_renderFrame;
 
 	uint64_t m_frameIndex{ 0 };

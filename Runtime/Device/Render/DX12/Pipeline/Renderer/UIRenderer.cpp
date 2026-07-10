@@ -39,6 +39,7 @@ bool UIRenderer::Initialize(Device& device, const Size& screenSize)
 bool UIRenderer::CreateDefaultPSOs()
 {
     ReturnIfFalse(CreatePSO(PipelineLibrary::Get(RegistryShader::UI, RasterPreset::NoCull)) != nullptr);
+    ReturnIfFalse(CreatePSO(PipelineLibrary::Get(RegistryShader::Text, RasterPreset::NoCull)) != nullptr);
 
     return true;
 }
@@ -53,6 +54,23 @@ ID3D12PipelineState* UIRenderer::CreatePSO(const PipelineState& pipelineState)
             pso.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
             pso.DepthStencilState.DepthEnable = FALSE;
             pso.DepthStencilState.StencilEnable = FALSE;
+
+            //  알파 블렌딩(Alpha Blending) 설정 추가
+            D3D12_RENDER_TARGET_BLEND_DESC& rtBlend = pso.BlendState.RenderTarget[0];
+            rtBlend.BlendEnable = TRUE;
+            rtBlend.LogicOpEnable = FALSE;
+
+            // 컬러 블렌딩 공식: (정답 색상 * 글자 알파) + (바탕 화면 색상 * (1 - 글자 알파))
+            rtBlend.SrcBlend = D3D12_BLEND_SRC_ALPHA;
+            rtBlend.DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
+            rtBlend.BlendOp = D3D12_BLEND_OP_ADD;
+
+            // 알파 채널 자체의 블렌딩 공식
+            rtBlend.SrcBlendAlpha = D3D12_BLEND_ONE;
+            rtBlend.DestBlendAlpha = D3D12_BLEND_ZERO;
+            rtBlend.BlendOpAlpha = D3D12_BLEND_OP_ADD;
+
+            rtBlend.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
         });
 }
 
@@ -106,9 +124,9 @@ void UIRenderer::Draw(
     MeshResource& mesh,
     UIMaterialResource& material,
     const cm::Matrix& quadWorld,
-    const std::optional<Rect>& source)
+    const cm::Vector4& uvTransform)
 {
-    auto drawCBAddress = UploadDrawCB(material, quadWorld, source);
+    auto drawCBAddress = UploadDrawCB(material, quadWorld, uvTransform);
 
     auto texIndices = material.GetTextureIndices();
     uint32_t resIndices[3] = { mesh.GetVertexHeapIndex(), mesh.GetIndexHeapIndex(), texIndices[0] };
@@ -121,8 +139,8 @@ void UIRenderer::Draw(
 
 D3D12_GPU_VIRTUAL_ADDRESS UIRenderer::UploadDrawCB(
     UIMaterialResource& material,
-    const Core::Math::Matrix& world,
-    const std::optional<Rect>& source)
+    const cm::Matrix& world,
+    const cm::Vector4& uvTransform)
 {
     UIDrawCB drawCB{};
 
@@ -132,9 +150,7 @@ D3D12_GPU_VIRTUAL_ADDRESS UIRenderer::UploadDrawCB(
     DirectX::XMMATRIX xmProj = ToDXMatrix(m_projection);
     XMStoreFloat4x4(&drawCB.projection, DirectX::XMMatrixTranspose(xmProj));
 
-    const auto& uv = material.CalcUVTransform(source);
-    drawCB.uvTransform = ToXMFLOAT4(uv);
-
+    drawCB.uvTransform = ToXMFLOAT4(uvTransform);
     return m_uiDrawCBAllocator.AllocateConstant(drawCB);
 }
 

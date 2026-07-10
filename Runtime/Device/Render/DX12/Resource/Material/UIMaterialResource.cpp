@@ -11,7 +11,7 @@ UIMaterialResource::UIMaterialResource(const MaterialDesc& desc) :
     m_desc = static_cast<const UIMaterialDesc&>(desc);
 }
 
-Core::Math::Vector4 UIMaterialResource::CalcUVTransform(const std::optional<Rect>& source)
+Core::Math::Vector4 UIMaterialResource::CalcUVTransform(const Rect* source)
 {
     if (!source)
         return Core::Math::Vector4(0.0f, 0.0f, 1.0f, 1.0f);

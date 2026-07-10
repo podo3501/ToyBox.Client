@@ -108,8 +108,11 @@ namespace RegistryShader
     constexpr ShaderID Phong{ 2 };
     constexpr ShaderID PBR{ 3 };
     constexpr ShaderID Grid{ 4 };
+
     constexpr ShaderID UI{ 5 };
-    constexpr ShaderID MipGenerator{ 6 }; //compute
+    constexpr ShaderID Text{ 6 };
+
+    constexpr ShaderID MipGenerator{ 7 }; //compute
 }
 
 struct ShaderAsset;
