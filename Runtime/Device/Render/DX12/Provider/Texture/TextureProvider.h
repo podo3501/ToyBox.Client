@@ -1,7 +1,7 @@
 #pragma once
 #include "TextureLoadRequest.h"
 #include "TextureCreateGraphBuilder.h"
-#include "Resource/Texture/DefaultTextureType.h"
+#include "Resource/Texture/BuiltinTextureType.h"
 #include <queue>
 
 class Device;
@@ -10,6 +10,7 @@ class DescriptorFactory;
 class TaskScheduler;
 class ResourceFactory;
 class ShaderLibrary;
+namespace Core { struct Color; }
 
 class TextureProvider
 {
@@ -22,14 +23,14 @@ public:
 
     bool Initialize(ShaderLibrary& shaderLibrary);
     void Update(size_t uploadBudgetBytes);
-    std::shared_ptr<TextureResource> GetDefaultTexture(DefaultTextureType type) const;
+    std::shared_ptr<TextureResource> GetBuiltinTexture(BuiltinTextureType type) const;
 
 private:
     bool CreateBuiltinTextures();
-    std::shared_ptr<TextureResource> CreateDefaultTexture(const TextureDesc& desc, std::shared_ptr<TextureAsset> asset);
-    std::shared_ptr<TextureAsset> CreateColorAsset(uint32_t pixelColor);
+    std::shared_ptr<TextureResource> CreateBuiltinTexture(const TextureDesc& desc, std::shared_ptr<TextureAsset> asset);
+    std::shared_ptr<TextureAsset> CreateColorAsset(const Core::Color& color);
 
     TextureCreateGraphBuilder m_createBuilder;
     std::queue<TextureLoadRequest> m_pending;
-    std::array<std::shared_ptr<TextureResource>, Core::EnumSize<DefaultTextureType>> m_defaultTextures;
+    std::array<std::shared_ptr<TextureResource>, Core::EnumSize<BuiltinTextureType>> m_builtinTextures;
 };

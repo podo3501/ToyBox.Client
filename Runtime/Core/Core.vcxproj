@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Foundation\Assert.h" />
+    <ClInclude Include="Foundation\Color.h" />
     <ClInclude Include="Foundation\Foundation.h" />
     <ClInclude Include="Foundation\Macros.h" />
     <ClInclude Include="Foundation\NoCopyNoMove.h" />
@@ -53,6 +54,7 @@
     <ClInclude Include="Utils\StringUtils.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Foundation\Color.cpp" />
     <ClCompile Include="Foundation\Geometry2D.cpp" />
     <ClCompile Include="Foundation\ResourceID.cpp" />
     <ClCompile Include="Math\CameraMatrices.cpp" />

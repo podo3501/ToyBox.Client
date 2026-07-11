@@ -112,6 +112,9 @@
     <ClInclude Include="Math\Vector2.h">
       <Filter>Math</Filter>
     </ClInclude>
+    <ClInclude Include="Foundation\Color.h">
+      <Filter>Foundation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Utils\EnumHelpers.cpp">
@@ -150,6 +153,9 @@
     </ClCompile>
     <ClCompile Include="Math\Vector2.cpp">
       <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Foundation\Color.cpp">
+      <Filter>Foundation</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

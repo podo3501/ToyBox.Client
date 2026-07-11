@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Storage">
@@ -376,9 +376,6 @@
     <ClInclude Include="Render\DX12\Provider\Texture\TextureRegistry.h">
       <Filter>Render\DX12\Provider\Texture</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\Resource\Texture\DefaultTextureType.h">
-      <Filter>Render\DX12\Resource\Texture</Filter>
-    </ClInclude>
     <ClInclude Include="Render\DX12\Helpers\TextureHelpers.h">
       <Filter>Render\DX12\Helpers</Filter>
     </ClInclude>
@@ -433,6 +430,10 @@
     <ClInclude Include="Render\DX12\TextSystem\AtlasPacker.h">
       <Filter>Render\DX12\TextSystem</Filter>
     </ClInclude>
+    <ClInclude Include="Render\DX12\TextSystem\FontAtlasCreateGraphBuilder.h">
+      <Filter>Render\DX12\TextSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Resource\Texture\BuiltinTextureType.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -701,6 +702,9 @@
       <Filter>Render\DX12\TextSystem</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\TextSystem\AtlasPacker.cpp">
+      <Filter>Render\DX12\TextSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\TextSystem\FontAtlasCreateGraphBuilder.cpp">
       <Filter>Render\DX12\TextSystem</Filter>
     </ClCompile>
   </ItemGroup>

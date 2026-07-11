@@ -54,10 +54,10 @@ void MaterialProvider::SetDefaultTextures(MaterialResource* matRes)
 {
     if (!matRes) return;
 
-    auto defaultBindings = matRes->GetDefaultTextureBindings();
+    auto defaultBindings = matRes->GetBuiltinTextureBindings();
     for (auto& binding : defaultBindings)
     {
-        auto tex = m_texProvider.GetDefaultTexture(binding.type);
+        auto tex = m_texProvider.GetBuiltinTexture(binding.type);
         matRes->SetTexture(binding.slot, tex);
     }
 }

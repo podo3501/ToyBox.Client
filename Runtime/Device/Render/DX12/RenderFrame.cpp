@@ -19,16 +19,18 @@ void RenderFrame::DrawText(
     std::shared_ptr<IFontResource> fontRes,
     std::string_view text,
     uint32_t size,
-    const Core::Math::Vector2& pos)
+    const Core::Math::Vector2& pos,
+    const Core::Color& color)
 {
     Assert(fontRes);
 
     auto uiItems = m_textSystem.DrawText(
         meshRes,
         fontRes,
-        text,
+        Core::UTF8ToUTF32(text),
         size,
-        pos);
+        pos,
+        color);
 
     m_scene.AddUI(uiItems);
 }

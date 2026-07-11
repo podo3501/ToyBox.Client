@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "UIMaterialResource.h"
 #include "Resource/Texture/TextureResource.h"
-#include "Resource/Texture/DefaultTextureType.h"
+#include "Resource/Texture/BuiltinTextureType.h"
 
 UIMaterialResource::~UIMaterialResource() = default;
 UIMaterialResource::UIMaterialResource(const MaterialDesc& desc) :
@@ -30,9 +30,9 @@ Core::Math::Vector4 UIMaterialResource::CalcUVTransform(const Rect* source)
     );
 }
 
-std::vector<DefaultTextureBinding> UIMaterialResource::GetDefaultTextureBindings() const
+std::vector<BuiltinTextureBinding> UIMaterialResource::GetBuiltinTextureBindings() const
 {
     return {
-        { Core::ToIndex(UITextureSlot::Normal), DefaultTextureType::White }
+        { Core::ToIndex(UITextureSlot::Normal), BuiltinTextureType::White }
     };
 }

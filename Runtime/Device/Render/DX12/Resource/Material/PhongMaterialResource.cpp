@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "PhongMaterialResource.h"
-#include "Resource/Texture/DefaultTextureType.h"
+#include "Resource/Texture/BuiltinTextureType.h"
 
 PhongMaterialResource::~PhongMaterialResource() = default;
 PhongMaterialResource::PhongMaterialResource(const MaterialDesc& desc) :
@@ -10,10 +10,10 @@ PhongMaterialResource::PhongMaterialResource(const MaterialDesc& desc) :
     m_desc = static_cast<const PhongMaterialDesc&>(desc);
 }
 
-std::vector<DefaultTextureBinding> PhongMaterialResource::GetDefaultTextureBindings() const
+std::vector<BuiltinTextureBinding> PhongMaterialResource::GetBuiltinTextureBindings() const
 {
     return {
-        { Core::ToIndex(PhongTextureSlot::Albedo), DefaultTextureType::White },
-        { Core::ToIndex(PhongTextureSlot::Normal), DefaultTextureType::FlatNormal }
+        { Core::ToIndex(PhongTextureSlot::Albedo), BuiltinTextureType::White },
+        { Core::ToIndex(PhongTextureSlot::Normal), BuiltinTextureType::FlatNormal }
     };
 }

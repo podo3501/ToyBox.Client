@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "PbrMaterialResource.h"
-#include "Resource/Texture/DefaultTextureType.h"
+#include "Resource/Texture/BuiltinTextureType.h"
 
 PbrMaterialResource::~PbrMaterialResource() = default;
 PbrMaterialResource::PbrMaterialResource(const MaterialDesc& desc) :
@@ -10,11 +10,11 @@ PbrMaterialResource::PbrMaterialResource(const MaterialDesc& desc) :
     m_desc = static_cast<const PbrMaterialDesc&>(desc);
 }
 
-std::vector<DefaultTextureBinding> PbrMaterialResource::GetDefaultTextureBindings() const
+std::vector<BuiltinTextureBinding> PbrMaterialResource::GetBuiltinTextureBindings() const
 {
     return {
-        { Core::ToIndex(PbrTextureSlot::Albedo), DefaultTextureType::White },
-        { Core::ToIndex(PbrTextureSlot::Normal), DefaultTextureType::FlatNormal },
-        { Core::ToIndex(PbrTextureSlot::ARM), DefaultTextureType::Orange }
+        { Core::ToIndex(PbrTextureSlot::Albedo), BuiltinTextureType::White },
+        { Core::ToIndex(PbrTextureSlot::Normal), BuiltinTextureType::FlatNormal },
+        { Core::ToIndex(PbrTextureSlot::ARM), BuiltinTextureType::DefaultARM }
     };
 }

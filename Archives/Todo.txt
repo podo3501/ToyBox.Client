@@ -1,4 +1,4 @@
-﻿--여러번 실행했을때 Initialize 안되는 부분 수정하기(텍스춰를 올릴때 문제가 생기는듯)
+--여러번 실행했을때 Initialize 안되는 부분 수정하기(텍스춰를 올릴때 문제가 생기는듯)
 --리소스 디렉토리 맞추기
 --google test에서 pch를 사용하는 방법을 찾아내자.
 --message에서 PostQuitMessage 메세지가 남아있어서 다음 테스트에 영향을 미치는듯 하다.
@@ -331,9 +331,30 @@
 --graph 쪽 디펜던시 만드는 부분 보완
 --m_heap ComPtr<ID3D12DescriptorHeap> m_heap; 이것도 device 처럼 처리 해야 할까?
 --resource loader factory로 바꾸고 나머지 함수들은 helper로 만들어서 보내자.
+--ui 텍스쳐 거꾸로 나오는 거 수정.
+--텍스쳐 부분(정적 atlas) 출력되게 구현
 
-@ui 텍스쳐 거꾸로 나오는 거 수정.
-@텍스쳐 부분 출력되게 구현
+@폰트 보강
+    textSystem으로 돼 있는데 이름 및 위치 고민
+    컬러 추가
+    외곽선(sdf) 만들기
+    quadUI 어떻게 처리할지.
+    srv로 초기화 시키고 있는데 어떻게 할지
+    atlas 텍스쳐를 넘겼을때 처리
+    폰트크기별로 atlas 관리
+
+@폰트
+- SDF / Outline / Shadow
+- Kerning 지원
+- Multi Line / Alignment
+- Text Color
+- QuadMesh 처리
+- Atlas Full 정책
+- Atlas를 FontSize별로 관리
+- Atlas Texture 전달 구조 개선
+- ResourceState(SRV 초기화) 정책
+- TextSystem 이름 및 위치 정리
+- Fallback Font 지원
 
 @렌더러 만들기
     @화면 배경색깔 지정하게끔

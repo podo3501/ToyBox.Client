@@ -2,25 +2,10 @@
 #include "TextSystem.h"
 #include "Core/Device.h"
 #include "Core/Utils/StringUtils.h"
-#include "Core/Math/Matrix.h"
 #include "Resource/Font/FontResource.h"
 #include "Resource/Texture/TextureResource.h"
 #include "Factory/DescriptorFactory.h"
-#include "Factory/ResourceFactory.h"
-#include "Graph/RenderGraph.h"
-#include "Graph/TaskScheduler.h"
 #include "Helpers/TextureHelpers.h"
-#include "Helpers/CommonHelpers.h"
-#include "Command/CommandList.h"
-
-struct GlyphUploadEntry // 하나의 글자를 아틀라스로 전송하기 위한 데이터 묶음
-{
-    std::vector<uint8_t> pixelData; // CPU 비트맵 임시 버퍼
-    uint32_t width;
-    uint32_t height;
-    uint32_t packX;
-    uint32_t packY;
-};
 
 namespace cm = Core::Math;
 
@@ -38,8 +23,7 @@ static Resource CreateFontAtlasResource(Device& device, const Size& atlasSize)
 
 TextSystem::~TextSystem() = default;
 TextSystem::TextSystem(TaskScheduler& taskScheduler, ResourceFactory& resFactory) :
-    m_taskScheduler{ taskScheduler },
-    m_resFactory{ resFactory }
+    m_atlasBuilder{ taskScheduler, resFactory }
 {}
 
 bool TextSystem::Initialize(
@@ -82,9 +66,10 @@ bool TextSystem::Initialize(
 std::vector<DrawUIItem> TextSystem::DrawText(
     std::shared_ptr<IMeshResource> meshRes,
     std::shared_ptr<IFontResource> fontRes,
-    std::string_view text,
+    std::span<const char32_t> text,
     uint32_t size,
-    const Core::Math::Vector2& pos)
+    const Core::Math::Vector2& pos,
+    const Core::Color& color)
 {
     std::vector<DrawUIItem> result;
     if (text.empty()) return result;
@@ -96,13 +81,8 @@ std::vector<DrawUIItem> TextSystem::DrawText(
     float cursorX = pos.x;
     float baselineY = pos.y;
 
-    size_t offset = 0;
-    while (offset < text.size())
+    for (auto codepoint : text)
     {
-        char32_t codepoint = Core::UTF8ToUTF32Char(text, offset);
-        if (codepoint == U'\0')
-            continue;
-
         const GlyphInfo* glyph = m_glyphCache.Get(font, codepoint, size);
         if (!glyph)
             continue;
@@ -115,14 +95,8 @@ std::vector<DrawUIItem> TextSystem::DrawText(
         float drawY = baselineY - glyph->bearingY;
 
         item.world =
-            cm::Matrix::Scale(
-                glyph->width,
-                glyph->height,
-                1.0f) *
-            cm::Matrix::Translation(
-                drawX,
-                drawY,
-                0.0f);
+            cm::Matrix::Scale(glyph->width, glyph->height, 1.0f) *
+            cm::Matrix::Translation(drawX, drawY, 0.0f);
 
         item.uvTransform = cm::Vector4{
             glyph->uvMin.x,
@@ -171,7 +145,7 @@ static bool CreateUploadEntry(
 
 void TextSystem::UpdateAtlasIfNeeded(
     std::shared_ptr<IFontResource> fontResource, 
-    std::string_view text,
+    std::span<const char32_t> text,
     uint32_t size)
 {
     if (text.empty()) return;
@@ -179,12 +153,8 @@ void TextSystem::UpdateAtlasIfNeeded(
 
     std::vector<GlyphUploadEntry> pendingUploads; // 이번 프레임에 새롭게 아틀라스에 추가할 글자들의 목록
 
-    size_t offset = 0;
-    while (offset < text.size())
+    for (auto codepoint : text)
     {
-        char32_t codepoint = Core::UTF8ToUTF32Char(text, offset);
-        if (codepoint == U'\0')
-            continue;
         if (m_glyphCache.Contains(font, codepoint, size))
             continue;
 
@@ -218,137 +188,7 @@ void TextSystem::UpdateAtlasIfNeeded(
     }
 
     if (!pendingUploads.empty())
-        UploadGlyphsToAtlas(pendingUploads);
-}
-
-struct TextRenderLayout 
-{ 
-    size_t offset{ 0 };
-    size_t rowPitch{ 0 };
-};
-
-void TextSystem::UploadGlyphsToAtlas(const std::vector<GlyphUploadEntry>& uploads)
-{
-    std::vector<TextRenderLayout> layouts;
-
-    size_t uploadOffset = 0;
-    for (const auto& glyph : uploads)
-    {
-        size_t rowPitch = AlignSize(glyph.width, AlignTextureRow);
-        size_t glyphSize = rowPitch * glyph.height;
-
-        uploadOffset = AlignSize(uploadOffset, AlignTexture);
-        layouts.push_back({ uploadOffset, rowPitch });
-
-        uploadOffset += glyphSize;
-    }
-    size_t totalUploadSize = uploadOffset;
-
-    RenderGraph graph;
-    RGResourceID atlasResID = RenderGraph::CreateRGResourceID();
-    RGResourceID uploadResID = RenderGraph::CreateRGResourceID();
-
-    graph.ImportResource(atlasResID, RGAccess::SRV);
-
-    BuildUploadPass(graph, atlasResID, uploadResID, uploads, layouts);
-
-    graph.ExportResource(atlasResID, RGAccess::SRV);
-    
-    auto compiledTasks = graph.Compile();
-
-    auto resCtx = std::make_shared<ResourceContext>();
-    resCtx->Set(atlasResID, GetAtlasResource());
-    resCtx->Set(uploadResID, m_resFactory.CreateResource(totalUploadSize, ResInitType::Upload));
-    m_taskScheduler.SubmitTask(compiledTasks, resCtx);
-}
-
-static void CopyGlyphToUploadBuffer(
-    uint8_t* mapped,
-    const GlyphUploadEntry& glyph,
-    const TextRenderLayout& layout)
-{
-    for (uint32_t y = 0; y < glyph.height; ++y)
-    {
-        std::memcpy(
-            mapped + layout.offset + y * layout.rowPitch,
-            glyph.pixelData.data() + y * glyph.width,
-            glyph.width);
-    }
-}
-
-static void CopyGlyphToAtlas(
-    CommandList& cmd,
-    Resource& uploadBuffer,
-    Resource& atlasTexture,
-    const GlyphUploadEntry& glyph,
-    const TextRenderLayout& layout)
-{
-    D3D12_TEXTURE_COPY_LOCATION dst{};
-    dst.pResource = atlasTexture.Get();
-    dst.Type = D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX;
-    dst.SubresourceIndex = 0;
-
-    D3D12_TEXTURE_COPY_LOCATION src{};
-    src.pResource = uploadBuffer.Get();
-    src.Type = D3D12_TEXTURE_COPY_TYPE_PLACED_FOOTPRINT;
-    src.PlacedFootprint.Offset = layout.offset;
-    src.PlacedFootprint.Footprint.Format = DXGI_FORMAT_R8_UNORM;
-    src.PlacedFootprint.Footprint.Width = glyph.width;
-    src.PlacedFootprint.Footprint.Height = glyph.height;
-    src.PlacedFootprint.Footprint.Depth = 1;
-    src.PlacedFootprint.Footprint.RowPitch = static_cast<UINT>(layout.rowPitch);
-
-    cmd->CopyTextureRegion(
-        &dst,
-        glyph.packX,
-        glyph.packY,
-        0,
-        &src,
-        nullptr);
-}
-
-void TextSystem::BuildUploadPass(
-    RenderGraph& graph, 
-    RGResourceID atlasResID, 
-    RGResourceID uploadResID,
-    const std::vector<GlyphUploadEntry>& uploads,
-    const std::vector<TextRenderLayout>& layouts)
-{
-    auto& upload = graph.AddCopyPass("FontAtlasUpload");
-    upload.Write(atlasResID, RGAccess::CopyDest);
-
-    upload.gpuExecute =
-        [
-            atlasResID,
-            uploadResID,
-            uploads,
-            layouts
-        ]
-        (CommandList& cmd, TaskContext& ctx) 
-        {
-            auto& uploadBuffer = ctx.GetResource(uploadResID);
-            auto& atlasResource = ctx.GetResource(atlasResID);
-
-            uint8_t* pCpuMem = nullptr;
-            uploadBuffer->Map(0, nullptr, reinterpret_cast<void**>(&pCpuMem));
-            
-            for (size_t i = 0; i < uploads.size(); ++i)
-            {
-                CopyGlyphToUploadBuffer(
-                    pCpuMem,
-                    uploads[i],
-                    layouts[i]);
-
-                CopyGlyphToAtlas(
-                    cmd,
-                    uploadBuffer,
-                    atlasResource,
-                    uploads[i],
-                    layouts[i]);
-            }
-
-            uploadBuffer->Unmap(0, nullptr);
-        };
+        m_atlasBuilder.UploadGlyphsToAtlas(GetAtlasResource(), pendingUploads);
 }
 
 const Resource& TextSystem::GetAtlasResource() const

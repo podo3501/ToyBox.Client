@@ -36,7 +36,7 @@ SceneRenderer::SceneRenderer(
 	m_defaultMaterials = CreateBuiltinMaterials(m_matRepository);
 }
 
-void SceneRenderer::DrawText(FontHandle hF, std::string_view text, uint32_t size, const Core::Math::Vector2& pos)
+void SceneRenderer::DrawText(FontHandle hF, std::string_view text, uint32_t size, const Core::Math::Vector2& pos, const Core::Color& color)
 {
 	auto mesh = m_meshRepository->Get(m_uiQuad);
 	if (!mesh || mesh->state != LoadState::Ready)
@@ -46,7 +46,7 @@ void SceneRenderer::DrawText(FontHandle hF, std::string_view text, uint32_t size
 	if (!font || font->state != LoadState::Ready)
 		return;
 
-	m_renderFrame->DrawText(mesh->meshRes, font->fontRes, text, size, pos);
+	m_renderFrame->DrawText(mesh->meshRes, font->fontRes, text, size, pos, color);
 }
 
 void SceneRenderer::DrawSurface(MeshHandle hM, MaterialHandle hMtl, const cm::Matrix& world)
@@ -106,8 +106,6 @@ void SceneRenderer::SetFrameData(const FrameData& frameData)
 {
 	m_renderFrame->SetFrameData(frameData);
 }
-
-
 
 MaterialHandle SceneRenderer::GetDefaultMaterial(MaterialDomain matDomain) const
 {

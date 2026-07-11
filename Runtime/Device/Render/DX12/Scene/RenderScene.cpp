@@ -19,15 +19,22 @@ void RenderScene::AddSurface(const DrawItem& item)
 
 void RenderScene::AddUI(const std::vector<DrawUIItem>& uiItems)
 {
-    m_uiDraws.insert(m_uiDraws.end(), uiItems.begin(), uiItems.end());
+    for (const auto& item : uiItems)
+        AddUI(item);
 }
 
 void RenderScene::AddUI(const DrawUIItem& uiItem)
 {
     //UI Batching & Layer Breaking 문제가 있기 때문에 z-order 값을 만들고 그것을 넣어주면 그 z값으로 sorting 해야 한다.
     //sorting 후 batch가 가능하면 batch 해 주기.
+
+    DrawUIItem newItem = uiItem;
+
     auto material = static_cast<MaterialResource*>(uiItem.material.get());
-    m_uiDraws.push_back(uiItem);
+    newItem.sortKey = RenderSortKey::Build(
+        material->GetPipelineState().GetHash());
+
+    m_uiDraws.push_back(std::move(newItem));
 }
 
 DrawPacket RenderScene::BuildDrawPacket()
@@ -51,10 +58,16 @@ static bool DebugSurfaceSort(const DrawItem& a, const DrawItem& b)
     return a.sortKey < b.sortKey;
 }
 
+static bool UISort(const DrawUIItem& a, const DrawUIItem& b)
+{
+    return a.sortKey < b.sortKey;
+}
+
 void RenderScene::SortDraws()
 {
     std::sort(m_surfaceDraws.begin(), m_surfaceDraws.end(), SurfaceSort);
     std::sort(m_debugSurfaceDraws.begin(), m_debugSurfaceDraws.end(), DebugSurfaceSort);
+    std::sort(m_uiDraws.begin(), m_uiDraws.end(), UISort);
 }
 
 void RenderScene::Clear()

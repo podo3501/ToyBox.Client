@@ -2,19 +2,15 @@
 #include "GameClient/Service/Render/Resource/IFontResource.h"
 #include "Resource/Material/UIMaterialResource.h"
 #include "Core/RenderData.h"
+#include "Core/Foundation/Color.h"
 #include "GlyphCache.h"
 #include "AtlasPacker.h"
-#include "Resource/Resource.h"
-#include "Graph/RGTypes.h"
+#include "FontAtlasCreateGraphBuilder.h"
 
-
-struct GlyphUploadEntry;
-struct TextRenderLayout;
 class Device;
 class TaskScheduler;
 class ResourceFactory;
 class DescriptorFactory;
-class RenderGraph;
 
 class TextSystem
 {
@@ -25,22 +21,16 @@ public:
     std::vector<DrawUIItem> DrawText(
         std::shared_ptr<IMeshResource> meshRes,
         std::shared_ptr<IFontResource> fontRes,
-        std::string_view text,
+        std::span<const char32_t> text,
         uint32_t size,
-        const Core::Math::Vector2& pos);
+        const Core::Math::Vector2& pos,
+        const Core::Color& color);
 
 private:
     void UpdateAtlasIfNeeded(
         std::shared_ptr<IFontResource> fontRes,
-        std::string_view text,
+        std::span<const char32_t> text,
         uint32_t size);
-    void UploadGlyphsToAtlas(const std::vector<GlyphUploadEntry>& uploads);
-    void BuildUploadPass(
-        RenderGraph& graph, 
-        RGResourceID atlasResID, 
-        RGResourceID uploadResID, 
-        const std::vector<GlyphUploadEntry>& uploads,
-        const std::vector<TextRenderLayout>& layouts);
     const Resource& GetAtlasResource() const;
 
     Size m_atlasTextureSize{};
@@ -49,7 +39,5 @@ private:
     GlyphCache m_glyphCache;
     AtlasPacker m_packer;
 
-    //builder로 갈 변수들
-    TaskScheduler& m_taskScheduler;
-    ResourceFactory& m_resFactory;
+    FontAtlasCreateGraphBuilder m_atlasBuilder;
 };

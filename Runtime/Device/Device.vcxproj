@@ -117,7 +117,7 @@
     <ClInclude Include="Render\DX12\Resource\Mesh\MeshResource.h" />
     <ClInclude Include="Render\DX12\Resource\Resource.h" />
     <ClInclude Include="Render\DX12\Resource\ShadowResource.h" />
-    <ClInclude Include="Render\DX12\Resource\Texture\DefaultTextureType.h" />
+    <ClInclude Include="Render\DX12\Resource\Texture\BuiltinTextureType.h" />
     <ClInclude Include="Render\DX12\Resource\Texture\TextureResource.h" />
     <ClInclude Include="Render\DX12\Scene\RenderScene.h" />
     <ClInclude Include="Render\DX12\Scene\RenderSortKey.h" />
@@ -125,6 +125,7 @@
     <ClInclude Include="Render\DX12\SwapChainPresenter.h" />
     <ClInclude Include="Render\DX12\RenderBackend.h" />
     <ClInclude Include="Render\DX12\TextSystem\AtlasPacker.h" />
+    <ClInclude Include="Render\DX12\TextSystem\FontAtlasCreateGraphBuilder.h" />
     <ClInclude Include="Render\DX12\TextSystem\TextSystem.h" />
     <ClInclude Include="Render\DX12\TextSystem\GlyphCache.h" />
     <ClInclude Include="Render\DX12\TextSystem\TextTypes.h" />
@@ -224,6 +225,7 @@
     <ClCompile Include="Render\DX12\SwapChainPresenter.cpp" />
     <ClCompile Include="Render\DX12\RenderBackend.cpp" />
     <ClCompile Include="Render\DX12\TextSystem\AtlasPacker.cpp" />
+    <ClCompile Include="Render\DX12\TextSystem\FontAtlasCreateGraphBuilder.cpp" />
     <ClCompile Include="Render\DX12\TextSystem\TextSystem.cpp" />
     <ClCompile Include="Render\DX12\TextSystem\GlyphCache.cpp" />
   </ItemGroup>

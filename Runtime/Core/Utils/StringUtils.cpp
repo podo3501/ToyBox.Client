@@ -257,7 +257,5 @@ std::string Core::UTF32ToUTF8(std::span<const char32_t> text)
     for (char32_t c : text)
         UTF32ToUTF8Char(c, result);
 
-    result.shrink_to_fit();
-
     return result;
 }

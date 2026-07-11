@@ -1,6 +1,6 @@
 #pragma once
 #include "GameClient/Service/Render/Resource/IMaterialResource.h"
-#include "Resource/Texture/DefaultTextureType.h"
+#include "Resource/Texture/BuiltinTextureType.h"
 
 class TextureResource;
 
@@ -14,7 +14,7 @@ public:
 
 	//backend interface
 	virtual const MaterialDesc& GetMaterialDesc() const noexcept = 0;
-	virtual std::vector<DefaultTextureBinding> GetDefaultTextureBindings() const { return {}; }
+	virtual std::vector<BuiltinTextureBinding> GetBuiltinTextureBindings() const { return {}; }
 
 	void MarkReady() noexcept { m_ready = true; }
 	const PipelineState& GetPipelineState() const;

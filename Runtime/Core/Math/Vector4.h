@@ -13,7 +13,7 @@ namespace Core::Math
         float w = 0.0f;
 
         Vector4() = default;
-        Vector4(float inX, float inY, float inZ, float inW) : x(inX), y(inY), z(inZ), w(inW) {}
+        constexpr Vector4(float inX, float inY, float inZ, float inW) : x(inX), y(inY), z(inZ), w(inW) {}
         Vector4(const Vector3& v3, float inW);
 
         Vector4 operator+(const Vector4& rhs) const;

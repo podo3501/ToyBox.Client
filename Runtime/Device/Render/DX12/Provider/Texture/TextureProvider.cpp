@@ -2,6 +2,7 @@
 #include "TextureProvider.h"
 #include "Factory/DescriptorFactory.h"
 #include "Resource/Texture/TextureResource.h"
+#include "Core/Foundation/Color.h"
 
 TextureProvider::~TextureProvider() = default;
 TextureProvider::TextureProvider(TextureCreateGraphBuilder create) noexcept :
@@ -21,51 +22,51 @@ shared_ptr<TextureResource> TextureProvider::CreateResource(const TextureDesc& d
     return make_shared<TextureResource>(desc);
 }
 
-std::shared_ptr<TextureAsset> TextureProvider::CreateColorAsset(uint32_t pixelColor)
+std::shared_ptr<TextureAsset> TextureProvider::CreateColorAsset(const Core::Color& color)
 {
     auto asset = std::make_shared<TextureAsset>();
     asset->size = ToSize(1, 1);
     asset->pixels.resize(sizeof(uint32_t));
 
     // 비트 연산을 통해 엔디안에 무관하게 항상 R, G, B, A 순서로 메모리 배치
-    asset->pixels[0] = static_cast<uint8_t>((pixelColor >> 24) & 0xFF); // R
-    asset->pixels[1] = static_cast<uint8_t>((pixelColor >> 16) & 0xFF); // G
-    asset->pixels[2] = static_cast<uint8_t>((pixelColor >> 8) & 0xFF); // B
-    asset->pixels[3] = static_cast<uint8_t>((pixelColor >> 0) & 0xFF); // A
+    asset->pixels[0] = color.R8();
+    asset->pixels[1] = color.G8();
+    asset->pixels[2] = color.B8();
+    asset->pixels[3] = color.A8();
 
     return asset;
 }
 
 bool TextureProvider::CreateBuiltinTextures()
 {
-    std::array<std::shared_ptr<TextureAsset>, Core::EnumSize<DefaultTextureType>> defaultAssets;
+    std::array<std::shared_ptr<TextureAsset>, Core::EnumSize<BuiltinTextureType>> builtinAssets;
+    
+    builtinAssets[Core::ToIndex(BuiltinTextureType::White)] = CreateColorAsset(Core::Color::White); // 흰색
+    builtinAssets[Core::ToIndex(BuiltinTextureType::FlatNormal)] = CreateColorAsset(Core::Color(0.5f, 0.5f, 1.f)); // 평평한 노멀 (128, 128, 255)
+    builtinAssets[Core::ToIndex(BuiltinTextureType::DefaultARM)] = CreateColorAsset(Core::Color(1.f, 0.5f, 0.f)); //ARM 기본
 
-    defaultAssets[Core::ToIndex(DefaultTextureType::White)] = CreateColorAsset(0xFFFFFFFF); // 흰색
-    defaultAssets[Core::ToIndex(DefaultTextureType::FlatNormal)] = CreateColorAsset(0x8080FFFF); // 평평한 노멀 (128, 128, 255)
-    defaultAssets[Core::ToIndex(DefaultTextureType::Orange)] = CreateColorAsset(0xFF8000FF);
-
-    struct BuiltinConfig { DefaultTextureType defaultType; const char* name; TextureType texType; };
+    struct BuiltinConfig { BuiltinTextureType builtinType; const char* name; TextureType texType; };
     BuiltinConfig configs[] = {
-        { DefaultTextureType::White, "DefaultTexture_White", TextureType::Color },
-        { DefaultTextureType::FlatNormal, "DefaultTexture_FlatNormal", TextureType::Linear },
-        { DefaultTextureType::Orange, "DefaultTexture_Orange", TextureType::Linear }
+        { BuiltinTextureType::White, "BuiltinTexture_White", TextureType::Color },
+        { BuiltinTextureType::FlatNormal, "BuiltinTexture_FlatNormal", TextureType::Linear },
+        { BuiltinTextureType::DefaultARM, "BuiltinTexture_DefaultARM", TextureType::Linear }
     };
 
     for (const auto& config : configs)
     {
         TextureDesc desc{ Core::ResourceID::MakeBuiltin(config.name), config.texType, false };
 
-        auto nDefaultType = Core::ToIndex(config.defaultType);
-        auto tex = CreateDefaultTexture(desc, defaultAssets[nDefaultType]);
+        auto nType = Core::ToIndex(config.builtinType);
+        auto tex = CreateBuiltinTexture(desc, builtinAssets[nType]);
         if (!tex) return false;
 
-        m_defaultTextures[nDefaultType] = tex;
+        m_builtinTextures[nType] = tex;
     }
 
     return true;
 }
 
-std::shared_ptr<TextureResource> TextureProvider::CreateDefaultTexture(
+std::shared_ptr<TextureResource> TextureProvider::CreateBuiltinTexture(
     const TextureDesc& desc,
     std::shared_ptr<TextureAsset> asset)
 {
@@ -79,12 +80,12 @@ std::shared_ptr<TextureResource> TextureProvider::CreateDefaultTexture(
     return texRes;
 }
 
-std::shared_ptr<TextureResource> TextureProvider::GetDefaultTexture(DefaultTextureType type) const
+std::shared_ptr<TextureResource> TextureProvider::GetBuiltinTexture(BuiltinTextureType type) const
 {
     auto idx = Core::ToIndex(type);
-    Assert(idx < m_defaultTextures.size());
+    Assert(idx < m_builtinTextures.size());
 
-    return m_defaultTextures[idx];
+    return m_builtinTextures[idx];
 }
 
 static size_t EstimateBytes(const TextureAsset& asset, const TextureDesc& desc)
