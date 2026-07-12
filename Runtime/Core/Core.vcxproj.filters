@@ -115,6 +115,9 @@
     <ClInclude Include="Foundation\Color.h">
       <Filter>Foundation</Filter>
     </ClInclude>
+    <ClInclude Include="Foundation\Align.h">
+      <Filter>Foundation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Utils\EnumHelpers.cpp">

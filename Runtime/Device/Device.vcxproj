@@ -45,6 +45,10 @@
     <ClInclude Include="Input\DirectX\InputManager.h" />
     <ClInclude Include="Input\IInputManager.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="Render\DX12\Allocator\DescriptorHeapAllocator.h" />
+    <ClInclude Include="Render\DX12\Allocator\FrameConstantAllocator.h" />
+    <ClInclude Include="Render\DX12\Allocator\FrameUploadAllocator.h" />
+    <ClInclude Include="Render\DX12\Allocator\UploadAllocation.h" />
     <ClInclude Include="Render\DX12\Core\FreeTypeLibrary.h" />
     <ClInclude Include="Render\DX12\Graph\BarrierBuilder.h" />
     <ClInclude Include="Render\DX12\Graph\RenderGraphDefinitions.h" />
@@ -53,7 +57,9 @@
     <ClInclude Include="Render\DX12\Graph\RenderPass.h" />
     <ClInclude Include="Render\DX12\Graph\TaskUtils.h" />
     <ClInclude Include="Render\DX12\Provider\Font\FontProvider.h" />
+    <ClInclude Include="Render\DX12\Provider\Mesh\TransientMeshProvider.h" />
     <ClInclude Include="Render\DX12\Provider\ResourceReleaseBuilder.h" />
+    <ClInclude Include="Render\DX12\RenderConstants.h" />
     <ClInclude Include="Render\DX12\RenderFrame.h" />
     <ClInclude Include="Render\DX12\Command\CommandList.h" />
     <ClInclude Include="Render\DX12\Command\CommandListHelpers.h" />
@@ -68,21 +74,18 @@
     <ClInclude Include="Render\DX12\Core\Device.h" />
     <ClInclude Include="Render\DX12\Core\FrameProfiler.h" />
     <ClInclude Include="Render\DX12\Core\RenderData.h" />
-    <ClInclude Include="Render\DX12\Factory\DescriptorAllocator.h" />
     <ClInclude Include="Render\DX12\Factory\DescriptorFactory.h" />
     <ClInclude Include="Render\DX12\Factory\ResourceFactory.h" />
     <ClInclude Include="Render\DX12\Graph\RGTypes.h" />
     <ClInclude Include="Render\DX12\Graph\Task.h" />
     <ClInclude Include="Render\DX12\Graph\TaskHandle.h" />
     <ClInclude Include="Render\DX12\Graph\TaskScheduler.h" />
-    <ClInclude Include="Render\DX12\Helpers\CommonHelpers.h" />
     <ClInclude Include="Render\DX12\Helpers\MathHelpers.h" />
     <ClInclude Include="Render\DX12\Helpers\TextureHelpers.h" />
     <ClInclude Include="Render\DX12\Pipeline\DebugSurfaceGraphBuilder.h" />
     <ClInclude Include="Render\DX12\Pipeline\ForwardRenderPipeline.h" />
     <ClInclude Include="Render\DX12\Pipeline\OpaqueGraphBuilder.h" />
     <ClInclude Include="Render\DX12\Pipeline\Renderer\DebugSurfaceRenderer.h" />
-    <ClInclude Include="Render\DX12\Pipeline\Renderer\FrameUploadAllocator.h" />
     <ClInclude Include="Render\DX12\Pipeline\Renderer\PipelineCache.h" />
     <ClInclude Include="Render\DX12\Pipeline\Renderer\RenderConstants.h" />
     <ClInclude Include="Render\DX12\Pipeline\Renderer\RendererConfig.h" />
@@ -115,6 +118,8 @@
     <ClInclude Include="Render\DX12\Resource\Material\SurfaceMaterialResource.h" />
     <ClInclude Include="Render\DX12\Resource\Material\UIMaterialResource.h" />
     <ClInclude Include="Render\DX12\Resource\Mesh\MeshResource.h" />
+    <ClInclude Include="Render\DX12\Resource\Mesh\StaticMeshResource.h" />
+    <ClInclude Include="Render\DX12\Resource\Mesh\TransientMeshResource.h" />
     <ClInclude Include="Render\DX12\Resource\Resource.h" />
     <ClInclude Include="Render\DX12\Resource\ShadowResource.h" />
     <ClInclude Include="Render\DX12\Resource\Texture\BuiltinTextureType.h" />
@@ -162,12 +167,16 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Render\DX12\Allocator\DescriptorHeapAllocator.cpp" />
+    <ClCompile Include="Render\DX12\Allocator\FrameConstantAllocator.cpp" />
+    <ClCompile Include="Render\DX12\Allocator\FrameUploadAllocator.cpp" />
     <ClCompile Include="Render\DX12\Core\FreeTypeLibrary.cpp" />
     <ClCompile Include="Render\DX12\Graph\BarrierBuilder.cpp" />
     <ClCompile Include="Render\DX12\Graph\RenderGraphUtils.cpp" />
     <ClCompile Include="Render\DX12\Graph\RenderGraph.cpp" />
     <ClCompile Include="Render\DX12\Graph\TaskUtils.cpp" />
     <ClCompile Include="Render\DX12\Provider\Font\FontProvider.cpp" />
+    <ClCompile Include="Render\DX12\Provider\Mesh\TransientMeshProvider.cpp" />
     <ClCompile Include="Render\DX12\Provider\ResourceReleaseBuilder.cpp" />
     <ClCompile Include="Render\DX12\RenderFrame.cpp" />
     <ClCompile Include="Render\DX12\Command\CommandList.cpp" />
@@ -178,18 +187,15 @@
     <ClCompile Include="Render\DX12\Core\Device.cpp" />
     <ClCompile Include="Render\DX12\Core\DX12Link.cpp" />
     <ClCompile Include="Render\DX12\Core\FrameProfiler.cpp" />
-    <ClCompile Include="Render\DX12\Factory\DescriptorAllocator.cpp" />
     <ClCompile Include="Render\DX12\Factory\DescriptorFactory.cpp" />
     <ClCompile Include="Render\DX12\Factory\ResourceFactory.cpp" />
     <ClCompile Include="Render\DX12\Graph\TaskScheduler.cpp" />
-    <ClCompile Include="Render\DX12\Helpers\CommonHelpers.cpp" />
     <ClCompile Include="Render\DX12\Helpers\MathHelpers.cpp" />
     <ClCompile Include="Render\DX12\Helpers\TextureHelpers.cpp" />
     <ClCompile Include="Render\DX12\Pipeline\DebugSurfaceGraphBuilder.cpp" />
     <ClCompile Include="Render\DX12\Pipeline\ForwardRenderPipeline.cpp" />
     <ClCompile Include="Render\DX12\Pipeline\OpaqueGraphBuilder.cpp" />
     <ClCompile Include="Render\DX12\Pipeline\Renderer\DebugSurfaceRenderer.cpp" />
-    <ClCompile Include="Render\DX12\Pipeline\Renderer\FrameUploadAllocator.cpp" />
     <ClCompile Include="Render\DX12\Pipeline\Renderer\PipelineCache.cpp" />
     <ClCompile Include="Render\DX12\Pipeline\Renderer\Renderers.cpp" />
     <ClCompile Include="Render\DX12\Pipeline\Renderer\RootSignatureBuilder.cpp" />
@@ -215,7 +221,8 @@
     <ClCompile Include="Render\DX12\Resource\Material\PbrMaterialResource.cpp" />
     <ClCompile Include="Render\DX12\Resource\Material\PhongMaterialResource.cpp" />
     <ClCompile Include="Render\DX12\Resource\Material\UIMaterialResource.cpp" />
-    <ClCompile Include="Render\DX12\Resource\Mesh\MeshResource.cpp" />
+    <ClCompile Include="Render\DX12\Resource\Mesh\StaticMeshResource.cpp" />
+    <ClCompile Include="Render\DX12\Resource\Mesh\TransientMeshResource.cpp" />
     <ClCompile Include="Render\DX12\Resource\Resource.cpp" />
     <ClCompile Include="Render\DX12\Resource\ShadowResource.cpp" />
     <ClCompile Include="Render\DX12\Resource\Texture\TextureResource.cpp" />

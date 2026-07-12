@@ -4,8 +4,8 @@
 
 struct DirectionalLightData
 {
-    Core::Math::Vector3 direction;
-    Core::Math::Vector3 color;
+    Core::Vector3 direction;
+    Core::Vector3 color;
     float intensity{ 0.f };
-    Core::Math::Matrix viewProj;
+    Core::Matrix viewProj;
 };

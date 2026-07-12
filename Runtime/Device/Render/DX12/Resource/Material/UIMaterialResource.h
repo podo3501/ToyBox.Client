@@ -15,9 +15,9 @@ public:
 
 	virtual std::vector<BuiltinTextureBinding> GetBuiltinTextureBindings() const override;
 	virtual const MaterialDesc& GetMaterialDesc() const noexcept override { return m_desc; }
-	Core::Math::Vector4 CalcUVTransform(const Rect* source);
+	Core::Vector4 CalcUVTransform(const Rect* source);
 
 private:
 	UIMaterialDesc m_desc;
-	Core::Math::Vector4 m_uvTransform{ 0.0f, 0.0f, 1.0f, 1.0f };
+	Core::Vector4 m_uvTransform{ 0.0f, 0.0f, 1.0f, 1.0f };
 };

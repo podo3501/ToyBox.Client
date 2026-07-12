@@ -1,8 +1,8 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "MipGenerator.h"
 #include "Core/Device.h"
 #include "Shader/ShaderLibrary.h"
-#include "Factory/DescriptorAllocator.h"
+#include "Allocator/DescriptorHeapAllocator.h"
 #include "Command/CommandList.h"
 #include "Resource/Texture/TextureResource.h"
 #include "Pipeline/Renderer/RootSignatureBuilder.h"
@@ -98,7 +98,7 @@ ID3D12PipelineState* MipGenerator::GetPSO(MipType type) const
     return m_psoMap[Core::ToIndex(type)].Get();
 }
 
-void MipGenerator::GenerateMips(CommandList& cmd, DescriptorAllocator& srvAllocator, TextureResource* texResource)
+void MipGenerator::GenerateMips(CommandList& cmd, DescriptorHeapAllocator& srvAllocator, TextureResource* texResource)
 {
     if (!texResource)
         return;

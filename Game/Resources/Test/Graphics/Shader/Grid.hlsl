@@ -1,7 +1,7 @@
 struct GridVertex
 {
     float3 position;
-    float3 color;
+    float4 color;
 };
 
 cbuffer GridIndicesCB : register(b0)
@@ -23,7 +23,7 @@ cbuffer ObjectCB : register(b2)
 struct PSInput
 {
     float4 pos : SV_POSITION;
-    float3 color    : COLOR;
+    float4 color : COLOR;
 };
 
 PSInput VSMain(uint vID : SV_VertexID)
@@ -45,5 +45,5 @@ PSInput VSMain(uint vID : SV_VertexID)
 
 float4 PSMain(PSInput input) : SV_TARGET
 {
-    return float4(input.color, 1.0f);
+    return input.color;
 }

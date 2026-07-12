@@ -11,10 +11,10 @@ UIMaterialResource::UIMaterialResource(const MaterialDesc& desc) :
     m_desc = static_cast<const UIMaterialDesc&>(desc);
 }
 
-Core::Math::Vector4 UIMaterialResource::CalcUVTransform(const Rect* source)
+Core::Vector4 UIMaterialResource::CalcUVTransform(const Rect* source)
 {
     if (!source)
-        return Core::Math::Vector4(0.0f, 0.0f, 1.0f, 1.0f);
+        return Core::Vector4(0.0f, 0.0f, 1.0f, 1.0f);
 
     auto texture = GetTexture(Resolve(UITextureSlot::Normal));
     const auto& size = texture->GetSize();
@@ -22,7 +22,7 @@ Core::Math::Vector4 UIMaterialResource::CalcUVTransform(const Rect* source)
     float texW = static_cast<float>(size.width);
     float texH = static_cast<float>(size.height);
 
-    return Core::Math::Vector4(
+    return Core::Vector4(
         source->x / texW,
         source->y / texH,
         (source->x + source->width) / texW,

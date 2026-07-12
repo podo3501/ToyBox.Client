@@ -39,37 +39,30 @@ std::shared_ptr<MeshAsset> MeshFactory::CreateSphere(float radius, uint32_t slic
             MeshVertex vert;
 
             // 법선 벡터 (Normal) : 원점에서 정점을 향하는 방향 단위 벡터
-            vert.nx = sinPhi * cosTheta;
-            vert.ny = cosPhi; // Y축을 위(Up)로 잡는 일반적인 3D 공간 기준
-            vert.nz = sinPhi * sinTheta;
+            vert.normal = {
+                sinPhi * cosTheta,
+                cosPhi, // Y축을 위(Up)로 잡는 일반적인 3D 공간 기준
+                sinPhi * sinTheta
+            };
 
             // 위치 좌표 (Position) : 법선 벡터에 반지름을 곱함
-            vert.px = radius * vert.nx;
-            vert.py = radius * vert.ny;
-            vert.pz = radius * vert.nz;
+            vert.position = vert.normal * radius;
 
             // UV 좌표
-            vert.u = (float)j / sliceCount;
-            vert.v = (float)i / stackCount;
+            vert.uv = {
+                static_cast<float>(j) / sliceCount,
+                static_cast<float>(i) / stackCount
+            };
 
             // 접선 벡터 (Tangent) : U(경도 theta)가 증가하는 방향으로의 편미분 벡터
-            vert.tx = -sinPhi * sinTheta;
-            vert.ty = 0.0f;
-            vert.tz = sinPhi * cosTheta;
+            vert.tangent = {
+                -sinPhi * sinTheta,
+                0.0f,
+                sinPhi * cosTheta
+            };
 
             // Tangent 정규화
-            float tLen = sqrtf(vert.tx * vert.tx + vert.ty * vert.ty + vert.tz * vert.tz);
-            if (tLen > 0.00001f)
-            {
-                vert.tx /= tLen;
-                vert.ty /= tLen;
-                vert.tz /= tLen;
-            }
-            else
-            {
-                // 극점(북극/남극)처럼 수식이 깨지는 곳의 예외 처리 기본값
-                vert.tx = 1.0f; vert.ty = 0.0f; vert.tz = 0.0f;
-            }
+            vert.tangent.NormalizeOr(Core::Vector3::Right());
 
             vertices.push_back(vert);
         }
@@ -123,32 +116,93 @@ std::shared_ptr<MeshAsset> MeshFactory::CreateCube(float size)
     // 6개 면 정의를 위한 구조체 데이터
     struct FaceInfo
     {
-        float nx, ny, nz; // 면의 Normal
-        float tx, ty, tz; // 면의 Tangent
-        float p0[3], p1[3], p2[3], p3[3]; // 각 면의 4개 모서리 좌표 (CCW 순서)
+        Core::Vector3 normal;
+        Core::Vector3 tangent;
+        Core::Vector3 points[4]; // CCW 순서
     };
 
     // 현재 사용 중인 왼손 좌표계 규칙에 맞춘 6개 면 정의
-    FaceInfo faces[6] = {
+    FaceInfo faces[6] =
+    {
         // 1. 앞면 (Front Face: +Z 방향을 바라봄)
-        {  0.f,  0.f,  1.f,   1.f,  0.f,  0.f,   { -h, -h,  h }, { -h,  h,  h }, {  h,  h,  h }, {  h, -h,  h } },
+        {
+            {  0.f,  0.f,  1.f },   // normal
+            {  1.f,  0.f,  0.f },   // tangent
+            {
+               { -h, -h,  h },
+               { -h,  h,  h },
+               {  h,  h,  h },
+               {  h, -h,  h }
+            }
+        },
+
         // 2. 뒷면 (Back Face: -Z 방향을 바라봄)
-        {  0.f,  0.f, -1.f,  -1.f,  0.f,  0.f,   {  h, -h, -h }, {  h,  h, -h }, { -h,  h, -h }, { -h, -h, -h } },
+        {
+            {  0.f,  0.f, -1.f },
+            { -1.f,  0.f,  0.f },
+            {
+                {  h, -h, -h },
+                {  h,  h, -h },
+                { -h,  h, -h },
+                { -h, -h, -h }
+            }
+        },
+
         // 3. 윗면 (Top Face: +Y 방향을 바라봄)
-        {  0.f,  1.f,  0.f,   1.f,  0.f,  0.f,   { -h,  h,  h }, { -h,  h, -h }, {  h,  h, -h }, {  h,  h,  h } },
+        {
+            {  0.f,  1.f,  0.f },
+            {  1.f,  0.f,  0.f },
+            {
+                { -h,  h,  h },
+                { -h,  h, -h },
+                {  h,  h, -h },
+                {  h,  h,  h }
+            }
+        },
+
         // 4. 아랫면 (Bottom Face: -Y 방향을 바라봄)
-        {  0.f, -1.f,  0.f,  -1.f,  0.f,  0.f,   { -h, -h, -h }, { -h, -h,  h }, {  h, -h,  h }, {  h, -h, -h } },
+        {
+            {  0.f, -1.f,  0.f },
+            { -1.f,  0.f,  0.f },
+            {
+                { -h, -h, -h },
+                { -h, -h,  h },
+                {  h, -h,  h },
+                {  h, -h, -h }
+            }
+        },
+
         // 5. 왼쪽면 (Left Face: -X 방향을 바라봄)
-        { -1.f,  0.f,  0.f,   0.f,  0.f,  1.f,   { -h, -h, -h }, { -h,  h, -h }, { -h,  h,  h }, { -h, -h,  h } },
+        {
+            { -1.f,  0.f,  0.f },
+            {  0.f,  0.f,  1.f },
+            {
+                { -h, -h, -h },
+                { -h,  h, -h },
+                { -h,  h,  h },
+                { -h, -h,  h }
+            }
+        },
+
         // 6. 오른쪽면 (Right Face: +X 방향을 바라봄)
-        {  1.f,  0.f,  0.f,   0.f,  0.f, -1.f,   {  h, -h,  h }, {  h,  h,  h }, {  h,  h, -h }, {  h, -h, -h } }
+        {
+            {  1.f,  0.f,  0.f },
+            {  0.f,  0.f, -1.f },
+            {
+                {  h, -h,  h },
+                {  h,  h,  h },
+                {  h,  h, -h },
+                {  h, -h, -h }
+            }
+        }
     };
 
     vertices.reserve(24);
     indices.reserve(36);
 
     // 각 면의 UV 매핑 기준 좌표 (사각형의 네 모서리)
-    float uvs[4][2] = {
+    Core::Vector2 uvs[4] =
+    {
         { 0.f, 1.f }, // 좌측 하단
         { 0.f, 0.f }, // 좌측 상단
         { 1.f, 0.f }, // 우측 상단
@@ -160,36 +214,16 @@ std::shared_ptr<MeshAsset> MeshFactory::CreateCube(float size)
     {
         uint32_t startIndex = static_cast<uint32_t>(vertices.size());
 
-        // 한 면당 4개의 정점 세팅
-        float* points[4] = { faces[f].p0, faces[f].p1, faces[f].p2, faces[f].p3 };
-
         for (uint32_t i = 0; i < 4; ++i)
         {
-            MeshVertex vert;
-
-            // Position
-            vert.px = points[i][0];
-            vert.py = points[i][1];
-            vert.pz = points[i][2];
-
-            // Normal
-            vert.nx = faces[f].nx;
-            vert.ny = faces[f].ny;
-            vert.nz = faces[f].nz;
-
-            // Tangent
-            vert.tx = faces[f].tx;
-            vert.ty = faces[f].ty;
-            vert.tz = faces[f].tz;
-
-            // UV
-            vert.u = uvs[i][0];
-            vert.v = uvs[i][1];
-
-            vertices.push_back(vert);
+            vertices.push_back({
+                faces[f].points[i],
+                faces[f].normal,
+                uvs[i],
+                faces[f].tangent
+                });
         }
 
-        //
         indices.push_back(startIndex + 0);
         indices.push_back(startIndex + 2);
         indices.push_back(startIndex + 1);
@@ -224,7 +258,7 @@ std::shared_ptr<MeshAsset> MeshFactory::CreateTorus(
     // 1. Vertex 생성
     for (uint32_t j = 0; j <= radialSegments; ++j)
     {
-        float v = (float)j / (float)radialSegments;
+        float v = static_cast<float>(j) / radialSegments;
         float phi = v * TWO_PI;
 
         float cosPhi = cosf(phi);
@@ -232,59 +266,41 @@ std::shared_ptr<MeshAsset> MeshFactory::CreateTorus(
 
         for (uint32_t i = 0; i <= tubularSegments; ++i)
         {
-            float u = (float)i / (float)tubularSegments;
+            float u = static_cast<float>(i) / tubularSegments;
             float theta = u * TWO_PI;
 
             float cosTheta = cosf(theta);
             float sinTheta = sinf(theta);
 
-            // 중심 원 (major circle)
-            float cx = radius * cosPhi;
-            float cy = radius * sinPhi;
+            // 중심 원(Major Circle)의 중심
+            Core::Vector3 center{
+                radius * cosPhi,
+                radius * sinPhi,
+                0.0f
+            };
 
-            // torus position
             MeshVertex vert;
 
-            vert.px = (radius + tubeRadius * cosTheta) * cosPhi;
-            vert.py = (radius + tubeRadius * cosTheta) * sinPhi;
-            vert.pz = tubeRadius * sinTheta;
+            // Position
+            vert.position = {
+                (radius + tubeRadius * cosTheta) * cosPhi,
+                (radius + tubeRadius * cosTheta) * sinPhi,
+                tubeRadius * sinTheta
+            };
 
-            // normal (center - vertex 방향)
-            float nx = vert.px - cx;
-            float ny = vert.py - cy;
-            float nz = vert.pz;
+            // Normal
+            vert.normal = (vert.position - center).Normalized();
 
-            float len = sqrtf(nx * nx + ny * ny + nz * nz);
-            if (len > 0.00001f)
-            {
-                nx /= len;
-                ny /= len;
-                nz /= len;
-            }
+            // Tangent (U(theta) 방향)
+            vert.tangent = {
+                -sinTheta * cosPhi,
+                -sinTheta * sinPhi,
+                 cosTheta
+            };
+            vert.tangent.NormalizeOr(Core::Vector3::Right());
 
-            vert.nx = nx;
-            vert.ny = ny;
-            vert.nz = nz;
-
-            // Tangent 계산: U(theta)가 증가하는 방향으로의 편미분 벡터
-            float tx = -sinTheta * cosPhi;
-            float ty = -sinTheta * sinPhi;
-            float tz = cosTheta;
-
-            float tLen = sqrtf(tx * tx + ty * ty + tz * tz);
-            if (tLen > 0.00001f)
-            {
-                tx /= tLen;
-                ty /= tLen;
-                tz /= tLen;
-            }
-
-            vert.tx = tx;
-            vert.ty = ty;
-            vert.tz = tz;
-
-            vert.u = u;
-            vert.v = v;
+            // UV
+            vert.uv = { u, v };
 
             vertices.push_back(vert);
         }
@@ -324,7 +340,7 @@ std::shared_ptr<MeshAsset> MeshFactory::CreateTorus(
 std::shared_ptr<MeshAsset> MeshFactory::CreateGrid(
     float cellSize,
     uint32_t halfExtent,
-    float r, float g, float b)
+    const Core::Color& color)
 {
     auto mesh = std::make_shared<MeshAsset>();
     mesh->format = VertexFormat::Grid;
@@ -332,9 +348,10 @@ std::shared_ptr<MeshAsset> MeshFactory::CreateGrid(
     std::vector<GridVertex> vertices;
     std::vector<uint32_t> indices;
 
-    const uint32_t lineCount = (halfExtent * 2 + 1); // 라인 개수
-    vertices.reserve(lineCount * 4); // 각 라인은 vertex 2개
-    indices.reserve(lineCount * 4); // 각 라인은 index 2개
+    const uint32_t lineCount = halfExtent * 2 + 1;
+
+    vertices.reserve(lineCount * 4); // 라인당 정점 2개
+    indices.reserve(lineCount * 4); // 라인당 인덱스 2개
 
     uint32_t index = 0;
 
@@ -344,27 +361,17 @@ std::shared_ptr<MeshAsset> MeshFactory::CreateGrid(
     // Z 방향 라인 (세로줄)
     for (uint32_t i = 0; i < lineCount; ++i)
     {
-        float x =
-            min + static_cast<float>(i) * cellSize;
+        float x = min + static_cast<float>(i) * cellSize;
 
-        GridVertex v0{};
-        v0.px = x;
-        v0.py = 0.0f;
-        v0.pz = min;
-        v0.r = r;
-        v0.g = g;
-        v0.b = b;
+        vertices.push_back({
+            { x, 0.0f, min },
+            color
+            });
 
-        GridVertex v1{};
-        v1.px = x;
-        v1.py = 0.0f;
-        v1.pz = max;
-        v1.r = r;
-        v1.g = g;
-        v1.b = b;
-
-        vertices.push_back(v0);
-        vertices.push_back(v1);
+        vertices.push_back({
+            { x, 0.0f, max },
+            color
+            });
 
         indices.push_back(index++);
         indices.push_back(index++);
@@ -375,24 +382,15 @@ std::shared_ptr<MeshAsset> MeshFactory::CreateGrid(
     {
         float z = min + static_cast<float>(i) * cellSize;
 
-        GridVertex v0{};
-        v0.px = min;
-        v0.py = 0.0f;
-        v0.pz = z;
-        v0.r = r;
-        v0.g = g;
-        v0.b = b;
+        vertices.push_back({
+            { min, 0.0f, z },
+            color
+            });
 
-        GridVertex v1{};
-        v1.px = max;
-        v1.py = 0.0f;
-        v1.pz = z;
-        v1.r = r;
-        v1.g = g;
-        v1.b = b;
-
-        vertices.push_back(v0);
-        vertices.push_back(v1);
+        vertices.push_back({
+            { max, 0.0f, z },
+            color
+            });
 
         indices.push_back(index++);
         indices.push_back(index++);

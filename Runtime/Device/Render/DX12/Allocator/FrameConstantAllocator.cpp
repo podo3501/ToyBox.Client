@@ -1,12 +1,12 @@
 #include "pch.h"
-#include "FrameUploadAllocator.h"
+#include "FrameConstantAllocator.h"
 #include "Core/Device.h"
 #include "d3dx12.h"
 
-FrameUploadAllocator::~FrameUploadAllocator() = default;
-FrameUploadAllocator::FrameUploadAllocator() = default;
+FrameConstantAllocator::~FrameConstantAllocator() = default;
+FrameConstantAllocator::FrameConstantAllocator() = default;
 
-void FrameUploadAllocator::CreateBuffer(Device& device, UINT bufferSize)
+void FrameConstantAllocator::CreateBuffer(Device& device, UINT bufferSize)
 {
     Assert(bufferSize > 0);
     m_bufferSize = bufferSize;
@@ -20,7 +20,7 @@ void FrameUploadAllocator::CreateBuffer(Device& device, UINT bufferSize)
     Assert(SUCCEEDED(hr));
 }
 
-void FrameUploadAllocator::Reset()
+void FrameConstantAllocator::Reset()
 {
     m_offset = 0;
 }

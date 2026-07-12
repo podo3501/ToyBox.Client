@@ -4,7 +4,8 @@
 #include "Factory/ResourceFactory.h"
 #include "Graph/RenderGraph.h"
 #include "Graph/TaskScheduler.h"
-#include "Helpers/CommonHelpers.h"
+#include "Core/Foundation/Align.h"
+#include "RenderConstants.h"
 #include "Command/CommandList.h"
 
 struct TextRenderLayout
@@ -30,10 +31,10 @@ void FontAtlasCreateGraphBuilder::UploadGlyphsToAtlas(
     size_t uploadOffset = 0;
     for (const auto& glyph : uploads)
     {
-        size_t rowPitch = AlignSize(glyph.width, AlignTextureRow);
+        size_t rowPitch = Core::AlignUp(glyph.width, AlignTextureRow);
         size_t glyphSize = rowPitch * glyph.height;
 
-        uploadOffset = AlignSize(uploadOffset, AlignTexture);
+        uploadOffset = Core::AlignUp(uploadOffset, AlignTexturePlacement);
         layouts.push_back({ uploadOffset, rowPitch });
 
         uploadOffset += glyphSize;

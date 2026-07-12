@@ -6,24 +6,24 @@ class Transform
 {
 public:
     Transform();
-    Transform(const Core::Math::Vector3& pos,
-        const Core::Math::Vector3& rot,
-        const Core::Math::Vector3& scale);
+    Transform(const Core::Vector3& pos,
+        const Core::Vector3& rot,
+        const Core::Vector3& scale);
 
-    void SetPosition(const Core::Math::Vector3& p);
-    void SetRotation(const Core::Math::Vector3& r);
-    void SetScale(const Core::Math::Vector3& s);
+    void SetPosition(const Core::Vector3& p);
+    void SetRotation(const Core::Vector3& r);
+    void SetScale(const Core::Vector3& s);
 
-    const Core::Math::Matrix& GetMatrix() const;
+    const Core::Matrix& GetMatrix() const;
     void SetDirty();
 
 private:
     void RebuildMatrix() const;
 
-    mutable Core::Math::Matrix m_worldMatrix;
+    mutable Core::Matrix m_worldMatrix;
     mutable bool m_dirty;
 
-    Core::Math::Vector3 position;
-    Core::Math::Vector3 rotation; // radians (x,y,z)
-    Core::Math::Vector3 scale;
+    Core::Vector3 position;
+    Core::Vector3 rotation; // radians (x,y,z)
+    Core::Vector3 scale;
 };

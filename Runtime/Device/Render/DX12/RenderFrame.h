@@ -16,16 +16,16 @@ public:
 		std::shared_ptr<IFontResource> fontRes,
 		std::string_view text,
 		uint32_t size,
-		const Core::Math::Vector2& pos,
+		const Core::Vector2& pos,
 		const Core::Color& color) override;
 	virtual void DrawSurface(
 		std::shared_ptr<IMeshResource> meshRes,
 		std::shared_ptr<IMaterialResource> matRes,
-		const Core::Math::Matrix& world) override;
+		const Core::Matrix& world) override;
 	virtual void DrawUI(
 		std::shared_ptr<IMeshResource> meshRes,
 		std::shared_ptr<IMaterialResource> matRes,
-		const Core::Math::Matrix& world,
+		const Core::Matrix& world,
 		const Rect* source) override;
 
 	DrawPacket PrepareRenderData();

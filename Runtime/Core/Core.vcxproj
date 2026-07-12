@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Foundation\Align.h" />
     <ClInclude Include="Foundation\Assert.h" />
     <ClInclude Include="Foundation\Color.h" />
     <ClInclude Include="Foundation\Foundation.h" />

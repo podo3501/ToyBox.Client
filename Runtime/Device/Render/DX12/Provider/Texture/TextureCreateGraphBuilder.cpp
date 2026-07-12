@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "TextureCreateGraphBuilder.h"
 #include "MipGenerator.h"
 #include "Graph/RenderGraph.h"
@@ -6,7 +6,8 @@
 #include "Factory/DescriptorFactory.h"
 #include "Factory/ResourceFactory.h"
 #include "TextureLoadRequest.h"
-#include "Helpers/CommonHelpers.h"
+#include "Core/Foundation/Align.h"
+#include "RenderConstants.h"
 #include "TextureUtils.h"
 
 struct TextureUploadEntry
@@ -67,7 +68,7 @@ void TextureCreateGraphBuilder::LoadTextures(const std::vector<TextureLoadReques
         m_descFactory.CreateTextureViews(textureResource.get(), mips);
 
         hasMipTask |= mips;
-        offset = AlignSize(offset, AlignTexture);
+        offset = Core::AlignUp(offset, AlignTexturePlacement);
 
         textureUploads.push_back({ texResID, texRes, req.asset, offset, mips });
         finalizeEntries.push_back({ texResID, mips });
@@ -83,7 +84,7 @@ void TextureCreateGraphBuilder::LoadTextures(const std::vector<TextureLoadReques
 
     auto compiledTasks = graph.Compile();
 
-    size_t totalUploadSize = AlignSize(offset, AlignTexture);
+    size_t totalUploadSize = Core::AlignUp(offset, AlignTexturePlacement);
     auto resCtx = std::make_shared<ResourceContext>();
     resCtx->Set(uploadResID, m_resFactory.CreateResource(totalUploadSize, ResInitType::Upload));
 

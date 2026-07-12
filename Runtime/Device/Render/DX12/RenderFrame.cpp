@@ -14,18 +14,22 @@ void RenderFrame::SetFrameData(const FrameData& frameData) noexcept
     m_frameData = frameData;
 }
 
+struct DrawTextItem
+{
+    std::shared_ptr<IFontResource> fontRes;
+};
+
 void RenderFrame::DrawText(
     std::shared_ptr<IMeshResource> meshRes,
     std::shared_ptr<IFontResource> fontRes,
     std::string_view text,
     uint32_t size,
-    const Core::Math::Vector2& pos,
+    const Core::Vector2& pos,
     const Core::Color& color)
 {
     Assert(fontRes);
 
     auto uiItems = m_textSystem.DrawText(
-        meshRes,
         fontRes,
         Core::UTF8ToUTF32(text),
         size,
@@ -38,7 +42,7 @@ void RenderFrame::DrawText(
 void RenderFrame::DrawSurface(
     std::shared_ptr<IMeshResource> meshRes,
     std::shared_ptr<IMaterialResource> matRes,
-    const Core::Math::Matrix& world)
+    const Core::Matrix& world)
 {
     DrawItem item;
     item.mesh = meshRes;
@@ -51,7 +55,7 @@ void RenderFrame::DrawSurface(
 void RenderFrame::DrawUI(
     std::shared_ptr<IMeshResource> meshRes,
     std::shared_ptr<IMaterialResource> matRes,
-    const Core::Math::Matrix& world,
+    const Core::Matrix& world,
     const Rect* source)
 {
     DrawUIItem item;

@@ -9,8 +9,6 @@
 #include "Resource/Mesh/MeshResource.h"
 #include "Core/D3D12Conversions.h"
 
-namespace cm = Core::Math;
-
 DebugSurfaceRenderer::~DebugSurfaceRenderer() = default;
 DebugSurfaceRenderer::DebugSurfaceRenderer(const DebugSurfaceRendererConfig& config, PipelineCache& pipelineCache) :
     m_config{ config },
@@ -106,7 +104,7 @@ ID3D12PipelineState* DebugSurfaceRenderer::CreatePSO(const PipelineState& pipeli
         });
 }
 
-void DebugSurfaceRenderer::Draw(CommandList& cmd, MeshResource& mesh, const cm::Matrix& world)
+void DebugSurfaceRenderer::Draw(CommandList& cmd, MeshResource& mesh, const Core::Matrix& world)
 {
     auto objectCBAddress = UploadObjectCB(world);
     uint32_t vbIndex = mesh.GetVertexHeapIndex();
@@ -117,7 +115,7 @@ void DebugSurfaceRenderer::Draw(CommandList& cmd, MeshResource& mesh, const cm::
     cmd->DrawInstanced(mesh.GetVertexCount(), 1, 0, 0);
 }
 
-D3D12_GPU_VIRTUAL_ADDRESS DebugSurfaceRenderer::UploadObjectCB(const cm::Matrix& world)
+D3D12_GPU_VIRTUAL_ADDRESS DebugSurfaceRenderer::UploadObjectCB(const Core::Matrix& world)
 {
     ObjectCB obj{};
 

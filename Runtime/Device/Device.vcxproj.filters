@@ -103,6 +103,9 @@
     <Filter Include="Render\DX12\TextSystem">
       <UniqueIdentifier>{ad316f76-0d62-43ae-b0f5-591bab1b6140}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Render\DX12\Allocator">
+      <UniqueIdentifier>{a1262f69-f1a8-4360-8005-8ee0a157eba6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Storage\JsonObjectIO.h">
@@ -188,9 +191,6 @@
       <Filter>Asset\Loader\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Render\DX12\Helpers\MathHelpers.h">
-      <Filter>Render\DX12\Helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\DX12\Helpers\CommonHelpers.h">
       <Filter>Render\DX12\Helpers</Filter>
     </ClInclude>
     <ClInclude Include="Render\DX12\Command\CommandList.h">
@@ -304,13 +304,7 @@
     <ClInclude Include="Render\DX12\Factory\ResourceFactory.h">
       <Filter>Render\DX12\Factory</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\Factory\DescriptorAllocator.h">
-      <Filter>Render\DX12\Factory</Filter>
-    </ClInclude>
     <ClInclude Include="Render\DX12\Pipeline\Renderer\DebugSurfaceRenderer.h">
-      <Filter>Render\DX12\Pipeline\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\DX12\Pipeline\Renderer\FrameUploadAllocator.h">
       <Filter>Render\DX12\Pipeline\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="Render\DX12\Pipeline\Renderer\PipelineCache.h">
@@ -434,6 +428,30 @@
       <Filter>Render\DX12\TextSystem</Filter>
     </ClInclude>
     <ClInclude Include="Render\DX12\Resource\Texture\BuiltinTextureType.h" />
+    <ClInclude Include="Render\DX12\Allocator\DescriptorHeapAllocator.h">
+      <Filter>Render\DX12\Allocator</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Allocator\FrameConstantAllocator.h">
+      <Filter>Render\DX12\Allocator</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Allocator\FrameUploadAllocator.h">
+      <Filter>Render\DX12\Allocator</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\RenderConstants.h">
+      <Filter>Render\DX12</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Resource\Mesh\StaticMeshResource.h">
+      <Filter>Render\DX12\Resource\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Resource\Mesh\TransientMeshResource.h">
+      <Filter>Render\DX12\Resource\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Allocator\UploadAllocation.h">
+      <Filter>Render\DX12\Allocator</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Provider\Mesh\TransientMeshProvider.h">
+      <Filter>Render\DX12\Provider\Mesh</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -515,9 +533,6 @@
     <ClCompile Include="Render\DX12\Helpers\MathHelpers.cpp">
       <Filter>Render\DX12\Helpers</Filter>
     </ClCompile>
-    <ClCompile Include="Render\DX12\Helpers\CommonHelpers.cpp">
-      <Filter>Render\DX12\Helpers</Filter>
-    </ClCompile>
     <ClCompile Include="Render\DX12\Command\CommandList.cpp">
       <Filter>Render\DX12\Command</Filter>
     </ClCompile>
@@ -569,9 +584,6 @@
     <ClCompile Include="Render\DX12\Scene\RenderSortKey.cpp">
       <Filter>Render\DX12\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Render\DX12\Resource\Mesh\MeshResource.cpp">
-      <Filter>Render\DX12\Resource\Mesh</Filter>
-    </ClCompile>
     <ClCompile Include="Render\DX12\Resource\Material\GridMaterialResource.cpp">
       <Filter>Render\DX12\Resource\Material</Filter>
     </ClCompile>
@@ -599,13 +611,7 @@
     <ClCompile Include="Render\DX12\Factory\ResourceFactory.cpp">
       <Filter>Render\DX12\Factory</Filter>
     </ClCompile>
-    <ClCompile Include="Render\DX12\Factory\DescriptorAllocator.cpp">
-      <Filter>Render\DX12\Factory</Filter>
-    </ClCompile>
     <ClCompile Include="Render\DX12\Pipeline\Renderer\DebugSurfaceRenderer.cpp">
-      <Filter>Render\DX12\Pipeline\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\DX12\Pipeline\Renderer\FrameUploadAllocator.cpp">
       <Filter>Render\DX12\Pipeline\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\Pipeline\Renderer\PipelineCache.cpp">
@@ -706,6 +712,24 @@
     </ClCompile>
     <ClCompile Include="Render\DX12\TextSystem\FontAtlasCreateGraphBuilder.cpp">
       <Filter>Render\DX12\TextSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Allocator\DescriptorHeapAllocator.cpp">
+      <Filter>Render\DX12\Allocator</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Allocator\FrameConstantAllocator.cpp">
+      <Filter>Render\DX12\Allocator</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Allocator\FrameUploadAllocator.cpp">
+      <Filter>Render\DX12\Allocator</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Resource\Mesh\StaticMeshResource.cpp">
+      <Filter>Render\DX12\Resource\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Resource\Mesh\TransientMeshResource.cpp">
+      <Filter>Render\DX12\Resource\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Provider\Mesh\TransientMeshProvider.cpp">
+      <Filter>Render\DX12\Provider\Mesh</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

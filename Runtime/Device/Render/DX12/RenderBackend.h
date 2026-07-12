@@ -9,6 +9,8 @@
 #include "Shader/ShaderLibrary.h"
 #include "Core/FrameProfiler.h"
 #include "ResourceProvider.h"
+#include "Allocator/FrameUploadAllocator.h"
+#include "Provider/Mesh/TransientMeshProvider.h"
 #include "Pipeline/ForwardRenderPipeline.h"
 #include "TextSystem/TextSystem.h"
 #include "RenderFrame.h"
@@ -40,6 +42,8 @@ private:
 	ShaderLibrary m_shaderLibrary;
 	FrameProfiler m_profiler;
 	ResourceProvider m_resProvider;
+	FrameUploadAllocator m_frameUploadAllocator;
+	TransientMeshProvider m_transientMeshProvider;
 	ForwardRenderPipeline m_pipeline;
 	TextSystem m_textSystem;
 	RenderFrame m_renderFrame;

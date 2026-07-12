@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Matrix.h"
 
-namespace Core::Math
+namespace Core
 {
     Matrix::Matrix()
     {

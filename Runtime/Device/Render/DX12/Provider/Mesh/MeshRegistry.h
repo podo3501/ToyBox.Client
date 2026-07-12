@@ -1,8 +1,9 @@
 #pragma once
-#include "Resource/Mesh/MeshResource.h"
 #include "Resource/Resource.h"
 #include "Graph/RGTypes.h"
 #include "GameClient/Asset/MeshAsset.h"
+
+struct IMeshResource;
 
 class MeshRegistry
 {

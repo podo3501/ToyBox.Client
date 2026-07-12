@@ -11,20 +11,30 @@ class Device;
 class TaskScheduler;
 class ResourceFactory;
 class DescriptorFactory;
+class TransientMeshProvider;
 
 class TextSystem
 {
 public:
     ~TextSystem();
-    TextSystem(TaskScheduler& taskScheduler, ResourceFactory& resFactory);
+    TextSystem(
+        TaskScheduler& taskScheduler, 
+        ResourceFactory& resFactory,
+        TransientMeshProvider& transientMeshProvider);
     bool Initialize(Device& device, DescriptorFactory& factory, const Size& atlasTexSize);
     std::vector<DrawUIItem> DrawText(
+        std::shared_ptr<IFontResource> fontRes,
+        std::span<const char32_t> text,
+        uint32_t size,
+        const Core::Vector2& pos,
+        const Core::Color& color);
+    /*std::vector<DrawUIItem> DrawText(
         std::shared_ptr<IMeshResource> meshRes,
         std::shared_ptr<IFontResource> fontRes,
         std::span<const char32_t> text,
         uint32_t size,
-        const Core::Math::Vector2& pos,
-        const Core::Color& color);
+        const Core::Vector2& pos,
+        const Core::Color& color);*/
 
 private:
     void UpdateAtlasIfNeeded(
@@ -38,6 +48,6 @@ private:
     
     GlyphCache m_glyphCache;
     AtlasPacker m_packer;
-
     FontAtlasCreateGraphBuilder m_atlasBuilder;
+    TransientMeshProvider& m_transientMeshProvider;
 };

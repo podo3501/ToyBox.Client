@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "CameraMatrices.h"
 
-namespace Core::Math
+namespace Core
 {
     Matrix CreateLookAt(const Vector3& eye, const Vector3& target, const Vector3& up)
     {

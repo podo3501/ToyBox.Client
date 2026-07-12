@@ -29,9 +29,9 @@ public:
 		MeshRepository* meshRepository, 
 		MaterialRepository* matRepository);
 
-	void DrawText(FontHandle hF, std::string_view text, uint32_t size, const Core::Math::Vector2& pos, const Core::Color& color);
-	void DrawSurface(MeshHandle hM, MaterialHandle hMtl, const Core::Math::Matrix& world);
-	void DrawDebugSurface(MeshHandle hM, MaterialHandle hMtl, const Core::Math::Matrix& world);
+	void DrawText(FontHandle hF, std::string_view text, uint32_t size, const Core::Vector2& pos, const Core::Color& color);
+	void DrawSurface(MeshHandle hM, MaterialHandle hMtl, const Core::Matrix& world);
+	void DrawDebugSurface(MeshHandle hM, MaterialHandle hMtl, const Core::Matrix& world);
 	void DrawUI(MaterialHandle hMtl, const Rect& dest, const Rect* source = nullptr);
 	void SetFrameData(const FrameData& frameData);
 

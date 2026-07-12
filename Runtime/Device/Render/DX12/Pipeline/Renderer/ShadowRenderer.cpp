@@ -7,8 +7,6 @@
 #include "Helpers/MathHelpers.h"
 #include "GameClient/Graphics/RenderData/DirectionalLightData.h"
 
-namespace cm = Core::Math;
-
 struct ShadowFrameCB
 {
     DirectX::XMFLOAT4X4 lightViewProj;
@@ -101,7 +99,7 @@ void ShadowRenderer::BeginFrame(CommandList& cmd)
     cmd->SetGraphicsRootConstantBufferView(Core::ToIndex(RootSlot::FrameCB), m_frameCBAddress);
 }
 
-D3D12_GPU_VIRTUAL_ADDRESS ShadowRenderer::UploadObjectCB(const cm::Matrix& world)
+D3D12_GPU_VIRTUAL_ADDRESS ShadowRenderer::UploadObjectCB(const Core::Matrix& world)
 {
     ShadowObjectCB obj{};
     DirectX::XMMATRIX xmWorld = ToDXMatrix(world);
@@ -113,7 +111,7 @@ D3D12_GPU_VIRTUAL_ADDRESS ShadowRenderer::UploadObjectCB(const cm::Matrix& world
 void ShadowRenderer::Draw(
     CommandList& cmd,
     MeshResource& mesh,
-    const cm::Matrix& world)
+    const Core::Matrix& world)
 {
     auto objectCBAddress = UploadObjectCB(world);
     uint32_t meshData[2] = { mesh.GetVertexHeapIndex(), mesh.GetIndexHeapIndex() };

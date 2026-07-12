@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Vector3.h"
 
-namespace Core::Math
+namespace Core
 {
     Vector3 Vector3::operator+(const Vector3& rhs) const
     {

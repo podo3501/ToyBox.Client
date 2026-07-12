@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "MeshRegistry.h"
+#include "Resource/Mesh/StaticMeshResource.h"
 
 void MeshRegistry::Register(RGResourceID resID, std::shared_ptr<IMeshResource> resource)
 {
@@ -17,7 +18,7 @@ void MeshRegistry::FinalizeMesh(RGResourceID resID, VertexFormat format,
     if (!res)
         return;
 
-    auto* meshRes = static_cast<MeshResource*>(res.get());
+    auto* meshRes = static_cast<StaticMeshResource*>(res.get());
     meshRes->SetVertexFormat(format);
     meshRes->SetResource(std::move(vRes), std::move(iRes), vCount, iCount);
     meshRes->SetVertexHeapIndex(vHeapIndex);

@@ -12,14 +12,14 @@ struct DrawItem
 {
     std::shared_ptr<IMeshResource> mesh;
     std::shared_ptr<IMaterialResource> material;
-    Core::Math::Matrix world;
+    Core::Matrix world{};
 
     uint64_t sortKey{ 0 };
 };
 
 struct DrawUIItem : public DrawItem
 {
-    Core::Math::Vector4 uvTransform{ 0.f, 0.f, 1.f, 1.f };
+    Core::Vector4 uvTransform{ 0.f, 0.f, 1.f, 1.f };
 };
 
 struct DrawPacket

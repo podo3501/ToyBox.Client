@@ -1,11 +1,11 @@
 #include "pch.h"
-#include "DescriptorAllocator.h"
+#include "DescriptorHeapAllocator.h"
 #include "Core/Device.h"
 
-DescriptorAllocator::~DescriptorAllocator() = default;
-DescriptorAllocator::DescriptorAllocator() noexcept = default;
+DescriptorHeapAllocator::~DescriptorHeapAllocator() = default;
+DescriptorHeapAllocator::DescriptorHeapAllocator() noexcept = default;
 
-bool DescriptorAllocator::Initialize(Device& device, D3D12_DESCRIPTOR_HEAP_TYPE type, UINT maxCount) noexcept
+bool DescriptorHeapAllocator::Initialize(Device& device, D3D12_DESCRIPTOR_HEAP_TYPE type, UINT maxCount) noexcept
 {
     m_capacity = maxCount;
     m_allocFront = 0;
@@ -27,7 +27,7 @@ bool DescriptorAllocator::Initialize(Device& device, D3D12_DESCRIPTOR_HEAP_TYPE 
     return true;
 }
 
-UINT DescriptorAllocator::Allocate() noexcept
+UINT DescriptorHeapAllocator::Allocate() noexcept
 {
     if (m_allocFront + m_allocBack + 1 > m_capacity)
     {
@@ -41,7 +41,7 @@ UINT DescriptorAllocator::Allocate() noexcept
     return index;
 }
 
-UINT DescriptorAllocator::AllocateTransient(UINT count) noexcept
+UINT DescriptorHeapAllocator::AllocateTransient(UINT count) noexcept
 {
     std::lock_guard<std::mutex> lock(m_allocBackMutex);
 
@@ -58,19 +58,19 @@ UINT DescriptorAllocator::AllocateTransient(UINT count) noexcept
     return start;
 }
 
-void DescriptorAllocator::Reset() noexcept
+void DescriptorHeapAllocator::Reset() noexcept
 {
     m_allocFront = 0;
     ResetTransient();
 }
 
-void DescriptorAllocator::ResetTransient() noexcept
+void DescriptorHeapAllocator::ResetTransient() noexcept
 {
     std::lock_guard<std::mutex> lock(m_allocBackMutex);
     m_allocBack = 0;
 }
 
-D3D12_CPU_DESCRIPTOR_HANDLE DescriptorAllocator::GetCpuHandle(UINT index) const noexcept
+D3D12_CPU_DESCRIPTOR_HANDLE DescriptorHeapAllocator::GetCpuHandle(UINT index) const noexcept
 {
     D3D12_CPU_DESCRIPTOR_HANDLE handle = m_cpuStart;
     handle.ptr += index * m_descriptorSize;
@@ -84,7 +84,7 @@ static D3D12_GPU_DESCRIPTOR_HANDLE InvalidGpuHandle()
     return h;
 }
 
-D3D12_GPU_DESCRIPTOR_HANDLE DescriptorAllocator::GetGpuHandle(UINT index) const noexcept
+D3D12_GPU_DESCRIPTOR_HANDLE DescriptorHeapAllocator::GetGpuHandle(UINT index) const noexcept
 {
     if (!m_shaderVisible)
     {

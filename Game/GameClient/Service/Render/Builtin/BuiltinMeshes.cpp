@@ -11,10 +11,10 @@ static std::shared_ptr<MeshAsset> CreateUIQuadAsset()
 
 	std::vector<UIVertex> vertices =
 	{
-		{ 0.0f, 0.0f, 0.0f,    1.0f,1.0f,1.0f,1.0f,  0.0f, 0.0f }, // 0, 좌상단
-		{ 1.0f, 0.0f, 0.0f,    1.0f,1.0f,1.0f,1.0f,  1.0f, 0.0f }, // 1, 우상단
-		{ 1.0f, 1.0f, 0.0f,    1.0f,1.0f,1.0f,1.0f,  1.0f, 1.0f }, // 2, 우하단
-		{ 0.0f, 1.0f, 0.0f,    1.0f,1.0f,1.0f,1.0f,  0.0f, 1.0f }, // 3, 좌하단
+		{ { 0.0f, 0.0f, 0.0f }, Core::Color::White, { 0.0f, 0.0f } }, // 0, 좌상단
+		{ { 1.0f, 0.0f, 0.0f }, Core::Color::White, { 1.0f, 0.0f } }, // 1, 우상단
+		{ { 1.0f, 1.0f, 0.0f }, Core::Color::White, { 1.0f, 1.0f } }, // 2, 우하단
+		{ { 0.0f, 1.0f, 0.0f }, Core::Color::White, { 0.0f, 1.0f } }, // 3, 좌하단
 	};
 
 	std::vector<uint32_t> indices =

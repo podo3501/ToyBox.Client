@@ -11,8 +11,6 @@
 #include "GameClient/Graphics/RenderData/FrameData.h"
 #include "Core/D3D12Conversions.h"
 
-namespace cm = Core::Math;
-
 struct PbrMaterialCB
 {
     uint32_t albedoTextureIndex;
@@ -163,7 +161,7 @@ void SurfaceRenderer::BindPipeline(CommandList& cmd, const PipelineState& pipeli
     m_currentPSO = pso;
 }
 
-D3D12_GPU_VIRTUAL_ADDRESS SurfaceRenderer::UploadObjectCB(const cm::Matrix& world)
+D3D12_GPU_VIRTUAL_ADDRESS SurfaceRenderer::UploadObjectCB(const Core::Matrix& world)
 {
     ObjectCB obj{};
 
@@ -227,7 +225,7 @@ void SurfaceRenderer::Draw(
     CommandList& cmd,
     MeshResource& mesh,
     MaterialResource& material,
-    const cm::Matrix& world)
+    const Core::Matrix& world)
 {
     auto objectCBAddress = UploadObjectCB(world);
     auto materialCBAddress = UploadMaterialCB(material);

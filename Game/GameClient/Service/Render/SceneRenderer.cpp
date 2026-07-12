@@ -19,8 +19,6 @@ struct ResolvedDrawData
 	std::shared_ptr<IMaterialResource> matRes;
 };
 
-namespace cm = Core::Math;
-
 SceneRenderer::~SceneRenderer() = default;
 SceneRenderer::SceneRenderer(
 	IRenderFrame* renderFrame, 
@@ -36,7 +34,7 @@ SceneRenderer::SceneRenderer(
 	m_defaultMaterials = CreateBuiltinMaterials(m_matRepository);
 }
 
-void SceneRenderer::DrawText(FontHandle hF, std::string_view text, uint32_t size, const Core::Math::Vector2& pos, const Core::Color& color)
+void SceneRenderer::DrawText(FontHandle hF, std::string_view text, uint32_t size, const Core::Vector2& pos, const Core::Color& color)
 {
 	auto mesh = m_meshRepository->Get(m_uiQuad);
 	if (!mesh || mesh->state != LoadState::Ready)
@@ -49,7 +47,7 @@ void SceneRenderer::DrawText(FontHandle hF, std::string_view text, uint32_t size
 	m_renderFrame->DrawText(mesh->meshRes, font->fontRes, text, size, pos, color);
 }
 
-void SceneRenderer::DrawSurface(MeshHandle hM, MaterialHandle hMtl, const cm::Matrix& world)
+void SceneRenderer::DrawSurface(MeshHandle hM, MaterialHandle hMtl, const Core::Matrix& world)
 {
 	if (!hMtl)
 		hMtl = GetDefaultMaterial(MaterialDomain::Surface);
@@ -60,7 +58,7 @@ void SceneRenderer::DrawSurface(MeshHandle hM, MaterialHandle hMtl, const cm::Ma
 	m_renderFrame->DrawSurface(data->meshRes, data->matRes, world);
 }
 
-void SceneRenderer::DrawDebugSurface(MeshHandle hM, MaterialHandle hMtl, const cm::Matrix& world)
+void SceneRenderer::DrawDebugSurface(MeshHandle hM, MaterialHandle hMtl, const Core::Matrix& world)
 {
 	if (!hMtl)
 		hMtl = GetDefaultMaterial(MaterialDomain::DebugSurface);
@@ -82,9 +80,9 @@ void SceneRenderer::DrawUI(MaterialHandle hMtl, const Rect& dest, const Rect* so
 	float width = static_cast<float>(dest.width);
 	float height = static_cast<float>(dest.height);
 
-	cm::Matrix scale = cm::Matrix::Scale(width, height, 1.0f);
-	cm::Matrix translation = cm::Matrix::Translation(static_cast<float>(dest.x), static_cast<float>(dest.y), 0.0f);
-	cm::Matrix world = scale * translation;
+	Core::Matrix scale = Core::Matrix::Scale(width, height, 1.0f);
+	Core::Matrix translation = Core::Matrix::Translation(static_cast<float>(dest.x), static_cast<float>(dest.y), 0.0f);
+	Core::Matrix world = scale * translation;
 
 	m_renderFrame->DrawUI(data->meshRes, data->matRes, world, source);
 }

@@ -17,17 +17,17 @@ struct IRenderFrame
 		std::shared_ptr<IFontResource> fontRes,
 		std::string_view text,
 		uint32_t size,
-		const Core::Math::Vector2& pos,
+		const Core::Vector2& pos,
 		const Core::Color& color) = 0;
 
 	virtual void DrawSurface(
 		std::shared_ptr<IMeshResource> meshRes,
 		std::shared_ptr<IMaterialResource> matRes,
-		const Core::Math::Matrix& world) = 0;
+		const Core::Matrix& world) = 0;
 
 	virtual void DrawUI(
 		std::shared_ptr<IMeshResource> meshRes,
 		std::shared_ptr<IMaterialResource> matRes,
-		const Core::Math::Matrix& world,
+		const Core::Matrix& world,
 		const Rect* source) = 0;
 };

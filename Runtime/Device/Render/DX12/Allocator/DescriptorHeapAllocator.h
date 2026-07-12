@@ -7,11 +7,11 @@ class Device;
 
 using Microsoft::WRL::ComPtr;
 
-class DescriptorAllocator
+class DescriptorHeapAllocator
 {
 public:
-    ~DescriptorAllocator();
-    explicit DescriptorAllocator() noexcept;
+    ~DescriptorHeapAllocator();
+    explicit DescriptorHeapAllocator() noexcept;
     bool Initialize(Device& device, D3D12_DESCRIPTOR_HEAP_TYPE type, UINT maxCount) noexcept;
     UINT Allocate() noexcept;
     UINT AllocateTransient(UINT count = 1) noexcept; // 뒤에서부터 채우는 임시 할당(mipmap 같이 잠시 계산때 쓰고 버리는 거)

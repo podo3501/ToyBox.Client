@@ -1,6 +1,9 @@
 #pragma once
 #include <vector>
 #include "AssetData.h"
+#include "Core/Math/Vector2.h"
+#include "Core/Math/Vector3.h"
+#include "Core/Foundation/Color.h"
 
 enum class VertexFormat
 {
@@ -11,23 +14,23 @@ enum class VertexFormat
 
 struct MeshVertex
 {
-    float px, py, pz;
-    float nx, ny, nz;
-    float u, v;
-    float tx, ty, tz;
+    Core::Vector3 position;
+    Core::Vector3 normal;
+    Core::Vector2 uv;
+    Core::Vector3 tangent;
 };
 
 struct UIVertex
 {
-    float x, y, z;
-    float r, g, b, a;
-    float u, v;
+    Core::Vector3 position;
+    Core::Color color;
+    Core::Vector2 uv;
 };
 
 struct GridVertex
 {
-    float px, py, pz;
-    float r, g, b;
+    Core::Vector3 position;
+    Core::Color color;
 };
 
 struct MeshAsset : public AssetData

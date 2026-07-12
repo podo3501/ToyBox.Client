@@ -20,9 +20,13 @@ bool DescriptorFactory::Initialize(const DescriptorConfig& config)
     return true;
 }
 
-UINT DescriptorFactory::CreateBufferSRV(const Resource& resBuffer, UINT elementCount, UINT elementStride)
+UINT DescriptorFactory::CreateBufferSRV(
+    const Resource& resBuffer, 
+    UINT firstElement, 
+    UINT elementCount, 
+    UINT elementStride)
 {
-    auto srvDesc = CreateStructuredBufferSRVDesc(elementCount, elementStride);
+    auto srvDesc = CreateStructuredBufferSRVDesc(firstElement, elementCount, elementStride);
 
     UINT index = m_bindlessAllocator.Allocate();
     if (index == UINT_MAX)
@@ -112,7 +116,9 @@ bool DescriptorFactory::CreateTextureViews(TextureResource* texRes, bool generat
 }
 
 D3D12_SHADER_RESOURCE_VIEW_DESC DescriptorFactory::CreateStructuredBufferSRVDesc(
-    UINT numElements, UINT stride) const
+    UINT firstElement,
+    UINT numElements, 
+    UINT stride) const
 {
     D3D12_SHADER_RESOURCE_VIEW_DESC desc{};
 
@@ -120,7 +126,7 @@ D3D12_SHADER_RESOURCE_VIEW_DESC DescriptorFactory::CreateStructuredBufferSRVDesc
     desc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
     desc.Format = DXGI_FORMAT_UNKNOWN; // StructuredBuffer로 인식시키기 위해 Format은 UNKNOWN으로 설정
 
-    desc.Buffer.FirstElement = 0;
+    desc.Buffer.FirstElement = firstElement;
     desc.Buffer.NumElements = numElements;
     desc.Buffer.StructureByteStride = stride; // 구조체(Vertex 등)의 크기
     desc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;

@@ -2,7 +2,7 @@
 #include "Vector4.h"
 #include "Vector3.h"
 
-namespace Core::Math
+namespace Core
 {
      Vector4::Vector4(const Vector3& v3, float inW) : 
          x(v3.x), y(v3.y), z(v3.z), w(inW) 

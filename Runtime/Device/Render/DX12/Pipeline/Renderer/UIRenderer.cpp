@@ -8,8 +8,6 @@
 #include "Helpers/MathHelpers.h"
 #include "Core/D3D12Conversions.h"
 
-namespace cm = Core::Math;
-
 struct UIDrawCB
 {
     DirectX::XMFLOAT4X4 world;
@@ -123,8 +121,8 @@ void UIRenderer::Draw(
     CommandList& cmd,
     MeshResource& mesh,
     UIMaterialResource& material,
-    const cm::Matrix& quadWorld,
-    const cm::Vector4& uvTransform)
+    const Core::Matrix& quadWorld,
+    const Core::Vector4& uvTransform)
 {
     auto drawCBAddress = UploadDrawCB(material, quadWorld, uvTransform);
 
@@ -139,8 +137,8 @@ void UIRenderer::Draw(
 
 D3D12_GPU_VIRTUAL_ADDRESS UIRenderer::UploadDrawCB(
     UIMaterialResource& material,
-    const cm::Matrix& world,
-    const cm::Vector4& uvTransform)
+    const Core::Matrix& world,
+    const Core::Vector4& uvTransform)
 {
     UIDrawCB drawCB{};
 
@@ -156,7 +154,7 @@ D3D12_GPU_VIRTUAL_ADDRESS UIRenderer::UploadDrawCB(
 
 void UIRenderer::SetScreenSize(const Size& size)
 {
-    m_projection = cm::Matrix::OrthographicOffCenter(
+    m_projection = Core::Matrix::OrthographicOffCenter(
         0.0f,
         static_cast<float>(size.width),
         static_cast<float>(size.height),

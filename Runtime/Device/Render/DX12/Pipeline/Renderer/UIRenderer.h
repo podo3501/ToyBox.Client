@@ -1,6 +1,6 @@
 #pragma once
 #include "RendererConfig.h"
-#include "FrameUploadAllocator.h"
+#include "Allocator/FrameConstantAllocator.h"
 #include "Core/Foundation/Geometry2D.h"
 #include "Core/Math/Vector4.h"
 #include "Core/Math/Matrix.h"
@@ -11,7 +11,7 @@ class PipelineCache;
 class CommandList;
 class MeshResource;
 class UIMaterialResource;
-class FrameUploadAllocator;
+class FrameConstantAllocator;
 
 class UIRenderer
 {
@@ -27,8 +27,8 @@ public:
         CommandList& cmd, 
         MeshResource& mesh, 
         UIMaterialResource& material, 
-        const Core::Math::Matrix& world,
-        const Core::Math::Vector4& uvTransform);
+        const Core::Matrix& world,
+        const Core::Vector4& uvTransform);
 
     void SetScreenSize(const Size& size);
 
@@ -45,14 +45,14 @@ private:
     ID3D12PipelineState* GetPipeline(const PipelineState& pipelineState);
     D3D12_GPU_VIRTUAL_ADDRESS UploadDrawCB(
         UIMaterialResource& material,
-        const Core::Math::Matrix& world, 
-        const Core::Math::Vector4& uvTransform);
+        const Core::Matrix& world, 
+        const Core::Vector4& uvTransform);
 
     UIRendererConfig m_config;
     PipelineCache& m_pipelineCache;
     Microsoft::WRL::ComPtr<ID3D12RootSignature> m_rootSignature;
     ID3D12PipelineState* m_currentPSO{ nullptr };
 
-    FrameUploadAllocator m_uiDrawCBAllocator;
-    Core::Math::Matrix m_projection;
+    FrameConstantAllocator m_uiDrawCBAllocator;
+    Core::Matrix m_projection;
 };

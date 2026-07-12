@@ -3,7 +3,7 @@
 #include "Matrix.h"
 #include "Vector3.h"
 
-namespace Core::Math
+namespace Core
 {
     Matrix CreateLookAt(
         const Vector3& eye,

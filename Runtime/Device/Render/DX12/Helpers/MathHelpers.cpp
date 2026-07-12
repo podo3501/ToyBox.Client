@@ -4,17 +4,17 @@
 #include "Core/Math/Vector4.h"
 #include "Core/Math/Matrix.h"
 
-DirectX::XMFLOAT3 ToXMFLOAT3(const Core::Math::Vector3& vec)
+DirectX::XMFLOAT3 ToXMFLOAT3(const Core::Vector3& vec)
 {
     return DirectX::XMFLOAT3(vec.x, vec.y, vec.z);
 }
 
-DirectX::XMFLOAT4 ToXMFLOAT4(const Core::Math::Vector4& vec)
+DirectX::XMFLOAT4 ToXMFLOAT4(const Core::Vector4& vec)
 {
     return DirectX::XMFLOAT4(vec.x, vec.y, vec.z, vec.w);
 }
 
-XMMATRIX ToDXMatrix(const Core::Math::Matrix& m)
+XMMATRIX ToDXMatrix(const Core::Matrix& m)
 {
     return XMMATRIX(
         m.m[0][0], m.m[0][1], m.m[0][2], m.m[0][3],

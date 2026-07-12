@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Core::Math
+namespace Core
 {
     class Matrix //row-major 
     {

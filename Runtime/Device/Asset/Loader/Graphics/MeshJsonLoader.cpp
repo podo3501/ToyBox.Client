@@ -67,10 +67,11 @@ static VertexFormat ParseVertexFormat(const std::string& str)
 static MeshVertex ConvertToVertex(const JsonMeshVertex& v)
 {
     return {
-        v.position.x, v.position.y, v.position.z,
-        v.normal.x, v.normal.y, v.normal.z,
-        v.uv.x, v.uv.y,
-        v.tangent.x, v.tangent.y, v.tangent.z };
+        { v.position.x, v.position.y, v.position.z },
+        { v.normal.x, v.normal.y, v.normal.z },
+        { v.uv.x, v.uv.y },
+        { v.tangent.x, v.tangent.y, v.tangent.z }
+    };
 }
 
 shared_ptr<MeshAsset> MeshJsonLoader::LoadFromMemory(Core::ByteBuffer buffer)

@@ -4,10 +4,11 @@
 #include "Core/Utils/StringUtils.h"
 #include "Resource/Font/FontResource.h"
 #include "Resource/Texture/TextureResource.h"
+#include "Resource/Mesh/TransientMeshResource.h"
 #include "Factory/DescriptorFactory.h"
 #include "Helpers/TextureHelpers.h"
-
-namespace cm = Core::Math;
+#include "GameClient/Asset/MeshAsset.h"
+#include "Provider/Mesh/TransientMeshProvider.h"
 
 static Resource CreateFontAtlasResource(Device& device, const Size& atlasSize)
 {
@@ -22,8 +23,12 @@ static Resource CreateFontAtlasResource(Device& device, const Size& atlasSize)
 }
 
 TextSystem::~TextSystem() = default;
-TextSystem::TextSystem(TaskScheduler& taskScheduler, ResourceFactory& resFactory) :
-    m_atlasBuilder{ taskScheduler, resFactory }
+TextSystem::TextSystem(
+    TaskScheduler& taskScheduler, 
+    ResourceFactory& resFactory,
+    TransientMeshProvider& transientMeshProvider) :
+    m_atlasBuilder{ taskScheduler, resFactory },
+    m_transientMeshProvider{ transientMeshProvider }
 {}
 
 bool TextSystem::Initialize(
@@ -64,54 +69,115 @@ bool TextSystem::Initialize(
 }
 
 std::vector<DrawUIItem> TextSystem::DrawText(
-    std::shared_ptr<IMeshResource> meshRes,
     std::shared_ptr<IFontResource> fontRes,
     std::span<const char32_t> text,
     uint32_t size,
-    const Core::Math::Vector2& pos,
+    const Core::Vector2& pos,
     const Core::Color& color)
 {
     std::vector<DrawUIItem> result;
     if (text.empty()) return result;
 
     UpdateAtlasIfNeeded(fontRes, text, size);
-    
     auto font = static_cast<FontResource*>(fontRes.get());
+
+    std::vector<UIVertex> vertices;
+    std::vector<uint32_t> indices;
+
+    vertices.reserve(text.size() * 4);
+    indices.reserve(text.size() * 6);
 
     float cursorX = pos.x;
     float baselineY = pos.y;
+    uint32_t vertexOffset = 0;
 
     for (auto codepoint : text)
     {
         const GlyphInfo* glyph = m_glyphCache.Get(font, codepoint, size);
-        if (!glyph)
-            continue;
+        if (!glyph) continue;
 
-        DrawUIItem item;
-        item.mesh = meshRes;
-        item.material = m_matResource;
+        float x0 = cursorX + glyph->bearingX;
+        float y0 = baselineY - glyph->bearingY;
+        float x1 = x0 + glyph->width;
+        float y1 = y0 + glyph->height;
 
-        float drawX = cursorX + glyph->bearingX;
-        float drawY = baselineY - glyph->bearingY;
+        vertices.push_back({ {x0, y0, 0.f}, color, {glyph->uvMin.x, glyph->uvMin.y} }); //0
+        vertices.push_back({ {x1, y0, 0.f}, color, {glyph->uvMax.x, glyph->uvMin.y} }); // 1
+        vertices.push_back({ {x1, y1, 0.f}, color, {glyph->uvMax.x, glyph->uvMax.y} }); // 2
+        vertices.push_back({ {x0, y1, 0.f}, color, {glyph->uvMin.x, glyph->uvMax.y} }); // 3
 
-        item.world =
-            cm::Matrix::Scale(glyph->width, glyph->height, 1.0f) *
-            cm::Matrix::Translation(drawX, drawY, 0.0f);
+        indices.insert(indices.end(), {
+            vertexOffset + 0, vertexOffset + 1, vertexOffset + 2,
+            vertexOffset + 0, vertexOffset + 2, vertexOffset + 3
+            });
 
-        item.uvTransform = cm::Vector4{
-            glyph->uvMin.x,
-            glyph->uvMin.y,
-            glyph->uvMax.x,
-            glyph->uvMax.y
-        };
-
-        result.push_back(std::move(item));
-
+        vertexOffset += 4;
         cursorX += glyph->advanceX;
     }
 
+    auto mesh = m_transientMeshProvider.Create(vertices, indices);
+    if (!mesh)
+        return result;
+
+    DrawUIItem item;
+
+    item.mesh = mesh;
+    item.material = m_matResource;
+
+    result.push_back(std::move(item)); //지금은 하나만 넣는데 나중에 텍스쳐가 여러장이거나, 머터리얼 변경이 있을수도 있음.
     return result;
 }
+
+
+//std::vector<DrawUIItem> TextSystem::DrawText(
+//    std::shared_ptr<IMeshResource> meshRes,
+//    std::shared_ptr<IFontResource> fontRes,
+//    std::span<const char32_t> text,
+//    uint32_t size,
+//    const Core::Vector2& pos,
+//    const Core::Color& color)
+//{
+//    std::vector<DrawUIItem> result;
+//    if (text.empty()) return result;
+//
+//    UpdateAtlasIfNeeded(fontRes, text, size);
+//    
+//    auto font = static_cast<FontResource*>(fontRes.get());
+//
+//    float cursorX = pos.x;
+//    float baselineY = pos.y;
+//
+//    for (auto codepoint : text)
+//    {
+//        const GlyphInfo* glyph = m_glyphCache.Get(font, codepoint, size);
+//        if (!glyph)
+//            continue;
+//
+//        DrawUIItem item;
+//        item.mesh = meshRes;
+//        item.material = m_matResource;
+//
+//        float drawX = cursorX + glyph->bearingX;
+//        float drawY = baselineY - glyph->bearingY;
+//
+//        item.world =
+//            Core::Matrix::Scale(glyph->width, glyph->height, 1.0f) *
+//            Core::Matrix::Translation(drawX, drawY, 0.0f);
+//
+//        item.uvTransform = Core::Vector4{
+//            glyph->uvMin.x,
+//            glyph->uvMin.y,
+//            glyph->uvMax.x,
+//            glyph->uvMax.y
+//        };
+//
+//        result.push_back(std::move(item));
+//
+//        cursorX += glyph->advanceX;
+//    }
+//
+//    return result;
+//}
 
 static bool CreateUploadEntry(
     FT_GlyphSlot slot, 
@@ -181,8 +247,8 @@ void TextSystem::UpdateAtlasIfNeeded(
         float atlasW = static_cast<float>(m_atlasTextureSize.width);
         float atlasH = static_cast<float>(m_atlasTextureSize.height);
 
-        glyphInfo.uvMin = cm::Vector2(static_cast<float>(packX) / atlasW, static_cast<float>(packY) / atlasH);
-        glyphInfo.uvMax = cm::Vector2(static_cast<float>(packX + width) / atlasW, static_cast<float>(packY + height) / atlasH);
+        glyphInfo.uvMin = Core::Vector2(static_cast<float>(packX) / atlasW, static_cast<float>(packY) / atlasH);
+        glyphInfo.uvMax = Core::Vector2(static_cast<float>(packX + width) / atlasW, static_cast<float>(packY + height) / atlasH);
 
         m_glyphCache.Insert(font, codepoint, size, glyphInfo);
     }

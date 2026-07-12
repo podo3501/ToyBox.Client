@@ -4,7 +4,7 @@
 
 struct CameraData
 {
-    Core::Math::Matrix view;
-    Core::Math::Matrix proj;
-    Core::Math::Vector3 position;
+    Core::Matrix view;
+    Core::Matrix proj;
+    Core::Vector3 position;
 };

@@ -17,12 +17,12 @@ namespace Core
         {
         }
 
-        constexpr explicit Color(const Math::Vector4& v)
+        constexpr explicit Color(const Vector4& v)
             : r(v.x), g(v.y), b(v.z), a(v.w)
         {
         }
 
-        constexpr operator Math::Vector4() const
+        constexpr operator Vector4() const
         {
             return { r, g, b, a };
         }
@@ -77,7 +77,7 @@ namespace Core
         static const Color Transparent;
     };
 
-    static_assert(sizeof(Color) == sizeof(Math::Vector4));
-    static_assert(alignof(Color) == alignof(Math::Vector4));
+    static_assert(sizeof(Color) == sizeof(Vector4));
+    static_assert(alignof(Color) == alignof(Vector4));
 }
 

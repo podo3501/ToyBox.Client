@@ -1,7 +1,7 @@
 #pragma once
 #include "Constants.h"
 
-namespace Core::Math
+namespace Core
 {
      constexpr float ToRadians(float degrees)
     {

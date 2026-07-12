@@ -3,8 +3,6 @@
 #include "Core/Math/CameraMatrices.h"
 #include <numbers>
 
-namespace cm = Core::Math;
-
 void Camera::SetRotation(float pitch, float yaw)
 {
     m_pitch = pitch;
@@ -31,7 +29,7 @@ void Camera::SetNearFar(float nearZ, float farZ)
     m_dirty = true;
 }
 
-void Camera::Move(const cm::Vector3& delta)
+void Camera::Move(const Core::Vector3& delta)
 {
     m_position = m_position + delta;
     m_dirty = true;
@@ -59,13 +57,13 @@ void Camera::MoveUp(float distance)
     m_dirty = true;
 }
 
-const cm::Matrix& Camera::GetView() const
+const Core::Matrix& Camera::GetView() const
 {
     UpdateIfNeeded();
     return m_view;
 }
 
-const cm::Matrix& Camera::GetProj() const
+const Core::Matrix& Camera::GetProj() const
 {
     UpdateIfNeeded();
     return m_proj;
@@ -110,14 +108,14 @@ void Camera::UpdateMatrices() const
     m_forward.z = cosYaw * cosPitch;
     m_forward.Normalize();
 
-    cm::Vector3 worldUp = { 0.0f, 1.0f, 0.0f };
+    Core::Vector3 worldUp = { 0.0f, 1.0f, 0.0f };
     m_right = worldUp.Cross(m_forward);
     m_right.Normalize();
 
     m_up = m_forward.Cross(m_right);
     m_up.Normalize();
 
-    cm::Vector3 target = m_position + m_forward;
-    m_view = cm::CreateLookAt(m_position, target, worldUp);
-    m_proj = cm::CreatePerspectiveFov(DegToRad(m_fov), m_aspect, m_nearZ, m_farZ);
+    Core::Vector3 target = m_position + m_forward;
+    m_view = Core::CreateLookAt(m_position, target, worldUp);
+    m_proj = Core::CreatePerspectiveFov(DegToRad(m_fov), m_aspect, m_nearZ, m_farZ);
 }

@@ -5,7 +5,7 @@
 #include <queue>
 
 class Device;
-class DescriptorAllocator;
+class DescriptorHeapAllocator;
 class DescriptorFactory;
 class TaskScheduler;
 class ResourceFactory;

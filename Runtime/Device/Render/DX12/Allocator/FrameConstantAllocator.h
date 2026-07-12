@@ -2,15 +2,15 @@
 #include <d3d12.h>
 #include <wrl.h>
 #include "Resource/Resource.h"
-#include "Helpers/CommonHelpers.h"
+#include "Core/Foundation/Align.h"
 
 class Device;
 
-class FrameUploadAllocator
+class FrameConstantAllocator
 {
 public:
-    ~FrameUploadAllocator();
-    FrameUploadAllocator();
+    ~FrameConstantAllocator();
+    FrameConstantAllocator();
     void Reset();
 
     template<typename T>
@@ -29,18 +29,18 @@ private:
 };
 
 template<typename T>
-void FrameUploadAllocator::Initialize(Device& device, UINT count)
+void FrameConstantAllocator::Initialize(Device& device, UINT count)
 {
     static_assert(std::is_trivially_copyable_v<T>);
     Assert(count > 0);
 
-    m_stride = static_cast<UINT>(AlignSize(sizeof(T), D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT));
+    m_stride = static_cast<UINT>(Core::AlignUp(sizeof(T), D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT));
 
     CreateBuffer(device, m_stride * count);
 }
 
 template<typename T>
-D3D12_GPU_VIRTUAL_ADDRESS FrameUploadAllocator::AllocateConstant(const T& data)
+D3D12_GPU_VIRTUAL_ADDRESS FrameConstantAllocator::AllocateConstant(const T& data)
 {
     static_assert(std::is_trivially_copyable_v<T>);
 

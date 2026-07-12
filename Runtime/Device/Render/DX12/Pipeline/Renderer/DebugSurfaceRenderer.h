@@ -1,6 +1,6 @@
 #pragma once
 #include "RendererConfig.h"
-#include "FrameUploadAllocator.h"
+#include "Allocator/FrameConstantAllocator.h"
 #include "Core/Math/Matrix.h"
 #include "GameClient/Service/Render/Desc/RenderState.h"
 
@@ -23,7 +23,7 @@ public:
     void PrepareFrame(const CameraData& camera);
     void BeginFrame(CommandList& cmd);
     void BindPipeline(CommandList& cmd, const PipelineState& pipelineState);
-    void Draw(CommandList& cmd, MeshResource& mesh, const Core::Math::Matrix& world);
+    void Draw(CommandList& cmd, MeshResource& mesh, const Core::Matrix& world);
 
 private:
     enum class RootSlot : uint32_t
@@ -38,15 +38,15 @@ private:
     ID3D12PipelineState* CreatePSO(const PipelineState& pipelineState);
     ID3D12PipelineState* GetPipeline(const PipelineState& pipelineState);
 
-    D3D12_GPU_VIRTUAL_ADDRESS UploadObjectCB(const Core::Math::Matrix& world);
+    D3D12_GPU_VIRTUAL_ADDRESS UploadObjectCB(const Core::Matrix& world);
 
     DebugSurfaceRendererConfig m_config;
     PipelineCache& m_pipelineCache;
     ComPtr<ID3D12RootSignature> m_rootSignature;
     ID3D12PipelineState* m_currentPSO{ nullptr };
 
-    FrameUploadAllocator m_objectCBAllocator;
-    FrameUploadAllocator m_frameCBAllocator;
+    FrameConstantAllocator m_objectCBAllocator;
+    FrameConstantAllocator m_frameCBAllocator;
 
     D3D12_GPU_VIRTUAL_ADDRESS m_frameCBAddress{};
 };

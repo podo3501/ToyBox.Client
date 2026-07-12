@@ -1,7 +1,7 @@
 #pragma once
 #include <cmath>
 
-namespace Core::Math
+namespace Core
 {
     struct Vector3;
 

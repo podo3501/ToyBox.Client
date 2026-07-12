@@ -5,7 +5,8 @@
 #include "Factory/DescriptorFactory.h"
 #include "Factory/ResourceFactory.h"
 #include "MeshLoadRequest.h"
-#include "Helpers/CommonHelpers.h"
+#include "Core/Foundation/Align.h"
+#include "RenderConstants.h"
 #include "MeshUtils.h"
 
 struct MeshUploadEntry
@@ -82,7 +83,7 @@ void MeshCreateGraphBuilder::LoadMeshes(
 
     auto compiledTasks = graph.Compile();
 
-    size_t totalUploadSize = AlignSize(offset, AlignVertexIndex);
+    size_t totalUploadSize = Core::AlignUp(offset, AlignVertexBuffer);
     auto resCtx = std::make_shared<ResourceContext>();
     resCtx->Set(uploadResID, m_resFactory.CreateResource(totalUploadSize, ResInitType::Upload));
 
@@ -131,8 +132,8 @@ void MeshCreateGraphBuilder::BuildFinalizePass(RenderGraph& graph, std::vector<M
             auto vertexCount = static_cast<uint32_t>(mesh.asset->vertices.size());
             auto indexCount = static_cast<uint32_t>(mesh.asset->indices.size());
 
-            auto vbHeapIndex = m_descFactory.CreateBufferSRV(vb, mesh.asset->vertexCount, mesh.asset->vertexStride);
-            auto ibHeapIndex = m_descFactory.CreateBufferSRV(ib, indexCount, sizeof(uint32_t));
+            auto vbHeapIndex = m_descFactory.CreateBufferSRV(vb, 0, mesh.asset->vertexCount, mesh.asset->vertexStride);
+            auto ibHeapIndex = m_descFactory.CreateBufferSRV(ib, 0, indexCount, sizeof(uint32_t));
 
             m_registry.FinalizeMesh(
                 mesh.meshResID,

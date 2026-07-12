@@ -1,10 +1,11 @@
 #include "pch.h"
 #include "MeshProvider.h"
-#include "Resource/Mesh/MeshResource.h"
+#include "Resource/Mesh/StaticMeshResource.h"
 #include "Factory/DescriptorFactory.h"
 #include "Graph/RGTypes.h"
 #include "Graph/TaskScheduler.h"
-#include "Helpers/CommonHelpers.h"
+#include "Core/Foundation/Align.h"
+#include "RenderConstants.h"
 
 MeshProvider::~MeshProvider() = default;
 MeshProvider::MeshProvider(MeshCreateGraphBuilder create, ResourceReleaseBuilder release) noexcept :
@@ -14,7 +15,7 @@ MeshProvider::MeshProvider(MeshCreateGraphBuilder create, ResourceReleaseBuilder
 
 shared_ptr<IMeshResource> MeshProvider::CreateResource()
 {
-    return make_shared<MeshResource>();
+    return make_shared<StaticMeshResource>();
 }
 
 static std::pair<size_t, size_t> EstimateBytes(const MeshAsset& mesh)
@@ -22,8 +23,8 @@ static std::pair<size_t, size_t> EstimateBytes(const MeshAsset& mesh)
     size_t vb = mesh.vertices.size();
     size_t ib = mesh.indices.size() * sizeof(uint32_t);
 
-    vb = AlignSize(vb, AlignVertexIndex);
-    ib = AlignSize(ib, AlignVertexIndex);
+    vb = Core::AlignUp(vb, AlignVertexBuffer);
+    ib = Core::AlignUp(ib, AlignIndexBuffer);
 
     return { vb, ib };
 }

@@ -1,9 +1,7 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "DirectionalLight.h"
 #include "Core/Math/Matrix.h"
 #include "GameClient/Graphics/RenderData/CameraData.h"
-
-namespace cm = Core::Math;
 
 DirectionalLightData DirectionalLight::BuildLightData() const
 {
@@ -12,23 +10,23 @@ DirectionalLightData DirectionalLight::BuildLightData() const
     data.color = m_color;
     data.intensity = m_intensity;
 
-    cm::Vector3 targetCenter{ 0.0f, 0.0f, 0.0f };
+    Core::Vector3 targetCenter{ 0.0f, 0.0f, 0.0f };
     float lightDistance = 200.0f; // 씬 크기에 맞게 조절 가능
-    cm::Vector3 lightPos = targetCenter - (m_direction * lightDistance);
+    Core::Vector3 lightPos = targetCenter - (m_direction * lightDistance);
 
     // 2. Light View Matrix 계산 (LookAt 변환 직접 유도) 기저 벡터 생성 (조명이 바라보는 방향이 곧 Forward 축)
-    cm::Vector3 zAxis = m_direction.NormalizedOr({ 0.0f, -1.0f, 0.0f });
+    Core::Vector3 zAxis = m_direction.NormalizedOr({ 0.0f, -1.0f, 0.0f });
 
     // 업 벡터 기준 설정 (만약 조명이 수직으로 정방향 하강하면 임시로 Z축을 업벡터로 변경)
-    cm::Vector3 upBasis{ 0.0f, 1.0f, 0.0f };
+    Core::Vector3 upBasis{ 0.0f, 1.0f, 0.0f };
     if (std::abs(zAxis.y) > 0.99f)
-        upBasis = cm::Vector3{ 0.0f, 0.0f, 1.0f };
+        upBasis = Core::Vector3{ 0.0f, 0.0f, 1.0f };
 
-    cm::Vector3 xAxis = upBasis.Cross(zAxis).NormalizedOr(cm::Vector3::Right());
-    cm::Vector3 yAxis = zAxis.Cross(xAxis).NormalizedOr(cm::Vector3::Up());
+    Core::Vector3 xAxis = upBasis.Cross(zAxis).NormalizedOr(Core::Vector3::Right());
+    Core::Vector3 yAxis = zAxis.Cross(xAxis).NormalizedOr(Core::Vector3::Up());
 
     // Row-Major 카메라 뷰 변환 행렬 구성
-    cm::Matrix lightView = cm::Matrix::Identity();
+    Core::Matrix lightView = Core::Matrix::Identity();
     lightView.m[0][0] = xAxis.x; lightView.m[1][0] = xAxis.y; lightView.m[2][0] = xAxis.z;
     lightView.m[0][1] = yAxis.x; lightView.m[1][1] = yAxis.y; lightView.m[2][1] = yAxis.z;
     lightView.m[0][2] = zAxis.x; lightView.m[1][2] = zAxis.y; lightView.m[2][2] = zAxis.z;
@@ -48,10 +46,10 @@ DirectionalLightData DirectionalLight::BuildLightData() const
     float nearZ = 0.1f;
     float farZ = 400.0f; // lightDistance 보다 커야 타겟 오브젝트들이 완전히 포함됨
 
-    cm::Matrix lightProj = cm::Matrix::OrthographicOffCenter(-halfWidth, halfWidth, -halfHeight, halfHeight, nearZ, farZ);
+    Core::Matrix lightProj = Core::Matrix::OrthographicOffCenter(-halfWidth, halfWidth, -halfHeight, halfHeight, nearZ, farZ);
 
     // 4. View * Proj 결합 후 구조체에 할당
-    cm::Matrix lightViewProj = lightView * lightProj;
+    Core::Matrix lightViewProj = lightView * lightProj;
     data.viewProj = lightViewProj;
 
     return data;
