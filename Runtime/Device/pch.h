@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 // Use the C++ standard templated min/max
 #define NOMINMAX
@@ -48,8 +48,10 @@ using namespace DirectX::SimpleMath;
 
 #ifdef _DEBUG
 #pragma comment(lib, "freetype_Debug.lib")
+#pragma comment(lib, "harfbuzz_Debug.lib")
 #else
 #pragma comment(lib, "freetype_Release.lib")
+#pragma comment(lib, "harfbuzz_Release.lib")
 #endif
 
 #define CHECK_ALIGN16(StructName) \

@@ -22,9 +22,7 @@ FontAtlasCreateGraphBuilder::FontAtlasCreateGraphBuilder(
     m_resFactory{ resFactory }
 {}
 
-void FontAtlasCreateGraphBuilder::UploadGlyphsToAtlas(
-    const Resource& atlasResource,
-    const std::vector<GlyphUploadEntry>& uploads)
+void FontAtlasCreateGraphBuilder::UploadGlyphsToAtlas(const std::vector<GlyphUploadEntry>& uploads)
 {
     std::vector<TextRenderLayout> layouts;
 
@@ -54,7 +52,7 @@ void FontAtlasCreateGraphBuilder::UploadGlyphsToAtlas(
     auto compiledTasks = graph.Compile();
 
     auto resCtx = std::make_shared<ResourceContext>();
-    resCtx->Set(atlasResID, atlasResource);
+    resCtx->Set(atlasResID, uploads[0].atlasRes); //?!? 지금은 텍스쳐가 하나라서 이렇게 하지만 글자수가 텍스쳐를 넘어가면 atlas 텍스쳐가 여러장 생기기 때문이다. 나중에 수정해야 한다.
     resCtx->Set(uploadResID, m_resFactory.CreateResource(totalUploadSize, ResInitType::Upload));
     m_taskScheduler.SubmitTask(compiledTasks, resCtx);
 }

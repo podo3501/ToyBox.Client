@@ -11,7 +11,17 @@ class Device;
 class TaskScheduler;
 class ResourceFactory;
 class DescriptorFactory;
+class TransientMeshResource;
 class TransientMeshProvider;
+
+struct ShapedGlyph;
+struct ShapedText
+{
+    FontResource* font{};
+    uint32_t size{};
+
+    std::vector<ShapedGlyph> glyphs;
+};
 
 class TextSystem
 {
@@ -22,25 +32,15 @@ public:
         ResourceFactory& resFactory,
         TransientMeshProvider& transientMeshProvider);
     bool Initialize(Device& device, DescriptorFactory& factory, const Size& atlasTexSize);
-    std::vector<DrawUIItem> DrawText(
-        std::shared_ptr<IFontResource> fontRes,
-        std::span<const char32_t> text,
-        uint32_t size,
-        const Core::Vector2& pos,
-        const Core::Color& color);
-    /*std::vector<DrawUIItem> DrawText(
-        std::shared_ptr<IMeshResource> meshRes,
-        std::shared_ptr<IFontResource> fontRes,
-        std::span<const char32_t> text,
-        uint32_t size,
-        const Core::Vector2& pos,
-        const Core::Color& color);*/
+    std::vector<DrawUIItem> BuildDrawItems(std::span<const DrawTextItem> items);
 
 private:
+    std::shared_ptr<TransientMeshResource> CreateTextMesh(
+        std::span<const DrawTextItem> items,
+        std::span<const ShapedText> shapedTexts);
     void UpdateAtlasIfNeeded(
-        std::shared_ptr<IFontResource> fontRes,
-        std::span<const char32_t> text,
-        uint32_t size);
+        const ShapedText& shapedText,
+        std::vector<GlyphUploadEntry>& outUploads);
     const Resource& GetAtlasResource() const;
 
     Size m_atlasTextureSize{};

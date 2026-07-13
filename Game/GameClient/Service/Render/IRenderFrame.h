@@ -13,7 +13,6 @@ struct IRenderFrame
 	virtual void SetFrameData(const FrameData& frameData) noexcept = 0;
 
 	virtual void DrawText(
-		std::shared_ptr<IMeshResource> meshRes,
 		std::shared_ptr<IFontResource> fontRes,
 		std::string_view text,
 		uint32_t size,

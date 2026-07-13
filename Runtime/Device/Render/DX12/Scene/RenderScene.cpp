@@ -17,10 +17,12 @@ void RenderScene::AddSurface(const DrawItem& item)
     }
 }
 
-void RenderScene::AddUI(const std::vector<DrawUIItem>& uiItems)
+void RenderScene::AddUI(std::vector<DrawUIItem>&& items)
 {
-    for (const auto& item : uiItems)
-        AddUI(item);
+    m_uiDraws.insert(
+        m_uiDraws.end(),
+        std::make_move_iterator(items.begin()),
+        std::make_move_iterator(items.end()));
 }
 
 void RenderScene::AddUI(const DrawUIItem& uiItem)

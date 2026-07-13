@@ -2,6 +2,7 @@
 #include "GameClient/Service/Render/IRenderFrame.h"
 #include "Scene/RenderScene.h"
 
+struct DrawTextItem;
 class TextSystem;
 
 class RenderFrame : public IRenderFrame
@@ -12,7 +13,6 @@ public:
 
 	virtual void SetFrameData(const FrameData& frameData) noexcept override;
 	virtual void DrawText(
-		std::shared_ptr<IMeshResource> meshRes,
 		std::shared_ptr<IFontResource> fontRes,
 		std::string_view text,
 		uint32_t size,
@@ -36,5 +36,7 @@ public:
 private:
 	TextSystem& m_textSystem;
 	RenderScene m_scene;
+
 	FrameData m_frameData;
+	std::vector<DrawTextItem> m_pendingTexts;
 };

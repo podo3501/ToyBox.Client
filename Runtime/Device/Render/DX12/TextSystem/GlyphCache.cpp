@@ -1,21 +1,21 @@
 #include "pch.h"
 #include "GlyphCache.h"
 
-bool GlyphCache::Contains(FontResource* fontRes, char32_t codepoint, uint32_t size) const
+bool GlyphCache::Contains(FontResource* fontRes, uint32_t glyphIndex, uint32_t size) const
 {
-    CacheKey key{ fontRes, codepoint, size };
+    CacheKey key{ fontRes, glyphIndex, size };
     return m_cache.find(key) != m_cache.end();
 }
 
-void GlyphCache::Insert(FontResource* fontRes, char32_t codepoint, uint32_t size, const GlyphInfo& info)
+void GlyphCache::Insert(FontResource* fontRes, uint32_t glyphIndex, uint32_t size, const GlyphInfo& info)
 {
-    CacheKey key{ fontRes, codepoint, size };
+    CacheKey key{ fontRes, glyphIndex, size };
     m_cache[key] = info;
 }
 
-const GlyphInfo* GlyphCache::Get(FontResource* fontRes, char32_t codepoint, uint32_t size) const
+const GlyphInfo* GlyphCache::Get(FontResource* fontRes, uint32_t glyphIndex, uint32_t size) const
 {
-    CacheKey key{ fontRes, codepoint, size };
+    CacheKey key{ fontRes, glyphIndex, size };
     auto it = m_cache.find(key);
     if (it != m_cache.end())
         return &it->second;

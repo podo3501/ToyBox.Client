@@ -83,7 +83,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)ThirdParty\Libs;$(SolutionDir)ThirdParty\SDL3\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)ThirdParty\Libs;$(SolutionDir)ThirdParty\SDL3\lib;$(SolutionDir)ThirdParty\FreeType\lib;$(SolutionDir)ThirdParty\HarfBuzz\lib</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -101,7 +101,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)ThirdParty\Libs;$(SolutionDir)ThirdParty\SDL3\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)ThirdParty\Libs;$(SolutionDir)ThirdParty\SDL3\lib;$(SolutionDir)ThirdParty\FreeType\lib;$(SolutionDir)ThirdParty\HarfBuzz\lib</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -117,7 +117,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)ThirdParty\Libs;$(SolutionDir)ThirdParty\SDL3\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)ThirdParty\Libs;$(SolutionDir)ThirdParty\SDL3\lib;$(SolutionDir)ThirdParty\FreeType\lib;$(SolutionDir)ThirdParty\HarfBuzz\lib</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -135,7 +135,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)ThirdParty\Libs;$(SolutionDir)ThirdParty\SDL3\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)ThirdParty\Libs;$(SolutionDir)ThirdParty\SDL3\lib;$(SolutionDir)ThirdParty\FreeType\lib;$(SolutionDir)ThirdParty\HarfBuzz\lib</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

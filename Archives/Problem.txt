@@ -1,4 +1,4 @@
-﻿CreateWICTextureFromFile안에 GetWIC함수가 InitOnceExecuteOnce로 Factory를 생성하는데 싱글톤 패턴
+CreateWICTextureFromFile안에 GetWIC함수가 InitOnceExecuteOnce로 Factory를 생성하는데 싱글톤 패턴
 을 쓰기 때문에 Test가 독립적으로 작동하지 못한다. 예를들면 1번 테스트에서 static 변수에 2를 넣고 2번
 테스트에서 그 값을 읽으면 초기화가 안 되어서 기대한 값이 아니라 2라는 값이 나오는 것처럼 static 변수
 를 초기화 해야 하는 일이 생겼다. 그래서 WICTextureLoader.h와 cpp를 수정해서 static 변수를 초기화 하는
@@ -399,3 +399,12 @@ C/C++ -> 최적화 /GL
 
 ui를 그릴때 좌표가 아래에서 위로 그려지는걸 방지하기 위해서 ortho에서 방향을 바꿔주는데 이때 찍는 
 삼각형이 뒤집혀지면서 컬링되어서 화면에 ui가 안그려진다. 이것이 ui에서 컬링을 끄는 이유. 
+
+FreeType등 ThirdParty들은 build 시키고 install 하면 된다.
+FreeType을 install시키고 이 폴더를 지정해 주면서 harfBuzz를 깔아야 한다.
+이때 FreeType의 폴더는 ThirdParty/FreeType/includ/freetype2 즉, freetype2 까지 넣어 주어야 한다.
+cmake .. -G "Visual Studio 17 2022" -A x64 -DHB_HAVE_FREETYPE=ON -DFREETYPE_INCLUDE_DIR_ft2build="D:/ProgrammingStudy/ToyBox/ThirdParty/FreeType/include/freetype2" -DFREETYPE_INCLUDE_DIR_freetype2="D:/ProgrammingStudy/ToyBox/ThirdParty/FreeType/includ/freetype2" -DFREETYPE_LIBRARY="D:/ProgrammingStudy/ToyBox/ThirdParty/FreeType/lib/freetype_Release.lib" -DFREETYPE_LIBRARY_DEBUG="D:/ProgrammingStudy/ToyBox/ThirdParty/FreeType/lib/freetype_Debug.lib" -DFREETYPE_LIBRARY_RELEASE="D:/ProgrammingStudy/ToyBox/ThirdParty/FreeType/lib/freetype_Release.lib"
+두개가 연동돼서 돌아갈때는 첫번째 ThirdParty는 install 해서 하는게 좋다.
+개인적으로 lib가 debug용 release용으로 나누어져 있기 때문에 직접 지정했지만, 하나일 경우에는 지정하지 않고
+조금 더 간단하게 할 수 있다.
+ThirdParty들은 install 해서 include와 lib를 지정해주는대로 쓰는게 좋다. 나중에 include 폴더가 꼬이면 귀찮아진다.

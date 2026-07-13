@@ -3,8 +3,19 @@
 #include "GameClient/Asset/FontAsset.h"
 #include <ft2build.h>
 #include FT_FREETYPE_H
+#include <harfbuzz/hb.h>
+#include <harfbuzz/hb-ft.h>
 // 하나의 폰트 파일(.ttf)에 대응하는 런타임 폰트 객체. gpu의 resource는 아님. 즉 펜스로 release 할 필요가 없음.
 // FreeType의 FT_Face를 관리
+
+struct ShapedGlyph
+{
+	uint32_t glyphIndex;
+
+	float advanceX;
+	float offsetX;
+	float offsetY;
+};
 
 struct FontAsset;
 class FreeTypeLibrary;
@@ -12,16 +23,23 @@ class FreeTypeLibrary;
 class FontResource : public IFontResource
 {
 public:
-	~FontResource();
+	virtual ~FontResource() override;
 	FontResource();
 	virtual bool IsReady() const noexcept override { return m_ready; }
 
 	bool Initialize(FreeTypeLibrary& ftLibrary, std::shared_ptr<FontAsset> asset);
 	FT_GlyphSlot GetGlyphSlot(char32_t codepoint, uint32_t fontSize) const;
+	FT_GlyphSlot GetGlyphSlotByGlyphIndex(uint32_t glyphIndex, uint32_t size) const;
+
+	std::vector<ShapedGlyph> Shape(std::span<const char32_t> text, uint32_t size);
 	void MarkReady() noexcept { m_ready = true; }
 
 private:
+	hb_font_t* GetOrCreateHbFont(uint32_t size);
+
 	FT_Face m_ftFace{ nullptr };
+	hb_buffer_t* m_hbBuffer{ nullptr };
+	std::unordered_map<uint32_t, hb_font_t*> m_hbFonts; // 크기별 HarfBuzz 폰트 캐시
 
 	bool m_ready{ false };
 	std::shared_ptr<FontAsset> m_asset;

@@ -3,6 +3,7 @@
 #include "Core/Utils/StringUtils.h"
 #include "TextSystem/TextSystem.h"
 #include "Resource/Material/UIMaterialResource.h"
+#include "Core/RenderData.h"
 
 RenderFrame::~RenderFrame() = default;
 RenderFrame::RenderFrame(TextSystem& textSystem) :
@@ -14,13 +15,7 @@ void RenderFrame::SetFrameData(const FrameData& frameData) noexcept
     m_frameData = frameData;
 }
 
-struct DrawTextItem
-{
-    std::shared_ptr<IFontResource> fontRes;
-};
-
 void RenderFrame::DrawText(
-    std::shared_ptr<IMeshResource> meshRes,
     std::shared_ptr<IFontResource> fontRes,
     std::string_view text,
     uint32_t size,
@@ -28,15 +23,17 @@ void RenderFrame::DrawText(
     const Core::Color& color)
 {
     Assert(fontRes);
+    if (text.empty()) return;
 
-    auto uiItems = m_textSystem.DrawText(
-        fontRes,
-        Core::UTF8ToUTF32(text),
-        size,
-        pos,
-        color);
+    DrawTextItem item;
 
-    m_scene.AddUI(uiItems);
+    item.fontRes = std::move(fontRes);
+    item.codePoints = Core::UTF8ToUTF32(text);
+    item.fontSize = size;
+    item.position = pos;
+    item.color = color;
+
+    m_pendingTexts.emplace_back(std::move(item));
 }
 
 void RenderFrame::DrawSurface(
@@ -71,6 +68,10 @@ void RenderFrame::DrawUI(
 
 DrawPacket RenderFrame::PrepareRenderData()
 {
+    auto uiItems = m_textSystem.BuildDrawItems(m_pendingTexts);
+    m_scene.AddUI(std::move(uiItems));
+    m_pendingTexts.clear();
+
     m_scene.SortDraws();
     return m_scene.BuildDrawPacket();
 }
@@ -78,5 +79,6 @@ DrawPacket RenderFrame::PrepareRenderData()
 void RenderFrame::Clear()
 {
     m_frameData = {};
+    m_pendingTexts.clear();
     m_scene.Clear();
 }

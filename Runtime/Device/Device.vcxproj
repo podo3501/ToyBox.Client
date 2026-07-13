@@ -302,7 +302,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir);$(SolutionDir)Game;$(SolutionDir)Runtime;$(SolutionDir)ThirdParty\Include;$(SolutionDir)ThirdParty\SDL3\include;$(SolutionDir)ThirdParty\FreeType\include;$(ProjectDir)\Render\DX12;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir);$(SolutionDir)Game;$(SolutionDir)Runtime;$(SolutionDir)ThirdParty\Include;$(SolutionDir)ThirdParty\SDL3\include;$(SolutionDir)ThirdParty\FreeType\include\freetype2;$(SolutionDir)ThirdParty\HarfBuzz\include;$(ProjectDir)\Render\DX12;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
@@ -326,7 +326,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir);$(SolutionDir)Game;$(SolutionDir)Runtime;$(SolutionDir)ThirdParty\Include;$(SolutionDir)ThirdParty\SDL3\include;$(SolutionDir)ThirdParty\FreeType\include;$(ProjectDir)\Render\DX12;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir);$(SolutionDir)Game;$(SolutionDir)Runtime;$(SolutionDir)ThirdParty\Include;$(SolutionDir)ThirdParty\SDL3\include;$(SolutionDir)ThirdParty\FreeType\include\freetype2;$(SolutionDir)ThirdParty\HarfBuzz\include;$(ProjectDir)\Render\DX12;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
@@ -348,7 +348,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir);$(SolutionDir)Game;$(SolutionDir)Runtime;$(SolutionDir)ThirdParty\Include;$(SolutionDir)ThirdParty\SDL3\include;$(SolutionDir)ThirdParty\FreeType\include;$(ProjectDir)\Render\DX12;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir);$(SolutionDir)Game;$(SolutionDir)Runtime;$(SolutionDir)ThirdParty\Include;$(SolutionDir)ThirdParty\SDL3\include;$(SolutionDir)ThirdParty\FreeType\include\freetype2;$(SolutionDir)ThirdParty\HarfBuzz\include;$(ProjectDir)\Render\DX12;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
@@ -372,7 +372,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir);$(SolutionDir)Game;$(SolutionDir)Runtime;$(SolutionDir)ThirdParty\Include;$(SolutionDir)ThirdParty\SDL3\include;$(SolutionDir)ThirdParty\FreeType\include;$(ProjectDir)\Render\DX12;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir);$(SolutionDir)Game;$(SolutionDir)Runtime;$(SolutionDir)ThirdParty\Include;$(SolutionDir)ThirdParty\SDL3\include;$(SolutionDir)ThirdParty\FreeType\include\freetype2;$(SolutionDir)ThirdParty\HarfBuzz\include;$(ProjectDir)\Render\DX12;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>

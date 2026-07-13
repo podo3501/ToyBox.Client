@@ -68,116 +68,98 @@ bool TextSystem::Initialize(
     return true;
 }
 
-std::vector<DrawUIItem> TextSystem::DrawText(
-    std::shared_ptr<IFontResource> fontRes,
-    std::span<const char32_t> text,
-    uint32_t size,
-    const Core::Vector2& pos,
-    const Core::Color& color)
+std::vector<DrawUIItem> TextSystem::BuildDrawItems(std::span<const DrawTextItem> items)
 {
     std::vector<DrawUIItem> result;
-    if (text.empty()) return result;
+    if (items.empty())
+        return result;
 
-    UpdateAtlasIfNeeded(fontRes, text, size);
-    auto font = static_cast<FontResource*>(fontRes.get());
+    std::vector<ShapedText> shapedTexts;
+    shapedTexts.reserve(items.size());
 
-    std::vector<UIVertex> vertices;
-    std::vector<uint32_t> indices;
-
-    vertices.reserve(text.size() * 4);
-    indices.reserve(text.size() * 6);
-
-    float cursorX = pos.x;
-    float baselineY = pos.y;
-    uint32_t vertexOffset = 0;
-
-    for (auto codepoint : text)
+    std::vector<GlyphUploadEntry> uploads; // 이번 프레임에 새롭게 아틀라스에 추가할 글자들의 목록
+    for (const auto& item : items)
     {
-        const GlyphInfo* glyph = m_glyphCache.Get(font, codepoint, size);
-        if (!glyph) continue;
+        auto font = static_cast<FontResource*>(item.fontRes.get());
 
-        float x0 = cursorX + glyph->bearingX;
-        float y0 = baselineY - glyph->bearingY;
-        float x1 = x0 + glyph->width;
-        float y1 = y0 + glyph->height;
+        ShapedText shaped;
+        shaped.font = font;
+        shaped.size = item.fontSize;
+        shaped.glyphs = font->Shape(item.codePoints, item.fontSize);
 
-        vertices.push_back({ {x0, y0, 0.f}, color, {glyph->uvMin.x, glyph->uvMin.y} }); //0
-        vertices.push_back({ {x1, y0, 0.f}, color, {glyph->uvMax.x, glyph->uvMin.y} }); // 1
-        vertices.push_back({ {x1, y1, 0.f}, color, {glyph->uvMax.x, glyph->uvMax.y} }); // 2
-        vertices.push_back({ {x0, y1, 0.f}, color, {glyph->uvMin.x, glyph->uvMax.y} }); // 3
-
-        indices.insert(indices.end(), {
-            vertexOffset + 0, vertexOffset + 1, vertexOffset + 2,
-            vertexOffset + 0, vertexOffset + 2, vertexOffset + 3
-            });
-
-        vertexOffset += 4;
-        cursorX += glyph->advanceX;
+        UpdateAtlasIfNeeded(shaped, uploads);
+        shapedTexts.push_back(std::move(shaped));
     }
 
-    auto mesh = m_transientMeshProvider.Create(vertices, indices);
+    if (!uploads.empty())
+        m_atlasBuilder.UploadGlyphsToAtlas(uploads);
+
+    auto mesh = CreateTextMesh(items, shapedTexts);
     if (!mesh)
         return result;
 
-    DrawUIItem item;
+    DrawUIItem uiItem;
+    uiItem.mesh = std::move(mesh);
+    uiItem.material = m_matResource;
 
-    item.mesh = mesh;
-    item.material = m_matResource;
-
-    result.push_back(std::move(item)); //지금은 하나만 넣는데 나중에 텍스쳐가 여러장이거나, 머터리얼 변경이 있을수도 있음.
+    result.push_back(std::move(uiItem));
     return result;
 }
 
+std::shared_ptr<TransientMeshResource> TextSystem::CreateTextMesh(
+    std::span<const DrawTextItem> items,
+    std::span<const ShapedText> shapedTexts)
+{
+    size_t totalGlyphCount = 0;
+    for (const auto& shapedText : shapedTexts)
+        totalGlyphCount += shapedText.glyphs.size();
+    if (totalGlyphCount == 0)
+        return nullptr;
 
-//std::vector<DrawUIItem> TextSystem::DrawText(
-//    std::shared_ptr<IMeshResource> meshRes,
-//    std::shared_ptr<IFontResource> fontRes,
-//    std::span<const char32_t> text,
-//    uint32_t size,
-//    const Core::Vector2& pos,
-//    const Core::Color& color)
-//{
-//    std::vector<DrawUIItem> result;
-//    if (text.empty()) return result;
-//
-//    UpdateAtlasIfNeeded(fontRes, text, size);
-//    
-//    auto font = static_cast<FontResource*>(fontRes.get());
-//
-//    float cursorX = pos.x;
-//    float baselineY = pos.y;
-//
-//    for (auto codepoint : text)
-//    {
-//        const GlyphInfo* glyph = m_glyphCache.Get(font, codepoint, size);
-//        if (!glyph)
-//            continue;
-//
-//        DrawUIItem item;
-//        item.mesh = meshRes;
-//        item.material = m_matResource;
-//
-//        float drawX = cursorX + glyph->bearingX;
-//        float drawY = baselineY - glyph->bearingY;
-//
-//        item.world =
-//            Core::Matrix::Scale(glyph->width, glyph->height, 1.0f) *
-//            Core::Matrix::Translation(drawX, drawY, 0.0f);
-//
-//        item.uvTransform = Core::Vector4{
-//            glyph->uvMin.x,
-//            glyph->uvMin.y,
-//            glyph->uvMax.x,
-//            glyph->uvMax.y
-//        };
-//
-//        result.push_back(std::move(item));
-//
-//        cursorX += glyph->advanceX;
-//    }
-//
-//    return result;
-//}
+    std::vector<UIVertex> vertices;
+    std::vector<uint32_t> indices;
+    vertices.reserve(totalGlyphCount * 4);
+    indices.reserve(totalGlyphCount * 6);
+
+    uint32_t vertexOffset = 0;
+    for (size_t itemIndex = 0; itemIndex < items.size(); ++itemIndex)
+    {
+        const auto& item = items[itemIndex];
+        const auto& shapedText = shapedTexts[itemIndex];
+        auto font = shapedText.font;
+
+        float cursorX = item.position.x;
+        float baselineY = item.position.y;
+        for (const auto& shapedGlyph : shapedText.glyphs)
+        {
+            const GlyphInfo* glyph = m_glyphCache.Get(font, shapedGlyph.glyphIndex, shapedText.size);
+            if (!glyph)
+                continue;
+
+            float x0 = cursorX + glyph->bearingX + shapedGlyph.offsetX;
+            float y0 = baselineY - glyph->bearingY - shapedGlyph.offsetY;
+            float x1 = x0 + glyph->width;
+            float y1 = y0 + glyph->height;
+
+            vertices.push_back({ { x0, y0, 0.f }, item.color, { glyph->uvMin.x, glyph->uvMin.y } });
+            vertices.push_back({ { x1, y0, 0.f }, item.color, { glyph->uvMax.x, glyph->uvMin.y } });
+            vertices.push_back({ { x1, y1, 0.f }, item.color, { glyph->uvMax.x, glyph->uvMax.y } });
+            vertices.push_back({ { x0, y1, 0.f }, item.color, { glyph->uvMin.x, glyph->uvMax.y } });
+
+            indices.insert(indices.end(), {
+                vertexOffset + 0, vertexOffset + 1, vertexOffset + 2,
+                vertexOffset + 0, vertexOffset + 2, vertexOffset + 3
+                });
+
+            vertexOffset += 4;
+            cursorX += shapedGlyph.advanceX; // HarfBuzz가 계산한 위치 이동량
+        }
+    }
+    if (vertices.empty())
+        return nullptr;
+
+    return m_transientMeshProvider.Create(vertices, indices);
+}
 
 static bool CreateUploadEntry(
     FT_GlyphSlot slot, 
@@ -210,21 +192,18 @@ static bool CreateUploadEntry(
 }
 
 void TextSystem::UpdateAtlasIfNeeded(
-    std::shared_ptr<IFontResource> fontResource, 
-    std::span<const char32_t> text,
-    uint32_t size)
+    const ShapedText& shapedText,
+    std::vector<GlyphUploadEntry>& outUploads)
 {
-    if (text.empty()) return;
-    auto font = static_cast<FontResource*>(fontResource.get());
+    auto font = shapedText.font;
 
-    std::vector<GlyphUploadEntry> pendingUploads; // 이번 프레임에 새롭게 아틀라스에 추가할 글자들의 목록
-
-    for (auto codepoint : text)
+    for (const auto& glyph : shapedText.glyphs)
     {
-        if (m_glyphCache.Contains(font, codepoint, size))
+        uint32_t glyphIndex = glyph.glyphIndex;
+        if (m_glyphCache.Contains(font, glyphIndex, shapedText.size))
             continue;
 
-        FT_GlyphSlot slot = font->GetGlyphSlot(codepoint, size);
+        FT_GlyphSlot slot = font->GetGlyphSlotByGlyphIndex(glyphIndex, shapedText.size);
         Assert(slot);
 
         uint32_t width = slot->bitmap.width;
@@ -232,29 +211,24 @@ void TextSystem::UpdateAtlasIfNeeded(
 
         auto [packX, packY] = m_packer.AllocateRect(width + 2, height + 2);
 
-        GlyphUploadEntry uploadEntry;
+        GlyphUploadEntry uploadEntry{ GetAtlasResource() };
         if (CreateUploadEntry(slot, packX, packY, uploadEntry))
-            pendingUploads.push_back(std::move(uploadEntry));
+            outUploads.push_back(std::move(uploadEntry));
 
         GlyphInfo glyphInfo;
         glyphInfo.width = static_cast<float>(width);
         glyphInfo.height = static_cast<float>(height);
         glyphInfo.bearingX = static_cast<float>(slot->bitmap_left);
         glyphInfo.bearingY = static_cast<float>(slot->bitmap_top);
-        glyphInfo.advanceX = static_cast<float>(slot->advance.x >> 6); // 26.6 고정소수점 변환
 
-        // 아틀라스 텍스처 해상도 기준의 0.0 ~ 1.0 UV 좌표 계산
         float atlasW = static_cast<float>(m_atlasTextureSize.width);
         float atlasH = static_cast<float>(m_atlasTextureSize.height);
 
-        glyphInfo.uvMin = Core::Vector2(static_cast<float>(packX) / atlasW, static_cast<float>(packY) / atlasH);
-        glyphInfo.uvMax = Core::Vector2(static_cast<float>(packX + width) / atlasW, static_cast<float>(packY + height) / atlasH);
+        glyphInfo.uvMin = { static_cast<float>(packX) / atlasW, static_cast<float>(packY) / atlasH };
+        glyphInfo.uvMax = { static_cast<float>(packX + width) / atlasW, static_cast<float>(packY + height) / atlasH };
 
-        m_glyphCache.Insert(font, codepoint, size, glyphInfo);
+        m_glyphCache.Insert(font, glyphIndex, shapedText.size, glyphInfo);
     }
-
-    if (!pendingUploads.empty())
-        m_atlasBuilder.UploadGlyphsToAtlas(GetAtlasResource(), pendingUploads);
 }
 
 const Resource& TextSystem::GetAtlasResource() const
