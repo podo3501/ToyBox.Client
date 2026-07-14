@@ -1,4 +1,5 @@
 #pragma once
+#include "Core/Foundation/Geometry2D.h"
 
 struct CommandPoolConfig
 {
@@ -13,6 +14,11 @@ struct DescriptorConfig
 	uint32_t dsvCount{ 64 }; //이걸 사용하는 것들은 대부분 내부 Frame Resource이기 때문에 64면 충분함.
 };
 
+struct TextConfig
+{
+	Size atlasSize{ 1024, 1024 };
+};
+
 struct RenderConfig
 {
 	bool enableDebugLayer{ true };
@@ -20,4 +26,5 @@ struct RenderConfig
 
 	CommandPoolConfig commandPools;
 	DescriptorConfig descriptors;
+	TextConfig text;
 };

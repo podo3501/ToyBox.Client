@@ -12,7 +12,7 @@ RenderBackend::RenderBackend(const RenderConfig& config) :
     m_resProvider{ m_device, m_taskScheduler, m_resFactory, m_descFactory },
     m_transientMeshProvider{ m_frameUploadAllocator, m_descFactory },
     m_pipeline{ m_device, m_swapChain, m_descFactory, m_shaderLibrary },
-    m_textSystem{ m_taskScheduler, m_resFactory, m_transientMeshProvider },
+    m_textSystem{ m_device, m_descFactory, m_taskScheduler, m_resFactory, m_transientMeshProvider },
     m_renderFrame{ m_textSystem }
 {}
 
@@ -34,7 +34,7 @@ bool RenderBackend::Initialize(HWND hwnd, const Size& screenSize, std::span<cons
     ReturnIfFalse(m_resProvider.Initialize(m_shaderLibrary));
     ReturnIfFalse(m_frameUploadAllocator.Initialize(m_device, 16 * 1024 * 1024)); //16MB. 일단 pool로 잡아놓고 동적으로 생성되지 않게.
     ReturnIfFalse(m_pipeline.Initialize(screenSize, shadowMapSize));
-    ReturnIfFalse(m_textSystem.Initialize(m_device, m_descFactory, { 1024, 1024 })); //?!? 일단은 이렇게 하고 나중에 config에 넣어야 한다.
+    ReturnIfFalse(m_textSystem.Initialize(m_config.text.atlasSize));
 
     return true;
 }

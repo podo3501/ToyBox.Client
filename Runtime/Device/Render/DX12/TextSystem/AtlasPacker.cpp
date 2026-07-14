@@ -3,37 +3,35 @@
 #define STB_RECT_PACK_IMPLEMENTATION
 #include "stb_rect_pack.h"
 
-AtlasPacker::~AtlasPacker() { Reset(); }
+AtlasPacker::~AtlasPacker() = default;
 AtlasPacker::AtlasPacker() = default;
 
-bool AtlasPacker::Initialize(const Size& textureSize)
+void AtlasPacker::Initialize(const Size& textureSize)
 {
     Reset();
 
     m_textureSize = textureSize;
 
-    m_context = new stbrp_context();
+    m_context = std::make_unique<stbrp_context>();
     m_nodes.resize(textureSize.width); // Skyline 알고리즘은 너비(width)만큼의 노드 공간이 필요합니다.
     
     stbrp_init_target(
-        m_context, 
+        m_context.get(),
         textureSize.width, 
         textureSize.height, 
         m_nodes.data(), 
         static_cast<int>(m_nodes.size())); // stb 패커 초기화
-
-    return true;
 }
 
-std::pair<int, int> AtlasPacker::AllocateRect(int width, int height)
+Point AtlasPacker::AllocateRect(const Size& size)
 {
     assert(m_context && "Packer is not initialized!");
 
     stbrp_rect rect{};
-    rect.w = width;
-    rect.h = height;
+    rect.w = size.width;
+    rect.h = size.height;
     
-    stbrp_pack_rects(m_context, &rect, 1); // 사각형 1개 패킹 시도
+    stbrp_pack_rects(m_context.get(), &rect, 1); // 사각형 1개 패킹 시도
     
     if (rect.was_packed) // rect.was_packed가 true라면 성공적으로 자리를 찾은 것입니다.
         return { rect.x, rect.y };
@@ -46,9 +44,7 @@ std::pair<int, int> AtlasPacker::AllocateRect(int width, int height)
 void AtlasPacker::Reset()
 {
     if (m_context)
-    {
-        delete m_context;
-        m_context = nullptr;
-    }
+        m_context.reset();
+
     m_nodes.clear();
 }

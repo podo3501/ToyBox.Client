@@ -4,12 +4,6 @@
 
 FontResource::~FontResource()
 {
-    if (m_hbBuffer)
-    {
-        hb_buffer_destroy(m_hbBuffer);
-        m_hbBuffer = nullptr;
-    }
-
     for (auto& [size, hbFont] : m_hbFonts)
         if (hbFont) hb_font_destroy(hbFont);
     m_hbFonts.clear();
@@ -25,19 +19,14 @@ FontResource::FontResource() = default;
 
 bool FontResource::Initialize(FreeTypeLibrary& ftLibrary, std::shared_ptr<FontAsset> asset)
 {
-	FT_Error error = FT_New_Memory_Face(
-		ftLibrary.Get(),
-		reinterpret_cast<const FT_Byte*>(asset->fontSource.data()),
-		static_cast<FT_Long>(asset->fontSource.size()),
-		0, // 단일 페이스 인덱스
-		&m_ftFace
-	);
+    FT_Error error = FT_New_Memory_Face(
+        ftLibrary.Get(),
+        reinterpret_cast<const FT_Byte*>(asset->fontSource.data()),
+        static_cast<FT_Long>(asset->fontSource.size()),
+        0, // 단일 페이스 인덱스
+        &m_ftFace);
 	if (error)
 		return false;
-
-    m_hbBuffer = hb_buffer_create();
-    if (!m_hbBuffer)
-        return false;
 
 	m_asset = std::move(asset);
 	MarkReady();
@@ -45,21 +34,7 @@ bool FontResource::Initialize(FreeTypeLibrary& ftLibrary, std::shared_ptr<FontAs
 	return true;
 }
 
-FT_GlyphSlot FontResource::GetGlyphSlot(char32_t codepoint, uint32_t fontSize) const
-{
-    FT_Set_Pixel_Sizes(m_ftFace, 0, fontSize);
-    FT_UInt glyphIndex = FT_Get_Char_Index(m_ftFace, codepoint);
-
-    if (FT_Load_Glyph(m_ftFace, glyphIndex, FT_LOAD_DEFAULT))
-        return nullptr;
-
-    if (FT_Render_Glyph(m_ftFace->glyph, FT_RENDER_MODE_NORMAL))
-        return nullptr;
-
-    return m_ftFace->glyph;
-}
-
-FT_GlyphSlot FontResource::GetGlyphSlotByGlyphIndex(uint32_t glyphIndex, uint32_t size) const
+FT_GlyphSlot FontResource::GetGlyphSlot(uint32_t glyphIndex, uint32_t size) const
 {
     FT_Set_Pixel_Sizes(m_ftFace, 0, size);
 
@@ -77,24 +52,26 @@ std::vector<ShapedGlyph> FontResource::Shape(std::span<const char32_t> text, uin
     FT_Set_Pixel_Sizes(m_ftFace, 0, size);
 
     hb_font_t* hbFont = GetOrCreateHbFont(size);
-    if (!hbFont || !m_hbBuffer) return {};
+    if (!hbFont) return {};
 
-    hb_ft_font_changed(hbFont);
-    hb_buffer_clear_contents(m_hbBuffer);
+    hb_buffer_t* buffer = hb_buffer_create();
+    if (!buffer) return {};
+
+    hb_buffer_clear_contents(buffer);
     hb_buffer_add_utf32(
-        m_hbBuffer,
+        buffer,
         reinterpret_cast<const uint32_t*>(text.data()),
         (int)text.size(),
         0,
         (int)text.size());
 
-    hb_buffer_guess_segment_properties(m_hbBuffer);
-    hb_shape(hbFont, m_hbBuffer, nullptr, 0);
+    hb_buffer_guess_segment_properties(buffer);
+    hb_shape(hbFont, buffer, nullptr, 0);
 
     unsigned glyphCount;
 
-    auto infos = hb_buffer_get_glyph_infos(m_hbBuffer, &glyphCount);
-    auto positions = hb_buffer_get_glyph_positions(m_hbBuffer, &glyphCount);
+    auto infos = hb_buffer_get_glyph_infos(buffer, &glyphCount);
+    auto positions = hb_buffer_get_glyph_positions(buffer, &glyphCount);
 
     std::vector<ShapedGlyph> result;
     result.reserve(glyphCount);
@@ -111,6 +88,7 @@ std::vector<ShapedGlyph> FontResource::Shape(std::span<const char32_t> text, uin
         result.push_back(glyph);
     }
 
+    hb_buffer_destroy(buffer);
     return result;
 }
 

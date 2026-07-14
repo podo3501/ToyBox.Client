@@ -452,6 +452,12 @@
     <ClInclude Include="Render\DX12\Provider\Mesh\TransientMeshProvider.h">
       <Filter>Render\DX12\Provider\Mesh</Filter>
     </ClInclude>
+    <ClInclude Include="Render\DX12\TextSystem\TextHelpers.h">
+      <Filter>Render\DX12\TextSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\TextSystem\AtlasPage.h">
+      <Filter>Render\DX12\TextSystem</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -730,6 +736,12 @@
     </ClCompile>
     <ClCompile Include="Render\DX12\Provider\Mesh\TransientMeshProvider.cpp">
       <Filter>Render\DX12\Provider\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\TextSystem\TextHelpers.cpp">
+      <Filter>Render\DX12\TextSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\TextSystem\AtlasPage.cpp">
+      <Filter>Render\DX12\TextSystem</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
