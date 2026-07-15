@@ -458,6 +458,9 @@
     <ClInclude Include="Render\DX12\TextSystem\AtlasPage.h">
       <Filter>Render\DX12\TextSystem</Filter>
     </ClInclude>
+    <ClInclude Include="Render\DX12\Allocator\FrameUploadPools.h">
+      <Filter>Render\DX12\Allocator</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -742,6 +745,9 @@
     </ClCompile>
     <ClCompile Include="Render\DX12\TextSystem\AtlasPage.cpp">
       <Filter>Render\DX12\TextSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Allocator\FrameUploadPools.cpp">
+      <Filter>Render\DX12\Allocator</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

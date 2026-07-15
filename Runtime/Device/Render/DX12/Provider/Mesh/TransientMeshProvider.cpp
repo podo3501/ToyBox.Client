@@ -3,12 +3,12 @@
 #include "Factory/DescriptorFactory.h"
 #include "Resource/Mesh/TransientMeshResource.h"
 #include "RenderConstants.h"
-#include "Allocator/FrameUploadAllocator.h"
+#include "Allocator/FrameUploadPools.h"
 
 TransientMeshProvider::TransientMeshProvider(
-    FrameUploadAllocator& allocator,
+    FrameUploadPools& frameUploadPools,
     DescriptorFactory& descriptorFactory) noexcept :
-    m_allocator{ allocator },
+    m_frameUploadPools{ frameUploadPools },
     m_descriptorFactory{ descriptorFactory }
 {}
 
@@ -24,8 +24,10 @@ std::shared_ptr<TransientMeshResource> TransientMeshProvider::Create(
     size_t vertexBytes = vertices.size() * sizeof(UIVertex);
     size_t indexBytes = indices.size() * sizeof(uint32_t);
 
-    UploadAllocation vertex = m_allocator.Allocate(static_cast<UINT>(vertexBytes), AlignVertexBuffer);
-    UploadAllocation index = m_allocator.Allocate(static_cast<UINT>(indexBytes), AlignIndexBuffer);
+    UploadAllocation vertex = m_frameUploadPools.VertexBuffer().Allocate(
+        static_cast<UINT>(vertexBytes), AlignVertexBuffer);
+    UploadAllocation index = m_frameUploadPools.IndexBuffer().Allocate(
+        static_cast<UINT>(indexBytes), AlignIndexBuffer);
 
     memcpy(vertex.cpuAddress, vertices.data(), vertexBytes);
     memcpy(index.cpuAddress, indices.data(), indexBytes);

@@ -2,14 +2,14 @@
 #include "GameClient/Asset/MeshAsset.h"
 
 class TransientMeshResource;
-class FrameUploadAllocator;
+class FrameUploadPools;
 class DescriptorFactory;
 
 class TransientMeshProvider
 {
 public:
     TransientMeshProvider(
-        FrameUploadAllocator& allocator,
+        FrameUploadPools& frameUploadPools,
         DescriptorFactory& descriptorFactory) noexcept;
 
     std::shared_ptr<TransientMeshResource> Create(
@@ -17,6 +17,6 @@ public:
         std::span<const uint32_t> indices);
 
 private:
-    FrameUploadAllocator& m_allocator;
+    FrameUploadPools& m_frameUploadPools;
     DescriptorFactory& m_descriptorFactory;
 };

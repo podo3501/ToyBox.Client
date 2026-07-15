@@ -111,12 +111,7 @@ void FontAtlasCreateGraphBuilder::BuildUploadPass(
     const std::vector<GlyphUploadEntry>& uploads,
     const std::vector<TextRenderLayout>& layouts)
 {
-    static uint32_t uploadIndex = 0;
-
-    std::string passName =
-        "FontAtlasUpload_" + std::to_string(uploadIndex++);
-
-    auto& upload = graph.AddCopyPass(passName);
+    auto& upload = graph.AddCopyPass("FontAtlasUpload");
     upload.Write(atlasResID, RGAccess::CopyDest);
 
     upload.gpuExecute =

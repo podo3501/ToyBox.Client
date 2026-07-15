@@ -33,7 +33,6 @@ TextSystem::TextSystem(
 bool TextSystem::Initialize(const Size& atlasTexSize)
 {
     m_atlasTextureSize = atlasTexSize;
-    CreatePage();
 
     return true;
 }
@@ -61,6 +60,7 @@ std::vector<DrawUIItem> TextSystem::BuildDrawItems(std::span<const DrawTextItem>
     for (uint16_t pageIndex = 0; pageIndex < uploadsPerPage.size(); ++pageIndex)
     {
         auto& uploads = uploadsPerPage[pageIndex];
+
         if (uploads.empty())
             continue;
 
@@ -81,7 +81,7 @@ std::vector<DrawUIItem> TextSystem::BuildDrawItems(std::span<const DrawTextItem>
 
         result.push_back(std::move(item));
     }
-
+    
     return result;
 }
 
@@ -221,6 +221,12 @@ void TextSystem::EnsureGlyphs(
             continue;
         }
 
+        if (m_pages.empty())
+        {
+            CreatePage();
+            outUploads.resize(m_pages.size());
+        }
+
         Size packSize{ width + Padding * 2, height + Padding * 2 };
         uint16_t pageIdx = CurrentPageIndex();
         auto packPos = m_pages[pageIdx]->AllocateRect(packSize);
@@ -255,5 +261,8 @@ void TextSystem::EnsureGlyphs(
 
 uint16_t TextSystem::CurrentPageIndex() const
 {
+    if (m_pages.empty())
+        return UINT16_MAX;
+
     return static_cast<uint16_t>(m_pages.size() - 1);
 }

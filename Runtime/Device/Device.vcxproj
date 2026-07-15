@@ -48,6 +48,7 @@
     <ClInclude Include="Render\DX12\Allocator\DescriptorHeapAllocator.h" />
     <ClInclude Include="Render\DX12\Allocator\FrameConstantAllocator.h" />
     <ClInclude Include="Render\DX12\Allocator\FrameUploadAllocator.h" />
+    <ClInclude Include="Render\DX12\Allocator\FrameUploadPools.h" />
     <ClInclude Include="Render\DX12\Allocator\UploadAllocation.h" />
     <ClInclude Include="Render\DX12\Core\FreeTypeLibrary.h" />
     <ClInclude Include="Render\DX12\Graph\BarrierBuilder.h" />
@@ -172,6 +173,7 @@
     <ClCompile Include="Render\DX12\Allocator\DescriptorHeapAllocator.cpp" />
     <ClCompile Include="Render\DX12\Allocator\FrameConstantAllocator.cpp" />
     <ClCompile Include="Render\DX12\Allocator\FrameUploadAllocator.cpp" />
+    <ClCompile Include="Render\DX12\Allocator\FrameUploadPools.cpp" />
     <ClCompile Include="Render\DX12\Core\FreeTypeLibrary.cpp" />
     <ClCompile Include="Render\DX12\Graph\BarrierBuilder.cpp" />
     <ClCompile Include="Render\DX12\Graph\RenderGraphUtils.cpp" />

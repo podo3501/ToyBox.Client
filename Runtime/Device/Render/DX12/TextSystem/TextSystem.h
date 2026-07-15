@@ -48,4 +48,5 @@ private:
     TransientMeshProvider& m_transientMeshProvider;
 
     std::vector<std::unique_ptr<AtlasPage>> m_pages;
+    std::unique_ptr<AtlasPage> m_secondPage;
 };
