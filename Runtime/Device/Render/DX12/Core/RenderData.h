@@ -10,6 +10,7 @@
 struct IFontResource;
 struct IMeshResource;
 struct IMaterialResource;
+class TextureResource;
 
 struct DrawItem
 {
@@ -18,6 +19,11 @@ struct DrawItem
     Core::Matrix world{};
 
     uint64_t sortKey{ 0 };
+};
+
+struct DrawUIItem : public DrawItem
+{
+    Core::Vector4 uvTransform{ 0.f, 0.f, 1.f, 1.f };
 };
 
 struct DrawTextItem
@@ -29,9 +35,14 @@ struct DrawTextItem
     Core::Color color;
 };
 
-struct DrawUIItem : public DrawItem
+struct DrawInspectItem
 {
-    Core::Vector4 uvTransform{ 0.f, 0.f, 1.f, 1.f };
+    std::shared_ptr<TextureResource> texture;
+};
+
+struct DebugPacket
+{
+    std::span<DrawInspectItem> images;
 };
 
 struct DrawPacket
@@ -39,4 +50,6 @@ struct DrawPacket
     std::span<DrawItem> surface;
     std::span<DrawItem> debugSurface;
     std::span<DrawUIItem> ui;
+
+    DebugPacket debug;
 };

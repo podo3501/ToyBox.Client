@@ -41,6 +41,7 @@ private:
 
     Device& m_device;
     DescriptorFactory& m_factory;
+
     Size m_atlasTextureSize{};
     GlyphCache m_glyphCache;
     

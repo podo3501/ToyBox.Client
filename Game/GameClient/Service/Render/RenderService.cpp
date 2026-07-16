@@ -109,7 +109,8 @@ static const RegistryShaderInfo g_shaderRegistry[] =
 	{ RegistryShader::Grid, RID::MakePath("Test/Graphics/Shader/Grid.hlsl"), ShaderType::Graphics },
 	{ RegistryShader::UI, RID::MakePath("Test/Graphics/Shader/UI.hlsl"), ShaderType::Graphics },
 	{ RegistryShader::Text, RID::MakePath("Test/Graphics/Shader/Text.hlsl"), ShaderType::Graphics },
-	{ RegistryShader::MipGenerator, RID::MakePath("Test/Graphics/Shader/MipGen.hlsl"), ShaderType::Compute }
+	{ RegistryShader::MipGenerator, RID::MakePath("Test/Graphics/Shader/MipGen.hlsl"), ShaderType::Compute },
+	{ RegistryShader::InspectorImage, RID::MakePath("Test/Graphics/Shader/InspectorImageRenderer.hlsl"), ShaderType::Graphics }
 };
 
 std::vector<RegistryShaderEntry> RenderService::LoadRegistryShaderEntries()

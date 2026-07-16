@@ -2,12 +2,14 @@
 #include "RenderFrame.h"
 #include "Core/Utils/StringUtils.h"
 #include "TextSystem/TextSystem.h"
+#include "Inspector/Inspector.h"
 #include "Resource/Material/UIMaterialResource.h"
 #include "Core/RenderData.h"
 
 RenderFrame::~RenderFrame() = default;
-RenderFrame::RenderFrame(TextSystem& textSystem) :
-    m_textSystem{ textSystem }
+RenderFrame::RenderFrame(TextSystem& textSystem, Inspector& inspector) :
+    m_textSystem{ textSystem },
+    m_inspector{ inspector }
 {}
 
 void RenderFrame::SetFrameData(const FrameData& frameData) noexcept
@@ -73,7 +75,11 @@ DrawPacket RenderFrame::PrepareRenderData()
     m_pendingTexts.clear();
 
     m_scene.SortDraws();
-    return m_scene.BuildDrawPacket();
+
+    auto packet = m_scene.BuildDrawPacket();
+    packet.debug = m_inspector.BuildPacket();
+
+    return packet;
 }
 
 void RenderFrame::Clear()
@@ -81,4 +87,5 @@ void RenderFrame::Clear()
     m_frameData = {};
     m_pendingTexts.clear();
     m_scene.Clear();
+    m_inspector.Clear();
 }

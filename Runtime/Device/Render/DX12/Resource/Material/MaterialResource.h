@@ -21,7 +21,9 @@ public:
 	MaterialDomain GetDomain() const noexcept;
 	bool IsTextureReady() const noexcept;
 	void SetTexture(TextureSlot texSlot, std::shared_ptr<TextureResource> texRes) noexcept;
-	TextureResource* GetTexture(TextureSlot texSlot) const noexcept;
+	TextureResource* GetTextureRaw(TextureSlot texSlot) const noexcept;
+	std::shared_ptr<TextureResource> GetTexture(TextureSlot texSlot) const noexcept;
+	
 	std::vector<UINT> GetTextureIndices() const noexcept;
 
 private:

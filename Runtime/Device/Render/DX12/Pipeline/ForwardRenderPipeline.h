@@ -1,6 +1,7 @@
 #pragma once
 #include "Resource/ShadowResource.h"
 #include "Renderer/Renderers.h"
+#include "Inspector/InspectorRenderers.h"
 #include "Graph/RGTypes.h"
 
 struct FrameData;
@@ -31,9 +32,10 @@ private:
 
     ShadowResource m_shadowRes; //이 클래스는 framereseource 클래스중의 하나. 프레임당 render가 필요한 리소스들.
     Renderers m_renderers;
+    InspectorRenderers m_inspectorRenderers;
 
-    RGResourceID m_hBackBuffer;
-    RGResourceID m_hShadow;
+    RGResourceID m_hBackBuffer{ 0 };
+    RGResourceID m_hShadow{ 0 };
 
     std::vector<CompiledTask> m_compiledTasks;
 };

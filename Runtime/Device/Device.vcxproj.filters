@@ -106,6 +106,9 @@
     <Filter Include="Render\DX12\Allocator">
       <UniqueIdentifier>{a1262f69-f1a8-4360-8005-8ee0a157eba6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Render\DX12\Inspector">
+      <UniqueIdentifier>{17415661-dccc-48ec-8efe-31578fa88320}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Storage\JsonObjectIO.h">
@@ -461,6 +464,18 @@
     <ClInclude Include="Render\DX12\Allocator\FrameUploadPools.h">
       <Filter>Render\DX12\Allocator</Filter>
     </ClInclude>
+    <ClInclude Include="Render\DX12\Inspector\Inspector.h">
+      <Filter>Render\DX12\Inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Inspector\InspectorGraphBuilder.h">
+      <Filter>Render\DX12\Inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Inspector\InspectorImageRenderer.h">
+      <Filter>Render\DX12\Inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Inspector\InspectorRenderers.h">
+      <Filter>Render\DX12\Inspector</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -748,6 +763,18 @@
     </ClCompile>
     <ClCompile Include="Render\DX12\Allocator\FrameUploadPools.cpp">
       <Filter>Render\DX12\Allocator</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Inspector\Inspector.cpp">
+      <Filter>Render\DX12\Inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Inspector\InspectorGraphBuilder.cpp">
+      <Filter>Render\DX12\Inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Inspector\InspectorImageRenderer.cpp">
+      <Filter>Render\DX12\Inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Inspector\InspectorRenderers.cpp">
+      <Filter>Render\DX12\Inspector</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

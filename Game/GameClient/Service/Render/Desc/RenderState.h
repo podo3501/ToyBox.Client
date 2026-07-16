@@ -102,7 +102,7 @@ struct ShaderStageDesc
 using ShaderID = uint32_t;
 inline constexpr ShaderID InvalidShaderID{ 0 };
 
-namespace RegistryShader
+namespace RegistryShader //이 enum 값은 파일 저장이나 직렬화, 네트워크의 값으로 사용되면 안된다. inspectorImage가 release 일때 빠질수도 있다.
 {
     constexpr ShaderID Shadow{ 1 };
     constexpr ShaderID Phong{ 2 };
@@ -113,6 +113,8 @@ namespace RegistryShader
     constexpr ShaderID Text{ 6 };
 
     constexpr ShaderID MipGenerator{ 7 }; //compute
+
+    constexpr ShaderID InspectorImage{ 8 }; //테스트용 shader. 이건 release 일때 빠질수도 있다.
 }
 
 struct ShaderAsset;

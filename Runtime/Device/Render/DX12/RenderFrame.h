@@ -4,12 +4,13 @@
 
 struct DrawTextItem;
 class TextSystem;
+class Inspector;
 
 class RenderFrame : public IRenderFrame
 {
 public:
 	~RenderFrame();
-	RenderFrame(TextSystem& textSystem);
+	RenderFrame(TextSystem& textSystem, Inspector& inspector);
 
 	virtual void SetFrameData(const FrameData& frameData) noexcept override;
 	virtual void DrawText(
@@ -35,6 +36,7 @@ public:
 
 private:
 	TextSystem& m_textSystem;
+	Inspector& m_inspector;
 	RenderScene m_scene;
 
 	FrameData m_frameData;

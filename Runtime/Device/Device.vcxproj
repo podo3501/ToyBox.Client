@@ -57,6 +57,10 @@
     <ClInclude Include="Render\DX12\Graph\RenderGraph.h" />
     <ClInclude Include="Render\DX12\Graph\RenderPass.h" />
     <ClInclude Include="Render\DX12\Graph\TaskUtils.h" />
+    <ClInclude Include="Render\DX12\Inspector\InspectorImageRenderer.h" />
+    <ClInclude Include="Render\DX12\Inspector\Inspector.h" />
+    <ClInclude Include="Render\DX12\Inspector\InspectorGraphBuilder.h" />
+    <ClInclude Include="Render\DX12\Inspector\InspectorRenderers.h" />
     <ClInclude Include="Render\DX12\Provider\Font\FontProvider.h" />
     <ClInclude Include="Render\DX12\Provider\Mesh\TransientMeshProvider.h" />
     <ClInclude Include="Render\DX12\Provider\ResourceReleaseBuilder.h" />
@@ -179,6 +183,10 @@
     <ClCompile Include="Render\DX12\Graph\RenderGraphUtils.cpp" />
     <ClCompile Include="Render\DX12\Graph\RenderGraph.cpp" />
     <ClCompile Include="Render\DX12\Graph\TaskUtils.cpp" />
+    <ClCompile Include="Render\DX12\Inspector\InspectorImageRenderer.cpp" />
+    <ClCompile Include="Render\DX12\Inspector\Inspector.cpp" />
+    <ClCompile Include="Render\DX12\Inspector\InspectorGraphBuilder.cpp" />
+    <ClCompile Include="Render\DX12\Inspector\InspectorRenderers.cpp" />
     <ClCompile Include="Render\DX12\Provider\Font\FontProvider.cpp" />
     <ClCompile Include="Render\DX12\Provider\Mesh\TransientMeshProvider.cpp" />
     <ClCompile Include="Render\DX12\Provider\ResourceReleaseBuilder.cpp" />

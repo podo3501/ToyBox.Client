@@ -13,7 +13,7 @@ RenderBackend::RenderBackend(const RenderConfig& config) :
     m_transientMeshProvider{ m_frameUploadPools, m_descFactory },
     m_pipeline{ m_device, m_swapChain, m_descFactory, m_shaderLibrary },
     m_textSystem{ m_device, m_descFactory, m_taskScheduler, m_resFactory, m_transientMeshProvider },
-    m_renderFrame{ m_textSystem }
+    m_renderFrame{ m_textSystem, m_inspector }
 {}
 
 void RenderBackend::WaitIdle()

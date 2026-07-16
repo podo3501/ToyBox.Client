@@ -6,6 +6,7 @@
 #include "OpaqueGraphBuilder.h"
 #include "DebugSurfaceGraphBuilder.h"
 #include "UIGraphBuilder.h"
+#include "Inspector/InspectorGraphBuilder.h"
 #include "SwapChainPresenter.h"
 #include "Factory/DescriptorFactory.h"
 #include "Command/CommandList.h"
@@ -19,13 +20,15 @@ ForwardRenderPipeline::ForwardRenderPipeline(
     m_device{ device },
     m_swapChain{ swapChain },
     m_descFactory{ descFactory },
-    m_renderers{ device, shaderLibaray }
+    m_renderers{ device, shaderLibaray },
+    m_inspectorRenderers{ device, shaderLibaray }
 {}
 
 bool ForwardRenderPipeline::Initialize(const Size& screenSize, const Size& shadowMapSize)
 {
     ReturnIfFalse(m_shadowRes.Initialize(m_device, m_descFactory, shadowMapSize));
     ReturnIfFalse(m_renderers.Initialize(screenSize));
+    ReturnIfFalse(m_inspectorRenderers.Initialize(screenSize));
 
     RenderGraph graph;
 
@@ -56,10 +59,15 @@ bool ForwardRenderPipeline::Initialize(const Size& screenSize, const Size& shado
         m_renderers.GetUIRenderer(),
         m_hBackBuffer);
 
+    InspectorGraphBuilder inspector(
+        m_inspectorRenderers.GetInspectorImageRenderer(),
+        m_hBackBuffer);
+
     shadow.Build(graph);
     opaque.Build(graph);
     debug.Build(graph);
     ui.Build(graph);
+    inspector.Build(graph);
 
     graph.ExportResource(m_hBackBuffer, RGAccess::Present);
     graph.ExportResource(m_hShadow, RGAccess::DepthWrite);
@@ -89,5 +97,6 @@ void ForwardRenderPipeline::Render(CommandList& cmd, const DrawPacket& drawPacke
 void ForwardRenderPipeline::Resize(const Size& size)
 {
     m_renderers.SetScreenSize(size);
+    m_inspectorRenderers.SetScreenSize(size);
 }
 

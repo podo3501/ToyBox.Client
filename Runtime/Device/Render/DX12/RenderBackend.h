@@ -7,6 +7,7 @@
 #include "Factory/DescriptorFactory.h"
 #include "Factory/ResourceFactory.h"
 #include "Shader/ShaderLibrary.h"
+#include "Inspector/Inspector.h"
 #include "Core/FrameProfiler.h"
 #include "ResourceProvider.h"
 #include "Allocator/FrameUploadPools.h"
@@ -40,6 +41,7 @@ private:
 	DescriptorFactory m_descFactory;
 	ResourceFactory m_resFactory;
 	ShaderLibrary m_shaderLibrary;
+	Inspector m_inspector; //코드가 이상할때 조사할수 있게 도와주는 클래스
 	FrameProfiler m_profiler;
 	ResourceProvider m_resProvider;
 	FrameUploadPools m_frameUploadPools;
