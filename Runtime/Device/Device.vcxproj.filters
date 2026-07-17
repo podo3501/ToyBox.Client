@@ -109,6 +109,12 @@
     <Filter Include="Render\DX12\Inspector">
       <UniqueIdentifier>{17415661-dccc-48ec-8efe-31578fa88320}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Render\DX12\TextSystem\Builder">
+      <UniqueIdentifier>{1fba3394-d940-422a-ab44-b720cb8ff452}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Render\DX12\TextSystem\Atlas">
+      <UniqueIdentifier>{2c40d7a1-19cc-4ee4-a3ec-e60979a8d178}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Storage\JsonObjectIO.h">
@@ -418,20 +424,11 @@
     <ClInclude Include="Render\DX12\TextSystem\TextSystem.h">
       <Filter>Render\DX12\TextSystem</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\TextSystem\GlyphCache.h">
-      <Filter>Render\DX12\TextSystem</Filter>
-    </ClInclude>
     <ClInclude Include="Render\DX12\TextSystem\TextTypes.h">
       <Filter>Render\DX12\TextSystem</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\TextSystem\AtlasPacker.h">
-      <Filter>Render\DX12\TextSystem</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\DX12\TextSystem\FontAtlasCreateGraphBuilder.h">
-      <Filter>Render\DX12\TextSystem</Filter>
-    </ClInclude>
     <ClInclude Include="Render\DX12\Resource\Texture\BuiltinTextureType.h" />
-    <ClInclude Include="Render\DX12\Allocator\DescriptorHeapAllocator.h">
+    <ClInclude Include="Render\DX12\Allocator\BindlessDescriptorAllocator.h">
       <Filter>Render\DX12\Allocator</Filter>
     </ClInclude>
     <ClInclude Include="Render\DX12\Allocator\FrameConstantAllocator.h">
@@ -458,9 +455,6 @@
     <ClInclude Include="Render\DX12\TextSystem\TextHelpers.h">
       <Filter>Render\DX12\TextSystem</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\TextSystem\AtlasPage.h">
-      <Filter>Render\DX12\TextSystem</Filter>
-    </ClInclude>
     <ClInclude Include="Render\DX12\Allocator\FrameUploadPools.h">
       <Filter>Render\DX12\Allocator</Filter>
     </ClInclude>
@@ -475,6 +469,36 @@
     </ClInclude>
     <ClInclude Include="Render\DX12\Inspector\InspectorRenderers.h">
       <Filter>Render\DX12\Inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Allocator\DescriptorAllocationType.h">
+      <Filter>Render\DX12\Allocator</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Allocator\DescriptorAllocator.h">
+      <Filter>Render\DX12\Allocator</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\TextSystem\Builder\FontAtlasUploadGraphBuilder.h">
+      <Filter>Render\DX12\TextSystem\Builder</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\TextSystem\Builder\TextMeshBuilder.h">
+      <Filter>Render\DX12\TextSystem\Builder</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\TextSystem\Atlas\AtlasPacker.h">
+      <Filter>Render\DX12\TextSystem\Atlas</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\TextSystem\Atlas\AtlasPage.h">
+      <Filter>Render\DX12\TextSystem\Atlas</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\TextSystem\Atlas\FontAtlas.h">
+      <Filter>Render\DX12\TextSystem\Atlas</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\TextSystem\Atlas\GlyphCache.h">
+      <Filter>Render\DX12\TextSystem\Atlas</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\TextSystem\Atlas\FontAtlasBucket.h">
+      <Filter>Render\DX12\TextSystem\Atlas</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\TextSystem\Atlas\AtlasTypes.h">
+      <Filter>Render\DX12\TextSystem\Atlas</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -728,16 +752,7 @@
     <ClCompile Include="Render\DX12\TextSystem\TextSystem.cpp">
       <Filter>Render\DX12\TextSystem</Filter>
     </ClCompile>
-    <ClCompile Include="Render\DX12\TextSystem\GlyphCache.cpp">
-      <Filter>Render\DX12\TextSystem</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\DX12\TextSystem\AtlasPacker.cpp">
-      <Filter>Render\DX12\TextSystem</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\DX12\TextSystem\FontAtlasCreateGraphBuilder.cpp">
-      <Filter>Render\DX12\TextSystem</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\DX12\Allocator\DescriptorHeapAllocator.cpp">
+    <ClCompile Include="Render\DX12\Allocator\BindlessDescriptorAllocator.cpp">
       <Filter>Render\DX12\Allocator</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\Allocator\FrameConstantAllocator.cpp">
@@ -758,9 +773,6 @@
     <ClCompile Include="Render\DX12\TextSystem\TextHelpers.cpp">
       <Filter>Render\DX12\TextSystem</Filter>
     </ClCompile>
-    <ClCompile Include="Render\DX12\TextSystem\AtlasPage.cpp">
-      <Filter>Render\DX12\TextSystem</Filter>
-    </ClCompile>
     <ClCompile Include="Render\DX12\Allocator\FrameUploadPools.cpp">
       <Filter>Render\DX12\Allocator</Filter>
     </ClCompile>
@@ -775,6 +787,30 @@
     </ClCompile>
     <ClCompile Include="Render\DX12\Inspector\InspectorRenderers.cpp">
       <Filter>Render\DX12\Inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Allocator\DescriptorAllocator.cpp">
+      <Filter>Render\DX12\Allocator</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\TextSystem\Builder\FontAtlasUploadGraphBuilder.cpp">
+      <Filter>Render\DX12\TextSystem\Builder</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\TextSystem\Builder\TextMeshBuilder.cpp">
+      <Filter>Render\DX12\TextSystem\Builder</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\TextSystem\Atlas\AtlasPacker.cpp">
+      <Filter>Render\DX12\TextSystem\Atlas</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\TextSystem\Atlas\AtlasPage.cpp">
+      <Filter>Render\DX12\TextSystem\Atlas</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\TextSystem\Atlas\FontAtlas.cpp">
+      <Filter>Render\DX12\TextSystem\Atlas</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\TextSystem\Atlas\GlyphCache.cpp">
+      <Filter>Render\DX12\TextSystem\Atlas</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\TextSystem\Atlas\FontAtlasBucket.cpp">
+      <Filter>Render\DX12\TextSystem\Atlas</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

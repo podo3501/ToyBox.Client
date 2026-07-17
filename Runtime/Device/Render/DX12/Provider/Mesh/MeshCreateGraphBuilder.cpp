@@ -132,8 +132,19 @@ void MeshCreateGraphBuilder::BuildFinalizePass(RenderGraph& graph, std::vector<M
             auto vertexCount = static_cast<uint32_t>(mesh.asset->vertices.size());
             auto indexCount = static_cast<uint32_t>(mesh.asset->indices.size());
 
-            auto vbHeapIndex = m_descFactory.CreateBufferSRV(vb, 0, mesh.asset->vertexCount, mesh.asset->vertexStride);
-            auto ibHeapIndex = m_descFactory.CreateBufferSRV(ib, 0, indexCount, sizeof(uint32_t));
+            auto vbHeapIndex = m_descFactory.CreateBufferSRV(
+                DescriptorAllocationType::Persistent,
+                vb, 
+                0, 
+                mesh.asset->vertexCount, 
+                mesh.asset->vertexStride);
+
+            auto ibHeapIndex = m_descFactory.CreateBufferSRV(
+                DescriptorAllocationType::Persistent,
+                ib, 
+                0, 
+                indexCount, 
+                sizeof(uint32_t));
 
             m_registry.FinalizeMesh(
                 mesh.meshResID,

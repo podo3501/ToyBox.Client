@@ -34,6 +34,7 @@ std::shared_ptr<TransientMeshResource> TransientMeshProvider::Create(
 
     UINT vertexHeapIndex =
         m_descriptorFactory.CreateBufferSRV(
+            DescriptorAllocationType::FrameTransient,
             *vertex.resource,
             static_cast<UINT>(
                 vertex.offset / sizeof(UIVertex)),
@@ -44,6 +45,7 @@ std::shared_ptr<TransientMeshResource> TransientMeshProvider::Create(
 
     UINT indexHeapIndex =
         m_descriptorFactory.CreateBufferSRV(
+            DescriptorAllocationType::FrameTransient,
             *index.resource,
             static_cast<UINT>(
                 index.offset / sizeof(uint32_t)),

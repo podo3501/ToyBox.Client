@@ -1,19 +1,19 @@
 #pragma once
 #include "Resource/Resource.h"
 #include "Graph/RGTypes.h"
-#include "TextTypes.h"
+#include "../TextTypes.h"
 
 struct TextRenderLayout;
 class TaskScheduler;
 class ResourceFactory;
 class RenderGraph;
 
-class FontAtlasCreateGraphBuilder
+class FontAtlasUploadGraphBuilder
 {
 public:
-    ~FontAtlasCreateGraphBuilder();
-    FontAtlasCreateGraphBuilder() = delete;
-    FontAtlasCreateGraphBuilder(
+    ~FontAtlasUploadGraphBuilder();
+    FontAtlasUploadGraphBuilder() = delete;
+    FontAtlasUploadGraphBuilder(
         TaskScheduler& taskScheduler,
         ResourceFactory& resourceFactory);
     

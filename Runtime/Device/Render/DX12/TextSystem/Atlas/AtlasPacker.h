@@ -1,6 +1,8 @@
 #pragma once
 #include "Core/Foundation/Geometry2D.h"
-#include "stb_rect_pack.h"
+
+struct stbrp_context;
+struct stbrp_node;
 
 class AtlasPacker
 {
@@ -16,7 +18,7 @@ public:
 
     void Initialize(const Size& textureSize);
 
-    Point AllocateRect(const Size& size);
+    std::optional<Point> AllocateRect(const Size& size);
     void Reset();
 
 private:

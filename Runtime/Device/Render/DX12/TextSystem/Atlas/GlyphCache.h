@@ -1,5 +1,5 @@
 #pragma once
-#include "TextTypes.h"
+#include "../TextTypes.h"
 #include "Core/Utils/Hash.h"
 
 class FontResource;

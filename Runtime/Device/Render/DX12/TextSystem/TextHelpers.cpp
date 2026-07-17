@@ -18,13 +18,17 @@ GlyphInfo CreateEmptyGlyphInfo(FT_GlyphSlot slot)
 
 GlyphInfo CreateGlyphInfo(
     FT_GlyphSlot slot,
+    FontBucketID bucketID,
+    uint16_t pageIndex,
     uint32_t packX,
     uint32_t packY,
     uint32_t padding,
-    const Size& atlasSize,
-    uint16_t pageIndex)
+    const Size& atlasSize)
 {
     GlyphInfo info;
+
+    info.bucketID = bucketID;
+    info.pageIndex = pageIndex;
 
     uint32_t width = slot->bitmap.width;
     uint32_t height = slot->bitmap.rows;
@@ -52,13 +56,13 @@ GlyphInfo CreateGlyphInfo(
         (glyphY + height) / atlasH
     };
 
-    info.pageIndex = pageIndex;
-
     return info;
 }
 
 bool CreateUploadEntry(
     FT_GlyphSlot slot,
+    FontBucketID bucketID,
+    uint16_t pageIndex,
     uint32_t packX,
     uint32_t packY,
     uint32_t padding,
@@ -70,6 +74,8 @@ bool CreateUploadEntry(
     if (width == 0 || height == 0)
         return false;
 
+    outEntry.bucketID = bucketID;
+    outEntry.pageIndex = pageIndex;
     outEntry.width = width;
     outEntry.height = height;
     outEntry.packX = packX + padding;

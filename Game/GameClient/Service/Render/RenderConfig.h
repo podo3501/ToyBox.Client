@@ -8,9 +8,15 @@ struct CommandPoolConfig
 	uint32_t compute{ 4 };
 };
 
-struct DescriptorConfig
+struct BindlessDescriptorConfig
 {
 	uint32_t bindlessCount{ 524288 }; //1,000,000개 (최대치) bindless 이기 때문에 많이 잡아야 한다.
+	uint32_t asyncTransientCount{ 32768 }; //bindless의 뒷부분을 떼서 사용. bindlessCount를 넘으면 안된다. 10000정도 써도 별 문제 없을꺼 같은데 일단 크게 잡아놓음.
+};
+
+struct DescriptorConfig
+{
+	BindlessDescriptorConfig bindless;	
 	uint32_t dsvCount{ 64 }; //이걸 사용하는 것들은 대부분 내부 Frame Resource이기 때문에 64면 충분함.
 };
 

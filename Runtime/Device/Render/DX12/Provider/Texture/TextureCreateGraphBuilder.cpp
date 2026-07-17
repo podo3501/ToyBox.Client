@@ -141,6 +141,6 @@ void TextureCreateGraphBuilder::BuildFinalizePass(RenderGraph& graph, std::vecto
         for (auto& tex : finalizeEntries)
             m_registry.FinalizeTexture(tex.resID);
 
-        m_descFactory.GetBindlessAllocator().ResetTransient(); //mipmap때 임시로 만든 srv/uav 정리.
+        m_descFactory.GetBindlessAllocator().ResetAsyncTransient(); //mipmap때 임시로 만든 srv/uav 정리.
         };
 }

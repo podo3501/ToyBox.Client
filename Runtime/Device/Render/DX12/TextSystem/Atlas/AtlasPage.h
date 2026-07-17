@@ -20,7 +20,7 @@ public:
     AtlasPage& operator=(AtlasPage&&) noexcept = default;
 
     void Initialize(Device& device, DescriptorFactory& factory, const Size& atlasTexSize);
-    Point AllocateRect(const Size& size);
+    std::optional<Point> AllocateRect(const Size& size);
 
     std::shared_ptr<MaterialResource> GetMaterialResource();
     const Resource& GetAtlasResource() const;

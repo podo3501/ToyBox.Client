@@ -7,7 +7,7 @@
 class Device;
 class ShaderLibrary;
 class CommandList;
-class DescriptorHeapAllocator;
+class BindlessDescriptorAllocator;
 class TextureResource;
 
 using Microsoft::WRL::ComPtr;
@@ -25,7 +25,7 @@ public:
     ~MipGenerator();
     MipGenerator(Device& device);
     bool Initialize(ShaderLibrary& shaderLibrary);
-    void GenerateMips(CommandList& cmd, DescriptorHeapAllocator& srvAllocator, TextureResource* texResource);
+    void GenerateMips(CommandList& cmd, BindlessDescriptorAllocator& srvAllocator, TextureResource* texResource);
 
 private:
     enum class RootSlot : uint32_t

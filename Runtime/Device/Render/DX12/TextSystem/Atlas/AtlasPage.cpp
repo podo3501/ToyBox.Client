@@ -53,7 +53,7 @@ void AtlasPage::CreateAtlasMaterial(Device& device, DescriptorFactory& factory, 
     m_material = matRes;
 }
 
-Point AtlasPage::AllocateRect(const Size& size)
+std::optional<Point> AtlasPage::AllocateRect(const Size& size)
 {
     return m_packer.AllocateRect(size);
 }

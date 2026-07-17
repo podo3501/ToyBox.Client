@@ -1,6 +1,5 @@
 #include "pch.h"
-#include "FontAtlasCreateGraphBuilder.h"
-#include "Factory/DescriptorFactory.h"
+#include "FontAtlasUploadGraphBuilder.h"
 #include "Factory/ResourceFactory.h"
 #include "Graph/RenderGraph.h"
 #include "Graph/TaskScheduler.h"
@@ -14,15 +13,15 @@ struct TextRenderLayout
     size_t rowPitch{ 0 };
 };
 
-FontAtlasCreateGraphBuilder::~FontAtlasCreateGraphBuilder() = default;
-FontAtlasCreateGraphBuilder::FontAtlasCreateGraphBuilder(
+FontAtlasUploadGraphBuilder::~FontAtlasUploadGraphBuilder() = default;
+FontAtlasUploadGraphBuilder::FontAtlasUploadGraphBuilder(
     TaskScheduler& taskScheduler,
     ResourceFactory& resFactory) :
     m_taskScheduler{ taskScheduler },
     m_resFactory{ resFactory }
 {}
 
-void FontAtlasCreateGraphBuilder::UploadGlyphsToAtlas(
+void FontAtlasUploadGraphBuilder::UploadGlyphsToAtlas(
     const Resource& atlasResource,
     const std::vector<GlyphUploadEntry>& uploads)
 {
@@ -104,7 +103,7 @@ static void CopyGlyphToAtlas(
         nullptr);
 }
 
-void FontAtlasCreateGraphBuilder::BuildUploadPass(
+void FontAtlasUploadGraphBuilder::BuildUploadPass(
     RenderGraph& graph,
     RGResourceID atlasResID,
     RGResourceID uploadResID,

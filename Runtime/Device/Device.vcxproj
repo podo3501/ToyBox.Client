@@ -45,7 +45,9 @@
     <ClInclude Include="Input\DirectX\InputManager.h" />
     <ClInclude Include="Input\IInputManager.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="Render\DX12\Allocator\DescriptorHeapAllocator.h" />
+    <ClInclude Include="Render\DX12\Allocator\DescriptorAllocationType.h" />
+    <ClInclude Include="Render\DX12\Allocator\DescriptorAllocator.h" />
+    <ClInclude Include="Render\DX12\Allocator\BindlessDescriptorAllocator.h" />
     <ClInclude Include="Render\DX12\Allocator\FrameConstantAllocator.h" />
     <ClInclude Include="Render\DX12\Allocator\FrameUploadAllocator.h" />
     <ClInclude Include="Render\DX12\Allocator\FrameUploadPools.h" />
@@ -134,12 +136,16 @@
     <ClInclude Include="Render\DX12\Shader\ShaderLibrary.h" />
     <ClInclude Include="Render\DX12\SwapChainPresenter.h" />
     <ClInclude Include="Render\DX12\RenderBackend.h" />
-    <ClInclude Include="Render\DX12\TextSystem\AtlasPacker.h" />
-    <ClInclude Include="Render\DX12\TextSystem\AtlasPage.h" />
-    <ClInclude Include="Render\DX12\TextSystem\FontAtlasCreateGraphBuilder.h" />
+    <ClInclude Include="Render\DX12\TextSystem\Atlas\AtlasPacker.h" />
+    <ClInclude Include="Render\DX12\TextSystem\Atlas\AtlasPage.h" />
+    <ClInclude Include="Render\DX12\TextSystem\Atlas\AtlasTypes.h" />
+    <ClInclude Include="Render\DX12\TextSystem\Atlas\FontAtlas.h" />
+    <ClInclude Include="Render\DX12\TextSystem\Atlas\FontAtlasBucket.h" />
+    <ClInclude Include="Render\DX12\TextSystem\Atlas\GlyphCache.h" />
+    <ClInclude Include="Render\DX12\TextSystem\Builder\FontAtlasUploadGraphBuilder.h" />
+    <ClInclude Include="Render\DX12\TextSystem\Builder\TextMeshBuilder.h" />
     <ClInclude Include="Render\DX12\TextSystem\TextHelpers.h" />
     <ClInclude Include="Render\DX12\TextSystem\TextSystem.h" />
-    <ClInclude Include="Render\DX12\TextSystem\GlyphCache.h" />
     <ClInclude Include="Render\DX12\TextSystem\TextTypes.h" />
     <ClInclude Include="Storage\JsonObjectIO.h" />
   </ItemGroup>
@@ -174,7 +180,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Render\DX12\Allocator\DescriptorHeapAllocator.cpp" />
+    <ClCompile Include="Render\DX12\Allocator\DescriptorAllocator.cpp" />
+    <ClCompile Include="Render\DX12\Allocator\BindlessDescriptorAllocator.cpp" />
     <ClCompile Include="Render\DX12\Allocator\FrameConstantAllocator.cpp" />
     <ClCompile Include="Render\DX12\Allocator\FrameUploadAllocator.cpp" />
     <ClCompile Include="Render\DX12\Allocator\FrameUploadPools.cpp" />
@@ -243,12 +250,15 @@
     <ClCompile Include="Render\DX12\Shader\ShaderLibrary.cpp" />
     <ClCompile Include="Render\DX12\SwapChainPresenter.cpp" />
     <ClCompile Include="Render\DX12\RenderBackend.cpp" />
-    <ClCompile Include="Render\DX12\TextSystem\AtlasPacker.cpp" />
-    <ClCompile Include="Render\DX12\TextSystem\AtlasPage.cpp" />
-    <ClCompile Include="Render\DX12\TextSystem\FontAtlasCreateGraphBuilder.cpp" />
+    <ClCompile Include="Render\DX12\TextSystem\Atlas\AtlasPacker.cpp" />
+    <ClCompile Include="Render\DX12\TextSystem\Atlas\AtlasPage.cpp" />
+    <ClCompile Include="Render\DX12\TextSystem\Atlas\FontAtlas.cpp" />
+    <ClCompile Include="Render\DX12\TextSystem\Atlas\FontAtlasBucket.cpp" />
+    <ClCompile Include="Render\DX12\TextSystem\Atlas\GlyphCache.cpp" />
+    <ClCompile Include="Render\DX12\TextSystem\Builder\FontAtlasUploadGraphBuilder.cpp" />
+    <ClCompile Include="Render\DX12\TextSystem\Builder\TextMeshBuilder.cpp" />
     <ClCompile Include="Render\DX12\TextSystem\TextHelpers.cpp" />
     <ClCompile Include="Render\DX12\TextSystem\TextSystem.cpp" />
-    <ClCompile Include="Render\DX12\TextSystem\GlyphCache.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Platform\Platform.vcxproj">

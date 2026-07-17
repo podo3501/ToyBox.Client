@@ -58,6 +58,7 @@ void RenderBackend::Update()
 void RenderBackend::Render()
 {
     m_frameUploadPools.Reset();
+    m_descFactory.GetBindlessAllocator().ResetFrameTransient();
 
     auto* cmd = m_cmdScheduler.Begin(CommandType::Direct);
     if (cmd)

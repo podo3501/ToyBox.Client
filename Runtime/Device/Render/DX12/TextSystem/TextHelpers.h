@@ -8,16 +8,19 @@ using FT_GlyphSlot = FT_GlyphSlotRec_*;
 
 GlyphInfo CreateEmptyGlyphInfo(FT_GlyphSlot slot);
 
-GlyphInfo CreateGlyphInfo(
+GlyphInfo CreateGlyphInfo(    
     FT_GlyphSlot slot,
+    FontBucketID bucketID,
+    uint16_t pageIndex,
     uint32_t packX,
     uint32_t packY,
     uint32_t padding,
-    const Size& atlasSize,
-    uint16_t pageIndex);
+    const Size& atlasSize);
 
 bool CreateUploadEntry(
     FT_GlyphSlot slot,
+    FontBucketID bucketID,
+    uint16_t pageIndex,
     uint32_t packX,
     uint32_t packY,
     uint32_t padding,

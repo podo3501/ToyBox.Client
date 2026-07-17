@@ -23,7 +23,7 @@ void AtlasPacker::Initialize(const Size& textureSize)
         static_cast<int>(m_nodes.size())); // stb 패커 초기화
 }
 
-Point AtlasPacker::AllocateRect(const Size& size)
+std::optional<Point> AtlasPacker::AllocateRect(const Size& size)
 {
     assert(m_context && "Packer is not initialized!");
 
@@ -32,13 +32,12 @@ Point AtlasPacker::AllocateRect(const Size& size)
     rect.h = size.height;
     
     stbrp_pack_rects(m_context.get(), &rect, 1); // 사각형 1개 패킹 시도
-    
-    if (rect.was_packed) // rect.was_packed가 true라면 성공적으로 자리를 찾은 것입니다.
-        return { rect.x, rect.y };
+    if (!rect.was_packed) // rect.was_packed가 true라면 성공적으로 자리를 찾은 것입니다.
+        return std::nullopt;
 
     // 공간이 부족하여 패킹에 실패한 경우 (-1, -1) 반환 (아틀라스가 가득 참)
     // 호출부(FontAtlasManager)에서 이를 받아 멀티 페이지를 파거나 에러 처리를 해야 합니다.
-    return { -1, -1 };
+    return Point{ rect.x, rect.y };
 }
 
 void AtlasPacker::Reset()

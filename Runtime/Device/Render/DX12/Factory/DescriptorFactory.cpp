@@ -14,24 +14,30 @@ DescriptorFactory::DescriptorFactory(Device& device) :
 
 bool DescriptorFactory::Initialize(const DescriptorConfig& config)
 {
-    ReturnIfFalse(m_bindlessAllocator.Initialize(m_device, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, config.bindlessCount));
+    ReturnIfFalse(m_bindlessAllocator.Initialize(m_device, config.bindless));
     ReturnIfFalse(m_dsvAllocator.Initialize(m_device, D3D12_DESCRIPTOR_HEAP_TYPE_DSV, config.dsvCount));
 
     return true;
 }
 
 UINT DescriptorFactory::CreateBufferSRV(
-    const Resource& resBuffer, 
+    DescriptorAllocationType type,
+    const Resource& resBuffer,
     UINT firstElement, 
     UINT elementCount, 
     UINT elementStride)
 {
-    auto srvDesc = CreateStructuredBufferSRVDesc(firstElement, elementCount, elementStride);
-
-    UINT index = m_bindlessAllocator.Allocate();
+    UINT index = UINT_MAX;
+    switch (type)
+    {
+    case DescriptorAllocationType::Persistent: index = m_bindlessAllocator.Allocate(); break;
+    case DescriptorAllocationType::FrameTransient: index = m_bindlessAllocator.AllocateFrameTransient(); break;
+    case DescriptorAllocationType::AsyncTransient: Assert(false); break; //지원안함.
+    }
     if (index == UINT_MAX)
         return UINT_MAX;
 
+    auto srvDesc = CreateStructuredBufferSRVDesc(firstElement, elementCount, elementStride);
     m_device->CreateShaderResourceView(resBuffer.Get(), &srvDesc, GetBindlessCpuHandle(index));
     return index;
 }
@@ -144,7 +150,7 @@ UINT DescriptorFactory::CreateMipSRV(const Resource& res, DXGI_FORMAT format, UI
     srvDesc.Texture2D.MipLevels = 1;  // 무조건 1개 밉 레벨 영역만 타겟팅
     //srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
 
-    UINT index = m_bindlessAllocator.AllocateTransient();
+    UINT index = m_bindlessAllocator.AllocateAsyncTransient();
     if (index == UINT_MAX) return UINT_MAX;
 
     m_device->CreateShaderResourceView(res.Get(), &srvDesc, GetBindlessCpuHandle(index));
@@ -158,7 +164,7 @@ UINT DescriptorFactory::CreateMipUAV(const Resource& res, DXGI_FORMAT format, UI
     uavDesc.ViewDimension = D3D12_UAV_DIMENSION_TEXTURE2D;
     uavDesc.Texture2D.MipSlice = mipLevel;
 
-    UINT index = m_bindlessAllocator.AllocateTransient();
+    UINT index = m_bindlessAllocator.AllocateAsyncTransient();
     if (index == UINT_MAX) return UINT_MAX;
 
     m_device->CreateUnorderedAccessView(res.Get(), nullptr, &uavDesc, GetBindlessCpuHandle(index));
