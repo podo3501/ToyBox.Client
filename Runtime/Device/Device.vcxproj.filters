@@ -115,6 +115,9 @@
     <Filter Include="Render\DX12\TextSystem\Atlas">
       <UniqueIdentifier>{2c40d7a1-19cc-4ee4-a3ec-e60979a8d178}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Render\DX12\TextSystem\Atlas\Glyph">
+      <UniqueIdentifier>{4fb86d46-ea5b-46f1-97cd-66dfa5e65852}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Storage\JsonObjectIO.h">
@@ -497,8 +500,20 @@
     <ClInclude Include="Render\DX12\TextSystem\Atlas\FontAtlasBucket.h">
       <Filter>Render\DX12\TextSystem\Atlas</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\TextSystem\Atlas\AtlasTypes.h">
+    <ClInclude Include="Render\DX12\TextSystem\Atlas\FontSetting.h">
       <Filter>Render\DX12\TextSystem\Atlas</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\TextSystem\Atlas\Glyph\GlyphBitmap.h">
+      <Filter>Render\DX12\TextSystem\Atlas\Glyph</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\TextSystem\Atlas\Glyph\GlyphGenerator.h">
+      <Filter>Render\DX12\TextSystem\Atlas\Glyph</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\TextSystem\Atlas\Glyph\BitmapGlyphGenerator.h">
+      <Filter>Render\DX12\TextSystem\Atlas\Glyph</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\TextSystem\Atlas\Glyph\SDFGlyphGenerator.h">
+      <Filter>Render\DX12\TextSystem\Atlas\Glyph</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -811,6 +826,12 @@
     </ClCompile>
     <ClCompile Include="Render\DX12\TextSystem\Atlas\FontAtlasBucket.cpp">
       <Filter>Render\DX12\TextSystem\Atlas</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\TextSystem\Atlas\Glyph\BitmapGlyphGenerator.cpp">
+      <Filter>Render\DX12\TextSystem\Atlas\Glyph</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\TextSystem\Atlas\Glyph\SDFGlyphGenerator.cpp">
+      <Filter>Render\DX12\TextSystem\Atlas\Glyph</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

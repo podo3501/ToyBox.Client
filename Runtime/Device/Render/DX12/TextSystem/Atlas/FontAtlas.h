@@ -1,11 +1,14 @@
 #pragma once
 #include "FontAtlasBucket.h"
 
-
-
 class Device;
 class DescriptorFactory;
 class FontResource;
+
+struct FontAtlasUpload
+{
+    std::vector<std::vector<GlyphUploadEntry>> pages;
+};
 
 class FontAtlas
 {
@@ -15,7 +18,7 @@ public:
     bool Initialize(const Size& atlasTextureSize);
     void EnsureGlyphs(
         const ShapedText& shapedText,
-        std::vector<std::vector<GlyphUploadEntry>>& outUploadsPerPage);
+        std::unordered_map<FontBucketID, FontAtlasUpload>& uploads);
     const GlyphInfo* FindGlyph(
         FontResource* font,
         uint32_t glyphIndex,
@@ -27,7 +30,6 @@ public:
     const Resource& GetAtlasResource(
         FontBucketID bucket,
         uint16_t pageIndex) const;
-    uint16_t PageCount(FontBucketID bucket) const;
 
 private:
     FontAtlasBucket& GetOrCreateBucket(FontBucketID bucket);

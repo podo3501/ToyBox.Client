@@ -1,6 +1,6 @@
 #pragma once
 #include "Core/RenderData.h"
-#include "../Atlas/AtlasTypes.h"
+#include "../Atlas/FontSetting.h"
 
 struct ShapedText;
 class FontAtlas;
@@ -9,7 +9,7 @@ class TransientMeshResource;
 
 struct PageMesh
 {
-    FontBucketID bucket{ InvalidFontBucket };
+    FontBucketID bucketID{ InvalidFontBucket };
     uint16_t pageIndex{ 0 };
     std::shared_ptr<TransientMeshResource> mesh;
 };

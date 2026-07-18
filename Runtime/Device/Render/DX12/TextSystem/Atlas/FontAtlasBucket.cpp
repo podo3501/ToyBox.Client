@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "FontAtlasBucket.h"
+#include "Glyph/GlyphGenerator.h"
 #include "Resource/Font/FontResource.h"
 #include "../TextHelpers.h"
 
@@ -7,9 +8,11 @@ FontAtlasBucket::~FontAtlasBucket() = default;
 FontAtlasBucket::FontAtlasBucket(
     Device& device,
     DescriptorFactory& factory,
+    std::unique_ptr<GlyphGenerator> glyphGenerator,
     FontBucketID bucketID) :
     m_device{ device },
     m_factory{ factory },
+    m_glyphGenerator{ std::move(glyphGenerator) },
     m_bucketID{ bucketID }
 {}
 
@@ -39,8 +42,8 @@ void FontAtlasBucket::EnsureGlyphs(
 {
     constexpr uint32_t Padding = 1;
 
+    outUploadsPerPage.resize(m_pages.size());
     auto font = shapedText.font;
-
     for (const auto& shapedGlyph : shapedText.glyphs)
     {
         uint32_t glyphIndex = shapedGlyph.glyphIndex;
@@ -53,73 +56,62 @@ void FontAtlasBucket::EnsureGlyphs(
             continue;
         }
 
-        FT_GlyphSlot slot =
-            font->GetGlyphSlot(
-                glyphIndex,
-                shapedText.size);
+        GlyphBitmap bitmap = m_glyphGenerator->Generate(
+            font,
+            glyphIndex,
+            shapedText.size);
 
-        Assert(slot);
-
-        uint32_t width = slot->bitmap.width;
-        uint32_t height = slot->bitmap.rows;
-
-        if (width == 0 || height == 0)
+        if (bitmap.width == 0 || bitmap.height == 0)
         {
             m_glyphCache.Insert(
                 font,
                 glyphIndex,
                 shapedText.size,
-                CreateEmptyGlyphInfo(slot));
+                CreateEmptyGlyphInfo(bitmap));
 
             continue;
         }
 
-        Size packSize{
-            width + Padding * 2,
-            height + Padding * 2
-        };
+        Size packSize{ 
+            bitmap.width + Padding * 2, 
+            bitmap.height + Padding * 2 };
 
         uint16_t pageIndex = CurrentPageIndex();
-
-        auto packPos =
-            m_pages[pageIndex]->AllocateRect(packSize);
+        auto packPos = m_pages[pageIndex]->AllocateRect(packSize);
 
         if (!packPos)
         {
             CreatePage();
-
             outUploadsPerPage.resize(m_pages.size());
 
             pageIndex = CurrentPageIndex();
-
-            packPos =
-                m_pages[pageIndex]->AllocateRect(packSize);
-
+            packPos = m_pages[pageIndex]->AllocateRect(packSize);
             Assert(packPos);
         }
 
-        GlyphUploadEntry uploadEntry;
+        GlyphUploadEntry upload;
         if (CreateUploadEntry(
-            slot,
+            std::move(bitmap),
             m_bucketID,
             pageIndex,
             packPos->x,
             packPos->y,
             Padding,
-            uploadEntry))
+            upload))
         {
             outUploadsPerPage[pageIndex].push_back(
-                std::move(uploadEntry));
+                std::move(upload));
         }
 
-        auto glyphInfo = CreateGlyphInfo(
-            slot,
-            m_bucketID,
-            pageIndex,
-            packPos->x,
-            packPos->y,
-            Padding,
-            m_atlasTextureSize);
+        auto glyphInfo =
+            CreateGlyphInfo(
+                bitmap,
+                m_bucketID,
+                pageIndex,
+                packPos->x,
+                packPos->y,
+                Padding,
+                m_atlasTextureSize);
 
         m_glyphCache.Insert(
             font,
@@ -140,32 +132,20 @@ const GlyphInfo* FontAtlasBucket::FindGlyph(
         size);
 }
 
-std::shared_ptr<IMaterialResource>
-FontAtlasBucket::GetMaterial(
-    uint16_t pageIndex) const
+std::shared_ptr<IMaterialResource> FontAtlasBucket::GetMaterial(uint16_t pageIndex) const
 {
     Assert(pageIndex < m_pages.size());
-
     return m_pages[pageIndex]->GetMaterialResource();
 }
 
-const Resource&
-FontAtlasBucket::GetAtlasResource(
-    uint16_t pageIndex) const
+const Resource& FontAtlasBucket::GetAtlasResource(uint16_t pageIndex) const
 {
     Assert(pageIndex < m_pages.size());
-
     return m_pages[pageIndex]->GetAtlasResource();
-}
-
-uint16_t FontAtlasBucket::PageCount() const
-{
-    return static_cast<uint16_t>(m_pages.size());
 }
 
 uint16_t FontAtlasBucket::CurrentPageIndex() const
 {
     Assert(!m_pages.empty());
-
     return static_cast<uint16_t>(m_pages.size() - 1);
 }

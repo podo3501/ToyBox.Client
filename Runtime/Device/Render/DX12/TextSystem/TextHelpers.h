@@ -3,13 +3,12 @@
 #include "Core/Foundation/Geometry2D.h"
 #include "GameClient/Asset/MeshAsset.h"
 
-struct FT_GlyphSlotRec_;
-using FT_GlyphSlot = FT_GlyphSlotRec_*;
+struct GlyphBitmap;
 
-GlyphInfo CreateEmptyGlyphInfo(FT_GlyphSlot slot);
+GlyphInfo CreateEmptyGlyphInfo(const GlyphBitmap& glyph);
 
-GlyphInfo CreateGlyphInfo(    
-    FT_GlyphSlot slot,
+GlyphInfo CreateGlyphInfo(
+    const GlyphBitmap& glyph,
     FontBucketID bucketID,
     uint16_t pageIndex,
     uint32_t packX,
@@ -18,7 +17,7 @@ GlyphInfo CreateGlyphInfo(
     const Size& atlasSize);
 
 bool CreateUploadEntry(
-    FT_GlyphSlot slot,
+    GlyphBitmap bitmap,
     FontBucketID bucketID,
     uint16_t pageIndex,
     uint32_t packX,

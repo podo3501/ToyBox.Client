@@ -61,7 +61,10 @@ std::vector<PageMesh> TextMeshBuilder::Build(
                 shapedGlyph.glyphIndex,
                 shaped.size);
             if (!glyph)
+            {
+                cursorX += shapedGlyph.advanceX;
                 continue;
+            }
 
             if (glyph->width == 0 || glyph->height == 0)
             {

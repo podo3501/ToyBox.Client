@@ -5,6 +5,7 @@
 class Device;
 class DescriptorFactory;
 class FontResource;
+class GlyphGenerator;
 
 class FontAtlasBucket
 {
@@ -13,6 +14,7 @@ public:
     FontAtlasBucket(
         Device& device,
         DescriptorFactory& factory,
+        std::unique_ptr<GlyphGenerator> glyphGenerator,
         FontBucketID bucketID);
 
     void Initialize(const Size& atlasTextureSize);
@@ -26,7 +28,6 @@ public:
 
     std::shared_ptr<IMaterialResource> GetMaterial(uint16_t pageIndex) const;
     const Resource& GetAtlasResource(uint16_t pageIndex) const;
-    uint16_t PageCount() const;
 
 private:
     void CreatePage();
@@ -34,8 +35,9 @@ private:
 
     Device& m_device;
     DescriptorFactory& m_factory;
-    FontBucketID m_bucketID{ InvalidFontBucket };
+    std::unique_ptr<GlyphGenerator> m_glyphGenerator;
 
+    FontBucketID m_bucketID{ InvalidFontBucket };
     Size m_atlasTextureSize{};
     GlyphCache m_glyphCache;
     std::vector<std::unique_ptr<AtlasPage>> m_pages;

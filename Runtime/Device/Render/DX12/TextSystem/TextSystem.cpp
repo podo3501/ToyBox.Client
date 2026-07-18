@@ -34,21 +34,10 @@ std::vector<DrawUIItem> TextSystem::BuildDrawItems(std::span<const DrawTextItem>
 
 void TextSystem::UploadPendingGlyphs(std::span<const ShapedText> shapedTexts)
 {
-    struct BucketUpload
-    {
-        FontBucketID bucket;
-        std::vector<std::vector<GlyphUploadEntry>> pages;
-    };
-
-    std::unordered_map<FontBucketID, BucketUpload> uploads;
+    std::unordered_map<FontBucketID, FontAtlasUpload> uploads;
+    
     for (const auto& shaped : shapedTexts)
-    {
-        FontBucketID bucket = GetFontBucketID(shaped.size);
-        auto& upload = uploads[bucket];
-        upload.bucket = bucket;
-
-        m_fontAtlas.EnsureGlyphs(shaped, upload.pages);
-    }
+        m_fontAtlas.EnsureGlyphs(shaped, uploads);
 
     for (auto& [bucket, upload] : uploads)
     {
@@ -73,7 +62,7 @@ std::vector<DrawUIItem> TextSystem::CreateDrawItems(std::span<const PageMesh> pa
     {
         DrawUIItem item;
         item.mesh = pageMesh.mesh;
-        item.material = m_fontAtlas.GetMaterial(pageMesh.bucket, pageMesh.pageIndex);
+        item.material = m_fontAtlas.GetMaterial(pageMesh.bucketID, pageMesh.pageIndex);
 
         result.push_back(std::move(item));
     }

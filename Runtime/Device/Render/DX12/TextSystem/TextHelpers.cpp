@@ -1,23 +1,24 @@
 #include "pch.h"
 #include "TextHelpers.h"
 #include "Core/Foundation/Color.h"
+#include "Atlas/Glyph/GlyphBitmap.h"
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
-GlyphInfo CreateEmptyGlyphInfo(FT_GlyphSlot slot)
+GlyphInfo CreateEmptyGlyphInfo(const GlyphBitmap& glyph)
 {
     GlyphInfo info;
 
-    info.width = 0.f;
-    info.height = 0.f;
-    info.bearingX = static_cast<float>(slot->bitmap_left);
-    info.bearingY = static_cast<float>(slot->bitmap_top);
+    info.width = glyph.glyphWidth;
+    info.height = glyph.glyphHeight;
+    info.bearingX = glyph.bearingX;
+    info.bearingY = glyph.bearingY;
 
     return info;
 }
 
 GlyphInfo CreateGlyphInfo(
-    FT_GlyphSlot slot,
+    const GlyphBitmap& glyph,
     FontBucketID bucketID,
     uint16_t pageIndex,
     uint32_t packX,
@@ -30,13 +31,10 @@ GlyphInfo CreateGlyphInfo(
     info.bucketID = bucketID;
     info.pageIndex = pageIndex;
 
-    uint32_t width = slot->bitmap.width;
-    uint32_t height = slot->bitmap.rows;
-
-    info.width = static_cast<float>(width);
-    info.height = static_cast<float>(height);
-    info.bearingX = static_cast<float>(slot->bitmap_left);
-    info.bearingY = static_cast<float>(slot->bitmap_top);
+    info.width = glyph.glyphWidth;
+    info.height = glyph.glyphHeight;
+    info.bearingX = glyph.bearingX;
+    info.bearingY = glyph.bearingY;
 
     float atlasW = static_cast<float>(atlasSize.width);
     float atlasH = static_cast<float>(atlasSize.height);
@@ -52,15 +50,15 @@ GlyphInfo CreateGlyphInfo(
 
     info.uvMax =
     {
-        (glyphX + width) / atlasW,
-        (glyphY + height) / atlasH
+        (glyphX + info.width) / atlasW,
+        (glyphY + info.height) / atlasH
     };
 
     return info;
 }
 
 bool CreateUploadEntry(
-    FT_GlyphSlot slot,
+    GlyphBitmap bitmap,
     FontBucketID bucketID,
     uint16_t pageIndex,
     uint32_t packX,
@@ -68,28 +66,14 @@ bool CreateUploadEntry(
     uint32_t padding,
     GlyphUploadEntry& outEntry)
 {
-    uint32_t width = slot->bitmap.width;
-    uint32_t height = slot->bitmap.rows;
-
-    if (width == 0 || height == 0)
+    if (bitmap.width == 0 || bitmap.height == 0)
         return false;
 
     outEntry.bucketID = bucketID;
     outEntry.pageIndex = pageIndex;
-    outEntry.width = width;
-    outEntry.height = height;
-    outEntry.packX = packX + padding;
-    outEntry.packY = packY + padding;
-
-    outEntry.pixelData.resize(width * height);
-
-    for (uint32_t y = 0; y < height; ++y)
-    {
-        std::memcpy(
-            &outEntry.pixelData[y * width],
-            &slot->bitmap.buffer[y * slot->bitmap.pitch],
-            width);
-    }
+    outEntry.x = packX + padding;
+    outEntry.y = packY + padding;
+    outEntry.bitmap = std::move(bitmap);
 
     return true;
 }

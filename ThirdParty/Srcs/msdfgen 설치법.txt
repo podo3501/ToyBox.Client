@@ -1,0 +1,21 @@
+1.13을 받는다. .zip으로 소스만 받는다.
+
+CMakeLists.txt에서 위쪽 옵션을 이렇게 바꾼다.
+
+option(MSDFGEN_CORE_ONLY "Only build the core library with no dependencies" OFF)
+option(MSDFGEN_BUILD_STANDALONE "Build the msdfgen standalone executable" OFF)
+option(MSDFGEN_USE_VCPKG "Use vcpkg package manager to link project dependencies" OFF)
+option(MSDFGEN_USE_OPENMP "Build with OpenMP support for multithreaded code" OFF)
+option(MSDFGEN_USE_CPP11 "Build with C++11 enabled" ON)
+option(MSDFGEN_USE_SKIA "Build with the Skia library" OFF)
+option(MSDFGEN_DISABLE_SVG "Disable SVG support" ON)
+option(MSDFGEN_DISABLE_PNG "Disable PNG support" ON)
+
+build 폴더를 만들고 그 폴더에서 밑에줄 실행
+
+cmake .. -G "Visual Studio 17 2022" -A x64 -DCMAKE_MSVC_RUNTIME_LIBRARY="MultiThreaded$<$<CONFIG:Debug>:Debug>DLL" -DMSDFGEN_USE_FREETYPE=ON -DMSDFGEN_INSTALL=ON -DFREETYPE_INCLUDE_DIRS=D:/ProgrammingStudy/ToyBox/ThirdParty/FreeType/include/freetype2 -DFREETYPE_LIBRARY_DEBUG=D:/ProgrammingStudy/ToyBox/ThirdParty/FreeType/lib/freetype_Debug.lib -DFREETYPE_LIBRARY_RELEASE=D:/ProgrammingStudy/ToyBox/ThirdParty/FreeType/lib/freetype_Release.lib
+
+그리고 lib 생성.
+
+cmake --build . --config Debug
+cmake --build . --config Release

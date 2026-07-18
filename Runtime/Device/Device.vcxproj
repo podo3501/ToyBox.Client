@@ -138,10 +138,14 @@
     <ClInclude Include="Render\DX12\RenderBackend.h" />
     <ClInclude Include="Render\DX12\TextSystem\Atlas\AtlasPacker.h" />
     <ClInclude Include="Render\DX12\TextSystem\Atlas\AtlasPage.h" />
-    <ClInclude Include="Render\DX12\TextSystem\Atlas\AtlasTypes.h" />
+    <ClInclude Include="Render\DX12\TextSystem\Atlas\FontSetting.h" />
     <ClInclude Include="Render\DX12\TextSystem\Atlas\FontAtlas.h" />
     <ClInclude Include="Render\DX12\TextSystem\Atlas\FontAtlasBucket.h" />
     <ClInclude Include="Render\DX12\TextSystem\Atlas\GlyphCache.h" />
+    <ClInclude Include="Render\DX12\TextSystem\Atlas\Glyph\BitmapGlyphGenerator.h" />
+    <ClInclude Include="Render\DX12\TextSystem\Atlas\Glyph\GlyphBitmap.h" />
+    <ClInclude Include="Render\DX12\TextSystem\Atlas\Glyph\GlyphGenerator.h" />
+    <ClInclude Include="Render\DX12\TextSystem\Atlas\Glyph\SDFGlyphGenerator.h" />
     <ClInclude Include="Render\DX12\TextSystem\Builder\FontAtlasUploadGraphBuilder.h" />
     <ClInclude Include="Render\DX12\TextSystem\Builder\TextMeshBuilder.h" />
     <ClInclude Include="Render\DX12\TextSystem\TextHelpers.h" />
@@ -255,6 +259,8 @@
     <ClCompile Include="Render\DX12\TextSystem\Atlas\FontAtlas.cpp" />
     <ClCompile Include="Render\DX12\TextSystem\Atlas\FontAtlasBucket.cpp" />
     <ClCompile Include="Render\DX12\TextSystem\Atlas\GlyphCache.cpp" />
+    <ClCompile Include="Render\DX12\TextSystem\Atlas\Glyph\BitmapGlyphGenerator.cpp" />
+    <ClCompile Include="Render\DX12\TextSystem\Atlas\Glyph\SDFGlyphGenerator.cpp" />
     <ClCompile Include="Render\DX12\TextSystem\Builder\FontAtlasUploadGraphBuilder.cpp" />
     <ClCompile Include="Render\DX12\TextSystem\Builder\TextMeshBuilder.cpp" />
     <ClCompile Include="Render\DX12\TextSystem\TextHelpers.cpp" />

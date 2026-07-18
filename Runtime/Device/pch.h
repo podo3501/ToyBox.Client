@@ -49,9 +49,13 @@ using namespace DirectX::SimpleMath;
 #ifdef _DEBUG
 #pragma comment(lib, "freetype_Debug.lib")
 #pragma comment(lib, "harfbuzz_Debug.lib")
+#pragma comment(lib, "msdfgen-core_Debug.lib")
+#pragma comment(lib, "msdfgen-ext_Debug.lib")
 #else
 #pragma comment(lib, "freetype_Release.lib")
 #pragma comment(lib, "harfbuzz_Release.lib")
+#pragma comment(lib, "msdfgen-core_Release.lib")
+#pragma comment(lib, "msdfgen-ext_Release.lib")
 #endif
 
 #define CHECK_ALIGN16(StructName) \

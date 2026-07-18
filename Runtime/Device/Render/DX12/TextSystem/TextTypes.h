@@ -1,6 +1,7 @@
 #pragma once
 #include "Core/Math/Vector2.h"
-#include "Atlas/AtlasTypes.h"
+#include "Atlas/FontSetting.h"
+#include "Atlas/Glyph/GlyphBitmap.h"
 
 struct GlyphInfo
 {
@@ -14,6 +15,7 @@ struct GlyphInfo
     
     Core::Vector2 uvMin{ 0.0f, 0.0f }; //Atlas Texture의 좌상단 UV. 즉 source
     Core::Vector2 uvMax{ 0.0f, 0.0f }; //Atlas Texture의 우하단 UV
+    //?!? advanceX는 어디?  이 값이 있어야 하는지 어떤지 나중에 판단 해 보자.
 };
 
 struct ShapedGlyph
@@ -39,9 +41,10 @@ struct GlyphUploadEntry // 하나의 글자를 아틀라스로 전송하기 위�
     FontBucketID bucketID{ InvalidFontBucket };
     uint16_t pageIndex{ 0 };
 
-    std::vector<uint8_t> pixelData; // CPU 비트맵 임시 버퍼
-    uint32_t width{ 0 };
-    uint32_t height{ 0 };
-    uint32_t packX{ 0 };
-    uint32_t packY{ 0 };
+    //atlas 위치
+    uint32_t x{ 0 };
+    uint32_t y{ 0 };
+
+    //업로드할 이미지 + glyph matric
+    GlyphBitmap bitmap;
 };

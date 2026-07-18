@@ -1,5 +1,7 @@
 #include "pch.h"
 #include "FontAtlas.h"
+#include "Glyph/BitmapGlyphGenerator.h"
+#include "Glyph/SDFGlyphGenerator.h"
 
 FontAtlas::~FontAtlas() = default;
 FontAtlas::FontAtlas(Device& device, DescriptorFactory& factory) :
@@ -18,15 +20,15 @@ bool FontAtlas::Initialize(const Size& atlasTextureSize)
 
 void FontAtlas::EnsureGlyphs(
     const ShapedText& shapedText,
-    std::vector<std::vector<GlyphUploadEntry>>& outUploadsPerPage)
+    std::unordered_map<FontBucketID, FontAtlasUpload>& uploads)
 {
     FontBucketID bucket = GetFontBucketID(shapedText.size);
-    auto& atlasBucket = GetOrCreateBucket(bucket);
-    outUploadsPerPage.resize(atlasBucket.PageCount());
+    auto& upload = uploads[bucket];
 
+    auto& atlasBucket = GetOrCreateBucket(bucket);
     atlasBucket.EnsureGlyphs(
         shapedText,
-        outUploadsPerPage);
+        upload.pages);
 }
 
 const GlyphInfo* FontAtlas::FindGlyph(
@@ -66,15 +68,6 @@ const Resource& FontAtlas::GetAtlasResource(
     return atlasBucket->GetAtlasResource(pageIndex);
 }
 
-uint16_t FontAtlas::PageCount(FontBucketID bucket) const
-{
-    auto atlasBucket = FindBucket(bucket);
-    if (!atlasBucket)
-        return 0;
-
-    return atlasBucket->PageCount();
-}
-
 FontAtlasBucket& FontAtlas::GetOrCreateBucket(FontBucketID bucket)
 {
     Assert(
@@ -83,10 +76,13 @@ FontAtlasBucket& FontAtlas::GetOrCreateBucket(FontBucketID bucket)
         bucket == FontBuckets::Large ||
         bucket == FontBuckets::Huge);
 
+    //auto glyphGenerator = std::make_unique<BitmapGlyphGenerator>();
+    auto glyphGenerator = std::make_unique<SDFGlyphGenerator>();
     auto [iter, inserted] = m_buckets.try_emplace(
         bucket,
         m_device,
         m_factory,
+        std::move(glyphGenerator),
         bucket);
 
     if (inserted)
@@ -94,7 +90,6 @@ FontAtlasBucket& FontAtlas::GetOrCreateBucket(FontBucketID bucket)
 
     return iter->second;
 }
-
 
 const FontAtlasBucket* FontAtlas::FindBucket(FontBucketID bucket) const
 {
