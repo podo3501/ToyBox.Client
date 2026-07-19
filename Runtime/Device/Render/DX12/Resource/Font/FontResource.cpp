@@ -47,6 +47,17 @@ FT_GlyphSlot FontResource::GetGlyphSlot(uint32_t glyphIndex, uint32_t size) cons
     return m_ftFace->glyph;
 }
 
+FT_GlyphSlot FontResource::GetGlyphOutlineSlot(uint32_t glyphIndex, uint32_t size) const
+{
+    FT_Set_Pixel_Sizes(m_ftFace, 0, size);
+
+    FT_Error error = FT_Load_Glyph(m_ftFace, glyphIndex, FT_LOAD_DEFAULT);
+    if (error)
+        return nullptr;
+
+    return m_ftFace->glyph;
+}
+
 std::vector<ShapedGlyph> FontResource::Shape(std::span<const char32_t> text, uint32_t size)
 {
     FT_Set_Pixel_Sizes(m_ftFace, 0, size);

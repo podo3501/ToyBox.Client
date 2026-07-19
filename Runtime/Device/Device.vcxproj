@@ -146,6 +146,7 @@
     <ClInclude Include="Render\DX12\TextSystem\Atlas\Glyph\GlyphBitmap.h" />
     <ClInclude Include="Render\DX12\TextSystem\Atlas\Glyph\GlyphGenerator.h" />
     <ClInclude Include="Render\DX12\TextSystem\Atlas\Glyph\SDFGlyphGenerator.h" />
+    <ClInclude Include="Render\DX12\TextSystem\Atlas\Glyph\SimpleSDFGlyphGenerator.h" />
     <ClInclude Include="Render\DX12\TextSystem\Builder\FontAtlasUploadGraphBuilder.h" />
     <ClInclude Include="Render\DX12\TextSystem\Builder\TextMeshBuilder.h" />
     <ClInclude Include="Render\DX12\TextSystem\TextHelpers.h" />
@@ -261,6 +262,7 @@
     <ClCompile Include="Render\DX12\TextSystem\Atlas\GlyphCache.cpp" />
     <ClCompile Include="Render\DX12\TextSystem\Atlas\Glyph\BitmapGlyphGenerator.cpp" />
     <ClCompile Include="Render\DX12\TextSystem\Atlas\Glyph\SDFGlyphGenerator.cpp" />
+    <ClCompile Include="Render\DX12\TextSystem\Atlas\Glyph\SimpleSDFGlyphGenerator.cpp" />
     <ClCompile Include="Render\DX12\TextSystem\Builder\FontAtlasUploadGraphBuilder.cpp" />
     <ClCompile Include="Render\DX12\TextSystem\Builder\TextMeshBuilder.cpp" />
     <ClCompile Include="Render\DX12\TextSystem\TextHelpers.cpp" />

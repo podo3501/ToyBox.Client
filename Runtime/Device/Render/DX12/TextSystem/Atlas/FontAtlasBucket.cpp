@@ -61,6 +61,15 @@ void FontAtlasBucket::EnsureGlyphs(
             glyphIndex,
             shapedText.size);
 
+        Core::Logger::Info(
+            "Glyph {} image={}x{} glyph={}x{} channels={}",
+            glyphIndex,
+            bitmap.width,
+            bitmap.height,
+            bitmap.glyphWidth,
+            bitmap.glyphHeight,
+            bitmap.channels);
+
         if (bitmap.width == 0 || bitmap.height == 0)
         {
             m_glyphCache.Insert(

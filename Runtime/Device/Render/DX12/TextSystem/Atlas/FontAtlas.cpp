@@ -2,6 +2,7 @@
 #include "FontAtlas.h"
 #include "Glyph/BitmapGlyphGenerator.h"
 #include "Glyph/SDFGlyphGenerator.h"
+#include "Glyph/SimpleSDFGlyphGenerator.h"
 
 FontAtlas::~FontAtlas() = default;
 FontAtlas::FontAtlas(Device& device, DescriptorFactory& factory) :
@@ -77,7 +78,8 @@ FontAtlasBucket& FontAtlas::GetOrCreateBucket(FontBucketID bucket)
         bucket == FontBuckets::Huge);
 
     //auto glyphGenerator = std::make_unique<BitmapGlyphGenerator>();
-    auto glyphGenerator = std::make_unique<SDFGlyphGenerator>();
+    //auto glyphGenerator = std::make_unique<SDFGlyphGenerator>();
+    auto glyphGenerator = std::make_unique<SimpleSDFGlyphGenerator>();
     auto [iter, inserted] = m_buckets.try_emplace(
         bucket,
         m_device,

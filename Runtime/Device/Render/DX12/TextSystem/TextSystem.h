@@ -9,6 +9,7 @@ class TaskScheduler;
 class ResourceFactory;
 class DescriptorFactory;
 class TransientMeshProvider;
+class Inspector;
 
 class TextSystem
 {
@@ -20,7 +21,7 @@ public:
         TaskScheduler& taskScheduler, 
         ResourceFactory& resFactory,
         TransientMeshProvider& transientMeshProvider);
-    bool Initialize(const Size& atlasTexSize);
+    bool Initialize(const Size& atlasTexSize, Inspector* inspector = nullptr);
     std::vector<DrawUIItem> BuildDrawItems(std::span<const DrawTextItem> items);
 
 private:
@@ -31,4 +32,6 @@ private:
     FontAtlas m_fontAtlas;
     FontAtlasUploadGraphBuilder m_atlasBuilder;
     TextMeshBuilder m_meshBuilder;
+
+    Inspector* m_inspector{ nullptr };
 };

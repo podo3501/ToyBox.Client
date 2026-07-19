@@ -16,6 +16,9 @@ struct InspectorDrawCB
 {
     DirectX::XMFLOAT4X4 world;
     DirectX::XMFLOAT4X4 projection;
+
+    DirectX::XMFLOAT2 imageSize;
+    DirectX::XMFLOAT2 padding{};
 };
 
 InspectorImageRenderer::~InspectorImageRenderer() = default;
@@ -76,7 +79,7 @@ bool InspectorImageRenderer::CreateRootSignature(Device& device)
 
     builder.Add32BitConstants(Core::ToIndex(RootSlot::ResourceIndices), 1);
     builder.AddCBV(Core::ToIndex(RootSlot::DrawCB));
-    builder.AddLinearSampler(0);
+    builder.AddPointSampler(0);
 
     builder.AddFlags(D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
@@ -134,6 +137,8 @@ D3D12_GPU_VIRTUAL_ADDRESS InspectorImageRenderer::UploadDrawCB()
 
     DirectX::XMMATRIX xmProj = ToDXMatrix(m_projection);
     XMStoreFloat4x4(&drawCB.projection, DirectX::XMMatrixTranspose(xmProj));
+
+    drawCB.imageSize = { ImageSize, ImageSize }; 
 
     return m_drawCBAllocator.AllocateConstant(drawCB);
 }

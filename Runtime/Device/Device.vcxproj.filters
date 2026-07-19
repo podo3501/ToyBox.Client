@@ -515,6 +515,9 @@
     <ClInclude Include="Render\DX12\TextSystem\Atlas\Glyph\SDFGlyphGenerator.h">
       <Filter>Render\DX12\TextSystem\Atlas\Glyph</Filter>
     </ClInclude>
+    <ClInclude Include="Render\DX12\TextSystem\Atlas\Glyph\SimpleSDFGlyphGenerator.h">
+      <Filter>Render\DX12\TextSystem\Atlas\Glyph</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -831,6 +834,9 @@
       <Filter>Render\DX12\TextSystem\Atlas\Glyph</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\TextSystem\Atlas\Glyph\SDFGlyphGenerator.cpp">
+      <Filter>Render\DX12\TextSystem\Atlas\Glyph</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\TextSystem\Atlas\Glyph\SimpleSDFGlyphGenerator.cpp">
       <Filter>Render\DX12\TextSystem\Atlas\Glyph</Filter>
     </ClCompile>
   </ItemGroup>

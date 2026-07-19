@@ -26,8 +26,8 @@ public:
 
 private:
     static constexpr UINT MaxImage = 10;
-    static constexpr float ImageSize = 256.0f;
-    static constexpr float Margin = 16.0f;
+    static constexpr float ImageSize = 512.0f;
+    static constexpr float Margin = 16.0f; //전체 창에서 여백
 
     enum class RootSlot : uint32_t
     {

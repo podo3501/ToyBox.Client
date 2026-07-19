@@ -25,7 +25,18 @@ void RootSignatureBuilder::AddBindlessSRVTable(UINT numDescriptors, UINT baseReg
 
 void RootSignatureBuilder::AddLinearSampler(UINT shaderRegister)
 {
-    m_samplers.push_back({ shaderRegister });
+    m_samplers.push_back({ 
+        shaderRegister,
+        D3D12_FILTER_MIN_MAG_MIP_LINEAR 
+        });
+}
+
+void RootSignatureBuilder::AddPointSampler(UINT shaderRegister)
+{
+    m_samplers.push_back({
+        shaderRegister,
+        D3D12_FILTER_MIN_MAG_MIP_POINT
+        });
 }
 
 void RootSignatureBuilder::AddComparisonSampler(UINT shaderRegister)
@@ -106,8 +117,8 @@ ComPtr<ID3D12RootSignature> RootSignatureBuilder::Build(Device& device)
 
     for (const auto& s : m_samplers)
     {
-        CD3DX12_STATIC_SAMPLER_DESC linearDesc(s.shaderRegister, D3D12_FILTER_MIN_MAG_MIP_LINEAR);
-        samplers.push_back(linearDesc);
+        CD3DX12_STATIC_SAMPLER_DESC samplerDesc(s.shaderRegister, s.filter);
+        samplers.push_back(samplerDesc);
     }
     samplers.insert(samplers.end(), m_staticSamplers.begin(), m_staticSamplers.end());
 

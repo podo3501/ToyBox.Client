@@ -34,7 +34,7 @@ bool RenderBackend::Initialize(HWND hwnd, const Size& screenSize, std::span<cons
     ReturnIfFalse(m_resProvider.Initialize(m_shaderLibrary));
     ReturnIfFalse(m_frameUploadPools.Initialize(m_device));
     ReturnIfFalse(m_pipeline.Initialize(screenSize, shadowMapSize));
-    ReturnIfFalse(m_textSystem.Initialize(m_config.text.atlasSize));
+    ReturnIfFalse(m_textSystem.Initialize(m_config.text.atlasSize, &m_inspector));
 
     return true;
 }

@@ -11,7 +11,7 @@ GlyphBitmap SDFGlyphGenerator::Generate(
 {
     Assert(font);
 
-    FT_GlyphSlot slot = font->GetGlyphSlot(glyphIndex, size);
+    FT_GlyphSlot slot = font->GetGlyphOutlineSlot(glyphIndex, size);
     Assert(slot);
 
     GlyphBitmap bitmap;
@@ -28,10 +28,12 @@ GlyphBitmap SDFGlyphGenerator::Generate(
     bitmap.width = resolution;
     bitmap.height = resolution;
     bitmap.channels = 1;
-    msdfgen::Bitmap<float, 1> sdf(bitmap.width, bitmap.height);
 
     auto shape = LoadShape(slot);
     auto bounds = shape.getBounds();
+    if (bounds.l >= bounds.r || bounds.b >= bounds.t)
+        return bitmap;  //아웃라인 경계가 없는 빈 글자 처리.
+
     bitmap.glyphWidth = static_cast<float>(bounds.r - bounds.l);
     bitmap.glyphHeight = static_cast<float>(bounds.t - bounds.b);
     auto projection = CreateProjection(
@@ -39,21 +41,35 @@ GlyphBitmap SDFGlyphGenerator::Generate(
         bitmap.width,
         bitmap.height);
 
+    msdfgen::Bitmap<float, 1> sdf(bitmap.width, bitmap.height);
     double range = GetSDFRange(bucketID);
+    range = 5.0;
+
+    msdfgen::SDFTransformation transformation(
+        projection,
+        msdfgen::Range(range));
+
     msdfgen::generateSDF(
         sdf,
         shape,
-        projection,
-        range);
+        transformation);
+
+    float minValue = FLT_MAX;
+    float maxValue = -FLT_MAX;
 
     bitmap.pixels.resize(bitmap.width * bitmap.height);
+    float inverseRange = 1.0f / static_cast<float>(range);
     for (uint32_t y = 0; y < bitmap.height; ++y)
     {
+        uint32_t srcY = bitmap.height - 1 - y; // msdfgen 소스 버퍼에서 읽어올 거꾸로 된 Y축 위치
         for (uint32_t x = 0; x < bitmap.width; ++x)
         {
-            float v = *sdf(x, y);
-            v = std::clamp(v * 0.5f + 0.5f, 0.0f, 1.0f);
+            float raw = *sdf(x, srcY);
+            float v = std::clamp(raw * inverseRange + 0.5f, 0.0f, 1.0f);
             bitmap.pixels[y * bitmap.width + x] = static_cast<uint8_t>(v * 255.0f);
+
+            minValue = std::min(minValue, raw);
+            maxValue = std::max(maxValue, raw);
         }
     }
 
@@ -102,12 +118,12 @@ msdfgen::Projection SDFGlyphGenerator::CreateProjection(
     double centerX = (bounds.l + bounds.r) * 0.5;
     double centerY = (bounds.b + bounds.t) * 0.5;
 
-    double bitmapCenterX = static_cast<double>(width) * 0.5;
-    double bitmapCenterY = static_cast<double>(height) * 0.5;
+    constexpr double BiasX = 0.0;
+    constexpr double BiasY = 0.0;
 
     msdfgen::Vector2 translate(
-        bitmapCenterX - centerX * scale,
-        bitmapCenterY - centerY * scale);
+        static_cast<double>(width) * 0.5 - centerX * scale - BiasX,
+        static_cast<double>(height) * 0.5 - centerY * scale - BiasY);
 
     return msdfgen::Projection(
         msdfgen::Vector2(scale, scale),

@@ -2,6 +2,7 @@
 #include "TextSystem.h"
 #include "Resource/Font/FontResource.h"
 #include "Resource/Mesh/TransientMeshResource.h"
+#include "Inspector/Inspector.h"
 
 TextSystem::~TextSystem() = default;
 TextSystem::TextSystem(
@@ -15,9 +16,12 @@ TextSystem::TextSystem(
     m_meshBuilder{ transientMeshProvider }
 {}
 
-bool TextSystem::Initialize(const Size& atlasTexSize)
+bool TextSystem::Initialize(const Size& atlasTexSize, Inspector* inspector)
 {
-    return m_fontAtlas.Initialize(atlasTexSize);
+   ReturnIfFalse(m_fontAtlas.Initialize(atlasTexSize));
+   m_inspector = inspector;
+
+   return true;
 }
 
 std::vector<DrawUIItem> TextSystem::BuildDrawItems(std::span<const DrawTextItem> items)
@@ -27,6 +31,13 @@ std::vector<DrawUIItem> TextSystem::BuildDrawItems(std::span<const DrawTextItem>
 
     auto shapedTexts = ShapeTexts(items);
     UploadPendingGlyphs(shapedTexts);
+
+    if (m_inspector)
+    {
+        const auto& mat = m_fontAtlas.GetMaterial(FontBuckets::Huge, 0);
+        auto matRes = static_pointer_cast<MaterialResource>(mat);
+        m_inspector->ShowImage(matRes->GetTexture(0));
+    }
 
     auto pageMeshes = m_meshBuilder.Build(m_fontAtlas, items, shapedTexts);
     return CreateDrawItems(pageMeshes);
