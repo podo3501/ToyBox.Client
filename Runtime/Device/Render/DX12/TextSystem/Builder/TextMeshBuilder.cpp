@@ -3,12 +3,15 @@
 #include "../Atlas/FontAtlas.h"
 #include "../TextHelpers.h"
 #include "Provider/Mesh/TransientMeshProvider.h"
+#include "Core/Utils/Hash.h"
 
 struct PageMeshBuffer
 {
     std::vector<UIVertex> vertices;
     std::vector<uint32_t> indices;
     uint32_t vertexOffset = 0;
+
+    std::shared_ptr<IMaterialResource> material{ nullptr };
 };
 
 struct TextBatchKey
@@ -48,8 +51,8 @@ std::vector<PageMesh> TextMeshBuilder::Build(
     std::unordered_map<TextBatchKey, PageMeshBuffer, TextBatchKeyHash> buffers;
     for (size_t itemIndex = 0; itemIndex < items.size(); ++itemIndex)
     {
-        const auto& item = items[itemIndex];
         const auto& shaped = shapedTexts[itemIndex];
+        const auto& item = items[shaped.index];
 
         float cursorX = item.position.x;
         float baselineY = item.position.y;
@@ -58,6 +61,7 @@ std::vector<PageMesh> TextMeshBuilder::Build(
         {
             const GlyphInfo* glyph = atlas.FindGlyph(
                 shaped.font,
+                shaped.mode,
                 shapedGlyph.glyphIndex,
                 shaped.size);
             if (!glyph)
@@ -79,6 +83,9 @@ std::vector<PageMesh> TextMeshBuilder::Build(
             };
 
             auto& buffer = buffers[key];
+            if (!buffer.material)
+                buffer.material = atlas.GetMaterial(glyph);
+
             float x = cursorX + glyph->bearingX + shapedGlyph.offsetX;
             float y = baselineY - glyph->bearingY - shapedGlyph.offsetY;
 
@@ -89,7 +96,7 @@ std::vector<PageMesh> TextMeshBuilder::Build(
                 *glyph,
                 x,
                 y,
-                item.color);
+                item.style.color);
 
             cursorX += shapedGlyph.advanceX;
         }
@@ -107,7 +114,10 @@ std::vector<PageMesh> TextMeshBuilder::Build(
         if (!mesh)
             continue;
 
-        result.push_back({ key.bucket, key.pageIndex, std::move(mesh) });
+        result.push_back({
+            std::move(mesh),
+            std::move(buffer.material)
+            });
     }
 
     return result;

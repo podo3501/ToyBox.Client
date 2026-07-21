@@ -22,7 +22,7 @@ void RenderFrame::DrawText(
     std::string_view text,
     uint32_t size,
     const Core::Vector2& pos,
-    const Core::Color& color)
+    const TextStyle& style)
 {
     Assert(fontRes);
     if (text.empty()) return;
@@ -33,7 +33,7 @@ void RenderFrame::DrawText(
     item.codePoints = Core::UTF8ToUTF32(text);
     item.fontSize = size;
     item.position = pos;
-    item.color = color;
+    item.style = style;
 
     m_pendingTexts.emplace_back(std::move(item));
 }

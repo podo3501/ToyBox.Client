@@ -3,7 +3,7 @@
 #include "RenderMetrics.h"
 #include "RenderRepository.h"
 #include "SceneRenderer.h"
-#include "Desc/ShaderStageBuilder.h"
+#include "Definition/ShaderStageBuilder.h"
 
 struct IRenderBackend;
 struct FrameData;

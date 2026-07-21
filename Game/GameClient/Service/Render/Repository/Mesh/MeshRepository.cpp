@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "MeshRepository.h"
 #include "IMeshProvider.h"
-#include "Service/Render/Desc/MeshDesc.h"
+#include "Service/Render/Definition/Mesh/MeshDesc.h"
 #include "Service/IAssetAsyncLoader.h"
 #include "Service/AssetAsyncHelper.h"
 

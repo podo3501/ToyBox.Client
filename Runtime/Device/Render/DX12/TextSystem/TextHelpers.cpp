@@ -9,33 +9,32 @@ GlyphInfo CreateEmptyGlyphInfo(const GlyphBitmap& glyph)
 {
     GlyphInfo info;
 
-    info.width = glyph.glyphWidth;
-    info.height = glyph.glyphHeight;
+    info.width = static_cast<float>(glyph.width);
+    info.height = static_cast<float>(glyph.height);
     info.bearingX = glyph.bearingX;
     info.bearingY = glyph.bearingY;
 
     return info;
 }
 
-GlyphInfo CreateGlyphInfo(
-    const GlyphBitmap& glyph,
-    FontBucketID bucketID,
-    uint16_t pageIndex,
-    uint32_t packX,
-    uint32_t packY,
-    uint32_t padding,
-    const Size& atlasSize)
+GlyphInfo CreateEmptyGlyphInfo(const SDFGlyphBitmap& sdfGlyph)
 {
     GlyphInfo info;
 
-    info.bucketID = bucketID;
-    info.pageIndex = pageIndex;
+    info = CreateEmptyGlyphInfo(sdfGlyph.bitmap);
+    info.width = sdfGlyph.glyphWidth;
+    info.height = sdfGlyph.glyphHeight;
 
-    info.width = glyph.glyphWidth;
-    info.height = glyph.glyphHeight;
-    info.bearingX = glyph.bearingX;
-    info.bearingY = glyph.bearingY;
+    return info;
+}
 
+static void SetGlyphUV(
+    uint32_t packX,
+    uint32_t packY,
+    uint32_t padding,
+    const Size& atlasSize,
+    GlyphInfo& info)
+{
     float atlasW = static_cast<float>(atlasSize.width);
     float atlasH = static_cast<float>(atlasSize.height);
 
@@ -53,7 +52,53 @@ GlyphInfo CreateGlyphInfo(
         (glyphX + info.width) / atlasW,
         (glyphY + info.height) / atlasH
     };
+}
 
+GlyphInfo CreateGlyphInfo(
+    const GlyphBitmap& glyph,
+    FontBucketID bucketID,
+    uint16_t pageIndex,
+    uint32_t packX,
+    uint32_t packY,
+    uint32_t padding,
+    const Size& atlasSize)
+{
+    GlyphInfo info;
+
+    info.mode = TextRenderMode::Bitmap;
+    info.bucketID = bucketID;
+    info.pageIndex = pageIndex;
+
+    info.width = static_cast<float>(glyph.width);
+    info.height = static_cast<float>(glyph.height);
+    info.bearingX = glyph.bearingX;
+    info.bearingY = glyph.bearingY;
+
+    SetGlyphUV(packX, packY, padding, atlasSize, info);
+    return info;
+}
+
+GlyphInfo CreateGlyphInfo(
+    const SDFGlyphBitmap& sdfGlyph,
+    FontBucketID bucketID,
+    uint16_t pageIndex,
+    uint32_t packX,
+    uint32_t packY,
+    uint32_t padding,
+    const Size& atlasSize)
+{
+    GlyphInfo info;
+
+    info.mode = TextRenderMode::SDF;
+    info.bucketID = bucketID;
+    info.pageIndex = pageIndex;
+
+    info.width = sdfGlyph.glyphWidth;
+    info.height = sdfGlyph.glyphHeight;
+    info.bearingX = sdfGlyph.bitmap.bearingX;
+    info.bearingY = sdfGlyph.bitmap.bearingY;
+
+    SetGlyphUV(packX, packY, padding, atlasSize, info);
     return info;
 }
 
@@ -69,8 +114,6 @@ bool CreateUploadEntry(
     if (bitmap.width == 0 || bitmap.height == 0)
         return false;
 
-    outEntry.bucketID = bucketID;
-    outEntry.pageIndex = pageIndex;
     outEntry.x = packX + padding;
     outEntry.y = packY + padding;
     outEntry.bitmap = std::move(bitmap);

@@ -1,8 +1,10 @@
 #pragma once
-#include "GlyphGenerator.h"
+#include "GlyphBitmap.h"
 
-class BitmapGlyphGenerator final : public GlyphGenerator
+class FontResource;
+
+class BitmapGlyphGenerator
 {
 public:
-    virtual GlyphBitmap Generate(FontResource* font, uint32_t glyphIndex, uint32_t size) override;
+    GlyphBitmap Generate(FontResource* font, uint32_t glyphIndex, uint32_t size);
 };

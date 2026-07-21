@@ -1,6 +1,6 @@
 #pragma once
 #include "MaterialResource.h"
-#include "GameClient/Service/Render/Desc/UIMaterialDesc.h"
+#include "GameClient/Service/Render/Definition/Material/UIMaterialDesc.h"
 #include "Core/Math/Vector4.h"
 #include "Core/Foundation/Geometry2D.h"
 

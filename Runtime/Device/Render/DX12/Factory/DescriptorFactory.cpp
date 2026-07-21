@@ -4,7 +4,7 @@
 #include "Core/D3D12Conversions.h"
 #include "Resource/Texture/TextureResource.h"
 #include "Resource/Resource.h"
-#include "GameClient/Service/Render/Desc/TextureDesc.h"
+#include "GameClient/Service/Render/Definition/Texture/TextureDesc.h"
 #include "GameClient/Service/Render/RenderConfig.h"
 
 DescriptorFactory::~DescriptorFactory() = default;

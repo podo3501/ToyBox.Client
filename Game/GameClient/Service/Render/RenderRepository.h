@@ -2,8 +2,8 @@
 #include "Handle/FontHandle.h"
 #include "Handle/MaterialHandle.h"
 #include "Handle/MeshHandle.h"
-#include "Desc/MeshDescFactory.h"
-#include "Desc/MaterialDescFactory.h"
+#include "Definition/Mesh/MeshDescFactory.h"
+#include "Definition/Material/MaterialDescFactory.h"
 
 struct MeshDesc;
 struct MeshAsset;

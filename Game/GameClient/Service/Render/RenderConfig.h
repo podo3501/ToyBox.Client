@@ -20,9 +20,20 @@ struct DescriptorConfig
 	uint32_t dsvCount{ 64 }; //이걸 사용하는 것들은 대부분 내부 Frame Resource이기 때문에 64면 충분함.
 };
 
+struct BitmapConfig
+{
+	Size atlasSize{ 256, 256 }; //테스트용 사이즈. 일반적으로는 1024나 2048을 사용
+};
+
+struct SDFConfig
+{
+	Size atlasSize{ 512, 512 }; //테스트용 사이즈. 일반적으로는 1024나 2048을 사용
+};
+
 struct TextConfig
 {
-	Size atlasSize{ 1024, 1024 };
+	BitmapConfig bitmap;
+	SDFConfig sdf;
 };
 
 struct RenderConfig

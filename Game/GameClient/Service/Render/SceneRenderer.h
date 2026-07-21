@@ -2,7 +2,8 @@
 #include "Handle/FontHandle.h"
 #include "Handle/MeshHandle.h"
 #include "Handle/MaterialHandle.h"
-#include "Desc/MaterialDesc.h"
+#include "Definition/Material/MaterialDesc.h"
+#include "Definition/Text/TextStyle.h"
 #include "Core/Math/Matrix.h"
 #include "Core/Math/Vector2.h"
 #include "Core/Foundation/Geometry2D.h"
@@ -29,7 +30,7 @@ public:
 		MeshRepository* meshRepository, 
 		MaterialRepository* matRepository);
 
-	void DrawText(FontHandle hF, std::string_view text, uint32_t size, const Core::Vector2& pos, const Core::Color& color);
+	void DrawText(FontHandle hF, std::string_view text, uint32_t size, const Core::Vector2& pos, const TextStyle& style = {});
 	void DrawSurface(MeshHandle hM, MaterialHandle hMtl, const Core::Matrix& world);
 	void DrawDebugSurface(MeshHandle hM, MaterialHandle hMtl, const Core::Matrix& world);
 	void DrawUI(MaterialHandle hMtl, const Rect& dest, const Rect* source = nullptr);

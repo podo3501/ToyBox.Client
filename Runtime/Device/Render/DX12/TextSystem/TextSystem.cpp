@@ -3,6 +3,12 @@
 #include "Resource/Font/FontResource.h"
 #include "Resource/Mesh/TransientMeshResource.h"
 #include "Inspector/Inspector.h"
+#include "GameClient/Service/Render/RenderConfig.h"
+
+struct ShapedTextGroup
+{
+    std::array<std::vector<ShapedText>, Core::EnumSize<TextRenderMode>> texts;
+};
 
 TextSystem::~TextSystem() = default;
 TextSystem::TextSystem(
@@ -11,14 +17,14 @@ TextSystem::TextSystem(
     TaskScheduler& taskScheduler, 
     ResourceFactory& resFactory,
     TransientMeshProvider& transientMeshProvider) :
-    m_fontAtlas{ device, factory },
     m_atlasBuilder{ taskScheduler, resFactory },
-    m_meshBuilder{ transientMeshProvider }
+    m_meshBuilder{ transientMeshProvider },
+    m_fontAtlas{ device, factory, m_atlasBuilder }
 {}
 
-bool TextSystem::Initialize(const Size& atlasTexSize, Inspector* inspector)
+bool TextSystem::Initialize(const TextConfig& texConfig, Inspector* inspector)
 {
-   ReturnIfFalse(m_fontAtlas.Initialize(atlasTexSize));
+    ReturnIfFalse(m_fontAtlas.Initialize(texConfig));
    m_inspector = inspector;
 
    return true;
@@ -29,39 +35,32 @@ std::vector<DrawUIItem> TextSystem::BuildDrawItems(std::span<const DrawTextItem>
     if (items.empty())
         return {};
 
-    auto shapedTexts = ShapeTexts(items);
-    UploadPendingGlyphs(shapedTexts);
-
-    if (m_inspector)
+    auto shapedGroups = ShapeTexts(items);
+    for (size_t i = 0; i < shapedGroups.texts.size(); ++i)
     {
-        const auto& mat = m_fontAtlas.GetMaterial(FontBuckets::Huge, 0);
-        auto matRes = static_pointer_cast<MaterialResource>(mat);
-        m_inspector->ShowImage(matRes->GetTexture(0));
+        auto& shapedTexts = shapedGroups.texts[i];
+        if (shapedTexts.empty())
+            continue;
+
+        auto mode = static_cast<TextRenderMode>(i);
+        m_fontAtlas.EnsureGlyphs(mode, shapedTexts);
     }
 
-    auto pageMeshes = m_meshBuilder.Build(m_fontAtlas, items, shapedTexts);
+    std::vector<PageMesh> pageMeshes;
+    for (size_t i = 0; i < shapedGroups.texts.size(); ++i)
+    {
+        auto& shapedTexts = shapedGroups.texts[i];
+        if (shapedTexts.empty())
+            continue;
+
+        auto meshes = m_meshBuilder.Build(m_fontAtlas, items, shapedTexts);
+        pageMeshes.insert(
+            pageMeshes.end(),
+            std::make_move_iterator(meshes.begin()),
+            std::make_move_iterator(meshes.end()));
+    }
+
     return CreateDrawItems(pageMeshes);
-}
-
-void TextSystem::UploadPendingGlyphs(std::span<const ShapedText> shapedTexts)
-{
-    std::unordered_map<FontBucketID, FontAtlasUpload> uploads;
-    
-    for (const auto& shaped : shapedTexts)
-        m_fontAtlas.EnsureGlyphs(shaped, uploads);
-
-    for (auto& [bucket, upload] : uploads)
-    {
-        for (uint16_t page = 0; page < upload.pages.size(); ++page)
-        {
-            auto& glyphs = upload.pages[page];
-            if (glyphs.empty())
-                continue;
-
-            auto& atlasRes = m_fontAtlas.GetAtlasResource(bucket, page);
-            m_atlasBuilder.UploadGlyphsToAtlas(atlasRes, glyphs);
-        }
-    }
 }
 
 std::vector<DrawUIItem> TextSystem::CreateDrawItems(std::span<const PageMesh> pageMeshes)
@@ -73,7 +72,7 @@ std::vector<DrawUIItem> TextSystem::CreateDrawItems(std::span<const PageMesh> pa
     {
         DrawUIItem item;
         item.mesh = pageMesh.mesh;
-        item.material = m_fontAtlas.GetMaterial(pageMesh.bucketID, pageMesh.pageIndex);
+        item.material = pageMesh.material;
 
         result.push_back(std::move(item));
     }
@@ -81,22 +80,27 @@ std::vector<DrawUIItem> TextSystem::CreateDrawItems(std::span<const PageMesh> pa
     return result;
 }
 
-std::vector<ShapedText> TextSystem::ShapeTexts(std::span<const DrawTextItem> items)
+ShapedTextGroup TextSystem::ShapeTexts(std::span<const DrawTextItem> items)
 {
-    std::vector<ShapedText> result;
-    result.reserve(items.size());
+    ShapedTextGroup result;
 
-    for (const auto& item : items)
+    for (size_t index = 0; index < items.size(); ++index)
     {
+        const auto& item = items[index];
+
         Assert(item.fontRes);
         auto font = static_cast<FontResource*>(item.fontRes.get());
 
         ShapedText shaped;
         shaped.font = font;
+        shaped.mode = item.style.mode;
         shaped.size = item.fontSize;
-        shaped.glyphs = font->Shape(item.codePoints, item.fontSize);
+        shaped.index = index;
+        shaped.glyphs = font->Shape(
+            item.codePoints,
+            item.fontSize);
 
-        result.push_back(std::move(shaped));
+        result.texts[Core::ToIndex(item.style.mode)].push_back(std::move(shaped));
     }
 
     return result;

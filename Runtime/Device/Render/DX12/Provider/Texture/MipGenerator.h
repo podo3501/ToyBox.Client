@@ -1,5 +1,5 @@
 #pragma once
-#include "GameClient/Service/Render/Desc/TextureDesc.h"
+#include "GameClient/Service/Render/Definition/Texture/TextureDesc.h"
 #include <d3d12.h>
 #include <wrl/client.h>
 #include <dxcapi.h>

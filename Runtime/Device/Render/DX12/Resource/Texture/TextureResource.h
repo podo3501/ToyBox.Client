@@ -1,5 +1,5 @@
 #pragma once
-#include "GameClient/Service/Render/Desc/TextureDesc.h"
+#include "GameClient/Service/Render/Definition/Texture/TextureDesc.h"
 #include "Resource/Resource.h"
 #include "Core/Foundation/Geometry2D.h"
 

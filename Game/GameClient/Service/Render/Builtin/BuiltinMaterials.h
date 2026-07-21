@@ -1,5 +1,5 @@
 #pragma once
-#include "../Desc/MaterialDesc.h"
+#include "../Definition/Material/MaterialDesc.h"
 #include "../Handle/MaterialHandle.h"
 
 class MaterialRepository;

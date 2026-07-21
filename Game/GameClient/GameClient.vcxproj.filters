@@ -249,18 +249,6 @@
     <ClCompile Include="Service\Asset\AssetLoaderRegistry.cpp">
       <Filter>Service\Asset</Filter>
     </ClCompile>
-    <ClCompile Include="Service\Render\Desc\MaterialDescFactory.cpp">
-      <Filter>Service\Render\Desc</Filter>
-    </ClCompile>
-    <ClCompile Include="Service\Render\Desc\MeshDescFactory.cpp">
-      <Filter>Service\Render\Desc</Filter>
-    </ClCompile>
-    <ClCompile Include="Service\Render\Desc\TextureDescFactory.cpp">
-      <Filter>Service\Render\Desc</Filter>
-    </ClCompile>
-    <ClCompile Include="Service\Render\Desc\ShaderStageBuilder.cpp">
-      <Filter>Service\Render\Desc</Filter>
-    </ClCompile>
     <ClCompile Include="Service\Render\Builtin\BuiltinMeshes.cpp">
       <Filter>Service\Render\Builtin</Filter>
     </ClCompile>
@@ -269,6 +257,18 @@
     </ClCompile>
     <ClCompile Include="Service\Render\Repository\Font\FontRepository.cpp">
       <Filter>Service\Render\Repository\Font</Filter>
+    </ClCompile>
+    <ClCompile Include="Service\Render\Definition\ShaderStageBuilder.cpp">
+      <Filter>Service\Render\Definition</Filter>
+    </ClCompile>
+    <ClCompile Include="Service\Render\Definition\Mesh\MeshDescFactory.cpp">
+      <Filter>Service\Render\Definition\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Service\Render\Definition\Material\MaterialDescFactory.cpp">
+      <Filter>Service\Render\Definition\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="Service\Render\Definition\Texture\TextureDescFactory.cpp">
+      <Filter>Service\Render\Definition\Texture</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -571,21 +571,6 @@
     <ClInclude Include="Service\Render\Handle\TextureHandle.h">
       <Filter>Service\Render\Handle</Filter>
     </ClInclude>
-    <ClInclude Include="Service\Render\Desc\MaterialDesc.h">
-      <Filter>Service\Render\Desc</Filter>
-    </ClInclude>
-    <ClInclude Include="Service\Render\Desc\SurfaceMaterialDesc.h">
-      <Filter>Service\Render\Desc</Filter>
-    </ClInclude>
-    <ClInclude Include="Service\Render\Desc\TextureDesc.h">
-      <Filter>Service\Render\Desc</Filter>
-    </ClInclude>
-    <ClInclude Include="Service\Render\Desc\UIMaterialDesc.h">
-      <Filter>Service\Render\Desc</Filter>
-    </ClInclude>
-    <ClInclude Include="Service\Render\Desc\RenderState.h">
-      <Filter>Service\Render\Desc</Filter>
-    </ClInclude>
     <ClInclude Include="Service\Render\Resource\IMaterialResource.h">
       <Filter>Service\Render\Resource</Filter>
     </ClInclude>
@@ -604,9 +589,6 @@
     <ClInclude Include="Service\Render\Repository\Mesh\MeshRepository.h">
       <Filter>Service\Render\Repository\Mesh</Filter>
     </ClInclude>
-    <ClInclude Include="Service\Render\Desc\MeshDesc.h">
-      <Filter>Service\Render\Desc</Filter>
-    </ClInclude>
     <ClInclude Include="Graphics\World\CameraInputState.h">
       <Filter>Graphics\World</Filter>
     </ClInclude>
@@ -615,18 +597,6 @@
     </ClInclude>
     <ClInclude Include="Graphics\World\CameraInputMapper.h">
       <Filter>Graphics\World</Filter>
-    </ClInclude>
-    <ClInclude Include="Service\Render\Desc\PbrMaterialDesc.h">
-      <Filter>Service\Render\Desc</Filter>
-    </ClInclude>
-    <ClInclude Include="Service\Render\Desc\GridMaterialDesc.h">
-      <Filter>Service\Render\Desc</Filter>
-    </ClInclude>
-    <ClInclude Include="Service\Render\Desc\PhongMaterialDesc.h">
-      <Filter>Service\Render\Desc</Filter>
-    </ClInclude>
-    <ClInclude Include="Service\Render\Desc\DebugSurfaceMaterialDesc.h">
-      <Filter>Service\Render\Desc</Filter>
     </ClInclude>
     <ClInclude Include="Service\Render\RenderServiceConfig.h">
       <Filter>Service\Render</Filter>
@@ -712,18 +682,6 @@
     <ClInclude Include="Service\Asset\AssetLoaderRegistry.h">
       <Filter>Service\Asset</Filter>
     </ClInclude>
-    <ClInclude Include="Service\Render\Desc\MaterialDescFactory.h">
-      <Filter>Service\Render\Desc</Filter>
-    </ClInclude>
-    <ClInclude Include="Service\Render\Desc\MeshDescFactory.h">
-      <Filter>Service\Render\Desc</Filter>
-    </ClInclude>
-    <ClInclude Include="Service\Render\Desc\TextureDescFactory.h">
-      <Filter>Service\Render\Desc</Filter>
-    </ClInclude>
-    <ClInclude Include="Service\Render\Desc\ShaderStageBuilder.h">
-      <Filter>Service\Render\Desc</Filter>
-    </ClInclude>
     <ClInclude Include="Service\Render\Builtin\BuiltinMeshes.h">
       <Filter>Service\Render\Builtin</Filter>
     </ClInclude>
@@ -747,6 +705,51 @@
     </ClInclude>
     <ClInclude Include="Asset\FontAsset.h">
       <Filter>Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Definition\RenderState.h">
+      <Filter>Service\Render\Definition</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Definition\ShaderStageBuilder.h">
+      <Filter>Service\Render\Definition</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Definition\Mesh\MeshDesc.h">
+      <Filter>Service\Render\Definition\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Definition\Mesh\MeshDescFactory.h">
+      <Filter>Service\Render\Definition\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Definition\Material\DebugSurfaceMaterialDesc.h">
+      <Filter>Service\Render\Definition\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Definition\Material\GridMaterialDesc.h">
+      <Filter>Service\Render\Definition\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Definition\Material\MaterialDesc.h">
+      <Filter>Service\Render\Definition\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Definition\Material\MaterialDescFactory.h">
+      <Filter>Service\Render\Definition\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Definition\Material\PbrMaterialDesc.h">
+      <Filter>Service\Render\Definition\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Definition\Material\PhongMaterialDesc.h">
+      <Filter>Service\Render\Definition\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Definition\Material\SurfaceMaterialDesc.h">
+      <Filter>Service\Render\Definition\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Definition\Material\UIMaterialDesc.h">
+      <Filter>Service\Render\Definition\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Definition\Texture\TextureDesc.h">
+      <Filter>Service\Render\Definition\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Definition\Texture\TextureDescFactory.h">
+      <Filter>Service\Render\Definition\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Definition\Text\TextStyle.h">
+      <Filter>Service\Render\Definition\Text</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -837,9 +840,6 @@
     <Filter Include="Service\Render\Handle">
       <UniqueIdentifier>{a93b329c-d95d-4962-8c97-b4c16ab6543b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Service\Render\Desc">
-      <UniqueIdentifier>{6fdcda01-0696-47fd-bb80-9684440986d5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Service\Render\Resource">
       <UniqueIdentifier>{19273d76-8193-4e8e-81a4-d928f782160e}</UniqueIdentifier>
     </Filter>
@@ -857,6 +857,21 @@
     </Filter>
     <Filter Include="Service\Render\Repository\Font">
       <UniqueIdentifier>{2d5988fb-90ed-42ea-a23d-c239406c240a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Service\Render\Definition">
+      <UniqueIdentifier>{3bcf058d-3f1a-4db3-8786-92b4c68c1605}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Service\Render\Definition\Mesh">
+      <UniqueIdentifier>{64742bfb-8c14-4c66-a074-90a0ad515bdb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Service\Render\Definition\Material">
+      <UniqueIdentifier>{b57274f5-4772-4f57-b9c4-6f54bbe4d765}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Service\Render\Definition\Texture">
+      <UniqueIdentifier>{1ebec737-9a77-4f90-9f30-a02561095162}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Service\Render\Definition\Text">
+      <UniqueIdentifier>{47340449-7e18-4b2b-a592-00cd54a03450}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

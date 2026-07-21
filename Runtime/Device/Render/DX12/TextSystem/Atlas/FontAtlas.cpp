@@ -3,42 +3,94 @@
 #include "Glyph/BitmapGlyphGenerator.h"
 #include "Glyph/SDFGlyphGenerator.h"
 #include "Glyph/SimpleSDFGlyphGenerator.h"
+#include "../Builder/FontAtlasUploadGraphBuilder.h"
+#include "BitmapFontAtlasBucket.h"
+#include "SDFFontAtlasBucket.h"
+
+static FontBucketID GetFontBucketID(TextRenderMode mode, uint32_t size)
+{
+    switch (mode)
+    {
+    case TextRenderMode::Bitmap:
+        if (size <= BitmapBuckets::Small) return BitmapBuckets::Small;
+        if (size <= BitmapBuckets::Medium) return BitmapBuckets::Medium;
+        if (size <= BitmapBuckets::Large) return BitmapBuckets::Large;
+        break;
+
+    case TextRenderMode::SDF:
+        if (size <= SDFBuckets::Small) return SDFBuckets::Small;
+        if (size <= SDFBuckets::Medium) return SDFBuckets::Medium;
+        if (size <= SDFBuckets::Large) return SDFBuckets::Large;
+        if (size <= SDFBuckets::Huge) return SDFBuckets::Huge;
+        break;
+    }
+    Assert(false);
+
+    return InvalidFontBucket;
+}
+
+struct FontAtlasUpload
+{
+    std::vector<std::vector<GlyphUploadEntry>> pages;
+};
 
 FontAtlas::~FontAtlas() = default;
-FontAtlas::FontAtlas(Device& device, DescriptorFactory& factory) :
+FontAtlas::FontAtlas(
+    Device& device, 
+    DescriptorFactory& factory, 
+    FontAtlasUploadGraphBuilder& atlasBuilder) :
     m_device{ device },
-    m_factory{ factory }
+    m_factory{ factory },
+    m_atlasBuilder{ atlasBuilder }
 {}
 
-bool FontAtlas::Initialize(const Size& atlasTextureSize)
+bool FontAtlas::Initialize(const TextConfig& config)
 {
-    if (atlasTextureSize.width <= 0 || atlasTextureSize.height <= 0)
-        return false;
-
-    m_atlasTextureSize = atlasTextureSize;
+    m_textConfig = config;
     return true;
 }
 
-void FontAtlas::EnsureGlyphs(
-    const ShapedText& shapedText,
-    std::unordered_map<FontBucketID, FontAtlasUpload>& uploads)
+void FontAtlas::EnsureGlyphs(TextRenderMode mode, std::span<const ShapedText> shapedTexts)
 {
-    FontBucketID bucket = GetFontBucketID(shapedText.size);
-    auto& upload = uploads[bucket];
+    std::unordered_map<FontBucketKey, FontAtlasUpload, FontBucketKeyHash> uploads;
 
-    auto& atlasBucket = GetOrCreateBucket(bucket);
-    atlasBucket.EnsureGlyphs(
-        shapedText,
-        upload.pages);
+    for (const auto& shapedText : shapedTexts)
+    {
+        FontBucketID bucket = GetFontBucketID(mode, shapedText.size);
+
+        FontBucketKey key{ mode, bucket };
+        auto& upload = uploads[key];
+
+        auto atlasBucket = GetOrCreateBucket(key);
+        atlasBucket->EnsureGlyphs(
+            shapedText,
+            upload.pages);
+    }
+
+    for (auto& [key, upload] : uploads)
+    {
+        for (uint16_t page = 0; page < upload.pages.size(); ++page)
+        {
+            auto& glyphs = upload.pages[page];
+            if (glyphs.empty())
+                continue;
+
+            auto& atlasRes = GetAtlasResource(key, page);
+            m_atlasBuilder.UploadGlyphsToAtlas(atlasRes, glyphs);
+        }
+    }
 }
 
 const GlyphInfo* FontAtlas::FindGlyph(
     FontResource* font,
+    TextRenderMode mode,
     uint32_t glyphIndex,
     uint32_t size) const
 {
-    FontBucketID bucket = GetFontBucketID(size);
-    auto atlasBucket = FindBucket(bucket);
+    FontBucketID bucket = GetFontBucketID(mode, size);
+
+    FontBucketKey key{ mode, bucket };
+    auto atlasBucket = FindBucket(key);
     if (!atlasBucket)
         return nullptr;
     
@@ -48,56 +100,71 @@ const GlyphInfo* FontAtlas::FindGlyph(
         size);
 }
 
-std::shared_ptr<IMaterialResource> FontAtlas::GetMaterial(
-    FontBucketID bucket,
-    uint16_t pageIndex) const
+std::shared_ptr<IMaterialResource> FontAtlas::GetMaterial(const GlyphInfo* glyph) const
 {
-    auto atlasBucket = FindBucket(bucket);
+    if (!glyph) return nullptr;
+
+    FontBucketKey key{ glyph->mode, glyph->bucketID };
+    auto atlasBucket = FindBucket(key);
     Assert(atlasBucket);
 
-    return atlasBucket->GetMaterial(
-        pageIndex);
+    return atlasBucket->GetMaterial(glyph->pageIndex);
 }
 
-const Resource& FontAtlas::GetAtlasResource(
-    FontBucketID bucket,
-    uint16_t pageIndex) const
-{    
-    auto atlasBucket = FindBucket(bucket);
+const Resource& FontAtlas::GetAtlasResource(const FontBucketKey& key, uint16_t pageIndex) const
+{
+    auto atlasBucket = FindBucket(key);
     Assert(atlasBucket);
 
     return atlasBucket->GetAtlasResource(pageIndex);
 }
 
-FontAtlasBucket& FontAtlas::GetOrCreateBucket(FontBucketID bucket)
+FontAtlasBucket* FontAtlas::GetOrCreateBucket(const FontBucketKey& key)
 {
-    Assert(
-        bucket == FontBuckets::Small ||
-        bucket == FontBuckets::Medium ||
-        bucket == FontBuckets::Large ||
-        bucket == FontBuckets::Huge);
+    auto iter = m_buckets.find(key);
+    if (iter != m_buckets.end())
+        return iter->second.get();
 
-    //auto glyphGenerator = std::make_unique<BitmapGlyphGenerator>();
-    //auto glyphGenerator = std::make_unique<SDFGlyphGenerator>();
-    auto glyphGenerator = std::make_unique<SimpleSDFGlyphGenerator>();
-    auto [iter, inserted] = m_buckets.try_emplace(
-        bucket,
-        m_device,
-        m_factory,
-        std::move(glyphGenerator),
-        bucket);
+    std::unique_ptr<FontAtlasBucket> fontAtlasBucket{ nullptr };
+    switch (key.mode)
+    {
+    case TextRenderMode::Bitmap:
+        fontAtlasBucket = std::make_unique<BitmapFontAtlasBucket>(
+            m_device,
+            m_factory,
+            key.bucket);
+        break;
+    case TextRenderMode::SDF:
+        fontAtlasBucket = std::make_unique<SDFFontAtlasBucket>(
+            m_device,
+            m_factory,
+            key.bucket);
+        break;
+    }
+    
+    fontAtlasBucket->Initialize(m_textConfig.bitmap.atlasSize);
 
-    if (inserted)
-        iter->second.Initialize(m_atlasTextureSize);
+    auto result = fontAtlasBucket.get();
+    m_buckets.emplace(key, std::move(fontAtlasBucket));
 
-    return iter->second;
+    return result;
 }
 
-const FontAtlasBucket* FontAtlas::FindBucket(FontBucketID bucket) const
+FontAtlasBucket* FontAtlas::FindBucket(const FontBucketKey& key) const
 {
-    auto iter = m_buckets.find(bucket);
+    auto iter = m_buckets.find(key);
     if (iter == m_buckets.end())
         return nullptr;
 
-    return &iter->second;
+    return iter->second.get();
 }
+
+//FontAtlasBucket을 상속받은 bitmapAtlasBucket, sdfAtlasBucket으로 한다.
+//현재 AtlasBucket에서 같이 쓰고 있는 구조체를 bitmap과 sdf용으로 나눈다.
+//BitmapGlyphGenerator는 AtlasBucket에서 생성하게 한다.
+//bitmap과 sdf의 texture 크기를 달리 해서 테스트 해 본다.
+//bitmap, sdf 가 동시에 찍히는지 확인 한다.
+//sdf 찍을때 오류 수정.
+//sdf용 shader 만들기.
+//일단 분리 어느정도 시키고 돌아가는게 확인되면 sdf 돌아가게끔 하기.
+//sdf 돌아가게끔 하다가 분리가 필요하면 일단 멈추고 분리 시킨후 테스트 후 분리가 잘된거 확인후 sdf 진행.

@@ -2,7 +2,7 @@
 #include "RendererConfig.h"
 #include "Allocator/FrameConstantAllocator.h"
 #include "Core/Math/Matrix.h"
-#include "GameClient/Service/Render/Desc/RenderState.h"
+#include "GameClient/Service/Render/Definition/RenderState.h"
 
 struct CameraData;
 class Device;

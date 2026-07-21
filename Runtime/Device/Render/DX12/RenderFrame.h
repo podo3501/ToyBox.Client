@@ -18,7 +18,7 @@ public:
 		std::string_view text,
 		uint32_t size,
 		const Core::Vector2& pos,
-		const Core::Color& color) override;
+		const TextStyle& style) override;
 	virtual void DrawSurface(
 		std::shared_ptr<IMeshResource> meshRes,
 		std::shared_ptr<IMaterialResource> matRes,

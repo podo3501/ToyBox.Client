@@ -1,6 +1,6 @@
 #pragma once
-#include "RenderState.h"
-#include "TextureDesc.h"
+#include "../RenderState.h"
+#include "../Texture/TextureDesc.h"
 
 enum class MaterialDomain
 {

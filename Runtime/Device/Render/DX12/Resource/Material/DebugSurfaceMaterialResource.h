@@ -1,6 +1,6 @@
 #pragma once
 #include "MaterialResource.h"
-#include "GameClient/Service/Render/Desc/DebugSurfaceMaterialDesc.h"
+#include "GameClient/Service/Render/Definition/Material/DebugSurfaceMaterialDesc.h"
 
 class DebugSurfaceMaterialResource : public MaterialResource
 {

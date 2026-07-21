@@ -1,44 +1,25 @@
 #pragma once
-#include "AtlasPage.h"
-#include "GlyphCache.h"
+#include "Core/Foundation/Geometry2D.h"
 
-class Device;
-class DescriptorFactory;
+struct GlyphUploadEntry;
+struct ShapedText;
+struct GlyphInfo;
+struct IMaterialResource;
 class FontResource;
-class GlyphGenerator;
+class Resource;
 
-class FontAtlasBucket
+struct FontAtlasBucket
 {
-public:
-    ~FontAtlasBucket();
-    FontAtlasBucket(
-        Device& device,
-        DescriptorFactory& factory,
-        std::unique_ptr<GlyphGenerator> glyphGenerator,
-        FontBucketID bucketID);
-
-    void Initialize(const Size& atlasTextureSize);
-    void EnsureGlyphs(
+    virtual ~FontAtlasBucket() = default;
+    virtual void Initialize(const Size& atlasTextureSize) = 0;
+    virtual void EnsureGlyphs(
         const ShapedText& shapedText,
-        std::vector<std::vector<GlyphUploadEntry>>& outUploadsPerPage);
-    const GlyphInfo* FindGlyph(
+        std::vector<std::vector<GlyphUploadEntry>>& outUploadsPerPage) = 0;
+    virtual const GlyphInfo* FindGlyph(
         FontResource* font,
         uint32_t glyphIndex,
-        uint32_t size) const;
+        uint32_t size) const = 0;
 
-    std::shared_ptr<IMaterialResource> GetMaterial(uint16_t pageIndex) const;
-    const Resource& GetAtlasResource(uint16_t pageIndex) const;
-
-private:
-    void CreatePage();
-    uint16_t CurrentPageIndex() const;
-
-    Device& m_device;
-    DescriptorFactory& m_factory;
-    std::unique_ptr<GlyphGenerator> m_glyphGenerator;
-
-    FontBucketID m_bucketID{ InvalidFontBucket };
-    Size m_atlasTextureSize{};
-    GlyphCache m_glyphCache;
-    std::vector<std::unique_ptr<AtlasPage>> m_pages;
+    virtual std::shared_ptr<IMaterialResource> GetMaterial(uint16_t pageIndex) const = 0;
+    virtual const Resource& GetAtlasResource(uint16_t pageIndex) const = 0;
 };

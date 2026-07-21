@@ -2,9 +2,11 @@
 #include "Core/Math/Vector2.h"
 #include "Atlas/FontSetting.h"
 #include "Atlas/Glyph/GlyphBitmap.h"
+#include "GameClient/Service/Render/Definition/Text/TextStyle.h"
 
 struct GlyphInfo
 {
+    TextRenderMode mode{ TextRenderMode::SDF };
     FontBucketID bucketID{ InvalidFontBucket };
     uint16_t pageIndex{ 0 };
 
@@ -31,20 +33,18 @@ class FontResource;
 struct ShapedText
 {
     FontResource* font{};
+    TextRenderMode mode{ TextRenderMode::SDF };
     uint32_t size{};
+    size_t index{ 0 }; //원본 텍스트 위치(여러 mode가 같이 그려지기 때문에)
 
     std::vector<ShapedGlyph> glyphs;
 };
 
 struct GlyphUploadEntry // 하나의 글자를 아틀라스로 전송하기 위한 데이터 묶음
 {
-    FontBucketID bucketID{ InvalidFontBucket };
-    uint16_t pageIndex{ 0 };
-
     //atlas 위치
     uint32_t x{ 0 };
     uint32_t y{ 0 };
 
-    //업로드할 이미지 + glyph matric
-    GlyphBitmap bitmap;
+    GlyphBitmap bitmap; //업로드할 이미지 + glyph matric
 };

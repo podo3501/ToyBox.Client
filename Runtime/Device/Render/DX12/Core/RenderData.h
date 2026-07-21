@@ -6,6 +6,7 @@
 #include "Core/Math/Vector4.h"
 #include "Core/Foundation/Color.h"
 #include "Core/Foundation/Geometry2D.h"
+#include "GameClient/Service/Render/Definition/Text/TextStyle.h"
 
 struct IFontResource;
 struct IMeshResource;
@@ -32,7 +33,7 @@ struct DrawTextItem
     std::vector<char32_t> codePoints;
     uint32_t fontSize{ 0 };
     Core::Vector2 position;
-    Core::Color color;
+    TextStyle style;
 };
 
 struct DrawInspectItem

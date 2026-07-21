@@ -1,7 +1,7 @@
 #pragma once
 #include <memory>
 #include "GameClient/Asset/TextureAsset.h"
-#include "GameClient/Service/Render/Desc/TextureDesc.h"
+#include "GameClient/Service/Render/Definition/Texture/TextureDesc.h"
 
 class TextureResource;
 

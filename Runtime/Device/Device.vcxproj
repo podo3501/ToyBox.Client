@@ -138,6 +138,7 @@
     <ClInclude Include="Render\DX12\RenderBackend.h" />
     <ClInclude Include="Render\DX12\TextSystem\Atlas\AtlasPacker.h" />
     <ClInclude Include="Render\DX12\TextSystem\Atlas\AtlasPage.h" />
+    <ClInclude Include="Render\DX12\TextSystem\Atlas\BitmapFontAtlasBucket.h" />
     <ClInclude Include="Render\DX12\TextSystem\Atlas\FontSetting.h" />
     <ClInclude Include="Render\DX12\TextSystem\Atlas\FontAtlas.h" />
     <ClInclude Include="Render\DX12\TextSystem\Atlas\FontAtlasBucket.h" />
@@ -147,6 +148,7 @@
     <ClInclude Include="Render\DX12\TextSystem\Atlas\Glyph\GlyphGenerator.h" />
     <ClInclude Include="Render\DX12\TextSystem\Atlas\Glyph\SDFGlyphGenerator.h" />
     <ClInclude Include="Render\DX12\TextSystem\Atlas\Glyph\SimpleSDFGlyphGenerator.h" />
+    <ClInclude Include="Render\DX12\TextSystem\Atlas\SDFFontAtlasBucket.h" />
     <ClInclude Include="Render\DX12\TextSystem\Builder\FontAtlasUploadGraphBuilder.h" />
     <ClInclude Include="Render\DX12\TextSystem\Builder\TextMeshBuilder.h" />
     <ClInclude Include="Render\DX12\TextSystem\TextHelpers.h" />
@@ -258,11 +260,12 @@
     <ClCompile Include="Render\DX12\TextSystem\Atlas\AtlasPacker.cpp" />
     <ClCompile Include="Render\DX12\TextSystem\Atlas\AtlasPage.cpp" />
     <ClCompile Include="Render\DX12\TextSystem\Atlas\FontAtlas.cpp" />
-    <ClCompile Include="Render\DX12\TextSystem\Atlas\FontAtlasBucket.cpp" />
+    <ClCompile Include="Render\DX12\TextSystem\Atlas\BitmapFontAtlasBucket.cpp" />
     <ClCompile Include="Render\DX12\TextSystem\Atlas\GlyphCache.cpp" />
     <ClCompile Include="Render\DX12\TextSystem\Atlas\Glyph\BitmapGlyphGenerator.cpp" />
     <ClCompile Include="Render\DX12\TextSystem\Atlas\Glyph\SDFGlyphGenerator.cpp" />
     <ClCompile Include="Render\DX12\TextSystem\Atlas\Glyph\SimpleSDFGlyphGenerator.cpp" />
+    <ClCompile Include="Render\DX12\TextSystem\Atlas\SDFFontAtlasBucket.cpp" />
     <ClCompile Include="Render\DX12\TextSystem\Builder\FontAtlasUploadGraphBuilder.cpp" />
     <ClCompile Include="Render\DX12\TextSystem\Builder\TextMeshBuilder.cpp" />
     <ClCompile Include="Render\DX12\TextSystem\TextHelpers.cpp" />

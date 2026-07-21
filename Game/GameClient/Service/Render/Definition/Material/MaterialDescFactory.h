@@ -3,7 +3,7 @@
 #include "PbrMaterialDesc.h"
 #include "GridMaterialDesc.h"
 #include "UIMaterialDesc.h"
-#include "TextureDescFactory.h"
+#include "../Texture/TextureDescFactory.h"
 
 struct PhongTextureArgs
 {

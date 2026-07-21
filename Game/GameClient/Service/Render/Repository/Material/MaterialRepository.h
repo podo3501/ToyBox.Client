@@ -3,8 +3,8 @@
 #include "Core/Utils/Hash.h"
 #include "../ResourceTypes.h"
 #include "Service/Render/Handle/MaterialHandle.h"
-#include "Service/Render/Desc/TextureDesc.h"
-#include "Service/Render/Desc/MaterialDesc.h"
+#include "Service/Render/Definition/Texture/TextureDesc.h"
+#include "Service/Render/Definition/Material/MaterialDesc.h"
 
 struct MaterialDesc;
 struct IMaterialProvider;

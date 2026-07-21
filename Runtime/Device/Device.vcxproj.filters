@@ -518,6 +518,12 @@
     <ClInclude Include="Render\DX12\TextSystem\Atlas\Glyph\SimpleSDFGlyphGenerator.h">
       <Filter>Render\DX12\TextSystem\Atlas\Glyph</Filter>
     </ClInclude>
+    <ClInclude Include="Render\DX12\TextSystem\Atlas\BitmapFontAtlasBucket.h">
+      <Filter>Render\DX12\TextSystem\Atlas</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\TextSystem\Atlas\SDFFontAtlasBucket.h">
+      <Filter>Render\DX12\TextSystem\Atlas</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -827,9 +833,6 @@
     <ClCompile Include="Render\DX12\TextSystem\Atlas\GlyphCache.cpp">
       <Filter>Render\DX12\TextSystem\Atlas</Filter>
     </ClCompile>
-    <ClCompile Include="Render\DX12\TextSystem\Atlas\FontAtlasBucket.cpp">
-      <Filter>Render\DX12\TextSystem\Atlas</Filter>
-    </ClCompile>
     <ClCompile Include="Render\DX12\TextSystem\Atlas\Glyph\BitmapGlyphGenerator.cpp">
       <Filter>Render\DX12\TextSystem\Atlas\Glyph</Filter>
     </ClCompile>
@@ -838,6 +841,12 @@
     </ClCompile>
     <ClCompile Include="Render\DX12\TextSystem\Atlas\Glyph\SimpleSDFGlyphGenerator.cpp">
       <Filter>Render\DX12\TextSystem\Atlas\Glyph</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\TextSystem\Atlas\BitmapFontAtlasBucket.cpp">
+      <Filter>Render\DX12\TextSystem\Atlas</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\TextSystem\Atlas\SDFFontAtlasBucket.cpp">
+      <Filter>Render\DX12\TextSystem\Atlas</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -34,13 +34,18 @@ SceneRenderer::SceneRenderer(
 	m_defaultMaterials = CreateBuiltinMaterials(m_matRepository);
 }
 
-void SceneRenderer::DrawText(FontHandle hF, std::string_view text, uint32_t size, const Core::Vector2& pos, const Core::Color& color)
+void SceneRenderer::DrawText(
+	FontHandle hF, 
+	std::string_view text, 
+	uint32_t size, 
+	const Core::Vector2& pos, 
+	const TextStyle& style)
 {
 	auto font = m_fontRepository->Get(hF);
 	if (!font || font->state != LoadState::Ready)
 		return;
 
-	m_renderFrame->DrawText(font->fontRes, text, size, pos, color);
+	m_renderFrame->DrawText(font->fontRes, text, size, pos, style);
 }
 
 void SceneRenderer::DrawSurface(MeshHandle hM, MaterialHandle hMtl, const Core::Matrix& world)

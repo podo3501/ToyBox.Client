@@ -1,43 +1,60 @@
 #pragma once
+#include "FontAtlas.h"
 #include "FontAtlasBucket.h"
+#include "FontSetting.h"
+#include "Core/Utils/Hash.h"
+#include "GameClient/Service/Render/RenderConfig.h"
+#include "GameClient/Service/Render/Definition/Text/TextStyle.h"
+
+struct FontBucketKey
+{
+    TextRenderMode mode{};
+    FontBucketID bucket{ InvalidFontBucket };
+
+    bool operator==(const FontBucketKey&) const = default;
+};
+
+struct FontBucketKeyHash
+{
+    size_t operator()(const FontBucketKey& key) const
+    {
+        return Core::HashOf(
+            key.mode,
+            key.bucket);
+    }
+};
 
 class Device;
 class DescriptorFactory;
 class FontResource;
-
-struct FontAtlasUpload
-{
-    std::vector<std::vector<GlyphUploadEntry>> pages;
-};
+class FontAtlasUploadGraphBuilder;
 
 class FontAtlas
 {
 public:
     ~FontAtlas();
-    FontAtlas(Device& device, DescriptorFactory& factory);
-    bool Initialize(const Size& atlasTextureSize);
-    void EnsureGlyphs(
-        const ShapedText& shapedText,
-        std::unordered_map<FontBucketID, FontAtlasUpload>& uploads);
+    FontAtlas(
+        Device& device, 
+        DescriptorFactory& factory,
+        FontAtlasUploadGraphBuilder& atlasBuilder);
+    bool Initialize(const TextConfig& config);
+    void EnsureGlyphs(TextRenderMode mode, std::span<const ShapedText> shapedTexts);
     const GlyphInfo* FindGlyph(
         FontResource* font,
+        TextRenderMode mode,
         uint32_t glyphIndex,
         uint32_t size) const;
-
-    std::shared_ptr<IMaterialResource> GetMaterial(
-        FontBucketID bucket,
-        uint16_t pageIndex) const;
-    const Resource& GetAtlasResource(
-        FontBucketID bucket,
-        uint16_t pageIndex) const;
+    virtual std::shared_ptr<IMaterialResource> GetMaterial(const GlyphInfo* glyph) const;
 
 private:
-    FontAtlasBucket& GetOrCreateBucket(FontBucketID bucket);
-    const FontAtlasBucket* FindBucket(FontBucketID bucket) const;
+    FontAtlasBucket* GetOrCreateBucket(const FontBucketKey& key);
+    FontAtlasBucket* FindBucket(const FontBucketKey& key) const;
+    const Resource& GetAtlasResource(const FontBucketKey& key, uint16_t pageIndex) const;
 
     Device& m_device;
     DescriptorFactory& m_factory;
+    FontAtlasUploadGraphBuilder& m_atlasBuilder;
 
-    Size m_atlasTextureSize{};
-    std::unordered_map<FontBucketID, FontAtlasBucket> m_buckets;
+    TextConfig m_textConfig;
+    std::unordered_map<FontBucketKey, std::unique_ptr<FontAtlasBucket>, FontBucketKeyHash> m_buckets;
 };

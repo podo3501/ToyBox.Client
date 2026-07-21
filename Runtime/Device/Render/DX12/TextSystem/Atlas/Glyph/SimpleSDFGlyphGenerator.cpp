@@ -6,11 +6,11 @@
 
 namespace
 {
-    constexpr int Padding = 8;
-    constexpr float SDFRange = 8.0f;
+    constexpr int SDFPadding = 8; //거리장을 위한 padding
+    constexpr float SDFRange = 8.0f; //수치 범위 -에서 + 까지.
 }
 
-GlyphBitmap SimpleSDFGlyphGenerator::Generate(
+SDFGlyphBitmap SimpleSDFGlyphGenerator::Generate(
     FontResource* font,
     uint32_t glyphIndex,
     uint32_t size)
@@ -20,26 +20,28 @@ GlyphBitmap SimpleSDFGlyphGenerator::Generate(
     FT_GlyphSlot slot = font->GetGlyphSlot(glyphIndex, size);
     Assert(slot);
 
-    GlyphBitmap bitmap;
+    SDFGlyphBitmap sdfGlyphBitmap;
+    auto& bitmap = sdfGlyphBitmap.bitmap;
 
-    bitmap.bearingX = static_cast<float>(slot->bitmap_left - Padding);
-    bitmap.bearingY = static_cast<float>(slot->bitmap_top + Padding);
+    bitmap.format = GlyphPixelFormat::R8;
+    bitmap.bearingX = static_cast<float>(slot->bitmap_left - SDFPadding);
+    bitmap.bearingY = static_cast<float>(slot->bitmap_top + SDFPadding);
     bitmap.advanceX = static_cast<float>(slot->advance.x >> 6);
 
     if (slot->bitmap.width == 0 ||
         slot->bitmap.rows == 0)
     {
-        return bitmap;
+        return sdfGlyphBitmap;
     }
 
-    bitmap.width = slot->bitmap.width + Padding * 2;
-    bitmap.height = slot->bitmap.rows + Padding * 2;
-    bitmap.channels = 1;
+    bitmap.width = slot->bitmap.width + SDFPadding * 2;
+    bitmap.height = slot->bitmap.rows + SDFPadding * 2;
 
-    bitmap.glyphWidth = static_cast<float>(slot->bitmap.width);
-    bitmap.glyphHeight = static_cast<float>(slot->bitmap.rows);
+    sdfGlyphBitmap.glyphWidth = static_cast<float>(slot->bitmap.width);
+    sdfGlyphBitmap.glyphHeight = static_cast<float>(slot->bitmap.rows);
 
-    bitmap.pixels.resize(bitmap.width * bitmap.height);
+    size_t pixelCount = bitmap.width * bitmap.height * GetBytesPerPixel(bitmap.format);
+    bitmap.pixels.resize(pixelCount);
 
     float minValue = FLT_MAX;
     float maxValue = -FLT_MAX;
@@ -48,8 +50,8 @@ GlyphBitmap SimpleSDFGlyphGenerator::Generate(
     {
         for (uint32_t x = 0; x < bitmap.width; ++x)
         {
-            int srcX = static_cast<int>(x) - Padding;
-            int srcY = static_cast<int>(y) - Padding;
+            int srcX = static_cast<int>(x) - SDFPadding;
+            int srcY = static_cast<int>(y) - SDFPadding;
 
             bool inside = false;
 
@@ -82,7 +84,7 @@ GlyphBitmap SimpleSDFGlyphGenerator::Generate(
         }
     }
 
-    return bitmap;
+    return sdfGlyphBitmap;
 }
 
 bool SimpleSDFGlyphGenerator::IsInside(

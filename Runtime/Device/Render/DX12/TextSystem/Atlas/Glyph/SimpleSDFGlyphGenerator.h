@@ -1,16 +1,17 @@
 #pragma once
-#include "GlyphGenerator.h"
+#include "GlyphBitmap.h"
 
 struct FT_Bitmap_;
 using FT_Bitmap = FT_Bitmap_;
+class FontResource;
 
-class SimpleSDFGlyphGenerator : public GlyphGenerator
+class SimpleSDFGlyphGenerator
 {
 public:
-    virtual GlyphBitmap Generate(
+    SDFGlyphBitmap Generate(
         FontResource* font,
         uint32_t glyphIndex,
-        uint32_t size) override;
+        uint32_t size);
 
 private:
     static bool IsInside(

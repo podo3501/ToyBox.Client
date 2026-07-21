@@ -3,15 +3,15 @@
 #include "../Atlas/FontSetting.h"
 
 struct ShapedText;
+struct IMaterialResource;
 class FontAtlas;
 class TransientMeshProvider;
 class TransientMeshResource;
 
 struct PageMesh
 {
-    FontBucketID bucketID{ InvalidFontBucket };
-    uint16_t pageIndex{ 0 };
     std::shared_ptr<TransientMeshResource> mesh;
+    std::shared_ptr<IMaterialResource> material;
 };
 
 class TextMeshBuilder

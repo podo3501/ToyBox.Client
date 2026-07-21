@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "BuiltinMaterials.h"
-#include "../Desc/MaterialDescFactory.h"
+#include "../Definition/Material/MaterialDescFactory.h"
 #include "../Repository/Material/MaterialRepository.h"
 
 DefaultMaterials CreateBuiltinMaterials(MaterialRepository* repository)

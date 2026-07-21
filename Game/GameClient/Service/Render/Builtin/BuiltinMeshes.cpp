@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "BuiltinMeshes.h"
 #include "Asset/MeshAsset.h"
-#include "../Desc/MeshDesc.h"
+#include "../Definition/Mesh/MeshDesc.h"
 #include "../Repository/Mesh/MeshRepository.h"
 
 static std::shared_ptr<MeshAsset> CreateUIQuadAsset()

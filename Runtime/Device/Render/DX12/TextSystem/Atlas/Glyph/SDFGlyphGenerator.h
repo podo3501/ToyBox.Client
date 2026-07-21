@@ -1,5 +1,5 @@
 #pragma once
-#include "GlyphGenerator.h"
+#include "GlyphBitmap.h"
 
 struct FT_GlyphSlotRec_;
 using FT_GlyphSlot = FT_GlyphSlotRec_*;
@@ -10,10 +10,12 @@ namespace msdfgen
     class Projection;
 }
 
-class SDFGlyphGenerator : public GlyphGenerator
+class FontResource;
+
+class SDFGlyphGenerator
 {
 public:
-    virtual GlyphBitmap Generate(FontResource* font, uint32_t glyphIndex, uint32_t size) override;
+    SDFGlyphBitmap Generate(FontResource* font, uint32_t glyphIndex, uint32_t size);
 
 private:
     msdfgen::Shape LoadShape(FT_GlyphSlot slot) const;

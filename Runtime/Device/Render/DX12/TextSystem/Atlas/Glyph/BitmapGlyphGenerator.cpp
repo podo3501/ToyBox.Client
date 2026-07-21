@@ -14,22 +14,18 @@ GlyphBitmap BitmapGlyphGenerator::Generate(
 
     GlyphBitmap bitmap;
 
+    bitmap.format = GlyphPixelFormat::R8;
     bitmap.width = slot->bitmap.width;
     bitmap.height = slot->bitmap.rows;
 
-    bitmap.glyphWidth = static_cast<float>(slot->bitmap.width);
-    bitmap.glyphHeight = static_cast<float>(slot->bitmap.rows);
-
     bitmap.bearingX = static_cast<float>(slot->bitmap_left);
     bitmap.bearingY = static_cast<float>(slot->bitmap_top);
-
-    bitmap.channels = 1;
     bitmap.advanceX = static_cast<float>(slot->advance.x >> 6);
 
     if (bitmap.width == 0 || bitmap.height == 0)
         return bitmap;
 
-    size_t pixelCount = bitmap.width * bitmap.height;
+    size_t pixelCount = bitmap.width * bitmap.height * GetBytesPerPixel(bitmap.format);
     bitmap.pixels.resize(pixelCount);
 
     for (uint32_t y = 0; y < bitmap.height; ++y)
