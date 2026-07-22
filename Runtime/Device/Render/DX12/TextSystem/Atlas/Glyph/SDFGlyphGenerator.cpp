@@ -43,7 +43,7 @@ static double GetSDFRange(FontBucketID bucket)
     return 4.0;
 }
 
-SDFGlyphBitmap SDFGlyphGenerator::Generate(
+SDFGlyph SDFGlyphGenerator::Generate(
     FontResource* font,
     uint32_t glyphIndex,
     uint32_t size)
@@ -53,35 +53,36 @@ SDFGlyphBitmap SDFGlyphGenerator::Generate(
     FT_GlyphSlot slot = font->GetGlyphOutlineSlot(glyphIndex, size);
     Assert(slot);
 
-    SDFGlyphBitmap sdfBitmap;
-    auto& bitmap = sdfBitmap.bitmap;
-
-    bitmap.format = GlyphPixelFormat::R8;
-    bitmap.bearingX = static_cast<float>(slot->bitmap_left);
-    bitmap.bearingY = static_cast<float>(slot->bitmap_top);
-    bitmap.advanceX = static_cast<float>(slot->advance.x >> 6);
-
-    if (slot->format != FT_GLYPH_FORMAT_OUTLINE)
-        return sdfBitmap;
-
+    SDFGlyph sdfGlyph;
+    auto& pixels = sdfGlyph.pixels;
+    auto& metrics = sdfGlyph.metrics;
     auto bucketID = GetFontBucketID(size);
     uint32_t resolution = GetSDFResolution(bucketID);
-    bitmap.width = resolution;
-    bitmap.height = resolution;
+
+    pixels.format = GlyphPixelFormat::R8;
+    pixels.width = resolution;
+    pixels.height = resolution;
 
     auto shape = LoadShape(slot);
     auto bounds = shape.getBounds();
     if (bounds.l >= bounds.r || bounds.b >= bounds.t)
-        return sdfBitmap;  //아웃라인 경계가 없는 빈 글자 처리.
+        return sdfGlyph;  //아웃라인 경계가 없는 빈 글자 처리.
 
-    sdfBitmap.glyphWidth = static_cast<float>(bounds.r - bounds.l);
-    sdfBitmap.glyphHeight = static_cast<float>(bounds.t - bounds.b);
+    metrics.width = static_cast<float>(bounds.r - bounds.l);
+    metrics.height = static_cast<float>(bounds.t - bounds.b);
+    metrics.bearingX = static_cast<float>(slot->bitmap_left);
+    metrics.bearingY = static_cast<float>(slot->bitmap_top);
+    metrics.advanceX = static_cast<float>(slot->advance.x >> 6);
+
+    if (slot->format != FT_GLYPH_FORMAT_OUTLINE)
+        return sdfGlyph;
+
     auto projection = CreateProjection(
         shape,
-        bitmap.width,
-        bitmap.height);
+        pixels.width,
+        pixels.height);
 
-    msdfgen::Bitmap<float, 1> sdf(bitmap.width, bitmap.height);
+    msdfgen::Bitmap<float, 1> sdf(pixels.width, pixels.height);
     double range = GetSDFRange(bucketID);
     range = 5.0;
 
@@ -97,25 +98,25 @@ SDFGlyphBitmap SDFGlyphGenerator::Generate(
     float minValue = FLT_MAX;
     float maxValue = -FLT_MAX;
 
-    size_t pixelCount = bitmap.width * bitmap.height * GetBytesPerPixel(bitmap.format);
-    bitmap.pixels.resize(pixelCount);
+    size_t pixelCount = pixels.width * pixels.height * GetBytesPerPixel(pixels.format);
+    pixels.buffer.resize(pixelCount);
 
     float inverseRange = 1.0f / static_cast<float>(range);
-    for (uint32_t y = 0; y < bitmap.height; ++y)
+    for (uint32_t y = 0; y < pixels.height; ++y)
     {
-        uint32_t srcY = bitmap.height - 1 - y; // msdfgen 소스 버퍼에서 읽어올 거꾸로 된 Y축 위치
-        for (uint32_t x = 0; x < bitmap.width; ++x)
+        uint32_t srcY = pixels.height - 1 - y; // msdfgen 소스 버퍼에서 읽어올 거꾸로 된 Y축 위치
+        for (uint32_t x = 0; x < pixels.width; ++x)
         {
             float raw = *sdf(x, srcY);
             float v = std::clamp(raw * inverseRange + 0.5f, 0.0f, 1.0f);
-            bitmap.pixels[y * bitmap.width + x] = static_cast<uint8_t>(v * 255.0f);
+            pixels.buffer[y * pixels.width + x] = static_cast<uint8_t>(v * 255.0f);
 
             minValue = std::min(minValue, raw);
             maxValue = std::max(maxValue, raw);
         }
     }
 
-    return sdfBitmap;
+    return sdfGlyph;
 }
 
 msdfgen::Shape SDFGlyphGenerator::LoadShape(FT_GlyphSlot slot) const

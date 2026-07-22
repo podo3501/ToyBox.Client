@@ -4,13 +4,11 @@
 #include "GameClient/Asset/MeshAsset.h"
 #include "GameClient/Service/Render/Definition/Text/TextStyle.h"
 
-struct GlyphBitmap;
-
-GlyphInfo CreateEmptyGlyphInfo(const GlyphBitmap& glyph);
-GlyphInfo CreateEmptyGlyphInfo(const SDFGlyphBitmap& sdfGlyph);
+GlyphInfo CreateEmptyGlyphInfo(const BitmapGlyph& glyph);
+GlyphInfo CreateEmptyGlyphInfo(const SDFGlyph& glyph);
 
 GlyphInfo CreateGlyphInfo(
-    const GlyphBitmap& glyph,
+    const BitmapGlyph& glyph,
     FontBucketID bucketID,
     uint16_t pageIndex,
     uint32_t packX,
@@ -19,7 +17,7 @@ GlyphInfo CreateGlyphInfo(
     const Size& atlasSize);
 
 GlyphInfo CreateGlyphInfo(
-    const SDFGlyphBitmap& sdfGlyph,
+    const SDFGlyph& sdfGlyph,
     FontBucketID bucketID,
     uint16_t pageIndex,
     uint32_t packX,
@@ -28,7 +26,7 @@ GlyphInfo CreateGlyphInfo(
     const Size& atlasSize);
 
 bool CreateUploadEntry(
-    GlyphBitmap bitmap,
+    GlyphPixels pixels,
     FontBucketID bucketID,
     uint16_t pageIndex,
     uint32_t packX,
@@ -43,4 +41,5 @@ void AppendGlyphQuad(
     const GlyphInfo& glyph,
     float x,
     float y,
-    const Core::Color& color);
+    const Core::Color& color,
+    UINT textureIndex);

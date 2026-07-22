@@ -4,6 +4,7 @@
 #include "../TextHelpers.h"
 #include "Provider/Mesh/TransientMeshProvider.h"
 #include "Core/Utils/Hash.h"
+#include "Resource/Material/UIMaterialResource.h"
 
 struct PageMeshBuffer
 {
@@ -82,13 +83,16 @@ std::vector<PageMesh> TextMeshBuilder::Build(
                 glyph->pageIndex
             };
 
+            auto material = atlas.GetMaterial(glyph);
             auto& buffer = buffers[key];
             if (!buffer.material)
-                buffer.material = atlas.GetMaterial(glyph);
+                buffer.material = material;
 
             float x = cursorX + glyph->bearingX + shapedGlyph.offsetX;
             float y = baselineY - glyph->bearingY - shapedGlyph.offsetY;
 
+            UIMaterialResource* uiMat = static_cast<UIMaterialResource*>(material.get());
+            auto texIndices = uiMat->GetTextureIndices();
             AppendGlyphQuad(
                 buffer.vertices,
                 buffer.indices,
@@ -96,7 +100,8 @@ std::vector<PageMesh> TextMeshBuilder::Build(
                 *glyph,
                 x,
                 y,
-                item.style.color);
+                item.style.color,
+                texIndices[0]);
 
             cursorX += shapedGlyph.advanceX;
         }

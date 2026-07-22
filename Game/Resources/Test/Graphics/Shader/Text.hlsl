@@ -3,6 +3,8 @@ struct UIVertex
     float3 pos;
     float4 color;
     float2 uv;
+    uint mode;          // 0: UI, 1: BitmapText 2: SDF 3: MSDF
+    uint textureIndex;  // Bindless SRV Index
 };
 
 SamplerState samp : register(s0);

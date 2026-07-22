@@ -503,10 +503,7 @@
     <ClInclude Include="Render\DX12\TextSystem\Atlas\FontSetting.h">
       <Filter>Render\DX12\TextSystem\Atlas</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\TextSystem\Atlas\Glyph\GlyphBitmap.h">
-      <Filter>Render\DX12\TextSystem\Atlas\Glyph</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\DX12\TextSystem\Atlas\Glyph\GlyphGenerator.h">
+    <ClInclude Include="Render\DX12\TextSystem\Atlas\Glyph\GlyphTypes.h">
       <Filter>Render\DX12\TextSystem\Atlas\Glyph</Filter>
     </ClInclude>
     <ClInclude Include="Render\DX12\TextSystem\Atlas\Glyph\BitmapGlyphGenerator.h">
@@ -523,6 +520,9 @@
     </ClInclude>
     <ClInclude Include="Render\DX12\TextSystem\Atlas\SDFFontAtlasBucket.h">
       <Filter>Render\DX12\TextSystem\Atlas</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\TextSystem\Atlas\Glyph\GlyphPixelFormat.h">
+      <Filter>Render\DX12\TextSystem\Atlas\Glyph</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

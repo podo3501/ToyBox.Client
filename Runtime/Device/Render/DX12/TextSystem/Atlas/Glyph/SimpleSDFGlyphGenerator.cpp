@@ -10,7 +10,7 @@ namespace
     constexpr float SDFRange = 8.0f; //수치 범위 -에서 + 까지.
 }
 
-SDFGlyphBitmap SimpleSDFGlyphGenerator::Generate(
+SDFGlyph SimpleSDFGlyphGenerator::Generate(
     FontResource* font,
     uint32_t glyphIndex,
     uint32_t size)
@@ -20,35 +20,32 @@ SDFGlyphBitmap SimpleSDFGlyphGenerator::Generate(
     FT_GlyphSlot slot = font->GetGlyphSlot(glyphIndex, size);
     Assert(slot);
 
-    SDFGlyphBitmap sdfGlyphBitmap;
-    auto& bitmap = sdfGlyphBitmap.bitmap;
+    SDFGlyph sdfGlyph;
+    auto& pixels = sdfGlyph.pixels;
+    auto& metrics = sdfGlyph.metrics;
 
-    bitmap.format = GlyphPixelFormat::R8;
-    bitmap.bearingX = static_cast<float>(slot->bitmap_left - SDFPadding);
-    bitmap.bearingY = static_cast<float>(slot->bitmap_top + SDFPadding);
-    bitmap.advanceX = static_cast<float>(slot->advance.x >> 6);
+    pixels.format = GlyphPixelFormat::R8;
+    pixels.width = slot->bitmap.width + SDFPadding * 2;
+    pixels.height = slot->bitmap.rows + SDFPadding * 2;
 
-    if (slot->bitmap.width == 0 ||
-        slot->bitmap.rows == 0)
-    {
-        return sdfGlyphBitmap;
-    }
+    metrics.width = static_cast<float>(slot->bitmap.width);
+    metrics.height = static_cast<float>(slot->bitmap.rows);
+    metrics.bearingX = static_cast<float>(slot->bitmap_left - SDFPadding);
+    metrics.bearingY = static_cast<float>(slot->bitmap_top + SDFPadding);
+    metrics.advanceX = static_cast<float>(slot->advance.x >> 6);
 
-    bitmap.width = slot->bitmap.width + SDFPadding * 2;
-    bitmap.height = slot->bitmap.rows + SDFPadding * 2;
+    if (metrics.width == 0.f || metrics.height == 0.f)
+        return sdfGlyph;
 
-    sdfGlyphBitmap.glyphWidth = static_cast<float>(slot->bitmap.width);
-    sdfGlyphBitmap.glyphHeight = static_cast<float>(slot->bitmap.rows);
-
-    size_t pixelCount = bitmap.width * bitmap.height * GetBytesPerPixel(bitmap.format);
-    bitmap.pixels.resize(pixelCount);
+    size_t pixelCount = pixels.width * pixels.height * GetBytesPerPixel(pixels.format);
+    pixels.buffer.resize(pixelCount);
 
     float minValue = FLT_MAX;
     float maxValue = -FLT_MAX;
 
-    for (uint32_t y = 0; y < bitmap.height; ++y)
+    for (uint32_t y = 0; y < pixels.height; ++y)
     {
-        for (uint32_t x = 0; x < bitmap.width; ++x)
+        for (uint32_t x = 0; x < pixels.width; ++x)
         {
             int srcX = static_cast<int>(x) - SDFPadding;
             int srcY = static_cast<int>(y) - SDFPadding;
@@ -76,7 +73,7 @@ SDFGlyphBitmap SimpleSDFGlyphGenerator::Generate(
                 0.0f,
                 1.0f);
 
-            bitmap.pixels[y * bitmap.width + x] =
+            pixels.buffer[y * pixels.width + x] =
                 static_cast<uint8_t>(v * 255.0f);
 
             minValue = std::min(minValue, dist);
@@ -84,7 +81,7 @@ SDFGlyphBitmap SimpleSDFGlyphGenerator::Generate(
         }
     }
 
-    return sdfGlyphBitmap;
+    return sdfGlyph;
 }
 
 bool SimpleSDFGlyphGenerator::IsInside(

@@ -2,7 +2,7 @@
 #include "BitmapGlyphGenerator.h"
 #include "Resource/Font/FontResource.h"
 
-GlyphBitmap BitmapGlyphGenerator::Generate(
+BitmapGlyph BitmapGlyphGenerator::Generate(
     FontResource* font,
     uint32_t glyphIndex,
     uint32_t size)
@@ -12,28 +12,32 @@ GlyphBitmap BitmapGlyphGenerator::Generate(
     FT_GlyphSlot slot = font->GetGlyphSlot(glyphIndex, size);
     Assert(slot);
 
-    GlyphBitmap bitmap;
+    BitmapGlyph bitmap;
+    auto& pixels = bitmap.pixels;
+    auto& metrics = bitmap.metrics;
 
-    bitmap.format = GlyphPixelFormat::R8;
-    bitmap.width = slot->bitmap.width;
-    bitmap.height = slot->bitmap.rows;
+    pixels.format = GlyphPixelFormat::R8;
+    pixels.width = slot->bitmap.width;
+    pixels.height = slot->bitmap.rows;
 
-    bitmap.bearingX = static_cast<float>(slot->bitmap_left);
-    bitmap.bearingY = static_cast<float>(slot->bitmap_top);
-    bitmap.advanceX = static_cast<float>(slot->advance.x >> 6);
+    metrics.width = static_cast<float>(slot->bitmap.width);
+    metrics.height = static_cast<float>(slot->bitmap.rows);
+    metrics.bearingX = static_cast<float>(slot->bitmap_left);
+    metrics.bearingY = static_cast<float>(slot->bitmap_top);
+    metrics.advanceX = static_cast<float>(slot->advance.x >> 6);
 
-    if (bitmap.width == 0 || bitmap.height == 0)
+    if (pixels.width == 0 || pixels.height == 0)
         return bitmap;
 
-    size_t pixelCount = bitmap.width * bitmap.height * GetBytesPerPixel(bitmap.format);
-    bitmap.pixels.resize(pixelCount);
+    size_t pixelCount = pixels.width * pixels.height * GetBytesPerPixel(pixels.format);
+    pixels.buffer.resize(pixelCount);
 
-    for (uint32_t y = 0; y < bitmap.height; ++y)
+    for (uint32_t y = 0; y < pixels.height; ++y)
     {
         memcpy(
-            bitmap.pixels.data() + y * bitmap.width,
+            pixels.buffer.data() + y * pixels.width,
             slot->bitmap.buffer + y * slot->bitmap.pitch,
-            bitmap.width);
+            pixels.width);
     }
 
     return bitmap;

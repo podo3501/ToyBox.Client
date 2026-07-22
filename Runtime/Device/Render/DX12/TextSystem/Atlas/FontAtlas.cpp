@@ -125,24 +125,20 @@ FontAtlasBucket* FontAtlas::GetOrCreateBucket(const FontBucketKey& key)
     if (iter != m_buckets.end())
         return iter->second.get();
 
+    Size atlasSize{};
     std::unique_ptr<FontAtlasBucket> fontAtlasBucket{ nullptr };
     switch (key.mode)
     {
     case TextRenderMode::Bitmap:
-        fontAtlasBucket = std::make_unique<BitmapFontAtlasBucket>(
-            m_device,
-            m_factory,
-            key.bucket);
+        fontAtlasBucket = std::make_unique<BitmapFontAtlasBucket>(m_device, m_factory, key.bucket);
+        atlasSize = m_textConfig.bitmap.atlasSize;
         break;
     case TextRenderMode::SDF:
-        fontAtlasBucket = std::make_unique<SDFFontAtlasBucket>(
-            m_device,
-            m_factory,
-            key.bucket);
+        fontAtlasBucket = std::make_unique<SDFFontAtlasBucket>(m_device, m_factory, key.bucket);
+        atlasSize = m_textConfig.sdf.atlasSize;
         break;
     }
-    
-    fontAtlasBucket->Initialize(m_textConfig.bitmap.atlasSize);
+    fontAtlasBucket->Initialize(atlasSize);
 
     auto result = fontAtlasBucket.get();
     m_buckets.emplace(key, std::move(fontAtlasBucket));
@@ -159,12 +155,9 @@ FontAtlasBucket* FontAtlas::FindBucket(const FontBucketKey& key) const
     return iter->second.get();
 }
 
-//FontAtlasBucket을 상속받은 bitmapAtlasBucket, sdfAtlasBucket으로 한다.
-//현재 AtlasBucket에서 같이 쓰고 있는 구조체를 bitmap과 sdf용으로 나눈다.
-//BitmapGlyphGenerator는 AtlasBucket에서 생성하게 한다.
-//bitmap과 sdf의 texture 크기를 달리 해서 테스트 해 본다.
-//bitmap, sdf 가 동시에 찍히는지 확인 한다.
 //sdf 찍을때 오류 수정.
 //sdf용 shader 만들기.
 //일단 분리 어느정도 시키고 돌아가는게 확인되면 sdf 돌아가게끔 하기.
 //sdf 돌아가게끔 하다가 분리가 필요하면 일단 멈추고 분리 시킨후 테스트 후 분리가 잘된거 확인후 sdf 진행.
+//bitmap, sdf 가 동시에 찍히는지 확인 한다.
+

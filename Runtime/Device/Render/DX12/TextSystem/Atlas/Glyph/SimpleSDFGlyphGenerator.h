@@ -1,5 +1,5 @@
 #pragma once
-#include "GlyphBitmap.h"
+#include "GlyphTypes.h"
 
 struct FT_Bitmap_;
 using FT_Bitmap = FT_Bitmap_;
@@ -8,7 +8,7 @@ class FontResource;
 class SimpleSDFGlyphGenerator
 {
 public:
-    SDFGlyphBitmap Generate(
+    SDFGlyph Generate(
         FontResource* font,
         uint32_t glyphIndex,
         uint32_t size);

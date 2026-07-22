@@ -144,8 +144,8 @@
     <ClInclude Include="Render\DX12\TextSystem\Atlas\FontAtlasBucket.h" />
     <ClInclude Include="Render\DX12\TextSystem\Atlas\GlyphCache.h" />
     <ClInclude Include="Render\DX12\TextSystem\Atlas\Glyph\BitmapGlyphGenerator.h" />
-    <ClInclude Include="Render\DX12\TextSystem\Atlas\Glyph\GlyphBitmap.h" />
-    <ClInclude Include="Render\DX12\TextSystem\Atlas\Glyph\GlyphGenerator.h" />
+    <ClInclude Include="Render\DX12\TextSystem\Atlas\Glyph\GlyphTypes.h" />
+    <ClInclude Include="Render\DX12\TextSystem\Atlas\Glyph\GlyphPixelFormat.h" />
     <ClInclude Include="Render\DX12\TextSystem\Atlas\Glyph\SDFGlyphGenerator.h" />
     <ClInclude Include="Render\DX12\TextSystem\Atlas\Glyph\SimpleSDFGlyphGenerator.h" />
     <ClInclude Include="Render\DX12\TextSystem\Atlas\SDFFontAtlasBucket.h" />

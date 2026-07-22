@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "SDFFontAtlasBucket.h"
-#include "Glyph/GlyphGenerator.h"
 #include "Resource/Font/FontResource.h"
 #include "../TextHelpers.h"
 
@@ -27,9 +26,18 @@ void SDFFontAtlasBucket::CreatePage()
     page->Initialize(
         m_device,
         m_factory,
-        m_atlasTextureSize);
+        m_atlasTextureSize,
+        GetAtlasPageDesc());
 
     m_pages.push_back(std::move(page));
+}
+
+AtlasPageDesc SDFFontAtlasBucket::GetAtlasPageDesc() const
+{
+    return {
+        GlyphPixelFormat::R8,
+        RegistryShader::UI
+    };
 }
 
 void SDFFontAtlasBucket::EnsureGlyphs(
@@ -52,19 +60,20 @@ void SDFFontAtlasBucket::EnsureGlyphs(
             continue;
         }
 
-        SDFGlyphBitmap sdfBitmap = m_glyphGenerator.Generate(
+        SDFGlyph sdf = m_glyphGenerator.Generate(
             font,
             glyphIndex,
             shapedText.size);
-        auto& bitmap = sdfBitmap.bitmap;
+        auto& pixels = sdf.pixels;
+        auto& metrics = sdf.metrics;
 
-        if (bitmap.width == 0 || bitmap.height == 0)
+        if (metrics.width == 0.f || metrics.height == 0.f)
         {
             m_glyphCache.Insert(
                 font,
                 glyphIndex,
                 shapedText.size,
-                CreateEmptyGlyphInfo(sdfBitmap));
+                CreateEmptyGlyphInfo(sdf));
 
             continue;
         }
@@ -76,8 +85,8 @@ void SDFFontAtlasBucket::EnsureGlyphs(
         }
 
         Size packSize{ 
-            bitmap.width + Padding * 2, 
-            bitmap.height + Padding * 2 };
+            pixels.width + Padding * 2,
+            pixels.height + Padding * 2 };
 
         uint16_t pageIndex = CurrentPageIndex();
         auto packPos = m_pages[pageIndex]->AllocateRect(packSize);
@@ -94,7 +103,7 @@ void SDFFontAtlasBucket::EnsureGlyphs(
 
         auto glyphInfo =
             CreateGlyphInfo(
-                sdfBitmap,
+                sdf,
                 m_bucketID,
                 pageIndex,
                 packPos->x,
@@ -104,7 +113,7 @@ void SDFFontAtlasBucket::EnsureGlyphs(
 
         GlyphUploadEntry upload;
         if (CreateUploadEntry(
-            std::move(bitmap),
+            std::move(sdf.pixels),
             m_bucketID,
             pageIndex,
             packPos->x,

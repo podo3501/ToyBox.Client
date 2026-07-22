@@ -32,6 +32,7 @@ public:
 
 private:
     void CreatePage();
+    AtlasPageDesc GetAtlasPageDesc() const;
     uint16_t CurrentPageIndex() const;
 
     Device& m_device;

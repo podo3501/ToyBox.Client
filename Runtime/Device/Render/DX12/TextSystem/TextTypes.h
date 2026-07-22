@@ -1,7 +1,7 @@
 #pragma once
 #include "Core/Math/Vector2.h"
 #include "Atlas/FontSetting.h"
-#include "Atlas/Glyph/GlyphBitmap.h"
+#include "Atlas/Glyph/GlyphTypes.h"
 #include "GameClient/Service/Render/Definition/Text/TextStyle.h"
 
 struct GlyphInfo
@@ -10,7 +10,7 @@ struct GlyphInfo
     FontBucketID bucketID{ InvalidFontBucket };
     uint16_t pageIndex{ 0 };
 
-    float width{ 0.0f }; //글리프 비트맵의 크기
+    float width{ 0.0f }; // 그려질 글자의 크기. bitmap은 보여지는 것과 동일하지만, sdf는 거리장을 더한 만큼 크게 그린다. 즉 글자 사각형이 겹쳐지게 그려진다.
     float height{ 0.0f };
     float bearingX{ 0.0f }; //pen 위치에서 비트맵 왼쪽까지의 거리. pen은 현재 쓰여질 위치.
     float bearingY{ 0.0f }; //pen 위치에서 위쪽까지의 거리
@@ -46,5 +46,5 @@ struct GlyphUploadEntry // 하나의 글자를 아틀라스로 전송하기 위�
     uint32_t x{ 0 };
     uint32_t y{ 0 };
 
-    GlyphBitmap bitmap; //업로드할 이미지 + glyph matric
+    GlyphPixels pixels; //업로드할 이미지 + glyph matric
 };

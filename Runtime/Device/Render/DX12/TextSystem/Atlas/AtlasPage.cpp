@@ -5,9 +5,9 @@
 #include "Factory/DescriptorFactory.h"
 #include "Helpers/TextureHelpers.h"
 
-static Resource CreateFontAtlasResource(Device& device, const Size& atlasSize)
+static Resource CreateFontAtlasResource(Device& device, const Size& atlasSize, DXGI_FORMAT format)
 {
-    auto desc = CreateTextureDescriptor(atlasSize.width, atlasSize.height, DXGI_FORMAT_R8_UNORM); // 글자 비트맵(Alpha) 정보만 담으면 되므로 R8_UNORM 포맷이 가장 효율적
+    auto desc = CreateTextureDescriptor(atlasSize.width, atlasSize.height, format); // 글자 비트맵(Alpha) 정보만 담으면 되므로 R8_UNORM 포맷이 가장 효율적
     desc.Flags |= D3D12_RESOURCE_FLAG_NONE;
 
     return device.CreateResource(
@@ -19,19 +19,28 @@ static Resource CreateFontAtlasResource(Device& device, const Size& atlasSize)
 
 AtlasPage::~AtlasPage() = default;
 AtlasPage::AtlasPage() = default;
-void AtlasPage::Initialize(Device& device, DescriptorFactory& factory, const Size& atlasTexSize)
+void AtlasPage::Initialize(
+    Device& device, 
+    DescriptorFactory& factory, 
+    const Size& atlasTexSize,
+    const AtlasPageDesc& desc)
 {
     m_packer.Initialize(atlasTexSize);
-    CreateAtlasMaterial(device, factory, atlasTexSize);
+    CreateAtlasMaterial(device, factory, atlasTexSize, desc);
 }
 
-void AtlasPage::CreateAtlasMaterial(Device& device, DescriptorFactory& factory, const Size& atlasTexSize)
+void AtlasPage::CreateAtlasMaterial(
+    Device& device, 
+    DescriptorFactory& factory, 
+    const Size& atlasTexSize,
+    const AtlasPageDesc& desc)
 {
-    auto resource = CreateFontAtlasResource(device, atlasTexSize);
+    auto format = GetDXGIFormat(desc.format);
+    auto resource = CreateFontAtlasResource(device, atlasTexSize, format);
     Assert(resource);
 
     // 셰이더에서 이 아틀라스를 바인딩해서 글자를 그릴 수 있도록 SRV만 생성합니다.
-    UINT srvIndex = factory.CreateTextureSRV(resource, DXGI_FORMAT_R8_UNORM);
+    UINT srvIndex = factory.CreateTextureSRV(resource, format);
     Assert(srvIndex != UINT_MAX);
 
     TextureDesc atlasTexDesc
@@ -47,7 +56,7 @@ void AtlasPage::CreateAtlasMaterial(Device& device, DescriptorFactory& factory, 
     atlasTex->MarkReady();
 
     UIMaterialDesc uiTextMaterialDesc;
-    uiTextMaterialDesc.SetShaderID(RegistryShader::Text);
+    uiTextMaterialDesc.SetShaderID(desc.shaderID);
     auto matRes = make_shared<UIMaterialResource>(uiTextMaterialDesc);
     matRes->SetTexture(Resolve(UITextureSlot::Normal), atlasTex);
     m_material = matRes;

@@ -13,19 +13,6 @@ struct TextRenderLayout
     size_t rowPitch{ 0 };
 };
 
-static DXGI_FORMAT GetDXGIFormat(GlyphPixelFormat format)
-{
-    switch (format)
-    {
-    case GlyphPixelFormat::R8: return DXGI_FORMAT_R8_UNORM;
-    case GlyphPixelFormat::RG8: return DXGI_FORMAT_R8G8_UNORM;
-    case GlyphPixelFormat::RGBA8: return DXGI_FORMAT_R8G8B8A8_UNORM;
-    }
-
-    Assert(false);
-    return DXGI_FORMAT_UNKNOWN;
-}
-
 FontAtlasUploadGraphBuilder::~FontAtlasUploadGraphBuilder() = default;
 FontAtlasUploadGraphBuilder::FontAtlasUploadGraphBuilder(
     TaskScheduler& taskScheduler,
@@ -43,11 +30,11 @@ void FontAtlasUploadGraphBuilder::UploadGlyphsToAtlas(
     size_t uploadOffset = 0;
     for (const auto& glyph : uploads)
     {
-        uint32_t bytesPerPixel = GetBytesPerPixel(glyph.bitmap.format);
+        uint32_t bytesPerPixel = GetBytesPerPixel(glyph.pixels.format);
 
-        size_t bytesPerRow = glyph.bitmap.width * bytesPerPixel;
+        size_t bytesPerRow = glyph.pixels.width * bytesPerPixel;
         size_t rowPitch = Core::AlignUp(bytesPerRow, AlignTextureRow);
-        size_t glyphSize = rowPitch * glyph.bitmap.height;
+        size_t glyphSize = rowPitch * glyph.pixels.height;
 
         uploadOffset = Core::AlignUp(uploadOffset, AlignTexturePlacement);
         layouts.push_back({ uploadOffset, rowPitch });
@@ -79,14 +66,14 @@ static void CopyGlyphToUploadBuffer(
     const GlyphUploadEntry& glyph,
     const TextRenderLayout& layout)
 {
-    uint32_t bytesPerPixel = GetBytesPerPixel(glyph.bitmap.format);
-    uint32_t bytesPerRow = glyph.bitmap.width * bytesPerPixel;
+    uint32_t bytesPerPixel = GetBytesPerPixel(glyph.pixels.format);
+    uint32_t bytesPerRow = glyph.pixels.width * bytesPerPixel;
 
-    for (uint32_t y = 0; y < glyph.bitmap.height; ++y)
+    for (uint32_t y = 0; y < glyph.pixels.height; ++y)
     {
         std::memcpy(
             mapped + layout.offset + y * layout.rowPitch,
-            glyph.bitmap.pixels.data() + y * bytesPerRow,
+            glyph.pixels.buffer.data() + y * bytesPerRow,
             bytesPerRow);
     }
 }
@@ -107,9 +94,9 @@ static void CopyGlyphToAtlas(
     src.pResource = uploadBuffer.Get();
     src.Type = D3D12_TEXTURE_COPY_TYPE_PLACED_FOOTPRINT;
     src.PlacedFootprint.Offset = layout.offset;
-    src.PlacedFootprint.Footprint.Format = GetDXGIFormat(glyph.bitmap.format);
-    src.PlacedFootprint.Footprint.Width = glyph.bitmap.width;
-    src.PlacedFootprint.Footprint.Height = glyph.bitmap.height;
+    src.PlacedFootprint.Footprint.Format = GetDXGIFormat(glyph.pixels.format);
+    src.PlacedFootprint.Footprint.Width = glyph.pixels.width;
+    src.PlacedFootprint.Footprint.Height = glyph.pixels.height;
     src.PlacedFootprint.Footprint.Depth = 1;
     src.PlacedFootprint.Footprint.RowPitch = static_cast<UINT>(layout.rowPitch);
 

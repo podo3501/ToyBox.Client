@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "BitmapFontAtlasBucket.h"
-#include "Glyph/GlyphGenerator.h"
 #include "Resource/Font/FontResource.h"
 #include "../TextHelpers.h"
 
@@ -27,9 +26,18 @@ void BitmapFontAtlasBucket::CreatePage()
     page->Initialize(
         m_device,
         m_factory,
-        m_atlasTextureSize);
+        m_atlasTextureSize,
+        GetAtlasPageDesc());
 
     m_pages.push_back(std::move(page));
+}
+
+AtlasPageDesc BitmapFontAtlasBucket::GetAtlasPageDesc() const
+{
+    return {
+        GlyphPixelFormat::R8,
+        RegistryShader::UI
+    };
 }
 
 void BitmapFontAtlasBucket::EnsureGlyphs(
@@ -52,12 +60,12 @@ void BitmapFontAtlasBucket::EnsureGlyphs(
             continue;
         }
 
-        GlyphBitmap bitmap = m_glyphGenerator.Generate(
+        BitmapGlyph bitmap = m_glyphGenerator.Generate(
             font,
             glyphIndex,
             shapedText.size);
 
-        if (bitmap.width == 0 || bitmap.height == 0)
+        if (bitmap.metrics.width == 0 || bitmap.metrics.height == 0)
         {
             m_glyphCache.Insert(
                 font,
@@ -75,8 +83,8 @@ void BitmapFontAtlasBucket::EnsureGlyphs(
         }
 
         Size packSize{ 
-            bitmap.width + Padding * 2, 
-            bitmap.height + Padding * 2 };
+            bitmap.pixels.width + Padding * 2,
+            bitmap.pixels.height + Padding * 2 };
 
         uint16_t pageIndex = CurrentPageIndex();
         auto packPos = m_pages[pageIndex]->AllocateRect(packSize);
@@ -103,7 +111,7 @@ void BitmapFontAtlasBucket::EnsureGlyphs(
 
         GlyphUploadEntry upload;
         if (CreateUploadEntry(
-            std::move(bitmap),
+            std::move(bitmap.pixels),
             m_bucketID,
             pageIndex,
             packPos->x,

@@ -1,34 +1,39 @@
 #include "pch.h"
 #include "TextHelpers.h"
 #include "Core/Foundation/Color.h"
-#include "Atlas/Glyph/GlyphBitmap.h"
+#include "Atlas/Glyph/GlyphTypes.h"
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
-GlyphInfo CreateEmptyGlyphInfo(const GlyphBitmap& glyph)
+GlyphInfo CreateEmptyGlyphInfo(const BitmapGlyph& glyph)
 {
     GlyphInfo info;
 
-    info.width = static_cast<float>(glyph.width);
-    info.height = static_cast<float>(glyph.height);
-    info.bearingX = glyph.bearingX;
-    info.bearingY = glyph.bearingY;
+    auto& metrics = glyph.metrics;
+    info.width = metrics.width;
+    info.height = metrics.height;
+    info.bearingX = metrics.bearingX;
+    info.bearingY = metrics.bearingY;
 
     return info;
 }
 
-GlyphInfo CreateEmptyGlyphInfo(const SDFGlyphBitmap& sdfGlyph)
+GlyphInfo CreateEmptyGlyphInfo(const SDFGlyph& glyph)
 {
     GlyphInfo info;
 
-    info = CreateEmptyGlyphInfo(sdfGlyph.bitmap);
-    info.width = sdfGlyph.glyphWidth;
-    info.height = sdfGlyph.glyphHeight;
+    auto& metrics = glyph.metrics;
+    info.width = metrics.width;
+    info.height = metrics.height;
+    info.bearingX = metrics.bearingX;
+    info.bearingY = metrics.bearingY;
 
     return info;
 }
 
 static void SetGlyphUV(
+    float width,
+    float height,
     uint32_t packX,
     uint32_t packY,
     uint32_t padding,
@@ -49,13 +54,13 @@ static void SetGlyphUV(
 
     info.uvMax =
     {
-        (glyphX + info.width) / atlasW,
-        (glyphY + info.height) / atlasH
+        (glyphX + width) / atlasW,
+        (glyphY + height) / atlasH
     };
 }
 
 GlyphInfo CreateGlyphInfo(
-    const GlyphBitmap& glyph,
+    const BitmapGlyph& glyph,
     FontBucketID bucketID,
     uint16_t pageIndex,
     uint32_t packX,
@@ -69,17 +74,22 @@ GlyphInfo CreateGlyphInfo(
     info.bucketID = bucketID;
     info.pageIndex = pageIndex;
 
-    info.width = static_cast<float>(glyph.width);
-    info.height = static_cast<float>(glyph.height);
-    info.bearingX = glyph.bearingX;
-    info.bearingY = glyph.bearingY;
+    auto& metrics = glyph.metrics;
+    info.width = metrics.width;
+    info.height = metrics.height;
+    info.bearingX = metrics.bearingX;
+    info.bearingY = metrics.bearingY;
 
-    SetGlyphUV(packX, packY, padding, atlasSize, info);
+    SetGlyphUV(
+        static_cast<float>(glyph.pixels.width), 
+        static_cast<float>(glyph.pixels.height),
+        packX, packY, 
+        padding, atlasSize, info);
     return info;
 }
 
 GlyphInfo CreateGlyphInfo(
-    const SDFGlyphBitmap& sdfGlyph,
+    const SDFGlyph& glyph,
     FontBucketID bucketID,
     uint16_t pageIndex,
     uint32_t packX,
@@ -93,17 +103,24 @@ GlyphInfo CreateGlyphInfo(
     info.bucketID = bucketID;
     info.pageIndex = pageIndex;
 
-    info.width = sdfGlyph.glyphWidth;
-    info.height = sdfGlyph.glyphHeight;
-    info.bearingX = sdfGlyph.bitmap.bearingX;
-    info.bearingY = sdfGlyph.bitmap.bearingY;
+    auto& pixels = glyph.pixels;
+    auto& metrics = glyph.metrics;
+    
+    info.width = static_cast<float>(pixels.width); // sdf는 거리장을 더한 만큼 크게 그린다. 즉 글자 사각형이 겹쳐지게 그려진다.
+    info.height = static_cast<float>(pixels.height);
+    info.bearingX = metrics.bearingX;
+    info.bearingY = metrics.bearingY;
 
-    SetGlyphUV(packX, packY, padding, atlasSize, info);
+    SetGlyphUV(
+        static_cast<float>(pixels.width),
+        static_cast<float>(pixels.height),
+        packX, packY, 
+        padding, atlasSize, info);
     return info;
 }
 
 bool CreateUploadEntry(
-    GlyphBitmap bitmap,
+    GlyphPixels pixels,
     FontBucketID bucketID,
     uint16_t pageIndex,
     uint32_t packX,
@@ -111,14 +128,27 @@ bool CreateUploadEntry(
     uint32_t padding,
     GlyphUploadEntry& outEntry)
 {
-    if (bitmap.width == 0 || bitmap.height == 0)
+    if (pixels.width == 0 || pixels.height == 0)
         return false;
 
     outEntry.x = packX + padding;
     outEntry.y = packY + padding;
-    outEntry.bitmap = std::move(bitmap);
+    outEntry.pixels = std::move(pixels);
 
     return true;
+}
+
+static UIRenderMode ToUIRenderMode(TextRenderMode mode)
+{
+    switch (mode)
+    {
+    case TextRenderMode::SDF: return UIRenderMode::SDF;
+    case TextRenderMode::MSDF: return UIRenderMode::MSDF;
+    case TextRenderMode::Bitmap: return UIRenderMode::BitmapText;
+    }
+    Assert(false);
+
+    return UIRenderMode::SDF;
 }
 
 void AppendGlyphQuad(
@@ -128,37 +158,46 @@ void AppendGlyphQuad(
     const GlyphInfo& glyph,
     float x,
     float y,
-    const Core::Color& color)
+    const Core::Color& color,
+    UINT textureIndex)
 {
     float x1 = x + glyph.width;
     float y1 = y + glyph.height;
-
+    auto mode = ToUIRenderMode(glyph.mode);
     vertices.push_back(
         {
             { x, y, 0.f },
             color,
-            { glyph.uvMin.x, glyph.uvMin.y }
+            { glyph.uvMin.x, glyph.uvMin.y },
+            mode,
+            textureIndex
         });
 
     vertices.push_back(
         {
             { x1, y, 0.f },
             color,
-            { glyph.uvMax.x, glyph.uvMin.y }
+            { glyph.uvMax.x, glyph.uvMin.y },
+            mode,
+            textureIndex
         });
 
     vertices.push_back(
         {
             { x1, y1, 0.f },
             color,
-            { glyph.uvMax.x, glyph.uvMax.y }
+            { glyph.uvMax.x, glyph.uvMax.y },
+            mode,
+            textureIndex
         });
 
     vertices.push_back(
         {
             { x, y1, 0.f },
             color,
-            { glyph.uvMin.x, glyph.uvMax.y }
+            { glyph.uvMin.x, glyph.uvMax.y },
+            mode,
+            textureIndex
         });
 
     indices.insert(indices.end(), {
