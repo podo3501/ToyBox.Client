@@ -2,19 +2,17 @@
 #include "FontAtlasBucket.h"
 #include "AtlasPage.h"
 #include "GlyphCache.h"
-#include "Glyph/SimpleSDFGlyphGenerator.h"
-#include "Glyph/SDFGlyphGenerator.h"
+#include "Glyph/MTSDFGlyphGenerator.h"
 
 class Device;
 class DescriptorFactory;
 class FontResource;
-class GlyphGenerator;
 
-class SDFFontAtlasBucket : public FontAtlasBucket
+class MTSDFFontAtlasBucket : public FontAtlasBucket
 {
 public:
-    virtual ~SDFFontAtlasBucket() override;
-    SDFFontAtlasBucket(
+    virtual ~MTSDFFontAtlasBucket() override;
+    MTSDFFontAtlasBucket(
         Device& device,
         DescriptorFactory& factory,
         FontBucketID bucketID);
@@ -38,8 +36,7 @@ private:
 
     Device& m_device;
     DescriptorFactory& m_factory;
-    //SimpleSDFGlyphGenerator m_glyphGenerator;
-    SDFGlyphGenerator m_glyphGenerator;
+    MTSDFGlyphGenerator m_glyphGenerator;
 
     FontBucketID m_bucketID{ InvalidFontBucket };
     Size m_atlasTextureSize{};

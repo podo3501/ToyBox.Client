@@ -6,28 +6,7 @@
 #include "../Builder/FontAtlasUploadGraphBuilder.h"
 #include "BitmapFontAtlasBucket.h"
 #include "SDFFontAtlasBucket.h"
-
-static FontBucketID GetFontBucketID(TextRenderMode mode, uint32_t size)
-{
-    switch (mode)
-    {
-    case TextRenderMode::Bitmap:
-        if (size <= BitmapBuckets::Small) return BitmapBuckets::Small;
-        if (size <= BitmapBuckets::Medium) return BitmapBuckets::Medium;
-        if (size <= BitmapBuckets::Large) return BitmapBuckets::Large;
-        break;
-
-    case TextRenderMode::SDF:
-        if (size <= SDFBuckets::Small) return SDFBuckets::Small;
-        if (size <= SDFBuckets::Medium) return SDFBuckets::Medium;
-        if (size <= SDFBuckets::Large) return SDFBuckets::Large;
-        if (size <= SDFBuckets::Huge) return SDFBuckets::Huge;
-        break;
-    }
-    Assert(false);
-
-    return InvalidFontBucket;
-}
+#include "MTSDFFontAtlasBucket.h"
 
 struct FontAtlasUpload
 {
@@ -136,6 +115,10 @@ FontAtlasBucket* FontAtlas::GetOrCreateBucket(const FontBucketKey& key)
     case TextRenderMode::SDF:
         fontAtlasBucket = std::make_unique<SDFFontAtlasBucket>(m_device, m_factory, key.bucket);
         atlasSize = m_textConfig.sdf.atlasSize;
+        break;
+    case TextRenderMode::MTSDF:
+        fontAtlasBucket = std::make_unique<MTSDFFontAtlasBucket>(m_device, m_factory, key.bucket);
+        atlasSize = m_textConfig.mtsdf.atlasSize;
         break;
     }
     fontAtlasBucket->Initialize(atlasSize);

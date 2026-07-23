@@ -25,7 +25,7 @@ enum class UIRenderMode : uint32_t
     UI = 0,
     BitmapText = 1,
     SDF = 2,
-    MSDF = 3
+    MTSDF = 3
 };
 
 struct UIVertex
@@ -35,6 +35,7 @@ struct UIVertex
     Core::Vector2 uv;
     UIRenderMode mode{ UIRenderMode::UI };
     uint32_t textureIndex{ 0 }; //Bindless SRV Heap Index. 일단은 ui는 cb로 인덱스를 가지고 오는 걸로 사용한다.
+    float sdfPxRange{ 0.f };
 };
 
 struct GridVertex

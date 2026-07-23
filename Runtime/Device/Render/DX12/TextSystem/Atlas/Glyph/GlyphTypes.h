@@ -15,6 +15,7 @@ struct GlyphMetrics
 {
     float width{ 0.f }; //bitmap font는 uv와 이미지의 크기가 동일 하기 때문에 이미지 크기로도 쓰인다.
     float height{ 0.f };
+    float pxRange{ 0.f };
 
     float bearingX{ 0.f };
     float bearingY{ 0.f };
@@ -28,6 +29,12 @@ struct BitmapGlyph
 };
 
 struct SDFGlyph
+{
+    GlyphPixels pixels;
+    GlyphMetrics metrics;
+};
+
+struct MTSDFGlyph
 {
     GlyphPixels pixels;
     GlyphMetrics metrics;

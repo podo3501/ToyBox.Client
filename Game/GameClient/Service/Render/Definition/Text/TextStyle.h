@@ -4,7 +4,7 @@
 enum class TextRenderMode
 {
     SDF, //일반적인 크기 및 전반적으로 사용.
-    MSDF, //크기가 큰 폰트에 사용.
+    MTSDF, //크기가 큰 폰트에 사용.
     Bitmap, //크기가 작은 폰트에서 제한적으로 사용.
     Count
 };

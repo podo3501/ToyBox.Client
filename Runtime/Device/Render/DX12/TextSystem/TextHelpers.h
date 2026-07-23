@@ -6,6 +6,7 @@
 
 GlyphInfo CreateEmptyGlyphInfo(const BitmapGlyph& glyph);
 GlyphInfo CreateEmptyGlyphInfo(const SDFGlyph& glyph);
+GlyphInfo CreateEmptyGlyphInfo(const MTSDFGlyph& glyph);
 
 GlyphInfo CreateGlyphInfo(
     const BitmapGlyph& glyph,
@@ -23,7 +24,18 @@ GlyphInfo CreateGlyphInfo(
     uint32_t packX,
     uint32_t packY,
     uint32_t padding,
-    const Size& atlasSize);
+    const Size& atlasSize,
+    float scale);
+
+GlyphInfo CreateGlyphInfo(
+    const MTSDFGlyph& glyph,
+    FontBucketID bucketID,
+    uint16_t pageIndex,
+    uint32_t packX,
+    uint32_t packY,
+    uint32_t padding,
+    const Size& atlasSize,
+    float scale);
 
 bool CreateUploadEntry(
     GlyphPixels pixels,

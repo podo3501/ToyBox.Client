@@ -4,6 +4,7 @@
 #include "TextSystem/TextTypes.h"
 #include <ft2build.h>
 #include FT_FREETYPE_H
+#include FT_MODULE_H
 #include <harfbuzz/hb.h>
 #include <harfbuzz/hb-ft.h>
 
@@ -20,10 +21,12 @@ public:
 
 	bool Initialize(FreeTypeLibrary& ftLibrary, std::shared_ptr<FontAsset> asset);
 	FT_GlyphSlot GetGlyphSlot(uint32_t glyphIndex, uint32_t size) const;
+	FT_GlyphSlot GetGlyphSlotSDF(uint32_t glyphIndex, uint32_t size, uint8_t spread = 8) const;
 	FT_GlyphSlot GetGlyphOutlineSlot(uint32_t glyphIndex, uint32_t size) const;
 
 	std::vector<ShapedGlyph> Shape(std::span<const char32_t> text, uint32_t size);
 	void MarkReady() noexcept { m_ready = true; }
+	FT_Face GetFtFace() { return m_ftFace; }
 
 private:
 	hb_font_t* GetOrCreateHbFont(uint32_t size);

@@ -47,6 +47,31 @@ FT_GlyphSlot FontResource::GetGlyphSlot(uint32_t glyphIndex, uint32_t size) cons
     return m_ftFace->glyph;
 }
 
+FT_GlyphSlot FontResource::GetGlyphSlotSDF(uint32_t glyphIndex, uint32_t size, uint8_t spread) const
+{
+    // 1. 폰트 크기 설정
+    FT_Set_Pixel_Sizes(m_ftFace, 0, size);
+
+    // 2. SDF 확산 범위(Spread / Padding) 설정
+    // FreeType SDF 렌더러 모듈("sdf")에 'spread' 속성을 전달합니다. (기본값: 8px)
+    // 이 spread 값이 아까 다루었던 거리장의 외부 탐색 range 크기가 됩니다.
+    FT_UInt sdfSpread = spread;
+    FT_Property_Set(m_ftFace->glyph->library, "sdf", "spread", &sdfSpread);
+
+    // 3. 글자 로드 (렌더링 없이 비트맵/아웃라인 정보 로드)
+    //if (FT_Load_Glyph(m_ftFace, glyphIndex, FT_LOAD_DEFAULT))
+        //return nullptr;
+    if (FT_Load_Glyph(m_ftFace, glyphIndex, FT_LOAD_DEFAULT | FT_LOAD_NO_HINTING))
+        return nullptr;
+
+    // 4. FT_RENDER_MODE_SDF 모드로 SDF 텍스처 렌더링
+    // (FreeType 내부에서 정밀 곡선 수식 기반으로 SDF 8-bit 버퍼를 생성해 줍니다)
+    if (FT_Render_Glyph(m_ftFace->glyph, FT_RENDER_MODE_SDF))
+        return nullptr;
+
+    return m_ftFace->glyph;
+}
+
 FT_GlyphSlot FontResource::GetGlyphOutlineSlot(uint32_t glyphIndex, uint32_t size) const
 {
     FT_Set_Pixel_Sizes(m_ftFace, 0, size);

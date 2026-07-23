@@ -31,6 +31,19 @@ GlyphInfo CreateEmptyGlyphInfo(const SDFGlyph& glyph)
     return info;
 }
 
+GlyphInfo CreateEmptyGlyphInfo(const MTSDFGlyph& glyph)
+{
+    GlyphInfo info;
+
+    auto& metrics = glyph.metrics;
+    info.width = metrics.width;
+    info.height = metrics.height;
+    info.bearingX = metrics.bearingX;
+    info.bearingY = metrics.bearingY;
+
+    return info;
+}
+
 static void SetGlyphUV(
     float width,
     float height,
@@ -88,6 +101,17 @@ GlyphInfo CreateGlyphInfo(
     return info;
 }
 
+static GlyphMetrics ScaleMetrics(const GlyphMetrics& metrics, float scale)
+{
+    GlyphMetrics scaled;
+    scaled.width = metrics.width * scale;
+    scaled.height = metrics.height * scale;
+    scaled.bearingX = metrics.bearingX * scale;
+    scaled.bearingY = metrics.bearingY * scale;
+    scaled.advanceX = metrics.advanceX * scale;
+    return scaled;
+}
+
 GlyphInfo CreateGlyphInfo(
     const SDFGlyph& glyph,
     FontBucketID bucketID,
@@ -95,7 +119,8 @@ GlyphInfo CreateGlyphInfo(
     uint32_t packX,
     uint32_t packY,
     uint32_t padding,
-    const Size& atlasSize)
+    const Size& atlasSize,
+    float scale)
 {
     GlyphInfo info;
 
@@ -104,17 +129,52 @@ GlyphInfo CreateGlyphInfo(
     info.pageIndex = pageIndex;
 
     auto& pixels = glyph.pixels;
-    auto& metrics = glyph.metrics;
-    
-    info.width = static_cast<float>(pixels.width); // sdf는 거리장을 더한 만큼 크게 그린다. 즉 글자 사각형이 겹쳐지게 그려진다.
-    info.height = static_cast<float>(pixels.height);
-    info.bearingX = metrics.bearingX;
-    info.bearingY = metrics.bearingY;
+    info.pxRange = glyph.metrics.pxRange;
+
+    auto scaledMetrics = ScaleMetrics(glyph.metrics, scale);
+    info.width = scaledMetrics.width;
+    info.height = scaledMetrics.height;
+    info.bearingX = scaledMetrics.bearingX;
+    info.bearingY = scaledMetrics.bearingY;
 
     SetGlyphUV(
         static_cast<float>(pixels.width),
         static_cast<float>(pixels.height),
         packX, packY, 
+        padding, atlasSize, info);
+    return info;
+}
+
+GlyphInfo CreateGlyphInfo(
+    const MTSDFGlyph& glyph,
+    FontBucketID bucketID,
+    uint16_t pageIndex,
+    uint32_t packX,
+    uint32_t packY,
+    uint32_t padding,
+    const Size& atlasSize,
+    float scale)
+{
+    GlyphInfo info;
+
+    info.mode = TextRenderMode::MTSDF;
+    info.bucketID = bucketID;
+    info.pageIndex = pageIndex;
+
+    auto& pixels = glyph.pixels;
+    auto scaledMetrics = ScaleMetrics(glyph.metrics, scale);
+
+    //info.width = static_cast<float>(pixels.width); // sdf는 거리장을 더한 만큼 크게 그린다. 즉 글자 사각형이 겹쳐지게 그려진다.
+    //info.height = static_cast<float>(pixels.height);
+    info.width = scaledMetrics.width;
+    info.height = scaledMetrics.height;
+    info.bearingX = scaledMetrics.bearingX;
+    info.bearingY = scaledMetrics.bearingY;
+
+    SetGlyphUV(
+        static_cast<float>(pixels.width),
+        static_cast<float>(pixels.height),
+        packX, packY,
         padding, atlasSize, info);
     return info;
 }
@@ -143,7 +203,7 @@ static UIRenderMode ToUIRenderMode(TextRenderMode mode)
     switch (mode)
     {
     case TextRenderMode::SDF: return UIRenderMode::SDF;
-    case TextRenderMode::MSDF: return UIRenderMode::MSDF;
+    case TextRenderMode::MTSDF: return UIRenderMode::MTSDF;
     case TextRenderMode::Bitmap: return UIRenderMode::BitmapText;
     }
     Assert(false);
@@ -164,13 +224,16 @@ void AppendGlyphQuad(
     float x1 = x + glyph.width;
     float y1 = y + glyph.height;
     auto mode = ToUIRenderMode(glyph.mode);
+    const float pxRange = glyph.pxRange;
+
     vertices.push_back(
         {
             { x, y, 0.f },
             color,
             { glyph.uvMin.x, glyph.uvMin.y },
             mode,
-            textureIndex
+            textureIndex,
+            pxRange
         });
 
     vertices.push_back(
@@ -179,7 +242,8 @@ void AppendGlyphQuad(
             color,
             { glyph.uvMax.x, glyph.uvMin.y },
             mode,
-            textureIndex
+            textureIndex,
+            pxRange
         });
 
     vertices.push_back(
@@ -188,7 +252,8 @@ void AppendGlyphQuad(
             color,
             { glyph.uvMax.x, glyph.uvMax.y },
             mode,
-            textureIndex
+            textureIndex,
+            pxRange
         });
 
     vertices.push_back(
@@ -197,7 +262,8 @@ void AppendGlyphQuad(
             color,
             { glyph.uvMin.x, glyph.uvMax.y },
             mode,
-            textureIndex
+            textureIndex,
+            pxRange
         });
 
     indices.insert(indices.end(), {

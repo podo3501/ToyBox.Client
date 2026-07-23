@@ -1,25 +1,26 @@
 #include "pch.h"
-#include "SDFFontAtlasBucket.h"
+#include "MTSDFFontAtlasBucket.h"
 #include "Resource/Font/FontResource.h"
 #include "../TextHelpers.h"
 
-SDFFontAtlasBucket::~SDFFontAtlasBucket() = default;
-SDFFontAtlasBucket::SDFFontAtlasBucket(
+MTSDFFontAtlasBucket::~MTSDFFontAtlasBucket() = default;
+MTSDFFontAtlasBucket::MTSDFFontAtlasBucket(
     Device& device,
     DescriptorFactory& factory,
     FontBucketID bucketID) :
     m_device{ device },
     m_factory{ factory },
     m_bucketID{ bucketID }
-{}
+{
+}
 
-void SDFFontAtlasBucket::Initialize(const Size& atlasTextureSize)
+void MTSDFFontAtlasBucket::Initialize(const Size& atlasTextureSize)
 {
     Assert(atlasTextureSize.width > 0 && atlasTextureSize.height > 0);
     m_atlasTextureSize = atlasTextureSize;
 }
 
-void SDFFontAtlasBucket::CreatePage()
+void MTSDFFontAtlasBucket::CreatePage()
 {
     auto page = std::make_unique<AtlasPage>();
 
@@ -32,15 +33,15 @@ void SDFFontAtlasBucket::CreatePage()
     m_pages.push_back(std::move(page));
 }
 
-AtlasPageDesc SDFFontAtlasBucket::GetAtlasPageDesc() const
+AtlasPageDesc MTSDFFontAtlasBucket::GetAtlasPageDesc() const
 {
     return {
-        GlyphPixelFormat::R8,
+        GlyphPixelFormat::RGBA8,
         RegistryShader::UI
     };
 }
 
-void SDFFontAtlasBucket::EnsureGlyphs(
+void MTSDFFontAtlasBucket::EnsureGlyphs(
     const ShapedText& shapedText,
     std::vector<std::vector<GlyphUploadEntry>>& outUploadsPerPage)
 {
@@ -60,12 +61,12 @@ void SDFFontAtlasBucket::EnsureGlyphs(
             continue;
         }
 
-        SDFGlyph sdf = m_glyphGenerator.Generate(
+        MTSDFGlyph mtsdf = m_glyphGenerator.Generate(
             font,
             glyphIndex,
             shapedText.size);
-        auto& pixels = sdf.pixels;
-        auto& metrics = sdf.metrics;
+        auto& pixels = mtsdf.pixels;
+        auto& metrics = mtsdf.metrics;
 
         if (metrics.width == 0.f || metrics.height == 0.f)
         {
@@ -73,7 +74,7 @@ void SDFFontAtlasBucket::EnsureGlyphs(
                 font,
                 glyphIndex,
                 shapedText.size,
-                CreateEmptyGlyphInfo(sdf));
+                CreateEmptyGlyphInfo(mtsdf));
 
             continue;
         }
@@ -84,7 +85,7 @@ void SDFFontAtlasBucket::EnsureGlyphs(
             outUploadsPerPage.resize(m_pages.size());
         }
 
-        Size packSize{ 
+        Size packSize{
             pixels.width + Padding * 2,
             pixels.height + Padding * 2 };
 
@@ -101,12 +102,12 @@ void SDFFontAtlasBucket::EnsureGlyphs(
             Assert(packPos);
         }
 
-        uint32_t bakeSize = GetSDFResolution(m_bucketID); // 이 버킷이 실제로 굽는 해상도
+        uint32_t bakeSize = GetMTSDFResolution(m_bucketID); // 이 버킷이 실제로 굽는 해상도
         float scale = static_cast<float>(shapedText.size) / static_cast<float>(bakeSize);
 
         auto glyphInfo =
             CreateGlyphInfo(
-                sdf,
+                mtsdf,
                 m_bucketID,
                 pageIndex,
                 packPos->x,
@@ -117,7 +118,7 @@ void SDFFontAtlasBucket::EnsureGlyphs(
 
         GlyphUploadEntry upload;
         if (CreateUploadEntry(
-            std::move(sdf.pixels),
+            std::move(mtsdf.pixels),
             m_bucketID,
             pageIndex,
             packPos->x,
@@ -137,7 +138,7 @@ void SDFFontAtlasBucket::EnsureGlyphs(
     }
 }
 
-const GlyphInfo* SDFFontAtlasBucket::FindGlyph(
+const GlyphInfo* MTSDFFontAtlasBucket::FindGlyph(
     FontResource* font,
     uint32_t glyphIndex,
     uint32_t size) const
@@ -148,19 +149,19 @@ const GlyphInfo* SDFFontAtlasBucket::FindGlyph(
         size);
 }
 
-std::shared_ptr<IMaterialResource> SDFFontAtlasBucket::GetMaterial(uint16_t pageIndex) const
+std::shared_ptr<IMaterialResource> MTSDFFontAtlasBucket::GetMaterial(uint16_t pageIndex) const
 {
     Assert(pageIndex < m_pages.size());
     return m_pages[pageIndex]->GetMaterialResource();
 }
 
-const Resource& SDFFontAtlasBucket::GetAtlasResource(uint16_t pageIndex) const
+const Resource& MTSDFFontAtlasBucket::GetAtlasResource(uint16_t pageIndex) const
 {
     Assert(pageIndex < m_pages.size());
     return m_pages[pageIndex]->GetAtlasResource();
 }
 
-uint16_t SDFFontAtlasBucket::CurrentPageIndex() const
+uint16_t MTSDFFontAtlasBucket::CurrentPageIndex() const
 {
     Assert(!m_pages.empty());
     return static_cast<uint16_t>(m_pages.size() - 1);
