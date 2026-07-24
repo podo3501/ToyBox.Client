@@ -25,11 +25,6 @@ struct BitmapConfig
 	Size atlasSize{ 256, 256 }; //테스트용 사이즈. 일반적으로는 1024나 2048을 사용
 };
 
-struct SDFConfig
-{
-	Size atlasSize{ 512, 512 }; //테스트용 사이즈. 일반적으로는 1024나 2048을 사용
-};
-
 struct MTSDFConfig
 {
 	Size atlasSize{ 512, 512 }; //테스트용 사이즈. 일반적으로는 1024나 2048을 사용
@@ -38,7 +33,6 @@ struct MTSDFConfig
 struct TextConfig
 {
 	BitmapConfig bitmap;
-	SDFConfig sdf;
 	MTSDFConfig mtsdf;
 };
 

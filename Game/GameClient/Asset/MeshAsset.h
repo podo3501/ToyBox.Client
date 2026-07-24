@@ -24,8 +24,13 @@ enum class UIRenderMode : uint32_t
 {
     UI = 0,
     BitmapText = 1,
-    SDF = 2,
-    MTSDF = 3
+    MTSDF = 2
+};
+
+struct UITextProps
+{
+    float sdfPxRange{ 0.f };
+    uint32_t params{ 0 }; //pack된 값들 순서 : weight, outlinecolor
 };
 
 struct UIVertex
@@ -33,9 +38,9 @@ struct UIVertex
     Core::Vector3 position;
     Core::Color color;
     Core::Vector2 uv;
-    UIRenderMode mode{ UIRenderMode::UI };
     uint32_t textureIndex{ 0 }; //Bindless SRV Heap Index. 일단은 ui는 cb로 인덱스를 가지고 오는 걸로 사용한다.
-    float sdfPxRange{ 0.f };
+    UIRenderMode mode{ UIRenderMode::UI };
+    UITextProps textProps;
 };
 
 struct GridVertex

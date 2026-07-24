@@ -5,11 +5,6 @@
 #include "Inspector/Inspector.h"
 #include "GameClient/Service/Render/RenderConfig.h"
 
-struct ShapedTextGroup
-{
-    std::array<std::vector<ShapedText>, Core::EnumSize<TextRenderMode>> texts;
-};
-
 TextSystem::~TextSystem() = default;
 TextSystem::TextSystem(
     Device& device,
@@ -35,31 +30,10 @@ std::vector<DrawUIItem> TextSystem::BuildDrawItems(std::span<const DrawTextItem>
     if (items.empty())
         return {};
 
-    auto shapedGroups = ShapeTexts(items);
-    for (size_t i = 0; i < shapedGroups.texts.size(); ++i)
-    {
-        auto& shapedTexts = shapedGroups.texts[i];
-        if (shapedTexts.empty())
-            continue;
+    auto shapedTexts = ShapeTexts(items);
+    m_fontAtlas.EnsureGlyphs(shapedTexts);
 
-        auto mode = static_cast<TextRenderMode>(i);
-        m_fontAtlas.EnsureGlyphs(mode, shapedTexts);
-    }
-
-    std::vector<PageMesh> pageMeshes;
-    for (size_t i = 0; i < shapedGroups.texts.size(); ++i)
-    {
-        auto& shapedTexts = shapedGroups.texts[i];
-        if (shapedTexts.empty())
-            continue;
-
-        auto meshes = m_meshBuilder.Build(m_fontAtlas, items, shapedTexts);
-        pageMeshes.insert(
-            pageMeshes.end(),
-            std::make_move_iterator(meshes.begin()),
-            std::make_move_iterator(meshes.end()));
-    }
-
+    std::vector<PageMesh> pageMeshes = m_meshBuilder.Build(m_fontAtlas, items, shapedTexts);
     return CreateDrawItems(pageMeshes);
 }
 
@@ -80,9 +54,10 @@ std::vector<DrawUIItem> TextSystem::CreateDrawItems(std::span<const PageMesh> pa
     return result;
 }
 
-ShapedTextGroup TextSystem::ShapeTexts(std::span<const DrawTextItem> items)
+std::vector<ShapedText> TextSystem::ShapeTexts(std::span<const DrawTextItem> items)
 {
-    ShapedTextGroup result;
+    std::vector<ShapedText> result;
+    result.reserve(items.size());
 
     for (size_t index = 0; index < items.size(); ++index)
     {
@@ -100,7 +75,7 @@ ShapedTextGroup TextSystem::ShapeTexts(std::span<const DrawTextItem> items)
             item.codePoints,
             item.fontSize);
 
-        result.texts[Core::ToIndex(item.style.mode)].push_back(std::move(shaped));
+        result.push_back(std::move(shaped));
     }
 
     return result;

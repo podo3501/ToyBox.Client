@@ -6,7 +6,7 @@
 
 struct GlyphInfo
 {
-    TextRenderMode mode{ TextRenderMode::SDF };
+    TextRenderMode mode{ TextRenderMode::MTSDF };
     FontBucketID bucketID{ InvalidFontBucket };
     uint16_t pageIndex{ 0 };
 
@@ -34,7 +34,7 @@ class FontResource;
 struct ShapedText
 {
     FontResource* font{};
-    TextRenderMode mode{ TextRenderMode::SDF };
+    TextRenderMode mode{ TextRenderMode::MTSDF };
     uint32_t size{};
     size_t index{ 0 }; //원본 텍스트 위치(여러 mode가 같이 그려지기 때문에)
 

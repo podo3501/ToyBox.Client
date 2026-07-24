@@ -33,6 +33,85 @@ struct TextBatchKeyHash
     }
 };
 
+using TextBatchBufferMap = std::unordered_map<TextBatchKey, PageMeshBuffer, TextBatchKeyHash>;
+
+static void ProcessShapedText(
+    const FontAtlas& atlas,
+    const ShapedText& shaped,
+    const DrawTextItem& item,
+    TextBatchBufferMap& buffers)
+{
+    float cursorX = item.position.x;
+    float baselineY = item.position.y;
+
+    for (const auto& shapedGlyph : shaped.glyphs)
+    {
+        const GlyphInfo* glyph = atlas.FindGlyph(
+            shaped.font,
+            shaped.mode,
+            shapedGlyph.glyphIndex,
+            shaped.size);
+        if (!glyph || glyph->width == 0 || glyph->height == 0)
+        {
+            cursorX += shapedGlyph.advanceX;
+            continue;
+        }
+
+        TextBatchKey key
+        {
+            glyph->bucketID,
+            glyph->pageIndex
+        };
+
+        auto material = atlas.GetMaterial(glyph);
+        auto& buffer = buffers[key];
+        if (!buffer.material)
+            buffer.material = material;
+
+        float x = cursorX + glyph->bearingX + shapedGlyph.offsetX;
+        float y = baselineY - glyph->bearingY - shapedGlyph.offsetY;
+
+        UIMaterialResource* uiMat = static_cast<UIMaterialResource*>(material.get());
+        auto texIndices = uiMat->GetTextureIndices();
+        AppendGlyphQuad(
+            buffer.vertices,
+            buffer.indices,
+            buffer.vertexOffset,
+            *glyph,
+            x,
+            y,
+            texIndices[0],
+            item.style);
+
+        cursorX += shapedGlyph.advanceX;
+    }
+}
+
+static std::vector<PageMesh> CreatePageMeshes(
+    TransientMeshProvider& meshProvider,
+    TextBatchBufferMap& buffers)
+{
+    std::vector<PageMesh> result;
+    result.reserve(buffers.size());
+
+    for (auto& [key, buffer] : buffers)
+    {
+        if (buffer.vertices.empty())
+            continue;
+
+        auto mesh = meshProvider.Create(buffer.vertices, buffer.indices);
+        if (!mesh)
+            continue;
+
+        result.push_back({
+            std::move(mesh),
+            std::move(buffer.material)
+            });
+    }
+
+    return result;
+}
+
 TextMeshBuilder::TextMeshBuilder(TransientMeshProvider& meshProvider) :
     m_meshProvider{ meshProvider }
 {}
@@ -49,81 +128,12 @@ std::vector<PageMesh> TextMeshBuilder::Build(
     if (totalGlyphCount == 0)
         return {};
 
-    std::unordered_map<TextBatchKey, PageMeshBuffer, TextBatchKeyHash> buffers;
-    for (size_t itemIndex = 0; itemIndex < items.size(); ++itemIndex)
+    TextBatchBufferMap buffers;
+    for(const auto& shaped : shapedTexts)
     {
-        const auto& shaped = shapedTexts[itemIndex];
         const auto& item = items[shaped.index];
-
-        float cursorX = item.position.x;
-        float baselineY = item.position.y;
-
-        for (const auto& shapedGlyph : shaped.glyphs)
-        {
-            const GlyphInfo* glyph = atlas.FindGlyph(
-                shaped.font,
-                shaped.mode,
-                shapedGlyph.glyphIndex,
-                shaped.size);
-            if (!glyph)
-            {
-                cursorX += shapedGlyph.advanceX;
-                continue;
-            }
-
-            if (glyph->width == 0 || glyph->height == 0)
-            {
-                cursorX += shapedGlyph.advanceX;
-                continue;
-            }
-
-            TextBatchKey key
-            {
-                glyph->bucketID,
-                glyph->pageIndex
-            };
-
-            auto material = atlas.GetMaterial(glyph);
-            auto& buffer = buffers[key];
-            if (!buffer.material)
-                buffer.material = material;
-
-            float x = cursorX + glyph->bearingX + shapedGlyph.offsetX;
-            float y = baselineY - glyph->bearingY - shapedGlyph.offsetY;
-
-            UIMaterialResource* uiMat = static_cast<UIMaterialResource*>(material.get());
-            auto texIndices = uiMat->GetTextureIndices();
-            AppendGlyphQuad(
-                buffer.vertices,
-                buffer.indices,
-                buffer.vertexOffset,
-                *glyph,
-                x,
-                y,
-                item.style.color,
-                texIndices[0]);
-
-            cursorX += shapedGlyph.advanceX;
-        }
+        ProcessShapedText(atlas, shaped, item, buffers);
     }
 
-    std::vector<PageMesh> result;
-    result.reserve(buffers.size());
-
-    for (auto& [key, buffer] : buffers)
-    {
-        if (buffer.vertices.empty())
-            continue;
-
-        auto mesh = m_meshProvider.Create(buffer.vertices, buffer.indices);
-        if (!mesh)
-            continue;
-
-        result.push_back({
-            std::move(mesh),
-            std::move(buffer.material)
-            });
-    }
-
-    return result;
+    return CreatePageMeshes(m_meshProvider, buffers);
 }

@@ -1,11 +1,8 @@
 #include "pch.h"
 #include "FontAtlas.h"
 #include "Glyph/BitmapGlyphGenerator.h"
-#include "Glyph/SDFGlyphGenerator.h"
-#include "Glyph/SimpleSDFGlyphGenerator.h"
 #include "../Builder/FontAtlasUploadGraphBuilder.h"
 #include "BitmapFontAtlasBucket.h"
-#include "SDFFontAtlasBucket.h"
 #include "MTSDFFontAtlasBucket.h"
 
 struct FontAtlasUpload
@@ -29,15 +26,15 @@ bool FontAtlas::Initialize(const TextConfig& config)
     return true;
 }
 
-void FontAtlas::EnsureGlyphs(TextRenderMode mode, std::span<const ShapedText> shapedTexts)
+void FontAtlas::EnsureGlyphs(std::span<const ShapedText> shapedTexts)
 {
     std::unordered_map<FontBucketKey, FontAtlasUpload, FontBucketKeyHash> uploads;
 
     for (const auto& shapedText : shapedTexts)
     {
-        FontBucketID bucket = GetFontBucketID(mode, shapedText.size);
+        FontBucketID bucket = GetFontBucketID(shapedText.mode, shapedText.size);
 
-        FontBucketKey key{ mode, bucket };
+        FontBucketKey key{ shapedText.mode, bucket };
         auto& upload = uploads[key];
 
         auto atlasBucket = GetOrCreateBucket(key);
@@ -112,10 +109,6 @@ FontAtlasBucket* FontAtlas::GetOrCreateBucket(const FontBucketKey& key)
         fontAtlasBucket = std::make_unique<BitmapFontAtlasBucket>(m_device, m_factory, key.bucket);
         atlasSize = m_textConfig.bitmap.atlasSize;
         break;
-    case TextRenderMode::SDF:
-        fontAtlasBucket = std::make_unique<SDFFontAtlasBucket>(m_device, m_factory, key.bucket);
-        atlasSize = m_textConfig.sdf.atlasSize;
-        break;
     case TextRenderMode::MTSDF:
         fontAtlasBucket = std::make_unique<MTSDFFontAtlasBucket>(m_device, m_factory, key.bucket);
         atlasSize = m_textConfig.mtsdf.atlasSize;
@@ -137,10 +130,4 @@ FontAtlasBucket* FontAtlas::FindBucket(const FontBucketKey& key) const
 
     return iter->second.get();
 }
-
-//sdf 찍을때 오류 수정.
-//sdf용 shader 만들기.
-//일단 분리 어느정도 시키고 돌아가는게 확인되면 sdf 돌아가게끔 하기.
-//sdf 돌아가게끔 하다가 분리가 필요하면 일단 멈추고 분리 시킨후 테스트 후 분리가 잘된거 확인후 sdf 진행.
-//bitmap, sdf 가 동시에 찍히는지 확인 한다.
 

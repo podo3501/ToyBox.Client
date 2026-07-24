@@ -12,11 +12,7 @@ MTSDFGlyph MTSDFGlyphGenerator::Generate(FontResource* font, uint32_t glyphIndex
     if (!ftFace || size == 0)
         return result;
 
-    // 요청 사이즈 -> 버킷 대표 해상도(bakeSize)로 변환.
-    // SDFGlyphGenerator와 동일하게, 실제 굽기는 이 bakeSize 하나로만 수행된다.
     const uint32_t bakeSize = GetMTSDFResolution(size);
-
-    // FT_Face를 msdfgen에 그대로 위임
     msdfgen::FontHandle* msdfFont = msdfgen::adoptFreetypeFont(ftFace);
     if (!msdfFont)
         return result;
@@ -58,7 +54,7 @@ MTSDFGlyph MTSDFGlyphGenerator::Generate(FontResource* font, uint32_t glyphIndex
     constexpr double kBasePxRangeAt40 = kFillRangeAt40 + kOutlineRangeAt40 * 2.0;
 
     double pxRange = kBasePxRangeAt40 * (static_cast<double>(bakeSize) / 40.0);
-    pxRange = std::clamp(pxRange, 2.0, 64.0);
+    pxRange = std::clamp(pxRange, 1.0, 64.0);
 
     const int padding = static_cast<int>(std::ceil(pxRange * 0.5));
 

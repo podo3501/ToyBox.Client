@@ -40,6 +40,7 @@
     <ClInclude Include="Math\Vector4.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Service\Locator.h" />
+    <ClInclude Include="Utils\BitUtils.h" />
     <ClInclude Include="Utils\Cast.hpp" />
     <ClInclude Include="Utils\CommonUtils.h" />
     <ClInclude Include="Utils\CycleIterator.h" />
@@ -71,6 +72,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Utils\BitUtils.cpp" />
     <ClCompile Include="Utils\CommonUtils.cpp" />
     <ClCompile Include="Utils\CycleIterator.cpp" />
     <ClCompile Include="Utils\EnumHelpers.cpp" />

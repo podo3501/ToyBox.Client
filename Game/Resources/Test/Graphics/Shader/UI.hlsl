@@ -1,11 +1,17 @@
+struct UITextProps
+{
+    nointerpolation float pxRange;     // SDF/MTSDF일 때만 유효. bake 시점 texel 단위 range
+    nointerpolation uint params;
+};
+
 struct UIVertex
 {
     float3 pos;
     float4 color;
     float2 uv;
-    uint mode; // 0: UI, 1: BitmapText, 2: SDF, 3: MSDF
     uint textureIndex; // Bindless SRV Heap Index
-    float pxRange;     // SDF/MTSDF일 때만 유효. bake 시점 texel 단위 range
+    uint mode; // 0: UI, 1: BitmapText, 2: MTSDF
+    UITextProps textProps;
 };
 
 SamplerState samp : register(s0);
@@ -31,7 +37,7 @@ struct PSInput
     float2 uv : TEXCOORD;
     nointerpolation uint mode : MODE;
     nointerpolation uint textureIndex : TEXINDEX;
-    nointerpolation float pxRange : PXRANGE;
+    UITextProps textProps : TEXTPROPERTIES;
 };
 
 PSInput VSMain(uint vID : SV_VertexID)
@@ -54,9 +60,52 @@ PSInput VSMain(uint vID : SV_VertexID)
     output.uv.y = lerp(uvTransform.y, uvTransform.w, input.uv.y);
     output.mode = input.mode;
     output.textureIndex = input.textureIndex;
-    output.pxRange = input.pxRange;
+    output.textProps = input.textProps;
 
     return output;
+}
+
+uint UnpackNibble(uint packed, uint nibbleIndex)
+{
+    return (packed >> (nibbleIndex * 4)) & 0x0F;
+}
+
+static const float kOutlineWeightTable[10] =
+{
+    0.0f,
+    0.5f,
+    0.8f,
+    1.1f,
+    1.4f,
+    1.7f,
+    2.0f,
+    2.3f,
+    2.6f,
+    2.9f,
+};
+
+float UnpackOutlineWeight(uint params)
+{
+    uint weightIndex = UnpackNibble(params, 0);
+    return kOutlineWeightTable[weightIndex];
+}
+
+static const float3 kOutlineColorTable[8] =
+{
+    float3(0.0f, 0.0f, 0.0f), // Black
+    float3(0.25f, 0.25f, 0.25f), // DarkGray
+    float3(0.75f, 0.75f, 0.75f), // LightGray
+    float3(1.00f, 1.00f, 1.00f), // White
+    float3(0.00f, 0.00f, 0.35f), // Navy
+    float3(0.21f, 0.27f, 0.31f), // Charcoal
+    float3(0.25f, 0.13f, 0.08f), // DarkBrown
+    float3(0.83f, 0.69f, 0.22f), // Gold
+};
+
+float3 UnpackOutlineColor(uint params)
+{
+    uint colorIndex = UnpackNibble(params, 1);
+    return kOutlineColorTable[colorIndex];
 }
 
 float median(float r, float g, float b)
@@ -88,32 +137,30 @@ float4 PSMain(PSInput input) : SV_TARGET
         float alpha = texColor.r;
         finalColor = float4(input.color.rgb, input.color.a * alpha);
     }
-    else if (input.mode == 2) // Mode 2: SDF Font
+    else if (input.mode == 2) // Mode 2: MTSDF Font
     {
-        float distance = texColor.r;
-        // 텍스처 UV 변화율을 기반으로 안티앨리어싱 폭(Smoothing Edge Width)을 계산
-        // 화면 해상도나 확대/축소 비율에 맞춰 경계를 자동으로 부드럽게 만듦.
-        float edgeSmoothing = fwidth(distance);
-        float alpha = smoothstep(0.5f - edgeSmoothing, 0.5f + edgeSmoothing, distance); // 0.5 경계값을 기준으로 smoothstep을 적용해 부드러운 알파 알파 마스크 생성
-        finalColor = float4(input.color.rgb, input.color.a * alpha);
-    }
-    else if (input.mode == 3) // Mode 3: MTSDF Font
-    {
-//        float distance = median(texColor.r, texColor.g, texColor.b);
-//        float edgeSmoothing = fwidth(distance);
-//        float alpha = smoothstep(0.5f - edgeSmoothing, 0.5f + edgeSmoothing, distance);
-//        finalColor = float4(input.color.rgb, input.color.a * alpha);
-
         float texW, texH;
         uiTex.GetDimensions(texW, texH);
 
-        float screenPxRange = ScreenPxRange(input.uv, input.pxRange, float2(texW, texH));
+        float screenPxRange = ScreenPxRange(input.uv, input.textProps.pxRange, float2(texW, texH));
         float distance = median(texColor.r, texColor.g, texColor.b);
-        //float sd = (distance - 0.5f) * screenPxRange;
-float sd = (distance - 0.5f) * 4.0f;
+        float sd = (distance - 0.5f) * screenPxRange;
 
-        float alpha = saturate(sd + 0.5f);
-        finalColor = float4(input.color.rgb, input.color.a * alpha);
+        float outlineWidthPx = UnpackOutlineWeight(input.textProps.params);
+        float3 outlineColor = UnpackOutlineColor(input.textProps.params);
+
+        float fillAlpha = saturate(sd + 0.5f);
+        if (outlineWidthPx > 0.0f)
+        {
+            float outlineAlpha = saturate(sd + outlineWidthPx + 0.5f);
+            float3 rgb = lerp(outlineColor.rgb, input.color.rgb, fillAlpha);
+            float a = max(fillAlpha, outlineAlpha) * input.color.a;
+            finalColor = float4(rgb, a);
+        }
+        else
+        {
+            finalColor = float4(input.color.rgb, input.color.a * fillAlpha);
+        }
     }
     else // 예외 예비 처리 (기존 UI 로직 적용)
     {

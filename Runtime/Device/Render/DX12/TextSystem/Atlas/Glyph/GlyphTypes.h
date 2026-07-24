@@ -28,12 +28,6 @@ struct BitmapGlyph
     GlyphMetrics metrics;
 };
 
-struct SDFGlyph
-{
-    GlyphPixels pixels;
-    GlyphMetrics metrics;
-};
-
 struct MTSDFGlyph
 {
     GlyphPixels pixels;

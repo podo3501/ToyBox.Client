@@ -38,7 +38,7 @@ public:
         DescriptorFactory& factory,
         FontAtlasUploadGraphBuilder& atlasBuilder);
     bool Initialize(const TextConfig& config);
-    void EnsureGlyphs(TextRenderMode mode, std::span<const ShapedText> shapedTexts);
+    void EnsureGlyphs(std::span<const ShapedText> shapedTexts);
     const GlyphInfo* FindGlyph(
         FontResource* font,
         TextRenderMode mode,

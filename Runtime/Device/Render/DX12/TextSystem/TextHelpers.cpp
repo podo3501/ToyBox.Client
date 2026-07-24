@@ -1,24 +1,12 @@
 #include "pch.h"
 #include "TextHelpers.h"
 #include "Core/Foundation/Color.h"
+#include "Core/Utils/BitUtils.h"
 #include "Atlas/Glyph/GlyphTypes.h"
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
 GlyphInfo CreateEmptyGlyphInfo(const BitmapGlyph& glyph)
-{
-    GlyphInfo info;
-
-    auto& metrics = glyph.metrics;
-    info.width = metrics.width;
-    info.height = metrics.height;
-    info.bearingX = metrics.bearingX;
-    info.bearingY = metrics.bearingY;
-
-    return info;
-}
-
-GlyphInfo CreateEmptyGlyphInfo(const SDFGlyph& glyph)
 {
     GlyphInfo info;
 
@@ -113,39 +101,6 @@ static GlyphMetrics ScaleMetrics(const GlyphMetrics& metrics, float scale)
 }
 
 GlyphInfo CreateGlyphInfo(
-    const SDFGlyph& glyph,
-    FontBucketID bucketID,
-    uint16_t pageIndex,
-    uint32_t packX,
-    uint32_t packY,
-    uint32_t padding,
-    const Size& atlasSize,
-    float scale)
-{
-    GlyphInfo info;
-
-    info.mode = TextRenderMode::SDF;
-    info.bucketID = bucketID;
-    info.pageIndex = pageIndex;
-
-    auto& pixels = glyph.pixels;
-    info.pxRange = glyph.metrics.pxRange;
-
-    auto scaledMetrics = ScaleMetrics(glyph.metrics, scale);
-    info.width = scaledMetrics.width;
-    info.height = scaledMetrics.height;
-    info.bearingX = scaledMetrics.bearingX;
-    info.bearingY = scaledMetrics.bearingY;
-
-    SetGlyphUV(
-        static_cast<float>(pixels.width),
-        static_cast<float>(pixels.height),
-        packX, packY, 
-        padding, atlasSize, info);
-    return info;
-}
-
-GlyphInfo CreateGlyphInfo(
     const MTSDFGlyph& glyph,
     FontBucketID bucketID,
     uint16_t pageIndex,
@@ -162,10 +117,9 @@ GlyphInfo CreateGlyphInfo(
     info.pageIndex = pageIndex;
 
     auto& pixels = glyph.pixels;
-    auto scaledMetrics = ScaleMetrics(glyph.metrics, scale);
+    info.pxRange = glyph.metrics.pxRange;
 
-    //info.width = static_cast<float>(pixels.width); // sdf는 거리장을 더한 만큼 크게 그린다. 즉 글자 사각형이 겹쳐지게 그려진다.
-    //info.height = static_cast<float>(pixels.height);
+    auto scaledMetrics = ScaleMetrics(glyph.metrics, scale);
     info.width = scaledMetrics.width;
     info.height = scaledMetrics.height;
     info.bearingX = scaledMetrics.bearingX;
@@ -202,13 +156,12 @@ static UIRenderMode ToUIRenderMode(TextRenderMode mode)
 {
     switch (mode)
     {
-    case TextRenderMode::SDF: return UIRenderMode::SDF;
     case TextRenderMode::MTSDF: return UIRenderMode::MTSDF;
     case TextRenderMode::Bitmap: return UIRenderMode::BitmapText;
     }
     Assert(false);
 
-    return UIRenderMode::SDF;
+    return UIRenderMode::MTSDF;
 }
 
 void AppendGlyphQuad(
@@ -218,22 +171,24 @@ void AppendGlyphQuad(
     const GlyphInfo& glyph,
     float x,
     float y,
-    const Core::Color& color,
-    UINT textureIndex)
+    UINT textureIndex,
+    const TextStyle& style)
 {
+    const Core::Color& color = style.color;
     float x1 = x + glyph.width;
     float y1 = y + glyph.height;
     auto mode = ToUIRenderMode(glyph.mode);
-    const float pxRange = glyph.pxRange;
+    auto params = Core::PackNibbles(style.weight, style.outlineColor);
+    UITextProps textProps{ glyph.pxRange, params };
 
     vertices.push_back(
         {
             { x, y, 0.f },
             color,
             { glyph.uvMin.x, glyph.uvMin.y },
-            mode,
             textureIndex,
-            pxRange
+            mode,
+            textProps
         });
 
     vertices.push_back(
@@ -241,9 +196,9 @@ void AppendGlyphQuad(
             { x1, y, 0.f },
             color,
             { glyph.uvMax.x, glyph.uvMin.y },
-            mode,
             textureIndex,
-            pxRange
+            mode,
+            textProps
         });
 
     vertices.push_back(
@@ -251,9 +206,9 @@ void AppendGlyphQuad(
             { x1, y1, 0.f },
             color,
             { glyph.uvMax.x, glyph.uvMax.y },
-            mode,
             textureIndex,
-            pxRange
+            mode,
+            textProps
         });
 
     vertices.push_back(
@@ -261,9 +216,9 @@ void AppendGlyphQuad(
             { x, y1, 0.f },
             color,
             { glyph.uvMin.x, glyph.uvMax.y },
-            mode,
             textureIndex,
-            pxRange
+            mode,
+            textProps
         });
 
     indices.insert(indices.end(), {

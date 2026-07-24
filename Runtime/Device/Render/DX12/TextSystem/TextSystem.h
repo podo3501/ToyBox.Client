@@ -8,7 +8,7 @@ concept FontAtlasType = std::derived_from<T, FontAtlas>;
 
 struct PageMesh;
 struct TextConfig;
-struct ShapedTextGroup;
+struct ShapedText; 
 class Device;
 class TaskScheduler;
 class ResourceFactory;
@@ -30,7 +30,7 @@ public:
     std::vector<DrawUIItem> BuildDrawItems(std::span<const DrawTextItem> items);
 
 private:
-    ShapedTextGroup ShapeTexts(std::span<const DrawTextItem> items);
+    std::vector<ShapedText> ShapeTexts(std::span<const DrawTextItem> items);
     std::vector<DrawUIItem> CreateDrawItems(std::span<const PageMesh> pageMeshes);
 
     FontAtlasUploadGraphBuilder m_atlasBuilder;

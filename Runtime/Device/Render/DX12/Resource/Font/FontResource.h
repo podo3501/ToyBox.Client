@@ -21,8 +21,6 @@ public:
 
 	bool Initialize(FreeTypeLibrary& ftLibrary, std::shared_ptr<FontAsset> asset);
 	FT_GlyphSlot GetGlyphSlot(uint32_t glyphIndex, uint32_t size) const;
-	FT_GlyphSlot GetGlyphSlotSDF(uint32_t glyphIndex, uint32_t size, uint8_t spread = 8) const;
-	FT_GlyphSlot GetGlyphOutlineSlot(uint32_t glyphIndex, uint32_t size) const;
 
 	std::vector<ShapedGlyph> Shape(std::span<const char32_t> text, uint32_t size);
 	void MarkReady() noexcept { m_ready = true; }

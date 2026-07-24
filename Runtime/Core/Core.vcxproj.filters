@@ -124,6 +124,9 @@
     <ClInclude Include="Foundation\Logger.h">
       <Filter>Foundation</Filter>
     </ClInclude>
+    <ClInclude Include="Utils\BitUtils.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Utils\EnumHelpers.cpp">
@@ -168,6 +171,9 @@
     </ClCompile>
     <ClCompile Include="Foundation\Logger.cpp">
       <Filter>Foundation</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\BitUtils.cpp">
+      <Filter>Utils</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

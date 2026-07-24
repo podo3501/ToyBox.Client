@@ -5,7 +5,6 @@
 #include "GameClient/Service/Render/Definition/Text/TextStyle.h"
 
 GlyphInfo CreateEmptyGlyphInfo(const BitmapGlyph& glyph);
-GlyphInfo CreateEmptyGlyphInfo(const SDFGlyph& glyph);
 GlyphInfo CreateEmptyGlyphInfo(const MTSDFGlyph& glyph);
 
 GlyphInfo CreateGlyphInfo(
@@ -16,16 +15,6 @@ GlyphInfo CreateGlyphInfo(
     uint32_t packY,
     uint32_t padding,
     const Size& atlasSize);
-
-GlyphInfo CreateGlyphInfo(
-    const SDFGlyph& sdfGlyph,
-    FontBucketID bucketID,
-    uint16_t pageIndex,
-    uint32_t packX,
-    uint32_t packY,
-    uint32_t padding,
-    const Size& atlasSize,
-    float scale);
 
 GlyphInfo CreateGlyphInfo(
     const MTSDFGlyph& glyph,
@@ -53,5 +42,5 @@ void AppendGlyphQuad(
     const GlyphInfo& glyph,
     float x,
     float y,
-    const Core::Color& color,
-    UINT textureIndex);
+    UINT textureIndex,
+    const TextStyle& style);
