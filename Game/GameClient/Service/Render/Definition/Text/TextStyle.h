@@ -8,7 +8,9 @@ enum class TextRenderMode
     Count
 };
 
-enum class OutlineWeight
+//text style은 4비트로 패킹되기 때문에 즉, enum 갯수가 16개를 넘기면 안된다. 
+
+enum class TextEffectLevel
 {
     None = 0,
     Level1,
@@ -20,9 +22,12 @@ enum class OutlineWeight
     Level7,
     Level8,
     Level9,
+    Level10,
+    Level11,
+    Level12,
 };
 
-enum class OutlineColor
+enum class TextColor
 {
     Black = 0,
     DarkGray,
@@ -34,10 +39,46 @@ enum class OutlineColor
     Gold
 };
 
+struct TextOutline
+{
+    TextEffectLevel weight{ TextEffectLevel::None };
+    TextColor color{ TextColor::Black };
+
+    constexpr auto ToNibbles() const
+    {
+        return std::make_tuple(weight, color);
+    }
+};
+
+struct TextShadow
+{
+    TextEffectLevel offset{ TextEffectLevel::None };
+    TextEffectLevel softness{ TextEffectLevel::None };
+    TextColor color{ TextColor::Black };
+
+    constexpr auto ToNibbles() const
+    {
+        return std::make_tuple(offset, softness, color);
+    }
+};
+
+struct TextGradient
+{
+    TextColor startColor{ TextColor::Black };
+    TextColor endColor{ TextColor::Black };
+
+    constexpr auto ToNibbles() const
+    {
+        return std::make_tuple(startColor, endColor);
+    }
+};
+
 struct TextStyle
 {
     TextRenderMode mode{ TextRenderMode::MTSDF };
     Core::Color color{ Core::Color::White };
-    OutlineWeight weight{ OutlineWeight::None };
-    OutlineColor outlineColor{ OutlineColor::Black };
+
+    TextOutline outline;
+    TextShadow shadow;
+    TextGradient gradient;
 };

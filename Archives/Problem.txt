@@ -408,3 +408,8 @@ cmake .. -G "Visual Studio 17 2022" -A x64 -DHB_HAVE_FREETYPE=ON -DFREETYPE_INCL
 개인적으로 lib가 debug용 release용으로 나누어져 있기 때문에 직접 지정했지만, 하나일 경우에는 지정하지 않고
 조금 더 간단하게 할 수 있다.
 ThirdParty들은 install 해서 include와 lib를 지정해주는대로 쓰는게 좋다. 나중에 include 폴더가 꼬이면 귀찮아진다.
+
+mtsdf에서 글자에 구멍이 뚫리는 현상이 일어나는데, 코드에 문제가 없다면, hole 문제는 특정 폰트에 특정 glyph의 문제이기 
+때문에 다른 폰트를 쓰거나 아니면 fontForge 프로그램을 써서 overlap 제거를 하게 되면 구멍 뚫리는 문제가 처리된다.
+msdfgen::resolveShapeGeometry(shape); 이 함수 호출을 하면 된다고 하나 skia를 깔아야 한다. skia는 너무 덩치가 큰 프로그램이라
+정말 깔아서 써야 할지 고려해야 한다. 

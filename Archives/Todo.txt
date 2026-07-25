@@ -356,6 +356,12 @@
 - TextSystem 이름 및 위치 정리
 - Fallback Font 지원
 
+@ui쪽 draw call 한번으로 하기 위해서
+- mesh shader로 메쉬 생성해서 하는걸로.
+- transient mesh를 사용하고 있는데 mesh shader로 바꿀수 있는지
+- z order 와 텍스쳐 order로 하는걸로 material은 안쓰이게 될꺼니까 material을 어떻게 처리할지.
+- 
+
 @렌더러 만들기
     @화면 배경색깔 지정하게끔
 

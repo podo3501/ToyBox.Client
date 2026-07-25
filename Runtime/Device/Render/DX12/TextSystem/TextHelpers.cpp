@@ -178,7 +178,10 @@ void AppendGlyphQuad(
     float x1 = x + glyph.width;
     float y1 = y + glyph.height;
     auto mode = ToUIRenderMode(glyph.mode);
-    auto params = Core::PackNibbles(style.weight, style.outlineColor);
+    auto params = Core::PackNibbles(
+        style.outline,
+        style.shadow,
+        style.gradient);
     UITextProps textProps{ glyph.pxRange, params };
 
     vertices.push_back(

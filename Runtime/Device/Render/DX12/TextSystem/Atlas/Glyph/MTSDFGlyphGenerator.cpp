@@ -45,12 +45,11 @@ MTSDFGlyph MTSDFGlyphGenerator::Generate(FontResource* font, uint32_t glyphIndex
     // MSDF는 edge마다 색상(채널)을 배정해야 median 재구성이 가능함.
     // SDF와 달리 이 색상 배정이 결과 품질에 직접적으로 영향을 줌.
     msdfgen::edgeColoringSimple(shape, 3.0);
-
     msdfgen::Shape::Bounds bounds = shape.getBounds();
 
     // pxRange/padding도 bakeSize 기준으로 계산 (버킷 내 캐시 일관성 유지)
     constexpr double kFillRangeAt40 = 2.0;  // 순수 fill/AA용 최소 range
-    constexpr double kOutlineRangeAt40 = 6.0;  // 지원할 최대 outline 두께(px, size=32 기준). 필요치에 맞게 조정
+    constexpr double kOutlineRangeAt40 = 6.0;  // 지원할 최대 outline 두께(px, size=40 기준). 필요치에 맞게 조정
     constexpr double kBasePxRangeAt40 = kFillRangeAt40 + kOutlineRangeAt40 * 2.0;
 
     double pxRange = kBasePxRangeAt40 * (static_cast<double>(bakeSize) / 40.0);
