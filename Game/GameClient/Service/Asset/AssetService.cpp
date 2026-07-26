@@ -17,8 +17,10 @@ unique_ptr<AssetService> AssetService::Create(IResourceManager* resManager) noex
 	return std::unique_ptr<AssetService>(new AssetService(resManager));
 }
 
-bool AssetService::Initialize(size_t threadCount)
+bool AssetService::Initialize(IAssetMetaRegistry* metaRegistry, size_t threadCount)
 {
+    m_metaRegistry = metaRegistry;
+
     if (threadCount == 0)
     {
         threadCount = std::min<size_t>(

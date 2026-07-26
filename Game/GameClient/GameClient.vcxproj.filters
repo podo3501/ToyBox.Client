@@ -270,6 +270,7 @@
     <ClCompile Include="Service\Render\Definition\Texture\TextureDescFactory.cpp">
       <Filter>Service\Render\Definition\Texture</Filter>
     </ClCompile>
+    <ClCompile Include="AssetMetaRegistry.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameLoop.h" />
@@ -750,6 +751,11 @@
     </ClInclude>
     <ClInclude Include="Service\Render\Definition\Text\TextStyle.h">
       <Filter>Service\Render\Definition\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="AssetMetaRegistry.h" />
+    <ClInclude Include="IAssetMetaRegistry.h" />
+    <ClInclude Include="Asset\TextureMetaAsset.h">
+      <Filter>Asset</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

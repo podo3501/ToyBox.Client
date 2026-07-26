@@ -4,6 +4,7 @@
 #include "AssetLoaderDesc.h"
 #include <thread>
 
+struct IAssetMetaRegistry;
 class AssetRepository;
 class AssetAsyncLoader;
 
@@ -14,7 +15,7 @@ public:
 	AssetService() = delete;
 	static unique_ptr<AssetService> Create(IResourceManager* resManager) noexcept;
 	
-	bool Initialize(size_t threadCount = 0);
+	bool Initialize(IAssetMetaRegistry* metaRegistry, size_t threadCount = 0);
 	bool IsIdle() const;
 
 	IAssetAsyncLoader* GetAsyncLoader() noexcept;
@@ -27,6 +28,7 @@ private:
 
 	std::unique_ptr<AssetRepository> m_repository{ nullptr }; //하나의 파일을 로딩.
 	std::unique_ptr<AssetAsyncLoader> m_asyncLoader{ nullptr }; //쓰레드를 통해서 로딩
+	IAssetMetaRegistry* m_metaRegistry{ nullptr };
 
 	std::vector<std::thread> m_threads;
 	std::atomic<int> m_activeJobs{ 0 };

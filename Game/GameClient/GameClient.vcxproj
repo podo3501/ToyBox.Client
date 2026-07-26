@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AssetMetaRegistry.cpp" />
     <ClCompile Include="Asset\AssetInput.cpp" />
     <ClCompile Include="GameLoop.cpp" />
     <ClCompile Include="Graphics\Geometry\MeshFactory.cpp" />
@@ -122,6 +123,7 @@
     <ClCompile Include="UserInterface\UINameGenerator\UINameGenerator.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AssetMetaRegistry.h" />
     <ClInclude Include="Asset\AssetData.h" />
     <ClInclude Include="Asset\AssetInput.h" />
     <ClInclude Include="Asset\AudioTypes.h" />
@@ -133,6 +135,7 @@
     <ClInclude Include="Asset\StaticSoundAsset.h" />
     <ClInclude Include="Asset\StreamSoundAsset.h" />
     <ClInclude Include="Asset\TextureAsset.h" />
+    <ClInclude Include="Asset\TextureMetaAsset.h" />
     <ClInclude Include="GameLoop.h" />
     <ClInclude Include="Graphics\Geometry\MeshFactory.h" />
     <ClInclude Include="Graphics\RenderData\CameraData.h" />
@@ -144,6 +147,7 @@
     <ClInclude Include="Graphics\World\CameraInputState.h" />
     <ClInclude Include="Graphics\World\DirectionalLight.h" />
     <ClInclude Include="Graphics\World\Transform.h" />
+    <ClInclude Include="IAssetMetaRegistry.h" />
     <ClInclude Include="Locator\InputLocator.h" />
     <ClInclude Include="Locator\UIComponentLocator.h" />
     <ClInclude Include="pch.h" />

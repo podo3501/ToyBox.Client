@@ -2,6 +2,8 @@
 #include "AssetLoaderRegistry.h"
 #include "AssetRepository.h"
 #include "AssetLoaderDesc.h"
+//include Metas
+#include "Asset/TextureMetaAsset.h"
 //include Assets
 #include "Asset/TextureAsset.h"
 #include "Asset/MeshAsset.h"
@@ -26,6 +28,11 @@ bool AssetLoaderRegistry::RegisterLoader(const std::string& ext, std::unique_ptr
 
 bool AssetLoaderRegistry::RegisterDefaultLoaders()
 {
+    //meta
+    ReturnIfFalse(RegisterLoader<TextureMetaAsset>(".png.mjson", CreateTextureMetaLoader()));
+    ReturnIfFalse(RegisterLoader<TextureMetaAsset>(".jpg.mjson", CreateTextureMetaLoader()));
+
+    //asset
     for (auto& ext : GetImageSupportedExtensions())
         ReturnIfFalse(RegisterLoader<TextureAsset>(ext, CreateImageTextureLoader()));
 

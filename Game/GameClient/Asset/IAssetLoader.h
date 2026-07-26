@@ -19,6 +19,8 @@ std::unique_ptr<IAssetLoader> CreateLoader()
 	return std::make_unique<T>();
 }
 
+std::unique_ptr<IAssetLoader> CreateTextureMetaLoader();
+
 std::unique_ptr<IAssetLoader> CreateImageTextureLoader();
 std::vector<std::string> GetImageSupportedExtensions();
 

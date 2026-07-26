@@ -7,6 +7,7 @@ public:
 	~ResourceManager();
 	ResourceManager() = delete;
 	explicit ResourceManager(const filesystem::path& path);
+
 	virtual bool Write(const filesystem::path& filename, const Core::ByteBuffer& buffer) noexcept override;
 	virtual bool Read(const filesystem::path& filename, Core::ByteBuffer& outBuffer) const noexcept override;
 	virtual bool WriteText(const filesystem::path& filename, const string& text) noexcept override;

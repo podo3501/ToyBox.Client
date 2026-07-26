@@ -24,6 +24,7 @@
     <ClInclude Include="Asset\Loader\Graphics\MeshJsonLoader.h" />
     <ClInclude Include="Asset\Loader\Graphics\PngTextureLoader.h" />
     <ClInclude Include="Asset\Loader\JsonLoader.h" />
+    <ClInclude Include="Asset\Loader\Meta\TextureMetaLoader.h" />
     <ClInclude Include="Asset\Loader\Sound\AudioProcessing.h" />
     <ClInclude Include="Asset\Loader\Sound\OggStaticLoader.h" />
     <ClInclude Include="Asset\Loader\Sound\OggStreamLoader.h" />
@@ -160,6 +161,7 @@
     <ClCompile Include="Asset\Loader\Graphics\HLSLShaderLoader.cpp" />
     <ClCompile Include="Asset\Loader\Graphics\MeshJsonLoader.cpp" />
     <ClCompile Include="Asset\Loader\Graphics\PngTextureLoader.cpp" />
+    <ClCompile Include="Asset\Loader\Meta\TextureMetaLoader.cpp" />
     <ClCompile Include="Asset\Loader\SoundDesc.cpp" />
     <ClCompile Include="Asset\Loader\Sound\AudioProcessing.cpp" />
     <ClCompile Include="Asset\Loader\Sound\OggStaticLoader.cpp" />
