@@ -30,7 +30,7 @@ bool AssetService::Initialize(IAssetMetaRegistry* metaRegistry, size_t threadCou
     ReturnIfFalse(StartWorkers(threadCount));
 
     AssetLoaderRegistry loaderRegistry(*m_repository);
-    ReturnIfFalse(loaderRegistry.RegisterDefaultLoaders());
+    ReturnIfFalse(loaderRegistry.RegisterDefaultLoaders(metaRegistry));
 
 	return true;
 }

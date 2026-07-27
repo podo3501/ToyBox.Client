@@ -2,7 +2,7 @@
 #include "StaticSoundBuffer.h"
 #include "SDL3_mixer/SDL_mixer.h"
 #include "GameClient/Asset/StaticSoundAsset.h"
-#include "Core/Utils/Cast.hpp"
+#include "Core/Foundation/Cast.hpp"
 
 StaticSoundBuffer::~StaticSoundBuffer()
 {

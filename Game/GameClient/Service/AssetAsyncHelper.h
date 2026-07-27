@@ -1,6 +1,6 @@
 #pragma once
 #include "IAssetAsyncLoader.h"
-#include "Core/Utils/Cast.hpp"
+#include "Core/Foundation/Cast.hpp"
 
 namespace Asset
 {
@@ -21,6 +21,15 @@ namespace Asset
         {
             .resID = Core::ResourceID::MakePath(path),
             .type = Core::GetTypeID<T>()
+        };
+    }
+
+    inline AssetRequest MakeRequest(Core::TypeID typeID, const std::string& path)
+    {
+        return
+        {
+            .resID = Core::ResourceID::MakePath(path),
+            .type = typeID
         };
     }
 

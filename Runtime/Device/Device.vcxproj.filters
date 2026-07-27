@@ -196,7 +196,7 @@
     <ClInclude Include="Asset\Loader\Sound\OggStreamLoader.h">
       <Filter>Asset\Loader\Sound</Filter>
     </ClInclude>
-    <ClInclude Include="Asset\Loader\Graphics\PngTextureLoader.h">
+    <ClInclude Include="Asset\Loader\Graphics\TextureLoader.h">
       <Filter>Asset\Loader\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Asset\Loader\Graphics\MeshJsonLoader.h">
@@ -596,7 +596,7 @@
     <ClCompile Include="Asset\Loader\Sound\OggStreamLoader.cpp">
       <Filter>Asset\Loader\Sound</Filter>
     </ClCompile>
-    <ClCompile Include="Asset\Loader\Graphics\PngTextureLoader.cpp">
+    <ClCompile Include="Asset\Loader\Graphics\TextureLoader.cpp">
       <Filter>Asset\Loader\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="Asset\Loader\Graphics\MeshJsonLoader.cpp">

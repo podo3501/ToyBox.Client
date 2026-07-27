@@ -19,11 +19,10 @@ std::unique_ptr<IAssetLoader> CreateLoader()
 	return std::make_unique<T>();
 }
 
+struct IAssetMetaRegistry;
+
 std::unique_ptr<IAssetLoader> CreateTextureMetaLoader();
-
-std::unique_ptr<IAssetLoader> CreateImageTextureLoader();
-std::vector<std::string> GetImageSupportedExtensions();
-
+std::unique_ptr<IAssetLoader> CreateImageTextureLoader(IAssetMetaRegistry* metaRegistry);
 std::unique_ptr<IAssetLoader> CreateMeshJsonLoader();
 std::unique_ptr<IAssetLoader> CreateOggStaticLoader();
 std::unique_ptr<IAssetLoader> CreateWavStaticLoader();

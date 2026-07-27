@@ -73,13 +73,13 @@ shared_ptr<AssetData> AssetRepository::LoadWithSource(IAssetLoader* loader, cons
 		auto stream = m_resManager->CreateReadStream(path);
 		if (!stream) return nullptr;
 
-		StreamInput source(std::move(stream));
+		StreamInput source(resID, std::move(stream));
 		return loader->Load(source);
 	}
 
 	Core::ByteBuffer buffer;
 	if (!m_resManager->Read(path, buffer)) return nullptr;
 
-	MemoryInput source(std::move(buffer));
+	MemoryInput source(resID, std::move(buffer));
 	return loader->Load(source);
 }

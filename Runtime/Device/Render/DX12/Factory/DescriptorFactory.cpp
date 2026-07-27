@@ -87,7 +87,7 @@ bool DescriptorFactory::CreateTextureViews(TextureResource* texRes, bool generat
     const UINT mipCount = resDesc.MipLevels;
 
     DXGI_FORMAT srvFormat = resDesc.Format;
-    if (texRes->GetDesc().type == TextureType::Color)
+    if (texRes->GetDesC().colorSpace == ColorSpace::SRGB)
         srvFormat = ToSRGB(resDesc.Format);
 
     UINT mainMipLevels = generateMips ? mipCount : 1;

@@ -57,8 +57,10 @@ ID3D12PipelineState* UIRenderer::CreatePSO(const PipelineState& pipelineState)
             rtBlend.BlendEnable = TRUE;
             rtBlend.LogicOpEnable = FALSE;
 
-            // 컬러 블렌딩 공식: (정답 색상 * 글자 알파) + (바탕 화면 색상 * (1 - 글자 알파))
-            rtBlend.SrcBlend = D3D12_BLEND_SRC_ALPHA;
+            // PMA 컬러 블렌딩 공식: (셰이더가 낸 rgb, 이미 alpha가 곱해진 상태) + (배경 * (1 - alpha))
+            // Straight일 때는 SRC_ALPHA * rgb를 GPU가 곱해줬는데,
+            // PMA는 셰이더가 이미 rgb*alpha를 계산해서 내놓으므로 GPU가 또 곱하면 안 됨 -> ONE
+            rtBlend.SrcBlend = D3D12_BLEND_ONE;
             rtBlend.DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
             rtBlend.BlendOp = D3D12_BLEND_OP_ADD;
 

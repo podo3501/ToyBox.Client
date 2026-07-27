@@ -2,6 +2,8 @@
 #include "AssetLoaderRegistry.h"
 #include "AssetRepository.h"
 #include "AssetLoaderDesc.h"
+#include "IAssetMetaRegistry.h"
+#include "Asset/AssetExtensions.h"
 //include Metas
 #include "Asset/TextureMetaAsset.h"
 //include Assets
@@ -19,22 +21,21 @@ AssetLoaderRegistry::AssetLoaderRegistry(AssetRepository& repository) noexcept :
 {}
 
 template <typename AssetType>
-bool AssetLoaderRegistry::RegisterLoader(const std::string& ext, std::unique_ptr<IAssetLoader>&& loader)
+bool AssetLoaderRegistry::RegisterLoader(std::string_view ext, std::unique_ptr<IAssetLoader>&& loader)
 {
     return m_repository.RegisterLoader(
         AssetLoaderDesc::Make<AssetType>(ext, std::move(loader))
     );
 }
 
-bool AssetLoaderRegistry::RegisterDefaultLoaders()
+bool AssetLoaderRegistry::RegisterDefaultLoaders(IAssetMetaRegistry* metaRegistry)
 {
     //meta
-    ReturnIfFalse(RegisterLoader<TextureMetaAsset>(".png.mjson", CreateTextureMetaLoader()));
-    ReturnIfFalse(RegisterLoader<TextureMetaAsset>(".jpg.mjson", CreateTextureMetaLoader()));
+    ReturnIfFalse(RegisterLoader<TextureMetaAsset>(".meta", CreateTextureMetaLoader()));
 
     //asset
-    for (auto& ext : GetImageSupportedExtensions())
-        ReturnIfFalse(RegisterLoader<TextureAsset>(ext, CreateImageTextureLoader()));
+    for (auto& ext : ImageSupportedExtensions)
+        ReturnIfFalse(RegisterLoader<TextureAsset>(ext, CreateImageTextureLoader(metaRegistry)));
 
     ReturnIfFalse(RegisterLoader<MeshAsset>(".mjson", CreateMeshJsonLoader()));
     ReturnIfFalse(RegisterLoader<StaticSoundTable>(".Json", CreateStaticSoundTableLoader()));

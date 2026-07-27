@@ -125,6 +125,7 @@
   <ItemGroup>
     <ClInclude Include="AssetMetaRegistry.h" />
     <ClInclude Include="Asset\AssetData.h" />
+    <ClInclude Include="Asset\AssetExtensions.h" />
     <ClInclude Include="Asset\AssetInput.h" />
     <ClInclude Include="Asset\AudioTypes.h" />
     <ClInclude Include="Asset\FontAsset.h" />
@@ -136,6 +137,7 @@
     <ClInclude Include="Asset\StreamSoundAsset.h" />
     <ClInclude Include="Asset\TextureAsset.h" />
     <ClInclude Include="Asset\TextureMetaAsset.h" />
+    <ClInclude Include="Asset\TextureTypes.h" />
     <ClInclude Include="GameLoop.h" />
     <ClInclude Include="Graphics\Geometry\MeshFactory.h" />
     <ClInclude Include="Graphics\RenderData\CameraData.h" />

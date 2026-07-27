@@ -19,12 +19,12 @@ static const MipShaderDesc g_mipShaders[] =
     { MipType::Data, { {"IS_DATA_MAP"} } }
 };
 
-static MipType GetMipType(TextureType textureType)
+static MipType GetMipType(ColorSpace colorSpace)
 {
-    switch (textureType)
+    switch (colorSpace)
     {
-    case TextureType::Color:        return MipType::SRGB;
-    case TextureType::Linear:        return MipType::Data;
+    case ColorSpace::SRGB:        return MipType::SRGB;
+    case ColorSpace::Linear:        return MipType::Data;
     default:
         return MipType::Data;
     }
@@ -115,7 +115,7 @@ void MipGenerator::GenerateMips(CommandList& cmd, BindlessDescriptorAllocator& s
     cmd->SetDescriptorHeaps(1, heaps);
     cmd->SetComputeRootSignature(m_rootSignature.Get());
 
-    const MipType mipType = GetMipType(texResource->GetDesc().type);
+    const MipType mipType = GetMipType(texResource->GetDesC().colorSpace);
     auto* pso = GetPSO(mipType);
     if (!pso) return;
     cmd->SetPipelineState(pso);

@@ -73,6 +73,18 @@ struct TextGradient
     }
 };
 
+struct TextGlow
+{
+    TextEffectLevel range{ TextEffectLevel::None };
+    TextEffectLevel intensity{ TextEffectLevel::None };
+    TextColor color{ TextColor::Black };
+
+    constexpr auto ToNibbles() const
+    {
+        return std::make_tuple(range, intensity, color);
+    }
+};
+
 struct TextStyle
 {
     TextRenderMode mode{ TextRenderMode::MTSDF };
@@ -81,4 +93,5 @@ struct TextStyle
     TextOutline outline;
     TextShadow shadow;
     TextGradient gradient;
+    TextGlow glow;
 };

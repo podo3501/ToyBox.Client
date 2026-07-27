@@ -106,9 +106,6 @@
     <ClInclude Include="Foundation\ResourceID.h">
       <Filter>Foundation</Filter>
     </ClInclude>
-    <ClInclude Include="Utils\Cast.hpp">
-      <Filter>Utils</Filter>
-    </ClInclude>
     <ClInclude Include="Math\Vector4.h">
       <Filter>Math</Filter>
     </ClInclude>
@@ -126,6 +123,9 @@
     </ClInclude>
     <ClInclude Include="Utils\BitUtils.h">
       <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Foundation\Cast.hpp">
+      <Filter>Foundation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

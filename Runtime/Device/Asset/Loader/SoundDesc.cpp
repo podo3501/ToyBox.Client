@@ -8,7 +8,6 @@ DECLARE_JSON_TRAITS(SoundType)
 DECLARE_JSON_TRAITS(Core::ResourceID)
 DECLARE_JSON_TRAITS(AudioGroup)
 
-
 using namespace EnumUtil;
 
 template<>

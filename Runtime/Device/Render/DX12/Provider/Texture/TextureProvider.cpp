@@ -88,10 +88,10 @@ std::shared_ptr<TextureResource> TextureProvider::GetBuiltinTexture(BuiltinTextu
     return m_builtinTextures[idx];
 }
 
-static size_t EstimateBytes(const TextureAsset& asset, const TextureDesc& desc)
+static size_t EstimateBytes(const TextureAsset& asset, const TextureDesC& desc)
 {
     size_t baseBytes = asset.pixels.size();
-    if (!desc.generateMips)
+    if (!desc.generateMipmaps)
         return baseBytes;
 
     return static_cast<size_t>(baseBytes * 4 / 3); //mip 비용은 정확 계산 대신 안정적인 근사 (1.33x)
@@ -103,12 +103,13 @@ bool TextureProvider::LoadResource(
 {
     if (!asset) return false;
 
-    auto res = std::static_pointer_cast<TextureResource>(resource);
+    TextureDesC desc{ asset->colorSpace, asset->generateMipmaps, asset->isPremultipliedAlpha };
+    resource->SetDesC(desc);
 
     TextureLoadRequest req;
-    req.resource = res;
+    req.resource = resource;
     req.asset = asset;
-    req.estimatedBytes = EstimateBytes(*asset, res->GetDesc());
+    req.estimatedBytes = EstimateBytes(*asset, resource->GetDesC());
 
     m_pending.push(req);
     return true;

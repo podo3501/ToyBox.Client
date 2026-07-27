@@ -1,7 +1,8 @@
 struct UITextProps
 {
     nointerpolation float pxRange;     // SDF/MTSDF일 때만 유효. bake 시점 texel 단위 range
-    nointerpolation uint params;
+    nointerpolation uint params1;
+    nointerpolation uint params2;
 };
 
 struct UIVertex
@@ -104,7 +105,7 @@ float UnpackOutlineWeight(uint params)
     return kOutlineWeightTable[weightIndex];
 }
 
-static const float3 kOutlineColorTable[8] =
+static const float3 kColorTable[8] =
 {
     float3(0.0f, 0.0f, 0.0f), // Black
     float3(0.25f, 0.25f, 0.25f), // DarkGray
@@ -119,10 +120,10 @@ static const float3 kOutlineColorTable[8] =
 float3 UnpackOutlineColor(uint params)
 {
     uint colorIndex = UnpackNibble(params, 1);
-    return kOutlineColorTable[colorIndex];
+    return kColorTable[colorIndex];
 }
 
-static const float kShadowTable[12] =
+static const float kShadowTable[13] =
 {
     0.00f,
     0.03f,
@@ -136,6 +137,7 @@ static const float kShadowTable[12] =
     0.54f,
     0.64f,
     0.75f,
+    0.86f,
 };
 
 float UnpackShadowOffset(uint params)
@@ -153,7 +155,7 @@ float UnpackShadowSoftness(uint params)
 float3 UnpackShadowColor(uint params)
 {
     uint idx = UnpackNibble(params, 4);
-    return kOutlineColorTable[idx];
+    return kColorTable[idx];
 }
 
 uint UnpackGradientStartIndex(uint params)
@@ -164,6 +166,44 @@ uint UnpackGradientStartIndex(uint params)
 uint UnpackGradientEndIndex(uint params)
 {
     return UnpackNibble(params, 6);
+}
+
+// --- 아우터 글로우 (params2) ---
+// 아웃라인(최대 0.45 * screenPxRange)보다 훨씬 넓게 퍼져야 해서 별도 테이블 사용.
+static const float kGlowRangeTable[13] =
+{
+    0.00f,
+    0.05f,
+    0.10f,
+    0.15f,
+    0.20f,
+    0.25f,
+    0.30f,
+    0.35f,
+    0.40f,
+    0.45f,
+    0.50f,
+    0.55f,
+    0.60f
+};
+
+float UnpackGlowRange(uint params2)
+{
+    uint idx = UnpackNibble(params2, 0);
+    return kGlowRangeTable[idx];
+}
+
+float UnpackGlowIntensity(uint params2)
+{
+    // 4bit 그대로 0~1 선형 매핑 (별도 테이블 불필요, 16단계면 충분히 촘촘함)
+    uint idx = UnpackNibble(params2, 1);
+    return idx / 12.0f;
+}
+
+float3 UnpackGlowColor(uint params2)
+{
+    uint idx = UnpackNibble(params2, 2);
+    return kColorTable[idx];
 }
 
 float median(float r, float g, float b)
@@ -180,6 +220,13 @@ float ScreenPxRange(float2 uv, float pxRange, float2 texSize)
     return max(0.5f * dot(unitRange, screenTexSize), 1.0f); // 최소 1px 보장 (pxRange=0인 mode 2/3 이외 안전장치)
 }
 
+void CompositeOver(inout float3 outRgb, inout float outA, float3 topRgbStraight, float topA)
+{
+    float3 topPremult = topRgbStraight * topA;
+    outRgb = topPremult + outRgb * (1.0f - topA);
+    outA = topA + outA * (1.0f - topA);
+}
+
 float4 PSMain(PSInput input) : SV_TARGET
 {
     Texture2D uiTex = ResourceDescriptorHeap[g_textureIndex];
@@ -188,12 +235,16 @@ float4 PSMain(PSInput input) : SV_TARGET
 
     if (input.mode == 0) // Mode 0: 일반 UI (RGBA 컬러 텍스처)
     {
-        finalColor = texColor * input.color; // 색 곱해서 tint 가능
+        // texColor.rgb는 이미 premultiplied. tint(input.color)는 straight이므로
+        // rgb는 tint.rgb * tint.a로, alpha는 tint.a로만 추가 스케일링한다.
+        finalColor.rgb = texColor.rgb * input.color.rgb * input.color.a;
+        finalColor.a   = texColor.a   * input.color.a;
     }
-    else if (input.mode == 1) // Mode 1: BitmapText (R 채널 알파 마스크)
+    else if (input.mode == 1) // Mode 1: BitmapText (R 채널 알파 마스크, PMA 무관)
     {
         float alpha = texColor.r;
-        finalColor = float4(input.color.rgb, input.color.a * alpha);
+        float finalAlpha = input.color.a * alpha;
+        finalColor = float4(input.color.rgb * finalAlpha, finalAlpha);
     }
     else if (input.mode == 2) // Mode 2: MTSDF Font
     {
@@ -206,21 +257,21 @@ float4 PSMain(PSInput input) : SV_TARGET
 
         // --- 그라데이션 fill 색상 계산 ---
         // start == end 인덱스면 그라데이션 없음으로 간주하고 기존 vertex color(tint)를 그대로 사용.
-	uint gradStartIdx = UnpackGradientStartIndex(input.textProps.params);
-        uint gradEndIdx = UnpackGradientEndIndex(input.textProps.params);
+	uint gradStartIdx = UnpackGradientStartIndex(input.textProps.params1);
+        uint gradEndIdx = UnpackGradientEndIndex(input.textProps.params1);
 
 	float3 fillColor = input.color.rgb;
         if (gradStartIdx != gradEndIdx)
         {
-            float3 gradStart = kOutlineColorTable[gradStartIdx];
-            float3 gradEnd = kOutlineColorTable[gradEndIdx];
+            float3 gradStart = kColorTable[gradStartIdx];
+            float3 gradEnd = kColorTable[gradEndIdx];
             fillColor = lerp(gradStart, gradEnd, saturate(input.localUV.y));
         }
 
 	// --- 아웃라인 ---
-        float outlineWidthFrac = UnpackOutlineWeight(input.textProps.params);
+        float outlineWidthFrac = UnpackOutlineWeight(input.textProps.params1);
         float outlineWidthPx = outlineWidthFrac * screenPxRange;
-        float3 outlineColor = UnpackOutlineColor(input.textProps.params);
+        float3 outlineColor = UnpackOutlineColor(input.textProps.params1);
 
         float fillAlpha = saturate(sd + 0.5f);
         float3 rgb;
@@ -237,14 +288,29 @@ float4 PSMain(PSInput input) : SV_TARGET
             alpha = input.color.a * fillAlpha;
         }
 
+	float3 outRgb = float3(0, 0, 0);
+        float outA = 0.0f;
+	// --- 아우터 글로우 (가장 아래 레이어) ---
+        float glowRange = UnpackGlowRange(input.textProps.params2) * screenPxRange;
+        if (glowRange > 0.0f)
+        {
+            float glowIntensity = UnpackGlowIntensity(input.textProps.params2);
+            float3 glowColor = UnpackGlowColor(input.textProps.params2);
+
+            // sd=0(외곽선)에서 1, sd=-glowRange(바깥으로 glowRange만큼)에서 0으로 부드럽게 falloff.
+            // sd>0(글자 내부)에서는 smoothstep이 1로 saturate되지만 위 레이어(fill/outline)가 덮으므로 무해.
+            float glowAlpha = smoothstep(-glowRange, 0.0f, sd) * glowIntensity;
+            CompositeOver(outRgb, outA, glowColor, glowAlpha);
+        }
+
 	// --- 드롭 섀도우 ---
-        float shadowOffsetFrac = UnpackShadowOffset(input.textProps.params);
+        float shadowOffsetFrac = UnpackShadowOffset(input.textProps.params1);
         float shadowOffsetPx = shadowOffsetFrac * screenPxRange;
         if (shadowOffsetPx > 0.0f)
         {
-            float shadowSoftnessFrac = UnpackShadowSoftness(input.textProps.params);
+            float shadowSoftnessFrac = UnpackShadowSoftness(input.textProps.params1);
             float shadowSoftness = max(shadowSoftnessFrac * screenPxRange, 0.001f); // 0 나눗셈 방지
-            float3 shadowColor = UnpackShadowColor(input.textProps.params);
+            float3 shadowColor = UnpackShadowColor(input.textProps.params1);
     
             // 픽셀 단위 오프셋 -> UV 델타. 방향은 우하단 고정(1,1) 예시, 필요시 nibble로 각도화
             float2 dir = normalize(float2(1.0f, 1.0f));
@@ -259,22 +325,16 @@ float4 PSMain(PSInput input) : SV_TARGET
             float shadowAlpha = saturate(shadowSd / shadowSoftness + 0.5f) * input.color.a;
 
             // shadow 위에 fill/outline을 alpha compositing (over 연산)
-            float3 outRgb = rgb * alpha + shadowColor * shadowAlpha * (1.0f - alpha);
-            float outA = alpha + shadowAlpha * (1.0f - alpha);
-
-            finalColor = float4(outA > 0.0001f ? outRgb / outA : 0.0f, outA);
-        }
-        else
-        {
-            finalColor = float4(rgb, alpha);
+            CompositeOver(outRgb, outA, shadowColor, shadowAlpha);		
         }
 
-
-
+	CompositeOver(outRgb, outA, rgb, alpha);
+	finalColor = float4(outRgb, outA);
     }
     else // 예외 예비 처리 (기존 UI 로직 적용)
     {
-        finalColor = texColor * input.color;
+        finalColor.rgb = texColor.rgb * input.color.rgb * input.color.a;
+        finalColor.a   = texColor.a   * input.color.a;
     }
 
     return finalColor;

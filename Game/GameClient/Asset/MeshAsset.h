@@ -30,7 +30,8 @@ enum class UIRenderMode : uint32_t
 struct UITextProps
 {
     float sdfPxRange{ 0.f };
-    uint32_t params{ 0 }; //pack된 값들 순서 : weight, outlinecolor
+    uint32_t params1{ 0 }; //param1에 pack된 효과: outline, drop shadow, fill gradient
+    uint32_t params2{ 0 }; //param2에 pack된 효과:
 };
 
 struct UIVertex
