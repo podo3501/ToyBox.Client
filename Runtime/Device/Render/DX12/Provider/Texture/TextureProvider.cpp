@@ -17,12 +17,12 @@ bool TextureProvider::Initialize(ShaderLibrary& shaderLibrary)
     return true;
 }
 
-shared_ptr<TextureResource> TextureProvider::CreateResource(const TextureDesc& desc)
+shared_ptr<TextureResource> TextureProvider::CreateResource()
 {
-    return make_shared<TextureResource>(desc);
+    return make_shared<TextureResource>();
 }
 
-std::shared_ptr<TextureAsset> TextureProvider::CreateColorAsset(const Core::Color& color)
+static std::shared_ptr<TextureAsset> CreateColorAsset(const Core::Color& color, ColorSpace colorSpace)
 {
     auto asset = std::make_shared<TextureAsset>();
     asset->size = ToSize(1, 1);
@@ -34,6 +34,10 @@ std::shared_ptr<TextureAsset> TextureProvider::CreateColorAsset(const Core::Colo
     asset->pixels[2] = color.B8();
     asset->pixels[3] = color.A8();
 
+    asset->colorSpace = colorSpace;
+    asset->generateMipmaps = false; //같은 색상이기 때문에 불필요
+    asset->isPremultipliedAlpha = false; //ui도 기본은 false로.
+
     return asset;
 }
 
@@ -41,23 +45,13 @@ bool TextureProvider::CreateBuiltinTextures()
 {
     std::array<std::shared_ptr<TextureAsset>, Core::EnumSize<BuiltinTextureType>> builtinAssets;
     
-    builtinAssets[Core::ToIndex(BuiltinTextureType::White)] = CreateColorAsset(Core::Color::White); // 흰색
-    builtinAssets[Core::ToIndex(BuiltinTextureType::FlatNormal)] = CreateColorAsset(Core::Color(0.5f, 0.5f, 1.f)); // 평평한 노멀 (128, 128, 255)
-    builtinAssets[Core::ToIndex(BuiltinTextureType::DefaultARM)] = CreateColorAsset(Core::Color(1.f, 0.5f, 0.f)); //ARM 기본
-
-    struct BuiltinConfig { BuiltinTextureType builtinType; const char* name; TextureType texType; };
-    BuiltinConfig configs[] = {
-        { BuiltinTextureType::White, "BuiltinTexture_White", TextureType::Color },
-        { BuiltinTextureType::FlatNormal, "BuiltinTexture_FlatNormal", TextureType::Linear },
-        { BuiltinTextureType::DefaultARM, "BuiltinTexture_DefaultARM", TextureType::Linear }
-    };
-
-    for (const auto& config : configs)
+    builtinAssets[Core::ToIndex(BuiltinTextureType::White)] = CreateColorAsset(Core::Color::White, ColorSpace::SRGB); // 흰색
+    builtinAssets[Core::ToIndex(BuiltinTextureType::FlatNormal)] = CreateColorAsset(Core::Color(0.5f, 0.5f, 1.f), ColorSpace::Linear); // 평평한 노멀 (128, 128, 255)
+    builtinAssets[Core::ToIndex(BuiltinTextureType::DefaultARM)] = CreateColorAsset(Core::Color(1.f, 0.5f, 0.f), ColorSpace::Linear); //ARM 기본
+    
+    for (int nType = 0; nType < Core::EnumSize<BuiltinTextureType>; nType++)
     {
-        TextureDesc desc{ Core::ResourceID::MakeBuiltin(config.name), config.texType, false };
-
-        auto nType = Core::ToIndex(config.builtinType);
-        auto tex = CreateBuiltinTexture(desc, builtinAssets[nType]);
+        auto tex = CreateBuiltinTexture(builtinAssets[nType]);
         if (!tex) return false;
 
         m_builtinTextures[nType] = tex;
@@ -66,11 +60,9 @@ bool TextureProvider::CreateBuiltinTextures()
     return true;
 }
 
-std::shared_ptr<TextureResource> TextureProvider::CreateBuiltinTexture(
-    const TextureDesc& desc,
-    std::shared_ptr<TextureAsset> asset)
+std::shared_ptr<TextureResource> TextureProvider::CreateBuiltinTexture(std::shared_ptr<TextureAsset> asset)
 {
-    auto texRes = CreateResource(desc);
+    auto texRes = CreateResource();
     if (!texRes)
         return nullptr;
 
@@ -88,7 +80,7 @@ std::shared_ptr<TextureResource> TextureProvider::GetBuiltinTexture(BuiltinTextu
     return m_builtinTextures[idx];
 }
 
-static size_t EstimateBytes(const TextureAsset& asset, const TextureDesC& desc)
+static size_t EstimateBytes(const TextureAsset& asset, const TextureDesc& desc)
 {
     size_t baseBytes = asset.pixels.size();
     if (!desc.generateMipmaps)
@@ -103,13 +95,13 @@ bool TextureProvider::LoadResource(
 {
     if (!asset) return false;
 
-    TextureDesC desc{ asset->colorSpace, asset->generateMipmaps, asset->isPremultipliedAlpha };
-    resource->SetDesC(desc);
+    TextureDesc desc{ asset->colorSpace, asset->generateMipmaps, asset->isPremultipliedAlpha };
+    resource->SetDesc(desc);
 
     TextureLoadRequest req;
     req.resource = resource;
     req.asset = asset;
-    req.estimatedBytes = EstimateBytes(*asset, resource->GetDesC());
+    req.estimatedBytes = EstimateBytes(*asset, resource->GetDesc());
 
     m_pending.push(req);
     return true;

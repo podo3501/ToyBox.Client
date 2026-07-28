@@ -58,7 +58,6 @@
     <ClCompile Include="Service\Render\Definition\Material\MaterialDescFactory.cpp" />
     <ClCompile Include="Service\Render\Definition\Mesh\MeshDescFactory.cpp" />
     <ClCompile Include="Service\Render\Definition\ShaderStageBuilder.cpp" />
-    <ClCompile Include="Service\Render\Definition\Texture\TextureDescFactory.cpp" />
     <ClCompile Include="Service\Render\Repository\Font\FontRepository.cpp" />
     <ClCompile Include="Service\Render\SceneRenderer.cpp" />
     <ClCompile Include="Service\Render\RenderService.cpp" />
@@ -204,8 +203,6 @@
     <ClInclude Include="Service\Render\Definition\Mesh\MeshDescFactory.h" />
     <ClInclude Include="Service\Render\Definition\RenderState.h" />
     <ClInclude Include="Service\Render\Definition\ShaderStageBuilder.h" />
-    <ClInclude Include="Service\Render\Definition\Texture\TextureDesc.h" />
-    <ClInclude Include="Service\Render\Definition\Texture\TextureDescFactory.h" />
     <ClInclude Include="Service\Render\Definition\Text\TextStyle.h" />
     <ClInclude Include="Service\Render\Handle\FontHandle.h" />
     <ClInclude Include="Service\Render\Handle\MaterialHandle.h" />

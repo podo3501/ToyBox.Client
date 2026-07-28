@@ -57,7 +57,7 @@ void TextureCreateGraphBuilder::LoadTextures(const std::vector<TextureLoadReques
         RGResourceID texResID = RenderGraph::CreateRGResourceID();
         m_registry.Register(texResID, req.resource);
 
-        auto& texDesc = req.resource->GetDesC();
+        auto& texDesc = req.resource->GetDesc();
         auto mips = CanGenerateMips(*req.asset, texDesc.generateMipmaps);
         auto resDesc = CreateTexture2DDesc(*req.asset, mips);
         auto texRes = m_resFactory.CreateTextureResource(resDesc);

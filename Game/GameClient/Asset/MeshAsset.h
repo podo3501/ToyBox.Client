@@ -31,7 +31,7 @@ struct UITextProps
 {
     float sdfPxRange{ 0.f };
     uint32_t params1{ 0 }; //param1에 pack된 효과: outline, drop shadow, fill gradient
-    uint32_t params2{ 0 }; //param2에 pack된 효과:
+    uint32_t params2{ 0 }; //param2에 pack된 효과: glow
 };
 
 struct UIVertex

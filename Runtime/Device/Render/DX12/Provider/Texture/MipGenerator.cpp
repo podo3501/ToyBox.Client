@@ -115,7 +115,7 @@ void MipGenerator::GenerateMips(CommandList& cmd, BindlessDescriptorAllocator& s
     cmd->SetDescriptorHeaps(1, heaps);
     cmd->SetComputeRootSignature(m_rootSignature.Get());
 
-    const MipType mipType = GetMipType(texResource->GetDesC().colorSpace);
+    const MipType mipType = GetMipType(texResource->GetDesc().colorSpace);
     auto* pso = GetPSO(mipType);
     if (!pso) return;
     cmd->SetPipelineState(pso);

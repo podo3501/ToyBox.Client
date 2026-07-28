@@ -82,21 +82,24 @@ uint UnpackNibble(uint packed, uint nibbleIndex)
     return (packed >> (nibbleIndex * 4)) & 0x0F;
 }
 
-static const float kOutlineWeightTable[13] =
+static const float kOutlineWeightTable[16] =
 {
     0.000f,
-    0.015f,
-    0.03f,
-    0.05f,
-    0.07f,
-    0.10f,
-    0.13f,
-    0.17f,
-    0.22f,
-    0.27f,
-    0.33f,
-    0.38f,
-    0.45f,
+    0.012f,
+    0.024f,
+    0.038f,
+    0.053f,
+    0.070f,
+    0.090f,
+    0.112f,
+    0.137f,
+    0.165f,
+    0.197f,
+    0.234f,
+    0.277f,
+    0.327f,
+    0.392f,
+    0.465f,
 };
 
 float UnpackOutlineWeight(uint params)
@@ -105,12 +108,23 @@ float UnpackOutlineWeight(uint params)
     return kOutlineWeightTable[weightIndex];
 }
 
-static const float3 kColorTable[8] =
+static const float3 kColorTable[16] =
 {
-    float3(0.0f, 0.0f, 0.0f), // Black
+    float3(0.00f, 0.00f, 0.00f), // Black
     float3(0.25f, 0.25f, 0.25f), // DarkGray
+    float3(0.50f, 0.50f, 0.50f), // Gray
     float3(0.75f, 0.75f, 0.75f), // LightGray
     float3(1.00f, 1.00f, 1.00f), // White
+
+    float3(0.80f, 0.15f, 0.15f), // Red
+    float3(0.15f, 0.75f, 0.20f), // Green
+    float3(0.20f, 0.45f, 0.95f), // Blue
+    float3(1.00f, 0.90f, 0.20f), // Yellow
+
+    float3(1.00f, 0.55f, 0.15f), // Orange
+    float3(0.70f, 0.30f, 0.90f), // Purple
+    float3(0.15f, 0.85f, 0.85f), // Cyan
+
     float3(0.00f, 0.00f, 0.35f), // Navy
     float3(0.21f, 0.27f, 0.31f), // Charcoal
     float3(0.25f, 0.13f, 0.08f), // DarkBrown
@@ -123,21 +137,24 @@ float3 UnpackOutlineColor(uint params)
     return kColorTable[colorIndex];
 }
 
-static const float kShadowTable[13] =
+static const float kShadowTable[16] =
 {
-    0.00f,
-    0.03f,
-    0.06f,
-    0.10f,
-    0.15f,
-    0.21f,
-    0.28f,
-    0.36f,
-    0.45f,
-    0.54f,
-    0.64f,
-    0.75f,
-    0.86f,
+    0.000f,
+    0.020f,
+    0.045f,
+    0.075f,
+    0.110f,
+    0.155f,
+    0.210f,
+    0.275f,
+    0.350f,
+    0.440f,
+    0.540f,
+    0.650f,
+    0.760f,
+    0.860f,
+    0.940f,
+    1.000f,
 };
 
 float UnpackShadowOffset(uint params)
@@ -170,21 +187,24 @@ uint UnpackGradientEndIndex(uint params)
 
 // --- 아우터 글로우 (params2) ---
 // 아웃라인(최대 0.45 * screenPxRange)보다 훨씬 넓게 퍼져야 해서 별도 테이블 사용.
-static const float kGlowRangeTable[13] =
+static const float kGlowRangeTable[16] =
 {
-    0.00f,
-    0.05f,
-    0.10f,
-    0.15f,
-    0.20f,
-    0.25f,
-    0.30f,
-    0.35f,
-    0.40f,
-    0.45f,
-    0.50f,
-    0.55f,
-    0.60f
+    0.000f,
+    0.030f,
+    0.062f,
+    0.096f,
+    0.132f,
+    0.171f,
+    0.213f,
+    0.258f,
+    0.306f,
+    0.357f,
+    0.411f,
+    0.468f,
+    0.528f,
+    0.591f,
+    0.657f,
+    0.700f,
 };
 
 float UnpackGlowRange(uint params2)
@@ -197,7 +217,7 @@ float UnpackGlowIntensity(uint params2)
 {
     // 4bit 그대로 0~1 선형 매핑 (별도 테이블 불필요, 16단계면 충분히 촘촘함)
     uint idx = UnpackNibble(params2, 1);
-    return idx / 12.0f;
+    return idx / 15.0f;
 }
 
 float3 UnpackGlowColor(uint params2)

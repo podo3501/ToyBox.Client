@@ -16,8 +16,8 @@ constexpr TextureSlot Resolve(PbrTextureSlot s)
 
 struct PbrSurface
 {
-    float normal{ 1.f }; //세기값
-    float ao{ 1.f }; //세기값
+    float normal{ 1.f }; //노말맵 세기값
+    float ao{ 1.f }; //주변광 세기값
     float roughness{ 0.5f }; //1이 거친것
     float metallic{ 0.0f }; //1이 메탈릭
 

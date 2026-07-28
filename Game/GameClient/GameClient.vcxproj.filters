@@ -267,9 +267,6 @@
     <ClCompile Include="Service\Render\Definition\Material\MaterialDescFactory.cpp">
       <Filter>Service\Render\Definition\Material</Filter>
     </ClCompile>
-    <ClCompile Include="Service\Render\Definition\Texture\TextureDescFactory.cpp">
-      <Filter>Service\Render\Definition\Texture</Filter>
-    </ClCompile>
     <ClCompile Include="AssetMetaRegistry.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -743,12 +740,6 @@
     <ClInclude Include="Service\Render\Definition\Material\UIMaterialDesc.h">
       <Filter>Service\Render\Definition\Material</Filter>
     </ClInclude>
-    <ClInclude Include="Service\Render\Definition\Texture\TextureDesc.h">
-      <Filter>Service\Render\Definition\Texture</Filter>
-    </ClInclude>
-    <ClInclude Include="Service\Render\Definition\Texture\TextureDescFactory.h">
-      <Filter>Service\Render\Definition\Texture</Filter>
-    </ClInclude>
     <ClInclude Include="Service\Render\Definition\Text\TextStyle.h">
       <Filter>Service\Render\Definition\Text</Filter>
     </ClInclude>
@@ -878,9 +869,6 @@
     </Filter>
     <Filter Include="Service\Render\Definition\Material">
       <UniqueIdentifier>{b57274f5-4772-4f57-b9c4-6f54bbe4d765}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Service\Render\Definition\Texture">
-      <UniqueIdentifier>{1ebec737-9a77-4f90-9f30-a02561095162}</UniqueIdentifier>
     </Filter>
     <Filter Include="Service\Render\Definition\Text">
       <UniqueIdentifier>{47340449-7e18-4b2b-a592-00cd54a03450}</UniqueIdentifier>

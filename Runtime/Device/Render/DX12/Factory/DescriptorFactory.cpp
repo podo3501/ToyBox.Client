@@ -4,7 +4,6 @@
 #include "Core/D3D12Conversions.h"
 #include "Resource/Texture/TextureResource.h"
 #include "Resource/Resource.h"
-#include "GameClient/Service/Render/Definition/Texture/TextureDesc.h"
 #include "GameClient/Service/Render/RenderConfig.h"
 
 DescriptorFactory::~DescriptorFactory() = default;
@@ -87,14 +86,14 @@ bool DescriptorFactory::CreateTextureViews(TextureResource* texRes, bool generat
     const UINT mipCount = resDesc.MipLevels;
 
     DXGI_FORMAT srvFormat = resDesc.Format;
-    if (texRes->GetDesC().colorSpace == ColorSpace::SRGB)
+    if (texRes->GetDesc().colorSpace == ColorSpace::SRGB)
         srvFormat = ToSRGB(resDesc.Format);
 
     UINT mainMipLevels = generateMips ? mipCount : 1;
     UINT mainIndex = CreateTextureSRV(res, srvFormat, mainMipLevels);
     if (mainIndex == UINT_MAX) return false;
 
-    texRes->SetHeapIndex(mainIndex);
+    texRes->SetHeapIndex(mainIndex); //bindless라서 자신이 몇번 인덱스인지 저장한다. 
 
     if (generateMips && mipCount > 1)
     {

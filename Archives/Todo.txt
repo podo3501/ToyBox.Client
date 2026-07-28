@@ -333,34 +333,21 @@
 --resource loader factory로 바꾸고 나머지 함수들은 helper로 만들어서 보내자.
 --ui 텍스쳐 거꾸로 나오는 거 수정.
 --텍스쳐 부분(정적 atlas) 출력되게 구현
-
-@폰트 보강
-    textSystem으로 돼 있는데 이름 및 위치 고민
-    컬러 추가
-    외곽선(sdf) 만들기
-    quadUI 어떻게 처리할지.
-    srv로 초기화 시키고 있는데 어떻게 할지
-    atlas 텍스쳐를 넘겼을때 처리
-    폰트크기별로 atlas 관리
+--컬러 추가
+--외곽선(mtsdf) 만들기
+--transient mesh로 quadUI 처리
+--폰트크기(10부터 20크기 안에는 한 bucket)로 bucket 만들고 atlas 관리
+--Keining 지원(harfbuzz)
+--폰트 outline/shadow/glow/gradient 구현
 
 @폰트
-- SDF / Outline / Shadow
-- Kerning 지원
 - Multi Line / Alignment
-- Text Color
-- QuadMesh 처리
-- Atlas Full 정책
-- Atlas를 FontSize별로 관리
-- Atlas Texture 전달 구조 개선
-- ResourceState(SRV 초기화) 정책
-- TextSystem 이름 및 위치 정리
 - Fallback Font 지원
 
 @ui쪽 draw call 한번으로 하기 위해서
 - mesh shader로 메쉬 생성해서 하는걸로.
 - transient mesh를 사용하고 있는데 mesh shader로 바꿀수 있는지
 - z order 와 텍스쳐 order로 하는걸로 material은 안쓰이게 될꺼니까 material을 어떻게 처리할지.
-- 
 
 @렌더러 만들기
     @화면 배경색깔 지정하게끔

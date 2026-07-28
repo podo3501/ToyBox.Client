@@ -54,9 +54,9 @@ MaterialHandle MaterialRepository::GetOrCreate(const MaterialDesc& desc)
     m_cache[key] = handle;
 
     uint32_t validTextureCount = 0;
-    for (const auto& [_, tex] : desc.textures)
+    for (const auto& [_, resID] : desc.textures)
     {
-        if (tex.resID.GetType() == Core::ResourceIDType::Path)
+        if (resID.GetType() == Core::ResourceIDType::Path)
             validTextureCount++;
     }
 
@@ -75,14 +75,14 @@ MaterialHandle MaterialRepository::GetOrCreate(const MaterialDesc& desc)
     pending.expectedCount = validTextureCount;
     m_pendingTextures.emplace(handle, std::move(pending));
 
-    for (const auto& [slot, tex] : desc.textures)
+    for (const auto& [slot, resID] : desc.textures)
     {
-        auto resType = tex.resID.GetType();
+        auto resType = resID.GetType();
         switch (resType)
         {
         case Core::ResourceIDType::Path:
         {
-            auto reqID = Asset::PushRequest<TextureAsset>(m_asyncLoader, tex.resID);
+            auto reqID = Asset::PushRequest<TextureAsset>(m_asyncLoader, resID);
             m_cpuPending.push_back({ handle, slot, reqID });
             break;
         }

@@ -18,7 +18,7 @@ public:
     ~TextureProvider();
     TextureProvider() = delete;
     explicit TextureProvider(TextureCreateGraphBuilder create) noexcept;
-    shared_ptr<TextureResource> CreateResource(const TextureDesc& desc);
+    shared_ptr<TextureResource> CreateResource();
     bool LoadResource(std::shared_ptr<TextureResource> resource, std::shared_ptr<TextureAsset> asset);
 
     bool Initialize(ShaderLibrary& shaderLibrary);
@@ -27,8 +27,7 @@ public:
 
 private:
     bool CreateBuiltinTextures();
-    std::shared_ptr<TextureResource> CreateBuiltinTexture(const TextureDesc& desc, std::shared_ptr<TextureAsset> asset);
-    std::shared_ptr<TextureAsset> CreateColorAsset(const Core::Color& color);
+    std::shared_ptr<TextureResource> CreateBuiltinTexture(std::shared_ptr<TextureAsset> asset);
 
     TextureCreateGraphBuilder m_createBuilder;
     std::queue<TextureLoadRequest> m_pending;

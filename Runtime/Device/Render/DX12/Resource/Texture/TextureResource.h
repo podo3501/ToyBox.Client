@@ -1,10 +1,9 @@
 #pragma once
-#include "GameClient/Service/Render/Definition/Texture/TextureDesc.h"
 #include "Resource/Resource.h"
 #include "Core/Foundation/Geometry2D.h"
 #include "GameClient/Asset/TextureTypes.h"
 
-struct TextureDesC
+struct TextureDesc
 {
 	ColorSpace colorSpace{ ColorSpace::SRGB };
 	bool generateMipmaps{ false };
@@ -15,15 +14,14 @@ class TextureResource
 {
 public:
 	~TextureResource();
-	TextureResource() = delete;
-	TextureResource(const TextureDesc& desc);
+	TextureResource();
 	bool IsReady() const noexcept { return m_ready; }
 	void MarkReady() { m_ready = true; }
 
 	void SetPremultiplyAlpha(bool premultiplyAlpha) { m_premultiplyAlpha = premultiplyAlpha; }
 
-	void SetDesC(const TextureDesC& desc) { m_desC = desc; }
-	const TextureDesC& GetDesC() const noexcept { return m_desC; }
+	void SetDesc(const TextureDesc& desc) { m_desc = desc; }
+	const TextureDesc& GetDesc() const noexcept { return m_desc; }
 
 	const Resource& Get() { return m_texture; }
 	void Set(Resource resource) { m_texture = std::move(resource); }
@@ -51,7 +49,6 @@ public:
 
 private:
 	TextureDesc m_desc;
-	TextureDesC m_desC;
 	bool m_premultiplyAlpha{ false };
 	Resource m_texture;
 

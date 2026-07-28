@@ -71,20 +71,20 @@ bool MaterialProvider::LoadResource(
         return false;
 
     auto& matDesc = matRes->GetMaterialDesc();
-    for (const auto& [slot, texDesc] : matDesc.textures)
+    for (const auto& bindTex : matDesc.textures)
     {
-        auto it = texAssets.find(slot);
+        auto it = texAssets.find(bindTex.slot);
         if (it == texAssets.end() || !it->second)
             continue;
 
-        auto texRes = m_texProvider.CreateResource(texDesc);
+        auto texRes = m_texProvider.CreateResource();
         if (!texRes)
             return false;
 
         if (!m_texProvider.LoadResource(texRes, it->second))
             return false;
 
-        matRes->SetTexture(slot, texRes);
+        matRes->SetTexture(bindTex.slot, texRes);
     }
 
     m_pendingMaterials.push_back(matRes);

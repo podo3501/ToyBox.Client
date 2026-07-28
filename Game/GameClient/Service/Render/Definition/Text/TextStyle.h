@@ -25,14 +25,28 @@ enum class TextEffectLevel
     Level10,
     Level11,
     Level12,
+    Level13,
+    Level14,
+    Level15,
 };
 
 enum class TextColor
 {
     Black = 0,
     DarkGray,
+    Gray,
     LightGray,
     White,
+
+    Red,
+    Green,
+    Blue,
+    Yellow,
+
+    Orange,
+    Purple,
+    Cyan,
+
     Navy,
     Charcoal,
     DarkBrown,

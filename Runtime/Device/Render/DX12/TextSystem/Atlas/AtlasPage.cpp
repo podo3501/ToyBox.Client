@@ -43,13 +43,14 @@ void AtlasPage::CreateAtlasMaterial(
     UINT srvIndex = factory.CreateTextureSRV(resource, format);
     Assert(srvIndex != UINT_MAX);
 
+    auto atlasTex = make_shared<TextureResource>();
     TextureDesc atlasTexDesc
     {
-        .resID = Core::ResourceID::MakeBuiltin("atlas"),
-        .type = TextureType::Color,
-        .generateMips = false
+        .colorSpace = ColorSpace::Linear,
+        .generateMipmaps = false,
+        .isPremultiplyAlpha = false
     };
-    auto atlasTex = make_shared<TextureResource>(atlasTexDesc);
+    atlasTex->SetDesc(atlasTexDesc); // 이 atlasTexDesc 정보로 텍스쳐를 만들지 않기 때문에 정보가 필요 없지만, 넣어놓도록 한다.
     atlasTex->Set(std::move(resource));
     atlasTex->SetHeapIndex(srvIndex);
     atlasTex->SetSize(atlasTexSize);

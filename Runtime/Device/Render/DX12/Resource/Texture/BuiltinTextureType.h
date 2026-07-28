@@ -1,4 +1,5 @@
 #pragma once
+using TextureSlot = uint32_t;
 
 enum class BuiltinTextureType
 {

@@ -3,19 +3,18 @@
 #include "PbrMaterialDesc.h"
 #include "GridMaterialDesc.h"
 #include "UIMaterialDesc.h"
-#include "../Texture/TextureDescFactory.h"
 
 struct PhongTextureArgs
 {
-    TextureDesc albedo{};
-    TextureDesc normal{};
+    Core::ResourceID albedo{};
+    Core::ResourceID normal{};
 };
 
 struct PbrTextureArgs
 {
-    TextureDesc albedo{};
-    TextureDesc normal{};
-    TextureDesc arm{}; //R: AO, G: Roughness, B: Metallic
+    Core::ResourceID albedo;
+    Core::ResourceID normal{};
+    Core::ResourceID arm{}; //R: AO, G: Roughness, B: Metallic
 };
 
 namespace SurfaceMatDescFactory
@@ -42,7 +41,7 @@ namespace DebugSurfaceMatDescFactory
 
 struct UITextureArgs
 {
-    TextureDesc normal{};
+    Core::ResourceID normal{};
 };
 
 namespace UIMatDescFactory

@@ -8,8 +8,8 @@ namespace SurfaceMatDescFactory
         PhongMaterialDesc CreateLit(const PhongTextureArgs& texArgs)
         {
             PhongMaterialDesc desc{};
-            desc.textures[Resolve(PhongTextureSlot::Albedo)] = texArgs.albedo;
-            desc.textures[Resolve(PhongTextureSlot::Normal)] = texArgs.normal;
+            desc.textures.emplace_back(Resolve(PhongTextureSlot::Albedo), texArgs.albedo);
+            desc.textures.emplace_back(Resolve(PhongTextureSlot::Normal), texArgs.normal);
 
             return desc;
         }
@@ -32,9 +32,9 @@ namespace SurfaceMatDescFactory
         PbrMaterialDesc CreateLit(const PbrTextureArgs& texArgs)
         {
             PbrMaterialDesc desc{};
-            desc.textures[Resolve(PbrTextureSlot::Albedo)] = texArgs.albedo;
-            desc.textures[Resolve(PbrTextureSlot::Normal)] = texArgs.normal;
-            desc.textures[Resolve(PbrTextureSlot::ARM)] = texArgs.arm;
+            desc.textures.emplace_back(Resolve(PbrTextureSlot::Albedo), texArgs.albedo);
+            desc.textures.emplace_back(Resolve(PbrTextureSlot::Normal), texArgs.normal);
+            desc.textures.emplace_back(Resolve(PbrTextureSlot::ARM), texArgs.arm);
 
             return desc;
         }
@@ -59,7 +59,7 @@ namespace DebugSurfaceMatDescFactory
 UIMaterialDesc UIMatDescFactory::CreateDefault(const UITextureArgs& texArgs)
 {
     UIMaterialDesc desc{};
-    desc.textures[Resolve(UITextureSlot::Normal)] = texArgs.normal;
+    desc.textures.emplace_back(Resolve(UITextureSlot::Normal), texArgs.normal);
 
     return desc;
 }

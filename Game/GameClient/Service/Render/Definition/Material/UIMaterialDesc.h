@@ -1,6 +1,5 @@
 #pragma once
 #include "MaterialDesc.h"
-#include "../Texture/TextureDesc.h"
 
 enum class UITextureSlot : uint32_t
 {

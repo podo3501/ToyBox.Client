@@ -64,7 +64,7 @@ std::shared_ptr<TextureAsset> TextureLoader::LoadFromMemory(const Core::Resource
     }
 
     bool resultIsPMA = false;
-    if (target == BlendTargetSpace::None || source == AlphaSourceState::Opaque)
+    if (source == AlphaSourceState::Opaque || target == BlendTargetSpace::None)
     {
         resultIsPMA = false;
     }
