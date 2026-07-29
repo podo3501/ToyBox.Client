@@ -15,10 +15,10 @@ struct IRenderFrame
 
 	virtual void DrawText(
 		std::shared_ptr<IFontResource> fontRes,
-		std::string_view text,
+		TextRenderMode mode,
+		std::span<const TextSpan> spans,
 		uint32_t size,
-		const Core::Vector2& pos,
-		const TextStyle& style) = 0;
+		const Rect& bounds) = 0;
 
 	virtual void DrawSurface(
 		std::shared_ptr<IMeshResource> meshRes,

@@ -101,11 +101,16 @@ struct TextGlow
 
 struct TextStyle
 {
-    TextRenderMode mode{ TextRenderMode::MTSDF };
     Core::Color color{ Core::Color::White };
 
-    TextOutline outline;
-    TextShadow shadow;
-    TextGradient gradient;
-    TextGlow glow;
+    std::optional<TextOutline> outline;
+    std::optional<TextShadow> shadow;
+    std::optional<TextGradient> gradient;
+    std::optional<TextGlow> glow;
+};
+
+struct TextSpan
+{
+    std::string_view text;
+    TextStyle style;
 };

@@ -47,6 +47,18 @@ FT_GlyphSlot FontResource::GetGlyphSlot(uint32_t glyphIndex, uint32_t size) cons
     return m_ftFace->glyph;
 }
 
+float FontResource::GetLineHeight(uint32_t size) const
+{
+    FT_Set_Pixel_Sizes(m_ftFace, 0, size);
+    return m_ftFace->size->metrics.height / 64.0f; //26.6 변환
+}
+
+float FontResource::GetAscent(uint32_t size) const
+{
+    FT_Set_Pixel_Sizes(m_ftFace, 0, size);
+    return m_ftFace->size->metrics.ascender / 64.f; // 26.6 fixed-point -> float
+}
+
 std::vector<ShapedGlyph> FontResource::Shape(std::span<const char32_t> text, uint32_t size)
 {
     FT_Set_Pixel_Sizes(m_ftFace, 0, size);
@@ -81,6 +93,7 @@ std::vector<ShapedGlyph> FontResource::Shape(std::span<const char32_t> text, uin
         ShapedGlyph glyph;
 
         glyph.glyphIndex = infos[i].codepoint;
+        glyph.sourceIndex = infos[i].cluster;
         glyph.advanceX = positions[i].x_advance / 64.f;
         glyph.offsetX = positions[i].x_offset / 64.f;
         glyph.offsetY = positions[i].y_offset / 64.f;

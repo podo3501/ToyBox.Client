@@ -36,16 +36,42 @@ SceneRenderer::SceneRenderer(
 
 void SceneRenderer::DrawText(
 	FontHandle hF, 
+	TextRenderMode mode,
 	std::string_view text, 
 	uint32_t size, 
-	const Core::Vector2& pos, 
+	const Rect& bounds, 
 	const TextStyle& style)
+{
+	TextSpan span{ text, style };
+	DrawText(hF, mode, std::span{ &span, 1 }, size, bounds);
+}
+
+void SceneRenderer::DrawText(
+	FontHandle hF, 
+	TextRenderMode mode,
+	std::span<const TextSpan> spans, 
+	uint32_t size, 
+	const Rect& bounds)
 {
 	auto font = m_fontRepository->Get(hF);
 	if (!font || font->state != LoadState::Ready)
 		return;
 
-	m_renderFrame->DrawText(font->fontRes, text, size, pos, style);
+	if (mode == TextRenderMode::Bitmap)
+	{
+		for (auto& span : spans)
+		{
+			auto& style = span.style;
+			//비트맵에는 이 기능들이 없다. 만약 Bitmap에 기능을 추가하면 여기서 assert를 제거.
+			//아예 style을 따로 갈수도 있지만, 그러기에는 구현 비용이 크다. 그리고 bitmap이라고 이 기능이 구현이 안되는것도 아니다.
+			Assert(!style.outline.has_value()); 
+			Assert(!style.shadow.has_value());
+			Assert(!style.gradient.has_value());
+			Assert(!style.glow.has_value());
+		}
+	}
+
+	m_renderFrame->DrawText(font->fontRes, mode, spans, size, bounds);
 }
 
 void SceneRenderer::DrawSurface(MeshHandle hM, MaterialHandle hMtl, const Core::Matrix& world)
@@ -78,11 +104,11 @@ void SceneRenderer::DrawUI(MaterialHandle hMtl, const Rect& dest, const Rect* so
 	auto data = ResolveResources(m_uiQuad, hMtl);
 	if (!data) return;
 
-	float width = static_cast<float>(dest.width);
-	float height = static_cast<float>(dest.height);
+	float width = dest.width;
+	float height = dest.height;
 
 	Core::Matrix scale = Core::Matrix::Scale(width, height, 1.0f);
-	Core::Matrix translation = Core::Matrix::Translation(static_cast<float>(dest.x), static_cast<float>(dest.y), 0.0f);
+	Core::Matrix translation = Core::Matrix::Translation(dest.x, dest.y, 0.0f);
 	Core::Matrix world = scale * translation;
 
 	m_renderFrame->DrawUI(data->meshRes, data->matRes, world, source);

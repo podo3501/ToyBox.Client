@@ -26,6 +26,9 @@ public:
 	void MarkReady() noexcept { m_ready = true; }
 	FT_Face GetFtFace() { return m_ftFace; }
 
+	float GetLineHeight(uint32_t size) const;
+	float GetAscent(uint32_t size) const;
+
 private:
 	hb_font_t* GetOrCreateHbFont(uint32_t size);
 

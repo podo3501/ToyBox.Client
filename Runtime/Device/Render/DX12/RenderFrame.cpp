@@ -19,21 +19,53 @@ void RenderFrame::SetFrameData(const FrameData& frameData) noexcept
 
 void RenderFrame::DrawText(
     std::shared_ptr<IFontResource> fontRes,
-    std::string_view text,
+    TextRenderMode mode,
+    std::span<const TextSpan> spans,
     uint32_t size,
-    const Core::Vector2& pos,
-    const TextStyle& style)
+    const Rect& bounds)
 {
     Assert(fontRes);
-    if (text.empty()) return;
+    if(spans.empty()) return;
+
+    Rect normalized = bounds;
+    normalized.Normalize(); // 뒤집힌 rect 방어
 
     DrawTextItem item;
-
-    item.fontRes = std::move(fontRes);
-    item.codePoints = Core::UTF8ToUTF32(text);
+    item.fontRes = fontRes;
+    item.mode = mode;
     item.fontSize = size;
-    item.position = pos;
-    item.style = style;
+    item.position = Core::Vector2{ normalized.Left(), normalized.Top() };
+    item.size = Core::Vector2{ normalized.width, normalized.height };
+
+    uint32_t lineIndex = 0;
+    for (auto& span : spans)
+    {
+        if (span.text.empty()) continue;
+
+        std::vector<char32_t> codepoints = Core::UTF8ToUTF32(span.text);
+        size_t segStart = 0;
+        for (size_t i = 0; i <= codepoints.size(); ++i)
+        {
+            bool isNewline = (i < codepoints.size()) && (codepoints[i] == U'\n');
+            bool isEnd = (i == codepoints.size());
+            if (!isNewline && !isEnd)
+                continue;
+
+            if (i > segStart) // 빈 세그먼트(연속 \n)는 run을 만들지 않음
+            {
+                item.runs.push_back({
+                    std::vector<char32_t>(codepoints.begin() + segStart, codepoints.begin() + i),
+                    span.style,
+                    lineIndex
+                    });
+            }
+
+            if (isNewline)
+                ++lineIndex; // 내용이 있든 없든 줄 번호는 증가
+
+            segStart = i + 1;
+        }
+    }
 
     m_pendingTexts.emplace_back(std::move(item));
 }

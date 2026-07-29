@@ -24,7 +24,11 @@ struct GlyphInfo
 struct ShapedGlyph
 {
     uint32_t glyphIndex;
+    uint32_t sourceIndex;
+    uint32_t runIndex;
+    uint32_t lineIndex;
 
+    char32_t codepoint{ 0 };
     float advanceX;
     float offsetX;
     float offsetY;

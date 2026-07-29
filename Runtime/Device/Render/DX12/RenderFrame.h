@@ -15,10 +15,10 @@ public:
 	virtual void SetFrameData(const FrameData& frameData) noexcept override;
 	virtual void DrawText(
 		std::shared_ptr<IFontResource> fontRes,
-		std::string_view text,
+		TextRenderMode mode,
+		std::span<const TextSpan> spans,
 		uint32_t size,
-		const Core::Vector2& pos,
-		const TextStyle& style) override;
+		const Rect& bounds);
 	virtual void DrawSurface(
 		std::shared_ptr<IMeshResource> meshRes,
 		std::shared_ptr<IMaterialResource> matRes,

@@ -27,13 +27,21 @@ struct DrawUIItem : public DrawItem
     Core::Vector4 uvTransform{ 0.f, 0.f, 1.f, 1.f };
 };
 
+struct DrawTextRun
+{
+    std::vector<char32_t> codePoints; //?!? 변수명을 바꿨으면 좋겠다. 글자들을 utf-8에서 utf-32로 바꾼건데 글자인지 뭔지 잘 모르겠네.
+    TextStyle style;
+    uint32_t lineIndex{ 0 }; // 이 run이 몇 번째 줄에 속하는지 (절대값)
+};
+
 struct DrawTextItem
 {
     std::shared_ptr<IFontResource> fontRes;
-    std::vector<char32_t> codePoints;
+    TextRenderMode mode;
+    std::vector<DrawTextRun> runs;
     uint32_t fontSize{ 0 };
-    Core::Vector2 position;
-    TextStyle style;
+    Core::Vector2 position{};
+    Core::Vector2 size{};
 };
 
 struct DrawInspectItem
