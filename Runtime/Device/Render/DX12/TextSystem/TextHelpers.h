@@ -44,3 +44,12 @@ void AppendGlyphQuad(
     float y,
     UINT textureIndex,
     const TextStyle& style);
+
+void AppendSolidQuad(
+    std::vector<UIVertex>& vertices,
+    std::vector<uint32_t>& indices,
+    uint32_t& vertexOffset,
+    float x, float y,
+    float width, float height,
+    UINT textureIndex,
+    const Core::Color& color);

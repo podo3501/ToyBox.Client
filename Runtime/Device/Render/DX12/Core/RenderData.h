@@ -38,10 +38,11 @@ struct DrawTextItem
 {
     std::shared_ptr<IFontResource> fontRes;
     TextRenderMode mode;
-    std::vector<DrawTextRun> runs;
     uint32_t fontSize{ 0 };
     Core::Vector2 position{};
     Core::Vector2 size{};
+    TextLayout layout{};
+    std::vector<DrawTextRun> runs;
 };
 
 struct DrawInspectItem

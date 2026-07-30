@@ -18,7 +18,8 @@ public:
 		TextRenderMode mode,
 		std::span<const TextSpan> spans,
 		uint32_t size,
-		const Rect& bounds);
+		const Rect& bounds,
+		const TextLayout& layout);
 	virtual void DrawSurface(
 		std::shared_ptr<IMeshResource> meshRes,
 		std::shared_ptr<IMaterialResource> matRes,

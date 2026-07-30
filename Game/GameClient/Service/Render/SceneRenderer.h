@@ -30,8 +30,23 @@ public:
 		MeshRepository* meshRepository, 
 		MaterialRepository* matRepository);
 
-	void DrawText(FontHandle hF, TextRenderMode mode, std::string_view text, uint32_t size, const Rect& bounds, const TextStyle& style = {});
-	void DrawText(FontHandle hF, TextRenderMode mode, std::span<const TextSpan> spans, uint32_t size, const Rect& bounds);
+	void DrawText(
+		FontHandle hF, 
+		TextRenderMode mode, 
+		std::string_view text, 
+		uint32_t size, 
+		const Rect& bounds, 
+		const TextLayout& layout = {},
+		const TextStyle& style = {});
+
+	void DrawText(
+		FontHandle hF, 
+		TextRenderMode mode, 
+		std::span<const TextSpan> spans, 
+		uint32_t size, 
+		const Rect& bounds,
+		const TextLayout& layout);
+
 	void DrawSurface(MeshHandle hM, MaterialHandle hMtl, const Core::Matrix& world);
 	void DrawDebugSurface(MeshHandle hM, MaterialHandle hMtl, const Core::Matrix& world);
 	void DrawUI(MaterialHandle hMtl, const Rect& dest, const Rect* source = nullptr);

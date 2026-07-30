@@ -527,6 +527,15 @@
     <ClInclude Include="Asset\Loader\Meta\TextureMetaLoader.h">
       <Filter>Asset\Loader\Meta</Filter>
     </ClInclude>
+    <ClInclude Include="Render\DX12\TextSystem\TextLayout.h">
+      <Filter>Render\DX12\TextSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\TextSystem\Builder\UnderlineBatcher.h">
+      <Filter>Render\DX12\TextSystem\Builder</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\TextSystem\Builder\TextBatch.h">
+      <Filter>Render\DX12\TextSystem\Builder</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -850,6 +859,12 @@
     </ClCompile>
     <ClCompile Include="Asset\Loader\Meta\TextureMetaLoader.cpp">
       <Filter>Asset\Loader\Meta</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\TextSystem\TextLayout.cpp">
+      <Filter>Render\DX12\TextSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\TextSystem\Builder\UnderlineBatcher.cpp">
+      <Filter>Render\DX12\TextSystem\Builder</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

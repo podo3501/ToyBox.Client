@@ -99,6 +99,43 @@ struct TextGlow
     }
 };
 
+struct TextUnderline
+{
+    std::optional<Core::Color> color; // 미지정 시 TextStyle::color를 사용
+    float thickness{ -1.f }; // -1이면 폰트 메트릭에서 자동 산출
+};
+
+enum class TextHorizontalAlign
+{
+    Left, 
+    Center, 
+    Right
+};
+
+enum class TextVerticalAlign
+{
+    Top,
+    Middle,
+    Bottom
+};
+
+enum class TextOverflow
+{
+    Overflow, // 영역 밖으로 그림
+    Clip, // Rect 밖은 자름.
+};
+
+struct TextLayout
+{
+    TextHorizontalAlign horizontalAlign{ TextHorizontalAlign::Left };
+    TextVerticalAlign verticalAlign{ TextVerticalAlign::Top };
+
+    bool wordWrap{ true };
+    TextOverflow overflow{ TextOverflow::Clip };
+
+    float lineSpacing{ 1.f }; //폰트 lineHeight의 배율. 1.0 이면 lineHeight를 그대로 쓴다는 것.
+};
+
 struct TextStyle
 {
     Core::Color color{ Core::Color::White };
@@ -107,6 +144,7 @@ struct TextStyle
     std::optional<TextShadow> shadow;
     std::optional<TextGradient> gradient;
     std::optional<TextGlow> glow;
+    std::optional<TextUnderline> underline;
 };
 
 struct TextSpan

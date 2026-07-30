@@ -10,6 +10,7 @@
 
 using FontBucketID = uint32_t;
 constexpr FontBucketID InvalidFontBucket = 0xffffffff;
+constexpr FontBucketID SolidQuadBucket = 0xfffffffe; // underline 등 폰트 무관 solid quad 전용
 
 namespace BitmapBuckets
 {

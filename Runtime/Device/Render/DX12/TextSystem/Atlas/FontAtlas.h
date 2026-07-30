@@ -3,6 +3,7 @@
 #include "FontAtlasBucket.h"
 #include "FontSetting.h"
 #include "Core/Utils/Hash.h"
+#include "AtlasPage.h"
 #include "GameClient/Service/Render/RenderConfig.h"
 #include "GameClient/Service/Render/Definition/Text/TextStyle.h"
 
@@ -44,15 +45,18 @@ public:
         TextRenderMode mode,
         uint32_t glyphIndex,
         uint32_t size) const;
-    virtual std::shared_ptr<IMaterialResource> GetMaterial(const GlyphInfo* glyph) const;
+    std::shared_ptr<IMaterialResource> GetMaterial(const GlyphInfo* glyph) const;
+    std::shared_ptr<MaterialResource> GetSolidMaterial() const;
 
 private:
+    void EnsureSolidPage();
     FontAtlasBucket* GetOrCreateBucket(const FontBucketKey& key);
     FontAtlasBucket* FindBucket(const FontBucketKey& key) const;
     const Resource& GetAtlasResource(const FontBucketKey& key, uint16_t pageIndex) const;
 
     Device& m_device;
     DescriptorFactory& m_factory;
+    AtlasPage m_solidPage;
     FontAtlasUploadGraphBuilder& m_atlasBuilder;
 
     TextConfig m_textConfig;

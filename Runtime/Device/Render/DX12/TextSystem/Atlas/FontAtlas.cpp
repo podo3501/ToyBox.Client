@@ -23,7 +23,36 @@ FontAtlas::FontAtlas(
 bool FontAtlas::Initialize(const TextConfig& config)
 {
     m_textConfig = config;
+    EnsureSolidPage();
+
     return true;
+}
+
+void FontAtlas::EnsureSolidPage()
+{
+    AtlasPageDesc solidDesc{};
+    solidDesc.format = GlyphPixelFormat::RGBA8; //알파 포함 RGBA 필요
+    solidDesc.shaderID = RegistryShader::UI;
+
+    constexpr Size kSolidPageSize{ 4, 4 };
+    m_solidPage.Initialize(m_device, m_factory, kSolidPageSize, solidDesc);
+
+    // 4x4를 전부 흰색(premultiplied RGBA = 255,255,255,255)으로 채워 1회 업로드
+    GlyphPixels pixels{ 
+        .format = GlyphPixelFormat::RGBA8, 
+        .width = 4, 
+        .height = 4 
+    };
+
+    pixels.buffer.resize(pixels.width * pixels.height * 4);
+    std::fill(pixels.buffer.begin(), pixels.buffer.end(), uint8_t{ 0xFF });
+
+    GlyphUploadEntry entry;
+    entry.x = 0;
+    entry.y = 0;
+    entry.pixels = std::move(pixels);
+
+    m_atlasBuilder.UploadGlyphsToAtlas(m_solidPage.GetAtlasResource(), { entry });
 }
 
 void FontAtlas::EnsureGlyphs(std::span<const ShapedText> shapedTexts)
@@ -85,6 +114,11 @@ std::shared_ptr<IMaterialResource> FontAtlas::GetMaterial(const GlyphInfo* glyph
     Assert(atlasBucket);
 
     return atlasBucket->GetMaterial(glyph->pageIndex);
+}
+
+std::shared_ptr<MaterialResource> FontAtlas::GetSolidMaterial() const
+{
+    return const_cast<AtlasPage&>(m_solidPage).GetMaterialResource();
 }
 
 const Resource& FontAtlas::GetAtlasResource(const FontBucketKey& key, uint16_t pageIndex) const

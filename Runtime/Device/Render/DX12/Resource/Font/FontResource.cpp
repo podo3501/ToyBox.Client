@@ -59,6 +59,22 @@ float FontResource::GetAscent(uint32_t size) const
     return m_ftFace->size->metrics.ascender / 64.f; // 26.6 fixed-point -> float
 }
 
+float FontResource::GetUnderlineThickness(uint32_t size) const
+{
+    FT_Set_Pixel_Sizes(m_ftFace, 0, size);
+    FT_Fixed scaled = FT_MulFix(m_ftFace->underline_thickness, m_ftFace->size->metrics.y_scale);
+    return scaled / 64.f;
+}
+
+float FontResource::GetUnderlineOffset(uint32_t size) const
+{
+    FT_Set_Pixel_Sizes(m_ftFace, 0, size);
+    // underline_position은 폰트 디자인 좌표(+y 위쪽) 기준 baseline 대비 오프셋이라 보통 음수.
+    // 화면 좌표(+y 아래쪽, baselineY에 더해 쓰는 값) 기준으로 바꾸려 부호를 뒤집는다.
+    FT_Fixed scaled = FT_MulFix(m_ftFace->underline_position, m_ftFace->size->metrics.y_scale);
+    return -(scaled / 64.f);
+}
+
 std::vector<ShapedGlyph> FontResource::Shape(std::span<const char32_t> text, uint32_t size)
 {
     FT_Set_Pixel_Sizes(m_ftFace, 0, size);

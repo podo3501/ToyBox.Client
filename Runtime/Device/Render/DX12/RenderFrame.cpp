@@ -22,7 +22,8 @@ void RenderFrame::DrawText(
     TextRenderMode mode,
     std::span<const TextSpan> spans,
     uint32_t size,
-    const Rect& bounds)
+    const Rect& bounds,
+    const TextLayout& layout)
 {
     Assert(fontRes);
     if(spans.empty()) return;
@@ -36,6 +37,7 @@ void RenderFrame::DrawText(
     item.fontSize = size;
     item.position = Core::Vector2{ normalized.Left(), normalized.Top() };
     item.size = Core::Vector2{ normalized.width, normalized.height };
+    item.layout = layout;
 
     uint32_t lineIndex = 0;
     for (auto& span : spans)

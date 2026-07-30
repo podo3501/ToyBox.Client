@@ -150,8 +150,11 @@
     <ClInclude Include="Render\DX12\TextSystem\Atlas\Glyph\MTSDFGlyphGenerator.h" />
     <ClInclude Include="Render\DX12\TextSystem\Atlas\MTSDFFontAtlasBucket.h" />
     <ClInclude Include="Render\DX12\TextSystem\Builder\FontAtlasUploadGraphBuilder.h" />
+    <ClInclude Include="Render\DX12\TextSystem\Builder\TextBatch.h" />
     <ClInclude Include="Render\DX12\TextSystem\Builder\TextMeshBuilder.h" />
+    <ClInclude Include="Render\DX12\TextSystem\Builder\UnderlineBatcher.h" />
     <ClInclude Include="Render\DX12\TextSystem\TextHelpers.h" />
+    <ClInclude Include="Render\DX12\TextSystem\TextLayout.h" />
     <ClInclude Include="Render\DX12\TextSystem\TextSystem.h" />
     <ClInclude Include="Render\DX12\TextSystem\TextTypes.h" />
     <ClInclude Include="Storage\JsonObjectIO.h" />
@@ -268,7 +271,9 @@
     <ClCompile Include="Render\DX12\TextSystem\Atlas\MTSDFFontAtlasBucket.cpp" />
     <ClCompile Include="Render\DX12\TextSystem\Builder\FontAtlasUploadGraphBuilder.cpp" />
     <ClCompile Include="Render\DX12\TextSystem\Builder\TextMeshBuilder.cpp" />
+    <ClCompile Include="Render\DX12\TextSystem\Builder\UnderlineBatcher.cpp" />
     <ClCompile Include="Render\DX12\TextSystem\TextHelpers.cpp" />
+    <ClCompile Include="Render\DX12\TextSystem\TextLayout.cpp" />
     <ClCompile Include="Render\DX12\TextSystem\TextSystem.cpp" />
   </ItemGroup>
   <ItemGroup>

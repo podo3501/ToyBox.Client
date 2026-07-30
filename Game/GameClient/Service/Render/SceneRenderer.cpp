@@ -40,10 +40,11 @@ void SceneRenderer::DrawText(
 	std::string_view text, 
 	uint32_t size, 
 	const Rect& bounds, 
+	const TextLayout& layout,
 	const TextStyle& style)
 {
 	TextSpan span{ text, style };
-	DrawText(hF, mode, std::span{ &span, 1 }, size, bounds);
+	DrawText(hF, mode, std::span{ &span, 1 }, size, bounds, layout);
 }
 
 void SceneRenderer::DrawText(
@@ -51,7 +52,8 @@ void SceneRenderer::DrawText(
 	TextRenderMode mode,
 	std::span<const TextSpan> spans, 
 	uint32_t size, 
-	const Rect& bounds)
+	const Rect& bounds,
+	const TextLayout& layout)
 {
 	auto font = m_fontRepository->Get(hF);
 	if (!font || font->state != LoadState::Ready)
@@ -71,7 +73,7 @@ void SceneRenderer::DrawText(
 		}
 	}
 
-	m_renderFrame->DrawText(font->fontRes, mode, spans, size, bounds);
+	m_renderFrame->DrawText(font->fontRes, mode, spans, size, bounds, layout);
 }
 
 void SceneRenderer::DrawSurface(MeshHandle hM, MaterialHandle hMtl, const Core::Matrix& world)

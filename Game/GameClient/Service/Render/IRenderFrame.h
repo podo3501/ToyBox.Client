@@ -18,7 +18,8 @@ struct IRenderFrame
 		TextRenderMode mode,
 		std::span<const TextSpan> spans,
 		uint32_t size,
-		const Rect& bounds) = 0;
+		const Rect& bounds,
+		const TextLayout& layout) = 0;
 
 	virtual void DrawSurface(
 		std::shared_ptr<IMeshResource> meshRes,

@@ -28,6 +28,8 @@ public:
 
 	float GetLineHeight(uint32_t size) const;
 	float GetAscent(uint32_t size) const;
+	float GetUnderlineThickness(uint32_t size) const;
+	float GetUnderlineOffset(uint32_t size) const;
 
 private:
 	hb_font_t* GetOrCreateHbFont(uint32_t size);
