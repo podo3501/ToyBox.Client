@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "BitmapFontAtlasBucket.h"
 #include "Resource/Font/FontResource.h"
-#include "../TextHelpers.h"
+#include "AtlasHelper.h"
 
 BitmapFontAtlasBucket::~BitmapFontAtlasBucket() = default;
 BitmapFontAtlasBucket::BitmapFontAtlasBucket(

@@ -1,8 +1,6 @@
 #pragma once
-#include "TextTypes.h"
+#include "../TextTypes.h"
 #include "Core/Foundation/Geometry2D.h"
-#include "GameClient/Asset/MeshAsset.h"
-#include "GameClient/Service/Render/Definition/Text/TextStyle.h"
 
 GlyphInfo CreateEmptyGlyphInfo(const BitmapGlyph& glyph);
 GlyphInfo CreateEmptyGlyphInfo(const MTSDFGlyph& glyph);
@@ -34,22 +32,3 @@ bool CreateUploadEntry(
     uint32_t packY,
     uint32_t padding,
     GlyphUploadEntry& outEntry);
-
-void AppendGlyphQuad(
-    std::vector<UIVertex>& vertices,
-    std::vector<uint32_t>& indices,
-    uint32_t& vertexOffset,
-    const GlyphInfo& glyph,
-    float x,
-    float y,
-    UINT textureIndex,
-    const TextStyle& style);
-
-void AppendSolidQuad(
-    std::vector<UIVertex>& vertices,
-    std::vector<uint32_t>& indices,
-    uint32_t& vertexOffset,
-    float x, float y,
-    float width, float height,
-    UINT textureIndex,
-    const Core::Color& color);

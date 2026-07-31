@@ -455,9 +455,6 @@
     <ClInclude Include="Render\DX12\Provider\Mesh\TransientMeshProvider.h">
       <Filter>Render\DX12\Provider\Mesh</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\TextSystem\TextHelpers.h">
-      <Filter>Render\DX12\TextSystem</Filter>
-    </ClInclude>
     <ClInclude Include="Render\DX12\Allocator\FrameUploadPools.h">
       <Filter>Render\DX12\Allocator</Filter>
     </ClInclude>
@@ -534,6 +531,18 @@
       <Filter>Render\DX12\TextSystem\Builder</Filter>
     </ClInclude>
     <ClInclude Include="Render\DX12\TextSystem\Builder\TextBatch.h">
+      <Filter>Render\DX12\TextSystem\Builder</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\TextSystem\Builder\GlyphCursor.h">
+      <Filter>Render\DX12\TextSystem\Builder</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\TextSystem\Builder\TextLayoutHelper.h">
+      <Filter>Render\DX12\TextSystem\Builder</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\TextSystem\Atlas\AtlasHelper.h">
+      <Filter>Render\DX12\TextSystem\Atlas</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\TextSystem\Builder\MeshBuilderHelpers.h">
       <Filter>Render\DX12\TextSystem\Builder</Filter>
     </ClInclude>
   </ItemGroup>
@@ -806,9 +815,6 @@
     <ClCompile Include="Render\DX12\Provider\Mesh\TransientMeshProvider.cpp">
       <Filter>Render\DX12\Provider\Mesh</Filter>
     </ClCompile>
-    <ClCompile Include="Render\DX12\TextSystem\TextHelpers.cpp">
-      <Filter>Render\DX12\TextSystem</Filter>
-    </ClCompile>
     <ClCompile Include="Render\DX12\Allocator\FrameUploadPools.cpp">
       <Filter>Render\DX12\Allocator</Filter>
     </ClCompile>
@@ -864,6 +870,21 @@
       <Filter>Render\DX12\TextSystem</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\TextSystem\Builder\UnderlineBatcher.cpp">
+      <Filter>Render\DX12\TextSystem\Builder</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\TextSystem\Builder\GlyphCursor.cpp">
+      <Filter>Render\DX12\TextSystem\Builder</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\TextSystem\Builder\TextLayoutHelper.cpp">
+      <Filter>Render\DX12\TextSystem\Builder</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\TextSystem\Atlas\AtlasHelper.cpp">
+      <Filter>Render\DX12\TextSystem\Atlas</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\TextSystem\Builder\MeshBuilderHelpers.cpp">
+      <Filter>Render\DX12\TextSystem\Builder</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\TextSystem\Builder\TextBatch.cpp">
       <Filter>Render\DX12\TextSystem\Builder</Filter>
     </ClCompile>
   </ItemGroup>

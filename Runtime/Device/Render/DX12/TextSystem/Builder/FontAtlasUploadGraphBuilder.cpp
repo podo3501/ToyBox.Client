@@ -7,10 +7,11 @@
 #include "RenderConstants.h"
 #include "Command/CommandList.h"
 
-struct TextRenderLayout
+struct GlyphUploadLayout
 {
     size_t offset{ 0 };
     size_t rowPitch{ 0 };
+    size_t bytesPerRow{ 0 };
 };
 
 FontAtlasUploadGraphBuilder::~FontAtlasUploadGraphBuilder() = default;
@@ -23,21 +24,24 @@ FontAtlasUploadGraphBuilder::FontAtlasUploadGraphBuilder(
 
 void FontAtlasUploadGraphBuilder::UploadGlyphsToAtlas(
     const Resource& atlasResource,
-    const std::vector<GlyphUploadEntry>& uploads)
+    std::vector<GlyphUploadEntry> uploads)
 {
-    std::vector<TextRenderLayout> layouts;
+    if (uploads.empty())
+        return; 
+
+    std::vector<GlyphUploadLayout> layouts;
 
     size_t uploadOffset = 0;
     for (const auto& glyph : uploads)
     {
         uint32_t bytesPerPixel = GetBytesPerPixel(glyph.pixels.format);
 
-        size_t bytesPerRow = glyph.pixels.width * bytesPerPixel;
+        size_t bytesPerRow = static_cast<size_t>(glyph.pixels.width) * bytesPerPixel;
         size_t rowPitch = Core::AlignUp(bytesPerRow, AlignTextureRow);
         size_t glyphSize = rowPitch * glyph.pixels.height;
 
         uploadOffset = Core::AlignUp(uploadOffset, AlignTexturePlacement);
-        layouts.push_back({ uploadOffset, rowPitch });
+        layouts.push_back({ uploadOffset, rowPitch, bytesPerRow });
 
         uploadOffset += glyphSize;
     }
@@ -49,7 +53,7 @@ void FontAtlasUploadGraphBuilder::UploadGlyphsToAtlas(
 
     graph.ImportResource(atlasResID, RGAccess::SRV);
 
-    BuildUploadPass(graph, atlasResID, uploadResID, uploads, layouts);
+    BuildUploadPass(graph, atlasResID, uploadResID, std::move(uploads), std::move(layouts));
 
     graph.ExportResource(atlasResID, RGAccess::SRV);
 
@@ -64,17 +68,14 @@ void FontAtlasUploadGraphBuilder::UploadGlyphsToAtlas(
 static void CopyGlyphToUploadBuffer(
     uint8_t* mapped,
     const GlyphUploadEntry& glyph,
-    const TextRenderLayout& layout)
+    const GlyphUploadLayout& layout)
 {
-    uint32_t bytesPerPixel = GetBytesPerPixel(glyph.pixels.format);
-    uint32_t bytesPerRow = glyph.pixels.width * bytesPerPixel;
-
     for (uint32_t y = 0; y < glyph.pixels.height; ++y)
     {
         std::memcpy(
             mapped + layout.offset + y * layout.rowPitch,
-            glyph.pixels.buffer.data() + y * bytesPerRow,
-            bytesPerRow);
+            glyph.pixels.buffer.data() + y * layout.bytesPerRow,
+            layout.bytesPerRow);
     }
 }
 
@@ -83,7 +84,7 @@ static void CopyGlyphToAtlas(
     Resource& uploadBuffer,
     Resource& atlasTexture,
     const GlyphUploadEntry& glyph,
-    const TextRenderLayout& layout)
+    const GlyphUploadLayout& layout)
 {
     D3D12_TEXTURE_COPY_LOCATION dst{};
     dst.pResource = atlasTexture.Get();
@@ -113,8 +114,8 @@ void FontAtlasUploadGraphBuilder::BuildUploadPass(
     RenderGraph& graph,
     RGResourceID atlasResID,
     RGResourceID uploadResID,
-    const std::vector<GlyphUploadEntry>& uploads,
-    const std::vector<TextRenderLayout>& layouts)
+    std::vector<GlyphUploadEntry> uploads,
+    std::vector<GlyphUploadLayout> layouts)
 {
     auto& upload = graph.AddCopyPass("FontAtlasUpload");
     upload.Write(atlasResID, RGAccess::CopyDest);
@@ -123,8 +124,8 @@ void FontAtlasUploadGraphBuilder::BuildUploadPass(
         [
             atlasResID,
             uploadResID,
-            uploads,
-            layouts
+            uploads = std::move(uploads),
+            layouts = std::move(layouts)
         ]
         (CommandList& cmd, TaskContext& ctx)
         {

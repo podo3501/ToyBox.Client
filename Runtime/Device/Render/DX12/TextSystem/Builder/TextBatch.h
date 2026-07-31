@@ -1,9 +1,7 @@
 #pragma once
-#include <unordered_map>
-#include <memory>
-#include <vector>
 #include "../Atlas/FontSetting.h"
 #include "Core/Utils/Hash.h"
+#include "GameClient/Asset/MeshAsset.h"
 
 struct UIVertex;
 struct IMaterialResource;
@@ -35,3 +33,14 @@ struct TextBatchKeyHash
 };
 
 using TextBatchBufferMap = std::unordered_map<TextBatchKey, PageMeshBuffer, TextBatchKeyHash>;
+
+struct BatchTarget
+{
+    PageMeshBuffer& buffer;
+    std::span<const UINT> texIndices;
+};
+
+BatchTarget GetOrCreateBatchTarget(
+    TextBatchBufferMap& buffers,
+    const TextBatchKey& key,
+    const std::shared_ptr<IMaterialResource>& material);

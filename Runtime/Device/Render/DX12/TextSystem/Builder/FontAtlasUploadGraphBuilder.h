@@ -3,7 +3,7 @@
 #include "Graph/RGTypes.h"
 #include "../TextTypes.h"
 
-struct TextRenderLayout;
+struct GlyphUploadLayout;
 class TaskScheduler;
 class ResourceFactory;
 class RenderGraph;
@@ -19,15 +19,15 @@ public:
     
     void UploadGlyphsToAtlas(
         const Resource& atlasResource,
-        const std::vector<GlyphUploadEntry>& uploads);
+        std::vector<GlyphUploadEntry> uploads);
 
 private:
     void BuildUploadPass(
         RenderGraph& graph,
         RGResourceID atlasResID,
         RGResourceID uploadResID,
-        const std::vector<GlyphUploadEntry>& uploads,
-        const std::vector<TextRenderLayout>& layouts);
+        std::vector<GlyphUploadEntry> uploads,
+        std::vector<GlyphUploadLayout> layouts);
 
 private:
     TaskScheduler& m_taskScheduler;

@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "MTSDFFontAtlasBucket.h"
 #include "Resource/Font/FontResource.h"
-#include "../TextHelpers.h"
+#include "AtlasHelper.h"
 
 MTSDFFontAtlasBucket::~MTSDFFontAtlasBucket() = default;
 MTSDFFontAtlasBucket::MTSDFFontAtlasBucket(

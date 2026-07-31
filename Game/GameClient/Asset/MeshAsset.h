@@ -4,6 +4,7 @@
 #include "Core/Math/Vector2.h"
 #include "Core/Math/Vector3.h"
 #include "Core/Foundation/Color.h"
+#include "Core/Foundation/Geometry2D.h"
 
 enum class VertexFormat
 {
@@ -30,6 +31,7 @@ enum class UIRenderMode : uint32_t
 struct UITextProps
 {
     float sdfPxRange{ 0.f };
+    Rect clipRect{ -FLT_MAX * 0.5f, -FLT_MAX * 0.5f, FLT_MAX, FLT_MAX }; // screen-space, clip 비활성 시 사실상 무제한
     uint32_t params1{ 0 }; //param1에 pack된 효과: outline, drop shadow, fill gradient
     uint32_t params2{ 0 }; //param2에 pack된 효과: glow
 };

@@ -1,6 +1,7 @@
 struct UITextProps
 {
     nointerpolation float pxRange;     // SDF/MTSDF일 때만 유효. bake 시점 texel 단위 range
+    nointerpolation float4 clipRect;
     nointerpolation uint params1;
     nointerpolation uint params2;
 };
@@ -37,6 +38,7 @@ struct PSInput
     float4 color : COLOR;
     float2 uv : TEXCOORD;
     float2 localUV : LOCALUV; //글자 그라데이션을 위해서.
+    float2 localPos : LOCALPOS; //클리핑을 위해서.
     nointerpolation uint mode : MODE;
     nointerpolation uint textureIndex : TEXINDEX;
     UITextProps textProps : TEXTPROPERTIES;
@@ -68,6 +70,7 @@ PSInput VSMain(uint vID : SV_VertexID)
     output.pos = clipPos;
     output.color = input.color;
     output.localUV = kQuadCornerUV[vertexIndex % 4];
+    output.localPos = input.pos.xy; // clipRect와 같은 좌표계로 넘김
     output.uv.x = lerp(uvTransform.x, uvTransform.z, input.uv.x);
     output.uv.y = lerp(uvTransform.y, uvTransform.w, input.uv.y);
     output.mode = input.mode;
@@ -249,6 +252,18 @@ void CompositeOver(inout float3 outRgb, inout float outA, float3 topRgbStraight,
 
 float4 PSMain(PSInput input) : SV_TARGET
 {
+    bool clipEnabled = (input.textProps.clipRect.z > 0.0f && input.textProps.clipRect.w > 0.0f);
+
+    if (clipEnabled)
+    {
+        float2 clipMin = input.textProps.clipRect.xy;
+        float2 clipMax = input.textProps.clipRect.xy + input.textProps.clipRect.zw;
+
+        if (input.localPos.x < clipMin.x || input.localPos.x > clipMax.x ||
+    	    input.localPos.y < clipMin.y || input.localPos.y > clipMax.y)
+	    discard;
+    }
+
     Texture2D uiTex = ResourceDescriptorHeap[g_textureIndex];
     float4 texColor = uiTex.Sample(samp, input.uv);
     float4 finalColor = float4(0, 0, 0, 0);

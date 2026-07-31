@@ -57,58 +57,6 @@ std::vector<DrawUIItem> TextSystem::CreateDrawItems(std::span<const PageMesh> pa
     return result;
 }
 
-static std::vector<ShapedGlyph> ShapeRuns(
-    FontResource* font,
-    std::span<const DrawTextRun> runs,
-    uint32_t fontSize)
-{
-    std::vector<ShapedGlyph> result;
-
-    size_t runIdx = 0;
-
-    while (runIdx < runs.size())
-    {
-        uint32_t lineIndex = runs[runIdx].lineIndex;
-        size_t groupStart = runIdx;
-
-        std::vector<char32_t> combined;
-        std::vector<size_t> runStarts;
-
-        while (runIdx < runs.size() &&
-            runs[runIdx].lineIndex == lineIndex)
-        {
-            runStarts.push_back(combined.size());
-
-            combined.insert(
-                combined.end(),
-                runs[runIdx].codePoints.begin(),
-                runs[runIdx].codePoints.end());
-
-            ++runIdx;
-        }
-
-        auto glyphs = font->Shape(combined, fontSize);
-
-        for (auto& glyph : glyphs)
-        {
-            uint32_t localRun = 0;
-            for (; localRun + 1 < runStarts.size(); ++localRun)
-            {
-                if (glyph.sourceIndex < runStarts[localRun + 1])
-                    break;
-            }
-
-            glyph.runIndex = static_cast<uint32_t>(groupStart + localRun);
-            glyph.lineIndex = lineIndex;
-            glyph.codepoint = combined[glyph.sourceIndex];
-
-            result.push_back(std::move(glyph));
-        }
-    }
-
-    return result;
-}
-
 std::vector<ShapedText> TextSystem::ShapeTexts(std::span<const DrawTextItem> items)
 {
     std::vector<ShapedText> result;

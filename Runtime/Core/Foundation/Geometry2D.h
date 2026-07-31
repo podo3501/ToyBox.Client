@@ -26,6 +26,8 @@ struct Rect
 {
     float x{ 0.f }, y{ 0.f }, width{ 0.f }, height{ 0.f };
 
+    bool IsValid() const { return width > 0.f && height > 0.f; }
+
     float Left() const { return x; }
     float Right() const { return x + width; }
     float Top() const { return y; }

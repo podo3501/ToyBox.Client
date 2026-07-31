@@ -52,7 +52,10 @@ void FontAtlas::EnsureSolidPage()
     entry.y = 0;
     entry.pixels = std::move(pixels);
 
-    m_atlasBuilder.UploadGlyphsToAtlas(m_solidPage.GetAtlasResource(), { entry });
+    std::vector<GlyphUploadEntry> uploads;
+    uploads.push_back(std::move(entry));
+
+    m_atlasBuilder.UploadGlyphsToAtlas(m_solidPage.GetAtlasResource(), std::move(uploads));
 }
 
 void FontAtlas::EnsureGlyphs(std::span<const ShapedText> shapedTexts)
@@ -81,7 +84,7 @@ void FontAtlas::EnsureGlyphs(std::span<const ShapedText> shapedTexts)
                 continue;
 
             auto& atlasRes = GetAtlasResource(key, page);
-            m_atlasBuilder.UploadGlyphsToAtlas(atlasRes, glyphs);
+            m_atlasBuilder.UploadGlyphsToAtlas(atlasRes, std::move(glyphs));
         }
     }
 }

@@ -1,5 +1,6 @@
 #pragma once
 #include "TextBatch.h"
+#include "Core/Foundation/Geometry2D.h"
 
 struct ShapedText;
 class FontAtlas;
@@ -10,7 +11,8 @@ public:
     UnderlineBatcher(
         const FontAtlas& atlas,
         const ShapedText& shaped,
-        TextBatchBufferMap& buffers);
+        TextBatchBufferMap& buffers,
+        const Rect& clipRect);
 
     void Update(
         const TextStyle& style,
@@ -25,6 +27,7 @@ private:
     const FontAtlas& m_atlas;
     const ShapedText& m_shaped;
     TextBatchBufferMap& m_buffers;
+    Rect m_clipRect;
 
     bool m_active{ false };
     float m_startX{ 0.f };

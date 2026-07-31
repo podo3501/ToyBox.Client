@@ -29,7 +29,7 @@ struct DrawUIItem : public DrawItem
 
 struct DrawTextRun
 {
-    std::vector<char32_t> codePoints; //?!? 변수명을 바꿨으면 좋겠다. 글자들을 utf-8에서 utf-32로 바꾼건데 글자인지 뭔지 잘 모르겠네.
+    std::vector<char32_t> codePoints;
     TextStyle style;
     uint32_t lineIndex{ 0 }; // 이 run이 몇 번째 줄에 속하는지 (절대값)
 };

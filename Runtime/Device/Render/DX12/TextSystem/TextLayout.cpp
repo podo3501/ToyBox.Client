@@ -1,5 +1,7 @@
 #include "pch.h"
 #include "TextLayout.h"
+#include "Core/RenderData.h"
+#include "Resource/Font/FontResource.h"
 
 static bool IsCJK(char32_t cp)
 {
@@ -16,8 +18,7 @@ static bool IsWhitespace(char32_t cp)
 
 static uint32_t ApplyWordWrapToRange(
     std::span<ShapedGlyph> glyphs,
-    size_t start,
-    size_t end,
+    size_t start, size_t end,
     float maxWidth,
     uint32_t baseLineIndex)
 {
@@ -25,133 +26,53 @@ static uint32_t ApplyWordWrapToRange(
     {
         for (size_t i = start; i < end; ++i)
             glyphs[i].lineIndex = baseLineIndex;
-
         return baseLineIndex;
     }
 
     uint32_t currentLine = baseLineIndex;
-    size_t lineStart = start;
+    float lineWidth = 0.f;
+    int lastBreak = -1;
 
-    while (lineStart < end)
+    for (size_t i = start; i < end; ++i)
     {
-        float lineWidth = 0.f;
-        int lastBreak = -1;
+        if (IsWhitespace(glyphs[i].codepoint) || IsCJK(glyphs[i].codepoint))
+            lastBreak = static_cast<int>(i);
 
-        size_t i = lineStart;
+        float glyphWidth = glyphs[i].advanceX;
 
-        // 현재 줄에 들어갈 glyph 범위 탐색
-        for (; i < end; ++i)
+        // 브레이크 지점이 없고, 이 glyph 하나만으로도 줄이 넘치는 경우 -> 문자 단위 강제 컷
+        if (lineWidth + glyphWidth > maxWidth && i > start && lastBreak < static_cast<int>(start))
         {
-            const auto& glyph = glyphs[i];
-
-            if (IsWhitespace(glyph.codepoint) || IsCJK(glyph.codepoint))
-                lastBreak = static_cast<int>(i);
-
-            float nextWidth = lineWidth + glyph.advanceX;
-
-            if (nextWidth > maxWidth && i > lineStart)
-                break;
-
-            lineWidth = nextWidth;
+            ++currentLine;
+            lineWidth = 0.f;
+            lastBreak = -1;
+            glyphs[i].lineIndex = currentLine;
+            lineWidth += glyphWidth;
+            continue;
         }
 
+        lineWidth += glyphWidth;
 
-        // 남은 모든 glyph가 현재 줄에 들어가는 경우
-        if (i == end)
+        if (lineWidth > maxWidth && i > start)
         {
-            for (size_t k = lineStart; k < end; ++k)
+            size_t breakAt = (lastBreak >= 0) ? static_cast<size_t>(lastBreak) : i;
+
+            ++currentLine;
+            lineWidth = 0.f;
+            for (size_t k = breakAt; k <= i; ++k)
+            {
                 glyphs[k].lineIndex = currentLine;
-
-            break;
+                lineWidth += glyphs[k].advanceX;
+            }
+            lastBreak = -1;
+            continue;
         }
 
-
-        size_t nextLineStart = i;
-
-
-        // 끊을 지점이 있는 경우
-        if (lastBreak >= static_cast<int>(lineStart))
-        {
-            size_t breakAt = static_cast<size_t>(lastBreak);
-
-            for (size_t k = lineStart; k <= breakAt; ++k)
-                glyphs[k].lineIndex = currentLine;
-
-            nextLineStart = breakAt + 1;
-        }
-        else
-        {
-            // 공백 없는 긴 단어:
-            // 현재 glyph부터 다음 줄로 강제 이동
-            for (size_t k = lineStart; k < i; ++k)
-                glyphs[k].lineIndex = currentLine;
-        }
-
-
-        ++currentLine;
-        lineStart = nextLineStart;
+        glyphs[i].lineIndex = currentLine;
     }
 
     return currentLine;
 }
-
-//static uint32_t ApplyWordWrapToRange(
-//    std::span<ShapedGlyph> glyphs,
-//    size_t start, size_t end,
-//    float maxWidth,
-//    uint32_t baseLineIndex)
-//{
-//    if (maxWidth <= 0.f)
-//    {
-//        for (size_t i = start; i < end; ++i)
-//            glyphs[i].lineIndex = baseLineIndex;
-//        return baseLineIndex;
-//    }
-//
-//    uint32_t currentLine = baseLineIndex;
-//    float lineWidth = 0.f;
-//    int lastBreak = -1;
-//
-//    for (size_t i = start; i < end; ++i)
-//    {
-//        if (IsWhitespace(glyphs[i].codepoint) || IsCJK(glyphs[i].codepoint))
-//            lastBreak = static_cast<int>(i);
-//
-//        float glyphWidth = glyphs[i].advanceX;
-//
-//        // 브레이크 지점이 없고, 이 glyph 하나만으로도 줄이 넘치는 경우 -> 문자 단위 강제 컷
-//        if (lineWidth + glyphWidth > maxWidth && i > start && lastBreak < static_cast<int>(start))
-//        {
-//            ++currentLine;
-//            lineWidth = 0.f;
-//            lastBreak = -1;
-//            glyphs[i].lineIndex = currentLine;
-//            lineWidth += glyphWidth;
-//            continue;
-//        }
-//
-//        lineWidth += glyphWidth;
-//
-//        if (lineWidth > maxWidth && i > start)
-//        {
-//            size_t breakAt = (lastBreak >= 0) ? static_cast<size_t>(lastBreak) : i;
-//
-//            ++currentLine;
-//            lineWidth = 0.f;
-//            for (size_t k = breakAt; k <= i; ++k)
-//            {
-//                glyphs[k].lineIndex = currentLine;
-//                lineWidth += glyphs[k].advanceX;
-//            }
-//            lastBreak = -1;
-//            continue;
-//        }
-//
-//        glyphs[i].lineIndex = currentLine;
-//    }
-//
-//    return currentLine;
-//}
 
 void ApplyWordWrap(std::span<ShapedGlyph> glyphs, float maxWidth, bool wordWrap)
 {
@@ -174,4 +95,56 @@ void ApplyWordWrap(std::span<ShapedGlyph> glyphs, float maxWidth, bool wordWrap)
         lineOffset += (lastLine - (hardLine + lineOffset));
         start = end;
     }
+}
+
+std::vector<ShapedGlyph> ShapeRuns(
+    FontResource* font,
+    std::span<const DrawTextRun> runs,
+    uint32_t fontSize)
+{
+    std::vector<ShapedGlyph> result;
+
+    size_t runIdx = 0;
+
+    while (runIdx < runs.size())
+    {
+        uint32_t lineIndex = runs[runIdx].lineIndex;
+        size_t groupStart = runIdx;
+
+        std::vector<char32_t> combined;
+        std::vector<size_t> runStarts;
+
+        while (runIdx < runs.size() &&
+            runs[runIdx].lineIndex == lineIndex)
+        {
+            runStarts.push_back(combined.size());
+
+            combined.insert(
+                combined.end(),
+                runs[runIdx].codePoints.begin(),
+                runs[runIdx].codePoints.end());
+
+            ++runIdx;
+        }
+
+        auto glyphs = font->Shape(combined, fontSize);
+
+        for (auto& glyph : glyphs)
+        {
+            uint32_t localRun = 0;
+            for (; localRun + 1 < runStarts.size(); ++localRun)
+            {
+                if (glyph.sourceIndex < runStarts[localRun + 1])
+                    break;
+            }
+
+            glyph.runIndex = static_cast<uint32_t>(groupStart + localRun);
+            glyph.lineIndex = lineIndex;
+            glyph.codepoint = combined[glyph.sourceIndex];
+
+            result.push_back(std::move(glyph));
+        }
+    }
+
+    return result;
 }
