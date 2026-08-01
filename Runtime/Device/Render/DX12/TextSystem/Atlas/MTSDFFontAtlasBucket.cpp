@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "MTSDFFontAtlasBucket.h"
 #include "Resource/Font/FontResource.h"
+#include "Glyph/MTSDFGlyphGenerator.h"
 #include "AtlasHelper.h"
 
 MTSDFFontAtlasBucket::~MTSDFFontAtlasBucket() = default;
@@ -61,7 +62,7 @@ void MTSDFFontAtlasBucket::EnsureGlyphs(
             continue;
         }
 
-        MTSDFGlyph mtsdf = m_glyphGenerator.Generate(
+        MTSDFGlyph mtsdf = GenerateMTSDFGlyph(
             font,
             glyphIndex,
             shapedText.size);
@@ -110,8 +111,7 @@ void MTSDFFontAtlasBucket::EnsureGlyphs(
                 mtsdf,
                 m_bucketID,
                 pageIndex,
-                packPos->x,
-                packPos->y,
+                *packPos,
                 Padding,
                 m_atlasTextureSize,
                 scale);
@@ -119,10 +119,7 @@ void MTSDFFontAtlasBucket::EnsureGlyphs(
         GlyphUploadEntry upload;
         if (CreateUploadEntry(
             std::move(mtsdf.pixels),
-            m_bucketID,
-            pageIndex,
-            packPos->x,
-            packPos->y,
+            *packPos,
             Padding,
             upload))
         {

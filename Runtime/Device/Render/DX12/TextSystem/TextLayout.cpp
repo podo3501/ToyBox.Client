@@ -5,15 +5,48 @@
 
 static bool IsCJK(char32_t cp)
 {
-    return (cp >= 0xAC00 && cp <= 0xD7A3)
-        || (cp >= 0x3130 && cp <= 0x318F)
-        || (cp >= 0x4E00 && cp <= 0x9FFF)
-        || (cp >= 0x3040 && cp <= 0x30FF);
+    return (cp >= 0x1100 && cp <= 0x11FF)   // 한글 자모 (조합형)
+        || (cp >= 0x3040 && cp <= 0x30FF)   // 히라가나 + 가타카나
+        || (cp >= 0x3130 && cp <= 0x318F)   // 한글 호환 자모
+        || (cp >= 0x3400 && cp <= 0x4DBF)   // CJK 확장 한자 A
+        || (cp >= 0x4E00 && cp <= 0x9FFF)   // CJK 통합 한자
+        || (cp >= 0xAC00 && cp <= 0xD7A3)   // 한글 음절 (가~힣)
+        || (cp >= 0xF900 && cp <= 0xFAFF);  // CJK 호환용 한자
 }
 
 static bool IsWhitespace(char32_t cp)
 {
     return cp == U' ' || cp == U'\t';
+}
+
+struct WrapState
+{
+    uint32_t currentLine;
+    float lineWidth;
+    std::optional<size_t> lastBreak;
+};
+
+// [breakAt, i] 구간을 새 줄로 시작한다. breakAt이 공백이면 그 공백은 어느 줄의 너비 계산에도 넣지 않고 건너뛴다.
+static void StartNewLine(
+    std::span<ShapedGlyph> glyphs,
+    size_t breakAt, size_t i,
+    WrapState& state)
+{
+    if (IsWhitespace(glyphs[breakAt].codepoint))
+    {
+        glyphs[breakAt].lineIndex = state.currentLine;
+        ++breakAt;
+    }
+
+    ++state.currentLine;
+    state.lineWidth = 0.f;
+    for (size_t k = breakAt; k <= i; ++k)
+    {
+        glyphs[k].lineIndex = state.currentLine;
+        state.lineWidth += glyphs[k].advanceX;
+    }
+
+    state.lastBreak.reset();
 }
 
 static uint32_t ApplyWordWrapToRange(
@@ -29,49 +62,35 @@ static uint32_t ApplyWordWrapToRange(
         return baseLineIndex;
     }
 
-    uint32_t currentLine = baseLineIndex;
-    float lineWidth = 0.f;
-    int lastBreak = -1;
+    WrapState state{ baseLineIndex, 0.f, std::nullopt };
 
     for (size_t i = start; i < end; ++i)
     {
         if (IsWhitespace(glyphs[i].codepoint) || IsCJK(glyphs[i].codepoint))
-            lastBreak = static_cast<int>(i);
+            state.lastBreak = i;
 
         float glyphWidth = glyphs[i].advanceX;
 
         // 브레이크 지점이 없고, 이 glyph 하나만으로도 줄이 넘치는 경우 -> 문자 단위 강제 컷
-        if (lineWidth + glyphWidth > maxWidth && i > start && lastBreak < static_cast<int>(start))
+        if (state.lineWidth + glyphWidth > maxWidth && i > start && !state.lastBreak.has_value())
         {
-            ++currentLine;
-            lineWidth = 0.f;
-            lastBreak = -1;
-            glyphs[i].lineIndex = currentLine;
-            lineWidth += glyphWidth;
+            StartNewLine(glyphs, i, i, state);
             continue;
         }
 
-        lineWidth += glyphWidth;
+        state.lineWidth += glyphWidth;
 
-        if (lineWidth > maxWidth && i > start)
+        if (state.lineWidth > maxWidth && i > start)
         {
-            size_t breakAt = (lastBreak >= 0) ? static_cast<size_t>(lastBreak) : i;
-
-            ++currentLine;
-            lineWidth = 0.f;
-            for (size_t k = breakAt; k <= i; ++k)
-            {
-                glyphs[k].lineIndex = currentLine;
-                lineWidth += glyphs[k].advanceX;
-            }
-            lastBreak = -1;
+            size_t breakAt = state.lastBreak.value_or(i);
+            StartNewLine(glyphs, breakAt, i, state);
             continue;
         }
 
-        glyphs[i].lineIndex = currentLine;
+        glyphs[i].lineIndex = state.currentLine;
     }
 
-    return currentLine;
+    return state.currentLine;
 }
 
 void ApplyWordWrap(std::span<ShapedGlyph> glyphs, float maxWidth, bool wordWrap)
@@ -92,7 +111,7 @@ void ApplyWordWrap(std::span<ShapedGlyph> glyphs, float maxWidth, bool wordWrap)
         uint32_t lastLine = ApplyWordWrapToRange(
             glyphs, start, end, maxWidth, hardLine + lineOffset);
 
-        lineOffset += (lastLine - (hardLine + lineOffset));
+        lineOffset = lastLine - hardLine;
         start = end;
     }
 }
@@ -131,16 +150,15 @@ std::vector<ShapedGlyph> ShapeRuns(
 
         for (auto& glyph : glyphs)
         {
-            uint32_t localRun = 0;
-            for (; localRun + 1 < runStarts.size(); ++localRun)
-            {
-                if (glyph.sourceIndex < runStarts[localRun + 1])
-                    break;
-            }
+            auto it = std::ranges::upper_bound(runStarts, glyph.sourceIndex);
+            uint32_t localRun = static_cast<uint32_t>(std::distance(runStarts.begin(), it) - 1);
 
             glyph.runIndex = static_cast<uint32_t>(groupStart + localRun);
             glyph.lineIndex = lineIndex;
-            glyph.codepoint = combined[glyph.sourceIndex];
+            Assert(glyph.sourceIndex < combined.size()); //font->Shape()가 유효 범위를 벗어난 sourceIndex를 반환
+            glyph.codepoint = (glyph.sourceIndex < combined.size())
+                ? combined[glyph.sourceIndex]
+                : U'\0';
 
             result.push_back(std::move(glyph));
         }

@@ -20,9 +20,9 @@ static void ProcessShapedText(
     std::vector<float> lineWidths = ComputeLineWidths(shaped.glyphs);
     GlyphCursor cursor{ shaped, item, lineWidths };
     UnderlineBatcher underline{ atlas, shaped, buffers, clipRect };
+    const std::vector<PackedTextParams> runParams = PackRunParams(item.runs); // 런당 1회
 
     uint32_t currentLine = UINT32_MAX;
-
     for (const auto& shapedGlyph : shaped.glyphs)
     {
         if (shapedGlyph.lineIndex != currentLine)
@@ -65,22 +65,16 @@ static void ProcessShapedText(
             }
         }
 
-        TextBatchKey key
-        {
-            glyph->bucketID,
-            glyph->pageIndex
-        };
+        auto target = GetGlyphBatchTarget(buffers, glyph, atlas);
+        const auto& params = runParams[shapedGlyph.runIndex];
 
-        auto target = GetOrCreateBatchTarget(buffers, key, atlas.GetMaterial(glyph));
         AppendGlyphQuad(
-            target.buffer.vertices,
-            target.buffer.indices,
-            target.buffer.vertexOffset,
+            target,
             *glyph,
             x,
             y,
-            target.texIndices[0],
-            style,
+            style.color,
+            params,
             clipRect);
 
         cursor.Advance(shapedGlyph.advanceX);
@@ -123,11 +117,9 @@ std::vector<PageMesh> TextMeshBuilder::Build(
     std::span<const DrawTextItem> items,
     std::span<const ShapedText> shapedTexts)
 {
-    size_t totalGlyphCount = 0;
-
-    for (const auto& shaped : shapedTexts)
-        totalGlyphCount += shaped.glyphs.size();
-    if (totalGlyphCount == 0)
+    bool hasAnyGlyph = std::ranges::any_of(shapedTexts,
+        [](const ShapedText& shaped) { return !shaped.glyphs.empty(); });
+    if (!hasAnyGlyph)
         return {};
 
     TextBatchBufferMap buffers;

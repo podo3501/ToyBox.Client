@@ -5,6 +5,9 @@
 
 struct UIVertex;
 struct IMaterialResource;
+struct GlyphInfo;
+class FontAtlas;
+
 struct PageMeshBuffer
 {
     std::vector<UIVertex> vertices;
@@ -40,7 +43,12 @@ struct BatchTarget
     std::span<const UINT> texIndices;
 };
 
-BatchTarget GetOrCreateBatchTarget(
+BatchTarget GetGlyphBatchTarget(
     TextBatchBufferMap& buffers,
-    const TextBatchKey& key,
-    const std::shared_ptr<IMaterialResource>& material);
+    const GlyphInfo* glyph,
+    const FontAtlas& atlas);
+
+BatchTarget GetSolidBatchTarget(
+    TextBatchBufferMap& buffers,
+    FontBucketID bucketID,
+    const FontAtlas& atlas);

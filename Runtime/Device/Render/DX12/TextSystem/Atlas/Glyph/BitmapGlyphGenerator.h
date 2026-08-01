@@ -3,8 +3,4 @@
 
 class FontResource;
 
-class BitmapGlyphGenerator
-{
-public:
-    BitmapGlyph Generate(FontResource* font, uint32_t glyphIndex, uint32_t size);
-};
+BitmapGlyph GenerateBitmapGlyph(FontResource* font, uint32_t glyphIndex, uint32_t size);

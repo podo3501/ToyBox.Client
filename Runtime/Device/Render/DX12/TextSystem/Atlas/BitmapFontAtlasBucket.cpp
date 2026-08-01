@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "BitmapFontAtlasBucket.h"
 #include "Resource/Font/FontResource.h"
+#include "Glyph/BitmapGlyphGenerator.h"
 #include "AtlasHelper.h"
 
 BitmapFontAtlasBucket::~BitmapFontAtlasBucket() = default;
@@ -60,7 +61,7 @@ void BitmapFontAtlasBucket::EnsureGlyphs(
             continue;
         }
 
-        BitmapGlyph bitmap = m_glyphGenerator.Generate(
+        BitmapGlyph bitmap = GenerateBitmapGlyph(
             font,
             glyphIndex,
             shapedText.size);
@@ -104,18 +105,14 @@ void BitmapFontAtlasBucket::EnsureGlyphs(
                 bitmap,
                 m_bucketID,
                 pageIndex,
-                packPos->x,
-                packPos->y,
+                *packPos,
                 Padding,
                 m_atlasTextureSize);
 
         GlyphUploadEntry upload;
         if (CreateUploadEntry(
             std::move(bitmap.pixels),
-            m_bucketID,
-            pageIndex,
-            packPos->x,
-            packPos->y,
+            *packPos,
             Padding,
             upload))
         {

@@ -13,7 +13,9 @@ struct GlyphPixels
 
 struct GlyphMetrics
 {
-    float width{ 0.f }; //bitmap font는 uv와 이미지의 크기가 동일 하기 때문에 이미지 크기로도 쓰인다.
+    // 렌더링 quad 크기(px). BitmapGlyph는 pixels.width/height와 항상 동일하지만,
+    // MTSDFGlyph는 CreateGlyphInfo()에서 scale이 적용되어 pixels 크기와 달라질 수 있음.
+    float width{ 0.f };
     float height{ 0.f };
     float pxRange{ 0.f };
 

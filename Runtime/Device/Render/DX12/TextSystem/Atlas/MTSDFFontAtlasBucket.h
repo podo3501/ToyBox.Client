@@ -2,7 +2,6 @@
 #include "FontAtlasBucket.h"
 #include "AtlasPage.h"
 #include "GlyphCache.h"
-#include "Glyph/MTSDFGlyphGenerator.h"
 
 class Device;
 class DescriptorFactory;
@@ -36,7 +35,6 @@ private:
 
     Device& m_device;
     DescriptorFactory& m_factory;
-    MTSDFGlyphGenerator m_glyphGenerator;
 
     FontBucketID m_bucketID{ InvalidFontBucket };
     Size m_atlasTextureSize{};

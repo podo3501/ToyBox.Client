@@ -31,8 +31,7 @@ GlyphInfo CreateEmptyGlyphInfo(const MTSDFGlyph& glyph)
 static void SetGlyphUV(
     float width,
     float height,
-    uint32_t packX,
-    uint32_t packY,
+    const Point& packPos,
     uint32_t padding,
     const Size& atlasSize,
     GlyphInfo& info)
@@ -40,8 +39,8 @@ static void SetGlyphUV(
     float atlasW = static_cast<float>(atlasSize.width);
     float atlasH = static_cast<float>(atlasSize.height);
 
-    float glyphX = static_cast<float>(packX + padding);
-    float glyphY = static_cast<float>(packY + padding);
+    float glyphX = static_cast<float>(packPos.x + padding);
+    float glyphY = static_cast<float>(packPos.y + padding);
 
     info.uvMin =
     {
@@ -60,8 +59,7 @@ GlyphInfo CreateGlyphInfo(
     const BitmapGlyph& glyph,
     FontBucketID bucketID,
     uint16_t pageIndex,
-    uint32_t packX,
-    uint32_t packY,
+    const Point& packPos,
     uint32_t padding,
     const Size& atlasSize)
 {
@@ -80,7 +78,7 @@ GlyphInfo CreateGlyphInfo(
     SetGlyphUV(
         static_cast<float>(glyph.pixels.width),
         static_cast<float>(glyph.pixels.height),
-        packX, packY,
+        packPos,
         padding, atlasSize, info);
     return info;
 }
@@ -100,8 +98,7 @@ GlyphInfo CreateGlyphInfo(
     const MTSDFGlyph& glyph,
     FontBucketID bucketID,
     uint16_t pageIndex,
-    uint32_t packX,
-    uint32_t packY,
+    const Point& packPos,
     uint32_t padding,
     const Size& atlasSize,
     float scale)
@@ -124,25 +121,22 @@ GlyphInfo CreateGlyphInfo(
     SetGlyphUV(
         static_cast<float>(pixels.width),
         static_cast<float>(pixels.height),
-        packX, packY,
+        packPos,
         padding, atlasSize, info);
     return info;
 }
 
 bool CreateUploadEntry(
-    GlyphPixels pixels,
-    FontBucketID bucketID,
-    uint16_t pageIndex,
-    uint32_t packX,
-    uint32_t packY,
+    GlyphPixels&& pixels,
+    const Point& packPos,
     uint32_t padding,
     GlyphUploadEntry& outEntry)
 {
     if (pixels.width == 0 || pixels.height == 0)
         return false;
 
-    outEntry.x = packX + padding;
-    outEntry.y = packY + padding;
+    outEntry.x = packPos.x + padding;
+    outEntry.y = packPos.y + padding;
     outEntry.pixels = std::move(pixels);
 
     return true;

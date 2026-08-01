@@ -8,8 +8,6 @@
 static Resource CreateFontAtlasResource(Device& device, const Size& atlasSize, DXGI_FORMAT format)
 {
     auto desc = CreateTextureDescriptor(atlasSize.width, atlasSize.height, format); // 글자 비트맵(Alpha) 정보만 담으면 되므로 R8_UNORM 포맷이 가장 효율적
-    desc.Flags |= D3D12_RESOURCE_FLAG_NONE;
-
     return device.CreateResource(
         desc,
         D3D12_HEAP_TYPE_DEFAULT,
@@ -50,7 +48,7 @@ void AtlasPage::CreateAtlasMaterial(
         .generateMipmaps = false,
         .isPremultiplyAlpha = false
     };
-    atlasTex->SetDesc(atlasTexDesc); // 이 atlasTexDesc 정보로 텍스쳐를 만들지 않기 때문에 정보가 필요 없지만, 넣어놓도록 한다.
+    atlasTex->SetDesc(atlasTexDesc); // 이 atlasTexDesc 정보로 텍스쳐 생성시점에는 안 쓰이지만, 디버그 용으로 넣어 놓는다.
     atlasTex->Set(std::move(resource));
     atlasTex->SetHeapIndex(srvIndex);
     atlasTex->SetSize(atlasTexSize);
@@ -75,6 +73,9 @@ std::shared_ptr<MaterialResource> AtlasPage::GetMaterialResource()
 
 const Resource& AtlasPage::GetAtlasResource() const
 {
+    Assert(m_material);
     auto tex = m_material->GetTexture(Resolve(UITextureSlot::Normal));
+
+    Assert(tex);
     return tex->Get();
 }

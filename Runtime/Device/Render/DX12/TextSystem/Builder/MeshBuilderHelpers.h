@@ -3,24 +3,27 @@
 #include "Core/Foundation/Geometry2D.h"
 
 struct UIVertex;
+struct DrawTextRun;
+struct BatchTarget;
+
+struct PackedTextParams
+{
+    uint32_t params1;
+    uint32_t params2;
+};
+
+std::vector<PackedTextParams> PackRunParams(const std::vector<DrawTextRun>& runs);
 
 void AppendGlyphQuad(
-    std::vector<UIVertex>& vertices,
-    std::vector<uint32_t>& indices,
-    uint32_t& vertexOffset,
+    BatchTarget& target,
     const GlyphInfo& glyph,
-    float x,
-    float y,
-    UINT textureIndex,
-    const TextStyle& style,
+    float x, float y,
+    const Core::Color& color,
+    PackedTextParams packParams,
     const Rect& clipRect);
 
 void AppendSolidQuad(
-    std::vector<UIVertex>& vertices,
-    std::vector<uint32_t>& indices,
-    uint32_t& vertexOffset,
-    float x, float y,
-    float width, float height,
-    UINT textureIndex,
+    BatchTarget& target,
+    const Rect& rect,
     const Core::Color& color,
     const Rect& clipRect);
