@@ -7,7 +7,6 @@ class FontResource;
 class GlyphCache
 {
 public:
-    bool Contains(FontResource* fontRes, uint32_t glyphIndex, uint32_t size) const;
     void Insert(FontResource* fontRes, uint32_t glyphIndex, uint32_t size, const GlyphInfo& info);
     const GlyphInfo* Get(FontResource* fontRes, uint32_t glyphIndex, uint32_t size) const;
     void Clear();

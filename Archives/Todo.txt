@@ -339,9 +339,9 @@
 --폰트크기(10부터 20크기 안에는 한 bucket)로 bucket 만들고 atlas 관리
 --Keining 지원(harfbuzz)
 --폰트 outline/shadow/glow/gradient 구현
+-- Multi Line / Alignment
 
 @폰트
-- Multi Line / Alignment
 - Fallback Font 지원
 
 @ui쪽 draw call 한번으로 하기 위해서

@@ -58,6 +58,13 @@ using namespace DirectX::SimpleMath;
 #pragma comment(lib, "msdfgen-ext_Release.lib")
 #endif
 
+#ifdef _DEBUG
+#pragma comment(lib, "ktx_Debug.lib")
+#else
+#pragma comment(lib, "ktx_Release.lib")
+#endif
+
+
 #define CHECK_ALIGN16(StructName) \
     static_assert(sizeof(StructName) % 16 == 0, #StructName "의 크기는 반드시 16바이트의 배수여야 합니다.")
 

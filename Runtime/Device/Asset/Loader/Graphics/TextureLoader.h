@@ -17,7 +17,8 @@ public:
 	}
 
 private:
-	IAssetMetaRegistry* m_metaRegistry{ nullptr };
 	std::shared_ptr<TextureAsset> LoadFromMemory(const Core::ResourceID& resID, Core::ByteBuffer buffer);
+
+	IAssetMetaRegistry* m_metaRegistry{ nullptr };
 };
 

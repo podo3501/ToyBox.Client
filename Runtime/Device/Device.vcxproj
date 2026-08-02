@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Asset\Loader\Graphics\KtxTextureLoader.h" />
     <ClInclude Include="Asset\Loader\Graphics\FontLoader.h" />
     <ClInclude Include="Asset\Loader\Graphics\HLSLShaderLoader.h" />
     <ClInclude Include="Asset\Loader\Graphics\MeshJsonLoader.h" />
@@ -163,6 +164,7 @@
     <ClInclude Include="Storage\JsonObjectIO.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Asset\Loader\Graphics\KtxTextureLoader.cpp" />
     <ClCompile Include="Asset\Loader\Graphics\FontLoader.cpp" />
     <ClCompile Include="Asset\Loader\Graphics\HLSLShaderLoader.cpp" />
     <ClCompile Include="Asset\Loader\Graphics\MeshJsonLoader.cpp" />
@@ -269,6 +271,7 @@
     <ClCompile Include="Render\DX12\TextSystem\Atlas\AtlasPage.cpp" />
     <ClCompile Include="Render\DX12\TextSystem\Atlas\FontAtlas.cpp" />
     <ClCompile Include="Render\DX12\TextSystem\Atlas\BitmapFontAtlasBucket.cpp" />
+    <ClCompile Include="Render\DX12\TextSystem\Atlas\FontAtlasBucket.cpp" />
     <ClCompile Include="Render\DX12\TextSystem\Atlas\GlyphCache.cpp" />
     <ClCompile Include="Render\DX12\TextSystem\Atlas\Glyph\BitmapGlyphGenerator.cpp" />
     <ClCompile Include="Render\DX12\TextSystem\Atlas\Glyph\MTSDFGlyphGenerator.cpp" />
@@ -349,7 +352,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir);$(SolutionDir)Game;$(SolutionDir)Runtime;$(SolutionDir)ThirdParty\Include;$(SolutionDir)ThirdParty\SDL3\include;$(SolutionDir)ThirdParty\FreeType\include\freetype2;$(SolutionDir)ThirdParty\HarfBuzz\include;$(ProjectDir)\Render\DX12;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir);$(SolutionDir)Game;$(SolutionDir)Runtime;$(SolutionDir)ThirdParty\Include;$(SolutionDir)ThirdParty\SDL3\include;$(SolutionDir)ThirdParty\FreeType\include\freetype2;$(SolutionDir)ThirdParty\HarfBuzz\include;$(SolutionDir)ThirdParty\KTX\include;$(ProjectDir)\Render\DX12;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
@@ -373,7 +376,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir);$(SolutionDir)Game;$(SolutionDir)Runtime;$(SolutionDir)ThirdParty\Include;$(SolutionDir)ThirdParty\SDL3\include;$(SolutionDir)ThirdParty\FreeType\include\freetype2;$(SolutionDir)ThirdParty\HarfBuzz\include;$(ProjectDir)\Render\DX12;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir);$(SolutionDir)Game;$(SolutionDir)Runtime;$(SolutionDir)ThirdParty\Include;$(SolutionDir)ThirdParty\SDL3\include;$(SolutionDir)ThirdParty\FreeType\include\freetype2;$(SolutionDir)ThirdParty\HarfBuzz\include;$(SolutionDir)ThirdParty\KTX\include;$(ProjectDir)\Render\DX12;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
@@ -395,7 +398,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir);$(SolutionDir)Game;$(SolutionDir)Runtime;$(SolutionDir)ThirdParty\Include;$(SolutionDir)ThirdParty\SDL3\include;$(SolutionDir)ThirdParty\FreeType\include\freetype2;$(SolutionDir)ThirdParty\HarfBuzz\include;$(ProjectDir)\Render\DX12;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir);$(SolutionDir)Game;$(SolutionDir)Runtime;$(SolutionDir)ThirdParty\Include;$(SolutionDir)ThirdParty\SDL3\include;$(SolutionDir)ThirdParty\FreeType\include\freetype2;$(SolutionDir)ThirdParty\HarfBuzz\include;$(SolutionDir)ThirdParty\KTX\include;$(ProjectDir)\Render\DX12;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
@@ -419,7 +422,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir);$(SolutionDir)Game;$(SolutionDir)Runtime;$(SolutionDir)ThirdParty\Include;$(SolutionDir)ThirdParty\SDL3\include;$(SolutionDir)ThirdParty\FreeType\include\freetype2;$(SolutionDir)ThirdParty\HarfBuzz\include;$(ProjectDir)\Render\DX12;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir);$(SolutionDir)Game;$(SolutionDir)Runtime;$(SolutionDir)ThirdParty\Include;$(SolutionDir)ThirdParty\SDL3\include;$(SolutionDir)ThirdParty\FreeType\include\freetype2;$(SolutionDir)ThirdParty\HarfBuzz\include;$(SolutionDir)ThirdParty\KTX\include;$(ProjectDir)\Render\DX12;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>

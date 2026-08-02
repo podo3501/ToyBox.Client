@@ -1,0 +1,8 @@
+cmake .. -G "Visual Studio 17 2022" -A x64 -DBUILD_SHARED_LIBS=OFF -DKTX_FEATURE_TESTS=OFF -DKTX_FEATURE_TOOLS=OFF 
+
+cmake --build . --config Release
+cmake --build . --config Debug
+
+cmake .. -DCMAKE_INSTALL_PREFIX=D:\ProgrammingStudy\ToyBox\ThirdParty\KTX
+
+cmake --install . --config Release

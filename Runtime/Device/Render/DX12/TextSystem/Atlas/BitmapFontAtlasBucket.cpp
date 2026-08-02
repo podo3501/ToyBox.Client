@@ -4,35 +4,6 @@
 #include "Glyph/BitmapGlyphGenerator.h"
 #include "AtlasHelper.h"
 
-BitmapFontAtlasBucket::~BitmapFontAtlasBucket() = default;
-BitmapFontAtlasBucket::BitmapFontAtlasBucket(
-    Device& device,
-    DescriptorFactory& factory,
-    FontBucketID bucketID) :
-    m_device{ device },
-    m_factory{ factory },
-    m_bucketID{ bucketID }
-{}
-
-void BitmapFontAtlasBucket::Initialize(const Size& atlasTextureSize)
-{
-    Assert(atlasTextureSize.width > 0 && atlasTextureSize.height > 0);
-    m_atlasTextureSize = atlasTextureSize;
-}
-
-void BitmapFontAtlasBucket::CreatePage()
-{
-    auto page = std::make_unique<AtlasPage>();
-
-    page->Initialize(
-        m_device,
-        m_factory,
-        m_atlasTextureSize,
-        GetAtlasPageDesc());
-
-    m_pages.push_back(std::move(page));
-}
-
 AtlasPageDesc BitmapFontAtlasBucket::GetAtlasPageDesc() const
 {
     return {
@@ -52,14 +23,8 @@ void BitmapFontAtlasBucket::EnsureGlyphs(
     for (const auto& shapedGlyph : shapedText.glyphs)
     {
         uint32_t glyphIndex = shapedGlyph.glyphIndex;
-
-        if (m_glyphCache.Contains(
-            font,
-            glyphIndex,
-            shapedText.size))
-        {
+        if (m_glyphCache.Get(font, glyphIndex, shapedText.size))
             continue;
-        }
 
         BitmapGlyph bitmap = GenerateBitmapGlyph(
             font,
@@ -126,33 +91,4 @@ void BitmapFontAtlasBucket::EnsureGlyphs(
             shapedText.size,
             glyphInfo);
     }
-}
-
-const GlyphInfo* BitmapFontAtlasBucket::FindGlyph(
-    FontResource* font,
-    uint32_t glyphIndex,
-    uint32_t size) const
-{
-    return m_glyphCache.Get(
-        font,
-        glyphIndex,
-        size);
-}
-
-std::shared_ptr<IMaterialResource> BitmapFontAtlasBucket::GetMaterial(uint16_t pageIndex) const
-{
-    Assert(pageIndex < m_pages.size());
-    return m_pages[pageIndex]->GetMaterialResource();
-}
-
-const Resource& BitmapFontAtlasBucket::GetAtlasResource(uint16_t pageIndex) const
-{
-    Assert(pageIndex < m_pages.size());
-    return m_pages[pageIndex]->GetAtlasResource();
-}
-
-uint16_t BitmapFontAtlasBucket::CurrentPageIndex() const
-{
-    Assert(!m_pages.empty());
-    return static_cast<uint16_t>(m_pages.size() - 1);
 }

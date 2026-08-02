@@ -3,12 +3,6 @@
 #include "Core/Foundation/Geometry2D.h"
 #include "TextureTypes.h"
 
-enum class PixelFormat
-{
-	RGB8,
-	RGBA8,
-};
-
 struct TextureAsset : public AssetData
 {
 	CORE_DECLARE_TYPE(TextureAsset)

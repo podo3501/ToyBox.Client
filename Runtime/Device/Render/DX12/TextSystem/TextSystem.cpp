@@ -21,9 +21,9 @@ TextSystem::TextSystem(
 bool TextSystem::Initialize(const TextConfig& texConfig, Inspector* inspector)
 {
     ReturnIfFalse(m_fontAtlas.Initialize(texConfig));
-   m_inspector = inspector;
+    m_inspector = inspector;
 
-   return true;
+    return true;
 }
 
 std::vector<DrawUIItem> TextSystem::BuildDrawItems(std::span<const DrawTextItem> items)

@@ -754,6 +754,9 @@
     <ClInclude Include="Asset\TextureTypes.h">
       <Filter>Asset</Filter>
     </ClInclude>
+    <ClInclude Include="Asset\CubemapAsset.h">
+      <Filter>Asset</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Locator">

@@ -1,0 +1,16 @@
+cmgen을 깔아야 한다.
+
+mkdir out
+cd out
+cmake .. -G "Visual Studio 17 2022" -A x64
+cmake --build . --config Release
+
+toktx를 깔아야 한다.
+KTX-Software-4.4.2-Windows-x64.exe 다운 받은후 설치
+
+cmgen으로 하나의 exr을 6면에 맞게 분할 exr을 만든다.
+.\cmgen.exe --format=exr --type=cubemap --deploy=.\output_dir .\symmetrical_garden_02_4k.exr
+
+ktx로 6개를 다시 하나의 ktx2로 만든다.
+ktx create --cubemap --format R16G16B16A16_SFLOAT m0_px.exr m0_nx.exr m0_py.exr m0_ny.exr m0_pz.exr m0_nz.exr d:\garden_hdr.ktx2
+

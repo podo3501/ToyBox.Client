@@ -1,11 +1,7 @@
 #pragma once
-#include "FontAtlas.h"
 #include "FontAtlasBucket.h"
-#include "FontSetting.h"
-#include "Core/Utils/Hash.h"
 #include "AtlasPage.h"
 #include "GameClient/Service/Render/RenderConfig.h"
-#include "GameClient/Service/Render/Definition/Text/TextStyle.h"
 
 struct FontBucketKey
 {

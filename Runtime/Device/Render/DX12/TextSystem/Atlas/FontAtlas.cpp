@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "FontAtlas.h"
-#include "Glyph/BitmapGlyphGenerator.h"
 #include "../Builder/FontAtlasUploadGraphBuilder.h"
 #include "BitmapFontAtlasBucket.h"
 #include "MTSDFFontAtlasBucket.h"
@@ -34,17 +33,18 @@ void FontAtlas::EnsureSolidPage()
     solidDesc.format = GlyphPixelFormat::RGBA8; //알파 포함 RGBA 필요
     solidDesc.shaderID = RegistryShader::UI;
 
-    constexpr Size kSolidPageSize{ 4, 4 };
-    m_solidPage.Initialize(m_device, m_factory, kSolidPageSize, solidDesc);
+    constexpr Size SolidPageSize{ 4, 4 };
+    m_solidPage.Initialize(m_device, m_factory, SolidPageSize, solidDesc);
 
     // 4x4를 전부 흰색(premultiplied RGBA = 255,255,255,255)으로 채워 1회 업로드
+    auto format = GlyphPixelFormat::RGBA8;
     GlyphPixels pixels{ 
-        .format = GlyphPixelFormat::RGBA8, 
-        .width = 4, 
-        .height = 4 
+        .format = format,
+        .width = SolidPageSize.width ,
+        .height = SolidPageSize.height
     };
-
-    pixels.buffer.resize(pixels.width * pixels.height * 4);
+    
+    pixels.buffer.resize(pixels.width * pixels.height * GetBytesPerPixel(format));
     std::fill(pixels.buffer.begin(), pixels.buffer.end(), uint8_t{ 0xFF });
 
     GlyphUploadEntry entry;
@@ -121,7 +121,7 @@ std::shared_ptr<IMaterialResource> FontAtlas::GetMaterial(const GlyphInfo* glyph
 
 std::shared_ptr<MaterialResource> FontAtlas::GetSolidMaterial() const
 {
-    return const_cast<AtlasPage&>(m_solidPage).GetMaterialResource();
+    return m_solidPage.GetMaterialResource();
 }
 
 const Resource& FontAtlas::GetAtlasResource(const FontBucketKey& key, uint16_t pageIndex) const
@@ -150,6 +150,9 @@ FontAtlasBucket* FontAtlas::GetOrCreateBucket(const FontBucketKey& key)
         fontAtlasBucket = std::make_unique<MTSDFFontAtlasBucket>(m_device, m_factory, key.bucket);
         atlasSize = m_textConfig.mtsdf.atlasSize;
         break;
+    default:
+        Assert(false); // 알 수 없는 TextRenderMode
+        return nullptr;
     }
     fontAtlasBucket->Initialize(atlasSize);
 

@@ -33,7 +33,7 @@ public:
         const AtlasPageDesc& desc);
     std::optional<Point> AllocateRect(const Size& size);
 
-    std::shared_ptr<MaterialResource> GetMaterialResource();
+    std::shared_ptr<MaterialResource> GetMaterialResource() const;
     const Resource& GetAtlasResource() const;
 
 private:

@@ -66,7 +66,7 @@ std::optional<Point> AtlasPage::AllocateRect(const Size& size)
     return m_packer.AllocateRect(size);
 }
 
-std::shared_ptr<MaterialResource> AtlasPage::GetMaterialResource()
+std::shared_ptr<MaterialResource> AtlasPage::GetMaterialResource() const
 {
     return m_material;
 }

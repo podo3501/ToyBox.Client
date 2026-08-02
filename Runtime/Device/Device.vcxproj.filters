@@ -545,6 +545,9 @@
     <ClInclude Include="Render\DX12\TextSystem\Builder\MeshBuilderHelpers.h">
       <Filter>Render\DX12\TextSystem\Builder</Filter>
     </ClInclude>
+    <ClInclude Include="Asset\Loader\Graphics\KtxTextureLoader.h">
+      <Filter>Asset\Loader\Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -886,6 +889,12 @@
     </ClCompile>
     <ClCompile Include="Render\DX12\TextSystem\Builder\TextBatch.cpp">
       <Filter>Render\DX12\TextSystem\Builder</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\TextSystem\Atlas\FontAtlasBucket.cpp">
+      <Filter>Render\DX12\TextSystem\Atlas</Filter>
+    </ClCompile>
+    <ClCompile Include="Asset\Loader\Graphics\KtxTextureLoader.cpp">
+      <Filter>Asset\Loader\Graphics</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

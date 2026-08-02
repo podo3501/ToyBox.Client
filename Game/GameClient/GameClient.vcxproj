@@ -127,6 +127,7 @@
     <ClInclude Include="Asset\AssetExtensions.h" />
     <ClInclude Include="Asset\AssetInput.h" />
     <ClInclude Include="Asset\AudioTypes.h" />
+    <ClInclude Include="Asset\CubemapAsset.h" />
     <ClInclude Include="Asset\FontAsset.h" />
     <ClInclude Include="Asset\IAssetLoader.h" />
     <ClInclude Include="Asset\MeshAsset.h" />
