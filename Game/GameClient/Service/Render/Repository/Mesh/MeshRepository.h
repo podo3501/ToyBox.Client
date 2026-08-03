@@ -15,7 +15,7 @@ struct IAssetAsyncLoader;
 struct MeshEntry
 {
     Core::ResourceID resID;
-    shared_ptr<IMeshResource> meshRes;
+    std::shared_ptr<IMeshResource> meshRes;
     LoadState state{ LoadState::Pending };
 };
 

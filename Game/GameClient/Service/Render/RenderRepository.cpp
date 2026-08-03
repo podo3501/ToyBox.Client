@@ -4,15 +4,18 @@
 #include "Repository/Font/FontRepository.h"
 #include "Repository/Material/MaterialRepository.h"
 #include "Repository/Mesh/MeshRepository.h"
+#include "Repository/Environment/EnvironmentRepository.h"
 
 RenderRepository::~RenderRepository() = default;
 RenderRepository::RenderRepository(
 	FontRepository* fontRepository,
 	MeshRepository* meshRepository, 
-	MaterialRepository* matRepository) :
+	MaterialRepository* matRepository,
+	EnvironmentRepository* envRepository) :
 	m_fontRepository{ fontRepository },
 	m_meshRepository{ meshRepository },
-	m_matRepository{ matRepository }
+	m_matRepository{ matRepository },
+	m_envRepository{ envRepository }
 {}
 
 FontHandle RenderRepository::LoadFont(const Core::ResourceID& resID)
@@ -43,6 +46,11 @@ MaterialHandle RenderRepository::LoadMaterial(const MaterialDesc& desc)
 bool RenderRepository::ReleaseMaterial(MaterialHandle mh)
 {
 	return m_matRepository->Release(mh);
+}
+
+EnvironmentHandle RenderRepository::LoadEnvironment(const EnvironmentDesc& desc)
+{
+	return m_envRepository->GetOrCreate(desc);
 }
 
 void RenderRepository::Update()

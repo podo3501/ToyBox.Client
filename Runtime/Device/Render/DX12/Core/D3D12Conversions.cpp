@@ -97,6 +97,7 @@ DXGI_FORMAT ToDXGIFormat(PixelFormat format)
     case PixelFormat::Unknown: return DXGI_FORMAT_UNKNOWN;
     case PixelFormat::RGB8: return DXGI_FORMAT_R8G8B8A8_UNORM; //3채널은 지원하지 않는다. 일단 이걸로.
     case PixelFormat::RGBA8: return DXGI_FORMAT_R8G8B8A8_UNORM;
+    case PixelFormat::R11G11B10F: return DXGI_FORMAT_R11G11B10_FLOAT;
     case PixelFormat::RGBA16F: return DXGI_FORMAT_R16G16B16A16_FLOAT;
     case PixelFormat::RGB9E5: return DXGI_FORMAT_R9G9B9E5_SHAREDEXP;
     case PixelFormat::BC6H_UF16: return DXGI_FORMAT_BC6H_UF16;

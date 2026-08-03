@@ -30,6 +30,16 @@ namespace Core
         return ResourceID(std::string(kPathPrefix) + NormalizePath(fsPath));
     }
 
+    ResourceID ResourceID::MakeSibling(std::string_view relativeName) const
+    {
+        Assert(GetType() == ResourceIDType::Path); // Path가 아니면 디렉터리 개념이 없음
+
+        std::filesystem::path fsPath(GetValue());
+        auto siblingPath = fsPath.parent_path() / relativeName;
+
+        return ResourceID::MakePath(siblingPath.string());
+    }
+
     ResourceIDType ResourceID::GetType() const
     {
         if (m_value.empty()) return ResourceIDType::Invalid;

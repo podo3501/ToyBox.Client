@@ -20,6 +20,8 @@ namespace Core
         static ResourceID MakeRuntime(std::string_view name);
         static ResourceID MakeBuiltin(std::string_view name);
 
+        ResourceID MakeSibling(std::string_view relativeName) const; // 이 ResourceID와 같은 디렉터리에 있는 relativeName을 가리키는 새 ResourceID 생성. Path 타입에만 유효
+
         ResourceIDType GetType() const;
         std::string_view GetValue() const;
         bool IsValid() const;

@@ -1,10 +1,11 @@
 #pragma once
+#include "GameClient/Asset/IAssetProvider.h"
 #include "AssetLoaderDesc.h"
 #include "AssetKeys.h"
 #include <mutex>
 
 struct IResourceManager;
-class AssetRepository
+class AssetRepository : public IAssetProvider
 {
 public:
 	~AssetRepository();

@@ -20,6 +20,11 @@ std::unique_ptr<IAssetLoader> CreateLoader()
 }
 
 struct IAssetMetaRegistry;
+struct IAssetProvider;
+
+std::unique_ptr<IAssetLoader> CreateEnvironmentLoader(IAssetProvider* assetProvider);
+std::unique_ptr<IAssetLoader> CreateTextureCubeLoader();
+std::unique_ptr<IAssetLoader> CreateSphericalHarmonicsLoader();
 
 std::unique_ptr<IAssetLoader> CreateTextureMetaLoader();
 std::unique_ptr<IAssetLoader> CreateImageTextureLoader(IAssetMetaRegistry* metaRegistry);

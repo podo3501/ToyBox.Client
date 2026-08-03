@@ -19,10 +19,12 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Asset\Loader\Graphics\KtxTextureLoader.h" />
+    <ClInclude Include="Asset\Loader\Graphics\EnvironmentLoader.h" />
     <ClInclude Include="Asset\Loader\Graphics\FontLoader.h" />
     <ClInclude Include="Asset\Loader\Graphics\HLSLShaderLoader.h" />
     <ClInclude Include="Asset\Loader\Graphics\MeshJsonLoader.h" />
+    <ClInclude Include="Asset\Loader\Graphics\SphericalHarmonicsLoader.h" />
+    <ClInclude Include="Asset\Loader\Graphics\TextureCubeLoader.h" />
     <ClInclude Include="Asset\Loader\Graphics\TextureLoader.h" />
     <ClInclude Include="Asset\Loader\JsonLoader.h" />
     <ClInclude Include="Asset\Loader\Meta\TextureMetaLoader.h" />
@@ -65,6 +67,7 @@
     <ClInclude Include="Render\DX12\Inspector\Inspector.h" />
     <ClInclude Include="Render\DX12\Inspector\InspectorGraphBuilder.h" />
     <ClInclude Include="Render\DX12\Inspector\InspectorRenderers.h" />
+    <ClInclude Include="Render\DX12\Provider\Environment\EnvironmentProvider.h" />
     <ClInclude Include="Render\DX12\Provider\Font\FontProvider.h" />
     <ClInclude Include="Render\DX12\Provider\Mesh\TransientMeshProvider.h" />
     <ClInclude Include="Render\DX12\Provider\ResourceReleaseBuilder.h" />
@@ -164,10 +167,12 @@
     <ClInclude Include="Storage\JsonObjectIO.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Asset\Loader\Graphics\KtxTextureLoader.cpp" />
+    <ClCompile Include="Asset\Loader\Graphics\EnvironmentLoader.cpp" />
     <ClCompile Include="Asset\Loader\Graphics\FontLoader.cpp" />
     <ClCompile Include="Asset\Loader\Graphics\HLSLShaderLoader.cpp" />
     <ClCompile Include="Asset\Loader\Graphics\MeshJsonLoader.cpp" />
+    <ClCompile Include="Asset\Loader\Graphics\SphericalHarmonicsLoader.cpp" />
+    <ClCompile Include="Asset\Loader\Graphics\TextureCubeLoader.cpp" />
     <ClCompile Include="Asset\Loader\Graphics\TextureLoader.cpp" />
     <ClCompile Include="Asset\Loader\Meta\TextureMetaLoader.cpp" />
     <ClCompile Include="Asset\Loader\SoundDesc.cpp" />
@@ -210,6 +215,7 @@
     <ClCompile Include="Render\DX12\Inspector\Inspector.cpp" />
     <ClCompile Include="Render\DX12\Inspector\InspectorGraphBuilder.cpp" />
     <ClCompile Include="Render\DX12\Inspector\InspectorRenderers.cpp" />
+    <ClCompile Include="Render\DX12\Provider\Environment\EnvironmentProvider.cpp" />
     <ClCompile Include="Render\DX12\Provider\Font\FontProvider.cpp" />
     <ClCompile Include="Render\DX12\Provider\Mesh\TransientMeshProvider.cpp" />
     <ClCompile Include="Render\DX12\Provider\ResourceReleaseBuilder.cpp" />

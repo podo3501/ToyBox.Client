@@ -121,6 +121,9 @@
     <Filter Include="Asset\Loader\Meta">
       <UniqueIdentifier>{8ec301ff-ca20-4ce7-9cab-8901accd7968}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Render\DX12\Provider\Environment">
+      <UniqueIdentifier>{b9cf2b5f-f9ba-4e8c-ac3b-fda5fa1c4141}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Storage\JsonObjectIO.h">
@@ -545,8 +548,17 @@
     <ClInclude Include="Render\DX12\TextSystem\Builder\MeshBuilderHelpers.h">
       <Filter>Render\DX12\TextSystem\Builder</Filter>
     </ClInclude>
-    <ClInclude Include="Asset\Loader\Graphics\KtxTextureLoader.h">
+    <ClInclude Include="Asset\Loader\Graphics\EnvironmentLoader.h">
       <Filter>Asset\Loader\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\Loader\Graphics\TextureCubeLoader.h">
+      <Filter>Asset\Loader\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\Loader\Graphics\SphericalHarmonicsLoader.h">
+      <Filter>Asset\Loader\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Provider\Environment\EnvironmentProvider.h">
+      <Filter>Render\DX12\Provider\Environment</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -893,8 +905,17 @@
     <ClCompile Include="Render\DX12\TextSystem\Atlas\FontAtlasBucket.cpp">
       <Filter>Render\DX12\TextSystem\Atlas</Filter>
     </ClCompile>
-    <ClCompile Include="Asset\Loader\Graphics\KtxTextureLoader.cpp">
+    <ClCompile Include="Asset\Loader\Graphics\EnvironmentLoader.cpp">
       <Filter>Asset\Loader\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Asset\Loader\Graphics\TextureCubeLoader.cpp">
+      <Filter>Asset\Loader\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Asset\Loader\Graphics\SphericalHarmonicsLoader.cpp">
+      <Filter>Asset\Loader\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Provider\Environment\EnvironmentProvider.cpp">
+      <Filter>Render\DX12\Provider\Environment</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

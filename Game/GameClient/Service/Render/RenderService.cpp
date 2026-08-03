@@ -4,6 +4,7 @@
 #include "Repository/Font/FontRepository.h"
 #include "Repository/Material/MaterialRepository.h"
 #include "Repository/Mesh/MeshRepository.h"
+#include "Repository/Environment/EnvironmentRepository.h"
 #include "Service/AssetAsyncHelper.h"
 #include "Asset/ShaderAsset.h"
 
@@ -23,6 +24,7 @@ RenderService::RenderService(unique_ptr<IRenderBackend> backend, IAssetAsyncLoad
 	m_fontRepository = make_unique<FontRepository>(resProvider->GetFontProvider(), asyncLoader);
 	m_meshRepository = make_unique<MeshRepository>(resProvider->GetMeshProvider(), asyncLoader);
 	m_matRepository = make_unique<MaterialRepository>(resProvider->GetMaterialProvider(), asyncLoader);
+	m_envRepository = make_unique<EnvironmentRepository>(resProvider->GetEnvironmentProvider(), asyncLoader);
 }
 
 unique_ptr<RenderService> RenderService::Create(	
@@ -41,7 +43,8 @@ bool RenderService::Initialize(HWND hwnd, const Size& screenSize)
 	m_repository = make_unique<RenderRepository>(
 		m_fontRepository.get(),
 		m_meshRepository.get(),
-		m_matRepository.get());
+		m_matRepository.get(),
+		m_envRepository.get());
 
 	m_renderer = make_unique<SceneRenderer>(
 		m_backend->GetRenderFrame(),

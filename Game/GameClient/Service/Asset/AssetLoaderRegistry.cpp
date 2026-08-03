@@ -7,6 +7,7 @@
 //include Metas
 #include "Asset/TextureMetaAsset.h"
 //include Assets
+#include "Asset/EnvironmentAsset.h"
 #include "Asset/TextureAsset.h"
 #include "Asset/MeshAsset.h"
 #include "Asset/StaticSoundAsset.h"
@@ -34,6 +35,10 @@ bool AssetLoaderRegistry::RegisterDefaultLoaders(IAssetMetaRegistry* metaRegistr
     ReturnIfFalse(RegisterLoader<TextureMetaAsset>(".meta", CreateTextureMetaLoader()));
 
     //asset
+    ReturnIfFalse(RegisterLoader<EnvironmentAsset>(".envmap", CreateEnvironmentLoader(&m_repository)));
+    ReturnIfFalse(RegisterLoader<TextureCubeAsset>(".ktx2", CreateTextureCubeLoader()));
+    ReturnIfFalse(RegisterLoader<SphericalHarmonicsAsset>(".txt", CreateSphericalHarmonicsLoader()));
+
     for (auto& ext : ImageSupportedExtensions)
         ReturnIfFalse(RegisterLoader<TextureAsset>(ext, CreateImageTextureLoader(metaRegistry)));
 
