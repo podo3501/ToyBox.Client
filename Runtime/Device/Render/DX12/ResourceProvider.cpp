@@ -24,6 +24,14 @@ namespace
         .minBudget = 4_MB
     };
 
+    constexpr BudgetRange CubeTextureBudgetRange
+    {
+        .fastGpuMs = 5.0f,
+        .slowGpuMs = 15.0f,
+        .maxBudget = 16_MB,
+        .minBudget = 2_MB
+    };
+
     constexpr BudgetRange MeshBudgetRange
     {
         .fastGpuMs = 5.0f,
@@ -49,19 +57,9 @@ namespace
                 t));
     }
 
-    size_t ComputeTextureBudget(float gpuMs)
-    {
-        return ComputeBudget(
-            gpuMs,
-            TextureBudgetRange);
-    }
-
-    size_t ComputeMeshBudget(float gpuMs)
-    {
-        return ComputeBudget(
-            gpuMs,
-            MeshBudgetRange);
-    }
+    size_t ComputeTextureBudget(float gpuMs) { return ComputeBudget(gpuMs, TextureBudgetRange); }
+    size_t ComputeCubeTextureBudget(float gpuMs) { return ComputeBudget(gpuMs, CubeTextureBudgetRange); }
+    size_t ComputeMeshBudget(float gpuMs) { return ComputeBudget(gpuMs, MeshBudgetRange); }
 }
 
 ResourceProvider::~ResourceProvider() = default;
@@ -81,6 +79,13 @@ ResourceProvider::ResourceProvider(
     m_matProvider{ 
         m_texProvider, 
         ResourceReleaseBuilder{ taskScheduler }, 
+        },
+    m_cubeProvider{
+        TextureCubeCreateGraphBuilder{ taskScheduler, resFactory, descFactory }
+        },
+    m_envProvider{
+        m_cubeProvider,
+        ResourceReleaseBuilder{ taskScheduler },
         }
 {}
 
@@ -100,6 +105,10 @@ void ResourceProvider::Update(float gpuMs)
 
     m_texProvider.Update(ComputeTextureBudget(m_avgGpuMs));
     m_matProvider.Update();
+
+    m_cubeProvider.Update(ComputeCubeTextureBudget(m_avgGpuMs));
+    m_envProvider.Update();
+
     m_meshProvider.Update(ComputeMeshBudget(m_avgGpuMs));
 }
 

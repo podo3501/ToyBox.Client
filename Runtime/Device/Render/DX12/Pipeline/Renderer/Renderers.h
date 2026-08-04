@@ -1,6 +1,7 @@
 #pragma once
 #include "PipelineCache.h"
 #include "ShadowRenderer.h"
+#include "SkyboxRenderer.h"
 #include "SurfaceRenderer.h"
 #include "DebugSurfaceRenderer.h"
 #include "UIRenderer.h"
@@ -23,6 +24,7 @@ public:
     SurfaceRenderer& GetSurfRenderer() { return m_surfRenderer; }
     DebugSurfaceRenderer& GetDebugSurfRenderer() { return m_debugSurfRenderer; }
     UIRenderer& GetUIRenderer() { return m_uiRenderer; }
+    SkyboxRenderer& GetSkyboxRenderer() { return m_skyboxRenderer; }
 
 private:
     Device& m_device;
@@ -33,4 +35,5 @@ private:
     SurfaceRenderer m_surfRenderer;
     DebugSurfaceRenderer m_debugSurfRenderer;
     UIRenderer m_uiRenderer;
+    SkyboxRenderer m_skyboxRenderer;
 };

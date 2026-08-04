@@ -4,11 +4,11 @@
 #include "Allocator/BindlessDescriptorAllocator.h"
 #include "Allocator/DescriptorAllocator.h"
 
-
 struct DescriptorConfig;
 class Device;
 class Resource;
 class TextureResource;
+class TextureCubeResource;
 class BindlessDescriptorAllocator;
 
 class DescriptorFactory
@@ -27,6 +27,7 @@ public:
     UINT CreateTextureSRV(const Resource& res, DXGI_FORMAT format, UINT mipLevels = 1);
     UINT CreateTextureDSV(const Resource& res, DXGI_FORMAT format, UINT mipSlice = 0);
     bool CreateTextureViews(TextureResource* texRes, bool generateMips);
+    bool CreateTextureCubeViews(TextureCubeResource* texRes);
     BindlessDescriptorAllocator& GetBindlessAllocator() noexcept { return m_bindlessAllocator; }
     DescriptorAllocator& GetDSVAllocator() noexcept { return m_dsvAllocator; }
 
@@ -41,6 +42,7 @@ private:
         UINT stride) const;
     UINT CreateMipSRV(const Resource& res, DXGI_FORMAT format, UINT mipLevel);
     UINT CreateMipUAV(const Resource& res, DXGI_FORMAT format, UINT mipLevel);
+    UINT CreateTextureCubeSRV(const Resource& res, DXGI_FORMAT format, UINT mipLevels);
 
     Device& m_device;
     BindlessDescriptorAllocator m_bindlessAllocator; // srv/uav/cbv 셋다 하나의 큰 힙에 들어감. cbv는 거의 안씀.

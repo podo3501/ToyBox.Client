@@ -102,6 +102,11 @@ void RenderFrame::DrawUI(
     m_scene.AddUI(item);
 }
 
+void RenderFrame::DrawEnvironment(std::shared_ptr<IEnvironmentResource> envRes)
+{
+    m_scene.SetEnvironment(std::move(envRes));
+}
+
 DrawPacket RenderFrame::PrepareRenderData()
 {
     auto uiItems = m_textSystem.BuildDrawItems(m_pendingTexts);

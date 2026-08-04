@@ -3,6 +3,7 @@
 #include "GameClient/Service/Render/Resource/IFontResource.h"
 #include "GameClient/Service/Render/Resource/IMeshResource.h"
 #include "GameClient/Service/Render/Resource/IMaterialResource.h"
+#include "GameClient/Service/Render/Resource/IEnvironmentResource.h"
 #include "GameClient/Service/Render/Definition/Text/TextStyle.h"
 #include "Core/Foundation/Geometry2D.h"
 #include "Core/Foundation/Color.h"
@@ -31,4 +32,6 @@ struct IRenderFrame
 		std::shared_ptr<IMaterialResource> matRes,
 		const Core::Matrix& world,
 		const Rect* source) = 0;
+
+	virtual void DrawEnvironment(std::shared_ptr<IEnvironmentResource> envRes) = 0;
 };

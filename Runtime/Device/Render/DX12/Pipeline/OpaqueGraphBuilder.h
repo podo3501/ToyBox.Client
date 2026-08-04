@@ -17,6 +17,7 @@ public:
         ShadowResource& shadowRes,
         RGResourceID backBufferResID, 
         RGResourceID shadowResID);
+
     void Build(RenderGraph& graph);
     
 private:

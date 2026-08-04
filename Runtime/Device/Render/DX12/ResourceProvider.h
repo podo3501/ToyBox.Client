@@ -4,6 +4,7 @@
 #include "Provider/Mesh/MeshProvider.h"
 #include "Provider/Texture/TextureProvider.h"
 #include "Provider/Material/MaterialProvider.h"
+#include "Provider/Texture/TextureCubeProvider.h"
 #include "Provider/Environment/EnvironmentProvider.h"
 
 struct ShaderRegisterDesc;
@@ -38,6 +39,7 @@ private:
 	MeshProvider m_meshProvider;
 	TextureProvider m_texProvider;
 	MaterialProvider m_matProvider;
+	TextureCubeProvider m_cubeProvider;
 	EnvironmentProvider m_envProvider;
 
 	float m_avgGpuMs{ 0.0f };

@@ -18,12 +18,12 @@ public:
 	virtual ~FontResource() override;
 	FontResource();
 	virtual bool IsReady() const noexcept override { return m_ready; }
+	void MarkReady() noexcept { m_ready = true; }
 
 	bool Initialize(FreeTypeLibrary& ftLibrary, std::shared_ptr<FontAsset> asset);
 	FT_GlyphSlot GetGlyphSlot(uint32_t glyphIndex, uint32_t size) const;
 
 	std::vector<ShapedGlyph> Shape(std::span<const char32_t> text, uint32_t size);
-	void MarkReady() noexcept { m_ready = true; }
 	FT_Face GetFtFace() { return m_ftFace; }
 
 	float GetLineHeight(uint32_t size) const;

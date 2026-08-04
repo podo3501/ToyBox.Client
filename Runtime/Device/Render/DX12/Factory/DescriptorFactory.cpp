@@ -3,7 +3,7 @@
 #include "Core/Device.h"
 #include "Core/D3D12Conversions.h"
 #include "Resource/Texture/TextureResource.h"
-#include "Resource/Resource.h"
+#include "Resource/Texture/TextureCubeResource.h"
 #include "GameClient/Service/Render/RenderConfig.h"
 
 DescriptorFactory::~DescriptorFactory() = default;
@@ -118,6 +118,39 @@ bool DescriptorFactory::CreateTextureViews(TextureResource* texRes, bool generat
     }
 
     return true;
+}
+
+bool DescriptorFactory::CreateTextureCubeViews(TextureCubeResource* texRes)
+{
+    if (!texRes) return false;
+
+    auto& res = texRes->Get();
+    const auto& resDesc = res->GetDesc();
+    const UINT mipCount = resDesc.MipLevels;
+
+    DXGI_FORMAT srvFormat = resDesc.Format; // 큐브맵은 항상 Linear -> sRGB 변환 불필요 (일반 텍스처와 달리 감마 인코딩 없음)
+    UINT index = CreateTextureCubeSRV(res, srvFormat, mipCount);
+    if (index == UINT_MAX) return false;
+
+    texRes->SetHeapIndex(index);
+    return true;
+}
+
+UINT DescriptorFactory::CreateTextureCubeSRV(const Resource& res, DXGI_FORMAT format, UINT mipLevels)
+{
+    D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
+    srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+    srvDesc.Format = format;
+    srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURECUBE;
+    srvDesc.TextureCube.MipLevels = mipLevels;
+    srvDesc.TextureCube.MostDetailedMip = 0;
+    srvDesc.TextureCube.ResourceMinLODClamp = 0.0f;
+
+    UINT index = m_bindlessAllocator.Allocate();
+    if (index == UINT_MAX) return UINT_MAX;
+
+    m_device->CreateShaderResourceView(res.Get(), &srvDesc, GetBindlessCpuHandle(index));
+    return index;
 }
 
 D3D12_SHADER_RESOURCE_VIEW_DESC DescriptorFactory::CreateStructuredBufferSRVDesc(

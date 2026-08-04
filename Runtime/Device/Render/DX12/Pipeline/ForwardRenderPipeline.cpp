@@ -3,6 +3,7 @@
 #include "Graph/RenderGraph.h"
 #include "Graph/TaskUtils.h"
 #include "ShadowGraphBuilder.h"
+#include "SkyboxGraphBuilder.h"
 #include "OpaqueGraphBuilder.h"
 #include "DebugSurfaceGraphBuilder.h"
 #include "UIGraphBuilder.h"
@@ -44,6 +45,11 @@ bool ForwardRenderPipeline::Initialize(const Size& screenSize, const Size& shado
         m_shadowRes,
         m_hShadow);
 
+    SkyboxGraphBuilder skybox(
+        m_renderers.GetSkyboxRenderer(),
+        m_swapChain,
+        m_hBackBuffer);
+
     OpaqueGraphBuilder opaque(
         m_renderers.GetSurfRenderer(),
         m_swapChain,
@@ -64,6 +70,7 @@ bool ForwardRenderPipeline::Initialize(const Size& screenSize, const Size& shado
         m_hBackBuffer);
 
     shadow.Build(graph);
+    skybox.Build(graph);
     opaque.Build(graph);
     debug.Build(graph);
     ui.Build(graph);

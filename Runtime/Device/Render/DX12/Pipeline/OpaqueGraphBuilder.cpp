@@ -36,7 +36,6 @@ void OpaqueGraphBuilder::Build(RenderGraph& graph)
         (CommandList& cmd, TaskContext& ctx)
         {
             swapChain.SetRenderTarget(cmd);
-            swapChain.Clear(cmd, 0.13f, 0.13f, 0.16f, 1.0f);
 
             surfRenderer.PrepareFrame(
                 ctx.frame.light,

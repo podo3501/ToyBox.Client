@@ -28,13 +28,19 @@ public:
     void Update();
     bool Release(EnvironmentHandle h);
     void ReleaseAll();
+
+    const EnvironmentEntry* Get(EnvironmentHandle h) const noexcept { return m_loadedEnvironments.Find(h); }
     
 private:
+    void ProcessCpuPending();
+    void ProcessGpuPending();
+    void ProcessLoading();
+
     IEnvironmentProvider* m_envProvider{ nullptr };
     IAssetAsyncLoader* m_asyncLoader{ nullptr };
 
     std::unordered_map<size_t, EnvironmentHandle> m_cache;
-    HandlePool<EnvironmentHandle, EnvironmentEntry> m_loadedEnvironments;
+    HandlePool<EnvironmentEntry, EnvironmentTag> m_loadedEnvironments;
 
     std::vector<CpuPendingEnvironmentRequest> m_cpuPending;
     std::vector<GpuPendingEnvironmentRequest> m_gpuPending;

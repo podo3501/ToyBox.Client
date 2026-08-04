@@ -7,6 +7,6 @@ struct IEnvironmentProvider
 {
     virtual ~IEnvironmentProvider() = default;
     virtual std::shared_ptr<IEnvironmentResource> CreateResource() = 0;
-    virtual bool LoadResource(std::shared_ptr<IEnvironmentResource> resource, std::shared_ptr<EnvironmentAsset> asset) = 0;
-    virtual void ReleaseResource(std::shared_ptr<IEnvironmentResource> resource) = 0;
+    virtual bool LoadResource(std::shared_ptr<IEnvironmentResource> res, std::shared_ptr<EnvironmentAsset> asset) = 0;
+    virtual void ReleaseResource(std::shared_ptr<IEnvironmentResource> res) = 0;
 };

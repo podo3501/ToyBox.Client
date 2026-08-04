@@ -11,6 +11,7 @@
 struct IFontResource;
 struct IMeshResource;
 struct IMaterialResource;
+struct IEnvironmentResource;
 class TextureResource;
 
 struct DrawItem
@@ -60,6 +61,7 @@ struct DrawPacket
     std::span<DrawItem> surface;
     std::span<DrawItem> debugSurface;
     std::span<DrawUIItem> ui;
+    std::shared_ptr<IEnvironmentResource> environment{ nullptr }; // nullptr 가능 - 환경 없는 씬
 
     DebugPacket debug;
 };

@@ -20,6 +20,14 @@ IBL까지 한 번에 뽑는 방법 — --deploy 사용
 즉, exr을 ktx1로 뽑아주는거
 .\cmgen.exe --deploy=.\ibl_output --format=ktx --size=256 .\symmetrical_garden_02_4k.exr
 
+
+
+
+
+
+.\cmgen.exe --deploy=.\out_skybox --format=ktx --size=2048 .\symmetrical_garden_02_4k.exr
+.\cmgen.exe --deploy=.\out_ibl --format=ktx --size=256 .\symmetrical_garden_02_4k.exr
+
 ktx1에서 ktx2로 바꿔주는 것.
 PS D:\ProgrammingStudy\ToyBox\Tools\Cubemap\ibl_output> ktx2ktx2.exe -o garden_skybox.ktx2 ibl_output_skybox.ktx
 PS D:\ProgrammingStudy\ToyBox\Tools\Cubemap\ibl_output> ktx2ktx2.exe -o garden_ibl.ktx2 ibl_output_ibl.ktx

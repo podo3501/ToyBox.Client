@@ -10,6 +10,7 @@ class MaterialProvider : public IMaterialProvider
 public:
 	~MaterialProvider();
 	MaterialProvider(TextureProvider& texProvider, ResourceReleaseBuilder release) noexcept;
+
 	virtual shared_ptr<IMaterialResource> CreateResource(const MaterialDesc& matDesc) override;
 	virtual bool LoadResource(std::shared_ptr<IMaterialResource> resource,
 		std::unordered_map<TextureSlot, std::shared_ptr<TextureAsset>> texAssets) override;

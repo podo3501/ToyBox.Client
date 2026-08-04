@@ -34,6 +34,7 @@ public:
 	bool ReleaseFont(FontHandle fh);
 	bool ReleaseMesh(MeshHandle mh);
 	bool ReleaseMaterial(MaterialHandle mh);
+	bool ReleaseEnvironment(EnvironmentHandle eh);
 
 	void Update();
 	void ReleaseAll();

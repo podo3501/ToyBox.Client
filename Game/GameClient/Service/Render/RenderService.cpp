@@ -50,7 +50,8 @@ bool RenderService::Initialize(HWND hwnd, const Size& screenSize)
 		m_backend->GetRenderFrame(),
 		m_fontRepository.get(),
 		m_meshRepository.get(),
-		m_matRepository.get());
+		m_matRepository.get(),
+		m_envRepository.get());
 
 	return true;
 }
@@ -111,6 +112,7 @@ static const RegistryShaderInfo g_shaderRegistry[] =
 	{ RegistryShader::PBR, RID::MakePath("Test/Graphics/Shader/PBR.hlsl"), ShaderType::Graphics },
 	{ RegistryShader::Grid, RID::MakePath("Test/Graphics/Shader/Grid.hlsl"), ShaderType::Graphics },
 	{ RegistryShader::UI, RID::MakePath("Test/Graphics/Shader/UI.hlsl"), ShaderType::Graphics },
+	{ RegistryShader::Skybox, RID::MakePath("Test/Graphics/Shader/Skybox.hlsl"), ShaderType::Graphics },
 	{ RegistryShader::MipGenerator, RID::MakePath("Test/Graphics/Shader/MipGen.hlsl"), ShaderType::Compute },
 	{ RegistryShader::InspectorImage, RID::MakePath("Test/Graphics/Shader/InspectorImageRenderer.hlsl"), ShaderType::Graphics }
 };

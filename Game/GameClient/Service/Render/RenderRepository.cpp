@@ -53,11 +53,17 @@ EnvironmentHandle RenderRepository::LoadEnvironment(const EnvironmentDesc& desc)
 	return m_envRepository->GetOrCreate(desc);
 }
 
+bool RenderRepository::ReleaseEnvironment(EnvironmentHandle eh)
+{
+	return m_envRepository->Release(eh);
+}
+
 void RenderRepository::Update()
 {
 	m_fontRepository->Update();
 	m_meshRepository->Update();
 	m_matRepository->Update();
+	m_envRepository->Update();
 }
 
 void RenderRepository::ReleaseAll()
@@ -65,4 +71,5 @@ void RenderRepository::ReleaseAll()
 	m_fontRepository->ReleaseAll();
 	m_meshRepository->ReleaseAll();
 	m_matRepository->ReleaseAll();
+	m_envRepository->ReleaseAll();
 }

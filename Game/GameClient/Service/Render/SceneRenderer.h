@@ -2,6 +2,7 @@
 #include "Handle/FontHandle.h"
 #include "Handle/MeshHandle.h"
 #include "Handle/MaterialHandle.h"
+#include "Handle/EnvironmentHandle.h"
 #include "Definition/Material/MaterialDesc.h"
 #include "Definition/Text/TextStyle.h"
 #include "Core/Math/Matrix.h"
@@ -18,6 +19,7 @@ struct FrameData;
 class FontRepository;
 class MaterialRepository;
 class MeshRepository;
+class EnvironmentRepository;
 
 class SceneRenderer
 {
@@ -28,7 +30,8 @@ public:
 		IRenderFrame* renderFrame, 
 		FontRepository* fontRepository,
 		MeshRepository* meshRepository, 
-		MaterialRepository* matRepository);
+		MaterialRepository* matRepository,
+		EnvironmentRepository* envRepository);
 
 	void DrawText(
 		FontHandle hF, 
@@ -50,6 +53,8 @@ public:
 	void DrawSurface(MeshHandle hM, MaterialHandle hMtl, const Core::Matrix& world);
 	void DrawDebugSurface(MeshHandle hM, MaterialHandle hMtl, const Core::Matrix& world);
 	void DrawUI(MaterialHandle hMtl, const Rect& dest, const Rect* source = nullptr);
+	void DrawEnvironment(EnvironmentHandle hEnv);
+
 	void SetFrameData(const FrameData& frameData);
 
 private:
@@ -60,6 +65,7 @@ private:
 	FontRepository* m_fontRepository{ nullptr };
 	MeshRepository* m_meshRepository{ nullptr };
 	MaterialRepository* m_matRepository{ nullptr };
+	EnvironmentRepository* m_envRepository{ nullptr };
 
 	//default(built in)
 	MeshHandle m_uiQuad{};

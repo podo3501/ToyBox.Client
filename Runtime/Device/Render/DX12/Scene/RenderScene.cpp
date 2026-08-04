@@ -39,6 +39,11 @@ void RenderScene::AddUI(const DrawUIItem& uiItem)
     m_uiDraws.push_back(std::move(newItem));
 }
 
+void RenderScene::SetEnvironment(std::shared_ptr<IEnvironmentResource> envRes) 
+{
+    m_environment = std::move(envRes);
+}
+
 DrawPacket RenderScene::BuildDrawPacket()
 {
     DrawPacket packet;
@@ -46,6 +51,7 @@ DrawPacket RenderScene::BuildDrawPacket()
     packet.surface = m_surfaceDraws;
     packet.debugSurface = m_debugSurfaceDraws;
     packet.ui = m_uiDraws;
+    packet.environment = m_environment; // shared_ptr 복사 (Clear에서 리셋되므로)
 
     return packet;
 }
@@ -77,4 +83,5 @@ void RenderScene::Clear()
     m_surfaceDraws.clear();
     m_debugSurfaceDraws.clear();
     m_uiDraws.clear();
+    m_environment.reset();
 }

@@ -3,12 +3,16 @@
 #include "Core/RenderData.h"
 #include "GameClient/Service/Render/Definition/Material/MaterialDesc.h"
 
+struct IEnvironmentResource;
+
 class RenderScene
 {
 public:
     void AddSurface(const DrawItem& item);   
     void AddUI(std::vector<DrawUIItem>&& items);
     void AddUI(const DrawUIItem& uiItem);
+    void SetEnvironment(std::shared_ptr<IEnvironmentResource> envRes);
+
     DrawPacket BuildDrawPacket();
 
     void SortDraws();
@@ -18,4 +22,5 @@ private:
     std::vector<DrawItem> m_surfaceDraws;
     std::vector<DrawItem> m_debugSurfaceDraws;
     std::vector<DrawUIItem> m_uiDraws;
+    std::shared_ptr<IEnvironmentResource> m_environment; // 프레임당 1개
 };

@@ -124,6 +124,9 @@
     <Filter Include="Render\DX12\Provider\Environment">
       <UniqueIdentifier>{b9cf2b5f-f9ba-4e8c-ac3b-fda5fa1c4141}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Render\DX12\Resource\Environment">
+      <UniqueIdentifier>{56fd83da-a4bb-41ec-af3c-517429c33683}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Storage\JsonObjectIO.h">
@@ -521,9 +524,6 @@
     <ClInclude Include="Render\DX12\TextSystem\Atlas\Glyph\MTSDFGlyphGenerator.h">
       <Filter>Render\DX12\TextSystem\Atlas\Glyph</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\Provider\Texture\TextureCreateGraphBuilder.h">
-      <Filter>Render\DX12\Resource\Material</Filter>
-    </ClInclude>
     <ClInclude Include="Asset\Loader\Meta\TextureMetaLoader.h">
       <Filter>Asset\Loader\Meta</Filter>
     </ClInclude>
@@ -559,6 +559,33 @@
     </ClInclude>
     <ClInclude Include="Render\DX12\Provider\Environment\EnvironmentProvider.h">
       <Filter>Render\DX12\Provider\Environment</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Resource\Environment\EnvironmentResource.h">
+      <Filter>Render\DX12\Resource\Environment</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Provider\Texture\TextureCreateGraphBuilder.h">
+      <Filter>Render\DX12\Provider\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Provider\Texture\TextureCubeCreateGraphBuilder.h">
+      <Filter>Render\DX12\Provider\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Provider\Texture\TextureCubeRegistry.h">
+      <Filter>Render\DX12\Provider\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Resource\Texture\TextureCubeResource.h">
+      <Filter>Render\DX12\Resource\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Provider\Texture\TextureCubeLoadRequest.h">
+      <Filter>Render\DX12\Provider\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Provider\Texture\TextureCubeProvider.h">
+      <Filter>Render\DX12\Provider\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Pipeline\SkyboxGraphBuilder.h">
+      <Filter>Render\DX12\Pipeline</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Pipeline\Renderer\SkyboxRenderer.h">
+      <Filter>Render\DX12\Pipeline\Renderer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -916,6 +943,27 @@
     </ClCompile>
     <ClCompile Include="Render\DX12\Provider\Environment\EnvironmentProvider.cpp">
       <Filter>Render\DX12\Provider\Environment</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Resource\Environment\EnvironmentResource.cpp">
+      <Filter>Render\DX12\Resource\Environment</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Provider\Texture\TextureCubeCreateGraphBuilder.cpp">
+      <Filter>Render\DX12\Provider\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Provider\Texture\TextureCubeRegistry.cpp">
+      <Filter>Render\DX12\Provider\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Resource\Texture\TextureCubeResource.cpp">
+      <Filter>Render\DX12\Resource\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Provider\Texture\TextureCubeProvider.cpp">
+      <Filter>Render\DX12\Provider\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Pipeline\SkyboxGraphBuilder.cpp">
+      <Filter>Render\DX12\Pipeline</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Pipeline\Renderer\SkyboxRenderer.cpp">
+      <Filter>Render\DX12\Pipeline\Renderer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

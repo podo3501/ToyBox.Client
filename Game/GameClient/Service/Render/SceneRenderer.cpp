@@ -4,6 +4,7 @@
 #include "Repository/Font/FontRepository.h"
 #include "Repository/Material/MaterialRepository.h"
 #include "Repository/Mesh/MeshRepository.h"
+#include "Repository/Environment/EnvironmentRepository.h"
 #include "Builtin/BuiltinMeshes.h"
 #include "Builtin/BuiltinMaterials.h"
 
@@ -24,11 +25,13 @@ SceneRenderer::SceneRenderer(
 	IRenderFrame* renderFrame, 
 	FontRepository* fontRepository,
 	MeshRepository* meshRepository, 
-	MaterialRepository* matRepository) :
+	MaterialRepository* matRepository,
+	EnvironmentRepository* envRepository) :
 	m_renderFrame{ renderFrame },
 	m_fontRepository{ fontRepository },
 	m_meshRepository{ meshRepository },
-	m_matRepository{ matRepository }
+	m_matRepository{ matRepository },
+	m_envRepository{ envRepository }
 {
 	m_uiQuad = CreateBuiltinUIQuad(m_meshRepository);
 	m_defaultMaterials = CreateBuiltinMaterials(m_matRepository);
@@ -114,6 +117,17 @@ void SceneRenderer::DrawUI(MaterialHandle hMtl, const Rect& dest, const Rect* so
 	Core::Matrix world = scale * translation;
 
 	m_renderFrame->DrawUI(data->meshRes, data->matRes, world, source);
+}
+
+void SceneRenderer::DrawEnvironment(EnvironmentHandle hEnv)
+{
+	if (!hEnv) return;
+
+	auto entry = m_envRepository->Get(hEnv);
+	if (!entry || entry->state != LoadState::Ready)
+		return;
+
+	m_renderFrame->DrawEnvironment(entry->envRes);
 }
 
 std::optional<ResolvedDrawData> SceneRenderer::ResolveResources(MeshHandle hM, MaterialHandle hMtl)

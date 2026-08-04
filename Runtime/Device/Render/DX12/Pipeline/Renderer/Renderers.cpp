@@ -8,7 +8,8 @@ Renderers::Renderers(Device& device, ShaderLibrary& shaderLibrary) :
     m_shadowRenderer{ m_config.shadow, m_pipelineCache },
     m_surfRenderer{ m_config.surface, m_pipelineCache },
     m_debugSurfRenderer{ m_config.debug, m_pipelineCache },
-    m_uiRenderer{ m_config.ui, m_pipelineCache }
+    m_uiRenderer{ m_config.ui, m_pipelineCache },
+    m_skyboxRenderer{ m_config.skybox, m_pipelineCache }
 {}
 
 bool Renderers::Initialize(const Size& screenSize)
@@ -17,6 +18,7 @@ bool Renderers::Initialize(const Size& screenSize)
     ReturnIfFalse(m_surfRenderer.Initialize(m_device));
     ReturnIfFalse(m_debugSurfRenderer.Initialize(m_device));
     ReturnIfFalse(m_uiRenderer.Initialize(m_device, screenSize));
+    ReturnIfFalse(m_skyboxRenderer.Initialize(m_device));
 
     return true;
 }

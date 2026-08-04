@@ -109,9 +109,10 @@ namespace RegistryShader //이 enum 값은 파일 저장이나 직렬화, 네트
     constexpr ShaderID PBR{ 3 };
     constexpr ShaderID Grid{ 4 };
     constexpr ShaderID UI{ 5 };
-    constexpr ShaderID MipGenerator{ 6 }; //compute
+    constexpr ShaderID Skybox{ 6 };
+    constexpr ShaderID MipGenerator{ 7 }; //compute
 
-    constexpr ShaderID InspectorImage{ 7 }; //테스트용 shader. 이건 release 일때 빠질수도 있다.
+    constexpr ShaderID InspectorImage{ 8 }; //테스트용 shader. 이건 release 일때 빠질수도 있다.
 }
 
 struct ShaderAsset;

@@ -75,7 +75,7 @@ std::shared_ptr<EnvironmentAsset> EnvironmentLoader::LoadFromMemory(const Core::
     {
         auto irradiance = m_assetProvider->Load(Core::GetTypeID<SphericalHarmonicsAsset>(),
             resID.MakeSibling(irradianceIt->second));
-        asset->irradiance = Core::Cast<SphericalHarmonicsAsset>(reflection);
+        asset->irradiance = Core::Cast<SphericalHarmonicsAsset>(irradiance);
     }
 
     return asset;

@@ -13,6 +13,7 @@ public:
 	RenderFrame(TextSystem& textSystem, Inspector& inspector);
 
 	virtual void SetFrameData(const FrameData& frameData) noexcept override;
+
 	virtual void DrawText(
 		std::shared_ptr<IFontResource> fontRes,
 		TextRenderMode mode,
@@ -20,15 +21,19 @@ public:
 		uint32_t size,
 		const Rect& bounds,
 		const TextLayout& layout);
+
 	virtual void DrawSurface(
 		std::shared_ptr<IMeshResource> meshRes,
 		std::shared_ptr<IMaterialResource> matRes,
 		const Core::Matrix& world) override;
+
 	virtual void DrawUI(
 		std::shared_ptr<IMeshResource> meshRes,
 		std::shared_ptr<IMaterialResource> matRes,
 		const Core::Matrix& world,
 		const Rect* source) override;
+
+	virtual void DrawEnvironment(std::shared_ptr<IEnvironmentResource> envRes) override;
 
 	DrawPacket PrepareRenderData();
 	void Clear();
