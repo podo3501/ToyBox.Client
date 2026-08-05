@@ -19,9 +19,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Asset\Loader\Graphics\BinaryLoader.h" />
     <ClInclude Include="Asset\Loader\Graphics\EnvironmentLoader.h" />
     <ClInclude Include="Asset\Loader\Graphics\FontLoader.h" />
     <ClInclude Include="Asset\Loader\Graphics\HLSLShaderLoader.h" />
+    <ClInclude Include="Asset\Loader\Graphics\MeshGltfLoader.h" />
     <ClInclude Include="Asset\Loader\Graphics\MeshJsonLoader.h" />
     <ClInclude Include="Asset\Loader\Graphics\SphericalHarmonicsLoader.h" />
     <ClInclude Include="Asset\Loader\Graphics\TextureCubeLoader.h" />
@@ -175,9 +177,11 @@
     <ClInclude Include="Storage\JsonObjectIO.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Asset\Loader\Graphics\BinaryLoader.cpp" />
     <ClCompile Include="Asset\Loader\Graphics\EnvironmentLoader.cpp" />
     <ClCompile Include="Asset\Loader\Graphics\FontLoader.cpp" />
     <ClCompile Include="Asset\Loader\Graphics\HLSLShaderLoader.cpp" />
+    <ClCompile Include="Asset\Loader\Graphics\MeshGltfLoader.cpp" />
     <ClCompile Include="Asset\Loader\Graphics\MeshJsonLoader.cpp" />
     <ClCompile Include="Asset\Loader\Graphics\SphericalHarmonicsLoader.cpp" />
     <ClCompile Include="Asset\Loader\Graphics\TextureCubeLoader.cpp" />

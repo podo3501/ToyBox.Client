@@ -25,5 +25,10 @@ struct MeshFrameCB
 
     DirectX::XMFLOAT3 lightColor;
     uint32_t shadowTextureIndex;
+
+    uint32_t reflectionTextureIndex;
+    uint32_t reflectionMipCount;
+    float envPadding[2];
+    DirectX::XMFLOAT4 irradianceSH[9];
 };
 CHECK_ALIGN16(MeshFrameCB);

@@ -128,6 +128,7 @@
     <ClInclude Include="Asset\AssetExtensions.h" />
     <ClInclude Include="Asset\AssetInput.h" />
     <ClInclude Include="Asset\AudioTypes.h" />
+    <ClInclude Include="Asset\BinaryAsset.h" />
     <ClInclude Include="Asset\EnvironmentAsset.h" />
     <ClInclude Include="Asset\FontAsset.h" />
     <ClInclude Include="Asset\IAssetLoader.h" />

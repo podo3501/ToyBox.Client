@@ -784,6 +784,9 @@
     <ClInclude Include="Service\Render\Resource\IEnvironmentResource.h">
       <Filter>Service\Render\Resource</Filter>
     </ClInclude>
+    <ClInclude Include="Asset\BinaryAsset.h">
+      <Filter>Asset</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Locator">

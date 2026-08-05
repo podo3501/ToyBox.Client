@@ -15,6 +15,7 @@
 #include "Asset/SoundTableAsset.h"
 #include "Asset/ShaderAsset.h"
 #include "Asset/FontAsset.h"
+#include "Asset/BinaryAsset.h"
 
 AssetLoaderRegistry::~AssetLoaderRegistry() = default;
 AssetLoaderRegistry::AssetLoaderRegistry(AssetRepository& repository) noexcept : 
@@ -35,6 +36,7 @@ bool AssetLoaderRegistry::RegisterDefaultLoaders(IAssetMetaRegistry* metaRegistr
     ReturnIfFalse(RegisterLoader<TextureMetaAsset>(".meta", CreateTextureMetaLoader()));
 
     //asset
+    ReturnIfFalse(RegisterLoader<BinaryAsset>(".bin", CreateBinaryLoader()));
     ReturnIfFalse(RegisterLoader<EnvironmentAsset>(".envmap", CreateEnvironmentLoader(&m_repository)));
     ReturnIfFalse(RegisterLoader<TextureCubeAsset>(".ktx2", CreateTextureCubeLoader()));
     ReturnIfFalse(RegisterLoader<SphericalHarmonicsAsset>(".txt", CreateSphericalHarmonicsLoader()));
@@ -43,6 +45,7 @@ bool AssetLoaderRegistry::RegisterDefaultLoaders(IAssetMetaRegistry* metaRegistr
         ReturnIfFalse(RegisterLoader<TextureAsset>(ext, CreateImageTextureLoader(metaRegistry)));
 
     ReturnIfFalse(RegisterLoader<MeshAsset>(".mjson", CreateMeshJsonLoader()));
+    ReturnIfFalse(RegisterLoader<MeshAsset>(".gltf", CreateMeshGltfLoader(&m_repository)));
     ReturnIfFalse(RegisterLoader<StaticSoundTable>(".Json", CreateStaticSoundTableLoader()));
     ReturnIfFalse(RegisterLoader<StreamSoundTable>(".Json", CreateStreamSoundTableLoader()));
     ReturnIfFalse(RegisterLoader<StaticSoundAsset>(".ogg", CreateOggStaticLoader()));

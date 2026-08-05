@@ -26,6 +26,12 @@ public:
     void SetHeapIndex(UINT index) noexcept { m_heapIndex = index; }
     UINT GetHeapIndex() const noexcept { return m_heapIndex; }
 
+    UINT GetMipCount() const noexcept // 추가
+    {
+        Assert(m_texture); // IsReady() 이후에만 호출해야 함
+        return m_texture->GetDesc().MipLevels;
+    }
+
 private:
     TextureCubeDesc m_desc;
     Resource m_texture;

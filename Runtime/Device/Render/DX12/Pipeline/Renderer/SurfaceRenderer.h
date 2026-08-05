@@ -16,6 +16,7 @@ class PipelineCache;
 class CommandList;
 class MeshResource;
 class MaterialResource;
+class EnvironmentResource;
 
 using Microsoft::WRL::ComPtr;
 
@@ -27,7 +28,11 @@ public:
     SurfaceRenderer(const SurfaceRendererConfig& config, PipelineCache& pipelineCache);
 
     bool Initialize(Device& device);
-    void PrepareFrame(const DirectionalLightData& light, const CameraData& camera, uint32_t shadowSRVIndex);
+    void PrepareFrame(
+        const DirectionalLightData& light, 
+        const CameraData& camera, 
+        uint32_t shadowSRVIndex,
+        const EnvironmentResource* envRes);
     void BeginFrame(CommandList& cmd);
     void BindPipeline(CommandList& cmd, const PipelineState& pipelineState);
     void Draw(CommandList& cmd, MeshResource& mesh, MaterialResource& material, const Core::Matrix& world);

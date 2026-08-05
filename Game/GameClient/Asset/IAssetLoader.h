@@ -30,6 +30,7 @@ std::unique_ptr<IAssetLoader> CreateTextureMetaLoader();
 std::unique_ptr<IAssetLoader> CreateImageTextureLoader(IAssetMetaRegistry* metaRegistry);
 std::unique_ptr<IAssetLoader> CreateKtxTextureLoader(IAssetMetaRegistry* metaRegistry);
 std::unique_ptr<IAssetLoader> CreateMeshJsonLoader();
+std::unique_ptr<IAssetLoader> CreateMeshGltfLoader(IAssetProvider* assetProvider);
 std::unique_ptr<IAssetLoader> CreateOggStaticLoader();
 std::unique_ptr<IAssetLoader> CreateWavStaticLoader();
 std::unique_ptr<IAssetLoader> CreateStaticSoundTableLoader();
@@ -37,4 +38,5 @@ std::unique_ptr<IAssetLoader> CreateStreamSoundTableLoader();
 std::unique_ptr<IAssetLoader> CreateOggStreamLoader();
 std::unique_ptr<IAssetLoader> CreateHLSLShaderLoader();
 std::unique_ptr<IAssetLoader> CreateFontLoader();
+std::unique_ptr<IAssetLoader> CreateBinaryLoader();
 

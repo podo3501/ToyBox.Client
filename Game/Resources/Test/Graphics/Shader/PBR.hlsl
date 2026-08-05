@@ -28,6 +28,13 @@ cbuffer MeshFrameCB : register(b1)
 
     float3 lightColor;
     uint shadowTextureIndex;
+ 
+    // IBL(Environment) 관련 - 환경이 없으면 reflectionTextureIndex == 0xFFFFFFFF
+    uint reflectionTextureIndex;
+    uint reflectionMipCount;
+    float2 envPadding;
+
+    float4 irradianceSH[9]; // xyz만 사용, w는 패딩
 };
 
 cbuffer ObjectCB : register(b2)
@@ -175,6 +182,46 @@ float3 FresnelSchlick(float cosTheta, float3 F0)
     return F0 + (1.0f - F0) * pow(saturate(1.0f - cosTheta), 5.0f);
 }
 
+// 러프니스를 고려한 프레넬 (IBL용 - Schlick-Roughness)
+// 일반 FresnelSchlick과 달리 roughness가 높을수록 프레넬 엣지가 완만해짐
+float3 FresnelSchlickRoughness(float cosTheta, float3 F0, float roughness)
+{
+    float3 F90 = max(float3(1.0f - roughness, 1.0f - roughness, 1.0f - roughness), F0);
+    return F0 + (F90 - F0) * pow(saturate(1.0f - cosTheta), 5.0f);
+}
+
+// EnvBRDFApprox: Karis 2014, "Physically Based Shading on Mobile"
+// 별도의 DFG LUT 텍스처 없이 specular IBL의 (scale, bias) 항을 근사
+float2 EnvBRDFApprox(float roughness, float NdotV)
+{
+    const float4 c0 = float4(-1.0f, -0.0275f, -0.572f, 0.022f);
+    const float4 c1 = float4(1.0f, 0.0425f, 1.04f, -0.04f);
+    float4 r = roughness * c0 + c1;
+    float a004 = min(r.x * r.x, exp2(-9.28f * NdotV)) * r.x + r.y;
+    return float2(-1.04f, 1.04f) * a004 + r.zw;
+}
+
+// Ramamoorthi & Hanrahan SH9 irradiance 근사식
+float3 EvalIrradianceSH9(float3 n)
+{
+    return irradianceSH[0].rgb
+         + irradianceSH[1].rgb * n.y + irradianceSH[2].rgb * n.z + irradianceSH[3].rgb * n.x
+         + irradianceSH[4].rgb * (n.x * n.y) + irradianceSH[5].rgb * (n.y * n.z)
+         + irradianceSH[6].rgb * (3.0f * n.z * n.z - 1.0f) + irradianceSH[7].rgb * (n.x * n.z)
+         + irradianceSH[8].rgb * (n.x * n.x - n.y * n.y);
+}
+
+// ACES Filmic Tone Mapping 근사 (Narkowicz 2015)
+float3 ACESFilm(float3 x)
+{
+    float a = 2.51f;
+    float b = 0.03f;
+    float c = 2.43f;
+    float d = 0.59f;
+    float e = 0.14f;
+    return saturate((x * (a * x + b)) / (x * (c * x + d) + e));
+}
+
 //Shadow 계산 함수
 float CalculateShadow(float4 shadowPos)
 {
@@ -304,11 +351,44 @@ float4 PSMain(PSInput input) : SV_TARGET
     // 11. 주변광(Ambient) 처리
     float highContrastAO = pow(saturate(sampledAO), 2.0f);
     float PBR_AO = lerp(1.0f, highContrastAO, ambientOcclusionIntensity);
+
+    float3 iblDiffuse;
+    float3 iblSpecular;
+
+    if (reflectionTextureIndex != 0xFFFFFFFF)
+    {
+        // Diffuse IBL - SH로부터 irradiance 평가
+        float3 irradiance = EvalIrradianceSH9(N);
+        // kD를 재사용하지 않고 IBL 전용 kS/kD를 다시 구함
+        // (roughness를 고려한 프레넬이라 직접광의 kS와 값이 다름)
+        float3 iblKS = FresnelSchlickRoughness(NdotV, F0, PBR_Roughness);
+        float3 iblKD = (float3(1.0f, 1.0f, 1.0f) - iblKS) * (1.0f - PBR_Metallic);
+        iblDiffuse = iblKD * albedo.rgb * irradiance;
+
+        // Specular IBL - roughness -> mip 매핑으로 프리필터링된 큐브맵 샘플링
+        float3 R = reflect(-V, N);
+        TextureCube reflectionTex = ResourceDescriptorHeap[reflectionTextureIndex];
+        float mipLevel = PBR_Roughness * float(reflectionMipCount - 1);
+        float3 prefilteredColor = reflectionTex.SampleLevel(gSampler, R, mipLevel).rgb;
+
+        float2 envBRDF = EnvBRDFApprox(PBR_Roughness, NdotV);
+        iblSpecular = prefilteredColor * (F0 * envBRDF.x + envBRDF.y);
+    }
+    else
+    {
+        // 환경이 없는 경우 - 기존의 단순 flat ambient로 폴백
+        iblDiffuse = albedo.rgb * 0.02f;
+        iblSpecular = float3(0.0f, 0.0f, 0.0f);
+    }
  
-    float3 ambient = albedo.rgb * 0.02f * PBR_AO;
+    //float3 ambient = albedo.rgb * 0.02f * PBR_AO;
+    float3 ambient = (iblDiffuse + iblSpecular) * PBR_AO;
     float3 finalColor = ambient + finalLight;
  
-    // 11. 감마 보정 (선형 공간 연산을 모니터 공간으로 출력)
+    // 12. 톤매핑 (HDR -> LDR) - 감마 보정 전에 반드시 먼저 적용
+    finalColor *= 1.0f;
+    finalColor = ACESFilm(finalColor);
+    // 13. 감마 보정 (선형 공간 연산을 모니터 공간으로 출력)
     finalColor = pow(finalColor, float3(1.0f / 2.2f, 1.0f / 2.2f, 1.0f / 2.2f));
 
     // 최종 결과 출력!!

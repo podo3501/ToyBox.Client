@@ -587,6 +587,12 @@
     <ClInclude Include="Render\DX12\Pipeline\Renderer\SkyboxRenderer.h">
       <Filter>Render\DX12\Pipeline\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="Asset\Loader\Graphics\MeshGltfLoader.h">
+      <Filter>Asset\Loader\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\Loader\Graphics\BinaryLoader.h">
+      <Filter>Asset\Loader\Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -964,6 +970,12 @@
     </ClCompile>
     <ClCompile Include="Render\DX12\Pipeline\Renderer\SkyboxRenderer.cpp">
       <Filter>Render\DX12\Pipeline\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Asset\Loader\Graphics\MeshGltfLoader.cpp">
+      <Filter>Asset\Loader\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Asset\Loader\Graphics\BinaryLoader.cpp">
+      <Filter>Asset\Loader\Graphics</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

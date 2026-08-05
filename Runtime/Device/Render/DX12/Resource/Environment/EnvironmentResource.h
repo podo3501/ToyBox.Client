@@ -18,7 +18,9 @@ public:
 
 	bool IsTextureReady() const noexcept;
 
-	std::shared_ptr<TextureCubeResource> GetSkybox() { return m_skybox; }
+	std::shared_ptr<TextureCubeResource> GetSkybox() const { return m_skybox; }
+	std::shared_ptr<TextureCubeResource> GetReflection() const { return m_reflection; }
+	std::array<Core::Vector3, 9> GetIrradianceSH() const { return m_irradianceSH; }
 
 private:
 	std::shared_ptr<TextureCubeResource> m_skybox;

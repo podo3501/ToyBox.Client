@@ -6,6 +6,7 @@
 #include "Resource/Mesh/MeshResource.h"
 #include "Resource/Material/PhongMaterialResource.h"
 #include "Resource/Material/PbrMaterialResource.h"
+#include "Resource/Environment/EnvironmentResource.h"
 #include "Resource/ShadowResource.h"
 
 OpaqueGraphBuilder::~OpaqueGraphBuilder() = default;
@@ -37,10 +38,12 @@ void OpaqueGraphBuilder::Build(RenderGraph& graph)
         {
             swapChain.SetRenderTarget(cmd);
 
+            auto envRes = static_cast<EnvironmentResource*>(ctx.drawPacket.environment.get());
             surfRenderer.PrepareFrame(
                 ctx.frame.light,
                 ctx.frame.camera,
-                shadowRes.GetSRVIndex()
+                shadowRes.GetSRVIndex(),
+                envRes
             );
             surfRenderer.BeginFrame(cmd);
 

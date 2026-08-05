@@ -8,6 +8,8 @@
 #include "Resource/Mesh/MeshResource.h"
 #include "Resource/Material/PhongMaterialResource.h"
 #include "Resource/Material/PbrMaterialResource.h"
+#include "Resource/Environment/EnvironmentResource.h"
+#include "Resource/Texture/TextureCubeResource.h"
 #include "GameClient/Graphics/RenderData/FrameData.h"
 #include "Core/D3D12Conversions.h"
 
@@ -117,7 +119,11 @@ bool SurfaceRenderer::CreateRootSignature(Device& device)
     return m_rootSignature != nullptr;
 }
 
-void SurfaceRenderer::PrepareFrame(const DirectionalLightData& light, const CameraData& camera, uint32_t shadowSRVIndex)
+void SurfaceRenderer::PrepareFrame(
+    const DirectionalLightData& light, 
+    const CameraData& camera, 
+    uint32_t shadowSRVIndex,
+    const EnvironmentResource* envRes)
 {
     m_objectCBAllocator.Reset();
     m_materialCBAllocator.Reset();
@@ -138,6 +144,22 @@ void SurfaceRenderer::PrepareFrame(const DirectionalLightData& light, const Came
     meshFrame.lightIntensity = light.intensity;
     meshFrame.lightColor = ToXMFLOAT3(light.color);
     meshFrame.shadowTextureIndex = shadowSRVIndex;
+
+    if (envRes && envRes->IsReady())
+    {
+        meshFrame.reflectionTextureIndex = envRes->GetReflection()->GetHeapIndex();
+        meshFrame.reflectionMipCount = envRes->GetReflection()->GetMipCount();
+
+        const auto& sh = envRes->GetIrradianceSH();
+        for (int i = 0; i < 9; ++i)
+            meshFrame.irradianceSH[i] = { sh[i].x, sh[i].y, sh[i].z, 0.0f };
+    }
+    else
+    {
+        meshFrame.reflectionTextureIndex = UINT_MAX;
+        meshFrame.reflectionMipCount = 0;
+        // irradianceSH는 {} 초기화라 이미 0
+    }
 
     m_frameCBAddress = m_frameCBAllocator.AllocateConstant(meshFrame);
 }

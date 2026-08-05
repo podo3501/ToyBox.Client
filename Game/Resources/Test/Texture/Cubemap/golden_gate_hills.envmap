@@ -1,0 +1,3 @@
+Skybox=golden_gate_hills_skybox.ktx2
+Reflection=golden_gate_hills_ibl.ktx2
+Irradiance=sh.txt

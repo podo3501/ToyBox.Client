@@ -47,7 +47,7 @@ bool TextureProvider::CreateBuiltinTextures()
     
     builtinAssets[Core::ToIndex(BuiltinTextureType::White)] = CreateColorAsset(Core::Color::White, ColorSpace::SRGB); // 흰색
     builtinAssets[Core::ToIndex(BuiltinTextureType::FlatNormal)] = CreateColorAsset(Core::Color(0.5f, 0.5f, 1.f), ColorSpace::Linear); // 평평한 노멀 (128, 128, 255)
-    builtinAssets[Core::ToIndex(BuiltinTextureType::DefaultARM)] = CreateColorAsset(Core::Color(1.f, 0.5f, 0.f), ColorSpace::Linear); //ARM 기본
+    builtinAssets[Core::ToIndex(BuiltinTextureType::DefaultARM)] = CreateColorAsset(Core::Color(1.f, 0.3f, 0.5f), ColorSpace::Linear); //ARM 기본
     
     for (int nType = 0; nType < Core::EnumSize<BuiltinTextureType>; nType++)
     {
