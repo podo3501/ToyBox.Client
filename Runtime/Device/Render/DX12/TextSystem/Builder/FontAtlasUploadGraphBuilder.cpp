@@ -47,6 +47,18 @@ void FontAtlasUploadGraphBuilder::UploadGlyphsToAtlas(
     }
     size_t totalUploadSize = uploadOffset;
 
+    std::vector<RGResourceID> readyResIDs;
+    readyResIDs.reserve(uploads.size());
+    for (auto& entry : uploads)
+    {
+        if (entry.readyTarget.expired())
+            continue; // 대상이 이미 없으면 등록할 필요 없음
+
+        RGResourceID id = RenderGraph::CreateRGResourceID();
+        m_registry.Register(id, entry.readyTarget);
+        readyResIDs.push_back(id);
+    }
+
     RenderGraph graph;
     RGResourceID atlasResID = RenderGraph::CreateRGResourceID();
     RGResourceID uploadResID = RenderGraph::CreateRGResourceID();
@@ -54,6 +66,7 @@ void FontAtlasUploadGraphBuilder::UploadGlyphsToAtlas(
     graph.ImportResource(atlasResID, RGAccess::SRV);
 
     BuildUploadPass(graph, atlasResID, uploadResID, std::move(uploads), std::move(layouts));
+    BuildFinalizePass(graph, atlasResID, std::move(readyResIDs));
 
     graph.ExportResource(atlasResID, RGAccess::SRV);
 
@@ -151,5 +164,20 @@ void FontAtlasUploadGraphBuilder::BuildUploadPass(
             }
 
             uploadBuffer->Unmap(0, nullptr);
+        };
+}
+
+void FontAtlasUploadGraphBuilder::BuildFinalizePass(
+    RenderGraph& graph,
+    RGResourceID atlasResID,
+    std::vector<RGResourceID> readyResIDs)
+{
+    auto& finalize = graph.AddCpuPass("FontAtlasUploadFinalize");
+    finalize.Read(atlasResID, RGAccess::SRV);
+
+    finalize.cpuExecute = [this, ids = std::move(readyResIDs)](TaskContext&)
+        {
+            for (RGResourceID id : ids)
+                m_registry.MarkReady(id);
         };
 }

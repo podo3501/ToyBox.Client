@@ -2,6 +2,7 @@
 #include "Resource/Resource.h"
 #include "Graph/RGTypes.h"
 #include "../TextTypes.h"
+#include "GlyphRegistry.h"
 
 struct GlyphUploadLayout;
 class TaskScheduler;
@@ -29,7 +30,13 @@ private:
         std::vector<GlyphUploadEntry> uploads,
         std::vector<GlyphUploadLayout> layouts);
 
+    void BuildFinalizePass(
+        RenderGraph& graph,
+        RGResourceID atlasResID,
+        std::vector<RGResourceID> readyResIDs);
+
 private:
     TaskScheduler& m_taskScheduler;
     ResourceFactory& m_resFactory;
+    GlyphRegistry m_registry;
 };

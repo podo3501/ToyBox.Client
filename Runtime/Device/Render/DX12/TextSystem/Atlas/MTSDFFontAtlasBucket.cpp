@@ -80,21 +80,20 @@ void MTSDFFontAtlasBucket::EnsureGlyphs(
                 m_atlasTextureSize,
                 scale);
 
+        std::shared_ptr<GlyphInfo> cachedInfo = m_glyphCache.Insert(
+            font, glyphIndex, shapedText.size, glyphInfo);
+
         GlyphUploadEntry upload;
         if (CreateUploadEntry(
-            std::move(mtsdf.pixels),
-            *packPos,
-            Padding,
+            std::move(mtsdf.pixels), 
+            *packPos, 
+            Padding, 
             upload))
         {
-            outUploadsPerPage[pageIndex].push_back(
-                std::move(upload));
+            upload.readyTarget = cachedInfo; // weak_ptr 대입 (shared_ptr -> weak_ptr 암시적 변환)
+            outUploadsPerPage[pageIndex].push_back(std::move(upload));
         }
-
-        m_glyphCache.Insert(
-            font,
-            glyphIndex,
-            shapedText.size,
-            glyphInfo);
+        else
+            cachedInfo->isReady = true;
     }
 }

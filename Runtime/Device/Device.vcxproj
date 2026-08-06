@@ -166,6 +166,7 @@
     <ClInclude Include="Render\DX12\TextSystem\Atlas\MTSDFFontAtlasBucket.h" />
     <ClInclude Include="Render\DX12\TextSystem\Builder\FontAtlasUploadGraphBuilder.h" />
     <ClInclude Include="Render\DX12\TextSystem\Builder\GlyphCursor.h" />
+    <ClInclude Include="Render\DX12\TextSystem\Builder\GlyphRegistry.h" />
     <ClInclude Include="Render\DX12\TextSystem\Builder\MeshBuilderHelpers.h" />
     <ClInclude Include="Render\DX12\TextSystem\Builder\TextBatch.h" />
     <ClInclude Include="Render\DX12\TextSystem\Builder\TextLayoutHelper.h" />
@@ -303,6 +304,7 @@
     <ClCompile Include="Render\DX12\TextSystem\Atlas\MTSDFFontAtlasBucket.cpp" />
     <ClCompile Include="Render\DX12\TextSystem\Builder\FontAtlasUploadGraphBuilder.cpp" />
     <ClCompile Include="Render\DX12\TextSystem\Builder\GlyphCursor.cpp" />
+    <ClCompile Include="Render\DX12\TextSystem\Builder\GlyphRegistry.cpp" />
     <ClCompile Include="Render\DX12\TextSystem\Builder\MeshBuilderHelpers.cpp" />
     <ClCompile Include="Render\DX12\TextSystem\Builder\TextBatch.cpp" />
     <ClCompile Include="Render\DX12\TextSystem\Builder\TextLayoutHelper.cpp" />

@@ -7,7 +7,7 @@ class FontResource;
 class GlyphCache
 {
 public:
-    void Insert(FontResource* fontRes, uint32_t glyphIndex, uint32_t size, const GlyphInfo& info);
+    std::shared_ptr<GlyphInfo> Insert(FontResource* fontRes, uint32_t glyphIndex, uint32_t size, const GlyphInfo& info);
     const GlyphInfo* Get(FontResource* fontRes, uint32_t glyphIndex, uint32_t size) const;
     void Clear();
 
@@ -32,5 +32,5 @@ private:
         }
     };
 
-    std::unordered_map<CacheKey, GlyphInfo, CacheKeyHash> m_cache;
+    std::unordered_map<CacheKey, std::shared_ptr<GlyphInfo>, CacheKeyHash> m_cache;
 };
