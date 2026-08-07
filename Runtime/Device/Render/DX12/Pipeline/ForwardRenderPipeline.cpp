@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "ForwardRenderPipeline.h"
-#include "Graph/RenderGraph.h"
 #include "Graph/TaskUtils.h"
 #include "ShadowGraphBuilder.h"
 #include "SkyboxGraphBuilder.h"
@@ -17,12 +16,36 @@ ForwardRenderPipeline::ForwardRenderPipeline(
     Device& device,
     SwapChainPresenter& swapChain,
     DescriptorFactory& descFactory,
-    ShaderLibrary& shaderLibaray) :
+    ShaderLibrary& shaderLibaray,
+    FontAtlasUploadGraphBuilder& fontUploadBuilder) :
     m_device{ device },
     m_swapChain{ swapChain },
     m_descFactory{ descFactory },
     m_renderers{ device, shaderLibaray },
-    m_inspectorRenderers{ device, shaderLibaray }
+    m_inspectorRenderers{ device, shaderLibaray },
+    // RGResourceID: static 함수이므로 생성자 초기화 리스트에서 바로 생성 가능
+    m_hBackBuffer{ RenderGraph::CreateRGResourceID() },
+    m_hShadow{ RenderGraph::CreateRGResourceID() },
+    //Builders
+    m_fontUploadBuilder{ fontUploadBuilder },
+    m_shadowBuilder{
+        m_renderers.GetShadowRenderer(),
+        m_descFactory, m_shadowRes, m_hShadow },
+    m_skyboxBuilder{
+        m_renderers.GetSkyboxRenderer(),
+        m_swapChain, m_hBackBuffer },
+    m_opaqueBuilder{
+        m_renderers.GetSurfRenderer(),
+        m_swapChain, m_shadowRes, m_hBackBuffer, m_hShadow },
+    m_debugBuilder{
+        m_renderers.GetDebugSurfRenderer(),
+        m_hBackBuffer },
+    m_uiBuilder{
+        m_renderers.GetUIRenderer(),
+        m_hBackBuffer },
+    m_inspectorBuilder{
+        m_inspectorRenderers.GetInspectorImageRenderer(),
+        m_hBackBuffer }
 {}
 
 bool ForwardRenderPipeline::Initialize(const Size& screenSize, const Size& shadowMapSize)
@@ -31,64 +54,44 @@ bool ForwardRenderPipeline::Initialize(const Size& screenSize, const Size& shado
     ReturnIfFalse(m_renderers.Initialize(screenSize));
     ReturnIfFalse(m_inspectorRenderers.Initialize(screenSize));
 
-    RenderGraph graph;
-
-    m_hBackBuffer = RenderGraph::CreateRGResourceID();
-    m_hShadow = RenderGraph::CreateRGResourceID();
-
-    graph.ImportResource(m_hBackBuffer, RGAccess::Present);
-    graph.ImportResource(m_hShadow, RGAccess::DepthWrite);
-
-    ShadowGraphBuilder shadow(
-        m_renderers.GetShadowRenderer(),
-        m_descFactory,
-        m_shadowRes,
-        m_hShadow);
-
-    SkyboxGraphBuilder skybox(
-        m_renderers.GetSkyboxRenderer(),
-        m_swapChain,
-        m_hBackBuffer);
-
-    OpaqueGraphBuilder opaque(
-        m_renderers.GetSurfRenderer(),
-        m_swapChain,
-        m_shadowRes,
-        m_hBackBuffer,
-        m_hShadow);
-
-    DebugSurfaceGraphBuilder debug(
-        m_renderers.GetDebugSurfRenderer(),
-        m_hBackBuffer);
-
-    UIGraphBuilder ui(
-        m_renderers.GetUIRenderer(),
-        m_hBackBuffer);
-
-    InspectorGraphBuilder inspector(
-        m_inspectorRenderers.GetInspectorImageRenderer(),
-        m_hBackBuffer);
-
-    shadow.Build(graph);
-    skybox.Build(graph);
-    opaque.Build(graph);
-    debug.Build(graph);
-    ui.Build(graph);
-    inspector.Build(graph);
-
-    graph.ExportResource(m_hBackBuffer, RGAccess::Present);
-    graph.ExportResource(m_hShadow, RGAccess::DepthWrite);
-
-    m_compiledTasks = graph.Compile();
+    BuildFrame(); // 첫 프레임 그래프를 미리 구성해둠
 
     return true;
 }
 
+std::vector<CompiledTask> ForwardRenderPipeline::BuildFrame()
+{
+    m_graph.Reset(); // 이전 프레임의 패스/배리어 계산 결과만 비움 (컨테이너 capacity는 유지)
+
+    m_graph.ImportResource(m_hBackBuffer, RGAccess::Present);
+    m_graph.ImportResource(m_hShadow, RGAccess::DepthWrite);     
+
+    //동적 패스: 포함될때도 있고 아닐때도 있고.
+    if (m_fontUploadBuilder.HasPendingUploads())
+        m_fontUploadBuilder.Build(m_graph);
+
+    // 정적 패스: 매 프레임 항상 포함
+    m_shadowBuilder.Build(m_graph);
+    m_skyboxBuilder.Build(m_graph);
+    m_opaqueBuilder.Build(m_graph);
+    m_debugBuilder.Build(m_graph);
+    m_uiBuilder.Build(m_graph);
+    m_inspectorBuilder.Build(m_graph);
+
+    m_graph.ExportResource(m_hBackBuffer, RGAccess::Present);
+    m_graph.ExportResource(m_hShadow, RGAccess::DepthWrite);        
+
+    return m_graph.Compile();
+}
+
 void ForwardRenderPipeline::Render(CommandList& cmd, const DrawPacket& drawPacket, const FrameData& frame)
 {
-    TaskContext ctx;
+    auto compiledTasks = BuildFrame(); // 매 프레임 그래프 재구성
 
+    TaskContext ctx;
     ctx.resources = std::make_shared<ResourceContext>();
+
+    m_fontUploadBuilder.ApplyResourceBindings(*ctx.resources);
     ctx.SetResource(m_hBackBuffer, m_swapChain.GetCurrentBackbuffer());
     ctx.SetResource(m_hShadow, m_shadowRes.GetResource());
 
@@ -98,7 +101,7 @@ void ForwardRenderPipeline::Render(CommandList& cmd, const DrawPacket& drawPacke
     auto& bindlessAllocator = m_descFactory.GetBindlessAllocator();
     cmd.SetBindlessHeap(bindlessAllocator.GetHeap());
 
-    ExecuteRenderPipeline(cmd, m_compiledTasks, ctx);
+    ExecuteRenderPipeline(cmd, compiledTasks, ctx);
 }
 
 void ForwardRenderPipeline::Resize(const Size& size)

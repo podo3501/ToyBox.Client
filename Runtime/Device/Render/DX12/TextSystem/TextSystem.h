@@ -23,11 +23,12 @@ public:
     TextSystem(
         Device& device,
         DescriptorFactory& factory,
-        TaskScheduler& taskScheduler, 
         ResourceFactory& resFactory,
         TransientMeshProvider& transientMeshProvider);
     bool Initialize(const TextConfig& texConfig, Inspector* inspector = nullptr);
     std::vector<DrawUIItem> BuildDrawItems(std::span<const DrawTextItem> items);
+
+    FontAtlasUploadGraphBuilder& GetBuilder() { return m_atlasBuilder; }
 
 private:
     std::vector<ShapedText> ShapeTexts(std::span<const DrawTextItem> items);

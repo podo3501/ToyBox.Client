@@ -57,4 +57,5 @@ private:
 
     TextConfig m_textConfig;
     std::unordered_map<FontBucketKey, std::unique_ptr<FontAtlasBucket>, FontBucketKeyHash> m_buckets;
+    std::vector<AtlasGlyphBatch> m_pendingBatches;
 };

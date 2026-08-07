@@ -427,9 +427,6 @@
     <ClInclude Include="Render\DX12\Core\FreeTypeLibrary.h">
       <Filter>Render\DX12\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Asset\Loader\Graphics\FontLoader.h">
-      <Filter>Asset\Loader\Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="Render\DX12\TextSystem\TextSystem.h">
       <Filter>Render\DX12\TextSystem</Filter>
     </ClInclude>
@@ -592,9 +589,6 @@
     </ClInclude>
     <ClInclude Include="Asset\Loader\Graphics\BinaryLoader.h">
       <Filter>Asset\Loader\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\DX12\TextSystem\Builder\GlyphRegistry.h">
-      <Filter>Render\DX12\TextSystem\Builder</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -842,9 +836,6 @@
     <ClCompile Include="Render\DX12\Core\FreeTypeLibrary.cpp">
       <Filter>Render\DX12\Core</Filter>
     </ClCompile>
-    <ClCompile Include="Asset\Loader\Graphics\FontLoader.cpp">
-      <Filter>Asset\Loader\Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="Render\DX12\TextSystem\TextSystem.cpp">
       <Filter>Render\DX12\TextSystem</Filter>
     </ClCompile>
@@ -979,9 +970,6 @@
     </ClCompile>
     <ClCompile Include="Asset\Loader\Graphics\BinaryLoader.cpp">
       <Filter>Asset\Loader\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\DX12\TextSystem\Builder\GlyphRegistry.cpp">
-      <Filter>Render\DX12\TextSystem\Builder</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

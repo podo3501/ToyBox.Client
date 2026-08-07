@@ -14,7 +14,6 @@
 #include "Asset/StreamSoundAsset.h"
 #include "Asset/SoundTableAsset.h"
 #include "Asset/ShaderAsset.h"
-#include "Asset/FontAsset.h"
 #include "Asset/BinaryAsset.h"
 
 AssetLoaderRegistry::~AssetLoaderRegistry() = default;
@@ -37,6 +36,7 @@ bool AssetLoaderRegistry::RegisterDefaultLoaders(IAssetMetaRegistry* metaRegistr
 
     //asset
     ReturnIfFalse(RegisterLoader<BinaryAsset>(".bin", CreateBinaryLoader()));
+    ReturnIfFalse(RegisterLoader<BinaryAsset>(".ttf", CreateBinaryLoader()));
     ReturnIfFalse(RegisterLoader<EnvironmentAsset>(".envmap", CreateEnvironmentLoader(&m_repository)));
     ReturnIfFalse(RegisterLoader<TextureCubeAsset>(".ktx2", CreateTextureCubeLoader()));
     ReturnIfFalse(RegisterLoader<SphericalHarmonicsAsset>(".txt", CreateSphericalHarmonicsLoader()));
@@ -52,7 +52,6 @@ bool AssetLoaderRegistry::RegisterDefaultLoaders(IAssetMetaRegistry* metaRegistr
     ReturnIfFalse(RegisterLoader<StreamSoundAsset>(".ogg", CreateOggStreamLoader()));
     ReturnIfFalse(RegisterLoader<StaticSoundAsset>(".wav", CreateWavStaticLoader()));
     ReturnIfFalse(RegisterLoader<ShaderAsset>(".hlsl", CreateHLSLShaderLoader()));
-    ReturnIfFalse(RegisterLoader<FontAsset>(".ttf", CreateFontLoader()));
 
     return true;
 }

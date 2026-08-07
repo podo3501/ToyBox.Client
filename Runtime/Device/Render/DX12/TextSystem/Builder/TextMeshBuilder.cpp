@@ -40,7 +40,7 @@ static void ProcessShapedText(
 
         const GlyphInfo* glyph = atlas.FindGlyph(
             shaped.font, shaped.mode, shapedGlyph.glyphIndex, shaped.size);
-        if (!glyph || glyph->width == 0 || glyph->height == 0 || !glyph->isReady)
+        if (!glyph || glyph->width == 0 || glyph->height == 0)
         {
             cursor.Advance(shapedGlyph.advanceX);
             continue;

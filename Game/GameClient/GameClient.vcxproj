@@ -130,7 +130,6 @@
     <ClInclude Include="Asset\AudioTypes.h" />
     <ClInclude Include="Asset\BinaryAsset.h" />
     <ClInclude Include="Asset\EnvironmentAsset.h" />
-    <ClInclude Include="Asset\FontAsset.h" />
     <ClInclude Include="Asset\IAssetLoader.h" />
     <ClInclude Include="Asset\IAssetProvider.h" />
     <ClInclude Include="Asset\MeshAsset.h" />

@@ -55,7 +55,7 @@ void FontAtlas::EnsureSolidPage()
     std::vector<GlyphUploadEntry> uploads;
     uploads.push_back(std::move(entry));
 
-    m_atlasBuilder.UploadGlyphsToAtlas(m_solidPage.GetAtlasResource(), std::move(uploads));
+    m_pendingBatches.push_back({ &m_solidPage.GetAtlasResource(), std::move(uploads) });
 }
 
 void FontAtlas::EnsureGlyphs(std::span<const ShapedText> shapedTexts)
@@ -84,8 +84,14 @@ void FontAtlas::EnsureGlyphs(std::span<const ShapedText> shapedTexts)
                 continue;
 
             auto& atlasRes = GetAtlasResource(key, page);
-            m_atlasBuilder.UploadGlyphsToAtlas(atlasRes, std::move(glyphs));
+            m_pendingBatches.push_back({ &atlasRes, std::move(glyphs) });
         }
+    }
+
+    if (!m_pendingBatches.empty())
+    {
+        m_atlasBuilder.QueueGlyphUploads(std::move(m_pendingBatches));
+        m_pendingBatches.clear();
     }
 }
 

@@ -46,8 +46,8 @@ private:
 	ResourceProvider m_resProvider;
 	FrameUploadPools m_frameUploadPools;
 	TransientMeshProvider m_transientMeshProvider;
-	ForwardRenderPipeline m_pipeline;
 	TextSystem m_textSystem;
+	ForwardRenderPipeline m_pipeline;
 	RenderFrame m_renderFrame;
 
 	uint64_t m_frameIndex{ 0 };

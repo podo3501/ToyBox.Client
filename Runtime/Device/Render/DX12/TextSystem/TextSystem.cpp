@@ -10,10 +10,9 @@ TextSystem::~TextSystem() = default;
 TextSystem::TextSystem(
     Device& device,
     DescriptorFactory& factory,
-    TaskScheduler& taskScheduler, 
     ResourceFactory& resFactory,
     TransientMeshProvider& transientMeshProvider) :
-    m_atlasBuilder{ taskScheduler, resFactory },
+    m_atlasBuilder{ resFactory },
     m_meshBuilder{ transientMeshProvider },
     m_fontAtlas{ device, factory, m_atlasBuilder }
 {}

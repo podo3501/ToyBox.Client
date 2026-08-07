@@ -21,7 +21,6 @@
   <ItemGroup>
     <ClInclude Include="Asset\Loader\Graphics\BinaryLoader.h" />
     <ClInclude Include="Asset\Loader\Graphics\EnvironmentLoader.h" />
-    <ClInclude Include="Asset\Loader\Graphics\FontLoader.h" />
     <ClInclude Include="Asset\Loader\Graphics\HLSLShaderLoader.h" />
     <ClInclude Include="Asset\Loader\Graphics\MeshGltfLoader.h" />
     <ClInclude Include="Asset\Loader\Graphics\MeshJsonLoader.h" />
@@ -166,7 +165,6 @@
     <ClInclude Include="Render\DX12\TextSystem\Atlas\MTSDFFontAtlasBucket.h" />
     <ClInclude Include="Render\DX12\TextSystem\Builder\FontAtlasUploadGraphBuilder.h" />
     <ClInclude Include="Render\DX12\TextSystem\Builder\GlyphCursor.h" />
-    <ClInclude Include="Render\DX12\TextSystem\Builder\GlyphRegistry.h" />
     <ClInclude Include="Render\DX12\TextSystem\Builder\MeshBuilderHelpers.h" />
     <ClInclude Include="Render\DX12\TextSystem\Builder\TextBatch.h" />
     <ClInclude Include="Render\DX12\TextSystem\Builder\TextLayoutHelper.h" />
@@ -180,7 +178,6 @@
   <ItemGroup>
     <ClCompile Include="Asset\Loader\Graphics\BinaryLoader.cpp" />
     <ClCompile Include="Asset\Loader\Graphics\EnvironmentLoader.cpp" />
-    <ClCompile Include="Asset\Loader\Graphics\FontLoader.cpp" />
     <ClCompile Include="Asset\Loader\Graphics\HLSLShaderLoader.cpp" />
     <ClCompile Include="Asset\Loader\Graphics\MeshGltfLoader.cpp" />
     <ClCompile Include="Asset\Loader\Graphics\MeshJsonLoader.cpp" />
@@ -304,7 +301,6 @@
     <ClCompile Include="Render\DX12\TextSystem\Atlas\MTSDFFontAtlasBucket.cpp" />
     <ClCompile Include="Render\DX12\TextSystem\Builder\FontAtlasUploadGraphBuilder.cpp" />
     <ClCompile Include="Render\DX12\TextSystem\Builder\GlyphCursor.cpp" />
-    <ClCompile Include="Render\DX12\TextSystem\Builder\GlyphRegistry.cpp" />
     <ClCompile Include="Render\DX12\TextSystem\Builder\MeshBuilderHelpers.cpp" />
     <ClCompile Include="Render\DX12\TextSystem\Builder\TextBatch.cpp" />
     <ClCompile Include="Render\DX12\TextSystem\Builder\TextLayoutHelper.cpp" />

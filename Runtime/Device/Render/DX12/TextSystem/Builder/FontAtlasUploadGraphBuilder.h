@@ -2,25 +2,29 @@
 #include "Resource/Resource.h"
 #include "Graph/RGTypes.h"
 #include "../TextTypes.h"
-#include "GlyphRegistry.h"
 
 struct GlyphUploadLayout;
-class TaskScheduler;
+struct ResourceContext;
 class ResourceFactory;
 class RenderGraph;
+
+struct PendingAtlas
+{
+    RGResourceID rgID;
+    std::vector<GlyphUploadEntry> glyphs;
+};
 
 class FontAtlasUploadGraphBuilder
 {
 public:
     ~FontAtlasUploadGraphBuilder();
     FontAtlasUploadGraphBuilder() = delete;
-    FontAtlasUploadGraphBuilder(
-        TaskScheduler& taskScheduler,
-        ResourceFactory& resourceFactory);
-    
-    void UploadGlyphsToAtlas(
-        const Resource& atlasResource,
-        std::vector<GlyphUploadEntry> uploads);
+    explicit FontAtlasUploadGraphBuilder(ResourceFactory& resourceFactory);
+
+    void QueueGlyphUploads(std::vector<AtlasGlyphBatch>&& batches);
+    void Build(RenderGraph& graph);
+    void ApplyResourceBindings(ResourceContext& resCtx) const;
+    bool HasPendingUploads() const { return !m_pending.empty(); }
 
 private:
     void BuildUploadPass(
@@ -30,13 +34,9 @@ private:
         std::vector<GlyphUploadEntry> uploads,
         std::vector<GlyphUploadLayout> layouts);
 
-    void BuildFinalizePass(
-        RenderGraph& graph,
-        RGResourceID atlasResID,
-        std::vector<RGResourceID> readyResIDs);
-
 private:
-    TaskScheduler& m_taskScheduler;
     ResourceFactory& m_resFactory;
-    GlyphRegistry m_registry;
+
+    std::unordered_map<const Resource*, PendingAtlas> m_pending;
+    std::unordered_map<RGResourceID, Resource> m_frameBindings;
 };

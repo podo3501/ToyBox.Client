@@ -8,7 +8,7 @@ public:
     ~FontProvider();
     FontProvider() noexcept;
     virtual std::shared_ptr<IFontResource> CreateResource() override;
-    virtual bool LoadResource(std::shared_ptr<IFontResource> resource, std::shared_ptr<FontAsset> asset) override;
+    virtual bool LoadResource(std::shared_ptr<IFontResource> resource, std::shared_ptr<BinaryAsset> asset) override;
     virtual void ReleaseResource(std::shared_ptr<IFontResource> resource) override;
 
 private:

@@ -1,14 +1,24 @@
 #pragma once
 #include "Resource/ShadowResource.h"
 #include "Renderer/Renderers.h"
-#include "Inspector/InspectorRenderers.h"
+#include "Graph/RenderGraph.h"
 #include "Graph/RGTypes.h"
+#include "Inspector/InspectorRenderers.h"
+//Graph Builders
+#include "ShadowGraphBuilder.h"
+#include "SkyboxGraphBuilder.h"
+#include "OpaqueGraphBuilder.h"
+#include "DebugSurfaceGraphBuilder.h"
+#include "UIGraphBuilder.h"
+#include "Inspector/InspectorGraphBuilder.h"
+#include "TextSystem/Builder/FontAtlasUploadGraphBuilder.h"
 
 struct FrameData;
 struct DrawPacket;
 struct CompiledTask;
 class Device;
 class ShaderLibrary;
+class ResourceFactory;
 class DescriptorFactory;
 class SwapChainPresenter;
 
@@ -20,12 +30,15 @@ public:
         Device& device,
         SwapChainPresenter& swapChain,
         DescriptorFactory& descFactory,
-        ShaderLibrary& shaderLibrary);
+        ShaderLibrary& shaderLibrary,
+        FontAtlasUploadGraphBuilder& fontUploadBuilder);
     bool Initialize(const Size& screenSize, const Size& shadowMapSize);
     void Render(CommandList& cmd, const DrawPacket& drawPacket, const FrameData& frame);
     void Resize(const Size& size);
 
 private:
+    std::vector<CompiledTask> BuildFrame();
+
     Device& m_device;
     SwapChainPresenter& m_swapChain;
     DescriptorFactory& m_descFactory;
@@ -37,5 +50,13 @@ private:
     RGResourceID m_hBackBuffer{ 0 };
     RGResourceID m_hShadow{ 0 };
 
-    std::vector<CompiledTask> m_compiledTasks;
+    FontAtlasUploadGraphBuilder& m_fontUploadBuilder;
+    ShadowGraphBuilder m_shadowBuilder;
+    SkyboxGraphBuilder m_skyboxBuilder;
+    OpaqueGraphBuilder m_opaqueBuilder;
+    DebugSurfaceGraphBuilder m_debugBuilder;
+    UIGraphBuilder m_uiBuilder;
+    InspectorGraphBuilder m_inspectorBuilder;
+
+    RenderGraph m_graph;
 };

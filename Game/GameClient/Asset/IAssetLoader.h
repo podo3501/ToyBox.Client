@@ -37,6 +37,5 @@ std::unique_ptr<IAssetLoader> CreateStaticSoundTableLoader();
 std::unique_ptr<IAssetLoader> CreateStreamSoundTableLoader();
 std::unique_ptr<IAssetLoader> CreateOggStreamLoader();
 std::unique_ptr<IAssetLoader> CreateHLSLShaderLoader();
-std::unique_ptr<IAssetLoader> CreateFontLoader();
 std::unique_ptr<IAssetLoader> CreateBinaryLoader();
 

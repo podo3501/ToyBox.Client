@@ -704,9 +704,6 @@
     <ClInclude Include="Service\Render\Resource\IFontResource.h">
       <Filter>Service\Render\Resource</Filter>
     </ClInclude>
-    <ClInclude Include="Asset\FontAsset.h">
-      <Filter>Asset</Filter>
-    </ClInclude>
     <ClInclude Include="Service\Render\Definition\RenderState.h">
       <Filter>Service\Render\Definition</Filter>
     </ClInclude>

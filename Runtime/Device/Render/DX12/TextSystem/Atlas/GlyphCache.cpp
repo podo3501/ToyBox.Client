@@ -1,16 +1,10 @@
 #include "pch.h"
 #include "GlyphCache.h"
 
-std::shared_ptr<GlyphInfo> GlyphCache::Insert(
-    FontResource* fontRes, 
-    uint32_t glyphIndex, 
-    uint32_t size, 
-    const GlyphInfo& info)
+void GlyphCache::Insert(FontResource* fontRes, uint32_t glyphIndex, uint32_t size, const GlyphInfo& info)
 {
     CacheKey key{ fontRes, glyphIndex, size };
-    auto sp = std::make_shared<GlyphInfo>(info);
-    m_cache[key] = sp;
-    return sp;
+    m_cache[key] = info;
 }
 
 const GlyphInfo* GlyphCache::Get(FontResource* fontRes, uint32_t glyphIndex, uint32_t size) const
@@ -18,7 +12,7 @@ const GlyphInfo* GlyphCache::Get(FontResource* fontRes, uint32_t glyphIndex, uin
     CacheKey key{ fontRes, glyphIndex, size };
     auto it = m_cache.find(key);
     if (it != m_cache.end())
-        return it->second.get();
+        return &it->second;
 
     return nullptr;
 }

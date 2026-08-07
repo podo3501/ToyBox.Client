@@ -38,7 +38,7 @@ FontHandle FontRepository::GetOrCreate(const Core::ResourceID& resID)
 	{
 	case Core::ResourceIDType::Path:
 	{
-		auto reqID = Asset::PushRequest<FontAsset>(m_asyncLoader, resID);
+		auto reqID = Asset::PushRequest<BinaryAsset>(m_asyncLoader, resID);
 		m_pending.push_back({ handle, reqID });
 	}
 	break;
@@ -100,8 +100,8 @@ void FontRepository::ProcessPendingRequests()
 		auto entry = m_loadedFonts.Find(req.handle);
 		if (entry && entry->fontRes)
 		{
-			auto fontAsset = std::static_pointer_cast<FontAsset>(asset);
-			if (m_fontProvider->LoadResource(entry->fontRes, fontAsset))
+			auto binaryAsset = std::static_pointer_cast<BinaryAsset>(asset);
+			if (m_fontProvider->LoadResource(entry->fontRes, binaryAsset))
 			{
 				Assert(entry->fontRes->IsReady()); //로딩했다면 준비상태여야 한다.
 				entry->state = LoadState::Ready;

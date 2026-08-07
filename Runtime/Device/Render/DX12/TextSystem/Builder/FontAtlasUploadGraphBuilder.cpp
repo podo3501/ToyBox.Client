@@ -2,7 +2,6 @@
 #include "FontAtlasUploadGraphBuilder.h"
 #include "Factory/ResourceFactory.h"
 #include "Graph/RenderGraph.h"
-#include "Graph/TaskScheduler.h"
 #include "Core/Foundation/Align.h"
 #include "RenderConstants.h"
 #include "Command/CommandList.h"
@@ -15,67 +14,65 @@ struct GlyphUploadLayout
 };
 
 FontAtlasUploadGraphBuilder::~FontAtlasUploadGraphBuilder() = default;
-FontAtlasUploadGraphBuilder::FontAtlasUploadGraphBuilder(
-    TaskScheduler& taskScheduler,
-    ResourceFactory& resFactory) :
-    m_taskScheduler{ taskScheduler },
+FontAtlasUploadGraphBuilder::FontAtlasUploadGraphBuilder(ResourceFactory& resFactory) :
     m_resFactory{ resFactory }
 {}
 
-void FontAtlasUploadGraphBuilder::UploadGlyphsToAtlas(
-    const Resource& atlasResource,
-    std::vector<GlyphUploadEntry> uploads)
+void FontAtlasUploadGraphBuilder::QueueGlyphUploads(std::vector<AtlasGlyphBatch>&& batches)
 {
-    if (uploads.empty())
-        return; 
-
-    std::vector<GlyphUploadLayout> layouts;
-
-    size_t uploadOffset = 0;
-    for (const auto& glyph : uploads)
+    Assert(m_pending.empty()); // 프레임에 한번씩만 들어오거나 안들어온다(새로운글자가 있을때만). Build에서 소비하는데 소비하지 못했다면 문제.
+    for (auto& batch : batches)
     {
-        uint32_t bytesPerPixel = GetBytesPerPixel(glyph.pixels.format);
-
-        size_t bytesPerRow = static_cast<size_t>(glyph.pixels.width) * bytesPerPixel;
-        size_t rowPitch = Core::AlignUp(bytesPerRow, AlignTextureRow);
-        size_t glyphSize = rowPitch * glyph.pixels.height;
-
-        uploadOffset = Core::AlignUp(uploadOffset, AlignTexturePlacement);
-        layouts.push_back({ uploadOffset, rowPitch, bytesPerRow });
-
-        uploadOffset += glyphSize;
+        m_pending.emplace(
+            batch.atlasResource,
+            PendingAtlas{ RenderGraph::CreateRGResourceID(), std::move(batch.glyphs) });
     }
-    size_t totalUploadSize = uploadOffset;
+}
 
-    std::vector<RGResourceID> readyResIDs;
-    readyResIDs.reserve(uploads.size());
-    for (auto& entry : uploads)
+void FontAtlasUploadGraphBuilder::Build(RenderGraph& graph)
+{
+    m_frameBindings.clear();
+
+    if (m_pending.empty())
+        return;
+
+    for (auto& [atlasResPtr, pending] : m_pending)
     {
-        if (entry.readyTarget.expired())
-            continue; // 대상이 이미 없으면 등록할 필요 없음
+        std::vector<GlyphUploadLayout> layouts;
+        layouts.reserve(pending.glyphs.size());
 
-        RGResourceID id = RenderGraph::CreateRGResourceID();
-        m_registry.Register(id, entry.readyTarget);
-        readyResIDs.push_back(id);
+        size_t uploadOffset = 0;
+        for (const auto& glyph : pending.glyphs)
+        {
+            uint32_t bytesPerPixel = GetBytesPerPixel(glyph.pixels.format);
+            size_t bytesPerRow = static_cast<size_t>(glyph.pixels.width) * bytesPerPixel;
+            size_t rowPitch = Core::AlignUp(bytesPerRow, AlignTextureRow);
+            size_t glyphSize = rowPitch * glyph.pixels.height;
+
+            uploadOffset = Core::AlignUp(uploadOffset, AlignTexturePlacement);
+            layouts.push_back({ uploadOffset, rowPitch, bytesPerRow });
+            uploadOffset += glyphSize;
+        }
+        size_t totalUploadSize = uploadOffset;
+
+        RGResourceID uploadResID = RenderGraph::CreateRGResourceID();
+
+        graph.ImportResource(pending.rgID, RGAccess::SRV);
+        BuildUploadPass(graph, pending.rgID, uploadResID, std::move(pending.glyphs), std::move(layouts));
+        graph.ExportResource(pending.rgID, RGAccess::SRV);
+
+        // atlas(원본 리소스)와 새로 만든 upload staging 리소스를 이번 프레임 바인딩 목록에 기록
+        m_frameBindings.emplace(pending.rgID, *atlasResPtr);
+        m_frameBindings.emplace(uploadResID, m_resFactory.CreateResource(totalUploadSize, ResInitType::Upload));
     }
 
-    RenderGraph graph;
-    RGResourceID atlasResID = RenderGraph::CreateRGResourceID();
-    RGResourceID uploadResID = RenderGraph::CreateRGResourceID();
+    m_pending.clear();
+}
 
-    graph.ImportResource(atlasResID, RGAccess::SRV);
-
-    BuildUploadPass(graph, atlasResID, uploadResID, std::move(uploads), std::move(layouts));
-    BuildFinalizePass(graph, atlasResID, std::move(readyResIDs));
-
-    graph.ExportResource(atlasResID, RGAccess::SRV);
-
-    auto compiledTasks = graph.Compile();
-
-    auto resCtx = std::make_shared<ResourceContext>();
-    resCtx->Set(atlasResID, atlasResource);
-    resCtx->Set(uploadResID, m_resFactory.CreateResource(totalUploadSize, ResInitType::Upload));
-    m_taskScheduler.SubmitTask(compiledTasks, resCtx);
+void FontAtlasUploadGraphBuilder::ApplyResourceBindings(ResourceContext& resCtx) const
+{
+    for (auto& [id, resource] : m_frameBindings)
+        resCtx.Set(id, resource);
 }
 
 static void CopyGlyphToUploadBuffer(
@@ -130,7 +127,7 @@ void FontAtlasUploadGraphBuilder::BuildUploadPass(
     std::vector<GlyphUploadEntry> uploads,
     std::vector<GlyphUploadLayout> layouts)
 {
-    auto& upload = graph.AddCopyPass("FontAtlasUpload");
+    auto& upload = graph.AddGraphicsPass("FontAtlasUpload");
     upload.Write(atlasResID, RGAccess::CopyDest);
 
     upload.gpuExecute =
@@ -164,20 +161,5 @@ void FontAtlasUploadGraphBuilder::BuildUploadPass(
             }
 
             uploadBuffer->Unmap(0, nullptr);
-        };
-}
-
-void FontAtlasUploadGraphBuilder::BuildFinalizePass(
-    RenderGraph& graph,
-    RGResourceID atlasResID,
-    std::vector<RGResourceID> readyResIDs)
-{
-    auto& finalize = graph.AddCpuPass("FontAtlasUploadFinalize");
-    finalize.Read(atlasResID, RGAccess::SRV);
-
-    finalize.cpuExecute = [this, ids = std::move(readyResIDs)](TaskContext&)
-        {
-            for (RGResourceID id : ids)
-                m_registry.MarkReady(id);
         };
 }

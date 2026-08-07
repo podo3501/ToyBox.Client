@@ -17,6 +17,7 @@ public:
     RenderPass& AddCpuPass(std::string name);
 
     std::vector<CompiledTask> Compile();
+    void Reset();
 
 private:
     struct PlannedBarrier 

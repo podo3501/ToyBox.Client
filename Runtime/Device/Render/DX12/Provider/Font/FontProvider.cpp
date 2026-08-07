@@ -11,9 +11,9 @@ shared_ptr<IFontResource> FontProvider::CreateResource()
 	return make_shared<FontResource>();
 }
 
-bool FontProvider::LoadResource(std::shared_ptr<IFontResource> resource, std::shared_ptr<FontAsset> asset)
+bool FontProvider::LoadResource(std::shared_ptr<IFontResource> resource, std::shared_ptr<BinaryAsset> asset)
 {
-	if (!resource || !asset || asset->fontSource.empty())
+	if (!resource || !asset || asset->buffer.empty())
 		return false;
 
 	auto font = std::static_pointer_cast<FontResource>(resource);

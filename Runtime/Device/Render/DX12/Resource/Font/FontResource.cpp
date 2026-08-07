@@ -17,12 +17,12 @@ FontResource::~FontResource()
 
 FontResource::FontResource() = default;
 
-bool FontResource::Initialize(FreeTypeLibrary& ftLibrary, std::shared_ptr<FontAsset> asset)
+bool FontResource::Initialize(FreeTypeLibrary& ftLibrary, std::shared_ptr<BinaryAsset> asset)
 {
     FT_Error error = FT_New_Memory_Face(
         ftLibrary.Get(),
-        reinterpret_cast<const FT_Byte*>(asset->fontSource.data()),
-        static_cast<FT_Long>(asset->fontSource.size()),
+        reinterpret_cast<const FT_Byte*>(asset->buffer.data()),
+        static_cast<FT_Long>(asset->buffer.size()),
         0, // 단일 페이스 인덱스
         &m_ftFace);
 	if (error)

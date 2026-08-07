@@ -56,6 +56,14 @@ std::vector<CompiledTask> RenderGraph::Compile()
     return tasks;
 }
 
+void RenderGraph::Reset()
+{
+    m_passes.clear();
+    m_statesTracker.clear();
+    m_exportResources.clear();
+    m_localTaskID = 1;
+}
+
 void RenderGraph::BuildExportPass()
 {
     if (m_exportResources.empty())

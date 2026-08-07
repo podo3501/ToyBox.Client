@@ -19,7 +19,6 @@ struct GlyphInfo
     Core::Vector2 uvMin{ 0.0f, 0.0f }; //Atlas Texture의 좌상단 UV. 즉 source
     Core::Vector2 uvMax{ 0.0f, 0.0f }; //Atlas Texture의 우하단 UV
     //?!? advanceX는 어디?  이 값이 있어야 하는지 어떤지 나중에 판단 해 보자.
-    bool isReady{ false };
 };
 
 struct ShapedGlyph
@@ -53,5 +52,11 @@ struct GlyphUploadEntry // 하나의 글자를 아틀라스로 전송하기 위�
     uint32_t y{ 0 };
 
     GlyphPixels pixels; //업로드할 이미지 + glyph matric
-    std::weak_ptr<GlyphInfo> readyTarget;
+};
+
+class Resource;
+struct AtlasGlyphBatch
+{
+    const Resource* atlasResource{ nullptr };
+    std::vector<GlyphUploadEntry> glyphs;
 };
