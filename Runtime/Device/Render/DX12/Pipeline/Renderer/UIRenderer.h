@@ -10,7 +10,7 @@ class Device;
 class PipelineCache;
 class CommandList;
 class MeshResource;
-class UIMaterialResource;
+class BrushResource;
 class FrameConstantAllocator;
 
 class UIRenderer
@@ -19,14 +19,12 @@ public:
     ~UIRenderer();
     UIRenderer(const UIRendererConfig& config, PipelineCache& pipelineCache);
     bool Initialize(Device& device, const Size& screenSize);
-    void PrepareFrame();
     void BeginFrame(CommandList& cmd);
-    void BindPipeline(CommandList& cmd, const PipelineState& pipelineState);
 
     void Draw(
         CommandList& cmd, 
         MeshResource& mesh, 
-        UIMaterialResource& material, 
+        BrushResource& brush,
         const Core::Matrix& world,
         const Core::Vector4& uvTransform);
 
@@ -40,18 +38,15 @@ private:
     };
 
     bool CreateRootSignature(Device& device);
-    bool CreateDefaultPSOs();
-    ID3D12PipelineState* CreatePSO(const PipelineState& pipelineState);
-    ID3D12PipelineState* GetPipeline(const PipelineState& pipelineState);
+    ID3D12PipelineState* CreatePSO();
     D3D12_GPU_VIRTUAL_ADDRESS UploadDrawCB(
-        UIMaterialResource& material,
         const Core::Matrix& world, 
         const Core::Vector4& uvTransform);
 
     UIRendererConfig m_config;
     PipelineCache& m_pipelineCache;
     Microsoft::WRL::ComPtr<ID3D12RootSignature> m_rootSignature;
-    ID3D12PipelineState* m_currentPSO{ nullptr };
+    ID3D12PipelineState* m_pso{ nullptr };
 
     FrameConstantAllocator m_uiDrawCBAllocator;
     Core::Matrix m_projection;

@@ -4,9 +4,11 @@
 #include "Repository/Font/FontRepository.h"
 #include "Repository/Material/MaterialRepository.h"
 #include "Repository/Mesh/MeshRepository.h"
+#include "Repository/Brush/BrushRepository.h"
 #include "Repository/Environment/EnvironmentRepository.h"
 #include "Builtin/BuiltinMeshes.h"
 #include "Builtin/BuiltinMaterials.h"
+#include "Builtin/BuiltinBrush.h"
 
 struct ResolvedEntries
 {
@@ -26,15 +28,18 @@ SceneRenderer::SceneRenderer(
 	FontRepository* fontRepository,
 	MeshRepository* meshRepository, 
 	MaterialRepository* matRepository,
+	BrushRepository* brushRepository,
 	EnvironmentRepository* envRepository) :
 	m_renderFrame{ renderFrame },
 	m_fontRepository{ fontRepository },
 	m_meshRepository{ meshRepository },
 	m_matRepository{ matRepository },
+	m_brushRepository{ brushRepository },
 	m_envRepository{ envRepository }
 {
 	m_uiQuad = CreateBuiltinUIQuad(m_meshRepository);
 	m_defaultMaterials = CreateBuiltinMaterials(m_matRepository);
+	m_defaultBrush = CreateBuiltinBrush(m_brushRepository);
 }
 
 void SceneRenderer::DrawText(
@@ -101,13 +106,18 @@ void SceneRenderer::DrawDebugSurface(MeshHandle hM, MaterialHandle hMtl, const C
 	m_renderFrame->DrawSurface(data->meshRes, data->matRes, world);
 }
 
-void SceneRenderer::DrawUI(MaterialHandle hMtl, const Rect& dest, const Rect* source)
+void SceneRenderer::DrawUI(BrushHandle bh, const Rect& dest, const Rect* source)
 {
-	if (!hMtl)
-		hMtl = GetDefaultMaterial(MaterialDomain::UserInterface);
+	if (!bh)
+		bh = m_defaultBrush;
 
-	auto data = ResolveResources(m_uiQuad, hMtl);
-	if (!data) return;
+	auto mesh = m_meshRepository->Get(m_uiQuad);
+	if (!mesh || mesh->state != LoadState::Ready)
+		return;
+
+	auto brush = m_brushRepository->Get(bh);
+	if (!brush || brush->state != LoadState::Ready)
+		return;
 
 	float width = dest.width;
 	float height = dest.height;
@@ -116,7 +126,7 @@ void SceneRenderer::DrawUI(MaterialHandle hMtl, const Rect& dest, const Rect* so
 	Core::Matrix translation = Core::Matrix::Translation(dest.x, dest.y, 0.0f);
 	Core::Matrix world = scale * translation;
 
-	m_renderFrame->DrawUI(data->meshRes, data->matRes, world, source);
+	m_renderFrame->DrawUI(mesh->meshRes, brush->brushRes, world, source);
 }
 
 void SceneRenderer::DrawEnvironment(EnvironmentHandle hEnv)

@@ -3,6 +3,7 @@
 #include "GameClient/Service/Render/Resource/IFontResource.h"
 #include "GameClient/Service/Render/Resource/IMeshResource.h"
 #include "GameClient/Service/Render/Resource/IMaterialResource.h"
+#include "GameClient/Service/Render/Resource/IBrushResource.h"
 #include "GameClient/Service/Render/Resource/IEnvironmentResource.h"
 #include "GameClient/Service/Render/Definition/Text/TextStyle.h"
 #include "Core/Foundation/Geometry2D.h"
@@ -29,7 +30,7 @@ struct IRenderFrame
 
 	virtual void DrawUI(
 		std::shared_ptr<IMeshResource> meshRes,
-		std::shared_ptr<IMaterialResource> matRes,
+		std::shared_ptr<IBrushResource> brushRes,
 		const Core::Matrix& world,
 		const Rect* source) = 0;
 

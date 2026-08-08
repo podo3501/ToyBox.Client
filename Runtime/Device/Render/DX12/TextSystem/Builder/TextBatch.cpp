@@ -1,13 +1,13 @@
 #include "pch.h"
 #include "TextBatch.h"
-#include "Resource/Material/UIMaterialResource.h"
+#include "Resource/Brush/BrushResource.h"
 #include "../TextTypes.h"
 #include "../Atlas/FontAtlas.h"
 
 static BatchTarget MakeBatchTarget(PageMeshBuffer& buffer)
 {
-    UIMaterialResource* uiMat = static_cast<UIMaterialResource*>(buffer.material.get());
-    return { buffer, uiMat->GetTextureIndices() };
+    BrushResource* brush = static_cast<BrushResource*>(buffer.brush.get());
+    return { buffer, brush->GetTextureIndex() };
 }
 
 BatchTarget GetGlyphBatchTarget(
@@ -18,7 +18,7 @@ BatchTarget GetGlyphBatchTarget(
     TextBatchKey key{ glyph->bucketID, glyph->pageIndex };
     auto [it, inserted] = buffers.try_emplace(key);
     if (inserted)
-        it->second.material = atlas.GetMaterial(glyph);
+        it->second.brush = atlas.GetBrush(glyph);
 
     return MakeBatchTarget(it->second);
 }
@@ -31,7 +31,7 @@ BatchTarget GetSolidBatchTarget(
     TextBatchKey key{ bucketID, 0 };
     auto [it, inserted] = buffers.try_emplace(key);
     if (inserted)
-        it->second.material = atlas.GetSolidMaterial();
+        it->second.brush = atlas.GetSolidBrush();
 
     return MakeBatchTarget(it->second);
 }

@@ -2,6 +2,7 @@
 #include "Handle/FontHandle.h"
 #include "Handle/MeshHandle.h"
 #include "Handle/MaterialHandle.h"
+#include "Handle/BrushHandle.h"
 #include "Handle/EnvironmentHandle.h"
 #include "Definition/Material/MaterialDesc.h"
 #include "Definition/Text/TextStyle.h"
@@ -19,6 +20,7 @@ struct FrameData;
 class FontRepository;
 class MaterialRepository;
 class MeshRepository;
+class BrushRepository;
 class EnvironmentRepository;
 
 class SceneRenderer
@@ -31,6 +33,7 @@ public:
 		FontRepository* fontRepository,
 		MeshRepository* meshRepository, 
 		MaterialRepository* matRepository,
+		BrushRepository* brushRepository,
 		EnvironmentRepository* envRepository);
 
 	void DrawText(
@@ -52,7 +55,7 @@ public:
 
 	void DrawSurface(MeshHandle hM, MaterialHandle hMtl, const Core::Matrix& world);
 	void DrawDebugSurface(MeshHandle hM, MaterialHandle hMtl, const Core::Matrix& world);
-	void DrawUI(MaterialHandle hMtl, const Rect& dest, const Rect* source = nullptr);
+	void DrawUI(BrushHandle bh, const Rect& dest, const Rect* source = nullptr);
 	void DrawEnvironment(EnvironmentHandle hEnv);
 
 	void SetFrameData(const FrameData& frameData);
@@ -65,9 +68,11 @@ private:
 	FontRepository* m_fontRepository{ nullptr };
 	MeshRepository* m_meshRepository{ nullptr };
 	MaterialRepository* m_matRepository{ nullptr };
+	BrushRepository* m_brushRepository{ nullptr };
 	EnvironmentRepository* m_envRepository{ nullptr };
 
 	//default(built in)
 	MeshHandle m_uiQuad{};
 	std::array<MaterialHandle, static_cast<size_t>(MaterialDomain::Count)> m_defaultMaterials;
+	BrushHandle m_defaultBrush;
 };

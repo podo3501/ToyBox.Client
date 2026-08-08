@@ -31,11 +31,6 @@ void RenderScene::AddUI(const DrawUIItem& uiItem)
     //sorting 후 batch가 가능하면 batch 해 주기.
 
     DrawUIItem newItem = uiItem;
-
-    auto material = static_cast<MaterialResource*>(uiItem.material.get());
-    newItem.sortKey = RenderSortKey::Build(
-        material->GetPipelineState().GetHash());
-
     m_uiDraws.push_back(std::move(newItem));
 }
 

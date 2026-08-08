@@ -2,17 +2,11 @@
 #include "Core/Foundation/Geometry2D.h"
 #include "AtlasPacker.h"
 #include "Resource/Resource.h"
-#include "Resource/Material/UIMaterialResource.h"
 #include "Glyph/GlyphPixelFormat.h"
-
-struct AtlasPageDesc
-{
-    GlyphPixelFormat format{ GlyphPixelFormat::R8 };
-    ShaderID shaderID{ RegistryShader::UI };
-};
 
 class Device;
 class DescriptorFactory;
+class BrushResource;
 
 class AtlasPage
 {
@@ -30,19 +24,19 @@ public:
         Device& device, 
         DescriptorFactory& factory, 
         const Size& atlasTexSize,
-        const AtlasPageDesc& desc);
+        GlyphPixelFormat format);
     std::optional<Point> AllocateRect(const Size& size);
 
-    std::shared_ptr<MaterialResource> GetMaterialResource() const;
+    std::shared_ptr<BrushResource> GetBrushResource() const;
     const Resource& GetAtlasResource() const;
 
 private:
-    void CreateAtlasMaterial(
+    void CreateAtlasBrush(
         Device& device, 
         DescriptorFactory& factory, 
         const Size& atlasTexSize,
-        const AtlasPageDesc& desc);
+        GlyphPixelFormat format);
 
     AtlasPacker m_packer;
-    std::shared_ptr<MaterialResource> m_material;
+    std::shared_ptr<BrushResource> m_brush;
 };

@@ -80,6 +80,10 @@ ResourceProvider::ResourceProvider(
         m_texProvider, 
         ResourceReleaseBuilder{ taskScheduler }, 
         },
+    m_brushProvider{
+        m_texProvider,
+        ResourceReleaseBuilder{ taskScheduler },
+    },
     m_cubeProvider{
         TextureCubeCreateGraphBuilder{ taskScheduler, resFactory, descFactory }
         },
@@ -106,6 +110,7 @@ void ResourceProvider::Update(float gpuMs)
     m_texProvider.Update(ComputeTextureBudget(m_avgGpuMs));
     m_matProvider.Update();
 
+    m_brushProvider.Update();
     m_cubeProvider.Update(ComputeCubeTextureBudget(m_avgGpuMs));
     m_envProvider.Update();
 

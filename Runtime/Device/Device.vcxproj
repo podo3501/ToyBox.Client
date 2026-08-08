@@ -70,6 +70,7 @@
     <ClInclude Include="Render\DX12\Inspector\InspectorRenderers.h" />
     <ClInclude Include="Render\DX12\Pipeline\Renderer\SkyboxRenderer.h" />
     <ClInclude Include="Render\DX12\Pipeline\SkyboxGraphBuilder.h" />
+    <ClInclude Include="Render\DX12\Provider\Brush\BrushProvider.h" />
     <ClInclude Include="Render\DX12\Provider\Environment\EnvironmentProvider.h" />
     <ClInclude Include="Render\DX12\Provider\Font\FontProvider.h" />
     <ClInclude Include="Render\DX12\Provider\Mesh\TransientMeshProvider.h" />
@@ -128,6 +129,7 @@
     <ClInclude Include="Render\DX12\Provider\Texture\TextureRegistry.h" />
     <ClInclude Include="Render\DX12\Provider\Texture\TextureUtils.h" />
     <ClInclude Include="Render\DX12\ResourceProvider.h" />
+    <ClInclude Include="Render\DX12\Resource\Brush\BrushResource.h" />
     <ClInclude Include="Render\DX12\Resource\Environment\EnvironmentResource.h" />
     <ClInclude Include="Render\DX12\Resource\Font\FontResource.h" />
     <ClInclude Include="Render\DX12\Resource\Material\DebugSurfaceMaterialResource.h" />
@@ -227,6 +229,7 @@
     <ClCompile Include="Render\DX12\Inspector\InspectorRenderers.cpp" />
     <ClCompile Include="Render\DX12\Pipeline\Renderer\SkyboxRenderer.cpp" />
     <ClCompile Include="Render\DX12\Pipeline\SkyboxGraphBuilder.cpp" />
+    <ClCompile Include="Render\DX12\Provider\Brush\BrushProvider.cpp" />
     <ClCompile Include="Render\DX12\Provider\Environment\EnvironmentProvider.cpp" />
     <ClCompile Include="Render\DX12\Provider\Font\FontProvider.cpp" />
     <ClCompile Include="Render\DX12\Provider\Mesh\TransientMeshProvider.cpp" />
@@ -271,6 +274,7 @@
     <ClCompile Include="Render\DX12\Provider\Texture\TextureRegistry.cpp" />
     <ClCompile Include="Render\DX12\Provider\Texture\TextureUtils.cpp" />
     <ClCompile Include="Render\DX12\ResourceProvider.cpp" />
+    <ClCompile Include="Render\DX12\Resource\Brush\BrushResource.cpp" />
     <ClCompile Include="Render\DX12\Resource\Environment\EnvironmentResource.cpp" />
     <ClCompile Include="Render\DX12\Resource\Font\FontResource.cpp" />
     <ClCompile Include="Render\DX12\Resource\Material\GridMaterialResource.cpp" />

@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "FontAtlasBucket.h"
+#include "Resource/Brush/BrushResource.h"
 
 FontAtlasBucket::FontAtlasBucket(
     Device& device,
@@ -24,7 +25,7 @@ void FontAtlasBucket::CreatePage()
         m_device,
         m_factory,
         m_atlasTextureSize,
-        GetAtlasPageDesc());
+        GetAtlasPageFormat());
 
     m_pages.push_back(std::move(page));
 }
@@ -40,10 +41,10 @@ const GlyphInfo* FontAtlasBucket::FindGlyph(
         size);
 }
 
-std::shared_ptr<IMaterialResource> FontAtlasBucket::GetMaterial(uint16_t pageIndex) const
+std::shared_ptr<IBrushResource> FontAtlasBucket::GetBrush(uint16_t pageIndex) const
 {
     Assert(pageIndex < m_pages.size());
-    return m_pages[pageIndex]->GetMaterialResource();
+    return m_pages[pageIndex]->GetBrushResource();
 }
 
 const Resource& FontAtlasBucket::GetAtlasResource(uint16_t pageIndex) const

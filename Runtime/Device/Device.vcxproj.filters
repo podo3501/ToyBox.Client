@@ -127,6 +127,12 @@
     <Filter Include="Render\DX12\Resource\Environment">
       <UniqueIdentifier>{56fd83da-a4bb-41ec-af3c-517429c33683}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Render\DX12\Provider\Brush">
+      <UniqueIdentifier>{9414d9b6-8b42-491e-960b-eb79e59a9610}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Render\DX12\Resource\Brush">
+      <UniqueIdentifier>{f8fec227-4a1d-440e-9e48-a8500ca4429b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Storage\JsonObjectIO.h">
@@ -302,9 +308,6 @@
       <Filter>Render\DX12\Resource\Material</Filter>
     </ClInclude>
     <ClInclude Include="Render\DX12\Resource\Material\SurfaceMaterialResource.h">
-      <Filter>Render\DX12\Resource\Material</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\DX12\Resource\Material\UIMaterialResource.h">
       <Filter>Render\DX12\Resource\Material</Filter>
     </ClInclude>
     <ClInclude Include="Render\DX12\Resource\Texture\TextureResource.h">
@@ -590,6 +593,15 @@
     <ClInclude Include="Asset\Loader\Graphics\BinaryLoader.h">
       <Filter>Asset\Loader\Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="Render\DX12\Provider\Brush\BrushProvider.h">
+      <Filter>Render\DX12\Provider\Brush</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Resource\Brush\BrushResource.h">
+      <Filter>Render\DX12\Resource\Brush</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Resource\Material\UIMaterialResource.h">
+      <Filter>Render\DX12\Resource\Material</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -732,9 +744,6 @@
       <Filter>Render\DX12\Resource\Material</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\Resource\Material\PhongMaterialResource.cpp">
-      <Filter>Render\DX12\Resource\Material</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\DX12\Resource\Material\UIMaterialResource.cpp">
       <Filter>Render\DX12\Resource\Material</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\Resource\Texture\TextureResource.cpp">
@@ -970,6 +979,15 @@
     </ClCompile>
     <ClCompile Include="Asset\Loader\Graphics\BinaryLoader.cpp">
       <Filter>Asset\Loader\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Provider\Brush\BrushProvider.cpp">
+      <Filter>Render\DX12\Provider\Brush</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Resource\Brush\BrushResource.cpp">
+      <Filter>Render\DX12\Resource\Brush</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Resource\Material\UIMaterialResource.cpp">
+      <Filter>Render\DX12\Resource\Material</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

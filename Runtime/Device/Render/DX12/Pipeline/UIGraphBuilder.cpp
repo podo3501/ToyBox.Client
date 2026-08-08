@@ -3,7 +3,7 @@
 #include "Graph/RenderGraph.h"
 #include "Renderer/UIRenderer.h"
 #include "Resource/Mesh/MeshResource.h"
-#include "Resource/Material/UIMaterialResource.h"
+#include "Resource/Brush/BrushResource.h"
 
 UIGraphBuilder::~UIGraphBuilder() = default;
 UIGraphBuilder::UIGraphBuilder(UIRenderer& uiRenderer, RGResourceID backBufferResID) :
@@ -21,16 +21,14 @@ void UIGraphBuilder::Build(RenderGraph& graph)
         ]
         (CommandList& cmd, TaskContext& ctx)
         {
-            uiRenderer.PrepareFrame();
             uiRenderer.BeginFrame(cmd);
 
             for (auto& uiItem : ctx.drawPacket.ui)
             {
                 auto mesh = static_cast<MeshResource*>(uiItem.mesh.get());
-                auto material = static_cast<UIMaterialResource*>(uiItem.material.get());
+                auto brush = static_cast<BrushResource*>(uiItem.brush.get());
 
-                uiRenderer.BindPipeline(cmd, material->GetPipelineState());
-                uiRenderer.Draw(cmd, *mesh, *material, uiItem.world, uiItem.uvTransform);
+                uiRenderer.Draw(cmd, *mesh, *brush, uiItem.world, uiItem.uvTransform);
             }
         };
 }

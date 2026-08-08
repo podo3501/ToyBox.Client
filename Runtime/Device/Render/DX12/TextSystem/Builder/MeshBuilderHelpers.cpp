@@ -59,7 +59,7 @@ void AppendGlyphQuad(
     auto mode = ToUIRenderMode(glyph.mode);
     auto& vertices = target.buffer.vertices;
     auto& indices = target.buffer.indices;
-    auto textureIndex = target.texIndices[0];
+    auto textureIndex = target.texIndex;
 
     UITextProps textProps
     {
@@ -127,7 +127,7 @@ void AppendSolidQuad(
 
     auto& vertices = target.buffer.vertices;
     auto& indices = target.buffer.indices;
-    auto textureIndex = target.texIndices[0];
+    auto textureIndex = target.texIndex;
 
     UITextProps textProps{ .sdfPxRange = 0.f, .clipRect = clipRect, .params1 = 0, .params2 = 0 };
 

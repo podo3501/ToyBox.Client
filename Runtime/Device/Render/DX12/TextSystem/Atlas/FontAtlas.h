@@ -41,8 +41,8 @@ public:
         TextRenderMode mode,
         uint32_t glyphIndex,
         uint32_t size) const;
-    std::shared_ptr<IMaterialResource> GetMaterial(const GlyphInfo* glyph) const;
-    std::shared_ptr<MaterialResource> GetSolidMaterial() const;
+    std::shared_ptr<IBrushResource> GetBrush(const GlyphInfo* glyph) const;
+    std::shared_ptr<BrushResource> GetSolidBrush() const;
 
 private:
     void EnsureSolidPage();

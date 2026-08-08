@@ -2,6 +2,7 @@
 #include "AtlasPage.h"
 #include "Core/Device.h"
 #include "Resource/Texture/TextureResource.h"
+#include "Resource/Brush/BrushResource.h"
 #include "Factory/DescriptorFactory.h"
 #include "Helpers/TextureHelpers.h"
 
@@ -21,24 +22,24 @@ void AtlasPage::Initialize(
     Device& device, 
     DescriptorFactory& factory, 
     const Size& atlasTexSize,
-    const AtlasPageDesc& desc)
+    GlyphPixelFormat format)
 {
     m_packer.Initialize(atlasTexSize);
-    CreateAtlasMaterial(device, factory, atlasTexSize, desc);
+    CreateAtlasBrush(device, factory, atlasTexSize, format);
 }
 
-void AtlasPage::CreateAtlasMaterial(
+void AtlasPage::CreateAtlasBrush(
     Device& device, 
     DescriptorFactory& factory, 
     const Size& atlasTexSize,
-    const AtlasPageDesc& desc)
+    GlyphPixelFormat format)
 {
-    auto format = GetDXGIFormat(desc.format);
-    auto resource = CreateFontAtlasResource(device, atlasTexSize, format);
+    auto dxFormat = GetDXGIFormat(format);
+    auto resource = CreateFontAtlasResource(device, atlasTexSize, dxFormat);
     Assert(resource);
 
     // 셰이더에서 이 아틀라스를 바인딩해서 글자를 그릴 수 있도록 SRV만 생성합니다.
-    UINT srvIndex = factory.CreateTextureSRV(resource, format);
+    UINT srvIndex = factory.CreateTextureSRV(resource, dxFormat);
     Assert(srvIndex != UINT_MAX);
 
     auto atlasTex = make_shared<TextureResource>();
@@ -54,11 +55,9 @@ void AtlasPage::CreateAtlasMaterial(
     atlasTex->SetSize(atlasTexSize);
     atlasTex->MarkReady();
 
-    UIMaterialDesc uiTextMaterialDesc;
-    uiTextMaterialDesc.SetShaderID(desc.shaderID);
-    auto matRes = make_shared<UIMaterialResource>(uiTextMaterialDesc);
-    matRes->SetTexture(Resolve(UITextureSlot::Normal), atlasTex);
-    m_material = matRes;
+    auto brushRes = make_shared<BrushResource>();
+    brushRes->SetTexture(atlasTex);
+    m_brush = brushRes;
 }
 
 std::optional<Point> AtlasPage::AllocateRect(const Size& size)
@@ -66,15 +65,15 @@ std::optional<Point> AtlasPage::AllocateRect(const Size& size)
     return m_packer.AllocateRect(size);
 }
 
-std::shared_ptr<MaterialResource> AtlasPage::GetMaterialResource() const
+std::shared_ptr<BrushResource> AtlasPage::GetBrushResource() const
 {
-    return m_material;
+    return m_brush;
 }
 
 const Resource& AtlasPage::GetAtlasResource() const
 {
-    Assert(m_material);
-    auto tex = m_material->GetTexture(Resolve(UITextureSlot::Normal));
+    Assert(m_brush);
+    auto tex = m_brush->GetTexture();
 
     Assert(tex);
     return tex->Get();

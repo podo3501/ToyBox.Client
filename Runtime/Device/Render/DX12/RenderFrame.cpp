@@ -3,7 +3,7 @@
 #include "Core/Utils/StringUtils.h"
 #include "TextSystem/TextSystem.h"
 #include "Inspector/Inspector.h"
-#include "Resource/Material/UIMaterialResource.h"
+#include "Resource/Brush/BrushResource.h"
 #include "Core/RenderData.h"
 
 RenderFrame::~RenderFrame() = default;
@@ -87,17 +87,17 @@ void RenderFrame::DrawSurface(
 
 void RenderFrame::DrawUI(
     std::shared_ptr<IMeshResource> meshRes,
-    std::shared_ptr<IMaterialResource> matRes,
+    std::shared_ptr<IBrushResource> brushRes,
     const Core::Matrix& world,
     const Rect* source)
 {
     DrawUIItem item;
     item.mesh = meshRes;
-    item.material = matRes;
+    item.brush = brushRes;
     item.world = world;
 
-    auto uiMatRes = static_cast<UIMaterialResource*>(matRes.get());
-    item.uvTransform = uiMatRes->CalcUVTransform(source);
+    auto brush = static_cast<BrushResource*>(brushRes.get());
+    item.uvTransform = brush->CalcUVTransform(source);
 
     m_scene.AddUI(item);
 }

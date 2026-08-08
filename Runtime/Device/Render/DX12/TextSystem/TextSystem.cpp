@@ -48,7 +48,7 @@ std::vector<DrawUIItem> TextSystem::CreateDrawItems(std::span<const PageMesh> pa
     {
         DrawUIItem item;
         item.mesh = pageMesh.mesh;
-        item.material = pageMesh.material;
+        item.brush = pageMesh.brush;
 
         result.push_back(std::move(item));
     }

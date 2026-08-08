@@ -6,7 +6,7 @@
 struct GlyphUploadEntry;
 struct ShapedText;
 struct GlyphInfo;
-struct IMaterialResource;
+struct IBrushResource;
 class FontResource;
 class Resource;
 class Device;
@@ -32,13 +32,13 @@ public:
         uint32_t glyphIndex,
         uint32_t size) const;
 
-    std::shared_ptr<IMaterialResource> GetMaterial(uint16_t pageIndex) const;
+    std::shared_ptr<IBrushResource> GetBrush(uint16_t pageIndex) const;
     const Resource& GetAtlasResource(uint16_t pageIndex) const;
 
 protected:
     void CreatePage();
     uint16_t CurrentPageIndex() const;
-    virtual AtlasPageDesc GetAtlasPageDesc() const = 0;
+    virtual GlyphPixelFormat GetAtlasPageFormat() const = 0;
 
     FontBucketID m_bucketID{ InvalidFontBucket };
     Size m_atlasTextureSize{};

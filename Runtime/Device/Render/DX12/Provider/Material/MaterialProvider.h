@@ -24,6 +24,7 @@ private:
 
 	TextureProvider& m_texProvider;
 	ResourceReleaseBuilder m_releaseBuilder;
+
 	std::vector<std::shared_ptr<MaterialResource>> m_pendingMaterials;
 	std::vector<std::shared_ptr<IMaterialResource>> m_pendingReleases;
 };

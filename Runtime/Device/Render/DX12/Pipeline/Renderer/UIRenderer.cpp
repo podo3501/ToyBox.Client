@@ -4,7 +4,7 @@
 #include "RootSignatureBuilder.h"
 #include "Command/CommandList.h"
 #include "Resource/Mesh/MeshResource.h"
-#include "Resource/Material/UIMaterialResource.h"
+#include "Resource/Brush/BrushResource.h"
 #include "Helpers/MathHelpers.h"
 #include "Core/D3D12Conversions.h"
 
@@ -28,21 +28,19 @@ bool UIRenderer::Initialize(Device& device, const Size& screenSize)
     m_uiDrawCBAllocator.Initialize<UIDrawCB>(device, m_config.maxUI);
 
     ReturnIfFalse(CreateRootSignature(device));
-    ReturnIfFalse(CreateDefaultPSOs());
+    m_pso = CreatePSO();
+    if (!m_pso) return false;
+
     SetScreenSize(screenSize);
-
     return true;
 }
 
-bool UIRenderer::CreateDefaultPSOs()
+ID3D12PipelineState* UIRenderer::CreatePSO()
 {
-    ReturnIfFalse(CreatePSO(PipelineLibrary::Get(RegistryShader::UI, RasterPreset::NoCull)) != nullptr);
+    PipelineState pipelineState = PipelineLibrary::Get(
+        RegistryShader::UI,
+        RasterPreset::NoCull);
 
-    return true;
-}
-
-ID3D12PipelineState* UIRenderer::CreatePSO(const PipelineState& pipelineState)
-{
     return m_pipelineCache.GetOrCreate(
         pipelineState,
         m_rootSignature.Get(),
@@ -73,15 +71,6 @@ ID3D12PipelineState* UIRenderer::CreatePSO(const PipelineState& pipelineState)
         });
 }
 
-ID3D12PipelineState* UIRenderer::GetPipeline(const PipelineState& pipelineState)
-{
-    auto* pipeline = m_pipelineCache.Find(pipelineState);
-    if (pipeline)
-        return pipeline;
-
-    return CreatePSO(pipelineState);
-}
-
 bool UIRenderer::CreateRootSignature(Device& device)
 {
     RootSignatureBuilder builder;
@@ -96,39 +85,30 @@ bool UIRenderer::CreateRootSignature(Device& device)
     return m_rootSignature != nullptr;
 }
 
-void UIRenderer::PrepareFrame()
-{
-    m_uiDrawCBAllocator.Reset();
-}
-
 void UIRenderer::BeginFrame(CommandList& cmd)
 {
-    m_currentPSO = nullptr;
+    m_uiDrawCBAllocator.Reset();
+
     cmd->SetGraphicsRootSignature(m_rootSignature.Get());
-}
-
-void UIRenderer::BindPipeline(CommandList& cmd, const PipelineState& pipelineState)
-{
-    auto* pso = GetPipeline(pipelineState);
-    if (m_currentPSO == pso)
-        return;
-
-    cmd->SetPipelineState(pso);
-    cmd->IASetPrimitiveTopology(ToD3D12_Draw(pipelineState.topologyType));
-    m_currentPSO = pso;
+    cmd->SetPipelineState(m_pso);
+    cmd->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
 void UIRenderer::Draw(
     CommandList& cmd,
     MeshResource& mesh,
-    UIMaterialResource& material,
+    BrushResource& brush,
     const Core::Matrix& quadWorld,
     const Core::Vector4& uvTransform)
 {
-    auto drawCBAddress = UploadDrawCB(material, quadWorld, uvTransform);
+    auto drawCBAddress = UploadDrawCB( quadWorld, uvTransform);
 
-    auto texIndices = material.GetTextureIndices();
-    uint32_t resIndices[3] = { mesh.GetVertexHeapIndex(), mesh.GetIndexHeapIndex(), texIndices[0] };
+    uint32_t resIndices[3] = 
+    { 
+        mesh.GetVertexHeapIndex(), 
+        mesh.GetIndexHeapIndex(), 
+        brush.GetTextureIndex() 
+    };
 
     cmd->SetGraphicsRoot32BitConstants(Core::ToIndex(RootSlot::ResourceIndices), 3, resIndices, 0);
     cmd->SetGraphicsRootConstantBufferView(Core::ToIndex(RootSlot::DrawCB), drawCBAddress);
@@ -137,7 +117,6 @@ void UIRenderer::Draw(
 }
 
 D3D12_GPU_VIRTUAL_ADDRESS UIRenderer::UploadDrawCB(
-    UIMaterialResource& material,
     const Core::Matrix& world,
     const Core::Vector4& uvTransform)
 {

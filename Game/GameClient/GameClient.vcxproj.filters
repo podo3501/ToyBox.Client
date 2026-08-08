@@ -271,6 +271,12 @@
     <ClCompile Include="Service\Render\Repository\Environment\EnvironmentRepository.cpp">
       <Filter>Service\Render\Repository\Environment</Filter>
     </ClCompile>
+    <ClCompile Include="Service\Render\Repository\Brush\BrushRepository.cpp">
+      <Filter>Service\Render\Repository\Brush</Filter>
+    </ClCompile>
+    <ClCompile Include="Service\Render\Builtin\BuiltinBrush.cpp">
+      <Filter>Service\Render\Builtin</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameLoop.h" />
@@ -784,6 +790,24 @@
     <ClInclude Include="Asset\BinaryAsset.h">
       <Filter>Asset</Filter>
     </ClInclude>
+    <ClInclude Include="Service\Render\Definition\BrushDesc.h">
+      <Filter>Service\Render\Definition</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Handle\BrushHandle.h">
+      <Filter>Service\Render\Handle</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Resource\IBrushResource.h">
+      <Filter>Service\Render\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Repository\Brush\BrushRepository.h">
+      <Filter>Service\Render\Repository\Brush</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Repository\Brush\IBrushProvider.h">
+      <Filter>Service\Render\Repository\Brush</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Builtin\BuiltinBrush.h">
+      <Filter>Service\Render\Builtin</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Locator">
@@ -905,6 +929,9 @@
     </Filter>
     <Filter Include="Service\Render\Repository\Environment">
       <UniqueIdentifier>{a79929fa-8fd5-461f-ba21-e07df1427219}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Service\Render\Repository\Brush">
+      <UniqueIdentifier>{5c7f1def-fb45-48e1-9dee-5c324aecaaf7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

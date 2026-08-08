@@ -4,12 +4,9 @@
 #include "Glyph/BitmapGlyphGenerator.h"
 #include "AtlasHelper.h"
 
-AtlasPageDesc BitmapFontAtlasBucket::GetAtlasPageDesc() const
+GlyphPixelFormat BitmapFontAtlasBucket::GetAtlasPageFormat() const
 {
-    return {
-        GlyphPixelFormat::R8,
-        RegistryShader::UI
-    };
+    return GlyphPixelFormat::R8;
 }
 
 void BitmapFontAtlasBucket::EnsureGlyphs(

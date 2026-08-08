@@ -21,6 +21,6 @@ public:
 private:
     std::vector<DrawItem> m_surfaceDraws;
     std::vector<DrawItem> m_debugSurfaceDraws;
-    std::vector<DrawUIItem> m_uiDraws;
+    std::vector<DrawUIItem>m_uiDraws;
     std::shared_ptr<IEnvironmentResource> m_environment; // 프레임당 1개
 };

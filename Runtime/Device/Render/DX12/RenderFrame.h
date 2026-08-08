@@ -29,7 +29,7 @@ public:
 
 	virtual void DrawUI(
 		std::shared_ptr<IMeshResource> meshRes,
-		std::shared_ptr<IMaterialResource> matRes,
+		std::shared_ptr<IBrushResource> brushRes,
 		const Core::Matrix& world,
 		const Rect* source) override;
 

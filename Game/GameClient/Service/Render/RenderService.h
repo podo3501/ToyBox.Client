@@ -12,6 +12,7 @@ struct RegistryShaderEntry;
 class FontRepository;
 class MeshRepository;
 class MaterialRepository;
+class BrushRepository;
 class EnvironmentRepository;
 
 class RenderService
@@ -46,6 +47,7 @@ private:
 	std::unique_ptr<FontRepository> m_fontRepository;
 	std::unique_ptr<MeshRepository> m_meshRepository;
 	std::unique_ptr<MaterialRepository> m_matRepository;
+	std::unique_ptr<BrushRepository> m_brushRepository;
 	std::unique_ptr<EnvironmentRepository> m_envRepository;
 
 	unique_ptr<RenderRepository> m_repository;

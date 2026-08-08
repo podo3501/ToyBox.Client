@@ -11,5 +11,5 @@ public:
         std::vector<std::vector<GlyphUploadEntry>>& outUploadsPerPage) override;
 
 private:
-    virtual AtlasPageDesc GetAtlasPageDesc() const override;
+    virtual GlyphPixelFormat GetAtlasPageFormat() const override;
 };

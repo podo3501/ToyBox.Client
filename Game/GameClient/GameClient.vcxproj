@@ -53,11 +53,13 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="Service\Input\InputService.cpp" />
+    <ClCompile Include="Service\Render\Builtin\BuiltinBrush.cpp" />
     <ClCompile Include="Service\Render\Builtin\BuiltinMaterials.cpp" />
     <ClCompile Include="Service\Render\Builtin\BuiltinMeshes.cpp" />
     <ClCompile Include="Service\Render\Definition\Material\MaterialDescFactory.cpp" />
     <ClCompile Include="Service\Render\Definition\Mesh\MeshDescFactory.cpp" />
     <ClCompile Include="Service\Render\Definition\ShaderStageBuilder.cpp" />
+    <ClCompile Include="Service\Render\Repository\Brush\BrushRepository.cpp" />
     <ClCompile Include="Service\Render\Repository\Environment\EnvironmentRepository.cpp" />
     <ClCompile Include="Service\Render\Repository\Font\FontRepository.cpp" />
     <ClCompile Include="Service\Render\SceneRenderer.cpp" />
@@ -194,6 +196,7 @@
     <ClInclude Include="Service\Input\KeyCode.h" />
     <ClInclude Include="Service\Input\MouseButton.h" />
     <ClInclude Include="Service\Input\MouseState.h" />
+    <ClInclude Include="Service\Render\Builtin\BuiltinBrush.h" />
     <ClInclude Include="Service\Render\Builtin\BuiltinMaterials.h" />
     <ClInclude Include="Service\Render\Builtin\BuiltinMeshes.h" />
     <ClInclude Include="Service\Render\Definition\EnvironmentDesc.h" />
@@ -210,16 +213,20 @@
     <ClInclude Include="Service\Render\Definition\RenderState.h" />
     <ClInclude Include="Service\Render\Definition\ShaderStageBuilder.h" />
     <ClInclude Include="Service\Render\Definition\Text\TextStyle.h" />
+    <ClInclude Include="Service\Render\Definition\BrushDesc.h" />
     <ClInclude Include="Service\Render\Handle\EnvironmentHandle.h" />
     <ClInclude Include="Service\Render\Handle\FontHandle.h" />
     <ClInclude Include="Service\Render\Handle\MaterialHandle.h" />
     <ClInclude Include="Service\Render\Handle\MeshHandle.h" />
     <ClInclude Include="Service\Render\Handle\TextureHandle.h" />
+    <ClInclude Include="Service\Render\Handle\BrushHandle.h" />
     <ClInclude Include="Service\Render\IRenderFrame.h" />
     <ClInclude Include="Service\Render\IRenderBackend.h" />
     <ClInclude Include="Service\Render\IResourceProvider.h" />
     <ClInclude Include="Service\Render\RenderConfig.h" />
     <ClInclude Include="Service\Render\RenderMetrics.h" />
+    <ClInclude Include="Service\Render\Repository\Brush\BrushRepository.h" />
+    <ClInclude Include="Service\Render\Repository\Brush\IBrushProvider.h" />
     <ClInclude Include="Service\Render\Repository\Environment\EnvironmentRepository.h" />
     <ClInclude Include="Service\Render\Repository\Environment\IEnvironmentProvider.h" />
     <ClInclude Include="Service\Render\Repository\Font\FontRepository.h" />
@@ -227,6 +234,7 @@
     <ClInclude Include="Service\Render\Resource\IEnvironmentResource.h" />
     <ClInclude Include="Service\Render\Resource\IFontResource.h" />
     <ClInclude Include="Service\Render\Resource\IResource.h" />
+    <ClInclude Include="Service\Render\Resource\IBrushResource.h" />
     <ClInclude Include="Service\Render\SceneRenderer.h" />
     <ClInclude Include="Service\Render\RenderService.h" />
     <ClInclude Include="Service\Render\RenderServiceConfig.h" />

@@ -11,6 +11,7 @@
 struct IFontResource;
 struct IMeshResource;
 struct IMaterialResource;
+struct IBrushResource;
 struct IEnvironmentResource;
 class TextureResource;
 
@@ -23,9 +24,14 @@ struct DrawItem
     uint64_t sortKey{ 0 };
 };
 
-struct DrawUIItem : public DrawItem
+struct DrawUIItem
 {
+    std::shared_ptr<IMeshResource> mesh;
+    std::shared_ptr<IBrushResource> brush;
+    Core::Matrix world{};
     Core::Vector4 uvTransform{ 0.f, 0.f, 1.f, 1.f };
+
+    uint64_t sortKey{ 0 };
 };
 
 struct DrawTextRun

@@ -4,12 +4,9 @@
 #include "Glyph/MTSDFGlyphGenerator.h"
 #include "AtlasHelper.h"
 
-AtlasPageDesc MTSDFFontAtlasBucket::GetAtlasPageDesc() const
+GlyphPixelFormat MTSDFFontAtlasBucket::GetAtlasPageFormat() const
 {
-    return {
-        GlyphPixelFormat::RGBA8,
-        RegistryShader::UI
-    };
+    return GlyphPixelFormat::RGBA8;
 }
 
 void MTSDFFontAtlasBucket::EnsureGlyphs(

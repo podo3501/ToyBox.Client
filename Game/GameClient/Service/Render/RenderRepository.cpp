@@ -4,6 +4,7 @@
 #include "Repository/Font/FontRepository.h"
 #include "Repository/Material/MaterialRepository.h"
 #include "Repository/Mesh/MeshRepository.h"
+#include "Repository/Brush/BrushRepository.h"
 #include "Repository/Environment/EnvironmentRepository.h"
 
 RenderRepository::~RenderRepository() = default;
@@ -11,10 +12,12 @@ RenderRepository::RenderRepository(
 	FontRepository* fontRepository,
 	MeshRepository* meshRepository, 
 	MaterialRepository* matRepository,
+	BrushRepository* brushRepository,
 	EnvironmentRepository* envRepository) :
 	m_fontRepository{ fontRepository },
 	m_meshRepository{ meshRepository },
 	m_matRepository{ matRepository },
+	m_brushRepository{ brushRepository },
 	m_envRepository{ envRepository }
 {}
 
@@ -48,6 +51,18 @@ bool RenderRepository::ReleaseMaterial(MaterialHandle mh)
 	return m_matRepository->Release(mh);
 }
 
+
+
+BrushHandle RenderRepository::LoadBrush(const BrushDesc& desc)
+{
+	return m_brushRepository->GetOrCreate(desc);
+}
+
+bool RenderRepository::ReleaseBrush(BrushHandle bh)
+{
+	return m_brushRepository->Release(bh);
+}
+
 EnvironmentHandle RenderRepository::LoadEnvironment(const EnvironmentDesc& desc)
 {
 	return m_envRepository->GetOrCreate(desc);
@@ -63,6 +78,7 @@ void RenderRepository::Update()
 	m_fontRepository->Update();
 	m_meshRepository->Update();
 	m_matRepository->Update();
+	m_brushRepository->Update();
 	m_envRepository->Update();
 }
 
@@ -71,5 +87,6 @@ void RenderRepository::ReleaseAll()
 	m_fontRepository->ReleaseAll();
 	m_meshRepository->ReleaseAll();
 	m_matRepository->ReleaseAll();
+	m_brushRepository->ReleaseAll();
 	m_envRepository->ReleaseAll();
 }

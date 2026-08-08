@@ -11,12 +11,11 @@ public:
 	EnvironmentResource();
 	virtual bool IsReady() const noexcept override { return m_ready; }
 	void MarkReady() { m_ready = true; }
+	bool IsTextureReady() const noexcept;
 
 	void SetSkybox(std::shared_ptr<TextureCubeResource> res) { m_skybox = std::move(res); }
 	void SetReflection(std::shared_ptr<TextureCubeResource> res) { m_reflection = std::move(res); }
 	void SetIrradianceSH(const std::array<Core::Vector3, 9>& sh) { m_irradianceSH = sh; }
-
-	bool IsTextureReady() const noexcept;
 
 	std::shared_ptr<TextureCubeResource> GetSkybox() const { return m_skybox; }
 	std::shared_ptr<TextureCubeResource> GetReflection() const { return m_reflection; }

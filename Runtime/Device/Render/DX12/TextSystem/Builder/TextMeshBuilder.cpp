@@ -101,7 +101,7 @@ static std::vector<PageMesh> CreatePageMeshes(
 
         result.push_back({
             std::move(mesh),
-            std::move(buffer.material)
+            std::move(buffer.brush)
             });
     }
 
