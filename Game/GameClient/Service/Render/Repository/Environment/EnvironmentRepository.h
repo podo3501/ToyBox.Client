@@ -1,7 +1,7 @@
 #pragma once
 #include "Core/Utils/Handle/HandlePool.h"
 #include "Service/Render/Handle/EnvironmentHandle.h"
-#include "../ResourceTypes.h"
+#include "../Base/ResourceTypes.h"
 
 struct IEnvironmentProvider;
 struct IEnvironmentResource;

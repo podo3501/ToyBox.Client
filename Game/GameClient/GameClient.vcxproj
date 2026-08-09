@@ -59,7 +59,6 @@
     <ClCompile Include="Service\Render\Definition\Material\MaterialDescFactory.cpp" />
     <ClCompile Include="Service\Render\Definition\Mesh\MeshDescFactory.cpp" />
     <ClCompile Include="Service\Render\Definition\ShaderStageBuilder.cpp" />
-    <ClCompile Include="Service\Render\Repository\Brush\BrushRepository.cpp" />
     <ClCompile Include="Service\Render\Repository\Environment\EnvironmentRepository.cpp" />
     <ClCompile Include="Service\Render\Repository\Font\FontRepository.cpp" />
     <ClCompile Include="Service\Render\SceneRenderer.cpp" />
@@ -207,7 +206,6 @@
     <ClInclude Include="Service\Render\Definition\Material\PbrMaterialDesc.h" />
     <ClInclude Include="Service\Render\Definition\Material\PhongMaterialDesc.h" />
     <ClInclude Include="Service\Render\Definition\Material\SurfaceMaterialDesc.h" />
-    <ClInclude Include="Service\Render\Definition\Material\UIMaterialDesc.h" />
     <ClInclude Include="Service\Render\Definition\Mesh\MeshDesc.h" />
     <ClInclude Include="Service\Render\Definition\Mesh\MeshDescFactory.h" />
     <ClInclude Include="Service\Render\Definition\RenderState.h" />
@@ -225,12 +223,16 @@
     <ClInclude Include="Service\Render\IResourceProvider.h" />
     <ClInclude Include="Service\Render\RenderConfig.h" />
     <ClInclude Include="Service\Render\RenderMetrics.h" />
-    <ClInclude Include="Service\Render\Repository\Brush\BrushRepository.h" />
-    <ClInclude Include="Service\Render\Repository\Brush\IBrushProvider.h" />
+    <ClInclude Include="Service\Render\Repository\Base\ResourceRepository.h" />
+    <ClInclude Include="Service\Render\Repository\Base\ResourceTypes.h" />
+    <ClInclude Include="Service\Render\Repository\BrushRepository.h" />
     <ClInclude Include="Service\Render\Repository\Environment\EnvironmentRepository.h" />
     <ClInclude Include="Service\Render\Repository\Environment\IEnvironmentProvider.h" />
     <ClInclude Include="Service\Render\Repository\Font\FontRepository.h" />
     <ClInclude Include="Service\Render\Repository\Font\IFontProvider.h" />
+    <ClInclude Include="Service\Render\Repository\IResourceRepository.h" />
+    <ClInclude Include="Service\Render\Repository\Provider\IBrushProvider.h" />
+    <ClInclude Include="Service\Render\Repository\RepositoryFwd.h" />
     <ClInclude Include="Service\Render\Resource\IEnvironmentResource.h" />
     <ClInclude Include="Service\Render\Resource\IFontResource.h" />
     <ClInclude Include="Service\Render\Resource\IResource.h" />
@@ -242,7 +244,6 @@
     <ClInclude Include="Service\Render\Repository\Material\MaterialRepository.h" />
     <ClInclude Include="Service\Render\Repository\Mesh\IMeshProvider.h" />
     <ClInclude Include="Service\Render\Repository\Mesh\MeshRepository.h" />
-    <ClInclude Include="Service\Render\Repository\ResourceTypes.h" />
     <ClInclude Include="Service\Render\RenderRepository.h" />
     <ClInclude Include="Service\Render\Resource\IMaterialResource.h" />
     <ClInclude Include="Service\Render\Resource\IMeshResource.h" />
@@ -317,6 +318,9 @@
     <ProjectReference Include="..\GameCore\GameCore.vcxproj">
       <Project>{51ad5607-32f1-4b44-8013-dddef3f543b4}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service\Render\Repository\Base\ResourceRepository.inl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

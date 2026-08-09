@@ -3,7 +3,6 @@
 #include "Resource/Material/PhongMaterialResource.h"
 #include "Resource/Material/PbrMaterialResource.h"
 #include "Resource/Material/GridMaterialResource.h"
-#include "Resource/Material/UIMaterialResource.h"
 #include "Resource/Texture/TextureResource.h"
 #include "../Texture/TextureProvider.h"
 
@@ -36,9 +35,6 @@ shared_ptr<IMaterialResource> MaterialProvider::CreateResource(const MaterialDes
         break;
     case MaterialDomain::DebugSurface:
         matRes = std::make_shared<GridMaterialResource>(matDesc);
-        break;
-    case MaterialDomain::UserInterface:
-        matRes = make_shared<UIMaterialResource>(matDesc);
         break;
     }
 

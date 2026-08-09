@@ -7,7 +7,6 @@ enum class MaterialDomain
 {
     Surface,
     DebugSurface,
-    UserInterface,
     Count
 };
 

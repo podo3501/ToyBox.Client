@@ -138,7 +138,6 @@
     <ClInclude Include="Render\DX12\Resource\Material\PbrMaterialResource.h" />
     <ClInclude Include="Render\DX12\Resource\Material\PhongMaterialResource.h" />
     <ClInclude Include="Render\DX12\Resource\Material\SurfaceMaterialResource.h" />
-    <ClInclude Include="Render\DX12\Resource\Material\UIMaterialResource.h" />
     <ClInclude Include="Render\DX12\Resource\Mesh\MeshResource.h" />
     <ClInclude Include="Render\DX12\Resource\Mesh\StaticMeshResource.h" />
     <ClInclude Include="Render\DX12\Resource\Mesh\TransientMeshResource.h" />
@@ -281,7 +280,6 @@
     <ClCompile Include="Render\DX12\Resource\Material\MaterialResource.cpp" />
     <ClCompile Include="Render\DX12\Resource\Material\PbrMaterialResource.cpp" />
     <ClCompile Include="Render\DX12\Resource\Material\PhongMaterialResource.cpp" />
-    <ClCompile Include="Render\DX12\Resource\Material\UIMaterialResource.cpp" />
     <ClCompile Include="Render\DX12\Resource\Mesh\StaticMeshResource.cpp" />
     <ClCompile Include="Render\DX12\Resource\Mesh\TransientMeshResource.cpp" />
     <ClCompile Include="Render\DX12\Resource\Resource.cpp" />

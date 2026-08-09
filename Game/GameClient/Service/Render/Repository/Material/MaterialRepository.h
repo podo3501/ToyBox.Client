@@ -1,7 +1,7 @@
 #pragma once
 #include "Core/Utils/Handle/HandlePool.h"
 #include "Core/Utils/Hash.h"
-#include "../ResourceTypes.h"
+#include "../Base/ResourceTypes.h"
 #include "Service/Render/Handle/MaterialHandle.h"
 #include "Service/Render/Definition/Material/MaterialDesc.h"
 

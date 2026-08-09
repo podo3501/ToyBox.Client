@@ -4,8 +4,8 @@
 
 struct BrushDesc
 {
-	Core::ResourceID texture;
+	Core::ResourceID resID;
 
 	bool operator==(const BrushDesc&) const = default;
-	size_t GetHash() const { return Core::HashOf(texture); }
+	size_t GetHash() const { return Core::HashOf(resID); }
 };

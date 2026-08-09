@@ -2,7 +2,7 @@
 #include "Core/Utils/Handle/HandlePool.h"
 #include "Core/Foundation/ResourceID.h"
 #include "Service/Render/Handle/MeshHandle.h"
-#include "../ResourceTypes.h"
+#include "../Base/ResourceTypes.h"
 
 struct IMeshProvider;
 struct IMeshResource;

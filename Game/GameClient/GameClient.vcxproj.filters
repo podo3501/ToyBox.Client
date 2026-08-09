@@ -271,9 +271,6 @@
     <ClCompile Include="Service\Render\Repository\Environment\EnvironmentRepository.cpp">
       <Filter>Service\Render\Repository\Environment</Filter>
     </ClCompile>
-    <ClCompile Include="Service\Render\Repository\Brush\BrushRepository.cpp">
-      <Filter>Service\Render\Repository\Brush</Filter>
-    </ClCompile>
     <ClCompile Include="Service\Render\Builtin\BuiltinBrush.cpp">
       <Filter>Service\Render\Builtin</Filter>
     </ClCompile>
@@ -551,9 +548,6 @@
     <ClInclude Include="Service\Render\RenderConfig.h">
       <Filter>Service\Render</Filter>
     </ClInclude>
-    <ClInclude Include="Service\Render\Repository\ResourceTypes.h">
-      <Filter>Service\Render\Repository</Filter>
-    </ClInclude>
     <ClInclude Include="Graphics\World\Transform.h">
       <Filter>Graphics\World</Filter>
     </ClInclude>
@@ -743,9 +737,6 @@
     <ClInclude Include="Service\Render\Definition\Material\SurfaceMaterialDesc.h">
       <Filter>Service\Render\Definition\Material</Filter>
     </ClInclude>
-    <ClInclude Include="Service\Render\Definition\Material\UIMaterialDesc.h">
-      <Filter>Service\Render\Definition\Material</Filter>
-    </ClInclude>
     <ClInclude Include="Service\Render\Definition\Text\TextStyle.h">
       <Filter>Service\Render\Definition\Text</Filter>
     </ClInclude>
@@ -799,14 +790,26 @@
     <ClInclude Include="Service\Render\Resource\IBrushResource.h">
       <Filter>Service\Render\Resource</Filter>
     </ClInclude>
-    <ClInclude Include="Service\Render\Repository\Brush\BrushRepository.h">
-      <Filter>Service\Render\Repository\Brush</Filter>
-    </ClInclude>
-    <ClInclude Include="Service\Render\Repository\Brush\IBrushProvider.h">
-      <Filter>Service\Render\Repository\Brush</Filter>
-    </ClInclude>
     <ClInclude Include="Service\Render\Builtin\BuiltinBrush.h">
       <Filter>Service\Render\Builtin</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Repository\IResourceRepository.h">
+      <Filter>Service\Render\Repository</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Repository\Provider\IBrushProvider.h">
+      <Filter>Service\Render\Repository\Provider</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Repository\RepositoryFwd.h">
+      <Filter>Service\Render\Repository</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Repository\Base\ResourceRepository.h">
+      <Filter>Service\Render\Repository\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Repository\Base\ResourceTypes.h">
+      <Filter>Service\Render\Repository\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Repository\BrushRepository.h">
+      <Filter>Service\Render\Repository</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -930,8 +933,16 @@
     <Filter Include="Service\Render\Repository\Environment">
       <UniqueIdentifier>{a79929fa-8fd5-461f-ba21-e07df1427219}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Service\Render\Repository\Brush">
-      <UniqueIdentifier>{5c7f1def-fb45-48e1-9dee-5c324aecaaf7}</UniqueIdentifier>
+    <Filter Include="Service\Render\Repository\Provider">
+      <UniqueIdentifier>{71c05ed2-8440-454c-bc76-c9eff8898c4f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Service\Render\Repository\Base">
+      <UniqueIdentifier>{409801ce-24c7-4ead-b3fe-acd52be8eab3}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service\Render\Repository\Base\ResourceRepository.inl">
+      <Filter>Service\Render\Repository\Base</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -52,14 +52,3 @@ namespace DebugSurfaceMatDescFactory
         }
     }
 }
-
-
-/////////////////////////////////////////////////////////////////
-
-UIMaterialDesc UIMatDescFactory::CreateDefault(const UITextureArgs& texArgs)
-{
-    UIMaterialDesc desc{};
-    desc.textures.emplace_back(Resolve(UITextureSlot::Normal), texArgs.normal);
-
-    return desc;
-}

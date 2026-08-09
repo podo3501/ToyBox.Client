@@ -9,6 +9,8 @@
 #include "Definition/BrushDesc.h"
 #include "Definition/EnvironmentDesc.h"
 
+#include "Repository/RepositoryFwd.h"
+
 struct MeshDesc;
 struct MeshAsset;
 struct MaterialDesc;
@@ -16,7 +18,6 @@ class FontRepository;
 class MeshRepository;
 class MaterialRepository;
 
-class BrushRepository;
 class EnvironmentRepository;
 
 //이 클래스는 지금 단순 포워딩 함수이지만 정책 코드가 안 들어가서 그렇다. 예를들면 엑셀에서 읽어와서 넣는다던가..

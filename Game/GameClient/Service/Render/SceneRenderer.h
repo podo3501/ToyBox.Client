@@ -11,6 +11,8 @@
 #include "Core/Foundation/Geometry2D.h"
 #include "Core/Foundation/Color.h"
 
+#include "Repository/RepositoryFwd.h"
+
 struct IResourceProvider;
 struct IRenderFrame;
 struct MeshAsset;
@@ -20,7 +22,6 @@ struct FrameData;
 class FontRepository;
 class MaterialRepository;
 class MeshRepository;
-class BrushRepository;
 class EnvironmentRepository;
 
 class SceneRenderer

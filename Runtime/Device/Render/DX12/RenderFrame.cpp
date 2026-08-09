@@ -87,13 +87,14 @@ void RenderFrame::DrawSurface(
 
 void RenderFrame::DrawUI(
     std::shared_ptr<IMeshResource> meshRes,
-    std::shared_ptr<IBrushResource> brushRes,
+    std::shared_ptr<IResource> brushRes,
     const Core::Matrix& world,
     const Rect* source)
 {
     DrawUIItem item;
     item.mesh = meshRes;
-    item.brush = brushRes;
+    //item.brush = brushRes;
+    item.brush = std::static_pointer_cast<IBrushResource>(brushRes);
     item.world = world;
 
     auto brush = static_cast<BrushResource*>(brushRes.get());

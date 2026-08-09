@@ -2,7 +2,7 @@
 #include "GameClient/Service/Render/Repository/Font/IFontProvider.h"
 #include "GameClient/Service/Render/Repository/Mesh/IMeshProvider.h"
 #include "GameClient/Service/Render/Repository/Material/IMaterialProvider.h"
-#include "GameClient/Service/Render/Repository/Brush/IBrushProvider.h"
+#include "GameClient/Service/Render/Repository/Provider/IBrushProvider.h"
 #include "GameClient/Service/Render/Repository/Environment/IEnvironmentProvider.h"
 
 struct IResourceProvider

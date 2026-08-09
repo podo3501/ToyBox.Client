@@ -2,7 +2,7 @@
 #include "Core/Utils/Handle/HandlePool.h"
 #include "Core/Foundation/ResourceID.h"
 #include "Service/Render/Handle/FontHandle.h"
-#include "../ResourceTypes.h"
+#include "../Base/ResourceTypes.h"
 
 struct IFontProvider;
 struct IFontResource;

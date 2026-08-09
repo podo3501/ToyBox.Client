@@ -2,7 +2,6 @@
 #include "PhongMaterialDesc.h"
 #include "PbrMaterialDesc.h"
 #include "GridMaterialDesc.h"
-#include "UIMaterialDesc.h"
 
 struct PhongTextureArgs
 {
@@ -37,14 +36,4 @@ namespace DebugSurfaceMatDescFactory
     {
         GridMaterialDesc CreateGrid();
     }
-}
-
-struct UITextureArgs
-{
-    Core::ResourceID normal{};
-};
-
-namespace UIMatDescFactory
-{
-    UIMaterialDesc CreateDefault(const UITextureArgs& texArgs = {});
 }

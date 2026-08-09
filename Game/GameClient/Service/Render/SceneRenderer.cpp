@@ -4,11 +4,12 @@
 #include "Repository/Font/FontRepository.h"
 #include "Repository/Material/MaterialRepository.h"
 #include "Repository/Mesh/MeshRepository.h"
-#include "Repository/Brush/BrushRepository.h"
 #include "Repository/Environment/EnvironmentRepository.h"
 #include "Builtin/BuiltinMeshes.h"
 #include "Builtin/BuiltinMaterials.h"
 #include "Builtin/BuiltinBrush.h"
+
+#include "Repository/BrushRepository.h"
 
 struct ResolvedEntries
 {
@@ -115,8 +116,12 @@ void SceneRenderer::DrawUI(BrushHandle bh, const Rect& dest, const Rect* source)
 	if (!mesh || mesh->state != LoadState::Ready)
 		return;
 
-	auto brush = m_brushRepository->Get(bh);
+	/*auto brush = m_brushRepository->Get(bh);
 	if (!brush || brush->state != LoadState::Ready)
+		return;*/
+
+	auto brushRes = m_brushRepository->GetIfReady(bh);
+	if (!brushRes)
 		return;
 
 	float width = dest.width;
@@ -126,7 +131,7 @@ void SceneRenderer::DrawUI(BrushHandle bh, const Rect& dest, const Rect* source)
 	Core::Matrix translation = Core::Matrix::Translation(dest.x, dest.y, 0.0f);
 	Core::Matrix world = scale * translation;
 
-	m_renderFrame->DrawUI(mesh->meshRes, brush->brushRes, world, source);
+	m_renderFrame->DrawUI(mesh->meshRes, brushRes, world, source);
 }
 
 void SceneRenderer::DrawEnvironment(EnvironmentHandle hEnv)

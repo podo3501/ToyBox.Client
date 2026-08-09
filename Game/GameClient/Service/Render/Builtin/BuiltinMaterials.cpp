@@ -9,11 +9,9 @@ DefaultMaterials CreateBuiltinMaterials(MaterialRepository* repository)
 
     auto surface = SurfaceMatDescFactory::Phong::CreateLit();
     auto debugSurface = DebugSurfaceMatDescFactory::Grid::CreateGrid();
-    auto userInterface = UIMatDescFactory::CreateDefault();
 
     materials[(size_t)MaterialDomain::Surface] = repository->GetOrCreate(surface);
     materials[(size_t)MaterialDomain::DebugSurface] = repository->GetOrCreate(debugSurface);
-    materials[(size_t)MaterialDomain::UserInterface] = repository->GetOrCreate(userInterface);
 
     return materials;
 }

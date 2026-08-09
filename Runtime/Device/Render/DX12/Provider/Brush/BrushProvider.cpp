@@ -9,7 +9,7 @@ BrushProvider::BrushProvider(TextureProvider& texProvider, ResourceReleaseBuilde
     m_releaseBuilder{ std::move(release) }
 {}
 
-std::shared_ptr<IBrushResource> BrushProvider::CreateResource()
+std::shared_ptr<IResource> BrushProvider::CreateResource()
 {
     auto brushRes = make_shared<BrushResource>();
 
@@ -19,27 +19,26 @@ std::shared_ptr<IBrushResource> BrushProvider::CreateResource()
     return brushRes;
 }
 
-bool BrushProvider::LoadResource(std::shared_ptr<IBrushResource> res, std::shared_ptr<TextureAsset> asset)
+bool BrushProvider::LoadResource(std::shared_ptr<IResource> res, std::shared_ptr<TextureAsset> asset)
 {
-    if (!asset)
-        return false;
-
     auto brushRes = std::static_pointer_cast<BrushResource>(res);
-    if (!brushRes) return false;
 
-    auto texRes = m_texProvider.CreateResource();
-    if (!texRes) return false;
+    if (asset) //asset이 builtin 이라면 없을수가 있다.
+    {
+        auto texRes = m_texProvider.CreateResource();
+        if (!texRes) return false;
 
-    if (!m_texProvider.LoadResource(texRes, asset))
-        return false;
+        if (!m_texProvider.LoadResource(texRes, asset))
+            return false;
 
-    brushRes->SetTexture(texRes);
-    m_pendingBrushes.push_back(brushRes);
+        brushRes->SetTexture(texRes);
+    }
 
+    m_pendingBrushes.push_back(std::move(brushRes));
     return true;
 }
 
-void BrushProvider::ReleaseResource(std::shared_ptr<IBrushResource> resource)
+void BrushProvider::ReleaseResource(std::shared_ptr<IResource> resource)
 {
     if (!resource)
         return;

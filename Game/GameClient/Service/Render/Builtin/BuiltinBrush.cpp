@@ -1,9 +1,9 @@
 #include "pch.h"
 #include "BuiltinBrush.h"
-#include "../Repository/Brush/BrushRepository.h"
+#include "../Repository/BrushRepository.h"
 
 BrushHandle CreateBuiltinBrush(BrushRepository* repository)
 {
-    BrushDesc desc;
+    BrushDesc desc{ Core::ResourceID::MakeBuiltin("Brush") };
     return repository->GetOrCreate(desc);
 }

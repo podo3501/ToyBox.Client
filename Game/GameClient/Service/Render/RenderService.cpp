@@ -4,10 +4,11 @@
 #include "Repository/Font/FontRepository.h"
 #include "Repository/Material/MaterialRepository.h"
 #include "Repository/Mesh/MeshRepository.h"
-#include "Repository/Brush/BrushRepository.h"
 #include "Repository/Environment/EnvironmentRepository.h"
 #include "Service/AssetAsyncHelper.h"
 #include "Asset/ShaderAsset.h"
+
+#include "Repository/BrushRepository.h"
 
 struct RegistryShaderEntry
 {
@@ -27,6 +28,8 @@ RenderService::RenderService(unique_ptr<IRenderBackend> backend, IAssetAsyncLoad
 	m_matRepository = make_unique<MaterialRepository>(resProvider->GetMaterialProvider(), asyncLoader);
 	m_brushRepository = make_unique<BrushRepository>(resProvider->GetBrushProvider(), asyncLoader);
 	m_envRepository = make_unique<EnvironmentRepository>(resProvider->GetEnvironmentProvider(), asyncLoader);
+
+	m_repositories.push_back(m_brushRepository.get());
 }
 
 unique_ptr<RenderService> RenderService::Create(	

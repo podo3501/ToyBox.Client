@@ -4,8 +4,9 @@
 #include "Repository/Font/FontRepository.h"
 #include "Repository/Material/MaterialRepository.h"
 #include "Repository/Mesh/MeshRepository.h"
-#include "Repository/Brush/BrushRepository.h"
 #include "Repository/Environment/EnvironmentRepository.h"
+
+#include "Repository/BrushRepository.h"
 
 RenderRepository::~RenderRepository() = default;
 RenderRepository::RenderRepository(

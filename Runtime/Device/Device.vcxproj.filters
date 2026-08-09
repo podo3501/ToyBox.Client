@@ -599,9 +599,6 @@
     <ClInclude Include="Render\DX12\Resource\Brush\BrushResource.h">
       <Filter>Render\DX12\Resource\Brush</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\Resource\Material\UIMaterialResource.h">
-      <Filter>Render\DX12\Resource\Material</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -985,9 +982,6 @@
     </ClCompile>
     <ClCompile Include="Render\DX12\Resource\Brush\BrushResource.cpp">
       <Filter>Render\DX12\Resource\Brush</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\DX12\Resource\Material\UIMaterialResource.cpp">
-      <Filter>Render\DX12\Resource\Material</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

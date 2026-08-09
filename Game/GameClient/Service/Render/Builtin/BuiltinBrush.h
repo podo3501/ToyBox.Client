@@ -2,6 +2,6 @@
 #include "../Definition/BrushDesc.h"
 #include "../Handle/BrushHandle.h"
 
-class BrushRepository;
+#include "../Repository/RepositoryFwd.h"
 
 BrushHandle CreateBuiltinBrush(BrushRepository* repository);
