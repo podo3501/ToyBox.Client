@@ -1,18 +1,20 @@
 #pragma once
-#include "GameClient/Service/Render/Resource/IBrushResource.h"
+#include "GameClient/Service/Render/Resource/IResource.h"
+#include "../IPendingResource.h"
 #include "Core/Math/Vector4.h"
 #include "Core/Foundation/Geometry2D.h"
 
 class TextureResource;
 
-class BrushResource : public IBrushResource
+class BrushResource : public IResource, public IPendingResource
 {
 public:
 	virtual ~BrushResource() override;
 	BrushResource();
 	virtual bool IsReady() const noexcept override { return m_ready; }
-	void MarkReady() { m_ready = true; }
-	bool IsTextureReady() const noexcept;
+	virtual bool IsDependencyReady() const noexcept override;
+	virtual void MarkReady() override { m_ready = true; }
+
 	Core::Vector4 CalcUVTransform(const Rect* source) const;
 
 	void SetTexture(std::shared_ptr<TextureResource> res) { m_texture = std::move(res); }	

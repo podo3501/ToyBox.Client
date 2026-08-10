@@ -614,7 +614,7 @@
     <ClInclude Include="Service\Render\IRenderFrame.h">
       <Filter>Service\Render</Filter>
     </ClInclude>
-    <ClInclude Include="Service\Render\IResourceProvider.h">
+    <ClInclude Include="Service\Render\IResourceProviderSet.h">
       <Filter>Service\Render</Filter>
     </ClInclude>
     <ClInclude Include="Service\Render\RenderRepository.h">
@@ -787,9 +787,6 @@
     <ClInclude Include="Service\Render\Handle\BrushHandle.h">
       <Filter>Service\Render\Handle</Filter>
     </ClInclude>
-    <ClInclude Include="Service\Render\Resource\IBrushResource.h">
-      <Filter>Service\Render\Resource</Filter>
-    </ClInclude>
     <ClInclude Include="Service\Render\Builtin\BuiltinBrush.h">
       <Filter>Service\Render\Builtin</Filter>
     </ClInclude>
@@ -809,6 +806,9 @@
       <Filter>Service\Render\Repository\Base</Filter>
     </ClInclude>
     <ClInclude Include="Service\Render\Repository\BrushRepository.h">
+      <Filter>Service\Render\Repository</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Repository\IResourceProvider.h">
       <Filter>Service\Render\Repository</Filter>
     </ClInclude>
   </ItemGroup>

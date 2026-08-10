@@ -4,9 +4,9 @@
 #include "GameClient/Asset/MeshAsset.h"
 
 struct UIVertex;
-struct IBrushResource;
 struct GlyphInfo;
 class FontAtlas;
+class BrushResource;
 
 struct PageMeshBuffer
 {
@@ -14,7 +14,7 @@ struct PageMeshBuffer
     std::vector<uint32_t> indices;
     uint32_t vertexOffset = 0;
 
-    std::shared_ptr<IBrushResource> brush{ nullptr };
+    std::shared_ptr<BrushResource> brush{ nullptr };
 };
 
 struct TextBatchKey

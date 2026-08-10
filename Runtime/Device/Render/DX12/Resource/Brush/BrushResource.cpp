@@ -5,10 +5,10 @@
 BrushResource::~BrushResource() = default;
 BrushResource::BrushResource() = default;
 
-bool BrushResource::IsTextureReady() const noexcept
+bool BrushResource::IsDependencyReady() const noexcept
 {
-	// 텍스처 업로드(비동기) 완료 여부. SH는 CPU 데이터 복사라 즉시 완료됨.
-	return m_texture && m_texture->IsReady();
+    // 텍스처 업로드(비동기) 완료 여부. SH는 CPU 데이터 복사라 즉시 완료됨.
+    return m_texture && m_texture->IsReady();
 }
 
 Core::Vector4 BrushResource::CalcUVTransform(const Rect* source) const

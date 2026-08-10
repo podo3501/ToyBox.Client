@@ -3,7 +3,7 @@
 #include "../Atlas/FontSetting.h"
 
 struct ShapedText;
-struct IBrushResource;
+class BrushResource;
 class FontAtlas;
 class TransientMeshProvider;
 class TransientMeshResource;
@@ -11,7 +11,7 @@ class TransientMeshResource;
 struct PageMesh
 {
     std::shared_ptr<TransientMeshResource> mesh;
-    std::shared_ptr<IBrushResource> brush;
+    std::shared_ptr<BrushResource> brush;
 };
 
 class TextMeshBuilder

@@ -13,7 +13,7 @@
 
 #include "Repository/RepositoryFwd.h"
 
-struct IResourceProvider;
+struct IResourceProviderSet;
 struct IRenderFrame;
 struct MeshAsset;
 struct MeshDesc;

@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "RenderRepository.h"
-#include "IResourceProvider.h"
+#include "IResourceProviderSet.h"
 #include "Repository/Font/FontRepository.h"
 #include "Repository/Material/MaterialRepository.h"
 #include "Repository/Mesh/MeshRepository.h"

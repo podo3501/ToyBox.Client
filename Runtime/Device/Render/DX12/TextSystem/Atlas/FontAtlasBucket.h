@@ -6,7 +6,7 @@
 struct GlyphUploadEntry;
 struct ShapedText;
 struct GlyphInfo;
-struct IBrushResource;
+class BrushResource;
 class FontResource;
 class Resource;
 class Device;
@@ -32,7 +32,7 @@ public:
         uint32_t glyphIndex,
         uint32_t size) const;
 
-    std::shared_ptr<IBrushResource> GetBrush(uint16_t pageIndex) const;
+    std::shared_ptr<BrushResource> GetBrush(uint16_t pageIndex) const;
     const Resource& GetAtlasResource(uint16_t pageIndex) const;
 
 protected:

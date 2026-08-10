@@ -397,7 +397,7 @@
     <ClInclude Include="Render\DX12\Provider\Texture\TextureUtils.h">
       <Filter>Render\DX12\Provider\Texture</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\ResourceProvider.h">
+    <ClInclude Include="Render\DX12\ResourceProviderSet.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
     <ClInclude Include="Render\DX12\Graph\RenderGraph.h">
@@ -598,6 +598,12 @@
     </ClInclude>
     <ClInclude Include="Render\DX12\Resource\Brush\BrushResource.h">
       <Filter>Render\DX12\Resource\Brush</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Provider\ResourceProvider.h">
+      <Filter>Render\DX12\Provider</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Resource\IPendingResource.h">
+      <Filter>Render\DX12\Resource</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -815,7 +821,7 @@
     <ClCompile Include="Render\DX12\Provider\Texture\TextureUtils.cpp">
       <Filter>Render\DX12\Provider\Texture</Filter>
     </ClCompile>
-    <ClCompile Include="Render\DX12\ResourceProvider.cpp">
+    <ClCompile Include="Render\DX12\ResourceProviderSet.cpp">
       <Filter>Render\DX12</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\Graph\RenderGraph.cpp">
@@ -982,6 +988,9 @@
     </ClCompile>
     <ClCompile Include="Render\DX12\Resource\Brush\BrushResource.cpp">
       <Filter>Render\DX12\Resource\Brush</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Provider\ResourceProvider.cpp">
+      <Filter>Render\DX12\Provider</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

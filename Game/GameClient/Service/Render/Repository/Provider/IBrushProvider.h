@@ -1,6 +1,6 @@
 #pragma once
 #include "GameClient/Asset/TextureAsset.h"
-#include "GameClient/Service/Render/Resource/IBrushResource.h"
+#include "GameClient/Service/Render/Resource/IResource.h"
 #include <memory>
 
 struct IBrushProvider

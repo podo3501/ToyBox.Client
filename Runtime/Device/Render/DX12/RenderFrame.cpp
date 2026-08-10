@@ -94,7 +94,7 @@ void RenderFrame::DrawUI(
     DrawUIItem item;
     item.mesh = meshRes;
     //item.brush = brushRes;
-    item.brush = std::static_pointer_cast<IBrushResource>(brushRes);
+    item.brush = std::static_pointer_cast<BrushResource>(brushRes);
     item.world = world;
 
     auto brush = static_cast<BrushResource*>(brushRes.get());

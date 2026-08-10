@@ -110,7 +110,7 @@ const GlyphInfo* FontAtlas::FindGlyph(
         size);
 }
 
-std::shared_ptr<IBrushResource> FontAtlas::GetBrush(const GlyphInfo* glyph) const
+std::shared_ptr<BrushResource> FontAtlas::GetBrush(const GlyphInfo* glyph) const
 {
     if (!glyph) return nullptr;
 

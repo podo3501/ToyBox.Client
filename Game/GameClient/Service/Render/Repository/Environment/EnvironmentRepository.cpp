@@ -41,12 +41,12 @@ EnvironmentHandle EnvironmentRepository::GetOrCreate(const EnvironmentDesc& desc
     auto handle = m_loadedEnvironments.Emplace(std::move(entry));
     m_cache[key] = handle;
 
-    auto resType = desc.envmap.GetType();
+    auto resType = desc.resID.GetType();
     switch (resType)
     {
     case Core::ResourceIDType::Path:
     {
-        auto reqID = Asset::PushRequest<EnvironmentAsset>(m_asyncLoader, desc.envmap);
+        auto reqID = Asset::PushRequest<EnvironmentAsset>(m_asyncLoader, desc.resID);
         m_cpuPending.push_back({ handle, reqID });
     }
     break;

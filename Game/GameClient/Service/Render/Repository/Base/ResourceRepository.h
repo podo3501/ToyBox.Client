@@ -1,5 +1,6 @@
 #pragma once
 #include "../IResourceRepository.h"
+#include "../IResourceProvider.h"
 #include "Core/Utils/Handle/HandlePool.h"
 #include "ResourceTypes.h"
 #include "Service/IAssetAsyncLoader.h"
@@ -10,7 +11,7 @@ struct IResource;
 struct ResourceEntry
 {
     size_t key{};
-    std::shared_ptr<IResource> res;
+    std::shared_ptr<IResource> res{ nullptr };
     LoadState state{ LoadState::Pending };
 };
 
@@ -22,9 +23,8 @@ public:
     using HandleT = IDHandle<TagT>;
     using DescT = typename Traits::Desc;
     using AssetT = typename Traits::Asset;
-    using ProviderT = typename Traits::Provider;
 
-    ResourceRepository(ProviderT* provider, IAssetAsyncLoader* asyncLoader);
+    ResourceRepository(IResourceProvider* provider, IAssetAsyncLoader* asyncLoader);
     virtual ~ResourceRepository() = default;
 
     HandleT GetOrCreate(const DescT& desc);
@@ -52,7 +52,7 @@ private:
     void ProcessLoading(); // GPU 업로드 완료 여부 확인, 완료 시 Ready 처리
 
 private:
-    ProviderT* m_provider;
+    IResourceProvider* m_provider;
     IAssetAsyncLoader* m_asyncLoader;
 
     std::unordered_map<size_t, HandleT> m_cache;

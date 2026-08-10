@@ -21,13 +21,13 @@ RenderService::RenderService(unique_ptr<IRenderBackend> backend, IAssetAsyncLoad
 	m_backend{ move(backend) },
 	m_asyncLoader{ asyncLoader }
 {
-	auto resProvider = m_backend->GetResourceProvider();
+	auto providerSet = m_backend->GetResourceProviderSet();
 
-	m_fontRepository = make_unique<FontRepository>(resProvider->GetFontProvider(), asyncLoader);
-	m_meshRepository = make_unique<MeshRepository>(resProvider->GetMeshProvider(), asyncLoader);
-	m_matRepository = make_unique<MaterialRepository>(resProvider->GetMaterialProvider(), asyncLoader);
-	m_brushRepository = make_unique<BrushRepository>(resProvider->GetBrushProvider(), asyncLoader);
-	m_envRepository = make_unique<EnvironmentRepository>(resProvider->GetEnvironmentProvider(), asyncLoader);
+	m_fontRepository = make_unique<FontRepository>(providerSet->GetFontProvider(), asyncLoader);
+	m_meshRepository = make_unique<MeshRepository>(providerSet->GetMeshProvider(), asyncLoader);
+	m_matRepository = make_unique<MaterialRepository>(providerSet->GetMaterialProvider(), asyncLoader);
+	m_brushRepository = make_unique<BrushRepository>(providerSet->GetBrushProvider(), asyncLoader);
+	m_envRepository = make_unique<EnvironmentRepository>(providerSet->GetEnvironmentProvider(), asyncLoader);
 
 	m_repositories.push_back(m_brushRepository.get());
 }

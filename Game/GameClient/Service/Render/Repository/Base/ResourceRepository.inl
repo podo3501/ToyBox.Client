@@ -1,11 +1,10 @@
 #pragma once
 
 template <typename Traits>
-ResourceRepository<Traits>::ResourceRepository(ProviderT* provider, IAssetAsyncLoader* asyncLoader) :
+ResourceRepository<Traits>::ResourceRepository(IResourceProvider* provider, IAssetAsyncLoader* asyncLoader) :
     m_provider{ provider },
     m_asyncLoader{ asyncLoader }
-{
-}
+{}
 
 template <typename Traits>
 typename ResourceRepository<Traits>::HandleT
@@ -16,13 +15,8 @@ ResourceRepository<Traits>::GetOrCreate(const DescT& desc)
     if (it != m_cache.end())
         return it->second;
 
-    auto res = m_provider->CreateResource();
-    if (!res) return HandleT::Invalid();
-
     ResourceEntry entry;
     entry.key = key;
-    entry.res = std::move(res);
-    entry.state = LoadState::Pending;
 
     auto handle = m_loadedResources.Emplace(std::move(entry));
     m_cache[key] = handle;
@@ -125,15 +119,18 @@ void ResourceRepository<Traits>::ProcessGpuPending()
     for (auto& work : m_gpuPending)
     {
         auto entry = m_loadedResources.Find(work.handle);
-        if (!entry || !entry->res) continue;
+        if (!entry)
+            continue;
 
-        if (!m_provider->LoadResource(entry->res, work.asset))
+        auto res = m_provider->CreateResource(work.asset);
+        if (!res)
         {
             entry->state = LoadState::Failed;
             continue;
         }
-        entry->state = LoadState::GpuLoading;
 
+        entry->res = std::move(res);
+        entry->state = LoadState::GpuLoading;
         m_loadingList.push_back(work.handle);
     }
 

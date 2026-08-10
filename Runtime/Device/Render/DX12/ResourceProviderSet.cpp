@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "ResourceProvider.h"
+#include "ResourceProviderSet.h"
 
 namespace
 {
@@ -62,8 +62,8 @@ namespace
     size_t ComputeMeshBudget(float gpuMs) { return ComputeBudget(gpuMs, MeshBudgetRange); }
 }
 
-ResourceProvider::~ResourceProvider() = default;
-ResourceProvider::ResourceProvider(
+ResourceProviderSet::~ResourceProviderSet() = default;
+ResourceProviderSet::ResourceProviderSet(
     Device& device,
     TaskScheduler& taskScheduler,
     ResourceFactory& resFactory,
@@ -82,7 +82,7 @@ ResourceProvider::ResourceProvider(
         },
     m_brushProvider{
         m_texProvider,
-        ResourceReleaseBuilder{ taskScheduler },
+        taskScheduler
     },
     m_cubeProvider{
         TextureCubeCreateGraphBuilder{ taskScheduler, resFactory, descFactory }
@@ -93,12 +93,12 @@ ResourceProvider::ResourceProvider(
         }
 {}
 
-bool ResourceProvider::Initialize(ShaderLibrary& shaderLibrary)
+bool ResourceProviderSet::Initialize(ShaderLibrary& shaderLibrary)
 {
 	return m_texProvider.Initialize(shaderLibrary);
 }
 
-void ResourceProvider::Update(float gpuMs)
+void ResourceProviderSet::Update(float gpuMs)
 {
     constexpr float SmoothingFactor = 0.1f;
 

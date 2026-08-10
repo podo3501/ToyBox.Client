@@ -11,9 +11,9 @@
 struct IFontResource;
 struct IMeshResource;
 struct IMaterialResource;
-struct IBrushResource;
 struct IEnvironmentResource;
 class TextureResource;
+class BrushResource;
 
 struct DrawItem
 {
@@ -27,7 +27,7 @@ struct DrawItem
 struct DrawUIItem
 {
     std::shared_ptr<IMeshResource> mesh;
-    std::shared_ptr<IBrushResource> brush;
+    std::shared_ptr<BrushResource> brush;
     Core::Matrix world{};
     Core::Vector4 uvTransform{ 0.f, 0.f, 1.f, 1.f };
 

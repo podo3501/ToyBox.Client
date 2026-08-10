@@ -4,73 +4,32 @@
 #include "../Texture/TextureProvider.h"
 
 BrushProvider::~BrushProvider() = default;
-BrushProvider::BrushProvider(TextureProvider& texProvider, ResourceReleaseBuilder release) noexcept :
-    m_texProvider{ texProvider },
-    m_releaseBuilder{ std::move(release) }
+BrushProvider::BrushProvider(TextureProvider& texProvider, TaskScheduler& taskScheduler) noexcept :
+    ResourceProvider{ taskScheduler },
+    m_texProvider{ texProvider }
 {}
 
-std::shared_ptr<IResource> BrushProvider::CreateResource()
+std::shared_ptr<IResource> BrushProvider::CreateResource(std::shared_ptr<AssetData> asset)
 {
-    auto brushRes = make_shared<BrushResource>();
+    auto brushRes = std::make_shared<BrushResource>();
 
-    auto tex = m_texProvider.GetBuiltinTexture(BuiltinTextureType::White);
-    brushRes->SetTexture(tex);
-
-    return brushRes;
-}
-
-bool BrushProvider::LoadResource(std::shared_ptr<IResource> res, std::shared_ptr<TextureAsset> asset)
-{
-    auto brushRes = std::static_pointer_cast<BrushResource>(res);
-
-    if (asset) //asset이 builtin 이라면 없을수가 있다.
+    if (asset)
     {
         auto texRes = m_texProvider.CreateResource();
-        if (!texRes) return false;
+        if (!texRes) return nullptr;
 
-        if (!m_texProvider.LoadResource(texRes, asset))
-            return false;
+        auto texAsset = std::static_pointer_cast<TextureAsset>(asset);
+        if (!m_texProvider.LoadResource(texRes, texAsset))
+            return nullptr;
 
         brushRes->SetTexture(texRes);
     }
-
-    m_pendingBrushes.push_back(std::move(brushRes));
-    return true;
-}
-
-void BrushProvider::ReleaseResource(std::shared_ptr<IResource> resource)
-{
-    if (!resource)
-        return;
-
-    m_pendingReleases.emplace_back(std::move(resource));
-}
-
-void BrushProvider::Update()
-{
-    FlushPendingBrushes();
-    FlushPendingRelease();
-}
-
-void BrushProvider::FlushPendingBrushes()
-{
-    for (auto it = m_pendingBrushes.begin(); it != m_pendingBrushes.end();)
+    else
     {
-        auto& brushRes = *it;
-        if (!brushRes->IsTextureReady())
-        {
-            ++it;
-            continue;
-        }
-        brushRes->MarkReady();
-        it = m_pendingBrushes.erase(it);
+        auto tex = m_texProvider.GetBuiltinTexture(BuiltinTextureType::White);
+        brushRes->SetTexture(tex);
     }
-}
 
-void BrushProvider::FlushPendingRelease()
-{
-    if (m_pendingReleases.empty())
-        return;
-
-    m_releaseBuilder.ReleaseResources(std::move(m_pendingReleases));
+    m_pendingLoads.push_back(brushRes);
+    return brushRes;
 }

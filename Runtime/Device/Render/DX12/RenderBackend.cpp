@@ -9,7 +9,7 @@ RenderBackend::RenderBackend(const RenderConfig& config) :
     m_swapChain{ m_cmdScheduler },
     m_descFactory{ m_device },
     m_resFactory{ m_device },
-    m_resProvider{ m_device, m_taskScheduler, m_resFactory, m_descFactory },
+    m_resProviderSet{ m_device, m_taskScheduler, m_resFactory, m_descFactory },
     m_transientMeshProvider{ m_frameUploadPools, m_descFactory },
     m_textSystem{ m_device, m_descFactory, m_resFactory, m_transientMeshProvider },
     m_pipeline{ m_device, m_swapChain, m_descFactory, m_shaderLibrary, m_textSystem.GetBuilder() },
@@ -31,7 +31,7 @@ bool RenderBackend::Initialize(HWND hwnd, const Size& screenSize, std::span<cons
     ReturnIfFalse(m_descFactory.Initialize(m_config.descriptors));
     ReturnIfFalse(m_shaderLibrary.Initialize(registryShaders));
     ReturnIfFalse(m_profiler.Initialize(m_device, m_cmdScheduler, m_resFactory));
-    ReturnIfFalse(m_resProvider.Initialize(m_shaderLibrary));
+    ReturnIfFalse(m_resProviderSet.Initialize(m_shaderLibrary));
     ReturnIfFalse(m_frameUploadPools.Initialize(m_device));
     ReturnIfFalse(m_textSystem.Initialize(m_config.text, &m_inspector));
     ReturnIfFalse(m_pipeline.Initialize(screenSize, shadowMapSize));
@@ -52,7 +52,7 @@ void RenderBackend::Update()
     m_profiler.Update(m_frameIndex);
     float gpuMs = m_profiler.GetGpuFrameTimeMs();
 
-    m_resProvider.Update(gpuMs);
+    m_resProviderSet.Update(gpuMs);
 }
 
 void RenderBackend::Render()

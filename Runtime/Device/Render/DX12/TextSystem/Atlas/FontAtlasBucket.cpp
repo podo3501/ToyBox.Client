@@ -41,7 +41,7 @@ const GlyphInfo* FontAtlasBucket::FindGlyph(
         size);
 }
 
-std::shared_ptr<IBrushResource> FontAtlasBucket::GetBrush(uint16_t pageIndex) const
+std::shared_ptr<BrushResource> FontAtlasBucket::GetBrush(uint16_t pageIndex) const
 {
     Assert(pageIndex < m_pages.size());
     return m_pages[pageIndex]->GetBrushResource();

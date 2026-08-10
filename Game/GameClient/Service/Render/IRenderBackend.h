@@ -3,7 +3,7 @@
 #include "RenderMetrics.h"
 #include "Core/Math/Matrix.h"
 #include "Core/Foundation/Geometry2D.h"
-#include "IResourceProvider.h"
+#include "IResourceProviderSet.h"
 #include "IRenderFrame.h"
 
 struct IMeshResource;
@@ -22,7 +22,7 @@ struct IRenderBackend
 	virtual void Update() = 0;
 	virtual void Render() = 0;
 	virtual void WaitIdle() = 0;
-	virtual IResourceProvider* GetResourceProvider() = 0;
+	virtual IResourceProviderSet* GetResourceProviderSet() = 0;
 	virtual IRenderFrame* GetRenderFrame() = 0;
 	virtual RenderMetrics GetRenderMetrics() = 0;
 };

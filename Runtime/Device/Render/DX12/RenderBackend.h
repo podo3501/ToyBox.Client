@@ -9,7 +9,7 @@
 #include "Shader/ShaderLibrary.h"
 #include "Inspector/Inspector.h"
 #include "Core/FrameProfiler.h"
-#include "ResourceProvider.h"
+#include "ResourceProviderSet.h"
 #include "Allocator/FrameUploadPools.h"
 #include "Provider/Mesh/TransientMeshProvider.h"
 #include "Pipeline/ForwardRenderPipeline.h"
@@ -27,7 +27,7 @@ public:
 	virtual void Update() override;
 	virtual void Render() override;
 	virtual void WaitIdle() override;
-	virtual IResourceProvider* GetResourceProvider() override { return &m_resProvider; }
+	virtual IResourceProviderSet* GetResourceProviderSet() override { return &m_resProviderSet; }
 	virtual IRenderFrame* GetRenderFrame() override { return &m_renderFrame; }
 	virtual RenderMetrics GetRenderMetrics() override;
 
@@ -43,7 +43,7 @@ private:
 	ShaderLibrary m_shaderLibrary;
 	Inspector m_inspector; //코드가 이상할때 조사할수 있게 도와주는 클래스
 	FrameProfiler m_profiler;
-	ResourceProvider m_resProvider;
+	ResourceProviderSet m_resProviderSet;
 	FrameUploadPools m_frameUploadPools;
 	TransientMeshProvider m_transientMeshProvider;
 	TextSystem m_textSystem;

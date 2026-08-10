@@ -220,7 +220,7 @@
     <ClInclude Include="Service\Render\Handle\BrushHandle.h" />
     <ClInclude Include="Service\Render\IRenderFrame.h" />
     <ClInclude Include="Service\Render\IRenderBackend.h" />
-    <ClInclude Include="Service\Render\IResourceProvider.h" />
+    <ClInclude Include="Service\Render\IResourceProviderSet.h" />
     <ClInclude Include="Service\Render\RenderConfig.h" />
     <ClInclude Include="Service\Render\RenderMetrics.h" />
     <ClInclude Include="Service\Render\Repository\Base\ResourceRepository.h" />
@@ -230,13 +230,13 @@
     <ClInclude Include="Service\Render\Repository\Environment\IEnvironmentProvider.h" />
     <ClInclude Include="Service\Render\Repository\Font\FontRepository.h" />
     <ClInclude Include="Service\Render\Repository\Font\IFontProvider.h" />
+    <ClInclude Include="Service\Render\Repository\IResourceProvider.h" />
     <ClInclude Include="Service\Render\Repository\IResourceRepository.h" />
     <ClInclude Include="Service\Render\Repository\Provider\IBrushProvider.h" />
     <ClInclude Include="Service\Render\Repository\RepositoryFwd.h" />
     <ClInclude Include="Service\Render\Resource\IEnvironmentResource.h" />
     <ClInclude Include="Service\Render\Resource\IFontResource.h" />
     <ClInclude Include="Service\Render\Resource\IResource.h" />
-    <ClInclude Include="Service\Render\Resource\IBrushResource.h" />
     <ClInclude Include="Service\Render\SceneRenderer.h" />
     <ClInclude Include="Service\Render\RenderService.h" />
     <ClInclude Include="Service\Render\RenderServiceConfig.h" />

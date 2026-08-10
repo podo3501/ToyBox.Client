@@ -1,5 +1,5 @@
 #pragma once
-#include "GameClient/Service/Render/IResourceProvider.h"
+#include "GameClient/Service/Render/IResourceProviderSet.h"
 #include "Provider/Font/FontProvider.h"
 #include "Provider/Mesh/MeshProvider.h"
 #include "Provider/Texture/TextureProvider.h"
@@ -15,11 +15,11 @@ class ResourceFactory;
 class TaskScheduler;
 class ShaderLibrary;
 
-class ResourceProvider : public IResourceProvider
+class ResourceProviderSet : public IResourceProviderSet
 {
 public:
-	~ResourceProvider();
-	ResourceProvider(
+	~ResourceProviderSet();
+	ResourceProviderSet(
 		Device& device,
 		TaskScheduler& taskScheduler,
 		ResourceFactory& resFactory,
@@ -28,7 +28,7 @@ public:
 	virtual IFontProvider* GetFontProvider() override { return &m_fontProvider; }
 	virtual IMeshProvider* GetMeshProvider() override { return &m_meshProvider; }
 	virtual IMaterialProvider* GetMaterialProvider() override { return &m_matProvider; }
-	virtual IBrushProvider* GetBrushProvider() override { return &m_brushProvider; }
+	virtual IResourceProvider* GetBrushProvider() override { return &m_brushProvider; }
 	virtual IEnvironmentProvider* GetEnvironmentProvider() override { return &m_envProvider; }
 	
 	bool Initialize(ShaderLibrary& shaderLibaray);

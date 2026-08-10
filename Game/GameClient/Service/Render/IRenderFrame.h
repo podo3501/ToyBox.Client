@@ -3,7 +3,6 @@
 #include "GameClient/Service/Render/Resource/IFontResource.h"
 #include "GameClient/Service/Render/Resource/IMeshResource.h"
 #include "GameClient/Service/Render/Resource/IMaterialResource.h"
-#include "GameClient/Service/Render/Resource/IBrushResource.h"
 #include "GameClient/Service/Render/Resource/IEnvironmentResource.h"
 #include "GameClient/Service/Render/Definition/Text/TextStyle.h"
 #include "Core/Foundation/Geometry2D.h"
