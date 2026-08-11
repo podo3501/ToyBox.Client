@@ -15,7 +15,7 @@ public:
 	virtual void SetFrameData(const FrameData& frameData) noexcept override;
 
 	virtual void DrawText(
-		std::shared_ptr<IFontResource> fontRes,
+		std::shared_ptr<IResource> fontRes,
 		TextRenderMode mode,
 		std::span<const TextSpan> spans,
 		uint32_t size,
@@ -33,7 +33,7 @@ public:
 		const Core::Matrix& world,
 		const Rect* source) override;
 
-	virtual void DrawEnvironment(std::shared_ptr<IEnvironmentResource> envRes) override;
+	virtual void DrawEnvironment(std::shared_ptr<IResource> envRes) override;
 
 	DrawPacket PrepareRenderData();
 	void Clear();

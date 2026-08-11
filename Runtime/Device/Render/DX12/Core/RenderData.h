@@ -8,12 +8,12 @@
 #include "Core/Foundation/Geometry2D.h"
 #include "GameClient/Service/Render/Definition/Text/TextStyle.h"
 
-struct IFontResource;
 struct IMeshResource;
 struct IMaterialResource;
-struct IEnvironmentResource;
+struct IResource;
 class TextureResource;
 class BrushResource;
+class EnvironmentResource;
 
 struct DrawItem
 {
@@ -43,7 +43,7 @@ struct DrawTextRun
 
 struct DrawTextItem
 {
-    std::shared_ptr<IFontResource> fontRes;
+    std::shared_ptr<IResource> fontRes;
     TextRenderMode mode;
     uint32_t fontSize{ 0 };
     Core::Vector2 position{};
@@ -67,7 +67,7 @@ struct DrawPacket
     std::span<DrawItem> surface;
     std::span<DrawItem> debugSurface;
     std::span<DrawUIItem> ui;
-    std::shared_ptr<IEnvironmentResource> environment{ nullptr }; // nullptr 가능 - 환경 없는 씬
+    std::shared_ptr<EnvironmentResource> environment{ nullptr }; // nullptr 가능 - 환경 없는 씬
 
     DebugPacket debug;
 };

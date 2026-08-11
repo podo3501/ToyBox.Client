@@ -1,9 +1,7 @@
 #pragma once
 #include "GameClient/Graphics/RenderData/FrameData.h"
-#include "GameClient/Service/Render/Resource/IFontResource.h"
 #include "GameClient/Service/Render/Resource/IMeshResource.h"
 #include "GameClient/Service/Render/Resource/IMaterialResource.h"
-#include "GameClient/Service/Render/Resource/IEnvironmentResource.h"
 #include "GameClient/Service/Render/Definition/Text/TextStyle.h"
 #include "Core/Foundation/Geometry2D.h"
 #include "Core/Foundation/Color.h"
@@ -15,7 +13,7 @@ struct IRenderFrame
 	virtual void SetFrameData(const FrameData& frameData) noexcept = 0;
 
 	virtual void DrawText(
-		std::shared_ptr<IFontResource> fontRes,
+		std::shared_ptr<IResource> fontRes,
 		TextRenderMode mode,
 		std::span<const TextSpan> spans,
 		uint32_t size,
@@ -33,5 +31,5 @@ struct IRenderFrame
 		const Core::Matrix& world,
 		const Rect* source) = 0;
 
-	virtual void DrawEnvironment(std::shared_ptr<IEnvironmentResource> envRes) = 0;
+	virtual void DrawEnvironment(std::shared_ptr<IResource> envRes) = 0;
 };

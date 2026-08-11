@@ -19,10 +19,8 @@ struct MeshAsset;
 struct MeshDesc;
 struct ResolvedDrawData;
 struct FrameData;
-class FontRepository;
 class MaterialRepository;
 class MeshRepository;
-class EnvironmentRepository;
 
 class SceneRenderer
 {

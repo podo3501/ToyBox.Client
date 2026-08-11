@@ -1,15 +1,15 @@
 #include "pch.h"
 #include "SceneRenderer.h"
 #include "IRenderFrame.h"
-#include "Repository/Font/FontRepository.h"
 #include "Repository/Material/MaterialRepository.h"
 #include "Repository/Mesh/MeshRepository.h"
-#include "Repository/Environment/EnvironmentRepository.h"
 #include "Builtin/BuiltinMeshes.h"
 #include "Builtin/BuiltinMaterials.h"
 #include "Builtin/BuiltinBrush.h"
 
+#include "Repository/FontRepository.h"
 #include "Repository/BrushRepository.h"
+#include "Repository/EnvironmentRepository.h"
 
 struct ResolvedEntries
 {
@@ -64,8 +64,8 @@ void SceneRenderer::DrawText(
 	const Rect& bounds,
 	const TextLayout& layout)
 {
-	auto font = m_fontRepository->Get(hF);
-	if (!font || font->state != LoadState::Ready)
+	auto fontRes = m_fontRepository->GetIfReady(hF);
+	if (!fontRes)
 		return;
 
 	if (mode == TextRenderMode::Bitmap)
@@ -82,7 +82,7 @@ void SceneRenderer::DrawText(
 		}
 	}
 
-	m_renderFrame->DrawText(font->fontRes, mode, spans, size, bounds, layout);
+	m_renderFrame->DrawText(fontRes, mode, spans, size, bounds, layout);
 }
 
 void SceneRenderer::DrawSurface(MeshHandle hM, MaterialHandle hMtl, const Core::Matrix& world)
@@ -116,10 +116,6 @@ void SceneRenderer::DrawUI(BrushHandle bh, const Rect& dest, const Rect* source)
 	if (!mesh || mesh->state != LoadState::Ready)
 		return;
 
-	/*auto brush = m_brushRepository->Get(bh);
-	if (!brush || brush->state != LoadState::Ready)
-		return;*/
-
 	auto brushRes = m_brushRepository->GetIfReady(bh);
 	if (!brushRes)
 		return;
@@ -138,11 +134,11 @@ void SceneRenderer::DrawEnvironment(EnvironmentHandle hEnv)
 {
 	if (!hEnv) return;
 
-	auto entry = m_envRepository->Get(hEnv);
-	if (!entry || entry->state != LoadState::Ready)
+	auto envRes = m_envRepository->GetIfReady(hEnv);
+	if (!envRes)
 		return;
 
-	m_renderFrame->DrawEnvironment(entry->envRes);
+	m_renderFrame->DrawEnvironment(envRes);
 }
 
 std::optional<ResolvedDrawData> SceneRenderer::ResolveResources(MeshHandle hM, MaterialHandle hMtl)

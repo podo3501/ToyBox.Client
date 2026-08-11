@@ -5,5 +5,5 @@
 BrushHandle CreateBuiltinBrush(BrushRepository* repository)
 {
     BrushDesc desc{ Core::ResourceID::MakeBuiltin("Brush") };
-    return repository->GetOrCreate(desc);
+    return repository->AcquireFromAsset(desc, nullptr);
 }

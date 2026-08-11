@@ -255,9 +255,6 @@
     <ClCompile Include="Service\Render\Builtin\BuiltinMaterials.cpp">
       <Filter>Service\Render\Builtin</Filter>
     </ClCompile>
-    <ClCompile Include="Service\Render\Repository\Font\FontRepository.cpp">
-      <Filter>Service\Render\Repository\Font</Filter>
-    </ClCompile>
     <ClCompile Include="Service\Render\Definition\ShaderStageBuilder.cpp">
       <Filter>Service\Render\Definition</Filter>
     </ClCompile>
@@ -268,9 +265,6 @@
       <Filter>Service\Render\Definition\Material</Filter>
     </ClCompile>
     <ClCompile Include="AssetMetaRegistry.cpp" />
-    <ClCompile Include="Service\Render\Repository\Environment\EnvironmentRepository.cpp">
-      <Filter>Service\Render\Repository\Environment</Filter>
-    </ClCompile>
     <ClCompile Include="Service\Render\Builtin\BuiltinBrush.cpp">
       <Filter>Service\Render\Builtin</Filter>
     </ClCompile>
@@ -695,15 +689,6 @@
     <ClInclude Include="Service\Render\Handle\FontHandle.h">
       <Filter>Service\Render\Handle</Filter>
     </ClInclude>
-    <ClInclude Include="Service\Render\Repository\Font\IFontProvider.h">
-      <Filter>Service\Render\Repository\Font</Filter>
-    </ClInclude>
-    <ClInclude Include="Service\Render\Repository\Font\FontRepository.h">
-      <Filter>Service\Render\Repository\Font</Filter>
-    </ClInclude>
-    <ClInclude Include="Service\Render\Resource\IFontResource.h">
-      <Filter>Service\Render\Resource</Filter>
-    </ClInclude>
     <ClInclude Include="Service\Render\Definition\RenderState.h">
       <Filter>Service\Render\Definition</Filter>
     </ClInclude>
@@ -769,15 +754,6 @@
     <ClInclude Include="Service\Render\Handle\EnvironmentHandle.h">
       <Filter>Service\Render\Handle</Filter>
     </ClInclude>
-    <ClInclude Include="Service\Render\Repository\Environment\EnvironmentRepository.h">
-      <Filter>Service\Render\Repository\Environment</Filter>
-    </ClInclude>
-    <ClInclude Include="Service\Render\Repository\Environment\IEnvironmentProvider.h">
-      <Filter>Service\Render\Repository\Environment</Filter>
-    </ClInclude>
-    <ClInclude Include="Service\Render\Resource\IEnvironmentResource.h">
-      <Filter>Service\Render\Resource</Filter>
-    </ClInclude>
     <ClInclude Include="Asset\BinaryAsset.h">
       <Filter>Asset</Filter>
     </ClInclude>
@@ -793,9 +769,6 @@
     <ClInclude Include="Service\Render\Repository\IResourceRepository.h">
       <Filter>Service\Render\Repository</Filter>
     </ClInclude>
-    <ClInclude Include="Service\Render\Repository\Provider\IBrushProvider.h">
-      <Filter>Service\Render\Repository\Provider</Filter>
-    </ClInclude>
     <ClInclude Include="Service\Render\Repository\RepositoryFwd.h">
       <Filter>Service\Render\Repository</Filter>
     </ClInclude>
@@ -810,6 +783,15 @@
     </ClInclude>
     <ClInclude Include="Service\Render\Repository\IResourceProvider.h">
       <Filter>Service\Render\Repository</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Repository\EnvironmentRepository.h">
+      <Filter>Service\Render\Repository</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Repository\FontRepository.h">
+      <Filter>Service\Render\Repository</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Definition\FontDesc.h">
+      <Filter>Service\Render\Definition</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -915,9 +897,6 @@
     <Filter Include="Service\Render\Builtin">
       <UniqueIdentifier>{9124a634-45d9-4f80-a85f-2d0bfdfae79d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Service\Render\Repository\Font">
-      <UniqueIdentifier>{2d5988fb-90ed-42ea-a23d-c239406c240a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Service\Render\Definition">
       <UniqueIdentifier>{3bcf058d-3f1a-4db3-8786-92b4c68c1605}</UniqueIdentifier>
     </Filter>
@@ -929,12 +908,6 @@
     </Filter>
     <Filter Include="Service\Render\Definition\Text">
       <UniqueIdentifier>{47340449-7e18-4b2b-a592-00cd54a03450}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Service\Render\Repository\Environment">
-      <UniqueIdentifier>{a79929fa-8fd5-461f-ba21-e07df1427219}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Service\Render\Repository\Provider">
-      <UniqueIdentifier>{71c05ed2-8440-454c-bc76-c9eff8898c4f}</UniqueIdentifier>
     </Filter>
     <Filter Include="Service\Render\Repository\Base">
       <UniqueIdentifier>{409801ce-24c7-4ead-b3fe-acd52be8eab3}</UniqueIdentifier>

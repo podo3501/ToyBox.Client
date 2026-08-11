@@ -34,7 +34,7 @@ void RenderScene::AddUI(const DrawUIItem& uiItem)
     m_uiDraws.push_back(std::move(newItem));
 }
 
-void RenderScene::SetEnvironment(std::shared_ptr<IEnvironmentResource> envRes) 
+void RenderScene::SetEnvironment(std::shared_ptr<EnvironmentResource> envRes) 
 {
     m_environment = std::move(envRes);
 }

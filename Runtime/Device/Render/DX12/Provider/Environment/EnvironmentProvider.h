@@ -1,28 +1,21 @@
 #pragma once
-#include "GameClient/Service/Render/Repository/Environment/IEnvironmentProvider.h"
-#include "../ResourceReleaseBuilder.h"
+#include "../ResourceProvider.h"
 
+struct TextureCubeAsset;
 class EnvironmentResource;
 class TextureCubeProvider;
+class TextureCubeResource;
 
-class EnvironmentProvider : public IEnvironmentProvider
+class EnvironmentProvider : public ResourceProvider
 {
 public:
     ~EnvironmentProvider();
-    EnvironmentProvider(TextureCubeProvider& cubeProvider, ResourceReleaseBuilder release) noexcept;
-
-    std::shared_ptr<IEnvironmentResource> CreateResource() override;
-    virtual bool LoadResource(std::shared_ptr<IEnvironmentResource> res, std::shared_ptr<EnvironmentAsset> asset) override;
-    virtual void ReleaseResource(std::shared_ptr<IEnvironmentResource> res) override;
+    EnvironmentProvider(TaskScheduler& taskScheduler, TextureCubeProvider& cubeProvider) noexcept;
+    virtual std::shared_ptr<IResource> CreateResource(std::shared_ptr<AssetData> asset) override;
     void Update();
 
 private:
-    void FlushPendingEnvironments();
-    void FlushPendingRelease();
+    std::shared_ptr<TextureCubeResource> CreateCubeResource(std::shared_ptr<TextureCubeAsset> cubeAsset);
 
     TextureCubeProvider& m_cubeProvider;
-    ResourceReleaseBuilder m_releaseBuilder;
-
-    std::vector<std::shared_ptr<EnvironmentResource>> m_pendingEnvironments;
-    std::vector<std::shared_ptr<IEnvironmentResource>> m_pendingReleases;
 };

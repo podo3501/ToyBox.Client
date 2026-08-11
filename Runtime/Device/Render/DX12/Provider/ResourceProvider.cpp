@@ -7,12 +7,6 @@ ResourceProvider::ResourceProvider(TaskScheduler& taskScheduler) noexcept :
 	m_releaseBuilder{ taskScheduler }
 {}
 
-void ResourceProvider::Update()
-{
-	FlushPendingLoad();
-	FlushPendingRelease();
-}
-
 void ResourceProvider::ReleaseResource(std::shared_ptr<IResource> resource)
 {
 	if (!resource)

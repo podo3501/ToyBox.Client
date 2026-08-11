@@ -1,14 +1,14 @@
 #include "pch.h"
 #include "RenderService.h"
 #include "IRenderBackend.h"
-#include "Repository/Font/FontRepository.h"
 #include "Repository/Material/MaterialRepository.h"
 #include "Repository/Mesh/MeshRepository.h"
-#include "Repository/Environment/EnvironmentRepository.h"
 #include "Service/AssetAsyncHelper.h"
 #include "Asset/ShaderAsset.h"
 
+#include "Repository/FontRepository.h"
 #include "Repository/BrushRepository.h"
+#include "Repository/EnvironmentRepository.h"
 
 struct RegistryShaderEntry
 {

@@ -29,7 +29,7 @@ bool FontResource::Initialize(FreeTypeLibrary& ftLibrary, std::shared_ptr<Binary
 		return false;
 
 	m_asset = std::move(asset);
-	MarkReady();
+	m_ready = true;
 
 	return true;
 }

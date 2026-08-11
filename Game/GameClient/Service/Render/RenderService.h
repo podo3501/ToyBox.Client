@@ -11,11 +11,8 @@ struct FrameData;
 struct IAssetAsyncLoader;
 struct RegistryShaderEntry;
 class IResourceRepository;
-class FontRepository;
 class MeshRepository;
 class MaterialRepository;
-
-class EnvironmentRepository;
 
 class RenderService
 {

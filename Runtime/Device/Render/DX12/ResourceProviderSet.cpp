@@ -81,15 +81,15 @@ ResourceProviderSet::ResourceProviderSet(
         ResourceReleaseBuilder{ taskScheduler }, 
         },
     m_brushProvider{
-        m_texProvider,
-        taskScheduler
+        taskScheduler,
+        m_texProvider
     },
     m_cubeProvider{
         TextureCubeCreateGraphBuilder{ taskScheduler, resFactory, descFactory }
         },
     m_envProvider{
-        m_cubeProvider,
-        ResourceReleaseBuilder{ taskScheduler },
+        taskScheduler,
+        m_cubeProvider
         }
 {}
 

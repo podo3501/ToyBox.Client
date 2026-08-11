@@ -126,14 +126,18 @@ void MeshRepository::ProcessGpuPending()
 	{
 		auto entry = m_loadedMeshes.Find(work.handle);
 		if (!entry || !entry->meshRes) continue;
-		if (entry->state != LoadState::Pending) continue; // 중복으로 들어온 경우 이미 Loading/Ready 라면 처리안함.
+		if (entry->state != LoadState::Pending)
+		{
+			continue; // 중복으로 들어온 경우 이미 Loading/Ready 라면 처리안함.
+		}
+			
 
 		if (!m_meshProvider->LoadResource(entry->meshRes, work.meshAsset))
 		{
 			entry->state = LoadState::Failed;
 			continue;
 		}
-		entry->state = LoadState::GpuLoading;
+		entry->state = LoadState::ResourceLoading;
 
 		m_loadingList.push_back(work.handle);
 	}

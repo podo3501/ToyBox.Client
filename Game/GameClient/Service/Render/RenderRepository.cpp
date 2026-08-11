@@ -1,12 +1,12 @@
 #include "pch.h"
 #include "RenderRepository.h"
 #include "IResourceProviderSet.h"
-#include "Repository/Font/FontRepository.h"
 #include "Repository/Material/MaterialRepository.h"
 #include "Repository/Mesh/MeshRepository.h"
-#include "Repository/Environment/EnvironmentRepository.h"
 
+#include "Repository/FontRepository.h"
 #include "Repository/BrushRepository.h"
+#include "Repository/EnvironmentRepository.h"
 
 RenderRepository::~RenderRepository() = default;
 RenderRepository::RenderRepository(
@@ -22,9 +22,9 @@ RenderRepository::RenderRepository(
 	m_envRepository{ envRepository }
 {}
 
-FontHandle RenderRepository::LoadFont(const Core::ResourceID& resID)
+FontHandle RenderRepository::LoadFont(const FontDesc& desc)
 {
-	return m_fontRepository->GetOrCreate(resID);
+	return m_fontRepository->Acquire(desc);
 }
 
 bool RenderRepository::ReleaseFont(FontHandle fh)
@@ -34,6 +34,7 @@ bool RenderRepository::ReleaseFont(FontHandle fh)
 
 MeshHandle RenderRepository::LoadMesh(const MeshDesc& desc, std::shared_ptr<MeshAsset> asset)
 {
+	//runtime/builtin 인데 asset이 없으면 이상한거다.
 	return m_meshRepository->GetOrCreate(desc, asset);
 }
 
@@ -56,7 +57,7 @@ bool RenderRepository::ReleaseMaterial(MaterialHandle mh)
 
 BrushHandle RenderRepository::LoadBrush(const BrushDesc& desc)
 {
-	return m_brushRepository->GetOrCreate(desc);
+	return m_brushRepository->Acquire(desc);
 }
 
 bool RenderRepository::ReleaseBrush(BrushHandle bh)
@@ -66,7 +67,7 @@ bool RenderRepository::ReleaseBrush(BrushHandle bh)
 
 EnvironmentHandle RenderRepository::LoadEnvironment(const EnvironmentDesc& desc)
 {
-	return m_envRepository->GetOrCreate(desc);
+	return m_envRepository->Acquire(desc);
 }
 
 bool RenderRepository::ReleaseEnvironment(EnvironmentHandle eh)

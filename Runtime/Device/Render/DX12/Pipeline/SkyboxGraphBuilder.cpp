@@ -30,10 +30,10 @@ void SkyboxGraphBuilder::Build(RenderGraph& graph)
             swapChain.SetRenderTarget(cmd);
             swapChain.Clear(cmd, 0.13f, 0.13f, 0.16f, 1.0f); // 여기로 이동
 
-            if (!ctx.drawPacket.environment)
+            auto& envRes = ctx.drawPacket.environment;
+            if (!envRes)
                 return; // 환경 없는 씬 - 스카이박스 안 그림
 
-            auto envRes = static_cast<EnvironmentResource*>(ctx.drawPacket.environment.get());
             if (!envRes->IsReady())
                 return;
 

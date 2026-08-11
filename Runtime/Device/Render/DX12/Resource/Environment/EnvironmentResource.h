@@ -1,17 +1,18 @@
 #pragma once
-#include "GameClient/Service/Render/Resource/IEnvironmentResource.h"
+#include "GameClient/Service/Render/Resource/IResource.h"
+#include "../IPendingResource.h"
 #include "Core/Math/Vector3.h"
 
 class TextureCubeResource;
 
-class EnvironmentResource : public IEnvironmentResource
+class EnvironmentResource : public IResource, public IPendingResource
 {
 public:
 	virtual ~EnvironmentResource() override;
 	EnvironmentResource();
 	virtual bool IsReady() const noexcept override { return m_ready; }
-	void MarkReady() { m_ready = true; }
-	bool IsTextureReady() const noexcept;
+	virtual bool IsDependencyReady() const noexcept override;
+	virtual void MarkReady() override { m_ready = true; }
 
 	void SetSkybox(std::shared_ptr<TextureCubeResource> res) { m_skybox = std::move(res); }
 	void SetReflection(std::shared_ptr<TextureCubeResource> res) { m_reflection = std::move(res); }
@@ -25,5 +26,6 @@ private:
 	std::shared_ptr<TextureCubeResource> m_skybox;
 	std::shared_ptr<TextureCubeResource> m_reflection;
 	std::array<Core::Vector3, 9> m_irradianceSH{};
+
 	bool m_ready{ false };
 };

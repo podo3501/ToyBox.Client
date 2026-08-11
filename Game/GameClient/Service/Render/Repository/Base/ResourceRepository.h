@@ -27,7 +27,8 @@ public:
     ResourceRepository(IResourceProvider* provider, IAssetAsyncLoader* asyncLoader);
     virtual ~ResourceRepository() = default;
 
-    HandleT GetOrCreate(const DescT& desc);
+    HandleT Acquire(const DescT& desc); //path
+    HandleT AcquireFromAsset(const DescT& desc, std::shared_ptr<AssetT> asset);
     bool Release(HandleT handle);
     void ReleaseAll();
     void Update();
@@ -47,8 +48,9 @@ private:
         std::shared_ptr<AssetT> asset;
     };
 
-    void ProcessCpuPending();  // CPU 로드 완료된 항목을 GPU 대기열로 이동
-    void ProcessGpuPending();  // GPU 업로드 시작, 완료 대기열(m_loadingList)로 이동
+    HandleT RegisterNewEntry(size_t key);
+    void ProcessAssetPending();  // CPU 로드 완료된 항목을 GPU 대기열로 이동
+    void ProcessResourcePending();  // GPU 업로드 시작, 완료 대기열(m_loadingList)로 이동
     void ProcessLoading(); // GPU 업로드 완료 여부 확인, 완료 시 Ready 처리
 
 private:
@@ -58,8 +60,8 @@ private:
     std::unordered_map<size_t, HandleT> m_cache;
     HandlePool<ResourceEntry, TagT> m_loadedResources;
 
-    std::vector<CpuPendingRequest> m_cpuPending;
-    std::vector<GpuPendingRequest> m_gpuPending;
+    std::vector<CpuPendingRequest> m_assetPending;
+    std::vector<GpuPendingRequest> m_resourcePending;
     std::vector<HandleT> m_loadingList;
 };
 

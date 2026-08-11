@@ -25,11 +25,11 @@ public:
 		ResourceFactory& resFactory,
 		DescriptorFactory& descFactory);
 
-	virtual IFontProvider* GetFontProvider() override { return &m_fontProvider; }
+	virtual IResourceProvider* GetFontProvider() override { return &m_fontProvider; }
 	virtual IMeshProvider* GetMeshProvider() override { return &m_meshProvider; }
 	virtual IMaterialProvider* GetMaterialProvider() override { return &m_matProvider; }
 	virtual IResourceProvider* GetBrushProvider() override { return &m_brushProvider; }
-	virtual IEnvironmentProvider* GetEnvironmentProvider() override { return &m_envProvider; }
+	virtual IResourceProvider* GetEnvironmentProvider() override { return &m_envProvider; }
 	
 	bool Initialize(ShaderLibrary& shaderLibaray);
 	void Update(float gpuMs);

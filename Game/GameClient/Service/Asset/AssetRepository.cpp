@@ -39,7 +39,7 @@ shared_ptr<AssetData> AssetRepository::Load(Core::TypeID type, const Core::Resou
 
 	IAssetLoader* loader = nullptr;
 	auto loaderIt = m_loaders.find(loaderKey);
-	Assert(loaderIt != m_loaders.end()); //파일 확장자에 맞는 로더 등록이 안돼 있다.
+	Assert(loaderIt != m_loaders.end()); //파일 확장자에 맞는 로더 등록이 안돼 있거나, 등록할때와 다른 Asset으로 로딩을 요청할때.
 	if (loaderIt == m_loaders.end())
 		return nullptr;
 

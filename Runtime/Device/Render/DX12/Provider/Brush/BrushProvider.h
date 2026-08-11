@@ -9,8 +9,9 @@ class BrushProvider : public ResourceProvider
 {
 public:
     ~BrushProvider();
-    BrushProvider(TextureProvider& texProvider, TaskScheduler& taskScheduler) noexcept;
+    BrushProvider(TaskScheduler& taskScheduler, TextureProvider& texProvider) noexcept;
     virtual std::shared_ptr<IResource> CreateResource(std::shared_ptr<AssetData> asset) override;
+    void Update();
 
 private:
     TextureProvider& m_texProvider;

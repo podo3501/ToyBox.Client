@@ -7,35 +7,50 @@ ResourceRepository<Traits>::ResourceRepository(IResourceProvider* provider, IAss
 {}
 
 template <typename Traits>
-typename ResourceRepository<Traits>::HandleT
-ResourceRepository<Traits>::GetOrCreate(const DescT& desc)
+ResourceRepository<Traits>::HandleT 
+ResourceRepository<Traits>::RegisterNewEntry(size_t key)
 {
-    const size_t key = desc.GetHash();
-    auto it = m_cache.find(key);
-    if (it != m_cache.end())
-        return it->second;
-
     ResourceEntry entry;
     entry.key = key;
 
     auto handle = m_loadedResources.Emplace(std::move(entry));
     m_cache[key] = handle;
 
-    switch (desc.resID.GetType())
-    {
-    case Core::ResourceIDType::Path:
-    {
-        auto reqID = Asset::PushRequest<AssetT>(m_asyncLoader, desc.resID);
-        m_cpuPending.push_back({ handle, reqID });
-    }
-    break;
-    case Core::ResourceIDType::Runtime:
-    case Core::ResourceIDType::Builtin:
-        m_gpuPending.push_back({ handle, nullptr });
-        break;
-    default:
-        return HandleT::Invalid();
-    }
+    return handle;
+}
+
+template <typename Traits>
+ResourceRepository<Traits>::HandleT 
+ResourceRepository<Traits>::Acquire(const DescT& desc)
+{
+    assert(desc.resID.GetType() == Core::ResourceIDType::Path);
+
+    const size_t key = desc.GetHash();
+    auto it = m_cache.find(key);
+    if (it != m_cache.end())
+        return it->second;
+
+    auto handle = RegisterNewEntry(key);
+
+    auto reqID = Asset::PushRequest<AssetT>(m_asyncLoader, desc.resID);
+    m_assetPending.push_back({ handle, reqID });
+
+    return handle;
+}
+
+template <typename Traits>
+ResourceRepository<Traits>::HandleT
+ResourceRepository<Traits>::AcquireFromAsset(const DescT& desc, std::shared_ptr<AssetT> asset)
+{
+    assert(desc.resID.GetType() != Core::ResourceIDType::Path);
+
+    const size_t key = desc.GetHash();
+    auto it = m_cache.find(key);
+    if (it != m_cache.end())
+        return it->second;
+
+    auto handle = RegisterNewEntry(key);
+    m_resourcePending.push_back({ handle, asset });
 
     return handle;
 }
@@ -60,8 +75,8 @@ void ResourceRepository<Traits>::ReleaseAll()
         Release(h);
         });
 
-    m_cpuPending.clear();
-    m_gpuPending.clear();
+    m_assetPending.clear();
+    m_resourcePending.clear();
 
     m_loadingList.clear();
     m_cache.clear();
@@ -71,8 +86,8 @@ void ResourceRepository<Traits>::ReleaseAll()
 template <typename Traits>
 void ResourceRepository<Traits>::Update()
 {
-    ProcessCpuPending();
-    ProcessGpuPending();
+    ProcessAssetPending();
+    ProcessResourcePending();
     ProcessLoading();
 }
 
@@ -89,12 +104,12 @@ std::shared_ptr<IResource> ResourceRepository<Traits>::GetIfReady(HandleT handle
 // ---- 파이프라인 단계별 처리 ----
 
 template <typename Traits>
-void ResourceRepository<Traits>::ProcessCpuPending()
+void ResourceRepository<Traits>::ProcessAssetPending()
 {
-    if (m_cpuPending.empty())
+    if (m_assetPending.empty())
         return;
 
-    for (auto it = m_cpuPending.begin(); it != m_cpuPending.end();)
+    for (auto it = m_assetPending.begin(); it != m_assetPending.end();)
     {
         auto& req = *it;
         auto asset = m_asyncLoader->TakeResult(req.requestId);
@@ -107,34 +122,35 @@ void ResourceRepository<Traits>::ProcessCpuPending()
         GpuPendingRequest gpuReq;
         gpuReq.handle = req.handle;
         gpuReq.asset = std::static_pointer_cast<AssetT>(asset);
-        m_gpuPending.push_back(std::move(gpuReq));
+        m_resourcePending.push_back(std::move(gpuReq));
 
-        it = m_cpuPending.erase(it);
+        it = m_assetPending.erase(it);
     }
 }
 
 template <typename Traits>
-void ResourceRepository<Traits>::ProcessGpuPending()
+void ResourceRepository<Traits>::ProcessResourcePending()
 {
-    for (auto& work : m_gpuPending)
+    for (auto& work : m_resourcePending)
     {
         auto entry = m_loadedResources.Find(work.handle);
-        if (!entry)
-            continue;
+        if (!entry) continue;
+        //if (entry->state != LoadState::Pending) continue; // 중복으로 들어온 경우 이미 Loading/Ready 라면 처리 안 함.
 
         auto res = m_provider->CreateResource(work.asset);
         if (!res)
         {
+            Assert(false); //로딩하다가 실패함.
             entry->state = LoadState::Failed;
             continue;
         }
 
         entry->res = std::move(res);
-        entry->state = LoadState::GpuLoading;
+        entry->state = LoadState::ResourceLoading;
         m_loadingList.push_back(work.handle);
     }
 
-    m_gpuPending.clear();
+    m_resourcePending.clear();
 }
 
 template <typename Traits>

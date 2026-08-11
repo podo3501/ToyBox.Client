@@ -15,8 +15,6 @@ public:
     virtual std::shared_ptr<IResource> CreateResource(std::shared_ptr<AssetData> asset) = 0;
     virtual void ReleaseResource(std::shared_ptr<IResource> res) override;
 
-    void Update();
-
 protected:
     void FlushPendingLoad();
     void FlushPendingRelease();

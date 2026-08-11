@@ -4,7 +4,7 @@
 #include "../Texture/TextureProvider.h"
 
 BrushProvider::~BrushProvider() = default;
-BrushProvider::BrushProvider(TextureProvider& texProvider, TaskScheduler& taskScheduler) noexcept :
+BrushProvider::BrushProvider(TaskScheduler& taskScheduler, TextureProvider& texProvider) noexcept :
     ResourceProvider{ taskScheduler },
     m_texProvider{ texProvider }
 {}
@@ -32,4 +32,10 @@ std::shared_ptr<IResource> BrushProvider::CreateResource(std::shared_ptr<AssetDa
 
     m_pendingLoads.push_back(brushRes);
     return brushRes;
+}
+
+void BrushProvider::Update()
+{
+    FlushPendingLoad();
+    FlushPendingRelease();
 }

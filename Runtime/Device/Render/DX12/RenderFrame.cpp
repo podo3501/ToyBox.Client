@@ -3,7 +3,8 @@
 #include "Core/Utils/StringUtils.h"
 #include "TextSystem/TextSystem.h"
 #include "Inspector/Inspector.h"
-#include "Resource/Brush/BrushResource.h"
+#include "Resource/Brush/BrushResource.h" //?!? scene 안에서 형변환 해야 할꺼 같다. 여기에 include 시키면 지저분하다.
+#include "Resource/Environment/EnvironmentResource.h"
 #include "Core/RenderData.h"
 
 RenderFrame::~RenderFrame() = default;
@@ -18,7 +19,7 @@ void RenderFrame::SetFrameData(const FrameData& frameData) noexcept
 }
 
 void RenderFrame::DrawText(
-    std::shared_ptr<IFontResource> fontRes,
+    std::shared_ptr<IResource> fontRes,
     TextRenderMode mode,
     std::span<const TextSpan> spans,
     uint32_t size,
@@ -103,9 +104,9 @@ void RenderFrame::DrawUI(
     m_scene.AddUI(item);
 }
 
-void RenderFrame::DrawEnvironment(std::shared_ptr<IEnvironmentResource> envRes)
+void RenderFrame::DrawEnvironment(std::shared_ptr<IResource> envRes)
 {
-    m_scene.SetEnvironment(std::move(envRes));
+    m_scene.SetEnvironment(std::static_pointer_cast<EnvironmentResource>(envRes));
 }
 
 DrawPacket RenderFrame::PrepareRenderData()

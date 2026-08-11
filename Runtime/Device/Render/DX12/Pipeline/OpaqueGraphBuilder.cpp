@@ -38,12 +38,11 @@ void OpaqueGraphBuilder::Build(RenderGraph& graph)
         {
             swapChain.SetRenderTarget(cmd);
 
-            auto envRes = static_cast<EnvironmentResource*>(ctx.drawPacket.environment.get());
             surfRenderer.PrepareFrame(
                 ctx.frame.light,
                 ctx.frame.camera,
                 shadowRes.GetSRVIndex(),
-                envRes
+                ctx.drawPacket.environment.get()
             );
             surfRenderer.BeginFrame(cmd);
 

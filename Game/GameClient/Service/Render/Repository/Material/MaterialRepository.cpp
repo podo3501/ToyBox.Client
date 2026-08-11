@@ -154,7 +154,7 @@ void MaterialRepository::ProcessGpuPending()
             entry->state = LoadState::Failed;
             continue;
         }
-        entry->state = LoadState::GpuLoading;
+        entry->state = LoadState::ResourceLoading;
 
         m_loadingList.push_back(work.handle);
     }

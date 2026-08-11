@@ -1,15 +1,14 @@
 #pragma once
-#include "GameClient/Service/Render/Repository/Font/IFontProvider.h"
+#include "GameClient/Service/Render/Repository/IResourceProvider.h"
 #include "Core/FreeTypeLibrary.h"
 
-class FontProvider : public IFontProvider
+class FontProvider : public IResourceProvider
 {
 public:
     ~FontProvider();
     FontProvider() noexcept;
-    virtual std::shared_ptr<IFontResource> CreateResource() override;
-    virtual bool LoadResource(std::shared_ptr<IFontResource> resource, std::shared_ptr<BinaryAsset> asset) override;
-    virtual void ReleaseResource(std::shared_ptr<IFontResource> resource) override;
+    virtual std::shared_ptr<IResource> CreateResource(std::shared_ptr<AssetData> asset) override;
+    virtual void ReleaseResource(std::shared_ptr<IResource> res) override;
 
 private:
     FreeTypeLibrary m_ftLibrary;
