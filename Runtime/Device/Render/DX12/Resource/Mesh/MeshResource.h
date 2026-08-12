@@ -1,7 +1,7 @@
 #pragma once
-#include "GameClient/Service/Render/Resource/IMeshResource.h"
+#include "GameClient/Service/Render/Resource/IResource.h"
 
-class MeshResource : public IMeshResource
+class MeshResource : public IResource
 {
 public:
 	virtual ~MeshResource() override = default;

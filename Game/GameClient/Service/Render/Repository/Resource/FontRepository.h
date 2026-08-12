@@ -1,6 +1,5 @@
 #pragma once
-#include "Base/ResourceRepository.h"
-#include "IResourceProvider.h"
+#include "../Base/ResourceRepository.h"
 #include "Service/Render/Definition/FontDesc.h"
 #include "Service/Render/Handle/FontHandle.h"
 #include "Asset/BinaryAsset.h"

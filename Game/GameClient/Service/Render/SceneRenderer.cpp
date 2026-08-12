@@ -2,38 +2,25 @@
 #include "SceneRenderer.h"
 #include "IRenderFrame.h"
 #include "Repository/Material/MaterialRepository.h"
-#include "Repository/Mesh/MeshRepository.h"
 #include "Builtin/BuiltinMeshes.h"
 #include "Builtin/BuiltinMaterials.h"
 #include "Builtin/BuiltinBrush.h"
 
-#include "Repository/FontRepository.h"
-#include "Repository/BrushRepository.h"
-#include "Repository/EnvironmentRepository.h"
-
-struct ResolvedEntries
-{
-	const MeshEntry* mesh{ nullptr };
-	const MaterialEntry* material{ nullptr };
-};
-
-struct ResolvedDrawData
-{
-	std::shared_ptr<IMeshResource> meshRes;
-	std::shared_ptr<IMaterialResource> matRes;
-};
+#include "Repository/ResourceRepositories.h"
 
 SceneRenderer::~SceneRenderer() = default;
 SceneRenderer::SceneRenderer(
 	IRenderFrame* renderFrame, 
 	FontRepository* fontRepository,
 	MeshRepository* meshRepository, 
+	DebugMeshRepository* debugMeshRepository,
 	MaterialRepository* matRepository,
 	BrushRepository* brushRepository,
 	EnvironmentRepository* envRepository) :
 	m_renderFrame{ renderFrame },
 	m_fontRepository{ fontRepository },
 	m_meshRepository{ meshRepository },
+	m_debugMeshRepository{ debugMeshRepository },
 	m_matRepository{ matRepository },
 	m_brushRepository{ brushRepository },
 	m_envRepository{ envRepository }
@@ -90,21 +77,31 @@ void SceneRenderer::DrawSurface(MeshHandle hM, MaterialHandle hMtl, const Core::
 	if (!hMtl)
 		hMtl = GetDefaultMaterial(MaterialDomain::Surface);
 
-	auto data = ResolveResources(hM, hMtl);
-	if (!data) return;
+	auto meshRes = m_meshRepository->GetIfReady(hM);
+	if (!meshRes)
+		return;
 
-	m_renderFrame->DrawSurface(data->meshRes, data->matRes, world);
+	auto material = m_matRepository->Get(hMtl);
+	if (!material || material->state != LoadState::Ready)
+		return;
+
+	m_renderFrame->DrawSurface(meshRes, material->matRes, world);
 }
 
-void SceneRenderer::DrawDebugSurface(MeshHandle hM, MaterialHandle hMtl, const Core::Matrix& world)
+void SceneRenderer::DrawDebugSurface(DebugMeshHandle hDM, MaterialHandle hMtl, const Core::Matrix& world)
 {
 	if (!hMtl)
 		hMtl = GetDefaultMaterial(MaterialDomain::DebugSurface);
 
-	auto data = ResolveResources(hM, hMtl);
-	if (!data) return;
+	auto meshRes = m_debugMeshRepository->GetIfReady(hDM);
+	if (!meshRes)
+		return;
 
-	m_renderFrame->DrawSurface(data->meshRes, data->matRes, world);
+	auto material = m_matRepository->Get(hMtl);
+	if (!material || material->state != LoadState::Ready)
+		return;
+
+	m_renderFrame->DrawSurface(meshRes, material->matRes, world);
 }
 
 void SceneRenderer::DrawUI(BrushHandle bh, const Rect& dest, const Rect* source)
@@ -112,8 +109,8 @@ void SceneRenderer::DrawUI(BrushHandle bh, const Rect& dest, const Rect* source)
 	if (!bh)
 		bh = m_defaultBrush;
 
-	auto mesh = m_meshRepository->Get(m_uiQuad);
-	if (!mesh || mesh->state != LoadState::Ready)
+	auto meshRes = m_meshRepository->GetIfReady(m_uiQuad);
+	if (!meshRes)
 		return;
 
 	auto brushRes = m_brushRepository->GetIfReady(bh);
@@ -127,7 +124,7 @@ void SceneRenderer::DrawUI(BrushHandle bh, const Rect& dest, const Rect* source)
 	Core::Matrix translation = Core::Matrix::Translation(dest.x, dest.y, 0.0f);
 	Core::Matrix world = scale * translation;
 
-	m_renderFrame->DrawUI(mesh->meshRes, brushRes, world, source);
+	m_renderFrame->DrawUI(meshRes, brushRes, world, source);
 }
 
 void SceneRenderer::DrawEnvironment(EnvironmentHandle hEnv)
@@ -139,19 +136,6 @@ void SceneRenderer::DrawEnvironment(EnvironmentHandle hEnv)
 		return;
 
 	m_renderFrame->DrawEnvironment(envRes);
-}
-
-std::optional<ResolvedDrawData> SceneRenderer::ResolveResources(MeshHandle hM, MaterialHandle hMtl)
-{
-	auto mesh = m_meshRepository->Get(hM);
-	if (!mesh || mesh->state != LoadState::Ready)
-		return std::nullopt;
-
-	auto material = m_matRepository->Get(hMtl);
-	if (!material || material->state != LoadState::Ready)
-		return std::nullopt;
-
-	return ResolvedDrawData{ mesh->meshRes, material->matRes };
 }
 
 void SceneRenderer::SetFrameData(const FrameData& frameData)

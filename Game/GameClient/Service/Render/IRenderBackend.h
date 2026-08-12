@@ -6,7 +6,6 @@
 #include "IResourceProviderSet.h"
 #include "IRenderFrame.h"
 
-struct IMeshResource;
 struct IMaterialResource;
 struct ShaderAsset;
 struct TextureAsset;

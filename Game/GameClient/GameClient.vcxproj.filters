@@ -219,9 +219,6 @@
     <ClCompile Include="Service\Render\Repository\Material\MaterialRepository.cpp">
       <Filter>Service\Render\Repository\Material</Filter>
     </ClCompile>
-    <ClCompile Include="Service\Render\Repository\Mesh\MeshRepository.cpp">
-      <Filter>Service\Render\Repository\Mesh</Filter>
-    </ClCompile>
     <ClCompile Include="Graphics\World\CameraController.cpp">
       <Filter>Graphics\World</Filter>
     </ClCompile>
@@ -258,15 +255,15 @@
     <ClCompile Include="Service\Render\Definition\ShaderStageBuilder.cpp">
       <Filter>Service\Render\Definition</Filter>
     </ClCompile>
-    <ClCompile Include="Service\Render\Definition\Mesh\MeshDescFactory.cpp">
-      <Filter>Service\Render\Definition\Mesh</Filter>
-    </ClCompile>
     <ClCompile Include="Service\Render\Definition\Material\MaterialDescFactory.cpp">
       <Filter>Service\Render\Definition\Material</Filter>
     </ClCompile>
     <ClCompile Include="AssetMetaRegistry.cpp" />
     <ClCompile Include="Service\Render\Builtin\BuiltinBrush.cpp">
       <Filter>Service\Render\Builtin</Filter>
+    </ClCompile>
+    <ClCompile Include="Service\Render\Repository\Container\RepositoryContainer.cpp">
+      <Filter>Service\Render\Repository\Container</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -569,20 +566,11 @@
     <ClInclude Include="Service\Render\Resource\IMaterialResource.h">
       <Filter>Service\Render\Resource</Filter>
     </ClInclude>
-    <ClInclude Include="Service\Render\Resource\IMeshResource.h">
-      <Filter>Service\Render\Resource</Filter>
-    </ClInclude>
     <ClInclude Include="Service\Render\Repository\Material\IMaterialProvider.h">
       <Filter>Service\Render\Repository\Material</Filter>
     </ClInclude>
     <ClInclude Include="Service\Render\Repository\Material\MaterialRepository.h">
       <Filter>Service\Render\Repository\Material</Filter>
-    </ClInclude>
-    <ClInclude Include="Service\Render\Repository\Mesh\IMeshProvider.h">
-      <Filter>Service\Render\Repository\Mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="Service\Render\Repository\Mesh\MeshRepository.h">
-      <Filter>Service\Render\Repository\Mesh</Filter>
     </ClInclude>
     <ClInclude Include="Graphics\World\CameraInputState.h">
       <Filter>Graphics\World</Filter>
@@ -695,12 +683,6 @@
     <ClInclude Include="Service\Render\Definition\ShaderStageBuilder.h">
       <Filter>Service\Render\Definition</Filter>
     </ClInclude>
-    <ClInclude Include="Service\Render\Definition\Mesh\MeshDesc.h">
-      <Filter>Service\Render\Definition\Mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="Service\Render\Definition\Mesh\MeshDescFactory.h">
-      <Filter>Service\Render\Definition\Mesh</Filter>
-    </ClInclude>
     <ClInclude Include="Service\Render\Definition\Material\DebugSurfaceMaterialDesc.h">
       <Filter>Service\Render\Definition\Material</Filter>
     </ClInclude>
@@ -778,20 +760,56 @@
     <ClInclude Include="Service\Render\Repository\Base\ResourceTypes.h">
       <Filter>Service\Render\Repository\Base</Filter>
     </ClInclude>
-    <ClInclude Include="Service\Render\Repository\BrushRepository.h">
-      <Filter>Service\Render\Repository</Filter>
-    </ClInclude>
     <ClInclude Include="Service\Render\Repository\IResourceProvider.h">
-      <Filter>Service\Render\Repository</Filter>
-    </ClInclude>
-    <ClInclude Include="Service\Render\Repository\EnvironmentRepository.h">
-      <Filter>Service\Render\Repository</Filter>
-    </ClInclude>
-    <ClInclude Include="Service\Render\Repository\FontRepository.h">
       <Filter>Service\Render\Repository</Filter>
     </ClInclude>
     <ClInclude Include="Service\Render\Definition\FontDesc.h">
       <Filter>Service\Render\Definition</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Definition\MeshDesc.h">
+      <Filter>Service\Render\Definition</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Definition\DebugMeshDesc.h">
+      <Filter>Service\Render\Definition</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Definition\ResourceDescs.h">
+      <Filter>Service\Render\Definition</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Handle\ResourceHandles.h">
+      <Filter>Service\Render\Handle</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Handle\DebugMeshHandle.h">
+      <Filter>Service\Render\Handle</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Repository\ResourceRepositories.h">
+      <Filter>Service\Render\Repository</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Repository\Resource\BrushRepository.h">
+      <Filter>Service\Render\Repository\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Repository\Resource\DebugMeshRepository.h">
+      <Filter>Service\Render\Repository\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Repository\Resource\EnvironmentRepository.h">
+      <Filter>Service\Render\Repository\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Repository\Resource\FontRepository.h">
+      <Filter>Service\Render\Repository\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Repository\Resource\MeshRepository.h">
+      <Filter>Service\Render\Repository\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Repository\Container\RepositoryContainer.h">
+      <Filter>Service\Render\Repository\Container</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Repository\Container\RepositoryTypeFwd.h">
+      <Filter>Service\Render\Repository\Container</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Repository\Container\RepositoryType.h">
+      <Filter>Service\Render\Repository\Container</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Repository\Container\RepositoryTypeTraits.h">
+      <Filter>Service\Render\Repository\Container</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -888,9 +906,6 @@
     <Filter Include="Service\Render\Repository\Material">
       <UniqueIdentifier>{9126813b-01da-42e8-b06d-f58a9dec5ae0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Service\Render\Repository\Mesh">
-      <UniqueIdentifier>{31a6befa-ed82-42da-b785-70ff8f4bccf6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Asset">
       <UniqueIdentifier>{9b9b0837-7b96-4ac7-bd03-ef8ccaa71157}</UniqueIdentifier>
     </Filter>
@@ -900,9 +915,6 @@
     <Filter Include="Service\Render\Definition">
       <UniqueIdentifier>{3bcf058d-3f1a-4db3-8786-92b4c68c1605}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Service\Render\Definition\Mesh">
-      <UniqueIdentifier>{64742bfb-8c14-4c66-a074-90a0ad515bdb}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Service\Render\Definition\Material">
       <UniqueIdentifier>{b57274f5-4772-4f57-b9c4-6f54bbe4d765}</UniqueIdentifier>
     </Filter>
@@ -911,6 +923,12 @@
     </Filter>
     <Filter Include="Service\Render\Repository\Base">
       <UniqueIdentifier>{409801ce-24c7-4ead-b3fe-acd52be8eab3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Service\Render\Repository\Resource">
+      <UniqueIdentifier>{64ac6fdc-3f40-4b22-a5a3-f46df8a8670b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Service\Render\Repository\Container">
+      <UniqueIdentifier>{563f6c2a-2ade-45ee-8f5f-77d7fd30100b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

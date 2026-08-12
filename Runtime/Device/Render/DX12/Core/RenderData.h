@@ -8,7 +8,6 @@
 #include "Core/Foundation/Geometry2D.h"
 #include "GameClient/Service/Render/Definition/Text/TextStyle.h"
 
-struct IMeshResource;
 struct IMaterialResource;
 struct IResource;
 class TextureResource;
@@ -17,7 +16,7 @@ class EnvironmentResource;
 
 struct DrawItem
 {
-    std::shared_ptr<IMeshResource> mesh;
+    std::shared_ptr<IResource> mesh;
     std::shared_ptr<IMaterialResource> material;
     Core::Matrix world{};
 
@@ -26,8 +25,8 @@ struct DrawItem
 
 struct DrawUIItem
 {
-    std::shared_ptr<IMeshResource> mesh;
-    std::shared_ptr<BrushResource> brush;
+    std::shared_ptr<IResource> mesh;
+    std::shared_ptr<IResource> brush;
     Core::Matrix world{};
     Core::Vector4 uvTransform{ 0.f, 0.f, 1.f, 1.f };
 

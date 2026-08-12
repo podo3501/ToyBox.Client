@@ -4,6 +4,7 @@
 #include "RenderRepository.h"
 #include "SceneRenderer.h"
 #include "Definition/ShaderStageBuilder.h"
+#include "Repository/Container/RepositoryContainer.h"
 #include "Repository/RepositoryFwd.h"
 
 struct IRenderBackend;
@@ -11,7 +12,6 @@ struct FrameData;
 struct IAssetAsyncLoader;
 struct RegistryShaderEntry;
 class IResourceRepository;
-class MeshRepository;
 class MaterialRepository;
 
 class RenderService
@@ -43,14 +43,16 @@ private:
 	IAssetAsyncLoader* m_asyncLoader{ nullptr };
 	std::unordered_map<Core::ResourceID, ShaderID> m_shaderCache;
 
+	RepositoryContainer m_repositories;
+
 	std::unique_ptr<FontRepository> m_fontRepository;
 	std::unique_ptr<MeshRepository> m_meshRepository;
+	std::unique_ptr<DebugMeshRepository> m_debugMeshRepository;
 	std::unique_ptr<MaterialRepository> m_matRepository;
-	//std::unique_ptr<BrushRepository> m_brushRepository;
 	std::unique_ptr<BrushRepository> m_brushRepository;
 	std::unique_ptr<EnvironmentRepository> m_envRepository;
 
-	std::vector<IResourceRepository*> m_repositories;
+	//std::vector<IResourceRepository*> m_repositories;
 
 	unique_ptr<RenderRepository> m_repository;
 	unique_ptr<SceneRenderer> m_renderer;

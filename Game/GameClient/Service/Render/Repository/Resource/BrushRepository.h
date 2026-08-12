@@ -1,8 +1,7 @@
 #pragma once
-#include "Base/ResourceRepository.h"
-#include "IResourceProvider.h"
-#include "Service/Render/Definition/BrushDesc.h"
+#include "../Base/ResourceRepository.h"
 #include "Service/Render/Handle/BrushHandle.h"
+#include "Service/Render/Definition/BrushDesc.h"
 #include "Asset/TextureAsset.h"
 
 struct BrushResourceTraits

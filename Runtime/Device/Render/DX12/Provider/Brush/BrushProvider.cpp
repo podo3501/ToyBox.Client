@@ -2,10 +2,11 @@
 #include "BrushProvider.h"
 #include "Resource/Brush/BrushResource.h"
 #include "../Texture/TextureProvider.h"
+#include "Core/Foundation/Cast.hpp"
 
 BrushProvider::~BrushProvider() = default;
 BrushProvider::BrushProvider(TaskScheduler& taskScheduler, TextureProvider& texProvider) noexcept :
-    ResourceProvider{ taskScheduler },
+    m_pendingRelease{ taskScheduler },
     m_texProvider{ texProvider }
 {}
 
@@ -18,7 +19,9 @@ std::shared_ptr<IResource> BrushProvider::CreateResource(std::shared_ptr<AssetDa
         auto texRes = m_texProvider.CreateResource();
         if (!texRes) return nullptr;
 
-        auto texAsset = std::static_pointer_cast<TextureAsset>(asset);
+        auto texAsset = Core::Cast<TextureAsset>(asset);
+        if (!texAsset) return nullptr;
+
         if (!m_texProvider.LoadResource(texRes, texAsset))
             return nullptr;
 
@@ -30,12 +33,17 @@ std::shared_ptr<IResource> BrushProvider::CreateResource(std::shared_ptr<AssetDa
         brushRes->SetTexture(tex);
     }
 
-    m_pendingLoads.push_back(brushRes);
+    m_pendingLoad.Add(brushRes);
     return brushRes;
+}
+
+void BrushProvider::ReleaseResource(std::shared_ptr<IResource> res)
+{
+    m_pendingRelease.Add(std::move(res));
 }
 
 void BrushProvider::Update()
 {
-    FlushPendingLoad();
-    FlushPendingRelease();
+    m_pendingLoad.Flush();
+    m_pendingRelease.Flush();
 }

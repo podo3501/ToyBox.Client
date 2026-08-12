@@ -3,6 +3,11 @@
 #include <type_traits>
 #include <concepts>
 
+// 사용법은 std::static_pointer_cast와 동일하지만, 실제 타입을 확인한 후 변환하므로 타입이 다르면 nullptr을 반환한다.
+// Cast<Derived>(Parent); // 단일 Raw Pointer
+// Cast<Derived>(Parent); // 단일 shared_ptr
+// CastAll<Derived>(Parents); // 여러 shared_ptr
+
 namespace Core
 {
     template<typename T>

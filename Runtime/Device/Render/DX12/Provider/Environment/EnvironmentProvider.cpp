@@ -6,7 +6,7 @@
 
 EnvironmentProvider::~EnvironmentProvider() = default;
 EnvironmentProvider::EnvironmentProvider(TaskScheduler& taskScheduler, TextureCubeProvider& cubeProvider) noexcept :
-    ResourceProvider{ taskScheduler },
+    m_pendingRelease{ taskScheduler },
     m_cubeProvider{ cubeProvider }
 {}
 
@@ -33,7 +33,7 @@ std::shared_ptr<IResource> EnvironmentProvider::CreateResource(
     envRes->SetReflection(reflectionRes);
     envRes->SetIrradianceSH(envAsset->irradiance->coefficients);
 
-    m_pendingLoads.push_back(envRes);
+    m_pendingLoad.Add(envRes);
     return envRes;
 }
 
@@ -50,8 +50,13 @@ std::shared_ptr<TextureCubeResource> EnvironmentProvider::CreateCubeResource(
     return res;
 }
 
+void EnvironmentProvider::ReleaseResource(std::shared_ptr<IResource> res)
+{
+    m_pendingRelease.Add(std::move(res));
+}
+
 void EnvironmentProvider::Update()
 {
-    FlushPendingLoad();
-    FlushPendingRelease();
+    m_pendingLoad.Flush();
+    m_pendingRelease.Flush();
 }

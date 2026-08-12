@@ -2,11 +2,11 @@
 #include <memory>
 #include "GameClient/Asset/MeshAsset.h"
 
-struct IMeshResource;
+class MeshResource;
 
 struct MeshLoadRequest
 {
-    std::shared_ptr<IMeshResource> resource;
+    std::shared_ptr<MeshResource> resource;
     std::shared_ptr<MeshAsset> asset;
 
     size_t vbBytes{ 0 };

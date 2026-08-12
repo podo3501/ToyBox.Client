@@ -1,6 +1,6 @@
 #pragma once
 #include "GameClient/Graphics/RenderData/FrameData.h"
-#include "GameClient/Service/Render/Resource/IMeshResource.h"
+#include "GameClient/Service/Render/Resource/IResource.h"
 #include "GameClient/Service/Render/Resource/IMaterialResource.h"
 #include "GameClient/Service/Render/Definition/Text/TextStyle.h"
 #include "Core/Foundation/Geometry2D.h"
@@ -21,12 +21,12 @@ struct IRenderFrame
 		const TextLayout& layout) = 0;
 
 	virtual void DrawSurface(
-		std::shared_ptr<IMeshResource> meshRes,
+		std::shared_ptr<IResource> meshRes,
 		std::shared_ptr<IMaterialResource> matRes,
 		const Core::Matrix& world) = 0;
 
 	virtual void DrawUI(
-		std::shared_ptr<IMeshResource> meshRes,
+		std::shared_ptr<IResource> meshRes,
 		std::shared_ptr<IResource> brushRes,
 		const Core::Matrix& world,
 		const Rect* source) = 0;

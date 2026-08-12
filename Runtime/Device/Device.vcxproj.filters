@@ -605,6 +605,12 @@
     <ClInclude Include="Render\DX12\Resource\IPendingResource.h">
       <Filter>Render\DX12\Resource</Filter>
     </ClInclude>
+    <ClInclude Include="Render\DX12\Provider\PendingLoadQueue.h">
+      <Filter>Render\DX12\Provider</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Provider\PendingReleaseQueue.h">
+      <Filter>Render\DX12\Provider</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -990,6 +996,12 @@
       <Filter>Render\DX12\Resource\Brush</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\Provider\ResourceProvider.cpp">
+      <Filter>Render\DX12\Provider</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Provider\PendingLoadQueue.cpp">
+      <Filter>Render\DX12\Provider</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Provider\PendingReleaseQueue.cpp">
       <Filter>Render\DX12\Provider</Filter>
     </ClCompile>
   </ItemGroup>

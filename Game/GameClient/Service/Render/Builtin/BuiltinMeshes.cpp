@@ -1,8 +1,6 @@
 #include "pch.h"
 #include "BuiltinMeshes.h"
-#include "Asset/MeshAsset.h"
-#include "../Definition/Mesh/MeshDesc.h"
-#include "../Repository/Mesh/MeshRepository.h"
+#include "../Repository/Resource/MeshRepository.h"
 
 static std::shared_ptr<MeshAsset> CreateUIQuadAsset()
 {
@@ -34,5 +32,5 @@ static std::shared_ptr<MeshAsset> CreateUIQuadAsset()
 MeshHandle CreateBuiltinUIQuad(MeshRepository* repository)
 {
     MeshDesc desc{ Core::ResourceID::MakeBuiltin("ui_quad") };
-    return repository->GetOrCreate(desc, CreateUIQuadAsset());
+    return repository->AcquireFromAsset(desc, CreateUIQuadAsset());
 }

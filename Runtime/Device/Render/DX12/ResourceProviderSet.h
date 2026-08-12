@@ -26,7 +26,7 @@ public:
 		DescriptorFactory& descFactory);
 
 	virtual IResourceProvider* GetFontProvider() override { return &m_fontProvider; }
-	virtual IMeshProvider* GetMeshProvider() override { return &m_meshProvider; }
+	virtual IResourceProvider* GetMeshProvider() override { return &m_meshProvider; }
 	virtual IMaterialProvider* GetMaterialProvider() override { return &m_matProvider; }
 	virtual IResourceProvider* GetBrushProvider() override { return &m_brushProvider; }
 	virtual IResourceProvider* GetEnvironmentProvider() override { return &m_envProvider; }

@@ -2,6 +2,7 @@
 #include "TextSystem.h"
 #include "Resource/Font/FontResource.h"
 #include "Resource/Mesh/TransientMeshResource.h"
+#include "Resource/Brush/BrushResource.h"
 #include "Inspector/Inspector.h"
 #include "GameClient/Service/Render/RenderConfig.h"
 #include "TextLayout.h"

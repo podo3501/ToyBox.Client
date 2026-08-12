@@ -1,6 +1,5 @@
 #pragma once
-#include "Base/ResourceRepository.h"
-#include "IResourceProvider.h"
+#include "../Base/ResourceRepository.h"
 #include "Service/Render/Definition/EnvironmentDesc.h"
 #include "Service/Render/Handle/EnvironmentHandle.h"
 #include "Asset/EnvironmentAsset.h"

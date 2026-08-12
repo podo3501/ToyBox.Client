@@ -2,7 +2,7 @@
 #include "MeshRegistry.h"
 #include "Resource/Mesh/StaticMeshResource.h"
 
-void MeshRegistry::Register(RGResourceID resID, std::shared_ptr<IMeshResource> resource)
+void MeshRegistry::Register(RGResourceID resID, std::shared_ptr<MeshResource> resource)
 {
     m_meshes[resID] = resource;
 }

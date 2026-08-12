@@ -23,12 +23,12 @@ public:
 		const TextLayout& layout);
 
 	virtual void DrawSurface(
-		std::shared_ptr<IMeshResource> meshRes,
+		std::shared_ptr<IResource> meshRes,
 		std::shared_ptr<IMaterialResource> matRes,
 		const Core::Matrix& world) override;
 
 	virtual void DrawUI(
-		std::shared_ptr<IMeshResource> meshRes,
+		std::shared_ptr<IResource> meshRes,
 		std::shared_ptr<IResource> brushRes,
 		const Core::Matrix& world,
 		const Rect* source) override;

@@ -27,8 +27,8 @@ public:
     ResourceRepository(IResourceProvider* provider, IAssetAsyncLoader* asyncLoader);
     virtual ~ResourceRepository() = default;
 
-    HandleT Acquire(const DescT& desc); //path
-    HandleT AcquireFromAsset(const DescT& desc, std::shared_ptr<AssetT> asset);
+    HandleT Acquire(const DescT& desc); // path
+    HandleT AcquireFromAsset(const DescT& desc, std::shared_ptr<AssetT> asset); // builtin/runtime
     bool Release(HandleT handle);
     void ReleaseAll();
     void Update();

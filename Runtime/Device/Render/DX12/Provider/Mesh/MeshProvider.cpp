@@ -1,27 +1,20 @@
 #include "pch.h"
 #include "MeshProvider.h"
 #include "Resource/Mesh/StaticMeshResource.h"
-#include "Factory/DescriptorFactory.h"
-#include "Graph/RGTypes.h"
-#include "Graph/TaskScheduler.h"
 #include "Core/Foundation/Align.h"
+#include "Core/Foundation/Cast.hpp"
 #include "RenderConstants.h"
 
 MeshProvider::~MeshProvider() = default;
-MeshProvider::MeshProvider(MeshCreateGraphBuilder create, ResourceReleaseBuilder release) noexcept :
-    m_createBuilder{ std::move(create) },
-    m_releaseBuilder{ std::move(release) }
+MeshProvider::MeshProvider(TaskScheduler& taskScheduler, MeshCreateGraphBuilder create) noexcept :
+    m_pendingRelease{ taskScheduler },
+    m_createBuilder{ std::move(create) }
 {}
 
-shared_ptr<IMeshResource> MeshProvider::CreateResource()
+static std::pair<size_t, size_t> EstimateBytes(MeshAsset* mesh)
 {
-    return make_shared<StaticMeshResource>();
-}
-
-static std::pair<size_t, size_t> EstimateBytes(const MeshAsset& mesh)
-{
-    size_t vb = mesh.vertices.size();
-    size_t ib = mesh.indices.size() * sizeof(uint32_t);
+    size_t vb = mesh->vertices.size();
+    size_t ib = mesh->indices.size() * sizeof(uint32_t);
 
     vb = Core::AlignUp(vb, AlignVertexBuffer);
     ib = Core::AlignUp(ib, AlignIndexBuffer);
@@ -29,33 +22,39 @@ static std::pair<size_t, size_t> EstimateBytes(const MeshAsset& mesh)
     return { vb, ib };
 }
 
-bool MeshProvider::LoadResource(std::shared_ptr<IMeshResource> resource, std::shared_ptr<MeshAsset> asset)
+std::shared_ptr<IResource> MeshProvider::CreateResource(std::shared_ptr<AssetData> asset)
 {
-    auto [vbBytes, ibBytes] = EstimateBytes(*asset);
+    if (!asset) return nullptr;
+
+    auto meshAsset = Core::Cast<MeshAsset>(asset);
+    if (!meshAsset) return nullptr;
+
+    auto [vbBytes, ibBytes] = EstimateBytes(meshAsset.get());
+    auto meshRes = make_shared<StaticMeshResource>();
 
     MeshLoadRequest req;
-    req.resource = resource;
-    req.asset = asset;
+    req.resource = meshRes;
+    req.asset = meshAsset;
     req.vbBytes = vbBytes;
     req.ibBytes = ibBytes;
     req.estimatedBytes = vbBytes + ibBytes;
 
     m_pendingLoads.push(req);
-    return true;
+    return meshRes;
 }
 
-void MeshProvider::ReleaseResource(std::shared_ptr<IMeshResource> resource)
+void MeshProvider::ReleaseResource(std::shared_ptr<IResource> res)
 {
-    if (!resource)
+    if (!res)
         return;
 
-    m_pendingReleases.emplace_back(std::move(resource));
+    m_pendingRelease.Add(std::move(res));
 }
 
 void MeshProvider::Update(size_t uploadBudgetBytes)
 {
     FlushPendingLoads(uploadBudgetBytes);
-    FlushPendingRelease();
+    m_pendingRelease.Flush();
 }
 
 void MeshProvider::FlushPendingLoads(size_t uploadBudgetBytes)
@@ -81,12 +80,4 @@ void MeshProvider::FlushPendingLoads(size_t uploadBudgetBytes)
         return;
 
     m_createBuilder.LoadMeshes(batch);
-}
-
-void MeshProvider::FlushPendingRelease()
-{
-    if (m_pendingReleases.empty())
-        return;
-
-    m_releaseBuilder.ReleaseResources(std::move(m_pendingReleases));
 }

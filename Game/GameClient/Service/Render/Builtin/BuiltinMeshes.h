@@ -1,6 +1,5 @@
 #pragma once
 #include "../Handle/MeshHandle.h"
-
-class MeshRepository;
+#include "../Repository/RepositoryFwd.h"
 
 MeshHandle CreateBuiltinUIQuad(MeshRepository* repository);

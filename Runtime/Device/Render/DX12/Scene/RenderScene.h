@@ -11,7 +11,7 @@ public:
     void AddSurface(const DrawItem& item);   
     void AddUI(std::vector<DrawUIItem>&& items);
     void AddUI(const DrawUIItem& uiItem);
-    void SetEnvironment(std::shared_ptr<EnvironmentResource> envRes);
+    void SetEnvironment(std::shared_ptr<IResource> envRes);
 
     DrawPacket BuildDrawPacket();
 

@@ -1,24 +1,20 @@
 #pragma once
-#include "GameClient/Service/Render/Repository/Mesh/IMeshProvider.h"
+#include "GameClient/Service/Render/Repository/IResourceProvider.h"
 #include "MeshCreateGraphBuilder.h"
-#include "../ResourceReleaseBuilder.h"
+#include "../PendingReleaseQueue.h"
 #include "MeshLoadRequest.h"
 #include <queue>
 
 struct MeshLoadRequest;
-class DescriptorFactory;
-class TaskScheduler;
-class ResourceFactory;
 
-class MeshProvider : public IMeshProvider
+class MeshProvider : public IResourceProvider
 {
 public:
     ~MeshProvider();
     MeshProvider() = delete;
-    MeshProvider(MeshCreateGraphBuilder create, ResourceReleaseBuilder release) noexcept;
-    virtual shared_ptr<IMeshResource> CreateResource() override;
-    virtual bool LoadResource(std::shared_ptr<IMeshResource> resource, std::shared_ptr<MeshAsset> asset) override;
-    virtual void ReleaseResource(std::shared_ptr<IMeshResource> resource) override;
+    MeshProvider(TaskScheduler& taskScheduler, MeshCreateGraphBuilder create) noexcept;
+    virtual std::shared_ptr<IResource> CreateResource(std::shared_ptr<AssetData> asset) override;
+    virtual void ReleaseResource(std::shared_ptr<IResource> res) override;
 
     void Update(size_t uploadBudgetBytes);
 
@@ -27,7 +23,6 @@ private:
     void FlushPendingRelease();
 
     MeshCreateGraphBuilder m_createBuilder;
-    ResourceReleaseBuilder m_releaseBuilder;
-    std::queue<MeshLoadRequest> m_pendingLoads;
-    std::vector<std::shared_ptr<IMeshResource>> m_pendingReleases;
+    PendingReleaseQueue m_pendingRelease;
+    std::queue<MeshLoadRequest> m_pendingLoads; // PendingLoadQueue는 안가짐. 그래프 콜백에서 직접 MarkReady
 };

@@ -74,6 +74,8 @@
     <ClInclude Include="Render\DX12\Provider\Environment\EnvironmentProvider.h" />
     <ClInclude Include="Render\DX12\Provider\Font\FontProvider.h" />
     <ClInclude Include="Render\DX12\Provider\Mesh\TransientMeshProvider.h" />
+    <ClInclude Include="Render\DX12\Provider\PendingLoadQueue.h" />
+    <ClInclude Include="Render\DX12\Provider\PendingReleaseQueue.h" />
     <ClInclude Include="Render\DX12\Provider\ResourceProvider.h" />
     <ClInclude Include="Render\DX12\Provider\ResourceReleaseBuilder.h" />
     <ClInclude Include="Render\DX12\Provider\Texture\TextureCreateGraphBuilder.h" />
@@ -234,6 +236,8 @@
     <ClCompile Include="Render\DX12\Provider\Environment\EnvironmentProvider.cpp" />
     <ClCompile Include="Render\DX12\Provider\Font\FontProvider.cpp" />
     <ClCompile Include="Render\DX12\Provider\Mesh\TransientMeshProvider.cpp" />
+    <ClCompile Include="Render\DX12\Provider\PendingLoadQueue.cpp" />
+    <ClCompile Include="Render\DX12\Provider\PendingReleaseQueue.cpp" />
     <ClCompile Include="Render\DX12\Provider\ResourceProvider.cpp" />
     <ClCompile Include="Render\DX12\Provider\ResourceReleaseBuilder.cpp" />
     <ClCompile Include="Render\DX12\Provider\Texture\TextureCubeCreateGraphBuilder.cpp" />

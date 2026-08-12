@@ -2,6 +2,7 @@
 #include "RenderScene.h"
 #include "RenderSortKey.h"
 #include "Resource/Material/SurfaceMaterialResource.h"
+#include "Resource/Environment/EnvironmentResource.h"
 
 void RenderScene::AddSurface(const DrawItem& item)
 {
@@ -34,9 +35,9 @@ void RenderScene::AddUI(const DrawUIItem& uiItem)
     m_uiDraws.push_back(std::move(newItem));
 }
 
-void RenderScene::SetEnvironment(std::shared_ptr<EnvironmentResource> envRes) 
+void RenderScene::SetEnvironment(std::shared_ptr<IResource> envRes) 
 {
-    m_environment = std::move(envRes);
+    m_environment = std::static_pointer_cast<EnvironmentResource>(envRes);
 }
 
 DrawPacket RenderScene::BuildDrawPacket()
