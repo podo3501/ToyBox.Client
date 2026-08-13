@@ -21,17 +21,18 @@ RenderService::RenderService(unique_ptr<IRenderBackend> backend, IAssetAsyncLoad
 {
 	auto providerSet = m_backend->GetResourceProviderSet();
 
-	//m_repositories.Emplace<FontRepository>(providerSet->GetFontProvider(), asyncLoader);
-	//m_repositories.Emplace<MeshRepository>(providerSet->GetMeshProvider(), asyncLoader);
-	//m_repositories.Emplace<DebugMeshRepository>(providerSet->GetMeshProvider(), asyncLoader);
-	//m_repositories.Emplace<BrushRepository>(providerSet->GetBrushProvider(), asyncLoader);
-	//m_repositories.Emplace<EnvironmentRepository>(providerSet->GetEnvironmentProvider(), asyncLoader);
+	m_repositories.Emplace<FontRepository>(providerSet->GetFontProvider(), asyncLoader);
+	m_repositories.Emplace<MeshRepository>(providerSet->GetMeshProvider(), asyncLoader);
+	m_repositories.Emplace<DebugMeshRepository>(providerSet->GetMeshProvider(), asyncLoader);
+	m_repositories.Emplace<DebugMaterialRepository>(providerSet->GetDebugMaterialProvider(), asyncLoader);
+	m_repositories.Emplace<BrushRepository>(providerSet->GetBrushProvider(), asyncLoader);
+	m_repositories.Emplace<EnvironmentRepository>(providerSet->GetEnvironmentProvider(), asyncLoader);
 
-	m_fontRepository = make_unique<FontRepository>(providerSet->GetFontProvider(), asyncLoader);
-	m_meshRepository = make_unique<MeshRepository>(providerSet->GetMeshProvider(), asyncLoader);
-	m_debugMeshRepository = make_unique<DebugMeshRepository>(providerSet->GetMeshProvider(), asyncLoader);
-	m_brushRepository = make_unique<BrushRepository>(providerSet->GetBrushProvider(), asyncLoader);
-	m_envRepository = make_unique<EnvironmentRepository>(providerSet->GetEnvironmentProvider(), asyncLoader);
+	//m_fontRepository = make_unique<FontRepository>(providerSet->GetFontProvider(), asyncLoader);
+	//m_meshRepository = make_unique<MeshRepository>(providerSet->GetMeshProvider(), asyncLoader);
+	//m_debugMeshRepository = make_unique<DebugMeshRepository>(providerSet->GetMeshProvider(), asyncLoader);
+	//m_brushRepository = make_unique<BrushRepository>(providerSet->GetBrushProvider(), asyncLoader);
+	//m_envRepository = make_unique<EnvironmentRepository>(providerSet->GetEnvironmentProvider(), asyncLoader);
 
 	m_matRepository = make_unique<MaterialRepository>(providerSet->GetMaterialProvider(), asyncLoader);
 }
@@ -50,21 +51,13 @@ bool RenderService::Initialize(HWND hwnd, const Size& screenSize)
 	ReturnIfFalse(m_backend->Initialize(hwnd, screenSize, shaderDescs));
 
 	m_repository = make_unique<RenderRepository>(
-		m_fontRepository.get(),
-		m_meshRepository.get(),
-		m_debugMeshRepository.get(),
-		m_matRepository.get(),
-		m_brushRepository.get(),
-		m_envRepository.get());
+		m_repositories,
+		m_matRepository.get());
 
 	m_renderer = make_unique<SceneRenderer>(
 		m_backend->GetRenderFrame(),
-		m_fontRepository.get(),
-		m_meshRepository.get(),
-		m_debugMeshRepository.get(),
-		m_matRepository.get(),
-		m_brushRepository.get(),
-		m_envRepository.get());
+		m_repositories,
+		m_matRepository.get());
 
 	return true;
 }

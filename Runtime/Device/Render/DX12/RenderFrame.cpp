@@ -95,9 +95,8 @@ void RenderFrame::DrawUI(
     item.mesh = meshRes;
     item.brush = brushRes;
     item.world = world;
-
-    auto brush = static_cast<BrushResource*>(brushRes.get());
-    item.uvTransform = brush->CalcUVTransform(source);
+    if (source)
+        item.source = *source;
 
     m_scene.AddUI(item);
 }

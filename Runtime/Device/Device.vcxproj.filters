@@ -611,6 +611,12 @@
     <ClInclude Include="Render\DX12\Provider\PendingReleaseQueue.h">
       <Filter>Render\DX12\Provider</Filter>
     </ClInclude>
+    <ClInclude Include="Render\DX12\Provider\Material\DebugMaterialProvider.h">
+      <Filter>Render\DX12\Provider\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Resource\Material\GridDebugMaterialResource.h">
+      <Filter>Render\DX12\Resource\Material</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -1003,6 +1009,12 @@
     </ClCompile>
     <ClCompile Include="Render\DX12\Provider\PendingReleaseQueue.cpp">
       <Filter>Render\DX12\Provider</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Provider\Material\DebugMaterialProvider.cpp">
+      <Filter>Render\DX12\Provider\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Resource\Material\GridDebugMaterialResource.cpp">
+      <Filter>Render\DX12\Resource\Material</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

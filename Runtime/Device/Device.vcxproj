@@ -73,6 +73,7 @@
     <ClInclude Include="Render\DX12\Provider\Brush\BrushProvider.h" />
     <ClInclude Include="Render\DX12\Provider\Environment\EnvironmentProvider.h" />
     <ClInclude Include="Render\DX12\Provider\Font\FontProvider.h" />
+    <ClInclude Include="Render\DX12\Provider\Material\DebugMaterialProvider.h" />
     <ClInclude Include="Render\DX12\Provider\Mesh\TransientMeshProvider.h" />
     <ClInclude Include="Render\DX12\Provider\PendingLoadQueue.h" />
     <ClInclude Include="Render\DX12\Provider\PendingReleaseQueue.h" />
@@ -137,6 +138,7 @@
     <ClInclude Include="Render\DX12\Resource\Font\FontResource.h" />
     <ClInclude Include="Render\DX12\Resource\IPendingResource.h" />
     <ClInclude Include="Render\DX12\Resource\Material\DebugSurfaceMaterialResource.h" />
+    <ClInclude Include="Render\DX12\Resource\Material\GridDebugMaterialResource.h" />
     <ClInclude Include="Render\DX12\Resource\Material\GridMaterialResource.h" />
     <ClInclude Include="Render\DX12\Resource\Material\MaterialResource.h" />
     <ClInclude Include="Render\DX12\Resource\Material\PbrMaterialResource.h" />
@@ -235,6 +237,7 @@
     <ClCompile Include="Render\DX12\Provider\Brush\BrushProvider.cpp" />
     <ClCompile Include="Render\DX12\Provider\Environment\EnvironmentProvider.cpp" />
     <ClCompile Include="Render\DX12\Provider\Font\FontProvider.cpp" />
+    <ClCompile Include="Render\DX12\Provider\Material\DebugMaterialProvider.cpp" />
     <ClCompile Include="Render\DX12\Provider\Mesh\TransientMeshProvider.cpp" />
     <ClCompile Include="Render\DX12\Provider\PendingLoadQueue.cpp" />
     <ClCompile Include="Render\DX12\Provider\PendingReleaseQueue.cpp" />
@@ -283,6 +286,7 @@
     <ClCompile Include="Render\DX12\Resource\Brush\BrushResource.cpp" />
     <ClCompile Include="Render\DX12\Resource\Environment\EnvironmentResource.cpp" />
     <ClCompile Include="Render\DX12\Resource\Font\FontResource.cpp" />
+    <ClCompile Include="Render\DX12\Resource\Material\GridDebugMaterialResource.cpp" />
     <ClCompile Include="Render\DX12\Resource\Material\GridMaterialResource.cpp" />
     <ClCompile Include="Render\DX12\Resource\Material\MaterialResource.cpp" />
     <ClCompile Include="Render\DX12\Resource\Material\PbrMaterialResource.cpp" />

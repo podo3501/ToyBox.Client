@@ -9,6 +9,9 @@ using MeshRepository = ResourceRepository<MeshResourceTraits>;
 struct DebugMeshResourceTraits;
 using DebugMeshRepository = ResourceRepository<DebugMeshResourceTraits>;
 
+struct DebugMaterialResourceTraits;
+using DebugMaterialRepository = ResourceRepository<DebugMaterialResourceTraits>;
+
 struct BrushResourceTraits;
 using BrushRepository = ResourceRepository<BrushResourceTraits>;
 

@@ -127,6 +127,7 @@
     <ClInclude Include="Asset\AssetInput.h" />
     <ClInclude Include="Asset\AudioTypes.h" />
     <ClInclude Include="Asset\BinaryAsset.h" />
+    <ClInclude Include="Asset\DebugMaterialAsset.h" />
     <ClInclude Include="Asset\EnvironmentAsset.h" />
     <ClInclude Include="Asset\IAssetLoader.h" />
     <ClInclude Include="Asset\IAssetProvider.h" />
@@ -198,6 +199,7 @@
     <ClInclude Include="Service\Render\Definition\DebugMeshDesc.h" />
     <ClInclude Include="Service\Render\Definition\EnvironmentDesc.h" />
     <ClInclude Include="Service\Render\Definition\FontDesc.h" />
+    <ClInclude Include="Service\Render\Definition\GridDebugMaterialDesc.h" />
     <ClInclude Include="Service\Render\Definition\Material\DebugSurfaceMaterialDesc.h" />
     <ClInclude Include="Service\Render\Definition\Material\GridMaterialDesc.h" />
     <ClInclude Include="Service\Render\Definition\Material\MaterialDesc.h" />
@@ -211,6 +213,7 @@
     <ClInclude Include="Service\Render\Definition\ShaderStageBuilder.h" />
     <ClInclude Include="Service\Render\Definition\Text\TextStyle.h" />
     <ClInclude Include="Service\Render\Definition\BrushDesc.h" />
+    <ClInclude Include="Service\Render\Handle\DebugMaterialHandle.h" />
     <ClInclude Include="Service\Render\Handle\DebugMeshHandle.h" />
     <ClInclude Include="Service\Render\Handle\EnvironmentHandle.h" />
     <ClInclude Include="Service\Render\Handle\FontHandle.h" />
@@ -235,6 +238,7 @@
     <ClInclude Include="Service\Render\Repository\RepositoryFwd.h" />
     <ClInclude Include="Service\Render\Repository\ResourceRepositories.h" />
     <ClInclude Include="Service\Render\Repository\Resource\BrushRepository.h" />
+    <ClInclude Include="Service\Render\Repository\Resource\DebugMaterialRepository.h" />
     <ClInclude Include="Service\Render\Repository\Resource\DebugMeshRepository.h" />
     <ClInclude Include="Service\Render\Repository\Resource\EnvironmentRepository.h" />
     <ClInclude Include="Service\Render\Repository\Resource\FontRepository.h" />

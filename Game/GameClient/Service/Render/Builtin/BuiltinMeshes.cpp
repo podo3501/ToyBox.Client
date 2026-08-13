@@ -29,8 +29,8 @@ static std::shared_ptr<MeshAsset> CreateUIQuadAsset()
 	return asset;
 }
 
-MeshHandle CreateBuiltinUIQuad(MeshRepository* repository)
+MeshHandle CreateBuiltinUIQuad(MeshRepository& repository)
 {
     MeshDesc desc{ Core::ResourceID::MakeBuiltin("ui_quad") };
-    return repository->AcquireFromAsset(desc, CreateUIQuadAsset());
+    return repository.AcquireFromAsset(desc, CreateUIQuadAsset());
 }

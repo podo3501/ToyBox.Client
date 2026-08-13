@@ -99,8 +99,9 @@ void UIRenderer::Draw(
     MeshResource& mesh,
     BrushResource& brush,
     const Core::Matrix& quadWorld,
-    const Core::Vector4& uvTransform)
+    const std::optional<Rect>& source)
 {
+    const Core::Vector4 uvTransform = brush.CalcUVTransform(source);
     auto drawCBAddress = UploadDrawCB( quadWorld, uvTransform);
 
     uint32_t resIndices[3] = 

@@ -28,8 +28,8 @@ struct DrawUIItem
     std::shared_ptr<IResource> mesh;
     std::shared_ptr<IResource> brush;
     Core::Matrix world{};
-    Core::Vector4 uvTransform{ 0.f, 0.f, 1.f, 1.f };
-
+    std::optional<Rect> source{ nullopt };
+    
     uint64_t sortKey{ 0 };
 };
 

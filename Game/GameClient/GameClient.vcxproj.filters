@@ -811,6 +811,18 @@
     <ClInclude Include="Service\Render\Repository\Container\RepositoryTypeTraits.h">
       <Filter>Service\Render\Repository\Container</Filter>
     </ClInclude>
+    <ClInclude Include="Service\Render\Definition\GridDebugMaterialDesc.h">
+      <Filter>Service\Render\Definition</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Handle\DebugMaterialHandle.h">
+      <Filter>Service\Render\Handle</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Repository\Resource\DebugMaterialRepository.h">
+      <Filter>Service\Render\Repository\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\DebugMaterialAsset.h">
+      <Filter>Asset</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Locator">

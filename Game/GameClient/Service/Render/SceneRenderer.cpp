@@ -1,33 +1,31 @@
 #include "pch.h"
 #include "SceneRenderer.h"
 #include "IRenderFrame.h"
-#include "Repository/Material/MaterialRepository.h"
+#include "Repository/Container/RepositoryContainer.h"
+#include "Repository/Container/RepositoryTypeTraits.h"
+#include "Repository/ResourceRepositories.h"
 #include "Builtin/BuiltinMeshes.h"
 #include "Builtin/BuiltinMaterials.h"
 #include "Builtin/BuiltinBrush.h"
 
-#include "Repository/ResourceRepositories.h"
+#include "Repository/Material/MaterialRepository.h"
 
 SceneRenderer::~SceneRenderer() = default;
 SceneRenderer::SceneRenderer(
-	IRenderFrame* renderFrame, 
-	FontRepository* fontRepository,
-	MeshRepository* meshRepository, 
-	DebugMeshRepository* debugMeshRepository,
-	MaterialRepository* matRepository,
-	BrushRepository* brushRepository,
-	EnvironmentRepository* envRepository) :
+	IRenderFrame* renderFrame,
+	RepositoryContainer& repositories,
+	MaterialRepository* matRepository) :
 	m_renderFrame{ renderFrame },
-	m_fontRepository{ fontRepository },
-	m_meshRepository{ meshRepository },
-	m_debugMeshRepository{ debugMeshRepository },
-	m_matRepository{ matRepository },
-	m_brushRepository{ brushRepository },
-	m_envRepository{ envRepository }
+	m_repositories{ repositories },
+	m_matRepository{ matRepository }
 {
-	m_uiQuad = CreateBuiltinUIQuad(m_meshRepository);
+	auto& meshRepository = m_repositories.Get<MeshRepository>();
+	m_uiQuad = CreateBuiltinUIQuad(meshRepository);
+
 	m_defaultMaterials = CreateBuiltinMaterials(m_matRepository);
-	m_defaultBrush = CreateBuiltinBrush(m_brushRepository);
+
+	auto& brushRepository = m_repositories.Get<BrushRepository>();
+	m_defaultBrush = CreateBuiltinBrush(brushRepository);
 }
 
 void SceneRenderer::DrawText(
@@ -51,7 +49,8 @@ void SceneRenderer::DrawText(
 	const Rect& bounds,
 	const TextLayout& layout)
 {
-	auto fontRes = m_fontRepository->GetIfReady(hF);
+	auto& fontRepository = m_repositories.Get<FontRepository>();
+	auto fontRes = fontRepository.GetIfReady(hF);
 	if (!fontRes)
 		return;
 
@@ -77,7 +76,8 @@ void SceneRenderer::DrawSurface(MeshHandle hM, MaterialHandle hMtl, const Core::
 	if (!hMtl)
 		hMtl = GetDefaultMaterial(MaterialDomain::Surface);
 
-	auto meshRes = m_meshRepository->GetIfReady(hM);
+	auto& meshRepository = m_repositories.Get<MeshRepository>();
+	auto meshRes = meshRepository.GetIfReady(hM);
 	if (!meshRes)
 		return;
 
@@ -93,7 +93,8 @@ void SceneRenderer::DrawDebugSurface(DebugMeshHandle hDM, MaterialHandle hMtl, c
 	if (!hMtl)
 		hMtl = GetDefaultMaterial(MaterialDomain::DebugSurface);
 
-	auto meshRes = m_debugMeshRepository->GetIfReady(hDM);
+	auto& debugMeshRepository = m_repositories.Get<DebugMeshRepository>();
+	auto meshRes = debugMeshRepository.GetIfReady(hDM);
 	if (!meshRes)
 		return;
 
@@ -109,11 +110,13 @@ void SceneRenderer::DrawUI(BrushHandle bh, const Rect& dest, const Rect* source)
 	if (!bh)
 		bh = m_defaultBrush;
 
-	auto meshRes = m_meshRepository->GetIfReady(m_uiQuad);
+	auto& meshRepository = m_repositories.Get<MeshRepository>();
+	auto meshRes = meshRepository.GetIfReady(m_uiQuad);
 	if (!meshRes)
 		return;
 
-	auto brushRes = m_brushRepository->GetIfReady(bh);
+	auto& brushRepository = m_repositories.Get<BrushRepository>();
+	auto brushRes = brushRepository.GetIfReady(bh);
 	if (!brushRes)
 		return;
 
@@ -131,7 +134,8 @@ void SceneRenderer::DrawEnvironment(EnvironmentHandle hEnv)
 {
 	if (!hEnv) return;
 
-	auto envRes = m_envRepository->GetIfReady(hEnv);
+	auto& envRepository = m_repositories.Get<EnvironmentRepository>();
+	auto envRes = envRepository.GetIfReady(hEnv);
 	if (!envRes)
 		return;
 

@@ -26,7 +26,7 @@ public:
         MeshResource& mesh, 
         BrushResource& brush,
         const Core::Matrix& world,
-        const Core::Vector4& uvTransform);
+        const std::optional<Rect>& source);
 
     void SetScreenSize(const Size& size);
 

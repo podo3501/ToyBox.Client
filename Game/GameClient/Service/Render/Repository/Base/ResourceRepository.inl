@@ -7,16 +7,20 @@ ResourceRepository<Traits>::ResourceRepository(IResourceProvider* provider, IAss
 {}
 
 template <typename Traits>
-ResourceRepository<Traits>::HandleT 
-ResourceRepository<Traits>::RegisterNewEntry(size_t key)
+std::pair<typename ResourceRepository<Traits>::HandleT, bool>
+ResourceRepository<Traits>::FindOrRegister(const DescT& desc)
 {
+    const size_t key = desc.GetHash();
+    auto it = m_cache.find(key);
+    if (it != m_cache.end())
+        return { it->second, false }; // 이미 존재
+
     ResourceEntry entry;
     entry.key = key;
-
     auto handle = m_loadedResources.Emplace(std::move(entry));
     m_cache[key] = handle;
 
-    return handle;
+    return { handle, true }; // 새로 등록됨
 }
 
 template <typename Traits>
@@ -25,16 +29,12 @@ ResourceRepository<Traits>::Acquire(const DescT& desc)
 {
     assert(desc.resID.GetType() == Core::ResourceIDType::Path);
 
-    const size_t key = desc.GetHash();
-    auto it = m_cache.find(key);
-    if (it != m_cache.end())
-        return it->second;
-
-    auto handle = RegisterNewEntry(key);
+    auto [handle, isNew] = FindOrRegister(desc);
+    if (!isNew)
+        return handle;
 
     auto reqID = Asset::PushRequest<AssetT>(m_asyncLoader, desc.resID);
     m_assetPending.push_back({ handle, reqID });
-
     return handle;
 }
 
@@ -44,14 +44,11 @@ ResourceRepository<Traits>::AcquireFromAsset(const DescT& desc, std::shared_ptr<
 {
     assert(desc.resID.GetType() != Core::ResourceIDType::Path);
 
-    const size_t key = desc.GetHash();
-    auto it = m_cache.find(key);
-    if (it != m_cache.end())
-        return it->second;
+    auto [handle, isNew] = FindOrRegister(desc);
+    if (!isNew)
+        return handle;
 
-    auto handle = RegisterNewEntry(key);
     m_resourcePending.push_back({ handle, asset });
-
     return handle;
 }
 

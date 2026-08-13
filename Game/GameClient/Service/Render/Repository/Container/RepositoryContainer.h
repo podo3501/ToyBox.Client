@@ -8,26 +8,52 @@ public:
     ~RepositoryContainer();
     RepositoryContainer();
 
-    template<typename TRepo, typename... Args>
-    TRepo* Emplace(Args&&... args)
+    template<typename TRepository, typename... Args>
+    TRepository& Emplace(Args&&... args)
     {
-        static_assert(std::is_base_of_v<IResourceRepository, TRepo>);
-        constexpr auto type = RepositoryTypeOf<TRepo>::value; // 인스턴스화 시점에 특수화만 보이면 OK
-        auto repo = std::make_unique<TRepo>(std::forward<Args>(args)...);
-        TRepo* ptr = repo.get();
-        m_repositories[Core::ToIndex(type)] = std::move(repo);
-        return ptr;
+        static_assert(std::is_base_of_v<IResourceRepository, TRepository>);
+        constexpr auto type = RepositoryTypeOf<TRepository>::value; // 인스턴스화 시점에 특수화만 보이면 OK
+
+        auto repository = std::make_unique<TRepository>(std::forward<Args>(args)...);
+        TRepository* ptr = repository.get();
+        m_repositories[Core::ToIndex(type)] = std::move(repository);
+
+        return *ptr;
     }
 
-    template<typename TRepo>
-    TRepo* Get() const
+    template<typename TRepository>
+    TRepository& Get() const
     {
-        constexpr auto type = RepositoryTypeOf<TRepo>::value;
-        return static_cast<TRepo*>(m_repositories[Core::ToIndex(type)].get());
+        constexpr auto type = RepositoryTypeOf<TRepository>::value;
+        auto* repository = static_cast<TRepository*>(
+            m_repositories[Core::ToIndex(type)].get());
+
+        Assert(repository);
+        return *repository;
     }
 
     void UpdateAll();
     void ReleaseAll();
+
+    // 매 프레임 부르지 않는 헬퍼 함수.
+
+    template<typename TRepository, typename... Args>
+    auto Acquire(Args&&... args)
+    {
+        return Get<TRepository>().Acquire(std::forward<Args>(args)...);
+    }
+
+    template<typename TRepository, typename... Args>
+    auto AcquireFromAsset(Args&&... args)
+    {
+        return Get<TRepository>().AcquireFromAsset(std::forward<Args>(args)...);
+    }
+
+    template<typename TRepository, typename THandle>
+    bool Release(THandle handle)
+    {
+        return Get<TRepository>().Release(handle);
+    }
 
 private:
     std::vector<std::unique_ptr<IResourceRepository>> m_repositories;

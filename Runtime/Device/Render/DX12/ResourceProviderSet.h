@@ -4,6 +4,7 @@
 #include "Provider/Mesh/MeshProvider.h"
 #include "Provider/Texture/TextureProvider.h"
 #include "Provider/Material/MaterialProvider.h"
+#include "Provider/Material/DebugMaterialProvider.h"
 #include "Provider/Brush/BrushProvider.h"
 #include "Provider/Texture/TextureCubeProvider.h"
 #include "Provider/Environment/EnvironmentProvider.h"
@@ -28,6 +29,7 @@ public:
 	virtual IResourceProvider* GetFontProvider() override { return &m_fontProvider; }
 	virtual IResourceProvider* GetMeshProvider() override { return &m_meshProvider; }
 	virtual IMaterialProvider* GetMaterialProvider() override { return &m_matProvider; }
+	virtual IResourceProvider* GetDebugMaterialProvider() override { return &m_debugMatProvider; }
 	virtual IResourceProvider* GetBrushProvider() override { return &m_brushProvider; }
 	virtual IResourceProvider* GetEnvironmentProvider() override { return &m_envProvider; }
 	
@@ -41,6 +43,7 @@ private:
 	MeshProvider m_meshProvider;
 	TextureProvider m_texProvider;
 	MaterialProvider m_matProvider;
+	DebugMaterialProvider m_debugMatProvider;
 	BrushProvider m_brushProvider;
 	TextureCubeProvider m_cubeProvider;
 	EnvironmentProvider m_envProvider;

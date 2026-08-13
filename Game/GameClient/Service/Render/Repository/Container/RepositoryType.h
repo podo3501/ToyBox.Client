@@ -4,8 +4,8 @@ enum class RepositoryType
 {
     Font,
     Mesh, 
-    DebugMesh, 
-    Material, 
+    DebugMesh,
+    DebugMaterial, 
     Brush, 
     Environment,
     Count

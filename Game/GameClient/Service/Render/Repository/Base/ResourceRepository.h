@@ -24,14 +24,14 @@ public:
     using DescT = typename Traits::Desc;
     using AssetT = typename Traits::Asset;
 
-    ResourceRepository(IResourceProvider* provider, IAssetAsyncLoader* asyncLoader);
     virtual ~ResourceRepository() = default;
+    ResourceRepository(IResourceProvider* provider, IAssetAsyncLoader* asyncLoader);
+    virtual void ReleaseAll() override;
+    virtual void Update() override;
 
     HandleT Acquire(const DescT& desc); // path
     HandleT AcquireFromAsset(const DescT& desc, std::shared_ptr<AssetT> asset); // builtin/runtime
     bool Release(HandleT handle);
-    void ReleaseAll();
-    void Update();
 
     std::shared_ptr<IResource> GetIfReady(HandleT handle) const;
 
@@ -48,7 +48,7 @@ private:
         std::shared_ptr<AssetT> asset;
     };
 
-    HandleT RegisterNewEntry(size_t key);
+    std::pair<HandleT, bool> FindOrRegister(const DescT& desc);
     void ProcessAssetPending();  // CPU 로드 완료된 항목을 GPU 대기열로 이동
     void ProcessResourcePending();  // GPU 업로드 시작, 완료 대기열(m_loadingList)로 이동
     void ProcessLoading(); // GPU 업로드 완료 여부 확인, 완료 시 Ready 처리

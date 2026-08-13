@@ -11,7 +11,7 @@ bool BrushResource::IsDependencyReady() const noexcept
     return m_texture && m_texture->IsReady();
 }
 
-Core::Vector4 BrushResource::CalcUVTransform(const Rect* source) const
+Core::Vector4 BrushResource::CalcUVTransform(const std::optional<Rect>& source) const
 {
     if (!source)
         return Core::Vector4(0.0f, 0.0f, 1.0f, 1.0f);

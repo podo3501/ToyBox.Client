@@ -15,7 +15,7 @@ public:
 	virtual bool IsDependencyReady() const noexcept override;
 	virtual void MarkReady() override { m_ready = true; }
 
-	Core::Vector4 CalcUVTransform(const Rect* source) const;
+	Core::Vector4 CalcUVTransform(const std::optional<Rect>& source) const;
 
 	void SetTexture(std::shared_ptr<TextureResource> res) { m_texture = std::move(res); }	
 	std::shared_ptr<TextureResource> GetTexture() { return m_texture; }

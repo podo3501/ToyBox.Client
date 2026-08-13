@@ -28,7 +28,7 @@ void UIGraphBuilder::Build(RenderGraph& graph)
                 auto mesh = static_cast<MeshResource*>(uiItem.mesh.get());
                 auto brush = static_cast<BrushResource*>(uiItem.brush.get());
 
-                uiRenderer.Draw(cmd, *mesh, *brush, uiItem.world, uiItem.uvTransform);
+                uiRenderer.Draw(cmd, *mesh, *brush, uiItem.world, uiItem.source);
             }
         };
 }
