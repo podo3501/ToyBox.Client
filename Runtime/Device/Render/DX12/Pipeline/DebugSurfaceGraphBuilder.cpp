@@ -4,7 +4,7 @@
 #include "Scene/RenderScene.h"
 #include "Renderer/DebugSurfaceRenderer.h"
 #include "Resource/Mesh/MeshResource.h"
-#include "Resource/Material/GridMaterialResource.h"
+#include "Resource/Material/DebugMaterialResource.h"
 
 DebugSurfaceGraphBuilder::~DebugSurfaceGraphBuilder() = default;
 DebugSurfaceGraphBuilder::DebugSurfaceGraphBuilder(
@@ -30,7 +30,7 @@ void DebugSurfaceGraphBuilder::Build(RenderGraph& graph)
             for (auto& item : ctx.drawPacket.debugSurface)
             {
                 auto mesh = static_cast<MeshResource*>(item.mesh.get());
-                auto material = static_cast<GridMaterialResource*>(item.material.get());
+                auto material = static_cast<DebugMaterialResource*>(item.material.get());
 
                 debugSurfRenderer.BindPipeline(cmd, material->GetPipelineState());
                 debugSurfRenderer.Draw(cmd, *mesh, item.world);

@@ -1,16 +1,17 @@
-#pragma once
+#include "pch.h"
+#include "ResourceRepositoryImpl.h"
+#include "Service/AssetAsyncHelper.h"
+#include "../IResourceProvider.h"
 
-template <typename Traits>
-ResourceRepository<Traits>::ResourceRepository(IResourceProvider* provider, IAssetAsyncLoader* asyncLoader) :
+ResourceRepositoryImpl::~ResourceRepositoryImpl() = default;
+ResourceRepositoryImpl::ResourceRepositoryImpl(IResourceProvider* provider, IAssetAsyncLoader* asyncLoader) :
     m_provider{ provider },
     m_asyncLoader{ asyncLoader }
 {}
 
-template <typename Traits>
-std::pair<typename ResourceRepository<Traits>::HandleT, bool>
-ResourceRepository<Traits>::FindOrRegister(const DescT& desc)
+std::pair<ResourceRepositoryImpl::RawHandle, bool> 
+ResourceRepositoryImpl::FindOrRegister(size_t key)
 {
-    const size_t key = desc.GetHash();
     auto it = m_cache.find(key);
     if (it != m_cache.end())
         return { it->second, false }; // 이미 존재
@@ -23,28 +24,26 @@ ResourceRepository<Traits>::FindOrRegister(const DescT& desc)
     return { handle, true }; // 새로 등록됨
 }
 
-template <typename Traits>
-ResourceRepository<Traits>::HandleT 
-ResourceRepository<Traits>::Acquire(const DescT& desc)
+ResourceRepositoryImpl::RawHandle 
+ResourceRepositoryImpl::Acquire(const ResourceDesc& desc)
 {
-    assert(desc.resID.GetType() == Core::ResourceIDType::Path);
+    assert(desc.GetResourceID().GetType() == Core::ResourceIDType::Path);
 
-    auto [handle, isNew] = FindOrRegister(desc);
+    auto [handle, isNew] = FindOrRegister(desc.GetHash());
     if (!isNew)
         return handle;
 
-    auto reqID = Asset::PushRequest<AssetT>(m_asyncLoader, desc.resID);
+    auto reqID = Asset::PushRequest(m_asyncLoader, desc.GetAssetTypeID(), desc.GetResourceID());
     m_assetPending.push_back({ handle, reqID });
     return handle;
 }
 
-template <typename Traits>
-ResourceRepository<Traits>::HandleT
-ResourceRepository<Traits>::AcquireFromAsset(const DescT& desc, std::shared_ptr<AssetT> asset)
+ResourceRepositoryImpl::RawHandle 
+ResourceRepositoryImpl::AcquireFromAsset(const ResourceDesc& desc, std::shared_ptr<AssetData> asset)
 {
-    assert(desc.resID.GetType() != Core::ResourceIDType::Path);
+    assert(desc.GetResourceID().GetType() != Core::ResourceIDType::Path);
 
-    auto [handle, isNew] = FindOrRegister(desc);
+    auto [handle, isNew] = FindOrRegister(desc.GetHash());
     if (!isNew)
         return handle;
 
@@ -52,8 +51,7 @@ ResourceRepository<Traits>::AcquireFromAsset(const DescT& desc, std::shared_ptr<
     return handle;
 }
 
-template <typename Traits>
-bool ResourceRepository<Traits>::Release(HandleT handle)
+bool ResourceRepositoryImpl::Release(RawHandle handle)
 {
     auto entry = m_loadedResources.Find(handle);
     if (!entry) return false;
@@ -65,10 +63,9 @@ bool ResourceRepository<Traits>::Release(HandleT handle)
     return m_loadedResources.Remove(handle);
 }
 
-template <typename Traits>
-void ResourceRepository<Traits>::ReleaseAll()
+void ResourceRepositoryImpl::ReleaseAll()
 {
-    m_loadedResources.Visit([this](HandleT h, ResourceEntry&) {
+    m_loadedResources.Visit([this](RawHandle h, ResourceEntry&) {
         Release(h);
         });
 
@@ -80,16 +77,14 @@ void ResourceRepository<Traits>::ReleaseAll()
     m_loadedResources.Clear();
 }
 
-template <typename Traits>
-void ResourceRepository<Traits>::Update()
+void ResourceRepositoryImpl::Update()
 {
     ProcessAssetPending();
     ProcessResourcePending();
     ProcessLoading();
 }
 
-template <typename Traits>
-std::shared_ptr<IResource> ResourceRepository<Traits>::GetIfReady(HandleT handle) const
+std::shared_ptr<IResource> ResourceRepositoryImpl::GetIfReady(RawHandle handle) const
 {
     auto entry = m_loadedResources.Find(handle);
     if (entry && entry->state == LoadState::Ready)
@@ -100,8 +95,7 @@ std::shared_ptr<IResource> ResourceRepository<Traits>::GetIfReady(HandleT handle
 
 // ---- 파이프라인 단계별 처리 ----
 
-template <typename Traits>
-void ResourceRepository<Traits>::ProcessAssetPending()
+void ResourceRepositoryImpl::ProcessAssetPending()
 {
     if (m_assetPending.empty())
         return;
@@ -118,15 +112,14 @@ void ResourceRepository<Traits>::ProcessAssetPending()
 
         GpuPendingRequest gpuReq;
         gpuReq.handle = req.handle;
-        gpuReq.asset = std::static_pointer_cast<AssetT>(asset);
+        gpuReq.asset = asset;
         m_resourcePending.push_back(std::move(gpuReq));
 
         it = m_assetPending.erase(it);
     }
 }
 
-template <typename Traits>
-void ResourceRepository<Traits>::ProcessResourcePending()
+void ResourceRepositoryImpl::ProcessResourcePending()
 {
     for (auto& work : m_resourcePending)
     {
@@ -150,8 +143,7 @@ void ResourceRepository<Traits>::ProcessResourcePending()
     m_resourcePending.clear();
 }
 
-template <typename Traits>
-void ResourceRepository<Traits>::ProcessLoading()
+void ResourceRepositoryImpl::ProcessLoading()
 {
     for (auto it = m_loadingList.begin(); it != m_loadingList.end(); )
     {

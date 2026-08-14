@@ -23,6 +23,15 @@ struct DrawItem
     uint64_t sortKey{ 0 };
 };
 
+struct DrawDebugItem
+{
+    std::shared_ptr<IResource> mesh;
+    std::shared_ptr<IResource> material;
+    Core::Matrix world{};
+
+    uint64_t sortKey{ 0 };
+};
+
 struct DrawUIItem
 {
     std::shared_ptr<IResource> mesh;
@@ -64,7 +73,8 @@ struct DebugPacket
 struct DrawPacket
 {
     std::span<DrawItem> surface;
-    std::span<DrawItem> debugSurface;
+    std::span<DrawItem> debugS;
+    std::span<DrawDebugItem> debugSurface;
     std::span<DrawUIItem> ui;
     std::shared_ptr<EnvironmentResource> environment{ nullptr }; // nullptr 가능 - 환경 없는 씬
 

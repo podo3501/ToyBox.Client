@@ -1,5 +1,11 @@
 #include "pch.h"
 #include "GridDebugMaterialResource.h"
 
-GridDebugMaterialResource::~GridDebugMaterialResource() = default;
-GridDebugMaterialResource::GridDebugMaterialResource() = default;
+GridDebugMaterialResource::GridDebugMaterialResource() : 
+	DebugMaterialResource{
+		PipelineLibrary::Get(
+			RegistryShader::Grid,
+			RasterPreset::Default,
+			PrimitiveTopologyType::Line) 
+	}
+{}

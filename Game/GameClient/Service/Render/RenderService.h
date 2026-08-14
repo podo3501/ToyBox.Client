@@ -5,7 +5,6 @@
 #include "SceneRenderer.h"
 #include "Definition/ShaderStageBuilder.h"
 #include "Repository/Container/RepositoryContainer.h"
-#include "Repository/RepositoryFwd.h"
 
 struct IRenderBackend;
 struct FrameData;

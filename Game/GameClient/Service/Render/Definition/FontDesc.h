@@ -1,11 +1,14 @@
 #pragma once
-#include "Core/Foundation/ResourceID.h"
-#include "Core/Utils/Hash.h"
+#include "ResourceDesc.h"
+#include "GameClient/Asset/BinaryAsset.h"
 
-struct FontDesc
+struct FontDesc : public ResourceDesc
 {
-	Core::ResourceID resID; // .ttf 파일 경로
-
+	using ResourceDesc::ResourceDesc; // .ttf 파일 경로
 	bool operator==(const FontDesc&) const = default;
-	size_t GetHash() const { return Core::HashOf(resID); }
+
+	virtual Core::TypeID GetAssetTypeID() const override
+	{
+		return BinaryAsset::StaticTypeID();
+	}
 };

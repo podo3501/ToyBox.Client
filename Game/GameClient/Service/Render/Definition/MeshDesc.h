@@ -1,11 +1,14 @@
 #pragma once
-#include "Core/Foundation/ResourceID.h"
-#include "Core/Utils/Hash.h"
+#include "ResourceDesc.h"
+#include "GameClient/Asset/MeshAsset.h"
 
-struct MeshDesc
+struct MeshDesc : public ResourceDesc
 {
-	Core::ResourceID resID;
-
+	using ResourceDesc::ResourceDesc;
 	bool operator==(const MeshDesc&) const = default;
-	size_t GetHash() const { return Core::HashOf(resID); }
+
+	virtual Core::TypeID GetAssetTypeID() const override
+	{
+		return MeshAsset::StaticTypeID();
+	}
 };

@@ -617,6 +617,9 @@
     <ClInclude Include="Render\DX12\Resource\Material\GridDebugMaterialResource.h">
       <Filter>Render\DX12\Resource\Material</Filter>
     </ClInclude>
+    <ClInclude Include="Render\DX12\Resource\Material\DebugMaterialResource.h">
+      <Filter>Render\DX12\Resource\Material</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />

@@ -13,9 +13,15 @@ void RenderScene::AddSurface(const DrawItem& item)
     switch (material->GetMaterialDesc().domain)
     {
     case MaterialDomain::Surface: m_surfaceDraws.push_back(newItem); break;
-    case MaterialDomain::DebugSurface: m_debugSurfaceDraws.push_back(newItem); break;
+    case MaterialDomain::DebugSurface: m_debugDraws.push_back(newItem); break;
     default: Assert(false); break; //여긴 surface 종류만 호출해야 한다.
     }
+}
+
+void RenderScene::AddDebugSurface(const DrawDebugItem& item)
+{
+    DrawDebugItem newItem = item;
+    m_debugSurfaceDraws.push_back(std::move(newItem));
 }
 
 void RenderScene::AddUI(std::vector<DrawUIItem>&& items)
@@ -45,6 +51,7 @@ DrawPacket RenderScene::BuildDrawPacket()
     DrawPacket packet;
 
     packet.surface = m_surfaceDraws;
+    packet.debugS = m_debugDraws;
     packet.debugSurface = m_debugSurfaceDraws;
     packet.ui = m_uiDraws;
     packet.environment = m_environment; // shared_ptr 복사 (Clear에서 리셋되므로)
@@ -57,7 +64,12 @@ static bool SurfaceSort(const DrawItem& a, const DrawItem& b)
     return a.sortKey < b.sortKey;
 }
 
-static bool DebugSurfaceSort(const DrawItem& a, const DrawItem& b)
+static bool DebugSSort(const DrawItem& a, const DrawItem& b)
+{
+    return a.sortKey < b.sortKey;
+}
+
+static bool DebugSurfaceSort(const DrawDebugItem& a, const DrawDebugItem& b)
 {
     return a.sortKey < b.sortKey;
 }
@@ -70,6 +82,7 @@ static bool UISort(const DrawUIItem& a, const DrawUIItem& b)
 void RenderScene::SortDraws()
 {
     std::sort(m_surfaceDraws.begin(), m_surfaceDraws.end(), SurfaceSort);
+    std::sort(m_debugDraws.begin(), m_debugDraws.end(), DebugSSort);
     std::sort(m_debugSurfaceDraws.begin(), m_debugSurfaceDraws.end(), DebugSurfaceSort);
     std::sort(m_uiDraws.begin(), m_uiDraws.end(), UISort);
 }
@@ -77,6 +90,7 @@ void RenderScene::SortDraws()
 void RenderScene::Clear()
 {
     m_surfaceDraws.clear();
+    m_debugDraws.clear();
     m_debugSurfaceDraws.clear();
     m_uiDraws.clear();
     m_environment.reset();

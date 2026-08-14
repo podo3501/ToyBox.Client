@@ -27,6 +27,11 @@ public:
 		std::shared_ptr<IMaterialResource> matRes,
 		const Core::Matrix& world) override;
 
+	virtual void DrawDebugSurface(
+		std::shared_ptr<IResource> meshRes,
+		std::shared_ptr<IResource> matRes,
+		const Core::Matrix& world) override;
+
 	virtual void DrawUI(
 		std::shared_ptr<IResource> meshRes,
 		std::shared_ptr<IResource> brushRes,

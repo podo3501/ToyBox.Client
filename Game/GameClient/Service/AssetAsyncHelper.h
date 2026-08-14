@@ -24,13 +24,18 @@ namespace Asset
         };
     }
 
-    inline AssetRequest MakeRequest(Core::TypeID typeID, const std::string& path)
+    inline AssetRequest MakeRequest(Core::TypeID typeID, Core::ResourceID resID)
     {
         return
         {
-            .resID = Core::ResourceID::MakePath(path),
+            .resID = std::move(resID),
             .type = typeID
         };
+    }
+
+    inline AssetRequest MakeRequest(Core::TypeID typeID, const std::string& path)
+    {
+        return MakeRequest(typeID, Core::ResourceID::MakePath(path));
     }
 
     template<typename T>
@@ -43,6 +48,16 @@ namespace Asset
     AssetRequestID PushRequest(IAssetAsyncLoader* asyncLoader, std::string_view path)
     {
         return PushRequest<T>(asyncLoader, Core::ResourceID::MakePath(path));
+    }
+
+    inline AssetRequestID PushRequest(IAssetAsyncLoader* asyncLoader, Core::TypeID typeID, Core::ResourceID resID)
+    {
+        return asyncLoader->PushRequest(MakeRequest(typeID, std::move(resID)));
+    }
+
+    inline AssetRequestID PushRequest(IAssetAsyncLoader* asyncLoader, Core::TypeID typeID, std::string_view path)
+    {
+        return PushRequest(asyncLoader, typeID, Core::ResourceID::MakePath(path));
     }
 
     template<typename T>

@@ -1,7 +1,6 @@
 #pragma once
 #include "Handle/ResourceHandles.h"
 #include "Definition/ResourceDescs.h"
-#include "Repository/RepositoryFwd.h"
 
 #include "Definition/Material/MaterialDescFactory.h"
 
@@ -22,7 +21,7 @@ public:
 	DebugMeshHandle LoadDebugMesh(const DebugMeshDesc& desc, std::shared_ptr<MeshAsset> asset = nullptr);
 	MaterialHandle LoadMaterial(const MaterialDesc& desc);
 
-	DebugMaterialHandle LoadDebugMaterial(const GridDebugMaterialDesc& desc);
+	DebugMaterialHandle LoadDebugMaterial(const DebugMaterialDesc& desc);
 	bool ReleaseDebugMaterial(DebugMaterialHandle dmh);
 
 	BrushHandle LoadBrush(const BrushDesc& desc);

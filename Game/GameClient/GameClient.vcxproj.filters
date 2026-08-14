@@ -265,6 +265,9 @@
     <ClCompile Include="Service\Render\Repository\Container\RepositoryContainer.cpp">
       <Filter>Service\Render\Repository\Container</Filter>
     </ClCompile>
+    <ClCompile Include="Service\Render\Repository\Base\ResourceRepositoryImpl.cpp">
+      <Filter>Service\Render\Repository\Base</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameLoop.h" />
@@ -751,9 +754,6 @@
     <ClInclude Include="Service\Render\Repository\IResourceRepository.h">
       <Filter>Service\Render\Repository</Filter>
     </ClInclude>
-    <ClInclude Include="Service\Render\Repository\RepositoryFwd.h">
-      <Filter>Service\Render\Repository</Filter>
-    </ClInclude>
     <ClInclude Include="Service\Render\Repository\Base\ResourceRepository.h">
       <Filter>Service\Render\Repository\Base</Filter>
     </ClInclude>
@@ -784,21 +784,6 @@
     <ClInclude Include="Service\Render\Repository\ResourceRepositories.h">
       <Filter>Service\Render\Repository</Filter>
     </ClInclude>
-    <ClInclude Include="Service\Render\Repository\Resource\BrushRepository.h">
-      <Filter>Service\Render\Repository\Resource</Filter>
-    </ClInclude>
-    <ClInclude Include="Service\Render\Repository\Resource\DebugMeshRepository.h">
-      <Filter>Service\Render\Repository\Resource</Filter>
-    </ClInclude>
-    <ClInclude Include="Service\Render\Repository\Resource\EnvironmentRepository.h">
-      <Filter>Service\Render\Repository\Resource</Filter>
-    </ClInclude>
-    <ClInclude Include="Service\Render\Repository\Resource\FontRepository.h">
-      <Filter>Service\Render\Repository\Resource</Filter>
-    </ClInclude>
-    <ClInclude Include="Service\Render\Repository\Resource\MeshRepository.h">
-      <Filter>Service\Render\Repository\Resource</Filter>
-    </ClInclude>
     <ClInclude Include="Service\Render\Repository\Container\RepositoryContainer.h">
       <Filter>Service\Render\Repository\Container</Filter>
     </ClInclude>
@@ -817,11 +802,20 @@
     <ClInclude Include="Service\Render\Handle\DebugMaterialHandle.h">
       <Filter>Service\Render\Handle</Filter>
     </ClInclude>
-    <ClInclude Include="Service\Render\Repository\Resource\DebugMaterialRepository.h">
-      <Filter>Service\Render\Repository\Resource</Filter>
-    </ClInclude>
     <ClInclude Include="Asset\DebugMaterialAsset.h">
       <Filter>Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Definition\DebugMaterialDesc.h">
+      <Filter>Service\Render\Definition</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\DebugMaterialType.h">
+      <Filter>Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Definition\ResourceDesc.h">
+      <Filter>Service\Render\Definition</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Repository\Base\ResourceRepositoryImpl.h">
+      <Filter>Service\Render\Repository\Base</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -936,16 +930,8 @@
     <Filter Include="Service\Render\Repository\Base">
       <UniqueIdentifier>{409801ce-24c7-4ead-b3fe-acd52be8eab3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Service\Render\Repository\Resource">
-      <UniqueIdentifier>{64ac6fdc-3f40-4b22-a5a3-f46df8a8670b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Service\Render\Repository\Container">
       <UniqueIdentifier>{563f6c2a-2ade-45ee-8f5f-77d7fd30100b}</UniqueIdentifier>
     </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Service\Render\Repository\Base\ResourceRepository.inl">
-      <Filter>Service\Render\Repository\Base</Filter>
-    </None>
   </ItemGroup>
 </Project>

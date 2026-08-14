@@ -1,7 +1,10 @@
 #pragma once
-#include "Resource/MeshRepository.h"
-#include "Resource/DebugMeshRepository.h"
-#include "Resource/DebugMaterialRepository.h"
-#include "Resource/FontRepository.h"
-#include "Resource/BrushRepository.h"
-#include "Resource/EnvironmentRepository.h"
+#include "Base/ResourceRepository.h"
+#include "../Handle/ResourceHandles.h"
+
+using BrushRepository = ResourceRepository<BrushTag>;
+using DebugMaterialRepository = ResourceRepository<DebugMaterialTag>;
+using DebugMeshRepository = ResourceRepository<DebugMeshTag>;
+using EnvironmentRepository = ResourceRepository<EnvironmentTag>;
+using FontRepository = ResourceRepository<FontTag>;
+using MeshRepository = ResourceRepository<MeshTag>;

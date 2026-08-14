@@ -7,8 +7,6 @@
 #include "Core/Foundation/Geometry2D.h"
 #include "Core/Foundation/Color.h"
 
-#include "Repository/RepositoryFwd.h"
-
 struct IResourceProviderSet;
 struct IRenderFrame;
 struct MeshAsset;
@@ -46,7 +44,7 @@ public:
 		const TextLayout& layout);
 
 	void DrawSurface(MeshHandle hM, MaterialHandle hMtl, const Core::Matrix& world);
-	void DrawDebugSurface(DebugMeshHandle hDM, MaterialHandle hMtl, const Core::Matrix& world);
+	void DrawDebugSurface(DebugMeshHandle hDM, DebugMaterialHandle hDMtl, const Core::Matrix& world);
 	void DrawUI(BrushHandle bh, const Rect& dest, const Rect* source = nullptr);
 	void DrawEnvironment(EnvironmentHandle hEnv);
 

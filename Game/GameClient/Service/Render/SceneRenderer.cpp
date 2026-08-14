@@ -88,21 +88,19 @@ void SceneRenderer::DrawSurface(MeshHandle hM, MaterialHandle hMtl, const Core::
 	m_renderFrame->DrawSurface(meshRes, material->matRes, world);
 }
 
-void SceneRenderer::DrawDebugSurface(DebugMeshHandle hDM, MaterialHandle hMtl, const Core::Matrix& world)
+void SceneRenderer::DrawDebugSurface(DebugMeshHandle hDM, DebugMaterialHandle hDMtl, const Core::Matrix& world)
 {
-	if (!hMtl)
-		hMtl = GetDefaultMaterial(MaterialDomain::DebugSurface);
-
 	auto& debugMeshRepository = m_repositories.Get<DebugMeshRepository>();
 	auto meshRes = debugMeshRepository.GetIfReady(hDM);
 	if (!meshRes)
 		return;
 
-	auto material = m_matRepository->Get(hMtl);
-	if (!material || material->state != LoadState::Ready)
+	auto& debugMaterialRepository = m_repositories.Get<DebugMaterialRepository>();
+	auto materialRes = debugMaterialRepository.GetIfReady(hDMtl);
+	if (!materialRes)
 		return;
 
-	m_renderFrame->DrawSurface(meshRes, material->matRes, world);
+	m_renderFrame->DrawDebugSurface(meshRes, materialRes, world);
 }
 
 void SceneRenderer::DrawUI(BrushHandle bh, const Rect& dest, const Rect* source)

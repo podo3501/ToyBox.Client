@@ -1,10 +1,9 @@
 #pragma once
-#include "GameClient/Service/Render/Resource/IResource.h"
+#include "DebugMaterialResource.h"
 
-class GridDebugMaterialResource : public IResource
+class GridDebugMaterialResource final : public DebugMaterialResource
 {
 public:
-	virtual ~GridDebugMaterialResource() override;
 	GridDebugMaterialResource();
 	virtual bool IsReady() const noexcept override { return true; }
 };

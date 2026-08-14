@@ -1,10 +1,6 @@
 #pragma once
 #include "AssetData.h"
-
-enum class DebugMaterialType
-{
-    Grid
-};
+#include "DebugMaterialType.h"
 
 struct DebugMaterialAsset : public AssetData
 {

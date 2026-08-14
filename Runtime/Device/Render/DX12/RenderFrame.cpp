@@ -85,6 +85,19 @@ void RenderFrame::DrawSurface(
     m_scene.AddSurface(item);
 }
 
+void RenderFrame::DrawDebugSurface(
+    std::shared_ptr<IResource> meshRes,
+    std::shared_ptr<IResource> matRes,
+    const Core::Matrix& world)
+{
+    DrawDebugItem item;
+    item.mesh = meshRes;
+    item.material = matRes;
+    item.world = world;
+
+    m_scene.AddDebugSurface(item);
+}
+
 void RenderFrame::DrawUI(
     std::shared_ptr<IResource> meshRes,
     std::shared_ptr<IResource> brushRes,

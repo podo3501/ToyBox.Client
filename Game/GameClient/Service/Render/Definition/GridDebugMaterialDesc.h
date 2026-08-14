@@ -1,10 +1,9 @@
 #pragma once
-#include "Core/Utils/Hash.h"
+#include "DebugMaterialDesc.h"
 
-struct GridDebugMaterialDesc
+struct GridDebugMaterialDesc : public DebugMaterialDesc
 {
-    Core::ResourceID resID;
-
-    bool operator==(const GridDebugMaterialDesc&) const = default;
-    size_t GetHash() const { return Core::HashOf(resID); }
+    explicit GridDebugMaterialDesc(Core::ResourceID resID) :
+        DebugMaterialDesc{ resID, DebugMaterialType::Grid }
+    {}
 };

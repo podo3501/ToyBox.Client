@@ -1,68 +1,39 @@
 #pragma once
 #include "../IResourceRepository.h"
-#include "../IResourceProvider.h"
-#include "Core/Utils/Handle/HandlePool.h"
-#include "ResourceTypes.h"
-#include "Service/IAssetAsyncLoader.h"
-#include "Service/AssetAsyncHelper.h"
+#include "ResourceRepositoryImpl.h"
 
-struct IResource;
-
-struct ResourceEntry
-{
-    size_t key{};
-    std::shared_ptr<IResource> res{ nullptr };
-    LoadState state{ LoadState::Pending };
-};
-
-template <typename Traits>
+template <typename Tag>
 class ResourceRepository : public IResourceRepository
 {
 public:
-    using TagT = typename Traits::Tag;
-    using HandleT = IDHandle<TagT>;
-    using DescT = typename Traits::Desc;
-    using AssetT = typename Traits::Asset;
+    using HandleT = IDHandle<Tag>;
 
-    virtual ~ResourceRepository() = default;
-    ResourceRepository(IResourceProvider* provider, IAssetAsyncLoader* asyncLoader);
-    virtual void ReleaseAll() override;
-    virtual void Update() override;
+    ResourceRepository(IResourceProvider* provider, IAssetAsyncLoader* asyncLoader)
+        : m_impl{ provider, asyncLoader } {}
 
-    HandleT Acquire(const DescT& desc); // path
-    HandleT AcquireFromAsset(const DescT& desc, std::shared_ptr<AssetT> asset); // builtin/runtime
-    bool Release(HandleT handle);
+    HandleT Acquire(const ResourceDesc& desc)
+    {
+        return HandleCast<Tag>(m_impl.Acquire(desc));
+    }
 
-    std::shared_ptr<IResource> GetIfReady(HandleT handle) const;
+    HandleT AcquireFromAsset(const ResourceDesc& desc, std::shared_ptr<AssetData> asset)
+    {
+        return HandleCast<Tag>(m_impl.AcquireFromAsset(desc, asset));
+    }
+
+    bool Release(HandleT handle)
+    {
+        return m_impl.Release(HandleCast<ResourceImplTag>(handle));
+    }
+
+    std::shared_ptr<IResource> GetIfReady(HandleT handle) const
+    {
+        return m_impl.GetIfReady(HandleCast<ResourceImplTag>(handle));
+    }
+
+    void ReleaseAll() override { m_impl.ReleaseAll(); }
+    void Update() override { m_impl.Update(); }
 
 private:
-    struct CpuPendingRequest
-    {
-        HandleT handle;
-        AssetRequestID requestId;
-    };
-
-    struct GpuPendingRequest
-    {
-        HandleT handle;
-        std::shared_ptr<AssetT> asset;
-    };
-
-    std::pair<HandleT, bool> FindOrRegister(const DescT& desc);
-    void ProcessAssetPending();  // CPU 로드 완료된 항목을 GPU 대기열로 이동
-    void ProcessResourcePending();  // GPU 업로드 시작, 완료 대기열(m_loadingList)로 이동
-    void ProcessLoading(); // GPU 업로드 완료 여부 확인, 완료 시 Ready 처리
-
-private:
-    IResourceProvider* m_provider;
-    IAssetAsyncLoader* m_asyncLoader;
-
-    std::unordered_map<size_t, HandleT> m_cache;
-    HandlePool<ResourceEntry, TagT> m_loadedResources;
-
-    std::vector<CpuPendingRequest> m_assetPending;
-    std::vector<GpuPendingRequest> m_resourcePending;
-    std::vector<HandleT> m_loadingList;
+    ResourceRepositoryImpl m_impl;
 };
-
-#include "ResourceRepository.inl"

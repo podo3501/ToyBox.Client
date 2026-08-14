@@ -17,6 +17,12 @@ struct IDHandle
     static constexpr IDHandle Invalid() noexcept { return IDHandle{ 0, 0 }; }
 };
 
+template<typename ToTag, typename FromTag>
+constexpr IDHandle<ToTag> HandleCast(IDHandle<FromTag> h) noexcept
+{
+    return IDHandle<ToTag>{ h.index, h.generation };
+}
+
 namespace std //unordered_map에서 hash를 어떻게 계산할지 정해주어야 한다.
 {
     template<typename Tag>

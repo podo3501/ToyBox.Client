@@ -1,5 +1,7 @@
 #pragma once
 #include "../Handle/BrushHandle.h"
-#include "../Repository/RepositoryFwd.h"
 
-BrushHandle CreateBuiltinBrush(BrushRepository& repository);
+template <typename TagT> 
+class ResourceRepository;
+
+BrushHandle CreateBuiltinBrush(ResourceRepository<BrushTag>& repository);

@@ -5,7 +5,8 @@
 struct AssetData
 {
 public:
-	virtual Core::TypeID GetTypeID() const = 0;
+    virtual ~AssetData() = default;
 
-	virtual ~AssetData() = default;
+    static Core::TypeID StaticTypeID() { return Core::GetTypeID<AssetData>(); }
+    virtual Core::TypeID GetTypeID() const { return StaticTypeID(); }
 };

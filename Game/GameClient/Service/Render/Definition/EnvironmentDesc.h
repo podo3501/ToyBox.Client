@@ -1,11 +1,14 @@
 #pragma once
-#include "Core/Foundation/ResourceID.h"
-#include "Core/Utils/Hash.h"
+#include "ResourceDesc.h"
+#include "GameClient/Asset/EnvironmentAsset.h"
 
-struct EnvironmentDesc
+struct EnvironmentDesc : public ResourceDesc
 {
-	Core::ResourceID resID; // .envmap 매니페스트 경로
-
+	using ResourceDesc::ResourceDesc; // .envmap 매니페스트 경로
 	bool operator==(const EnvironmentDesc&) const = default;
-	size_t GetHash() const { return Core::HashOf(resID); }
+
+	virtual Core::TypeID GetAssetTypeID() const override
+	{
+		return EnvironmentAsset::StaticTypeID();
+	}
 };

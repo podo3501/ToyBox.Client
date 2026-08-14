@@ -29,7 +29,7 @@ bool RenderRepository::ReleaseFont(FontHandle fh)
 
 MeshHandle RenderRepository::LoadMesh(const MeshDesc& desc, std::shared_ptr<MeshAsset> asset)
 {
-	if (desc.resID.GetType() != Core::ResourceIDType::Path)
+	if (desc.GetResourceID().GetType() != Core::ResourceIDType::Path)
 	{
 		Assert(asset); //runtime/builtin 인데 asset이 없으면 이상한거다.
 		return m_repositories.AcquireFromAsset<MeshRepository>(desc, asset);
@@ -45,7 +45,7 @@ bool RenderRepository::ReleaseMesh(MeshHandle mh)
 
 DebugMeshHandle RenderRepository::LoadDebugMesh(const DebugMeshDesc& desc, std::shared_ptr<MeshAsset> asset)
 {
-	if (desc.resID.GetType() != Core::ResourceIDType::Path)
+	if (desc.GetResourceID().GetType() != Core::ResourceIDType::Path)
 	{
 		Assert(asset); //runtime/builtin 인데 asset이 없으면 이상한거다.
 		return m_repositories.AcquireFromAsset<DebugMeshRepository>(desc, asset);
@@ -64,10 +64,10 @@ bool RenderRepository::ReleaseMaterial(MaterialHandle mh)
 	return m_matRepository->Release(mh);
 }
 
-DebugMaterialHandle RenderRepository::LoadDebugMaterial(const GridDebugMaterialDesc& desc)
+DebugMaterialHandle RenderRepository::LoadDebugMaterial(const DebugMaterialDesc& desc)
 {
 	auto asset = std::make_shared<DebugMaterialAsset>();
-	asset->type = DebugMaterialType::Grid;
+	asset->type = desc.GetType();
 
 	return m_repositories.AcquireFromAsset<DebugMaterialRepository>(desc, std::move(asset));
 }

@@ -137,6 +137,7 @@
     <ClInclude Include="Render\DX12\Resource\Environment\EnvironmentResource.h" />
     <ClInclude Include="Render\DX12\Resource\Font\FontResource.h" />
     <ClInclude Include="Render\DX12\Resource\IPendingResource.h" />
+    <ClInclude Include="Render\DX12\Resource\Material\DebugMaterialResource.h" />
     <ClInclude Include="Render\DX12\Resource\Material\DebugSurfaceMaterialResource.h" />
     <ClInclude Include="Render\DX12\Resource\Material\GridDebugMaterialResource.h" />
     <ClInclude Include="Render\DX12\Resource\Material\GridMaterialResource.h" />
