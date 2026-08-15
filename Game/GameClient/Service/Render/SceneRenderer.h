@@ -13,7 +13,6 @@ struct MeshAsset;
 struct MeshDesc;
 struct ResolvedDrawData;
 struct FrameData;
-class MaterialRepository;
 class RepositoryContainer;
 
 class SceneRenderer
@@ -23,8 +22,7 @@ public:
 	SceneRenderer() = delete;
 	SceneRenderer(
 		IRenderFrame* renderFrame, 
-		RepositoryContainer& repositories,
-		MaterialRepository* matRepository);
+		RepositoryContainer& repositories);
 
 	void DrawText(
 		FontHandle hF, 
@@ -55,7 +53,6 @@ private:
 
 	IRenderFrame* m_renderFrame{ nullptr };
 	RepositoryContainer& m_repositories;
-	MaterialRepository* m_matRepository{ nullptr };
 
 	//default(built in)
 	MeshHandle m_uiQuad{};

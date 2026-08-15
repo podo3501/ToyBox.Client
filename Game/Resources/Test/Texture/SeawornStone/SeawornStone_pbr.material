@@ -1,0 +1,14 @@
+{
+  "type": "PBR",
+  "surface": {
+    "normalStrength": 1.0,
+    "aoStrength": 1.0,
+    "roughness": 0.6,
+    "metallic": 0.2
+  },
+  "textures": {
+    "albedo": "SeawornStone_diff.png",
+    "normal": "SeawornStone_nor_dx.png",
+    "arm": "SeawornStone_arm.png"
+  }
+}

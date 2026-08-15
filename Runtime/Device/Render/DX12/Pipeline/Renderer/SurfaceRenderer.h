@@ -15,7 +15,7 @@ class Device;
 class PipelineCache;
 class CommandList;
 class MeshResource;
-class MaterialResource;
+class MaterialRes;
 class EnvironmentResource;
 
 using Microsoft::WRL::ComPtr;
@@ -35,7 +35,7 @@ public:
         const EnvironmentResource* envRes);
     void BeginFrame(CommandList& cmd);
     void BindPipeline(CommandList& cmd, const PipelineState& pipelineState);
-    void Draw(CommandList& cmd, MeshResource& mesh, MaterialResource& material, const Core::Matrix& world);
+    void Draw(CommandList& cmd, MeshResource& mesh, MaterialRes& material, const Core::Matrix& world);
     
 private:
     enum class RootSlot : uint32_t
@@ -53,7 +53,7 @@ private:
     ID3D12PipelineState* GetPipeline(const PipelineState& pipelineState);
 
     D3D12_GPU_VIRTUAL_ADDRESS UploadObjectCB(const Core::Matrix& world);
-    D3D12_GPU_VIRTUAL_ADDRESS UploadMaterialCB(MaterialResource& material);
+    D3D12_GPU_VIRTUAL_ADDRESS UploadMaterialCB(MaterialRes& material);
 
     SurfaceRendererConfig m_config;
     PipelineCache& m_pipelineCache;

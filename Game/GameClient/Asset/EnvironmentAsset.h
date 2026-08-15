@@ -5,7 +5,7 @@
 
 struct EnvironmentAsset : public AssetData
 {
-    CORE_DECLARE_TYPE(EnvironmentAsset)
+    CORE_DECLARE_TYPE(EnvironmentAsset, AssetData)
 
     std::shared_ptr<TextureCubeAsset> skybox;
     std::shared_ptr<TextureCubeAsset> reflection;

@@ -3,7 +3,7 @@
 
 struct BinaryAsset : public AssetData
 {
-    CORE_DECLARE_TYPE(BinaryAsset)
+    CORE_DECLARE_TYPE(BinaryAsset, AssetData)
 
     Core::ByteBuffer buffer;
 };

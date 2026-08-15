@@ -20,7 +20,7 @@ enum class BlendTargetSpace
 
 struct TextureMetaAsset : public AssetData
 {
-	CORE_DECLARE_TYPE(TextureMetaAsset)
+	CORE_DECLARE_TYPE(TextureMetaAsset, AssetData)
 
     ColorSpace colorSpace{ ColorSpace::SRGB };
 	bool generateMipmaps{ false };

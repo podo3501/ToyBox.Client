@@ -6,8 +6,8 @@
 #include "Command/CommandList.h"
 #include "Helpers/MathHelpers.h"
 #include "Resource/Mesh/MeshResource.h"
-#include "Resource/Material/PhongMaterialResource.h"
-#include "Resource/Material/PbrMaterialResource.h"
+#include "Resource/Material/PhongMaterialRes.h"
+#include "Resource/Material/PbrMaterialRes.h"
 #include "Resource/Environment/EnvironmentResource.h"
 #include "Resource/Texture/TextureCubeResource.h"
 #include "GameClient/Graphics/RenderData/FrameData.h"
@@ -193,7 +193,7 @@ D3D12_GPU_VIRTUAL_ADDRESS SurfaceRenderer::UploadObjectCB(const Core::Matrix& wo
     return m_objectCBAllocator.AllocateConstant(obj);
 }
 
-D3D12_GPU_VIRTUAL_ADDRESS SurfaceRenderer::UploadMaterialCB(MaterialResource& material)
+D3D12_GPU_VIRTUAL_ADDRESS SurfaceRenderer::UploadMaterialCB(MaterialRes& material)
 {
     SurfaceMaterialResource* surfaceMat = static_cast<SurfaceMaterialResource*>(&material);
     auto textureIndices = surfaceMat->GetTextureIndices();
@@ -203,8 +203,8 @@ D3D12_GPU_VIRTUAL_ADDRESS SurfaceRenderer::UploadMaterialCB(MaterialResource& ma
     {
     case SurfaceType::Phong:
     {
-        auto* phongMat = static_cast<PhongMaterialResource*>(surfaceMat);
-        const PhongSurface& surface = phongMat->GetSurface();
+        auto* phongMat = static_cast<PhongMaterialRes*>(surfaceMat);
+        const PhongSurf& surface = phongMat->GetSurface();
 
         PhongMaterialCB cb{};
         cb.albedoTextureIndex = textureIndices[static_cast<int>(PhongTextureSlot::Albedo)];
@@ -221,8 +221,8 @@ D3D12_GPU_VIRTUAL_ADDRESS SurfaceRenderer::UploadMaterialCB(MaterialResource& ma
     }
     case SurfaceType::PBR:
     {
-        auto* pbrMat = static_cast<PbrMaterialResource*>(surfaceMat);
-        const PbrSurface& surface = pbrMat->GetSurface();
+        auto* pbrMat = static_cast<PbrMaterialRes*>(surfaceMat);
+        const PbrSurf& surface = pbrMat->GetSurface();
 
         PbrMaterialCB cb{};
         cb.albedoTextureIndex = textureIndices[static_cast<int>(PbrTextureSlot::Albedo)];
@@ -246,7 +246,7 @@ D3D12_GPU_VIRTUAL_ADDRESS SurfaceRenderer::UploadMaterialCB(MaterialResource& ma
 void SurfaceRenderer::Draw(
     CommandList& cmd,
     MeshResource& mesh,
-    MaterialResource& material,
+    MaterialRes& material,
     const Core::Matrix& world)
 {
     auto objectCBAddress = UploadObjectCB(world);

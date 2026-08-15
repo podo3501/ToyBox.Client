@@ -12,7 +12,7 @@ struct TextureCubeMipFace
 
 struct TextureCubeAsset : public AssetData
 {
-    CORE_DECLARE_TYPE(TextureCubeAsset)
+    CORE_DECLARE_TYPE(TextureCubeAsset, AssetData)
 
     PixelFormat format{ PixelFormat::Unknown };
     ColorSpace colorSpace{ ColorSpace::Linear }; // HDR 환경맵은 보통 리니어

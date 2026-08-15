@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "MaterialRepository.h"
+#include "MaterialRepo.h"
 #include "IMaterialProvider.h"
 #include "Service/Render/Resource/IMaterialResource.h"
 #include "Service/IAssetAsyncLoader.h"
@@ -28,13 +28,13 @@ struct GpuPendingMaterialRequest
     std::unordered_map<TextureSlot, std::shared_ptr<TextureAsset>> textures;
 };
 
-MaterialRepository::~MaterialRepository() = default;
-MaterialRepository::MaterialRepository(IMaterialProvider* matProvider, IAssetAsyncLoader* asyncLoader) :
+MaterialRepo::~MaterialRepo() = default;
+MaterialRepo::MaterialRepo(IMaterialProvider* matProvider, IAssetAsyncLoader* asyncLoader) :
     m_matProvider{ matProvider },
     m_asyncLoader{ asyncLoader }
 {}
 
-MaterialHandle MaterialRepository::GetOrCreate(const MaterialDesc& desc)
+MaterialHandle MaterialRepo::GetOrCreate(const MaterialDesc& desc)
 {
     const size_t key = desc.GetHash();
     auto it = m_cache.find(key);
@@ -98,14 +98,14 @@ MaterialHandle MaterialRepository::GetOrCreate(const MaterialDesc& desc)
     return handle;
 }
 
-void MaterialRepository::Update()
+void MaterialRepo::Update()
 {
     ProcessCpuPending();
     ProcessGpuPending();
     ProcessLoading();
 }
 
-void MaterialRepository::ProcessCpuPending()
+void MaterialRepo::ProcessCpuPending()
 {
     if (m_cpuPending.empty())
         return;
@@ -142,7 +142,7 @@ void MaterialRepository::ProcessCpuPending()
     }
 }
 
-void MaterialRepository::ProcessGpuPending()
+void MaterialRepo::ProcessGpuPending()
 {
     for (auto& work : m_gpuPending)
     {
@@ -162,7 +162,7 @@ void MaterialRepository::ProcessGpuPending()
     m_gpuPending.clear();
 }
 
-void MaterialRepository::ProcessLoading()
+void MaterialRepo::ProcessLoading()
 {
     for (auto it = m_loadingList.begin(); it != m_loadingList.end(); )
     {
@@ -184,7 +184,7 @@ void MaterialRepository::ProcessLoading()
     }
 }
 
-bool MaterialRepository::Release(MaterialHandle h)
+bool MaterialRepo::Release(MaterialHandle h)
 {
     auto entry = m_loadedMaterials.Find(h);
     if (!entry) 
@@ -197,7 +197,7 @@ bool MaterialRepository::Release(MaterialHandle h)
     return m_loadedMaterials.Remove(h);
 }
 
-void MaterialRepository::ReleaseAll()
+void MaterialRepo::ReleaseAll()
 {
     m_loadedMaterials.Visit([this](MaterialHandle h, MaterialEntry&) {
         Release(h);

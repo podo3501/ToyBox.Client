@@ -7,7 +7,7 @@
 void RenderScene::AddSurface(const DrawItem& item)
 {
     DrawItem newItem = item;
-    auto material = static_cast<MaterialResource*>(item.material.get());
+    auto material = static_cast<MaterialRes*>(item.material.get());
     newItem.sortKey = RenderSortKey::Build(material->GetPipelineState().GetHash());
 
     switch (material->GetMaterialDesc().domain)

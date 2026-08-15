@@ -8,3 +8,4 @@ using DebugMeshRepository = ResourceRepository<DebugMeshTag>;
 using EnvironmentRepository = ResourceRepository<EnvironmentTag>;
 using FontRepository = ResourceRepository<FontTag>;
 using MeshRepository = ResourceRepository<MeshTag>;
+using MaterialRepository = ResourceRepository<MaterialTag>;

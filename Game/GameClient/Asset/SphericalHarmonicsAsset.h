@@ -4,7 +4,7 @@
 
 struct SphericalHarmonicsAsset : public AssetData
 {
-    CORE_DECLARE_TYPE(SphericalHarmonicsAsset)
+    CORE_DECLARE_TYPE(SphericalHarmonicsAsset, AssetData)
 
     std::array<Core::Vector3, 9> coefficients;
 };

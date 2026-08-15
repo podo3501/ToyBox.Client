@@ -1,20 +1,29 @@
 #include "pch.h"
 #include "PbrMaterialResource.h"
-#include "Resource/Texture/BuiltinTextureType.h"
+#include "../Texture/TextureResource.h"
 
 PbrMaterialResource::~PbrMaterialResource() = default;
-PbrMaterialResource::PbrMaterialResource(const MaterialDesc& desc) :
-    SurfaceMaterialResource{ static_cast<uint32_t>(PbrTextureSlot::Count) }
-{
-    Assert(desc.domain == MaterialDomain::Surface);
-    m_desc = static_cast<const PbrMaterialDesc&>(desc);
-}
+PbrMaterialResource::PbrMaterialResource() :
+	MaterialResource{
+		PipelineLibrary::Get(
+			RegistryShader::PBR,
+			RasterPreset::Default,
+			PrimitiveTopologyType::Triangle)
+	}
+{}
 
-std::vector<BuiltinTextureBinding> PbrMaterialResource::GetBuiltinTextureBindings() const
+bool PbrMaterialResource::IsDependencyReady() const noexcept
 {
-    return {
-        { Core::ToIndex(PbrTextureSlot::Albedo), BuiltinTextureType::White },
-        { Core::ToIndex(PbrTextureSlot::Normal), BuiltinTextureType::FlatNormal },
-        { Core::ToIndex(PbrTextureSlot::ARM), BuiltinTextureType::DefaultARM }
-    };
+    // albedo는 필수
+    if (!m_albedo || !m_albedo->IsReady())
+        return false;
+
+    // normal, arm은 선택
+    if (m_normal && !m_normal->IsReady())
+        return false;
+
+    if (m_arm && !m_arm->IsReady())
+        return false;
+
+    return true;
 }

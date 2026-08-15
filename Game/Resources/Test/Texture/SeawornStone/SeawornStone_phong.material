@@ -1,0 +1,13 @@
+{
+  "type": "Phong",
+  "surface": {
+    "normalStrength": 1.0,
+    "shininess": 3.0,
+    "specular": 0.05,
+    "ambient": 0.015
+  },
+  "textures": {
+    "albedo": "SeawornStone_diff.png",
+    "normal": "SeawornStone_nor_dx.png"
+  }
+}

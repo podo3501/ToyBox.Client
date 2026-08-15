@@ -298,13 +298,13 @@
     <ClInclude Include="Render\DX12\Resource\Material\GridMaterialResource.h">
       <Filter>Render\DX12\Resource\Material</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\Resource\Material\MaterialResource.h">
+    <ClInclude Include="Render\DX12\Resource\Material\MaterialRes.h">
       <Filter>Render\DX12\Resource\Material</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\Resource\Material\PbrMaterialResource.h">
+    <ClInclude Include="Render\DX12\Resource\Material\PbrMaterialRes.h">
       <Filter>Render\DX12\Resource\Material</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\Resource\Material\PhongMaterialResource.h">
+    <ClInclude Include="Render\DX12\Resource\Material\PhongMaterialRes.h">
       <Filter>Render\DX12\Resource\Material</Filter>
     </ClInclude>
     <ClInclude Include="Render\DX12\Resource\Material\SurfaceMaterialResource.h">
@@ -361,7 +361,7 @@
     <ClInclude Include="Render\DX12\RenderFrame.h">
       <Filter>Render\DX12</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\Provider\Material\MaterialProvider.h">
+    <ClInclude Include="Render\DX12\Provider\Material\MaterialProv.h">
       <Filter>Render\DX12\Provider\Material</Filter>
     </ClInclude>
     <ClInclude Include="Render\DX12\Provider\Mesh\MeshCreateGraphBuilder.h">
@@ -620,6 +620,21 @@
     <ClInclude Include="Render\DX12\Resource\Material\DebugMaterialResource.h">
       <Filter>Render\DX12\Resource\Material</Filter>
     </ClInclude>
+    <ClInclude Include="Asset\Loader\Graphics\MaterialJsonLoader.h">
+      <Filter>Asset\Loader\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Provider\Material\MaterialProvider.h">
+      <Filter>Render\DX12\Provider\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Resource\Material\PbrMaterialResource.h">
+      <Filter>Render\DX12\Resource\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Resource\Material\MaterialResource.h">
+      <Filter>Render\DX12\Resource\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Resource\Material\PhongMaterialResource.h">
+      <Filter>Render\DX12\Resource\Material</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -755,13 +770,13 @@
     <ClCompile Include="Render\DX12\Resource\Material\GridMaterialResource.cpp">
       <Filter>Render\DX12\Resource\Material</Filter>
     </ClCompile>
-    <ClCompile Include="Render\DX12\Resource\Material\MaterialResource.cpp">
+    <ClCompile Include="Render\DX12\Resource\Material\MaterialRes.cpp">
       <Filter>Render\DX12\Resource\Material</Filter>
     </ClCompile>
-    <ClCompile Include="Render\DX12\Resource\Material\PbrMaterialResource.cpp">
+    <ClCompile Include="Render\DX12\Resource\Material\PbrMaterialRes.cpp">
       <Filter>Render\DX12\Resource\Material</Filter>
     </ClCompile>
-    <ClCompile Include="Render\DX12\Resource\Material\PhongMaterialResource.cpp">
+    <ClCompile Include="Render\DX12\Resource\Material\PhongMaterialRes.cpp">
       <Filter>Render\DX12\Resource\Material</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\Resource\Texture\TextureResource.cpp">
@@ -803,7 +818,7 @@
     <ClCompile Include="Render\DX12\RenderFrame.cpp">
       <Filter>Render\DX12</Filter>
     </ClCompile>
-    <ClCompile Include="Render\DX12\Provider\Material\MaterialProvider.cpp">
+    <ClCompile Include="Render\DX12\Provider\Material\MaterialProv.cpp">
       <Filter>Render\DX12\Provider\Material</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\Provider\Mesh\MeshCreateGraphBuilder.cpp">
@@ -1017,6 +1032,18 @@
       <Filter>Render\DX12\Provider\Material</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\Resource\Material\GridDebugMaterialResource.cpp">
+      <Filter>Render\DX12\Resource\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="Asset\Loader\Graphics\MaterialJsonLoader.cpp">
+      <Filter>Asset\Loader\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Provider\Material\MaterialProvider.cpp">
+      <Filter>Render\DX12\Provider\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Resource\Material\PbrMaterialResource.cpp">
+      <Filter>Render\DX12\Resource\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Resource\Material\PhongMaterialResource.cpp">
       <Filter>Render\DX12\Resource\Material</Filter>
     </ClCompile>
   </ItemGroup>

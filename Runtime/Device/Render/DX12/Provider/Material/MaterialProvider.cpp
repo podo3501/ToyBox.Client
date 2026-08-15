@@ -1,126 +1,99 @@
 #include "pch.h"
 #include "MaterialProvider.h"
-#include "Resource/Material/PhongMaterialResource.h"
+#include "GameClient/Asset/PbrMaterialAsset.h"
+#include "GameClient/Asset/PhongMaterialAsset.h"
 #include "Resource/Material/PbrMaterialResource.h"
-#include "Resource/Material/GridMaterialResource.h"
-#include "Resource/Texture/TextureResource.h"
+#include "Resource/Material/PhongMaterialResource.h"
+#include "Core/Foundation/Cast.hpp"
 #include "../Texture/TextureProvider.h"
 
-
 MaterialProvider::~MaterialProvider() = default;
-MaterialProvider::MaterialProvider(TextureProvider& texProvider, ResourceReleaseBuilder release) noexcept :
-	m_texProvider{ texProvider },
-    m_releaseBuilder{ std::move(release) }
+MaterialProvider::MaterialProvider(TaskScheduler& taskScheduler, TextureProvider& texProvider) noexcept :
+    m_pendingRelease{ taskScheduler },
+    m_texProvider{ texProvider }
 {}
 
-static std::shared_ptr<MaterialResource> CreateSurfaceResource(const SurfaceMaterialDesc& surfaceDesc)
+std::shared_ptr<IResource> MaterialProvider::CreateResource(std::shared_ptr<AssetData> asset)
 {
-    switch (surfaceDesc.surfType)
-    {
-    case SurfaceType::Phong: return std::make_shared<PhongMaterialResource>(surfaceDesc);
-    case SurfaceType::PBR: return std::make_shared<PbrMaterialResource>(surfaceDesc);
-    }
-
-    return nullptr;
-}
-
-shared_ptr<IMaterialResource> MaterialProvider::CreateResource(const MaterialDesc& matDesc)
-{
-    shared_ptr<MaterialResource> matRes{ nullptr };
-
-    switch (matDesc.domain)
-    {
-    case MaterialDomain::Surface:
-        matRes = CreateSurfaceResource(static_cast<const SurfaceMaterialDesc&>(matDesc));
-        break;
-    case MaterialDomain::DebugSurface:
-        matRes = std::make_shared<GridMaterialResource>(matDesc);
-        break;
-    }
-
-    if (!matRes)
+    if (!asset)
         return nullptr;
 
-    SetDefaultTextures(matRes.get());
+    auto matAsset = Core::Cast<MaterialAsset>(asset);
+    if (!matAsset)
+        return nullptr;
+
+    shared_ptr<IResource> matRes{ nullptr };
+
+    switch (matAsset->type)
+    {
+    case MaterialType::PBR: matRes = CreatePbrMaterialResource(asset); break;
+    case MaterialType::Phong: matRes = CreatePhongMaterialResource(asset); break;
+    }
+    Assert(matRes);
 
     return matRes;
 }
 
-void MaterialProvider::SetDefaultTextures(MaterialResource* matRes)
+shared_ptr<IResource> MaterialProvider::CreatePbrMaterialResource(std::shared_ptr<AssetData> asset)
 {
-    if (!matRes) return;
+    auto pbrAsset = Core::Cast<PbrMaterialAsset>(asset);
 
-    auto defaultBindings = matRes->GetBuiltinTextureBindings();
-    for (auto& binding : defaultBindings)
-    {
-        auto tex = m_texProvider.GetBuiltinTexture(binding.type);
-        matRes->SetTexture(binding.slot, tex);
-    }
+    auto albedoRes = CreateTexResource(pbrAsset->albedo);
+    if (!albedoRes)
+        return nullptr;
+
+    auto normalRes = CreateTexResource(pbrAsset->normal);
+    auto armRes = CreateTexResource(pbrAsset->arm);
+
+    auto pbrRes = std::make_shared<PbrMaterialResource>();
+    pbrRes->SetAlbedo(albedoRes);
+    pbrRes->SetNormal(normalRes);
+    pbrRes->SetArm(armRes);
+    pbrRes->SetSurface(pbrAsset->surface);
+
+    m_pendingLoad.Add(pbrRes);
+    return pbrRes;
 }
 
-bool MaterialProvider::LoadResource(
-    std::shared_ptr<IMaterialResource> res,
-    std::unordered_map<TextureSlot, std::shared_ptr<TextureAsset>> texAssets)
+shared_ptr<IResource> MaterialProvider::CreatePhongMaterialResource(std::shared_ptr<AssetData> asset)
 {
-    auto matRes = static_pointer_cast<MaterialResource>(res);
-    if (!matRes)
-        return false;
+    auto phongAsset = Core::Cast<PhongMaterialAsset>(asset);
 
-    auto& matDesc = matRes->GetMaterialDesc();
-    for (const auto& bindTex : matDesc.textures)
-    {
-        auto it = texAssets.find(bindTex.slot);
-        if (it == texAssets.end() || !it->second)
-            continue;
+    auto albedoRes = CreateTexResource(phongAsset->albedo);
+    if (!albedoRes)
+        return nullptr;
 
-        auto texRes = m_texProvider.CreateResource();
-        if (!texRes)
-            return false;
+    auto normalRes = CreateTexResource(phongAsset->normal);
 
-        if (!m_texProvider.LoadResource(texRes, it->second))
-            return false;
+    auto phongRes = std::make_shared<PhongMaterialResource>();
+    phongRes->SetAlbedo(albedoRes);
+    phongRes->SetNormal(normalRes);
+    phongRes->SetSurface(phongAsset->surface);
 
-        matRes->SetTexture(bindTex.slot, texRes);
-    }
-
-    m_pendingMaterials.push_back(matRes);
-    return true;
+    m_pendingLoad.Add(phongRes);
+    return phongRes;
 }
 
-void MaterialProvider::ReleaseResource(std::shared_ptr<IMaterialResource> resource)
+std::shared_ptr<TextureResource> MaterialProvider::CreateTexResource(std::shared_ptr<TextureAsset> texAsset)
 {
-    if (!resource)
-        return;
+    if (!texAsset) return nullptr;
 
-    m_pendingReleases.emplace_back(std::move(resource));
+    auto res = m_texProvider.CreateResource();
+    if (!res) return nullptr;
+
+    if (!m_texProvider.LoadResource(res, texAsset))
+        return nullptr;
+
+    return res;
+}
+
+void MaterialProvider::ReleaseResource(std::shared_ptr<IResource> res)
+{
+    m_pendingRelease.Add(std::move(res));
 }
 
 void MaterialProvider::Update()
 {
-    FlushPendingMaterials();
-    FlushPendingRelease();
-}
-
-void MaterialProvider::FlushPendingMaterials()
-{
-    for (auto it = m_pendingMaterials.begin(); it != m_pendingMaterials.end();)
-    {
-        auto& matRes = *it;
-        if (!matRes->IsTextureReady())
-        {
-            ++it;
-            continue;
-        }
-
-        matRes->MarkReady();
-        it = m_pendingMaterials.erase(it);
-    }
-}
-
-void MaterialProvider::FlushPendingRelease()
-{
-    if (m_pendingReleases.empty())
-        return;
-
-    m_releaseBuilder.ReleaseResources(std::move(m_pendingReleases));
+    m_pendingLoad.Flush();
+    m_pendingRelease.Flush();
 }

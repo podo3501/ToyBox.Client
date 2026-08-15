@@ -17,7 +17,7 @@ class EnvironmentResource;
 struct DrawItem
 {
     std::shared_ptr<IResource> mesh;
-    std::shared_ptr<IMaterialResource> material;
+    std::shared_ptr<IResource> material;
     Core::Matrix world{};
 
     uint64_t sortKey{ 0 };

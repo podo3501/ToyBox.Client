@@ -54,7 +54,7 @@ struct GridVertex
 
 struct MeshAsset : public AssetData
 {
-    CORE_DECLARE_TYPE(MeshAsset)
+    CORE_DECLARE_TYPE(MeshAsset, AssetData)
 
     VertexFormat format;
 

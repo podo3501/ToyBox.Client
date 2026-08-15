@@ -11,7 +11,7 @@ struct FrameData;
 struct IAssetAsyncLoader;
 struct RegistryShaderEntry;
 class IResourceRepository;
-class MaterialRepository;
+class MaterialRepo;
 
 class RenderService
 {
@@ -43,8 +43,6 @@ private:
 	std::unordered_map<Core::ResourceID, ShaderID> m_shaderCache;
 
 	RepositoryContainer m_repositories;
-	std::unique_ptr<MaterialRepository> m_matRepository;
-
 	unique_ptr<RenderRepository> m_repository;
 	unique_ptr<SceneRenderer> m_renderer;
 };

@@ -21,12 +21,12 @@ struct MaterialEntry
     LoadState state{ LoadState::Pending };
 };
 
-class MaterialRepository
+class MaterialRepo
 {
 public:
-    ~MaterialRepository();
-    MaterialRepository() = delete;
-    MaterialRepository(IMaterialProvider* matProvider, IAssetAsyncLoader* asyncLoader);
+    ~MaterialRepo();
+    MaterialRepo() = delete;
+    MaterialRepo(IMaterialProvider* matProvider, IAssetAsyncLoader* asyncLoader);
     MaterialHandle GetOrCreate(const MaterialDesc& desc);
     void Update();
     bool Release(MaterialHandle h);

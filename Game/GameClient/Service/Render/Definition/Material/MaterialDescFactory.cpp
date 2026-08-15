@@ -5,18 +5,18 @@ namespace SurfaceMatDescFactory
 {
     namespace Phong
     {
-        PhongMaterialDesc CreateLit(const PhongTextureArgs& texArgs)
+        PhongMaterialDe CreateLit(const PhongTextureArgs& texArgs)
         {
-            PhongMaterialDesc desc{};
+            PhongMaterialDe desc{};
             desc.textures.emplace_back(Resolve(PhongTextureSlot::Albedo), texArgs.albedo);
             desc.textures.emplace_back(Resolve(PhongTextureSlot::Normal), texArgs.normal);
 
             return desc;
         }
 
-        PhongMaterialDesc CreateWireframe()
+        PhongMaterialDe CreateWireframe()
         {
-            PhongMaterialDesc desc{};
+            PhongMaterialDe desc{};
 
             desc.pipelineState = PipelineLibrary::Get(
                 RegistryShader::Phong,
@@ -29,9 +29,9 @@ namespace SurfaceMatDescFactory
 
     namespace PBR
     {
-        PbrMaterialDesc CreateLit(const PbrTextureArgs& texArgs)
+        PbrMaterialDe CreateLit(const PbrTextureArgs& texArgs)
         {
-            PbrMaterialDesc desc{};
+            PbrMaterialDe desc{};
             desc.textures.emplace_back(Resolve(PbrTextureSlot::Albedo), texArgs.albedo);
             desc.textures.emplace_back(Resolve(PbrTextureSlot::Normal), texArgs.normal);
             desc.textures.emplace_back(Resolve(PbrTextureSlot::ARM), texArgs.arm);

@@ -3,6 +3,7 @@
 #include "Resource/Environment/EnvironmentResource.h"
 #include "../Texture/TextureCubeProvider.h"
 #include "GameClient/Asset/EnvironmentAsset.h"
+#include "Core/Foundation/Cast.hpp"
 
 EnvironmentProvider::~EnvironmentProvider() = default;
 EnvironmentProvider::EnvironmentProvider(TaskScheduler& taskScheduler, TextureCubeProvider& cubeProvider) noexcept :
@@ -16,7 +17,7 @@ std::shared_ptr<IResource> EnvironmentProvider::CreateResource(
     if (!asset)
         return nullptr;
 
-    auto envAsset = std::static_pointer_cast<EnvironmentAsset>(asset);
+    auto envAsset = Core::Cast<EnvironmentAsset>(asset);
     if (!envAsset->skybox || !envAsset->reflection || !envAsset->irradiance)
         return nullptr;
 

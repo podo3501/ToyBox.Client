@@ -1,20 +1,28 @@
 #pragma once
-#include "SurfaceMaterialResource.h"
-#include "GameClient/Service/Render/Definition/Material/PhongMaterialDesc.h"
+#include "MaterialResource.h"
+#include "../IPendingResource.h"
+#include "GameClient/Asset/PhongSurface.h"
 
-class PhongMaterialResource : public SurfaceMaterialResource
+class TextureResource;
+
+class PhongMaterialResource final : public MaterialResource, public IPendingResource
 {
 public:
-	~PhongMaterialResource();
-	PhongMaterialResource() = delete;
-	PhongMaterialResource(const MaterialDesc& desc);
+	virtual ~PhongMaterialResource() override;
+	PhongMaterialResource();
+	virtual bool IsReady() const noexcept override { return m_ready; }
+	virtual bool IsDependencyReady() const noexcept override;
+	virtual void MarkReady() override { m_ready = true; }
 
-	virtual std::vector<BuiltinTextureBinding> GetBuiltinTextureBindings() const override;
-	virtual const MaterialDesc& GetMaterialDesc() const noexcept override { return m_desc; }
-	virtual SurfaceType GetSurfaceType() const noexcept override { return m_desc.surfType; }
-
-	const PhongSurface& GetSurface() const { return m_desc.surf; }
+	void SetAlbedo(std::shared_ptr<TextureResource> res) { m_albedo = std::move(res); }
+	void SetNormal(std::shared_ptr<TextureResource> res) { m_normal = std::move(res); }
+	void SetSurface(const PhongSurface& surface) { m_surface = surface; }
 
 private:
-	PhongMaterialDesc m_desc;
+	std::shared_ptr<TextureResource> m_albedo;
+	std::shared_ptr<TextureResource> m_normal;
+	PhongSurface m_surface;
+
+	bool m_ready{ false };
 };
+

@@ -28,7 +28,7 @@ public:
 
 	virtual IResourceProvider* GetFontProvider() override { return &m_fontProvider; }
 	virtual IResourceProvider* GetMeshProvider() override { return &m_meshProvider; }
-	virtual IMaterialProvider* GetMaterialProvider() override { return &m_matProvider; }
+	virtual IResourceProvider* GetMaterialProvider() override { return &m_matProvider; }
 	virtual IResourceProvider* GetDebugMaterialProvider() override { return &m_debugMatProvider; }
 	virtual IResourceProvider* GetBrushProvider() override { return &m_brushProvider; }
 	virtual IResourceProvider* GetEnvironmentProvider() override { return &m_envProvider; }

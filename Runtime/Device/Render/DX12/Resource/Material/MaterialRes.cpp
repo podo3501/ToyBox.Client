@@ -1,24 +1,24 @@
 #include "pch.h"
-#include "MaterialResource.h"
+#include "MaterialRes.h"
 #include "Resource/Texture/TextureResource.h"
 
-MaterialResource::~MaterialResource() = default;
-MaterialResource::MaterialResource(uint32_t texSlotCount)
+MaterialRes::~MaterialRes() = default;
+MaterialRes::MaterialRes(uint32_t texSlotCount)
 {
     m_texResources.resize(texSlotCount);
 }
 
-MaterialDomain MaterialResource::GetDomain() const noexcept
+MaterialDomain MaterialRes::GetDomain() const noexcept
 {
     return GetMaterialDesc().domain;
 }
 
-const PipelineState& MaterialResource::GetPipelineState() const
+const PipelineState& MaterialRes::GetPipelineState() const
 {
 	return GetMaterialDesc().pipelineState;
 }
 
-bool MaterialResource::IsTextureReady() const noexcept
+bool MaterialRes::IsTextureReady() const noexcept
 {
     const auto& desc = GetMaterialDesc();
     const size_t count = desc.textures.size();
@@ -33,25 +33,25 @@ bool MaterialResource::IsTextureReady() const noexcept
     return true;
 }
 
-void MaterialResource::SetTexture(TextureSlot texSlot, std::shared_ptr<TextureResource> texRes) noexcept
+void MaterialRes::SetTexture(TextureSlot texSlot, std::shared_ptr<TextureResource> texRes) noexcept
 {
     Assert(texSlot < m_texResources.size());
     m_texResources[texSlot] = texRes;
 }
 
-TextureResource* MaterialResource::GetTextureRaw(TextureSlot texSlot) const noexcept
+TextureResource* MaterialRes::GetTextureRaw(TextureSlot texSlot) const noexcept
 {
     Assert(texSlot < m_texResources.size());
     return m_texResources[texSlot].get();
 }
 
-std::shared_ptr<TextureResource> MaterialResource::GetTexture(TextureSlot texSlot) const noexcept
+std::shared_ptr<TextureResource> MaterialRes::GetTexture(TextureSlot texSlot) const noexcept
 {
     Assert(texSlot < m_texResources.size());
     return m_texResources[texSlot];
 }
 
-std::vector<UINT> MaterialResource::GetTextureIndices() const noexcept
+std::vector<UINT> MaterialRes::GetTextureIndices() const noexcept
 {
     std::vector<UINT> indices;
     indices.reserve(m_texResources.size());

@@ -1,30 +1,26 @@
 #pragma once
-#include "GameClient/Service/Render/Repository/Material/IMaterialProvider.h"
-#include "../ResourceReleaseBuilder.h"
+#include "GameClient/Service/Render/Repository/IResourceProvider.h"
+#include "../PendingLoadQueue.h"
+#include "../PendingReleaseQueue.h"
 
-class MaterialResource;
+struct TextureAsset;
 class TextureProvider;
 
-class MaterialProvider : public IMaterialProvider
+class MaterialProvider : public IResourceProvider
 {
 public:
 	~MaterialProvider();
-	MaterialProvider(TextureProvider& texProvider, ResourceReleaseBuilder release) noexcept;
-
-	virtual shared_ptr<IMaterialResource> CreateResource(const MaterialDesc& matDesc) override;
-	virtual bool LoadResource(std::shared_ptr<IMaterialResource> resource,
-		std::unordered_map<TextureSlot, std::shared_ptr<TextureAsset>> texAssets) override;
-	virtual void ReleaseResource(std::shared_ptr<IMaterialResource> resource) override;
+	MaterialProvider(TaskScheduler& taskScheduler, TextureProvider& texProvider) noexcept;
+	virtual std::shared_ptr<IResource> CreateResource(std::shared_ptr<AssetData> asset) override;
+	virtual void ReleaseResource(std::shared_ptr<IResource> res) override;
 	void Update();
 
 private:
-	void SetDefaultTextures(MaterialResource* matRes);
-	void FlushPendingMaterials();
-	void FlushPendingRelease();
+	shared_ptr<IResource> CreatePbrMaterialResource(std::shared_ptr<AssetData> asset);
+	shared_ptr<IResource> CreatePhongMaterialResource(std::shared_ptr<AssetData> asset);
+	std::shared_ptr<TextureResource> CreateTexResource(std::shared_ptr<TextureAsset> texAsset);
 
+	PendingLoadQueue m_pendingLoad;
+	PendingReleaseQueue m_pendingRelease;
 	TextureProvider& m_texProvider;
-	ResourceReleaseBuilder m_releaseBuilder;
-
-	std::vector<std::shared_ptr<MaterialResource>> m_pendingMaterials;
-	std::vector<std::shared_ptr<IMaterialResource>> m_pendingReleases;
 };

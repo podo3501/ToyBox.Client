@@ -22,7 +22,7 @@ struct IRenderFrame
 
 	virtual void DrawSurface(
 		std::shared_ptr<IResource> meshRes,
-		std::shared_ptr<IMaterialResource> matRes,
+		std::shared_ptr<IResource> matRes,
 		const Core::Matrix& world) = 0;
 
 	virtual void DrawDebugSurface(

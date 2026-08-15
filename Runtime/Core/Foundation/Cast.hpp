@@ -15,6 +15,7 @@ namespace Core
         requires(const T & obj)
     {
         { obj.GetTypeID() } -> std::convertible_to<TypeID>;
+        { obj.IsKindOf(TypeID{}) } -> std::convertible_to<bool>;
     };
 
     template<typename T>
@@ -33,7 +34,7 @@ namespace Core
         if (!source)
             return nullptr;
 
-        if (source->GetTypeID() != TargetType::StaticTypeID())
+        if (!source->IsKindOf(TargetType::StaticTypeID()))
             return nullptr;
 
         return static_cast<TargetType*>(source);
@@ -45,7 +46,7 @@ namespace Core
         if (!source)
             return nullptr;
 
-        if (source->GetTypeID() != TargetType::StaticTypeID())
+        if (!source->IsKindOf(TargetType::StaticTypeID()))
             return nullptr;
 
         return static_cast<const TargetType*>(source);
@@ -57,7 +58,7 @@ namespace Core
         if (!source)
             return nullptr;
 
-        if (source->GetTypeID() != TargetType::StaticTypeID())
+        if (!source->IsKindOf(TargetType::StaticTypeID()))
             return nullptr;
 
         return std::static_pointer_cast<TargetType>(source);

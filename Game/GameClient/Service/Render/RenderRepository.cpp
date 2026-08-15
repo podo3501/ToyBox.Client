@@ -7,14 +7,9 @@
 
 #include "Asset/DebugMaterialAsset.h"
 
-#include "Repository/Material/MaterialRepository.h"
-
 RenderRepository::~RenderRepository() = default;
-RenderRepository::RenderRepository(
-	RepositoryContainer& repositories,
-	MaterialRepository* matRepository) :
-	m_repositories{ repositories },
-	m_matRepository{ matRepository }
+RenderRepository::RenderRepository(RepositoryContainer& repositories) :
+	m_repositories{ repositories }
 {}
 
 FontHandle RenderRepository::LoadFont(const FontDesc& desc)
@@ -54,14 +49,14 @@ DebugMeshHandle RenderRepository::LoadDebugMesh(const DebugMeshDesc& desc, std::
 	return m_repositories.Acquire<DebugMeshRepository>(desc);
 }
 
-MaterialHandle RenderRepository::LoadMaterial(const MaterialDesc& desc)
+MaterialHandle RenderRepository::LoadMaterial(const PbrMaterialDesc& desc)
 {
-	return m_matRepository->GetOrCreate(desc);
+	return m_repositories.Acquire<MaterialRepository>(desc);
 }
 
 bool RenderRepository::ReleaseMaterial(MaterialHandle mh)
 {
-	return m_matRepository->Release(mh);
+	return m_repositories.Release<MaterialRepository>(mh);
 }
 
 DebugMaterialHandle RenderRepository::LoadDebugMaterial(const DebugMaterialDesc& desc)
@@ -100,11 +95,9 @@ bool RenderRepository::ReleaseEnvironment(EnvironmentHandle eh)
 void RenderRepository::Update()
 {
 	m_repositories.UpdateAll();
-	m_matRepository->Update();
 }
 
 void RenderRepository::ReleaseAll()
 {
 	m_repositories.ReleaseAll();
-	m_matRepository->ReleaseAll();
 }

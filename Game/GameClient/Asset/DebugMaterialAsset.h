@@ -4,7 +4,7 @@
 
 struct DebugMaterialAsset : public AssetData
 {
-    CORE_DECLARE_TYPE(DebugMaterialAsset)
+    CORE_DECLARE_TYPE(DebugMaterialAsset, AssetData)
 
     DebugMaterialType type;
 };

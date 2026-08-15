@@ -13,22 +13,22 @@ constexpr TextureSlot Resolve(PhongTextureSlot s)
     return static_cast<TextureSlot>(s);
 }
 
-struct PhongSurface
+struct PhongSurf
 {
     float normal{ 1.0f };    // 1. Normal Map의 강도 조절 (PBR과 동일)
     float shininess{ 3.0f }; // 2. 하이라이트 동그라미의 크기/선명도 (대체로 1.0 ~ 256.0)
     float specular{ 0.05f };  // 3. 하이라이트의 전체적인 밝기/세기 (0.0 ~ 1.0)
     float ambient{ 0.015f };   // 4. 환경광/기본 음영 밝기 (선택 사항, 0.0 ~ 1.0)
 
-    bool operator==(const PhongSurface&) const = default;
+    bool operator==(const PhongSurf&) const = default;
     size_t GetHash() const { return Core::HashOf(normal, shininess, specular, ambient); }
 };
 
-struct PhongMaterialDesc : public SurfaceMaterialDesc
+struct PhongMaterialDe : public SurfaceMaterialDesc
 {
-    PhongSurface surf{};
+    PhongSurf surf{};
 
-    PhongMaterialDesc()
+    PhongMaterialDe()
     {
         surfType = SurfaceType::Phong;
         pipelineState = PipelineLibrary::Get(
@@ -37,6 +37,6 @@ struct PhongMaterialDesc : public SurfaceMaterialDesc
             PrimitiveTopologyType::Triangle);
     }
 
-    bool operator==(const PhongMaterialDesc&) const = default;
+    bool operator==(const PhongMaterialDe&) const = default;
     size_t GetHash() const { return Core::HashOf(SurfaceMaterialDesc::GetHash(), surf.GetHash()); }
 };

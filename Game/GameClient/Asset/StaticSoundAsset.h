@@ -10,7 +10,7 @@ enum class SampleFormat
 
 struct StaticSoundAsset : public AssetData
 {
-    CORE_DECLARE_TYPE(StaticSoundAsset)
+    CORE_DECLARE_TYPE(StaticSoundAsset, AssetData)
 
     int sampleRate = 0;
     int channels = 0;

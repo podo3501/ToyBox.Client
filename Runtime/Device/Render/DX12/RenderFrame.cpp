@@ -74,7 +74,7 @@ void RenderFrame::DrawText(
 
 void RenderFrame::DrawSurface(
     std::shared_ptr<IResource> meshRes,
-    std::shared_ptr<IMaterialResource> matRes,
+    std::shared_ptr<IResource> matRes,
     const Core::Matrix& world)
 {
     DrawItem item;

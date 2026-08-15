@@ -24,7 +24,7 @@ public:
 
 	virtual void DrawSurface(
 		std::shared_ptr<IResource> meshRes,
-		std::shared_ptr<IMaterialResource> matRes,
+		std::shared_ptr<IResource> matRes,
 		const Core::Matrix& world) override;
 
 	virtual void DrawDebugSurface(

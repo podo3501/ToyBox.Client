@@ -3,7 +3,7 @@
 
 struct ShaderAsset : public AssetData
 {
-    CORE_DECLARE_TYPE(ShaderAsset)
+    CORE_DECLARE_TYPE(ShaderAsset, AssetData)
 
     std::string hlslSource; // file 전체
 

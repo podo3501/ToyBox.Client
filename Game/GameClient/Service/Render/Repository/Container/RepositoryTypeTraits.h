@@ -10,6 +10,7 @@ template<typename TRepo> struct RepositoryTypeOf;
 
 DECLARE_REPOSITORY_TYPE(FontRepository, Font)
 DECLARE_REPOSITORY_TYPE(MeshRepository, Mesh)
+DECLARE_REPOSITORY_TYPE(MaterialRepository, Material)
 DECLARE_REPOSITORY_TYPE(DebugMeshRepository, DebugMesh)
 DECLARE_REPOSITORY_TYPE(DebugMaterialRepository, DebugMaterial)
 DECLARE_REPOSITORY_TYPE(BrushRepository, Brush)

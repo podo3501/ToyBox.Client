@@ -1,20 +1,31 @@
 #pragma once
-#include "SurfaceMaterialResource.h"
-#include "GameClient/Service/Render/Definition/Material/PbrMaterialDesc.h"
+#include "MaterialResource.h"
+#include "../IPendingResource.h"
+#include "GameClient/Asset/PbrSurface.h"
 
-class PbrMaterialResource : public SurfaceMaterialResource
+struct PbrSurface;
+class TextureResource;
+
+class PbrMaterialResource final : public MaterialResource, public IPendingResource
 {
 public:
-	~PbrMaterialResource();
-	PbrMaterialResource() = delete;
-	PbrMaterialResource(const MaterialDesc& desc);
+	virtual ~PbrMaterialResource() override;
+	PbrMaterialResource();
+	virtual bool IsReady() const noexcept override { return m_ready; }
+	virtual bool IsDependencyReady() const noexcept override;
+	virtual void MarkReady() override { m_ready = true; }
 
-	virtual std::vector<BuiltinTextureBinding> GetBuiltinTextureBindings() const override;
-	virtual const MaterialDesc& GetMaterialDesc() const noexcept override { return m_desc; }
-	virtual SurfaceType GetSurfaceType() const noexcept override { return m_desc.surfType; }
-
-	const PbrSurface& GetSurface() const { return m_desc.surf; }
+	void SetAlbedo(std::shared_ptr<TextureResource> res) { m_albedo = std::move(res); }
+	void SetNormal(std::shared_ptr<TextureResource> res) { m_normal = std::move(res); }
+	void SetArm(std::shared_ptr<TextureResource> res) { m_arm = std::move(res); }
+	void SetSurface(const PbrSurface& surface) { m_surface = surface; }
 
 private:
-	PbrMaterialDesc m_desc;
+	std::shared_ptr<TextureResource> m_albedo;
+	std::shared_ptr<TextureResource> m_normal;
+	std::shared_ptr<TextureResource> m_arm;
+	PbrSurface m_surface;
+
+	bool m_ready{ false };
 };
+

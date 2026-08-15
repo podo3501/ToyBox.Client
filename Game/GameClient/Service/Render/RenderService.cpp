@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "RenderService.h"
 #include "IRenderBackend.h"
-#include "Repository/Material/MaterialRepository.h"
+#include "Repository/Material/MaterialRepo.h"
 #include "Service/AssetAsyncHelper.h"
 #include "Asset/ShaderAsset.h"
 
@@ -23,18 +23,11 @@ RenderService::RenderService(unique_ptr<IRenderBackend> backend, IAssetAsyncLoad
 
 	m_repositories.Emplace<FontRepository>(providerSet->GetFontProvider(), asyncLoader);
 	m_repositories.Emplace<MeshRepository>(providerSet->GetMeshProvider(), asyncLoader);
+	m_repositories.Emplace<MaterialRepository>(providerSet->GetMaterialProvider(), asyncLoader);
 	m_repositories.Emplace<DebugMeshRepository>(providerSet->GetMeshProvider(), asyncLoader);
 	m_repositories.Emplace<DebugMaterialRepository>(providerSet->GetDebugMaterialProvider(), asyncLoader);
 	m_repositories.Emplace<BrushRepository>(providerSet->GetBrushProvider(), asyncLoader);
 	m_repositories.Emplace<EnvironmentRepository>(providerSet->GetEnvironmentProvider(), asyncLoader);
-
-	//m_fontRepository = make_unique<FontRepository>(providerSet->GetFontProvider(), asyncLoader);
-	//m_meshRepository = make_unique<MeshRepository>(providerSet->GetMeshProvider(), asyncLoader);
-	//m_debugMeshRepository = make_unique<DebugMeshRepository>(providerSet->GetMeshProvider(), asyncLoader);
-	//m_brushRepository = make_unique<BrushRepository>(providerSet->GetBrushProvider(), asyncLoader);
-	//m_envRepository = make_unique<EnvironmentRepository>(providerSet->GetEnvironmentProvider(), asyncLoader);
-
-	m_matRepository = make_unique<MaterialRepository>(providerSet->GetMaterialProvider(), asyncLoader);
 }
 
 unique_ptr<RenderService> RenderService::Create(	
@@ -50,14 +43,8 @@ bool RenderService::Initialize(HWND hwnd, const Size& screenSize)
 	auto shaderDescs = SetupRegistryShaders();
 	ReturnIfFalse(m_backend->Initialize(hwnd, screenSize, shaderDescs));
 
-	m_repository = make_unique<RenderRepository>(
-		m_repositories,
-		m_matRepository.get());
-
-	m_renderer = make_unique<SceneRenderer>(
-		m_backend->GetRenderFrame(),
-		m_repositories,
-		m_matRepository.get());
+	m_repository = make_unique<RenderRepository>(m_repositories);
+	m_renderer = make_unique<SceneRenderer>(m_backend->GetRenderFrame(), m_repositories);
 
 	return true;
 }

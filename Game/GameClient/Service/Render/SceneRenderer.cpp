@@ -8,21 +8,20 @@
 #include "Builtin/BuiltinMaterials.h"
 #include "Builtin/BuiltinBrush.h"
 
-#include "Repository/Material/MaterialRepository.h"
+#include "Repository/Material/MaterialRepo.h"
 
 SceneRenderer::~SceneRenderer() = default;
 SceneRenderer::SceneRenderer(
 	IRenderFrame* renderFrame,
-	RepositoryContainer& repositories,
-	MaterialRepository* matRepository) :
+	RepositoryContainer& repositories) :
 	m_renderFrame{ renderFrame },
-	m_repositories{ repositories },
-	m_matRepository{ matRepository }
+	m_repositories{ repositories }
 {
 	auto& meshRepository = m_repositories.Get<MeshRepository>();
 	m_uiQuad = CreateBuiltinUIQuad(meshRepository);
 
-	m_defaultMaterials = CreateBuiltinMaterials(m_matRepository);
+	auto& materialRepository = m_repositories.Get<MaterialRepository>();
+	m_defaultMaterials = CreateBuiltinMaterials(materialRepository);
 
 	auto& brushRepository = m_repositories.Get<BrushRepository>();
 	m_defaultBrush = CreateBuiltinBrush(brushRepository);
@@ -81,11 +80,12 @@ void SceneRenderer::DrawSurface(MeshHandle hM, MaterialHandle hMtl, const Core::
 	if (!meshRes)
 		return;
 
-	auto material = m_matRepository->Get(hMtl);
-	if (!material || material->state != LoadState::Ready)
+	auto& materialRepository = m_repositories.Get<MaterialRepository>();
+	auto materialRes = materialRepository.GetIfReady(hMtl);
+	if (!materialRes)
 		return;
 
-	m_renderFrame->DrawSurface(meshRes, material->matRes, world);
+	m_renderFrame->DrawSurface(meshRes, materialRes, world);
 }
 
 void SceneRenderer::DrawDebugSurface(DebugMeshHandle hDM, DebugMaterialHandle hDMtl, const Core::Matrix& world)

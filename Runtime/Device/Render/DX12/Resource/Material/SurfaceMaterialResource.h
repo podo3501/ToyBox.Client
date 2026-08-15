@@ -1,10 +1,10 @@
 #pragma once
-#include "MaterialResource.h"
+#include "MaterialRes.h"
 #include "GameClient/Service/Render/Definition/Material/SurfaceMaterialDesc.h"
 
-class SurfaceMaterialResource : public MaterialResource
+class SurfaceMaterialResource : public MaterialRes
 {
 public:
-    SurfaceMaterialResource(uint32_t texSlotCount) : MaterialResource{ texSlotCount } {}
+    SurfaceMaterialResource(uint32_t texSlotCount) : MaterialRes{ texSlotCount } {}
     virtual SurfaceType GetSurfaceType() const noexcept = 0;
 };

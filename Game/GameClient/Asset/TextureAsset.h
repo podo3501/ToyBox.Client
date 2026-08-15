@@ -5,7 +5,7 @@
 
 struct TextureAsset : public AssetData
 {
-	CORE_DECLARE_TYPE(TextureAsset)
+	CORE_DECLARE_TYPE(TextureAsset, AssetData)
 
 	Size size;
 	uint32_t stride{ 0 };

@@ -1,19 +1,26 @@
 #include "pch.h"
 #include "PhongMaterialResource.h"
-#include "Resource/Texture/BuiltinTextureType.h"
+#include "../Texture/TextureResource.h"
 
 PhongMaterialResource::~PhongMaterialResource() = default;
-PhongMaterialResource::PhongMaterialResource(const MaterialDesc& desc) :
-    SurfaceMaterialResource{ static_cast<uint32_t>(PhongTextureSlot::Count) }
-{
-    Assert(desc.domain == MaterialDomain::Surface);
-    m_desc = static_cast<const PhongMaterialDesc&>(desc);
-}
+PhongMaterialResource::PhongMaterialResource() :
+	MaterialResource{
+		PipelineLibrary::Get(
+			RegistryShader::Phong,
+			RasterPreset::Default,
+			PrimitiveTopologyType::Triangle)
+	}
+{}
 
-std::vector<BuiltinTextureBinding> PhongMaterialResource::GetBuiltinTextureBindings() const
+bool PhongMaterialResource::IsDependencyReady() const noexcept
 {
-    return {
-        { Core::ToIndex(PhongTextureSlot::Albedo), BuiltinTextureType::White },
-        { Core::ToIndex(PhongTextureSlot::Normal), BuiltinTextureType::FlatNormal }
-    };
+    // albedo는 필수
+    if (!m_albedo || !m_albedo->IsReady())
+        return false;
+
+    // normal은 선택
+    if (m_normal && !m_normal->IsReady())
+        return false;
+
+    return true;
 }

@@ -32,7 +32,7 @@ struct StaticSoundDesc : public SoundDesc
 struct StaticSoundTable : public AssetData
 {
 public:
-	CORE_DECLARE_TYPE(StaticSoundTable)
+	CORE_DECLARE_TYPE(StaticSoundTable, AssetData)
 
 	const StaticSoundDesc* GetDescriptor(std::string_view index) const noexcept;
 	void Serialize(Serializer& serializer);
@@ -52,7 +52,7 @@ struct StreamSoundDesc : public SoundDesc
 struct StreamSoundTable : public AssetData
 {
 public:
-	CORE_DECLARE_TYPE(StreamSoundTable)
+	CORE_DECLARE_TYPE(StreamSoundTable, AssetData)
 
 	const StreamSoundDesc* GetDescriptor(std::string_view index) const noexcept;
 	void Serialize(Serializer& serializer);

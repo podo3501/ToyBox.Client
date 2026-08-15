@@ -4,8 +4,8 @@
 #include "Graph/RenderGraph.h"
 #include "Renderer/SurfaceRenderer.h"
 #include "Resource/Mesh/MeshResource.h"
-#include "Resource/Material/PhongMaterialResource.h"
-#include "Resource/Material/PbrMaterialResource.h"
+#include "Resource/Material/PhongMaterialRes.h"
+#include "Resource/Material/PbrMaterialRes.h"
 #include "Resource/Environment/EnvironmentResource.h"
 #include "Resource/ShadowResource.h"
 
@@ -49,7 +49,7 @@ void OpaqueGraphBuilder::Build(RenderGraph& graph)
             for (auto& item : ctx.drawPacket.surface)
             {
                 auto mesh = static_cast<MeshResource*>(item.mesh.get());
-                auto material = static_cast<MaterialResource*>(item.material.get());
+                auto material = static_cast<MaterialRes*>(item.material.get());
 
                 surfRenderer.BindPipeline(cmd, material->GetPipelineState());
                 surfRenderer.Draw(cmd, *mesh, *material, item.world);

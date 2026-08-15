@@ -216,9 +216,6 @@
     <ClCompile Include="Service\Render\SceneRenderer.cpp">
       <Filter>Service\Render</Filter>
     </ClCompile>
-    <ClCompile Include="Service\Render\Repository\Material\MaterialRepository.cpp">
-      <Filter>Service\Render\Repository\Material</Filter>
-    </ClCompile>
     <ClCompile Include="Graphics\World\CameraController.cpp">
       <Filter>Graphics\World</Filter>
     </ClCompile>
@@ -267,6 +264,9 @@
     </ClCompile>
     <ClCompile Include="Service\Render\Repository\Base\ResourceRepositoryImpl.cpp">
       <Filter>Service\Render\Repository\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Service\Render\Repository\Material\MaterialRepo.cpp">
+      <Filter>Service\Render\Repository\Material</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -569,12 +569,6 @@
     <ClInclude Include="Service\Render\Resource\IMaterialResource.h">
       <Filter>Service\Render\Resource</Filter>
     </ClInclude>
-    <ClInclude Include="Service\Render\Repository\Material\IMaterialProvider.h">
-      <Filter>Service\Render\Repository\Material</Filter>
-    </ClInclude>
-    <ClInclude Include="Service\Render\Repository\Material\MaterialRepository.h">
-      <Filter>Service\Render\Repository\Material</Filter>
-    </ClInclude>
     <ClInclude Include="Graphics\World\CameraInputState.h">
       <Filter>Graphics\World</Filter>
     </ClInclude>
@@ -698,10 +692,10 @@
     <ClInclude Include="Service\Render\Definition\Material\MaterialDescFactory.h">
       <Filter>Service\Render\Definition\Material</Filter>
     </ClInclude>
-    <ClInclude Include="Service\Render\Definition\Material\PbrMaterialDesc.h">
+    <ClInclude Include="Service\Render\Definition\Material\PbrMaterialDe.h">
       <Filter>Service\Render\Definition\Material</Filter>
     </ClInclude>
-    <ClInclude Include="Service\Render\Definition\Material\PhongMaterialDesc.h">
+    <ClInclude Include="Service\Render\Definition\Material\PhongMaterialDe.h">
       <Filter>Service\Render\Definition\Material</Filter>
     </ClInclude>
     <ClInclude Include="Service\Render\Definition\Material\SurfaceMaterialDesc.h">
@@ -816,6 +810,33 @@
     </ClInclude>
     <ClInclude Include="Service\Render\Repository\Base\ResourceRepositoryImpl.h">
       <Filter>Service\Render\Repository\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\MaterialAsset.h">
+      <Filter>Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\PbrMaterialAsset.h">
+      <Filter>Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\PhongMaterialAsset.h">
+      <Filter>Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\PbrSurface.h">
+      <Filter>Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\PhongSurface.h">
+      <Filter>Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Definition\PbrMaterialDesc.h">
+      <Filter>Service\Render\Definition</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Definition\PhongMaterialDesc.h">
+      <Filter>Service\Render\Definition</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Repository\Material\IMaterialProvider.h">
+      <Filter>Service\Render\Repository\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Repository\Material\MaterialRepo.h">
+      <Filter>Service\Render\Repository\Material</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

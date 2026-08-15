@@ -14,22 +14,22 @@ constexpr TextureSlot Resolve(PbrTextureSlot s)
     return static_cast<TextureSlot>(s);
 }
 
-struct PbrSurface
+struct PbrSurf
 {
     float normal{ 1.f }; //노말맵 세기값
     float ao{ 1.f }; //주변광 세기값
     float roughness{ 0.5f }; //1이 거친것
     float metallic{ 0.0f }; //1이 메탈릭
 
-    bool operator==(const PbrSurface&) const = default;
+    bool operator==(const PbrSurf&) const = default;
     size_t GetHash() const { return Core::HashOf(normal, ao, roughness, metallic); }
 };
 
-struct PbrMaterialDesc : public SurfaceMaterialDesc
+struct PbrMaterialDe : public SurfaceMaterialDesc
 {
-    PbrSurface surf{};
+    PbrSurf surf{};
 
-    PbrMaterialDesc()
+    PbrMaterialDe()
     {
         surfType = SurfaceType::PBR;
         pipelineState = PipelineLibrary::Get(
@@ -38,6 +38,6 @@ struct PbrMaterialDesc : public SurfaceMaterialDesc
             PrimitiveTopologyType::Triangle);
     }
 
-    bool operator==(const PbrMaterialDesc&) const = default;
+    bool operator==(const PbrMaterialDe&) const = default;
     size_t GetHash() const { return Core::HashOf(SurfaceMaterialDesc::GetHash(), surf.GetHash()); }
 };

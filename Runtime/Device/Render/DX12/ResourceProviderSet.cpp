@@ -77,8 +77,8 @@ ResourceProviderSet::ResourceProviderSet(
         TextureCreateGraphBuilder{ m_device, taskScheduler, resFactory, descFactory }
         },
     m_matProvider{ 
-        m_texProvider, 
-        ResourceReleaseBuilder{ taskScheduler }, 
+        taskScheduler,
+        m_texProvider 
         },
     m_brushProvider{
         taskScheduler,

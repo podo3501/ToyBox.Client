@@ -1,6 +1,6 @@
 #pragma once
-#include "PhongMaterialDesc.h"
-#include "PbrMaterialDesc.h"
+#include "PhongMaterialDe.h"
+#include "PbrMaterialDe.h"
 #include "GridMaterialDesc.h"
 
 struct PhongTextureArgs
@@ -20,13 +20,13 @@ namespace SurfaceMatDescFactory
 {
     namespace Phong
     {
-        PhongMaterialDesc CreateLit(const PhongTextureArgs& texArgs = {});
-        PhongMaterialDesc CreateWireframe();
+        PhongMaterialDe CreateLit(const PhongTextureArgs& texArgs = {});
+        PhongMaterialDe CreateWireframe();
     }
 
     namespace PBR
     {
-        PbrMaterialDesc CreateLit(const PbrTextureArgs& texArgs = {});
+        PbrMaterialDe CreateLit(const PbrTextureArgs& texArgs = {});
     }
 }
 
