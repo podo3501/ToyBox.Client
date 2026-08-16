@@ -1,11 +1,10 @@
 #pragma once
-#include "ResourceDesc.h"
+#include "MaterialDesc.h"
 #include "GameClient/Asset/PhongMaterialAsset.h"
 
-struct PhongMaterialDesc : public ResourceDesc
+struct PhongMaterialDesc : public MaterialDesc
 {
-	using ResourceDesc::ResourceDesc; // .material 파일 경로
-	bool operator==(const PhongMaterialDesc&) const = default;
+	using MaterialDesc::MaterialDesc; // .material 파일 경로
 
 	virtual Core::TypeID GetAssetTypeID() const override
 	{

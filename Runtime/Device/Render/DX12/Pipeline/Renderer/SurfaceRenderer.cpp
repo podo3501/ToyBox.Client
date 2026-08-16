@@ -6,22 +6,26 @@
 #include "Command/CommandList.h"
 #include "Helpers/MathHelpers.h"
 #include "Resource/Mesh/MeshResource.h"
-#include "Resource/Material/PhongMaterialRes.h"
-#include "Resource/Material/PbrMaterialRes.h"
+#include "Resource/Material/PhongMaterialResource.h"
+#include "Resource/Material/PbrMaterialResource.h"
 #include "Resource/Environment/EnvironmentResource.h"
 #include "Resource/Texture/TextureCubeResource.h"
 #include "GameClient/Graphics/RenderData/FrameData.h"
 #include "Core/D3D12Conversions.h"
+
+//xxxStrength: 0에서 1 사이.
+//xxxScale: 0에서 무한대. 원본값을 스케일하는 것.
+//xxxIntensity: 0에서 무한대. 대신 원본값.
 
 struct PbrMaterialCB
 {
     uint32_t albedoTextureIndex;
     uint32_t normalTextureIndex;
     uint32_t armTextureIndex;
-    float normalIntensity;
-    float roughnessIntensity;
-    float ambientOcclusionIntensity;
-    float metallic;
+    float normalScale;
+    float roughnessScale;
+    float metallicScale;
+    float aoStrength;
     float padding{ 0.f };
 };
 
@@ -30,10 +34,10 @@ struct PhongMaterialCB
     uint32_t albedoTextureIndex; 
     uint32_t normalTextureIndex;
     uint32_t dummyTextureIndex{ 0 };
-    float normalIntensity;
-    float shininess;
-    float specularIntensity;
-    float ambientIntensity;
+    float normalScale;
+    float ambientScale;
+    float specularScale;
+    float shininess; //하이라이트 지수: 보통 4.0 ~ 256.0
     float padding{ 0.f };
 };
 
@@ -193,51 +197,48 @@ D3D12_GPU_VIRTUAL_ADDRESS SurfaceRenderer::UploadObjectCB(const Core::Matrix& wo
     return m_objectCBAllocator.AllocateConstant(obj);
 }
 
-D3D12_GPU_VIRTUAL_ADDRESS SurfaceRenderer::UploadMaterialCB(MaterialRes& material)
+D3D12_GPU_VIRTUAL_ADDRESS SurfaceRenderer::UploadMaterialCB(MaterialResource& material)
 {
-    SurfaceMaterialResource* surfaceMat = static_cast<SurfaceMaterialResource*>(&material);
-    auto textureIndices = surfaceMat->GetTextureIndices();
-
     MaterialConstantBuffer gpuCB{};
-    switch (surfaceMat->GetSurfaceType())
+
+    switch (material.GetType())
     {
-    case SurfaceType::Phong:
+    case MaterialType::Phong:
     {
-        auto* phongMat = static_cast<PhongMaterialRes*>(surfaceMat);
-        const PhongSurf& surface = phongMat->GetSurface();
+        auto& phongMat = static_cast<PhongMaterialResource&>(material);
+        const PhongSurface& surface = phongMat.GetSurface();
 
         PhongMaterialCB cb{};
-        cb.albedoTextureIndex = textureIndices[static_cast<int>(PhongTextureSlot::Albedo)];
-        cb.normalTextureIndex = textureIndices[static_cast<int>(PhongTextureSlot::Normal)];
+        cb.albedoTextureIndex = phongMat.GetAlbedo().GetHeapIndex();
+        cb.normalTextureIndex = phongMat.GetNormal().GetHeapIndex();
         cb.dummyTextureIndex = 0;
 
-        cb.normalIntensity = surface.normal;
+        cb.normalScale = surface.normalScale;
+        cb.ambientScale = surface.ambientScale;
+        cb.specularScale = surface.specularScale;
         cb.shininess = surface.shininess;
-        cb.specularIntensity = surface.specular;
-        cb.ambientIntensity = surface.ambient;
 
         std::memcpy(&gpuCB, &cb, sizeof(MaterialConstantBuffer));
         break;
     }
-    case SurfaceType::PBR:
+    case MaterialType::PBR:
     {
-        auto* pbrMat = static_cast<PbrMaterialRes*>(surfaceMat);
-        const PbrSurf& surface = pbrMat->GetSurface();
+        auto& pbrMat = static_cast<PbrMaterialResource&>(material);
+        const PbrSurface& surface = pbrMat.GetSurface();
 
         PbrMaterialCB cb{};
-        cb.albedoTextureIndex = textureIndices[static_cast<int>(PbrTextureSlot::Albedo)];
-        cb.normalTextureIndex = textureIndices[static_cast<int>(PbrTextureSlot::Normal)];
-        cb.armTextureIndex = textureIndices[static_cast<int>(PbrTextureSlot::ARM)];
-
-        cb.normalIntensity = surface.normal;
-        cb.roughnessIntensity = surface.roughness;
-        cb.ambientOcclusionIntensity = surface.ao;
-        cb.metallic = surface.metallic;
+        cb.albedoTextureIndex = pbrMat.GetAlbedo().GetHeapIndex();
+        cb.normalTextureIndex = pbrMat.GetNormal().GetHeapIndex();
+        cb.armTextureIndex = pbrMat.GetArm().GetHeapIndex();
+             
+        cb.normalScale = surface.normalScale;
+        cb.roughnessScale = surface.roughnessScale;
+        cb.metallicScale = surface.metallicScale;
+        cb.aoStrength = surface.aoStrength;
 
         std::memcpy(&gpuCB, &cb, sizeof(MaterialConstantBuffer));
         break;
     }
-    default: Assert(false); break; // 미지원 또는 구현이 누락된 SurfaceType
     }
 
     return m_materialCBAllocator.AllocateConstant(gpuCB);
@@ -246,7 +247,7 @@ D3D12_GPU_VIRTUAL_ADDRESS SurfaceRenderer::UploadMaterialCB(MaterialRes& materia
 void SurfaceRenderer::Draw(
     CommandList& cmd,
     MeshResource& mesh,
-    MaterialRes& material,
+    MaterialResource& material,
     const Core::Matrix& world)
 {
     auto objectCBAddress = UploadObjectCB(world);

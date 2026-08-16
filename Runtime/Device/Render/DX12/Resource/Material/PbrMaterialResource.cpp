@@ -5,6 +5,7 @@
 PbrMaterialResource::~PbrMaterialResource() = default;
 PbrMaterialResource::PbrMaterialResource() :
 	MaterialResource{
+        MaterialType::PBR,
 		PipelineLibrary::Get(
 			RegistryShader::PBR,
 			RasterPreset::Default,

@@ -1,0 +1,13 @@
+{
+  "type": "PBR",
+  "surface": {
+    "normalScale": 1.0,
+    "roughnessScale": 0.8,
+    "metallicScale": 0.0,
+    "aoStrength": 1.0
+  },
+  "textures": {
+    "albedo": "PavingStones.jpg",
+    "normal": "PavingStonesNormalDX.jpg"
+  }
+}

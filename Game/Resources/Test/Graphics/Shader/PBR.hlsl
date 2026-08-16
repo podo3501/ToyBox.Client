@@ -47,10 +47,10 @@ cbuffer PbrMaterialCB : register(b3)
     uint albedoTextureIndex;
     uint normalTextureIndex;
     uint armTextureIndex;
-    float normalIntensity;
-    float roughnessIntensity;
-    float ambientOcclusionIntensity;
-    float metallic;
+    float normalScale;
+    float roughnessScale;
+    float metallicScale;
+    float aoStrength;
     float MaterialPadding;
 };
 
@@ -293,6 +293,9 @@ float4 PSMain(PSInput input) : SV_TARGET
     Texture2D normalTex = ResourceDescriptorHeap[normalTextureIndex];
     float3 localNormal = normalTex.Sample(gSampler, input.uv).xyz;
     localNormal = localNormal * 2.0f - 1.0f;
+
+    localNormal.xy *= normalScale;
+    localNormal.z = 1.0f;
     localNormal = normalize(localNormal);
 
     // 탄젠트 공간 -> 월드 공간 노멀 최종 변환
@@ -316,8 +319,8 @@ float4 PSMain(PSInput input) : SV_TARGET
     float NdotV = saturate(dot(N, V));
 
     // 6. PBR 재질 데이터 가공
-    float PBR_Roughness = clamp(sampledRoughness * roughnessIntensity, 0.05f, 1.0f);
-    float PBR_Metallic  = saturate(sampledMetallic * metallic);
+    float PBR_Roughness = clamp(sampledRoughness * roughnessScale, 0.05f, 1.0f);
+    float PBR_Metallic  = saturate(sampledMetallic * metallicScale);
 
     // 7. Cook-Torrance PBR BRDF 연산 시작
     float3 F0 = float3(0.04f, 0.04f, 0.04f); 
@@ -350,7 +353,7 @@ float4 PSMain(PSInput input) : SV_TARGET
 
     // 11. 주변광(Ambient) 처리
     float highContrastAO = pow(saturate(sampledAO), 2.0f);
-    float PBR_AO = lerp(1.0f, highContrastAO, ambientOcclusionIntensity);
+    float PBR_AO = lerp(1.0f, highContrastAO, aoStrength);
 
     float3 iblDiffuse;
     float3 iblSpecular;

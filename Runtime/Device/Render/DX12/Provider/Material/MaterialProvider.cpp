@@ -16,59 +16,68 @@ MaterialProvider::MaterialProvider(TaskScheduler& taskScheduler, TextureProvider
 std::shared_ptr<IResource> MaterialProvider::CreateResource(std::shared_ptr<AssetData> asset)
 {
     if (!asset)
-        return nullptr;
+        return BuildPhongResource(nullptr, nullptr, PhongSurface{});
 
     auto matAsset = Core::Cast<MaterialAsset>(asset);
     if (!matAsset)
         return nullptr;
 
-    shared_ptr<IResource> matRes{ nullptr };
-
     switch (matAsset->type)
     {
-    case MaterialType::PBR: matRes = CreatePbrMaterialResource(asset); break;
-    case MaterialType::Phong: matRes = CreatePhongMaterialResource(asset); break;
+    case MaterialType::PBR:
+    {
+        auto pbrAsset = Core::Cast<PbrMaterialAsset>(asset);
+        return BuildPbrResource(pbrAsset->albedo, pbrAsset->normal, pbrAsset->arm, pbrAsset->surface);
     }
-    Assert(matRes);
+    case MaterialType::Phong: 
+    {
+        auto phongAsset = Core::Cast<PhongMaterialAsset>(asset);
+        return BuildPhongResource(phongAsset->albedo, phongAsset->normal, phongAsset->surface);
+    }
+    }
+    Assert(false);
 
-    return matRes;
+    return nullptr;
 }
 
-shared_ptr<IResource> MaterialProvider::CreatePbrMaterialResource(std::shared_ptr<AssetData> asset)
+shared_ptr<IResource> MaterialProvider::BuildPbrResource(
+    std::shared_ptr<TextureAsset> albedoAsset,
+    std::shared_ptr<TextureAsset> normalAsset,
+    std::shared_ptr<TextureAsset> armAsset,
+    const PbrSurface& surface)
 {
-    auto pbrAsset = Core::Cast<PbrMaterialAsset>(asset);
-
-    auto albedoRes = CreateTexResource(pbrAsset->albedo);
+    auto albedoRes = CreateTexResourceOrFallback(albedoAsset, BuiltinTextureType::White);
     if (!albedoRes)
         return nullptr;
 
-    auto normalRes = CreateTexResource(pbrAsset->normal);
-    auto armRes = CreateTexResource(pbrAsset->arm);
+    auto normalRes = CreateTexResourceOrFallback(normalAsset, BuiltinTextureType::FlatNormal);
+    auto armRes = CreateTexResourceOrFallback(armAsset, BuiltinTextureType::DefaultARM);
 
     auto pbrRes = std::make_shared<PbrMaterialResource>();
     pbrRes->SetAlbedo(albedoRes);
     pbrRes->SetNormal(normalRes);
     pbrRes->SetArm(armRes);
-    pbrRes->SetSurface(pbrAsset->surface);
+    pbrRes->SetSurface(surface);
 
     m_pendingLoad.Add(pbrRes);
     return pbrRes;
 }
 
-shared_ptr<IResource> MaterialProvider::CreatePhongMaterialResource(std::shared_ptr<AssetData> asset)
+shared_ptr<IResource> MaterialProvider::BuildPhongResource(
+    std::shared_ptr<TextureAsset> albedoAsset,
+    std::shared_ptr<TextureAsset> normalAsset,
+    const PhongSurface& surface)
 {
-    auto phongAsset = Core::Cast<PhongMaterialAsset>(asset);
-
-    auto albedoRes = CreateTexResource(phongAsset->albedo);
+    auto albedoRes = CreateTexResourceOrFallback(albedoAsset, BuiltinTextureType::White);
     if (!albedoRes)
         return nullptr;
 
-    auto normalRes = CreateTexResource(phongAsset->normal);
+    auto normalRes = CreateTexResourceOrFallback(normalAsset, BuiltinTextureType::FlatNormal);
 
     auto phongRes = std::make_shared<PhongMaterialResource>();
     phongRes->SetAlbedo(albedoRes);
     phongRes->SetNormal(normalRes);
-    phongRes->SetSurface(phongAsset->surface);
+    phongRes->SetSurface(surface);
 
     m_pendingLoad.Add(phongRes);
     return phongRes;
@@ -85,6 +94,16 @@ std::shared_ptr<TextureResource> MaterialProvider::CreateTexResource(std::shared
         return nullptr;
 
     return res;
+}
+
+std::shared_ptr<TextureResource> MaterialProvider::CreateTexResourceOrFallback(
+    std::shared_ptr<TextureAsset> texAsset,
+    BuiltinTextureType fallbackType)
+{
+    if (auto res = CreateTexResource(texAsset))
+        return res;
+
+    return m_texProvider.GetBuiltinTexture(fallbackType);
 }
 
 void MaterialProvider::ReleaseResource(std::shared_ptr<IResource> res)

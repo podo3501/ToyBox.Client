@@ -1,6 +1,5 @@
 #pragma once
 #include "Handle/ResourceHandles.h"
-#include "Definition/Material/MaterialDesc.h"
 #include "Definition/Text/TextStyle.h"
 #include "Core/Math/Matrix.h"
 #include "Core/Math/Vector2.h"
@@ -49,13 +48,11 @@ public:
 	void SetFrameData(const FrameData& frameData);
 
 private:
-	MaterialHandle GetDefaultMaterial(MaterialDomain matDomain) const;
-
 	IRenderFrame* m_renderFrame{ nullptr };
 	RepositoryContainer& m_repositories;
 
 	//default(built in)
 	MeshHandle m_uiQuad{};
-	std::array<MaterialHandle, static_cast<size_t>(MaterialDomain::Count)> m_defaultMaterials;
+	MaterialHandle m_defaultMaterial;
 	BrushHandle m_defaultBrush;
 };

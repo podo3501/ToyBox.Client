@@ -1,10 +1,10 @@
 {
   "type": "PBR",
   "surface": {
-    "normalStrength": 1.0,
-    "aoStrength": 1.0,
-    "roughness": 0.6,
-    "metallic": 0.2
+    "normalScale": 1.0,
+    "roughnessScale": 0.6,
+    "metallicScale": 0.2,
+    "aoStrength": 1.0
   },
   "textures": {
     "albedo": "SeawornStone_diff.png",

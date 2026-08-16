@@ -49,7 +49,7 @@ DebugMeshHandle RenderRepository::LoadDebugMesh(const DebugMeshDesc& desc, std::
 	return m_repositories.Acquire<DebugMeshRepository>(desc);
 }
 
-MaterialHandle RenderRepository::LoadMaterial(const PbrMaterialDesc& desc)
+MaterialHandle RenderRepository::LoadMaterial(const MaterialDesc& desc)
 {
 	return m_repositories.Acquire<MaterialRepository>(desc);
 }

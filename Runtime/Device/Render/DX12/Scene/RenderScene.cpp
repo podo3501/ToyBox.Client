@@ -1,26 +1,25 @@
 #include "pch.h"
 #include "RenderScene.h"
 #include "RenderSortKey.h"
-#include "Resource/Material/SurfaceMaterialResource.h"
+#include "Resource/Material/MaterialResource.h"
+#include "Resource/Material/DebugMaterialResource.h"
 #include "Resource/Environment/EnvironmentResource.h"
 
 void RenderScene::AddSurface(const DrawItem& item)
 {
     DrawItem newItem = item;
-    auto material = static_cast<MaterialRes*>(item.material.get());
+    auto material = static_cast<MaterialResource*>(item.material.get());
     newItem.sortKey = RenderSortKey::Build(material->GetPipelineState().GetHash());
 
-    switch (material->GetMaterialDesc().domain)
-    {
-    case MaterialDomain::Surface: m_surfaceDraws.push_back(newItem); break;
-    case MaterialDomain::DebugSurface: m_debugDraws.push_back(newItem); break;
-    default: Assert(false); break; //여긴 surface 종류만 호출해야 한다.
-    }
+    m_surfaceDraws.push_back(newItem);
 }
 
 void RenderScene::AddDebugSurface(const DrawDebugItem& item)
 {
     DrawDebugItem newItem = item;
+    auto debugMaterial = static_cast<DebugMaterialResource*>(item.material.get());
+    newItem.sortKey = RenderSortKey::Build(debugMaterial->GetPipelineState().GetHash());
+
     m_debugSurfaceDraws.push_back(std::move(newItem));
 }
 
@@ -51,7 +50,6 @@ DrawPacket RenderScene::BuildDrawPacket()
     DrawPacket packet;
 
     packet.surface = m_surfaceDraws;
-    packet.debugS = m_debugDraws;
     packet.debugSurface = m_debugSurfaceDraws;
     packet.ui = m_uiDraws;
     packet.environment = m_environment; // shared_ptr 복사 (Clear에서 리셋되므로)
@@ -60,11 +58,6 @@ DrawPacket RenderScene::BuildDrawPacket()
 }
 
 static bool SurfaceSort(const DrawItem& a, const DrawItem& b)
-{
-    return a.sortKey < b.sortKey;
-}
-
-static bool DebugSSort(const DrawItem& a, const DrawItem& b)
 {
     return a.sortKey < b.sortKey;
 }
@@ -82,7 +75,6 @@ static bool UISort(const DrawUIItem& a, const DrawUIItem& b)
 void RenderScene::SortDraws()
 {
     std::sort(m_surfaceDraws.begin(), m_surfaceDraws.end(), SurfaceSort);
-    std::sort(m_debugDraws.begin(), m_debugDraws.end(), DebugSSort);
     std::sort(m_debugSurfaceDraws.begin(), m_debugSurfaceDraws.end(), DebugSurfaceSort);
     std::sort(m_uiDraws.begin(), m_uiDraws.end(), UISort);
 }
@@ -90,7 +82,6 @@ void RenderScene::SortDraws()
 void RenderScene::Clear()
 {
     m_surfaceDraws.clear();
-    m_debugDraws.clear();
     m_debugSurfaceDraws.clear();
     m_uiDraws.clear();
     m_environment.reset();

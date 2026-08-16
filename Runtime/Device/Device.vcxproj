@@ -123,7 +123,6 @@
     <ClInclude Include="Render\DX12\Pipeline\Renderer\UIRenderer.h" />
     <ClInclude Include="Render\DX12\Pipeline\ShadowGraphBuilder.h" />
     <ClInclude Include="Render\DX12\Pipeline\UIGraphBuilder.h" />
-    <ClInclude Include="Render\DX12\Provider\Material\MaterialProv.h" />
     <ClInclude Include="Render\DX12\Provider\Mesh\MeshCreateGraphBuilder.h" />
     <ClInclude Include="Render\DX12\Provider\Mesh\MeshLoadRequest.h" />
     <ClInclude Include="Render\DX12\Provider\Mesh\MeshProvider.h" />
@@ -140,14 +139,9 @@
     <ClInclude Include="Render\DX12\Resource\Font\FontResource.h" />
     <ClInclude Include="Render\DX12\Resource\IPendingResource.h" />
     <ClInclude Include="Render\DX12\Resource\Material\DebugMaterialResource.h" />
-    <ClInclude Include="Render\DX12\Resource\Material\DebugSurfaceMaterialResource.h" />
     <ClInclude Include="Render\DX12\Resource\Material\GridDebugMaterialResource.h" />
-    <ClInclude Include="Render\DX12\Resource\Material\GridMaterialResource.h" />
-    <ClInclude Include="Render\DX12\Resource\Material\MaterialRes.h" />
     <ClInclude Include="Render\DX12\Resource\Material\MaterialResource.h" />
-    <ClInclude Include="Render\DX12\Resource\Material\PbrMaterialRes.h" />
     <ClInclude Include="Render\DX12\Resource\Material\PbrMaterialResource.h" />
-    <ClInclude Include="Render\DX12\Resource\Material\PhongMaterialRes.h" />
     <ClInclude Include="Render\DX12\Resource\Material\PhongMaterialResource.h" />
     <ClInclude Include="Render\DX12\Resource\Material\SurfaceMaterialResource.h" />
     <ClInclude Include="Render\DX12\Resource\Mesh\MeshResource.h" />
@@ -280,7 +274,6 @@
     <ClCompile Include="Render\DX12\Pipeline\Renderer\UIRenderer.cpp" />
     <ClCompile Include="Render\DX12\Pipeline\ShadowGraphBuilder.cpp" />
     <ClCompile Include="Render\DX12\Pipeline\UIGraphBuilder.cpp" />
-    <ClCompile Include="Render\DX12\Provider\Material\MaterialProv.cpp" />
     <ClCompile Include="Render\DX12\Provider\Mesh\MeshCreateGraphBuilder.cpp" />
     <ClCompile Include="Render\DX12\Provider\Mesh\MeshProvider.cpp" />
     <ClCompile Include="Render\DX12\Provider\Mesh\MeshRegistry.cpp" />
@@ -295,11 +288,7 @@
     <ClCompile Include="Render\DX12\Resource\Environment\EnvironmentResource.cpp" />
     <ClCompile Include="Render\DX12\Resource\Font\FontResource.cpp" />
     <ClCompile Include="Render\DX12\Resource\Material\GridDebugMaterialResource.cpp" />
-    <ClCompile Include="Render\DX12\Resource\Material\GridMaterialResource.cpp" />
-    <ClCompile Include="Render\DX12\Resource\Material\MaterialRes.cpp" />
-    <ClCompile Include="Render\DX12\Resource\Material\PbrMaterialRes.cpp" />
     <ClCompile Include="Render\DX12\Resource\Material\PbrMaterialResource.cpp" />
-    <ClCompile Include="Render\DX12\Resource\Material\PhongMaterialRes.cpp" />
     <ClCompile Include="Render\DX12\Resource\Material\PhongMaterialResource.cpp" />
     <ClCompile Include="Render\DX12\Resource\Mesh\StaticMeshResource.cpp" />
     <ClCompile Include="Render\DX12\Resource\Mesh\TransientMeshResource.cpp" />

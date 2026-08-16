@@ -1,0 +1,6 @@
+{
+  "type": "Phong",
+  "textures": {
+    "albedo": "BlueButton.png"
+  }
+}

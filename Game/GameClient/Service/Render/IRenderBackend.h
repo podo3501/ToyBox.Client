@@ -5,6 +5,7 @@
 #include "Core/Foundation/Geometry2D.h"
 #include "IResourceProviderSet.h"
 #include "IRenderFrame.h"
+#include "GameClient/Service/Render/Definition/RenderState.h"
 
 struct IMaterialResource;
 struct ShaderAsset;

@@ -5,7 +5,6 @@
 struct DebugMeshDesc : public ResourceDesc
 {
     using ResourceDesc::ResourceDesc;
-    bool operator==(const DebugMeshDesc&) const = default;
 
     virtual Core::TypeID GetAssetTypeID() const override
     {

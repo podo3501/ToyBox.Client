@@ -9,7 +9,6 @@ private:
     DebugMaterialType type;
 
 public:
-    bool operator==(const DebugMaterialDesc&) const = default;
     virtual Core::TypeID GetAssetTypeID() const override
     {
         return AssetData::StaticTypeID(); // 현재 Debug Material은 Asset을 사용하지 않음.

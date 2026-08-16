@@ -8,8 +8,6 @@
 #include "Builtin/BuiltinMaterials.h"
 #include "Builtin/BuiltinBrush.h"
 
-#include "Repository/Material/MaterialRepo.h"
-
 SceneRenderer::~SceneRenderer() = default;
 SceneRenderer::SceneRenderer(
 	IRenderFrame* renderFrame,
@@ -21,7 +19,7 @@ SceneRenderer::SceneRenderer(
 	m_uiQuad = CreateBuiltinUIQuad(meshRepository);
 
 	auto& materialRepository = m_repositories.Get<MaterialRepository>();
-	m_defaultMaterials = CreateBuiltinMaterials(materialRepository);
+	m_defaultMaterial = CreateBuiltinMaterials(materialRepository);
 
 	auto& brushRepository = m_repositories.Get<BrushRepository>();
 	m_defaultBrush = CreateBuiltinBrush(brushRepository);
@@ -73,7 +71,7 @@ void SceneRenderer::DrawText(
 void SceneRenderer::DrawSurface(MeshHandle hM, MaterialHandle hMtl, const Core::Matrix& world)
 {
 	if (!hMtl)
-		hMtl = GetDefaultMaterial(MaterialDomain::Surface);
+		hMtl = m_defaultMaterial;
 
 	auto& meshRepository = m_repositories.Get<MeshRepository>();
 	auto meshRes = meshRepository.GetIfReady(hM);
@@ -143,9 +141,4 @@ void SceneRenderer::DrawEnvironment(EnvironmentHandle hEnv)
 void SceneRenderer::SetFrameData(const FrameData& frameData)
 {
 	m_renderFrame->SetFrameData(frameData);
-}
-
-MaterialHandle SceneRenderer::GetDefaultMaterial(MaterialDomain matDomain) const
-{
-	return m_defaultMaterials[static_cast<size_t>(matDomain)];
 }

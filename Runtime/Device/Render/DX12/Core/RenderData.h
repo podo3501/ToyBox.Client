@@ -73,7 +73,6 @@ struct DebugPacket
 struct DrawPacket
 {
     std::span<DrawItem> surface;
-    std::span<DrawItem> debugS;
     std::span<DrawDebugItem> debugSurface;
     std::span<DrawUIItem> ui;
     std::shared_ptr<EnvironmentResource> environment{ nullptr }; // nullptr 가능 - 환경 없는 씬

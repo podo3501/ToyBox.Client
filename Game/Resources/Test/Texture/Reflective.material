@@ -1,0 +1,9 @@
+{
+  "type": "PBR",
+  "surface": {
+    "normalScale": 1.0,
+    "roughnessScale": 0.01,
+    "metallicScale": 4.0,
+    "aoStrength": 0.3
+  }
+}

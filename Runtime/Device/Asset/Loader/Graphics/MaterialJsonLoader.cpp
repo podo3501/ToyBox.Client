@@ -7,33 +7,33 @@
 
 struct JsonPBRSurface
 {
-    float normalStrength = 1.0f;
-    float aoStrength = 1.0f;
-    float roughness = 1.0f;
-    float metallic = 0.0f;
+    float normalScale = 1.f;
+    float roughnessScale = 1.f;
+    float metallicScale = 1.f;
+    float aoStrength = 1.f;
 
     void Serialize(Serializer& serializer)
     {
-        serializer.Process("normalStrength", normalStrength);
+        serializer.Process("normalScale", normalScale);
+        serializer.Process("roughnessScale", roughnessScale);
+        serializer.Process("metallicScale", metallicScale);
         serializer.Process("aoStrength", aoStrength);
-        serializer.Process("roughness", roughness);
-        serializer.Process("metallic", metallic);
     }
 };
 
 struct JsonPhongSurface
 {
-    float normalStrength = 1.0f;
-    float shininess = 5.0f;
-    float specular = 0.0f;
-    float ambient = 0.0f;
+    float normalScale = 1.f;
+    float ambientScale = 0.1f;
+    float specularScale = 1.f;
+    float shininess = 32.f;
 
     void Serialize(Serializer& serializer)
     {
-        serializer.Process("normalStrength", normalStrength);
+        serializer.Process("normalScale", normalScale);
+        serializer.Process("ambientScale", ambientScale);
+        serializer.Process("specularScale", specularScale);
         serializer.Process("shininess", shininess);
-        serializer.Process("specular", specular);
-        serializer.Process("ambient", ambient);
     }
 };
 struct JsonMaterialTextures
@@ -95,10 +95,10 @@ static std::shared_ptr<MaterialAsset> LoadPBR(
     auto material = std::make_shared<PbrMaterialAsset>();
 
     material->type = MaterialType::PBR;
-    material->normalStrength = surface.normalStrength;
+    material->surface.normalScale = surface.normalScale;
+    material->surface.roughnessScale = surface.roughnessScale;
+    material->surface.metallicScale = surface.metallicScale;
     material->surface.aoStrength = surface.aoStrength;
-    material->surface.roughness = surface.roughness;
-    material->surface.metallic = surface.metallic;
 
     LoadCommonTextures(*material, materialID, provider, textures);
     material->arm = LoadTexture(provider, materialID, textures.arm);
@@ -120,10 +120,10 @@ static std::shared_ptr<MaterialAsset> LoadPhong(
     auto material = std::make_shared<PhongMaterialAsset>();
 
     material->type = MaterialType::Phong;
-    material->normalStrength = surface.normalStrength;
+    material->surface.normalScale = surface.normalScale;
+    material->surface.ambientScale = surface.ambientScale;
+    material->surface.specularScale = surface.specularScale;
     material->surface.shininess = surface.shininess;
-    material->surface.specular = surface.specular;
-    material->surface.ambient = surface.ambient;
 
     LoadCommonTextures(*material, materialID, provider, textures);
 

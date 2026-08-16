@@ -1,0 +1,14 @@
+{
+  "type": "PBR",
+  "surface": {
+    "normalScale": 1.0,
+    "roughnessScale": 0.9,
+    "metallicScale": 0.05,
+    "aoStrength": 1.0
+  },
+  "textures": {
+    "albedo": "marble_bust_01_diff_4k.jpg",
+    "normal": "marble_bust_01_nor_dx_4k.jpg",
+    "arm": "marble_bust_01_arm_4k.jpg"
+  }
+}

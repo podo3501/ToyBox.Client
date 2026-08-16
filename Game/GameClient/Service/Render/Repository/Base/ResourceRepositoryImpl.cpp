@@ -27,7 +27,7 @@ ResourceRepositoryImpl::FindOrRegister(size_t key)
 ResourceRepositoryImpl::RawHandle 
 ResourceRepositoryImpl::Acquire(const ResourceDesc& desc)
 {
-    assert(desc.GetResourceID().GetType() == Core::ResourceIDType::Path);
+    Assert(desc.GetResourceID().GetType() == Core::ResourceIDType::Path);
 
     auto [handle, isNew] = FindOrRegister(desc.GetHash());
     if (!isNew)
@@ -41,7 +41,7 @@ ResourceRepositoryImpl::Acquire(const ResourceDesc& desc)
 ResourceRepositoryImpl::RawHandle 
 ResourceRepositoryImpl::AcquireFromAsset(const ResourceDesc& desc, std::shared_ptr<AssetData> asset)
 {
-    assert(desc.GetResourceID().GetType() != Core::ResourceIDType::Path);
+    Assert(desc.GetResourceID().GetType() != Core::ResourceIDType::Path);
 
     auto [handle, isNew] = FindOrRegister(desc.GetHash());
     if (!isNew)

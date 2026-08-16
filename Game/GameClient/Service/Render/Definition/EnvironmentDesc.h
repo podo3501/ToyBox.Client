@@ -5,7 +5,6 @@
 struct EnvironmentDesc : public ResourceDesc
 {
 	using ResourceDesc::ResourceDesc; // .envmap 매니페스트 경로
-	bool operator==(const EnvironmentDesc&) const = default;
 
 	virtual Core::TypeID GetAssetTypeID() const override
 	{

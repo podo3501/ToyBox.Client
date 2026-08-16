@@ -20,6 +20,11 @@ public:
 	void SetArm(std::shared_ptr<TextureResource> res) { m_arm = std::move(res); }
 	void SetSurface(const PbrSurface& surface) { m_surface = surface; }
 
+	const TextureResource& GetAlbedo() const noexcept { return *m_albedo; }
+	const TextureResource& GetNormal() const noexcept { return *m_normal; }
+	const TextureResource& GetArm() const noexcept { return *m_arm; }
+	const PbrSurface& GetSurface() const noexcept { return m_surface; }
+
 private:
 	std::shared_ptr<TextureResource> m_albedo;
 	std::shared_ptr<TextureResource> m_normal;

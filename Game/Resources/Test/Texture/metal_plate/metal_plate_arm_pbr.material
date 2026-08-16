@@ -1,0 +1,13 @@
+{
+  "type": "PBR",
+  "surface": {
+    "normalScale": 1.0,
+    "roughnessScale": 0.5,
+    "metallicScale": 1.0,
+    "aoStrength": 1.0
+  },
+  "textures": {
+    "albedo": "metal_plate_diff.png",
+    "arm": "metal_plate_arm.png"
+  }
+}

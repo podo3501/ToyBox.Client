@@ -1,7 +1,6 @@
 #pragma once
 #include "Core/Foundation/Geometry2D.h"
 #include "Core/RenderData.h"
-#include "GameClient/Service/Render/Definition/Material/MaterialDesc.h"
 
 class EnvironmentResource;
 

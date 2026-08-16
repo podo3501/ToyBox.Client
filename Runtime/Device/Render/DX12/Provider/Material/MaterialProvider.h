@@ -3,8 +3,11 @@
 #include "../PendingLoadQueue.h"
 #include "../PendingReleaseQueue.h"
 
+struct PbrSurface;
+struct PhongSurface;
 struct TextureAsset;
 class TextureProvider;
+enum class BuiltinTextureType;
 
 class MaterialProvider : public IResourceProvider
 {
@@ -16,9 +19,21 @@ public:
 	void Update();
 
 private:
-	shared_ptr<IResource> CreatePbrMaterialResource(std::shared_ptr<AssetData> asset);
-	shared_ptr<IResource> CreatePhongMaterialResource(std::shared_ptr<AssetData> asset);
+	shared_ptr<IResource> BuildPbrResource(
+		std::shared_ptr<TextureAsset> albedoAsset,
+		std::shared_ptr<TextureAsset> normalAsset,
+		std::shared_ptr<TextureAsset> armAsset,
+		const PbrSurface& surface);
+
+	shared_ptr<IResource> BuildPhongResource(
+		std::shared_ptr<TextureAsset> albedoAsset,
+		std::shared_ptr<TextureAsset> normalAsset,
+		const PhongSurface& surface);
+
 	std::shared_ptr<TextureResource> CreateTexResource(std::shared_ptr<TextureAsset> texAsset);
+	std::shared_ptr<TextureResource> CreateTexResourceOrFallback(
+		std::shared_ptr<TextureAsset> texAsset,
+		BuiltinTextureType fallbackType);
 
 	PendingLoadQueue m_pendingLoad;
 	PendingReleaseQueue m_pendingRelease;

@@ -1,6 +1,4 @@
 #pragma once
-#include "GameClient/Service/Render/Repository/Material/IMaterialProvider.h"
-
 #include "GameClient/Service/Render/Repository/IResourceProvider.h"
 
 struct IResourceProviderSet

@@ -5,6 +5,7 @@
 PhongMaterialResource::~PhongMaterialResource() = default;
 PhongMaterialResource::PhongMaterialResource() :
 	MaterialResource{
+        MaterialType::Phong,
 		PipelineLibrary::Get(
 			RegistryShader::Phong,
 			RasterPreset::Default,
