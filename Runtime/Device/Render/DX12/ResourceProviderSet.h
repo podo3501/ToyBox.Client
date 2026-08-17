@@ -1,5 +1,5 @@
 #pragma once
-#include "GameClient/Service/Render/IResourceProviderSet.h"
+#include "GameClient/Service/Render/ProviderType.h"
 #include "Provider/Font/FontProvider.h"
 #include "Provider/Mesh/MeshProvider.h"
 #include "Provider/Texture/TextureProvider.h"
@@ -15,8 +15,9 @@ class DescriptorFactory;
 class ResourceFactory;
 class TaskScheduler;
 class ShaderLibrary;
+class IUpdatableProvider;
 
-class ResourceProviderSet : public IResourceProviderSet
+class ResourceProviderSet
 {
 public:
 	~ResourceProviderSet();
@@ -26,12 +27,10 @@ public:
 		ResourceFactory& resFactory,
 		DescriptorFactory& descFactory);
 
-	virtual IResourceProvider* GetFontProvider() override { return &m_fontProvider; }
-	virtual IResourceProvider* GetMeshProvider() override { return &m_meshProvider; }
-	virtual IResourceProvider* GetMaterialProvider() override { return &m_matProvider; }
-	virtual IResourceProvider* GetDebugMaterialProvider() override { return &m_debugMatProvider; }
-	virtual IResourceProvider* GetBrushProvider() override { return &m_brushProvider; }
-	virtual IResourceProvider* GetEnvironmentProvider() override { return &m_envProvider; }
+	IResourceProvider* GetProvider(ProviderType type)
+	{
+		return m_providers[static_cast<size_t>(type)];
+	}
 	
 	bool Initialize(ShaderLibrary& shaderLibaray);
 	void Update(float gpuMs);
@@ -47,6 +46,9 @@ private:
 	BrushProvider m_brushProvider;
 	TextureCubeProvider m_cubeProvider;
 	EnvironmentProvider m_envProvider;
+
+	std::array<IResourceProvider*, Core::EnumSize<ProviderType>> m_providers;
+	std::vector<IUpdatableProvider*> m_updatables;
 
 	float m_avgGpuMs{ 0.0f };
 };

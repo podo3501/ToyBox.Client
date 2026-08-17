@@ -341,6 +341,12 @@
 --폰트 outline/shadow/glow/gradient 구현
 -- Multi Line / Alignment
 
+@view를 만들어 renderstate를 셋팅할수 있게
+@service에서 drawitem을 다 모아서 리스트로 backend로 보내게.
+@테스트용 shader를 넣고 돌릴 수 있게.
+@renderer 쪽에 감마처리 하는 단계 추가.
+@다중 view 만들기. viewport 및 camera를 view에 셋팅하는 것.
+
 @Service 레이어에서 그릴것을 전부 모아 리스트를 만들어서 Backend에 넘겨준다. 
 - DrawxxxItem 을 Service 레이어에서 채워서 보내준다.
 - RenderFrame과 RenderScene을 합쳐야 할지도 모른다.

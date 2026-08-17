@@ -1,10 +1,8 @@
 #include "pch.h"
 #include "RenderRepository.h"
-#include "IResourceProviderSet.h"
 #include "Repository/Container/RepositoryContainer.h"
 #include "Repository/Container/RepositoryTypeTraits.h"
 #include "Repository/ResourceRepositories.h"
-
 #include "Asset/DebugMaterialAsset.h"
 
 RenderRepository::~RenderRepository() = default;

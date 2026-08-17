@@ -14,6 +14,9 @@ public:
 
 	virtual void SetFrameData(const FrameData& frameData) noexcept override;
 
+	virtual void BeginView(const ViewContext& view) override;
+	virtual void EndView() override;
+
 	virtual void DrawText(
 		std::shared_ptr<IResource> fontRes,
 		TextRenderMode mode,
@@ -25,6 +28,7 @@ public:
 	virtual void DrawSurface(
 		std::shared_ptr<IResource> meshRes,
 		std::shared_ptr<IResource> matRes,
+		std::optional<ShaderID> shaderOverride,
 		const Core::Matrix& world) override;
 
 	virtual void DrawDebugSurface(

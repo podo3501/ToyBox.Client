@@ -42,7 +42,7 @@ void BrushProvider::ReleaseResource(std::shared_ptr<IResource> res)
     m_pendingRelease.Add(std::move(res));
 }
 
-void BrushProvider::Update()
+void BrushProvider::Update(float)
 {
     m_pendingLoad.Flush();
     m_pendingRelease.Flush();

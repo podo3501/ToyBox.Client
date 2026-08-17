@@ -1,14 +1,19 @@
 #pragma once
 #include "GameClient/Service/Render/Resource/IResource.h"
-#include "GameClient/Service/Render/Definition/RenderState.h"
+#include "GameClient/Service/Render/Definition/View/RenderState.h"
 #include "GameClient/Asset/MaterialType.h"
 
 class MaterialResource : public IResource
 {
 public:
-	virtual ~MaterialResource() override = default;
+	virtual ~MaterialResource() override;
+	MaterialResource() = delete;
 	MaterialType GetType() const noexcept { return m_type; }
-	const PipelineState& GetPipelineState() const noexcept { return m_pipelineState; }
+
+	PipelineState GetPipelineState(
+		const std::optional<RasterPreset>& rasterOverride,
+		const std::optional<ShaderID>& shaderOverride) const;
+	const PipelineState& GetPipelineState() const { return m_pipelineState; }
 
 protected:
 	MaterialResource(MaterialType type, PipelineState pipelineState) :
@@ -18,5 +23,5 @@ protected:
 
 private:
 	MaterialType m_type;
-	const PipelineState m_pipelineState;
+	PipelineState m_pipelineState;
 };

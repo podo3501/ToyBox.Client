@@ -27,7 +27,8 @@ public:
 	virtual void Update() override;
 	virtual void Render() override;
 	virtual void WaitIdle() override;
-	virtual IResourceProviderSet* GetResourceProviderSet() override { return &m_resProviderSet; }
+
+	virtual IResourceProvider* GetProvider(ProviderType type) override;
 	virtual IRenderFrame* GetRenderFrame() override { return &m_renderFrame; }
 	virtual RenderMetrics GetRenderMetrics() override;
 

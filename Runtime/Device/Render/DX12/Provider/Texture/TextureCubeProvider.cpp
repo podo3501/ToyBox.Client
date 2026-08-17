@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "TextureCubeProvider.h"
+#include "../ProviderBudget.h"
 
 TextureCubeProvider::~TextureCubeProvider() = default;
 TextureCubeProvider::TextureCubeProvider(TextureCubeCreateGraphBuilder create) noexcept :
@@ -34,30 +35,15 @@ bool TextureCubeProvider::LoadResource(
     req.asset = asset;
     req.estimatedBytes = EstimateBytes(*asset);
 
-    m_pending.push(req);
+    m_pendingLoads.Push(req);
     return true;
 }
 
-void TextureCubeProvider::Update(size_t uploadBudgetBytes)
+void TextureCubeProvider::Update(float avgGpuMs)
 {
-    size_t usedBytes = 0;
-    std::vector<TextureCubeLoadRequest> batch;
-    batch.reserve(8); // 큐브맵은 텍스처보다 훨씬 저빈도라 작게 예약
+    auto uploadBudgetBytes = ComputeBudget(avgGpuMs, ProviderBudget::TextureCube);
 
-    while (!m_pending.empty())
-    {
-        auto& req = m_pending.front();
-
-        if (usedBytes + req.estimatedBytes > uploadBudgetBytes && !batch.empty())
-            break;
-
-        usedBytes += req.estimatedBytes;
-        batch.push_back(req);
-        m_pending.pop();
-    }
-
-    if (batch.empty())
-        return;
-
-    m_createBuilder.LoadTextureCubes(batch);
+    m_pendingLoads.Flush(uploadBudgetBytes, [this](std::vector<TextureCubeLoadRequest>& batch) {
+        m_createBuilder.LoadTextureCubes(batch);
+        });
 }

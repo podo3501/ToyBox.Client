@@ -5,11 +5,27 @@
 #include "Resource/Material/DebugMaterialResource.h"
 #include "Resource/Environment/EnvironmentResource.h"
 
+void RenderScene::BeginView(const ViewContext& view)
+{
+    m_currentRasterOverride = view.renderOverride.rasterPreset;
+}
+
+void RenderScene::EndView()
+{
+    m_currentRasterOverride.reset();
+}
+
 void RenderScene::AddSurface(const DrawItem& item)
 {
     DrawItem newItem = item;
     auto material = static_cast<MaterialResource*>(item.material.get());
-    newItem.sortKey = RenderSortKey::Build(material->GetPipelineState().GetHash());
+
+    PipelineState pso = material->GetPipelineState(
+        m_currentRasterOverride,
+        item.shaderOverride);
+
+    newItem.sortKey = RenderSortKey::Build(pso.GetHash());
+    newItem.pipelineState = pso;
 
     m_surfaceDraws.push_back(newItem);
 }

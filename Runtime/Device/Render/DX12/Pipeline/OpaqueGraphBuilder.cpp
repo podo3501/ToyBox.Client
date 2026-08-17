@@ -49,8 +49,8 @@ void OpaqueGraphBuilder::Build(RenderGraph& graph)
             {
                 auto mesh = static_cast<MeshResource*>(item.mesh.get());
                 auto material = static_cast<MaterialResource*>(item.material.get());
-
-                surfRenderer.BindPipeline(cmd, material->GetPipelineState());
+                
+                surfRenderer.BindPipeline(cmd, item.pipelineState);
                 surfRenderer.Draw(cmd, *mesh, *material, item.world);
             }
         };

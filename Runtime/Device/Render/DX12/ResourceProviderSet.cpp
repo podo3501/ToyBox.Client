@@ -1,67 +1,6 @@
 #include "pch.h"
 #include "ResourceProviderSet.h"
 
-namespace
-{
-    constexpr size_t operator"" _MB(unsigned long long value)
-    {
-        return value * 1024ull * 1024ull;
-    }
-
-    struct BudgetRange
-    {
-        float fastGpuMs; // 최대 예산을 적용하는 GPU 시간
-        float slowGpuMs; // 최소 예산을 적용하는 GPU 시간
-        size_t maxBudget; // fastGpuMs 이하일 때의 예산
-        size_t minBudget; // slowGpuMs 이상일 때의 예산
-    };
-
-    constexpr BudgetRange TextureBudgetRange
-    {
-        .fastGpuMs = 5.0f,
-        .slowGpuMs = 15.0f,
-        .maxBudget = 32_MB,
-        .minBudget = 4_MB
-    };
-
-    constexpr BudgetRange CubeTextureBudgetRange
-    {
-        .fastGpuMs = 5.0f,
-        .slowGpuMs = 15.0f,
-        .maxBudget = 16_MB,
-        .minBudget = 2_MB
-    };
-
-    constexpr BudgetRange MeshBudgetRange
-    {
-        .fastGpuMs = 5.0f,
-        .slowGpuMs = 15.0f,
-        .maxBudget = 16_MB,
-        .minBudget = 2_MB
-    };
-
-    size_t ComputeBudget(
-        float gpuMs,
-        const BudgetRange& range)
-    {
-        const float t = std::clamp(
-            (gpuMs - range.fastGpuMs) /
-            (range.slowGpuMs - range.fastGpuMs),
-            0.0f,
-            1.0f);
-
-        return static_cast<size_t>(
-            std::lerp(
-                static_cast<float>(range.maxBudget),
-                static_cast<float>(range.minBudget),
-                t));
-    }
-
-    size_t ComputeTextureBudget(float gpuMs) { return ComputeBudget(gpuMs, TextureBudgetRange); }
-    size_t ComputeCubeTextureBudget(float gpuMs) { return ComputeBudget(gpuMs, CubeTextureBudgetRange); }
-    size_t ComputeMeshBudget(float gpuMs) { return ComputeBudget(gpuMs, MeshBudgetRange); }
-}
-
 ResourceProviderSet::~ResourceProviderSet() = default;
 ResourceProviderSet::ResourceProviderSet(
     Device& device,
@@ -91,7 +30,24 @@ ResourceProviderSet::ResourceProviderSet(
         taskScheduler,
         m_cubeProvider
         }
-{}
+{
+    m_providers[Core::ToIndex(ProviderType::Font)] = &m_fontProvider;
+    m_providers[Core::ToIndex(ProviderType::Mesh)] = &m_meshProvider;
+    m_providers[Core::ToIndex(ProviderType::Material)] = &m_matProvider;
+    m_providers[Core::ToIndex(ProviderType::DebugMaterial)] = &m_debugMatProvider;
+    m_providers[Core::ToIndex(ProviderType::Brush)] = &m_brushProvider;
+    m_providers[Core::ToIndex(ProviderType::Environment)] = &m_envProvider;
+
+    m_updatables =
+    {
+        &m_meshProvider,
+        &m_texProvider,
+        &m_matProvider,
+        &m_brushProvider,
+        &m_cubeProvider,
+        &m_envProvider,
+    };
+}
 
 bool ResourceProviderSet::Initialize(ShaderLibrary& shaderLibrary)
 {
@@ -107,13 +63,7 @@ void ResourceProviderSet::Update(float gpuMs)
     else
         m_avgGpuMs = std::lerp(m_avgGpuMs, gpuMs, SmoothingFactor);
 
-    m_texProvider.Update(ComputeTextureBudget(m_avgGpuMs));
-    m_matProvider.Update();
-
-    m_brushProvider.Update();
-    m_cubeProvider.Update(ComputeCubeTextureBudget(m_avgGpuMs));
-    m_envProvider.Update();
-
-    m_meshProvider.Update(ComputeMeshBudget(m_avgGpuMs));
+    for (IUpdatableProvider* provider : m_updatables)
+        provider->Update(m_avgGpuMs);
 }
 

@@ -56,7 +56,7 @@ void EnvironmentProvider::ReleaseResource(std::shared_ptr<IResource> res)
     m_pendingRelease.Add(std::move(res));
 }
 
-void EnvironmentProvider::Update()
+void EnvironmentProvider::Update(float)
 {
     m_pendingLoad.Flush();
     m_pendingRelease.Flush();

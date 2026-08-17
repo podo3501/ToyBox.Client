@@ -76,6 +76,11 @@ void RenderBackend::Render()
     m_renderFrame.Clear();
 }
 
+IResourceProvider* RenderBackend::GetProvider(ProviderType type)
+{
+    return m_resProviderSet.GetProvider(type);
+}
+
 RenderMetrics RenderBackend::GetRenderMetrics()
 {
     RenderMetrics metrics;

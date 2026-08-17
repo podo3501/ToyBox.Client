@@ -1,6 +1,7 @@
 #pragma once
 #include "Handle/ResourceHandles.h"
 #include "Definition/Text/TextStyle.h"
+#include "Definition/View/ViewContext.h"
 #include "Core/Math/Matrix.h"
 #include "Core/Math/Vector2.h"
 #include "Core/Foundation/Geometry2D.h"
@@ -23,6 +24,9 @@ public:
 		IRenderFrame* renderFrame, 
 		RepositoryContainer& repositories);
 
+	void BeginView(const ViewContext& view);
+	void EndView();
+
 	void DrawText(
 		FontHandle hF, 
 		TextRenderMode mode, 
@@ -40,7 +44,17 @@ public:
 		const Rect& bounds,
 		const TextLayout& layout);
 
-	void DrawSurface(MeshHandle hM, MaterialHandle hMtl, const Core::Matrix& world);
+	void DrawSurface(
+		MeshHandle hM, 
+		MaterialHandle hMtl, 
+		const Core::Matrix& world);
+
+	void DrawWithShaderOverride(
+		MeshHandle hM,
+		MaterialHandle hMtl,
+		ShaderID shaderID,
+		const Core::Matrix& world);
+
 	void DrawDebugSurface(DebugMeshHandle hDM, DebugMaterialHandle hDMtl, const Core::Matrix& world);
 	void DrawUI(BrushHandle bh, const Rect& dest, const Rect* source = nullptr);
 	void DrawEnvironment(EnvironmentHandle hEnv);
@@ -48,6 +62,12 @@ public:
 	void SetFrameData(const FrameData& frameData);
 
 private:
+	void DrawSurfaceInternal(
+		MeshHandle hM,
+		MaterialHandle hMtl,
+		std::optional<ShaderID> shaderOverride,
+		const Core::Matrix& world);
+
 	IRenderFrame* m_renderFrame{ nullptr };
 	RepositoryContainer& m_repositories;
 

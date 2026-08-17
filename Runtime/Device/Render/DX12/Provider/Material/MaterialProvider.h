@@ -1,5 +1,6 @@
 #pragma once
 #include "GameClient/Service/Render/Repository/IResourceProvider.h"
+#include "../IUpdatableProvider.h"
 #include "../PendingLoadQueue.h"
 #include "../PendingReleaseQueue.h"
 
@@ -9,14 +10,14 @@ struct TextureAsset;
 class TextureProvider;
 enum class BuiltinTextureType;
 
-class MaterialProvider : public IResourceProvider
+class MaterialProvider : public IResourceProvider, public IUpdatableProvider
 {
 public:
 	~MaterialProvider();
 	MaterialProvider(TaskScheduler& taskScheduler, TextureProvider& texProvider) noexcept;
 	virtual std::shared_ptr<IResource> CreateResource(std::shared_ptr<AssetData> asset) override;
 	virtual void ReleaseResource(std::shared_ptr<IResource> res) override;
-	void Update();
+	virtual void Update(float);
 
 private:
 	shared_ptr<IResource> BuildPbrResource(

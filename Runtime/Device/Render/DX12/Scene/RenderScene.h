@@ -1,5 +1,6 @@
 #pragma once
 #include "Core/Foundation/Geometry2D.h"
+#include "GameClient/Service/Render/Definition/View/ViewContext.h"
 #include "Core/RenderData.h"
 
 class EnvironmentResource;
@@ -7,6 +8,9 @@ class EnvironmentResource;
 class RenderScene
 {
 public:
+    void BeginView(const ViewContext& view);
+    void EndView();
+
     void AddSurface(const DrawItem& item);   
     void AddDebugSurface(const DrawDebugItem& item);
     void AddUI(std::vector<DrawUIItem>&& items);
@@ -19,6 +23,8 @@ public:
     void Clear();
 
 private:
+    std::optional<RasterPreset> m_currentRasterOverride;
+
     std::vector<DrawItem> m_surfaceDraws;
     std::vector<DrawItem> m_debugDraws;
     std::vector<DrawDebugItem> m_debugSurfaceDraws;

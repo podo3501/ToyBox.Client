@@ -25,6 +25,16 @@ SceneRenderer::SceneRenderer(
 	m_defaultBrush = CreateBuiltinBrush(brushRepository);
 }
 
+void SceneRenderer::BeginView(const ViewContext& view)
+{
+	m_renderFrame->BeginView(view);
+}
+
+void SceneRenderer::EndView()
+{
+	m_renderFrame->EndView();
+}
+
 void SceneRenderer::DrawText(
 	FontHandle hF, 
 	TextRenderMode mode,
@@ -68,7 +78,28 @@ void SceneRenderer::DrawText(
 	m_renderFrame->DrawText(fontRes, mode, spans, size, bounds, layout);
 }
 
-void SceneRenderer::DrawSurface(MeshHandle hM, MaterialHandle hMtl, const Core::Matrix& world)
+void SceneRenderer::DrawSurface(
+	MeshHandle hM,
+	MaterialHandle hMtl,
+	const Core::Matrix& world)
+{
+	DrawSurfaceInternal(hM, hMtl, std::nullopt, world);
+}
+
+void SceneRenderer::DrawWithShaderOverride(
+	MeshHandle hM,
+	MaterialHandle hMtl,
+	ShaderID shaderID,
+	const Core::Matrix& world)
+{
+	DrawSurfaceInternal(hM, hMtl, shaderID, world);
+}
+
+void SceneRenderer::DrawSurfaceInternal(
+	MeshHandle hM,
+	MaterialHandle hMtl,
+	std::optional<ShaderID> shaderOverride,
+	const Core::Matrix& world)
 {
 	if (!hMtl)
 		hMtl = m_defaultMaterial;
@@ -83,7 +114,11 @@ void SceneRenderer::DrawSurface(MeshHandle hM, MaterialHandle hMtl, const Core::
 	if (!materialRes)
 		return;
 
-	m_renderFrame->DrawSurface(meshRes, materialRes, world);
+	m_renderFrame->DrawSurface(
+		meshRes,
+		materialRes,
+		shaderOverride,
+		world);
 }
 
 void SceneRenderer::DrawDebugSurface(DebugMeshHandle hDM, DebugMaterialHandle hDMtl, const Core::Matrix& world)

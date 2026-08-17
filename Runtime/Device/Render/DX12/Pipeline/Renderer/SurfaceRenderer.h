@@ -3,7 +3,7 @@
 #include "Allocator/FrameConstantAllocator.h"
 #include "Core/Foundation/Geometry2D.h"
 #include "Core/Math/Matrix.h"
-#include "GameClient/Service/Render/Definition/RenderState.h"
+#include "GameClient/Service/Render/Definition/View/RenderState.h"
 #include <d3d12.h>
 #include <wrl.h>
 
@@ -49,7 +49,6 @@ private:
     bool CreateRootSignature(Device& device);
     bool CreateDefaultPSOs();
     ID3D12PipelineState* CreatePSO(const PipelineState& pipelineState);
-    void CreatePipeline(const PipelineState& pipelineState);
     ID3D12PipelineState* GetPipeline(const PipelineState& pipelineState);
 
     D3D12_GPU_VIRTUAL_ADDRESS UploadObjectCB(const Core::Matrix& world);

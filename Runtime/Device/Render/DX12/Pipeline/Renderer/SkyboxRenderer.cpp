@@ -4,7 +4,7 @@
 #include "RootSignatureBuilder.h"
 #include "Command/CommandList.h"
 #include "Resource/Texture/TextureCubeResource.h"
-#include "GameClient/Service/Render/Definition/RenderState.h"
+#include "GameClient/Service/Render/Definition/View/RenderState.h"
 #include "GameClient/Graphics/RenderData/FrameData.h"
 #include "Helpers/MathHelpers.h"
 

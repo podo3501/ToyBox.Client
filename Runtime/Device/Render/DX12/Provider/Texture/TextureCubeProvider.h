@@ -1,26 +1,25 @@
 #pragma once
+#include "../IUpdatableProvider.h"
 #include "TextureCubeLoadRequest.h"
 #include "TextureCubeCreateGraphBuilder.h"
-#include <queue>
+#include "../PendingUploadQueue.h"
 
 struct TextureCubeLoadRequest;
 class TextureCubeResource;
 
-class TextureCubeProvider
+class TextureCubeProvider : public IUpdatableProvider
 {
 public:
     ~TextureCubeProvider();
     TextureCubeProvider(TextureCubeCreateGraphBuilder create) noexcept;
+    virtual void Update(float avgGpuMs) override;
 
     std::shared_ptr<TextureCubeResource> CreateResource();
-
     bool LoadResource(
         std::shared_ptr<TextureCubeResource> resource,
         std::shared_ptr<TextureCubeAsset> asset);
 
-    void Update(size_t uploadBudgetBytes);
-
 private:
     TextureCubeCreateGraphBuilder m_createBuilder;
-    std::queue<TextureCubeLoadRequest> m_pending;
+    PendingUploadQueue<TextureCubeLoadRequest> m_pendingLoads;
 };

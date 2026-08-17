@@ -292,9 +292,6 @@
     <ClInclude Include="Render\DX12\Resource\Mesh\MeshResource.h">
       <Filter>Render\DX12\Resource\Mesh</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\Resource\Material\SurfaceMaterialResource.h">
-      <Filter>Render\DX12\Resource\Material</Filter>
-    </ClInclude>
     <ClInclude Include="Render\DX12\Resource\Texture\TextureResource.h">
       <Filter>Render\DX12\Resource\Texture</Filter>
     </ClInclude>
@@ -618,6 +615,15 @@
     </ClInclude>
     <ClInclude Include="Render\DX12\Resource\Texture\BuiltinTextureType.h">
       <Filter>Render\DX12\Resource\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Provider\IUpdatableProvider.h">
+      <Filter>Render\DX12\Provider</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Provider\ProviderBudget.h">
+      <Filter>Render\DX12\Provider</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Provider\PendingUploadQueue.h">
+      <Filter>Render\DX12\Provider</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1013,6 +1019,12 @@
       <Filter>Render\DX12\Resource\Material</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\Resource\Material\PhongMaterialResource.cpp">
+      <Filter>Render\DX12\Resource\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Provider\ProviderBudget.cpp">
+      <Filter>Render\DX12\Provider</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Resource\Material\MaterialResource.cpp">
       <Filter>Render\DX12\Resource\Material</Filter>
     </ClCompile>
   </ItemGroup>

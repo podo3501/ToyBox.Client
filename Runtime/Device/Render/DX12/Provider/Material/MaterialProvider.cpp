@@ -111,7 +111,7 @@ void MaterialProvider::ReleaseResource(std::shared_ptr<IResource> res)
     m_pendingRelease.Add(std::move(res));
 }
 
-void MaterialProvider::Update()
+void MaterialProvider::Update(float)
 {
     m_pendingLoad.Flush();
     m_pendingRelease.Flush();

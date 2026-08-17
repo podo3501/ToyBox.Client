@@ -3,9 +3,10 @@
 #include "RenderMetrics.h"
 #include "Core/Math/Matrix.h"
 #include "Core/Foundation/Geometry2D.h"
-#include "IResourceProviderSet.h"
+#include "ProviderType.h"
 #include "IRenderFrame.h"
-#include "GameClient/Service/Render/Definition/RenderState.h"
+#include "GameClient/Service/Render/Repository/IResourceProvider.h"
+#include "GameClient/Service/Render/Definition/View/RenderState.h"
 
 struct IMaterialResource;
 struct ShaderAsset;
@@ -22,8 +23,9 @@ struct IRenderBackend
 	virtual void Update() = 0;
 	virtual void Render() = 0;
 	virtual void WaitIdle() = 0;
-	virtual IResourceProviderSet* GetResourceProviderSet() = 0;
-	virtual IRenderFrame* GetRenderFrame() = 0;
+
+	virtual IResourceProvider* GetProvider(ProviderType type) = 0; //리소스쪽. 로딩같은것들.
+	virtual IRenderFrame* GetRenderFrame() = 0; //Render쪽. 
 	virtual RenderMetrics GetRenderMetrics() = 0;
 };
 

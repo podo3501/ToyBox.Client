@@ -569,9 +569,6 @@
     <ClInclude Include="Graphics\World\CameraInputMapper.h">
       <Filter>Graphics\World</Filter>
     </ClInclude>
-    <ClInclude Include="Service\Render\RenderServiceConfig.h">
-      <Filter>Service\Render</Filter>
-    </ClInclude>
     <ClInclude Include="Graphics\RenderData\FrameData.h">
       <Filter>Graphics\RenderData</Filter>
     </ClInclude>
@@ -582,9 +579,6 @@
       <Filter>Graphics\RenderData</Filter>
     </ClInclude>
     <ClInclude Include="Service\Render\IRenderFrame.h">
-      <Filter>Service\Render</Filter>
-    </ClInclude>
-    <ClInclude Include="Service\Render\IResourceProviderSet.h">
       <Filter>Service\Render</Filter>
     </ClInclude>
     <ClInclude Include="Service\Render\RenderRepository.h">
@@ -664,9 +658,6 @@
     </ClInclude>
     <ClInclude Include="Service\Render\Handle\FontHandle.h">
       <Filter>Service\Render\Handle</Filter>
-    </ClInclude>
-    <ClInclude Include="Service\Render\Definition\RenderState.h">
-      <Filter>Service\Render\Definition</Filter>
     </ClInclude>
     <ClInclude Include="Service\Render\Definition\ShaderStageBuilder.h">
       <Filter>Service\Render\Definition</Filter>
@@ -808,6 +799,15 @@
     <ClInclude Include="Service\Render\Definition\MaterialDesc.h">
       <Filter>Service\Render\Definition</Filter>
     </ClInclude>
+    <ClInclude Include="Service\Render\ProviderType.h">
+      <Filter>Service\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Definition\View\RenderState.h">
+      <Filter>Service\Render\Definition\View</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Definition\View\ViewContext.h">
+      <Filter>Service\Render\Definition\View</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Locator">
@@ -917,6 +917,9 @@
     </Filter>
     <Filter Include="Service\Render\Repository\Container">
       <UniqueIdentifier>{563f6c2a-2ade-45ee-8f5f-77d7fd30100b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Service\Render\Definition\View">
+      <UniqueIdentifier>{f3fb49e4-1d66-4954-956d-ca9c3167c5af}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

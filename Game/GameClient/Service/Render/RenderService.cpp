@@ -18,15 +18,13 @@ RenderService::RenderService(unique_ptr<IRenderBackend> backend, IAssetAsyncLoad
 	m_backend{ move(backend) },
 	m_asyncLoader{ asyncLoader }
 {
-	auto providerSet = m_backend->GetResourceProviderSet();
-
-	m_repositories.Emplace<FontRepository>(providerSet->GetFontProvider(), asyncLoader);
-	m_repositories.Emplace<MeshRepository>(providerSet->GetMeshProvider(), asyncLoader);
-	m_repositories.Emplace<MaterialRepository>(providerSet->GetMaterialProvider(), asyncLoader);
-	m_repositories.Emplace<DebugMeshRepository>(providerSet->GetMeshProvider(), asyncLoader);
-	m_repositories.Emplace<DebugMaterialRepository>(providerSet->GetDebugMaterialProvider(), asyncLoader);
-	m_repositories.Emplace<BrushRepository>(providerSet->GetBrushProvider(), asyncLoader);
-	m_repositories.Emplace<EnvironmentRepository>(providerSet->GetEnvironmentProvider(), asyncLoader);
+	m_repositories.Emplace<FontRepository>(m_backend->GetProvider(ProviderType::Font), asyncLoader);
+	m_repositories.Emplace<MeshRepository>(m_backend->GetProvider(ProviderType::Mesh), asyncLoader);
+	m_repositories.Emplace<MaterialRepository>(m_backend->GetProvider(ProviderType::Material), asyncLoader);
+	m_repositories.Emplace<DebugMeshRepository>(m_backend->GetProvider(ProviderType::Mesh), asyncLoader);
+	m_repositories.Emplace<DebugMaterialRepository>(m_backend->GetProvider(ProviderType::DebugMaterial), asyncLoader);
+	m_repositories.Emplace<BrushRepository>(m_backend->GetProvider(ProviderType::Brush), asyncLoader);
+	m_repositories.Emplace<EnvironmentRepository>(m_backend->GetProvider(ProviderType::Environment), asyncLoader);
 }
 
 unique_ptr<RenderService> RenderService::Create(	

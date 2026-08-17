@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "TextureProvider.h"
+#include "../ProviderBudget.h"
 #include "Factory/DescriptorFactory.h"
 #include "Resource/Texture/TextureResource.h"
 #include "Core/Foundation/Color.h"
@@ -103,30 +104,15 @@ bool TextureProvider::LoadResource(
     req.asset = asset;
     req.estimatedBytes = EstimateBytes(*asset, resource->GetDesc());
 
-    m_pending.push(req);
+    m_pendingLoads.Push(req);
     return true;
 }
 
-void TextureProvider::Update(size_t uploadBudgetBytes)
+void TextureProvider::Update(float avgGpuMs)
 {
-    size_t usedBytes = 0;
-    std::vector<TextureLoadRequest> batch;
-    batch.reserve(32);
+    auto uploadBudgetBytes = ComputeBudget(avgGpuMs, ProviderBudget::Texture);
 
-    while (!m_pending.empty())
-    {
-        auto& req = m_pending.front();
-
-        if (usedBytes + req.estimatedBytes > uploadBudgetBytes && !batch.empty()) // 최소 1개의 요청은 항상 처리한다. 그렇지 않으면 budget보다 큰 텍스처가 영원히 대기열에 남을 수 있다.
-            break; 
-
-        usedBytes += req.estimatedBytes;
-        batch.push_back(req);
-        m_pending.pop();
-    }
-
-    if (batch.empty())
-        return;
-
-    m_createBuilder.LoadTextures(batch);
+    m_pendingLoads.Flush(uploadBudgetBytes, [this](std::vector<TextureLoadRequest>& batch) {
+        m_createBuilder.LoadTextures(batch);
+        });
 }

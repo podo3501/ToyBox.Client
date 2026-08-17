@@ -17,6 +17,16 @@ void RenderFrame::SetFrameData(const FrameData& frameData) noexcept
     m_frameData = frameData;
 }
 
+void RenderFrame::BeginView(const ViewContext& view)
+{
+    m_scene.BeginView(view);
+}
+
+void RenderFrame::EndView()
+{
+    m_scene.EndView();
+}
+
 void RenderFrame::DrawText(
     std::shared_ptr<IResource> fontRes,
     TextRenderMode mode,
@@ -75,11 +85,13 @@ void RenderFrame::DrawText(
 void RenderFrame::DrawSurface(
     std::shared_ptr<IResource> meshRes,
     std::shared_ptr<IResource> matRes,
+    std::optional<ShaderID> shaderOverride,
     const Core::Matrix& world)
 {
     DrawItem item;
-    item.mesh = meshRes;
-    item.material = matRes;
+    item.mesh = std::move(meshRes);
+    item.material = std::move(matRes);
+    item.shaderOverride = std::move(shaderOverride);
     item.world = world;
 
     m_scene.AddSurface(item);

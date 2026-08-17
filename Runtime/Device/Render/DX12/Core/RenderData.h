@@ -6,6 +6,7 @@
 #include "Core/Math/Vector4.h"
 #include "Core/Foundation/Color.h"
 #include "Core/Foundation/Geometry2D.h"
+#include "GameClient/Service/Render/Definition/View/RenderState.h"
 #include "GameClient/Service/Render/Definition/Text/TextStyle.h"
 
 struct IMaterialResource;
@@ -18,9 +19,11 @@ struct DrawItem
 {
     std::shared_ptr<IResource> mesh;
     std::shared_ptr<IResource> material;
+    std::optional<ShaderID> shaderOverride;
     Core::Matrix world{};
 
     uint64_t sortKey{ 0 };
+    PipelineState pipelineState{};
 };
 
 struct DrawDebugItem
