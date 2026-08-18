@@ -5,7 +5,7 @@
 #include "Core/RenderData.h"
 #include "TextBatch.h"
 
-std::vector<PackedTextParams> PackRunParams(const std::vector<DrawTextRun>& runs)
+std::vector<PackedTextParams> PackRunParams(const std::vector<TextRun>& runs)
 {
     std::vector<PackedTextParams> packed;
     packed.reserve(runs.size());

@@ -13,6 +13,7 @@ struct MeshAsset;
 struct MeshDesc;
 struct ResolvedDrawData;
 struct FrameData;
+struct ViewDrawList;
 class RepositoryContainer;
 
 class SceneRenderer
@@ -70,6 +71,7 @@ private:
 
 	IRenderFrame* m_renderFrame{ nullptr };
 	RepositoryContainer& m_repositories;
+	ViewDrawList* m_currentDraws{ nullptr };
 
 	//default(built in)
 	MeshHandle m_uiQuad{};

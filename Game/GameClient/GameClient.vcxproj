@@ -216,7 +216,9 @@
     <ClInclude Include="Service\Render\Definition\ShaderStageBuilder.h" />
     <ClInclude Include="Service\Render\Definition\Text\TextStyle.h" />
     <ClInclude Include="Service\Render\Definition\BrushDesc.h" />
+    <ClInclude Include="Service\Render\Definition\View\ViewDrawList.h" />
     <ClInclude Include="Service\Render\Definition\View\RenderState.h" />
+    <ClInclude Include="Service\Render\Definition\View\SceneView.h" />
     <ClInclude Include="Service\Render\Definition\View\ViewContext.h" />
     <ClInclude Include="Service\Render\Handle\DebugMaterialHandle.h" />
     <ClInclude Include="Service\Render\Handle\DebugMeshHandle.h" />

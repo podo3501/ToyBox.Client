@@ -147,6 +147,13 @@ struct TextStyle
     std::optional<TextUnderline> underline;
 };
 
+struct TextRun
+{
+    std::vector<char32_t> codePoints;
+    TextStyle style;
+    uint32_t lineIndex{ 0 }; // 이 run이 몇 번째 줄에 속하는지 (절대값)
+};
+
 struct TextSpan
 {
     std::string_view text;

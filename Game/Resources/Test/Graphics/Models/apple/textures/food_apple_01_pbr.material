@@ -1,0 +1,14 @@
+{
+  "type": "PBR",
+  "surface": {
+    "normalScale": 1.0,
+    "roughnessScale": 3.0,
+    "metallicScale": 0.0,
+    "aoStrength": 1.0
+  },
+  "textures": {
+    "albedo": "food_apple_01_diff_4k.jpg",
+    "normal": "food_apple_01_nor_dx_4k.jpg",
+    "arm": "food_apple_01_arm_4k.jpg"
+  }
+}

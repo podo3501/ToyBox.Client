@@ -3,7 +3,6 @@
 #include "Core/Foundation/Geometry2D.h"
 
 struct UIVertex;
-struct DrawTextRun;
 struct BatchTarget;
 
 struct PackedTextParams
@@ -12,7 +11,7 @@ struct PackedTextParams
     uint32_t params2;
 };
 
-std::vector<PackedTextParams> PackRunParams(const std::vector<DrawTextRun>& runs);
+std::vector<PackedTextParams> PackRunParams(const std::vector<TextRun>& runs);
 
 void AppendGlyphQuad(
     BatchTarget& target,

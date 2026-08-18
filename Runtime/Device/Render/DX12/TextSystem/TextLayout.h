@@ -1,8 +1,6 @@
 #pragma once
 #include "TextTypes.h"
 
-struct DrawTextRun;
-
 void ApplyWordWrap(
     std::span<ShapedGlyph> glyphs, 
     float maxWidth, 
@@ -10,5 +8,5 @@ void ApplyWordWrap(
 
 std::vector<ShapedGlyph> ShapeRuns(
     FontResource* font,
-    std::span<const DrawTextRun> runs,
+    std::span<const TextRun> runs,
     uint32_t fontSize);

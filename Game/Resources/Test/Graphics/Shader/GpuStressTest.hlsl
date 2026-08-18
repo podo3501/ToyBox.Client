@@ -40,10 +40,10 @@ cbuffer PhongMaterialCB : register(b3)
     uint albedoTextureIndex;
     uint normalTextureIndex;
     uint dummyTextureIndex; // Phong에서는 안 쓰므로 더미
-    float normalIntensity; // 노멀 맵 강도 조절 (0.0 ~ 1.0)
-    float shininess; // PBR의 roughnessIntensity 자리 재활용 (하이라이트 지수: 보통 4.0 ~ 256.0)
-    float specularIntensity;   
-    float ambientIntensity;    
+    float normalScale;
+    float ambientScale;
+    float specularScale;
+    float shininess;
     float MaterialPadding;
 };
 
@@ -99,8 +99,8 @@ float4 PSMain(PSInput input) : SV_TARGET
     float3 localNormal = normalTex.Sample(gSampler, input.uv).xyz;
     localNormal = localNormal * 2.0f - 1.0f;
     
-    // C++에서 받아온 노멀 강도(normalIntensity)를 xy축에 보정 후 변환
-    localNormal.xy *= normalIntensity;
+    // C++에서 받아온 노멀 강도(normalScale)를 xy축에 보정 후 변환
+    localNormal.xy *= normalScale;
     localNormal = normalize(localNormal);
     N = normalize(mul(localNormal, TBN));
 
@@ -119,13 +119,13 @@ float4 PSMain(PSInput input) : SV_TARGET
 
     // [B] Specular (정반사 하이라이트)
     float specPower = pow(NdotH, shininess);
-    float3 specular = specPower * specularIntensity;
+    float3 specular = specPower * specularScale;
 
     // 라이트 컬러 및 라이트 자체의 Intensity(강도) 결합
     float3 finalLight = (diffuse + specular) * lightColor * lightIntensity;
 
     // 6. 환경광(Ambient) 처리
-    float3 ambient = albedo.rgb * ambientIntensity;
+    float3 ambient = albedo.rgb * ambientScale;
     
     // 최종 색상 합성
     float3 finalColor = ambient + finalLight;

@@ -5,13 +5,18 @@
 #include "Resource/Material/DebugMaterialResource.h"
 #include "Resource/Environment/EnvironmentResource.h"
 
-void RenderScene::BeginView(const ViewContext& view)
+ViewDrawList& RenderScene::BeginView(const ViewContext& view)
 {
     m_currentRasterOverride = view.renderOverride.rasterPreset;
+    m_drawList.Clear();
+    return m_drawList;
 }
 
 void RenderScene::EndView()
 {
+    if (m_drawList.environment)
+        SetEnvironment(m_drawList.environment);
+
     m_currentRasterOverride.reset();
 }
 

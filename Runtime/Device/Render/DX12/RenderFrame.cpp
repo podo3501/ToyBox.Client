@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "RenderFrame.h"
-#include "Core/Utils/StringUtils.h"
 #include "TextSystem/TextSystem.h"
 #include "Inspector/Inspector.h"
 #include "Resource/Brush/BrushResource.h"
@@ -17,9 +16,9 @@ void RenderFrame::SetFrameData(const FrameData& frameData) noexcept
     m_frameData = frameData;
 }
 
-void RenderFrame::BeginView(const ViewContext& view)
+ViewDrawList& RenderFrame::BeginView(const ViewContext& view)
 {
-    m_scene.BeginView(view);
+    return m_scene.BeginView(view);
 }
 
 void RenderFrame::EndView()
@@ -30,13 +29,13 @@ void RenderFrame::EndView()
 void RenderFrame::DrawText(
     std::shared_ptr<IResource> fontRes,
     TextRenderMode mode,
-    std::span<const TextSpan> spans,
     uint32_t size,
     const Rect& bounds,
-    const TextLayout& layout)
+    const TextLayout& layout,
+    std::vector<TextRun> textRuns)
 {
     Assert(fontRes);
-    if(spans.empty()) return;
+    if(textRuns.empty()) return;
 
     Rect normalized = bounds;
     normalized.Normalize(); // 뒤집힌 rect 방어
@@ -48,36 +47,7 @@ void RenderFrame::DrawText(
     item.position = Core::Vector2{ normalized.Left(), normalized.Top() };
     item.size = Core::Vector2{ normalized.width, normalized.height };
     item.layout = layout;
-
-    uint32_t lineIndex = 0;
-    for (auto& span : spans)
-    {
-        if (span.text.empty()) continue;
-
-        std::vector<char32_t> codepoints = Core::UTF8ToUTF32(span.text);
-        size_t segStart = 0;
-        for (size_t i = 0; i <= codepoints.size(); ++i)
-        {
-            bool isNewline = (i < codepoints.size()) && (codepoints[i] == U'\n');
-            bool isEnd = (i == codepoints.size());
-            if (!isNewline && !isEnd)
-                continue;
-
-            if (i > segStart) // 빈 세그먼트(연속 \n)는 run을 만들지 않음
-            {
-                item.runs.push_back({
-                    std::vector<char32_t>(codepoints.begin() + segStart, codepoints.begin() + i),
-                    span.style,
-                    lineIndex
-                    });
-            }
-
-            if (isNewline)
-                ++lineIndex; // 내용이 있든 없든 줄 번호는 증가
-
-            segStart = i + 1;
-        }
-    }
+    item.runs = std::move(textRuns);
 
     m_pendingTexts.emplace_back(std::move(item));
 }

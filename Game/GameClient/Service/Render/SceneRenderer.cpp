@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "SceneRenderer.h"
 #include "IRenderFrame.h"
+#include "Core/Utils/StringUtils.h"
 #include "Repository/Container/RepositoryContainer.h"
 #include "Repository/Container/RepositoryTypeTraits.h"
 #include "Repository/ResourceRepositories.h"
@@ -27,12 +28,14 @@ SceneRenderer::SceneRenderer(
 
 void SceneRenderer::BeginView(const ViewContext& view)
 {
-	m_renderFrame->BeginView(view);
+	Assert(!m_currentDraws); //중복 view 방지.
+	m_currentDraws = &m_renderFrame->BeginView(view);
 }
 
 void SceneRenderer::EndView()
 {
 	m_renderFrame->EndView();
+	m_currentDraws = nullptr;
 }
 
 void SceneRenderer::DrawText(
@@ -46,6 +49,37 @@ void SceneRenderer::DrawText(
 {
 	TextSpan span{ text, style };
 	DrawText(hF, mode, std::span{ &span, 1 }, size, bounds, layout);
+}
+
+static std::vector<TextRun> BuildTextRuns(std::span<const TextSpan> spans)
+{
+	std::vector<TextRun> runs;
+	uint32_t lineIndex = 0;
+	for (auto& span : spans)
+	{
+		if (span.text.empty()) continue;
+		std::vector<char32_t> codepoints = Core::UTF8ToUTF32(span.text);
+		size_t segStart = 0;
+		for (size_t i = 0; i <= codepoints.size(); ++i)
+		{
+			bool isNewline = (i < codepoints.size()) && (codepoints[i] == U'\n');
+			bool isEnd = (i == codepoints.size());
+			if (!isNewline && !isEnd)
+				continue;
+			if (i > segStart) // 빈 세그먼트(연속 \n)는 run을 만들지 않음
+			{
+				runs.push_back({
+					std::vector<char32_t>(codepoints.begin() + segStart, codepoints.begin() + i),
+					span.style,
+					lineIndex
+					});
+			}
+			if (isNewline)
+				++lineIndex; // 내용이 있든 없든 줄 번호는 증가
+			segStart = i + 1;
+		}
+	}
+	return runs;
 }
 
 void SceneRenderer::DrawText(
@@ -74,8 +108,8 @@ void SceneRenderer::DrawText(
 			Assert(!style.glow.has_value());
 		}
 	}
-
-	m_renderFrame->DrawText(fontRes, mode, spans, size, bounds, layout);
+	auto textRun = BuildTextRuns(spans);
+	m_renderFrame->DrawText(fontRes, mode, size, bounds, layout, std::move(textRun));
 }
 
 void SceneRenderer::DrawSurface(
@@ -170,7 +204,7 @@ void SceneRenderer::DrawEnvironment(EnvironmentHandle hEnv)
 	if (!envRes)
 		return;
 
-	m_renderFrame->DrawEnvironment(envRes);
+	m_currentDraws->environment = envRes;
 }
 
 void SceneRenderer::SetFrameData(const FrameData& frameData)

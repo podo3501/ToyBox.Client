@@ -340,10 +340,10 @@
 --Keining 지원(harfbuzz)
 --폰트 outline/shadow/glow/gradient 구현
 -- Multi Line / Alignment
+--view를 만들어 renderstate를 셋팅할수 있게
+--테스트용 shader를 넣고 돌릴 수 있게.
 
-@view를 만들어 renderstate를 셋팅할수 있게
 @service에서 drawitem을 다 모아서 리스트로 backend로 보내게.
-@테스트용 shader를 넣고 돌릴 수 있게.
 @renderer 쪽에 감마처리 하는 단계 추가.
 @다중 view 만들기. viewport 및 camera를 view에 셋팅하는 것.
 

@@ -45,13 +45,6 @@ struct DrawUIItem
     uint64_t sortKey{ 0 };
 };
 
-struct DrawTextRun
-{
-    std::vector<char32_t> codePoints;
-    TextStyle style;
-    uint32_t lineIndex{ 0 }; // 이 run이 몇 번째 줄에 속하는지 (절대값)
-};
-
 struct DrawTextItem
 {
     std::shared_ptr<IResource> fontRes;
@@ -60,7 +53,7 @@ struct DrawTextItem
     Core::Vector2 position{};
     Core::Vector2 size{};
     TextLayout layout{};
-    std::vector<DrawTextRun> runs;
+    std::vector<TextRun> runs;
 };
 
 struct DrawInspectItem

@@ -14,16 +14,16 @@ public:
 
 	virtual void SetFrameData(const FrameData& frameData) noexcept override;
 
-	virtual void BeginView(const ViewContext& view) override;
+	virtual ViewDrawList& BeginView(const ViewContext& view) override;
 	virtual void EndView() override;
 
 	virtual void DrawText(
 		std::shared_ptr<IResource> fontRes,
 		TextRenderMode mode,
-		std::span<const TextSpan> spans,
 		uint32_t size,
 		const Rect& bounds,
-		const TextLayout& layout);
+		const TextLayout& layout,
+		std::vector<TextRun> textRuns);
 
 	virtual void DrawSurface(
 		std::shared_ptr<IResource> meshRes,

@@ -808,6 +808,12 @@
     <ClInclude Include="Service\Render\Definition\View\ViewContext.h">
       <Filter>Service\Render\Definition\View</Filter>
     </ClInclude>
+    <ClInclude Include="Service\Render\Definition\View\ViewDrawList.h">
+      <Filter>Service\Render\Definition\View</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Definition\View\SceneView.h">
+      <Filter>Service\Render\Definition\View</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Locator">

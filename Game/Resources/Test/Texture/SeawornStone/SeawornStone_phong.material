@@ -3,8 +3,8 @@
   "surface": {
     "normalScale": 1.0,
     "ambientScale": 0.02,    
-    "specularScale": 0.2,
-    "shininess": 8.0
+    "specularScale": 0.05,
+    "shininess": 4.0
   },
   "textures": {
     "albedo": "SeawornStone_diff.png",

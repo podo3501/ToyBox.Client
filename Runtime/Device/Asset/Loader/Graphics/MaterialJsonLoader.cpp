@@ -25,8 +25,8 @@ struct JsonPhongSurface
 {
     float normalScale = 1.f;
     float ambientScale = 0.1f;
-    float specularScale = 1.f;
-    float shininess = 32.f;
+    float specularScale = 0.2f;
+    float shininess = 8.f;
 
     void Serialize(Serializer& serializer)
     {

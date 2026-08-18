@@ -13,7 +13,7 @@ public:
     void SetMouseSensitivity(float sensitivity) { m_mouseSensitivity = sensitivity; }
 
 private:
-    float m_moveSpeed = 5.0f;
-    float m_boostSpeed = 15.0f;
+    float m_moveSpeed = 0.5f;
+    float m_boostSpeed = 2.0f;
     float m_mouseSensitivity = 0.0025f;
 };

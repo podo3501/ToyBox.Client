@@ -1,6 +1,6 @@
 #pragma once
 #include "Core/Foundation/Geometry2D.h"
-#include "GameClient/Service/Render/Definition/View/ViewContext.h"
+#include "GameClient/Service/Render/Definition/View/SceneView.h"
 #include "Core/RenderData.h"
 
 class EnvironmentResource;
@@ -8,7 +8,7 @@ class EnvironmentResource;
 class RenderScene
 {
 public:
-    void BeginView(const ViewContext& view);
+    ViewDrawList& BeginView(const ViewContext& view);
     void EndView();
 
     void AddSurface(const DrawItem& item);   
@@ -30,4 +30,6 @@ private:
     std::vector<DrawDebugItem> m_debugSurfaceDraws;
     std::vector<DrawUIItem>m_uiDraws;
     std::shared_ptr<EnvironmentResource> m_environment; // 프레임당 1개
+
+    ViewDrawList m_drawList;
 };
