@@ -1,19 +1,8 @@
 #pragma once
-#include "Handle/ResourceHandles.h"
-#include "Definition/Text/TextStyle.h"
-#include "Definition/View/ViewContext.h"
-#include "Core/Math/Matrix.h"
-#include "Core/Math/Vector2.h"
-#include "Core/Foundation/Geometry2D.h"
-#include "Core/Foundation/Color.h"
+#include "SceneView.h"
 
-struct IResourceProviderSet;
 struct IRenderFrame;
-struct MeshAsset;
-struct MeshDesc;
-struct ResolvedDrawData;
 struct FrameData;
-struct ViewDrawList;
 class RepositoryContainer;
 
 class SceneRenderer
@@ -25,56 +14,21 @@ public:
 		IRenderFrame* renderFrame, 
 		RepositoryContainer& repositories);
 
-	void BeginView(const ViewContext& view);
-	void EndView();
+	void Flush();
 
-	void DrawText(
-		FontHandle hF, 
-		TextRenderMode mode, 
-		std::string_view text, 
-		uint32_t size, 
-		const Rect& bounds, 
-		const TextLayout& layout = {},
-		const TextStyle& style = {});
-
-	void DrawText(
-		FontHandle hF, 
-		TextRenderMode mode, 
-		std::span<const TextSpan> spans, 
-		uint32_t size, 
-		const Rect& bounds,
-		const TextLayout& layout);
-
-	void DrawSurface(
-		MeshHandle hM, 
-		MaterialHandle hMtl, 
-		const Core::Matrix& world);
-
-	void DrawWithShaderOverride(
-		MeshHandle hM,
-		MaterialHandle hMtl,
-		ShaderID shaderID,
-		const Core::Matrix& world);
-
-	void DrawDebugSurface(DebugMeshHandle hDM, DebugMaterialHandle hDMtl, const Core::Matrix& world);
-	void DrawUI(BrushHandle bh, const Rect& dest, const Rect* source = nullptr);
-	void DrawEnvironment(EnvironmentHandle hEnv);
+	SceneView& CreateView(const ViewContext& context);
 
 	void SetFrameData(const FrameData& frameData);
 
 private:
-	void DrawSurfaceInternal(
-		MeshHandle hM,
-		MaterialHandle hMtl,
-		std::optional<ShaderID> shaderOverride,
-		const Core::Matrix& world);
-
 	IRenderFrame* m_renderFrame{ nullptr };
 	RepositoryContainer& m_repositories;
-	ViewDrawList* m_currentDraws{ nullptr };
 
 	//default(built in)
 	MeshHandle m_uiQuad{};
 	MaterialHandle m_defaultMaterial;
 	BrushHandle m_defaultBrush;
+
+	std::deque<SceneView> m_viewPool;   // 한 번 만들어지면 삭제 안 함, 계속 재사용
+	size_t m_activeViewCount{ 0 };      // 이번 프레임에 CreateView로 사용된 개수
 };

@@ -262,6 +262,9 @@
     <ClCompile Include="Service\Render\Repository\Base\ResourceRepositoryImpl.cpp">
       <Filter>Service\Render\Repository\Base</Filter>
     </ClCompile>
+    <ClCompile Include="Service\Render\SceneView.cpp">
+      <Filter>Service\Render</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameLoop.h" />
@@ -811,8 +814,11 @@
     <ClInclude Include="Service\Render\Definition\View\ViewDrawList.h">
       <Filter>Service\Render\Definition\View</Filter>
     </ClInclude>
-    <ClInclude Include="Service\Render\Definition\View\SceneView.h">
+    <ClInclude Include="Service\Render\Definition\View\SceneViewData.h">
       <Filter>Service\Render\Definition\View</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\SceneView.h">
+      <Filter>Service\Render</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

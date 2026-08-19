@@ -71,6 +71,7 @@ void RenderService::Update()
 
 void RenderService::Render()
 {
+	m_renderer->Flush(); //한 프레임에 그려질 데이터를 backend에 셋팅한다.
 	m_backend->Render();
 }
 

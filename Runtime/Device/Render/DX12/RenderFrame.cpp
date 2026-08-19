@@ -16,97 +16,85 @@ void RenderFrame::SetFrameData(const FrameData& frameData) noexcept
     m_frameData = frameData;
 }
 
-ViewDrawList& RenderFrame::BeginView(const ViewContext& view)
+void RenderFrame::SubmitViews(std::vector<SceneViewData> views)
 {
-    return m_scene.BeginView(view);
-}
+    for (auto& view : views)
+    {
+        // view별 raster override는 이 view의 draw item들을 추가하는 동안만 유효해야 함
+        // (Add*가 PSO를 만들 때 m_currentRasterOverride를 참조하므로, 아이템 추가 전에 세팅)
+        auto rasterOverride = view.context.renderOverride.rasterPreset;
 
-void RenderFrame::EndView()
-{
-    m_scene.EndView();
-}
+        if (view.draws.environment)
+            m_scene.SetEnvironment(view.draws.environment);
 
-void RenderFrame::DrawText(
-    std::shared_ptr<IResource> fontRes,
-    TextRenderMode mode,
-    uint32_t size,
-    const Rect& bounds,
-    const TextLayout& layout,
-    std::vector<TextRun> textRuns)
-{
-    Assert(fontRes);
-    if(textRuns.empty()) return;
+        for (auto& surface : view.draws.surfaces)
+        {
+            m_scene.AddSurface(
+                DrawItem{ 
+                    surface.mesh, 
+                    surface.material, 
+                    surface.shaderOverride, 
+                    surface.world },
+                rasterOverride);
+        }
 
-    Rect normalized = bounds;
-    normalized.Normalize(); // 뒤집힌 rect 방어
+        for (auto& debugSurface : view.draws.debugSurfaces)
+        {
+            m_scene.AddDebugSurface(
+                DrawDebugItem{
+                    debugSurface.mesh,
+                    debugSurface.material,
+                    debugSurface.world });
+        }
 
-    DrawTextItem item;
-    item.fontRes = fontRes;
-    item.mode = mode;
-    item.fontSize = size;
-    item.position = Core::Vector2{ normalized.Left(), normalized.Top() };
-    item.size = Core::Vector2{ normalized.width, normalized.height };
-    item.layout = layout;
-    item.runs = std::move(textRuns);
+        if (!view.draws.ui.empty())
+        {
+            std::vector<DrawUIItem> uiItems;
+            uiItems.reserve(view.draws.ui.size());
+            for (auto& ui : view.draws.ui)
+            {
+                uiItems.push_back(
+                    DrawUIItem{
+                        ui.mesh,
+                        ui.brush,
+                        ui.world,
+                        ui.source });
+            }
+            m_scene.AddUI(std::move(uiItems));
+        }
 
-    m_pendingTexts.emplace_back(std::move(item));
-}
+        if (!view.draws.texts.empty())
+        {
+            std::vector<DrawTextItem> textItems;
+            textItems.reserve(view.draws.texts.size());
+            for (auto& text : view.draws.texts)
+            {
+                if (text.runs.empty()) continue;
+                Assert(text.font);
 
-void RenderFrame::DrawSurface(
-    std::shared_ptr<IResource> meshRes,
-    std::shared_ptr<IResource> matRes,
-    std::optional<ShaderID> shaderOverride,
-    const Core::Matrix& world)
-{
-    DrawItem item;
-    item.mesh = std::move(meshRes);
-    item.material = std::move(matRes);
-    item.shaderOverride = std::move(shaderOverride);
-    item.world = world;
+                Rect normalized = text.bounds;
+                normalized.Normalize(); // 뒤집힌 rect 방어
 
-    m_scene.AddSurface(item);
-}
+                DrawTextItem item;
+                item.fontRes = text.font;
+                item.mode = text.mode;
+                item.fontSize = text.size;
+                item.position = Core::Vector2{ normalized.Left(), normalized.Top() };
+                item.size = Core::Vector2{ normalized.width, normalized.height };
+                item.layout = text.layout;
+                item.runs = std::move(text.runs);
 
-void RenderFrame::DrawDebugSurface(
-    std::shared_ptr<IResource> meshRes,
-    std::shared_ptr<IResource> matRes,
-    const Core::Matrix& world)
-{
-    DrawDebugItem item;
-    item.mesh = meshRes;
-    item.material = matRes;
-    item.world = world;
+                textItems.push_back(std::move(item));
+            }
 
-    m_scene.AddDebugSurface(item);
-}
-
-void RenderFrame::DrawUI(
-    std::shared_ptr<IResource> meshRes,
-    std::shared_ptr<IResource> brushRes,
-    const Core::Matrix& world,
-    const Rect* source)
-{
-    DrawUIItem item;
-    item.mesh = meshRes;
-    item.brush = brushRes;
-    item.world = world;
-    if (source)
-        item.source = *source;
-
-    m_scene.AddUI(item);
-}
-
-void RenderFrame::DrawEnvironment(std::shared_ptr<IResource> envRes)
-{
-    m_scene.SetEnvironment(envRes);
+            auto uiItems = m_textSystem.BuildDrawItems(textItems);
+            m_scene.AddUI(std::move(uiItems));
+        }
+    }
 }
 
 DrawPacket RenderFrame::PrepareRenderData()
 {
-    auto uiItems = m_textSystem.BuildDrawItems(m_pendingTexts);
-    m_scene.AddUI(std::move(uiItems));
-    m_pendingTexts.clear();
-
     m_scene.SortDraws();
 
     auto packet = m_scene.BuildDrawPacket();
@@ -118,7 +106,6 @@ DrawPacket RenderFrame::PrepareRenderData()
 void RenderFrame::Clear()
 {
     m_frameData = {};
-    m_pendingTexts.clear();
     m_scene.Clear();
     m_inspector.Clear();
 }

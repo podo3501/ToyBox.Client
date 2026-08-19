@@ -5,28 +5,13 @@
 #include "Resource/Material/DebugMaterialResource.h"
 #include "Resource/Environment/EnvironmentResource.h"
 
-ViewDrawList& RenderScene::BeginView(const ViewContext& view)
-{
-    m_currentRasterOverride = view.renderOverride.rasterPreset;
-    m_drawList.Clear();
-    return m_drawList;
-}
-
-void RenderScene::EndView()
-{
-    if (m_drawList.environment)
-        SetEnvironment(m_drawList.environment);
-
-    m_currentRasterOverride.reset();
-}
-
-void RenderScene::AddSurface(const DrawItem& item)
+void RenderScene::AddSurface(const DrawItem& item, std::optional<RasterPreset> rasterOverride)
 {
     DrawItem newItem = item;
     auto material = static_cast<MaterialResource*>(item.material.get());
 
     PipelineState pso = material->GetPipelineState(
-        m_currentRasterOverride,
+        rasterOverride,
         item.shaderOverride);
 
     newItem.sortKey = RenderSortKey::Build(pso.GetHash());

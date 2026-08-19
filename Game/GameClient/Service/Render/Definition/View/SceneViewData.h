@@ -2,7 +2,7 @@
 #include "ViewContext.h"
 #include "ViewDrawList.h"
 
-struct SceneView
+struct SceneViewData
 {
     ViewContext context;
     ViewDrawList draws;

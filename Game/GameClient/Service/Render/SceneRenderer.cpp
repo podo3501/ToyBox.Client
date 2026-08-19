@@ -1,10 +1,8 @@
 #include "pch.h"
 #include "SceneRenderer.h"
 #include "IRenderFrame.h"
-#include "Core/Utils/StringUtils.h"
 #include "Repository/Container/RepositoryContainer.h"
 #include "Repository/Container/RepositoryTypeTraits.h"
-#include "Repository/ResourceRepositories.h"
 #include "Builtin/BuiltinMeshes.h"
 #include "Builtin/BuiltinMaterials.h"
 #include "Builtin/BuiltinBrush.h"
@@ -26,185 +24,39 @@ SceneRenderer::SceneRenderer(
 	m_defaultBrush = CreateBuiltinBrush(brushRepository);
 }
 
-void SceneRenderer::BeginView(const ViewContext& view)
+void SceneRenderer::Flush()
 {
-	Assert(!m_currentDraws); //중복 view 방지.
-	m_currentDraws = &m_renderFrame->BeginView(view);
-}
+	std::vector<SceneViewData> submitted;
+	submitted.reserve(m_activeViewCount);
 
-void SceneRenderer::EndView()
-{
-	m_renderFrame->EndView();
-	m_currentDraws = nullptr;
-}
-
-void SceneRenderer::DrawText(
-	FontHandle hF, 
-	TextRenderMode mode,
-	std::string_view text, 
-	uint32_t size, 
-	const Rect& bounds, 
-	const TextLayout& layout,
-	const TextStyle& style)
-{
-	TextSpan span{ text, style };
-	DrawText(hF, mode, std::span{ &span, 1 }, size, bounds, layout);
-}
-
-static std::vector<TextRun> BuildTextRuns(std::span<const TextSpan> spans)
-{
-	std::vector<TextRun> runs;
-	uint32_t lineIndex = 0;
-	for (auto& span : spans)
+	for (size_t i = 0; i < m_activeViewCount; ++i)
 	{
-		if (span.text.empty()) continue;
-		std::vector<char32_t> codepoints = Core::UTF8ToUTF32(span.text);
-		size_t segStart = 0;
-		for (size_t i = 0; i <= codepoints.size(); ++i)
-		{
-			bool isNewline = (i < codepoints.size()) && (codepoints[i] == U'\n');
-			bool isEnd = (i == codepoints.size());
-			if (!isNewline && !isEnd)
-				continue;
-			if (i > segStart) // 빈 세그먼트(연속 \n)는 run을 만들지 않음
-			{
-				runs.push_back({
-					std::vector<char32_t>(codepoints.begin() + segStart, codepoints.begin() + i),
-					span.style,
-					lineIndex
-					});
-			}
-			if (isNewline)
-				++lineIndex; // 내용이 있든 없든 줄 번호는 증가
-			segStart = i + 1;
-		}
+		auto& view = m_viewPool[i];
+		if (view.IsEmpty())
+			continue;
+
+		submitted.push_back(view.TakeData());
 	}
-	return runs;
+
+	m_renderFrame->SubmitViews(std::move(submitted));
+
+	m_activeViewCount = 0; // pool 원소들은 삭제 안 하고 그대로 둠. 다음 CreateView가 다시 재사용
 }
 
-void SceneRenderer::DrawText(
-	FontHandle hF, 
-	TextRenderMode mode,
-	std::span<const TextSpan> spans, 
-	uint32_t size, 
-	const Rect& bounds,
-	const TextLayout& layout)
+SceneView& SceneRenderer::CreateView(const ViewContext& context)
 {
-	auto& fontRepository = m_repositories.Get<FontRepository>();
-	auto fontRes = fontRepository.GetIfReady(hF);
-	if (!fontRes)
-		return;
-
-	if (mode == TextRenderMode::Bitmap)
+	SceneView* view;
+	if (m_activeViewCount < m_viewPool.size())
+		view = &m_viewPool[m_activeViewCount]; // 이미 만들어진 view 재사용
+	else
 	{
-		for (auto& span : spans)
-		{
-			auto& style = span.style;
-			//비트맵에는 이 기능들이 없다. 만약 Bitmap에 기능을 추가하면 여기서 assert를 제거.
-			//아예 style을 따로 갈수도 있지만, 그러기에는 구현 비용이 크다. 그리고 bitmap이라고 이 기능이 구현이 안되는것도 아니다.
-			Assert(!style.outline.has_value()); 
-			Assert(!style.shadow.has_value());
-			Assert(!style.gradient.has_value());
-			Assert(!style.glow.has_value());
-		}
+		m_viewPool.emplace_back(m_repositories, m_uiQuad, m_defaultMaterial, m_defaultBrush); // 풀이 부족할 때만 새로 생성 (이후 프레임부턴 대부분 여기 안 옴)
+		view = &m_viewPool.back();
 	}
-	auto textRun = BuildTextRuns(spans);
-	m_renderFrame->DrawText(fontRes, mode, size, bounds, layout, std::move(textRun));
-}
 
-void SceneRenderer::DrawSurface(
-	MeshHandle hM,
-	MaterialHandle hMtl,
-	const Core::Matrix& world)
-{
-	DrawSurfaceInternal(hM, hMtl, std::nullopt, world);
-}
-
-void SceneRenderer::DrawWithShaderOverride(
-	MeshHandle hM,
-	MaterialHandle hMtl,
-	ShaderID shaderID,
-	const Core::Matrix& world)
-{
-	DrawSurfaceInternal(hM, hMtl, shaderID, world);
-}
-
-void SceneRenderer::DrawSurfaceInternal(
-	MeshHandle hM,
-	MaterialHandle hMtl,
-	std::optional<ShaderID> shaderOverride,
-	const Core::Matrix& world)
-{
-	if (!hMtl)
-		hMtl = m_defaultMaterial;
-
-	auto& meshRepository = m_repositories.Get<MeshRepository>();
-	auto meshRes = meshRepository.GetIfReady(hM);
-	if (!meshRes)
-		return;
-
-	auto& materialRepository = m_repositories.Get<MaterialRepository>();
-	auto materialRes = materialRepository.GetIfReady(hMtl);
-	if (!materialRes)
-		return;
-
-	m_renderFrame->DrawSurface(
-		meshRes,
-		materialRes,
-		shaderOverride,
-		world);
-}
-
-void SceneRenderer::DrawDebugSurface(DebugMeshHandle hDM, DebugMaterialHandle hDMtl, const Core::Matrix& world)
-{
-	auto& debugMeshRepository = m_repositories.Get<DebugMeshRepository>();
-	auto meshRes = debugMeshRepository.GetIfReady(hDM);
-	if (!meshRes)
-		return;
-
-	auto& debugMaterialRepository = m_repositories.Get<DebugMaterialRepository>();
-	auto materialRes = debugMaterialRepository.GetIfReady(hDMtl);
-	if (!materialRes)
-		return;
-
-	m_renderFrame->DrawDebugSurface(meshRes, materialRes, world);
-}
-
-void SceneRenderer::DrawUI(BrushHandle bh, const Rect& dest, const Rect* source)
-{
-	if (!bh)
-		bh = m_defaultBrush;
-
-	auto& meshRepository = m_repositories.Get<MeshRepository>();
-	auto meshRes = meshRepository.GetIfReady(m_uiQuad);
-	if (!meshRes)
-		return;
-
-	auto& brushRepository = m_repositories.Get<BrushRepository>();
-	auto brushRes = brushRepository.GetIfReady(bh);
-	if (!brushRes)
-		return;
-
-	float width = dest.width;
-	float height = dest.height;
-
-	Core::Matrix scale = Core::Matrix::Scale(width, height, 1.0f);
-	Core::Matrix translation = Core::Matrix::Translation(dest.x, dest.y, 0.0f);
-	Core::Matrix world = scale * translation;
-
-	m_renderFrame->DrawUI(meshRes, brushRes, world, source);
-}
-
-void SceneRenderer::DrawEnvironment(EnvironmentHandle hEnv)
-{
-	if (!hEnv) return;
-
-	auto& envRepository = m_repositories.Get<EnvironmentRepository>();
-	auto envRes = envRepository.GetIfReady(hEnv);
-	if (!envRes)
-		return;
-
-	m_currentDraws->environment = envRes;
+	view->Reset(context);
+	++m_activeViewCount;
+	return *view;
 }
 
 void SceneRenderer::SetFrameData(const FrameData& frameData)

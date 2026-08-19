@@ -62,6 +62,7 @@
     <ClCompile Include="Service\Render\SceneRenderer.cpp" />
     <ClCompile Include="Service\Render\RenderService.cpp" />
     <ClCompile Include="Service\Render\RenderRepository.cpp" />
+    <ClCompile Include="Service\Render\SceneView.cpp" />
     <ClCompile Include="UserInterface\CommandHistory\TextureResource\TexResCommandHistory.cpp" />
     <ClCompile Include="UserInterface\CommandHistory\TextureResource\TexResCommandRegistry.cpp" />
     <ClCompile Include="UserInterface\CommandHistory\UserInterface\UICommandHistory.cpp" />
@@ -218,7 +219,7 @@
     <ClInclude Include="Service\Render\Definition\BrushDesc.h" />
     <ClInclude Include="Service\Render\Definition\View\ViewDrawList.h" />
     <ClInclude Include="Service\Render\Definition\View\RenderState.h" />
-    <ClInclude Include="Service\Render\Definition\View\SceneView.h" />
+    <ClInclude Include="Service\Render\Definition\View\SceneViewData.h" />
     <ClInclude Include="Service\Render\Definition\View\ViewContext.h" />
     <ClInclude Include="Service\Render\Handle\DebugMaterialHandle.h" />
     <ClInclude Include="Service\Render\Handle\DebugMeshHandle.h" />
@@ -248,6 +249,7 @@
     <ClInclude Include="Service\Render\SceneRenderer.h" />
     <ClInclude Include="Service\Render\RenderService.h" />
     <ClInclude Include="Service\Render\RenderRepository.h" />
+    <ClInclude Include="Service\Render\SceneView.h" />
     <ClInclude Include="UserInterface\CommandHistory\Command.h" />
     <ClInclude Include="UserInterface\CommandHistory\CommandHistory.h" />
     <ClInclude Include="UserInterface\CommandHistory\CommandType.h" />

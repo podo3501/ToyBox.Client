@@ -13,36 +13,7 @@ public:
 	RenderFrame(TextSystem& textSystem, Inspector& inspector);
 
 	virtual void SetFrameData(const FrameData& frameData) noexcept override;
-
-	virtual ViewDrawList& BeginView(const ViewContext& view) override;
-	virtual void EndView() override;
-
-	virtual void DrawText(
-		std::shared_ptr<IResource> fontRes,
-		TextRenderMode mode,
-		uint32_t size,
-		const Rect& bounds,
-		const TextLayout& layout,
-		std::vector<TextRun> textRuns);
-
-	virtual void DrawSurface(
-		std::shared_ptr<IResource> meshRes,
-		std::shared_ptr<IResource> matRes,
-		std::optional<ShaderID> shaderOverride,
-		const Core::Matrix& world) override;
-
-	virtual void DrawDebugSurface(
-		std::shared_ptr<IResource> meshRes,
-		std::shared_ptr<IResource> matRes,
-		const Core::Matrix& world) override;
-
-	virtual void DrawUI(
-		std::shared_ptr<IResource> meshRes,
-		std::shared_ptr<IResource> brushRes,
-		const Core::Matrix& world,
-		const Rect* source) override;
-
-	virtual void DrawEnvironment(std::shared_ptr<IResource> envRes) override;
+	virtual void SubmitViews(std::vector<SceneViewData> views) override;
 
 	DrawPacket PrepareRenderData();
 	void Clear();
@@ -55,5 +26,4 @@ private:
 	RenderScene m_scene;
 
 	FrameData m_frameData;
-	std::vector<DrawTextItem> m_pendingTexts;
 };
