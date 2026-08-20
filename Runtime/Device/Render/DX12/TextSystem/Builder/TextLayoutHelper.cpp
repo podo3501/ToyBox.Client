@@ -48,7 +48,7 @@ std::vector<float> ComputeLineWidths(std::span<const ShapedGlyph> glyphs)
     return lineWidths;
 }
 
-Rect ComputeClipRect(const DrawTextItem& item)
+Rect ComputeClipRect(const RenderTextItem& item)
 {
     if (item.layout.overflow != TextOverflow::Clip)
         return {};

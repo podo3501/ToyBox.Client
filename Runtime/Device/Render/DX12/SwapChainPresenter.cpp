@@ -49,8 +49,17 @@ void SwapChainPresenter::Clear(CommandList& cmd, float r, float g, float b, floa
 void SwapChainPresenter::SetRenderTarget(CommandList& cmd)
 {
     CommandUtils::SetRenderTarget(cmd, GetCurrentRTV(), GetDSV());
-    CommandUtils::SetViewport(cmd, static_cast<float>(m_size.width), static_cast<float>(m_size.height));
-    CommandUtils::SetScissor(cmd, m_size.width, m_size.height);
+}
+
+void SwapChainPresenter::SetViewport(CommandList& cmd, const std::optional<Rect>& viewport)
+{
+    const Rect rect = viewport.value_or(Rect{ 
+        0.f, 0.f,
+        static_cast<float>(m_size.width),
+        static_cast<float>(m_size.height) });
+
+    CommandUtils::SetViewport(cmd, rect.x, rect.y, rect.width, rect.height);
+    CommandUtils::SetScissor(cmd, rect.x, rect.y, rect.width, rect.height);
 }
 
 void SwapChainPresenter::TransitionToRenderTarget(CommandList& cmd)

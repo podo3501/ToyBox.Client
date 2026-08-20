@@ -81,7 +81,7 @@ void SceneView::DrawSurfaceInternal(
     if (!materialRes)
         return;
 
-    m_data.draws.surfaces.push_back(SurfaceDrawItem{
+    m_data.draws.surfaces.push_back(DrawSurfaceItem{
         meshRes,
         materialRes,
         shaderOverride,
@@ -101,7 +101,7 @@ void SceneView::DrawDebugSurface(DebugMeshHandle hDM, DebugMaterialHandle hDMtl,
     if (!materialRes)
         return;
 
-    m_data.draws.debugSurfaces.push_back(DebugSurfaceDrawItem{ 
+    m_data.draws.debugSurfaces.push_back(DrawDebugSurfaceItem{ 
         meshRes, 
         materialRes, 
         world });
@@ -129,7 +129,7 @@ void SceneView::DrawUI(BrushHandle bh, const Rect& dest, const Rect* source)
     Core::Matrix translation = Core::Matrix::Translation(dest.x, dest.y, 0.0f);
     Core::Matrix world = scale * translation;
 
-    m_data.draws.ui.push_back(UIDrawItem{
+    m_data.draws.ui.push_back(DrawUIItem{
         meshRes, brushRes, world, source ? std::optional<Rect>(*source) : std::nullopt
         });
 }
@@ -207,7 +207,7 @@ void SceneView::DrawText(
         }
     }
     
-    m_data.draws.texts.push_back(TextDrawItem{
+    m_data.draws.texts.push_back(DrawTextItem{
         fontRes, mode, size, bounds, layout, BuildTextRuns(spans)
         });
 }

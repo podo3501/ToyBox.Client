@@ -41,7 +41,7 @@ struct ResourceContext
 
 struct TaskContext
 {
-    DrawPacket drawPacket;
+    shared_ptr<RenderPacket> packet;
     FrameData frame;
     shared_ptr<ResourceContext> resources; //중요한 리소스. 공유됨.
 

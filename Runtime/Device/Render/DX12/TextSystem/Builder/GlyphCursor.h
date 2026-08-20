@@ -2,14 +2,14 @@
 #include "Core/Foundation/Geometry2D.h"
 
 struct ShapedText;
-struct DrawTextItem;
+struct RenderTextItem;
 
 class GlyphCursor
 {
 public:
     GlyphCursor(
         const ShapedText& shaped,
-        const DrawTextItem& item,
+        const RenderTextItem& item,
         std::span<const float> lineWidths);
     
     void BeginLine(uint32_t lineIndex); // 줄이 바뀔 때 호출 — cursorX/baselineY를 그 줄의 align에 맞게 리셋
@@ -25,7 +25,7 @@ public:
     bool IsLineVisible(uint32_t lineIndex, const Rect& clipRect) const; // 현재 줄이 clipRect와 겹치는지
 
 private:
-    const DrawTextItem& m_item;
+    const RenderTextItem& m_item;
     std::span<const float> m_lineWidths;
 
     float m_lineHeight;

@@ -3,7 +3,7 @@
 #include "Core/Foundation/Geometry2D.h"
 #include "../TextTypes.h"
 
-struct DrawTextItem;
+struct RenderTextItem;
 
 float ComputeHorizontalOffset(
     TextHorizontalAlign align,
@@ -16,4 +16,4 @@ float ComputeVerticalOffset(
     float totalBlockHeight);
 
 std::vector<float> ComputeLineWidths(std::span<const ShapedGlyph> glyphs);
-Rect ComputeClipRect(const DrawTextItem& item);
+Rect ComputeClipRect(const RenderTextItem& item);

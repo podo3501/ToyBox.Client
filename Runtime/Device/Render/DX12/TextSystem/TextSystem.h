@@ -26,13 +26,13 @@ public:
         ResourceFactory& resFactory,
         TransientMeshProvider& transientMeshProvider);
     bool Initialize(const TextConfig& texConfig, Inspector* inspector = nullptr);
-    std::vector<DrawUIItem> BuildDrawItems(std::span<const DrawTextItem> items);
+    std::vector<RenderUIItem> BuildDrawItems(std::span<const RenderTextItem> items);
 
     FontAtlasUploadGraphBuilder& GetBuilder() { return m_atlasBuilder; }
 
 private:
-    std::vector<ShapedText> ShapeTexts(std::span<const DrawTextItem> items);
-    std::vector<DrawUIItem> CreateDrawItems(std::span<const PageMesh> pageMeshes);
+    std::vector<ShapedText> ShapeTexts(std::span<const RenderTextItem> items);
+    std::vector<RenderUIItem> CreateDrawItems(std::span<const PageMesh> pageMeshes);
 
     FontAtlasUploadGraphBuilder m_atlasBuilder;
     TextMeshBuilder m_meshBuilder;

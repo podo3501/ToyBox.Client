@@ -1,4 +1,5 @@
 #pragma once
+#include "Core/Foundation/Geometry2D.h"
 #include "RenderState.h"
 #include <optional>
 
@@ -19,7 +20,7 @@ struct RenderOverride
 
 struct ViewContext
 {
-    std::optional<::Viewport> viewport;
+    std::optional<Rect> viewport{ std::nullopt };
     RenderOverride renderOverride;
-    // 나중에: Camera, RenderTargetSet, Viewport, PassType ...
+    // 나중에: Camera, RenderTargetSet, PassType ...
 };

@@ -26,7 +26,7 @@ bool TextSystem::Initialize(const TextConfig& texConfig, Inspector* inspector)
     return true;
 }
 
-std::vector<DrawUIItem> TextSystem::BuildDrawItems(std::span<const DrawTextItem> items)
+std::vector<RenderUIItem> TextSystem::BuildDrawItems(std::span<const RenderTextItem> items)
 {
     if (items.empty())
         return {};
@@ -40,14 +40,14 @@ std::vector<DrawUIItem> TextSystem::BuildDrawItems(std::span<const DrawTextItem>
     return CreateDrawItems(pageMeshes);
 }
 
-std::vector<DrawUIItem> TextSystem::CreateDrawItems(std::span<const PageMesh> pageMeshes)
+std::vector<RenderUIItem> TextSystem::CreateDrawItems(std::span<const PageMesh> pageMeshes)
 {
-    std::vector<DrawUIItem> result;
+    std::vector<RenderUIItem> result;
     result.reserve(pageMeshes.size());
 
     for (const auto& pageMesh : pageMeshes)
     {
-        DrawUIItem item;
+        RenderUIItem item;
         item.mesh = pageMesh.mesh;
         item.brush = pageMesh.brush;
 
@@ -57,7 +57,7 @@ std::vector<DrawUIItem> TextSystem::CreateDrawItems(std::span<const PageMesh> pa
     return result;
 }
 
-std::vector<ShapedText> TextSystem::ShapeTexts(std::span<const DrawTextItem> items)
+std::vector<ShapedText> TextSystem::ShapeTexts(std::span<const RenderTextItem> items)
 {
     std::vector<ShapedText> result;
     result.reserve(items.size());

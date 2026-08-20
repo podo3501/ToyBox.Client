@@ -2,7 +2,7 @@
 #include "OpaqueGraphBuilder.h"
 #include "SwapChainPresenter.h"
 #include "Graph/RenderGraph.h"
-#include "Renderer/SurfaceRenderer.h"
+#include "../Renderer/SurfaceRenderer.h"
 #include "Resource/Mesh/MeshResource.h"
 #include "Resource/Material/MaterialResource.h"
 #include "Resource/Environment/EnvironmentResource.h"
@@ -36,16 +36,17 @@ void OpaqueGraphBuilder::Build(RenderGraph& graph)
         (CommandList& cmd, TaskContext& ctx)
         {
             swapChain.SetRenderTarget(cmd);
+            swapChain.SetViewport(cmd, ctx.packet->viewport);
 
             surfRenderer.PrepareFrame(
                 ctx.frame.light,
                 ctx.frame.camera,
                 shadowRes.GetSRVIndex(),
-                ctx.drawPacket.environment.get()
+                ctx.packet->environment.get()
             );
             surfRenderer.BeginFrame(cmd);
 
-            for (auto& item : ctx.drawPacket.surface)
+            for (auto& item : ctx.packet->surface)
             {
                 auto mesh = static_cast<MeshResource*>(item.mesh.get());
                 auto material = static_cast<MaterialResource*>(item.material.get());

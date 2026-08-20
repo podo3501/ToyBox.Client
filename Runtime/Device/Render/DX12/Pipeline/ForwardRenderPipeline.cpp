@@ -1,11 +1,6 @@
 #include "pch.h"
 #include "ForwardRenderPipeline.h"
 #include "Graph/TaskUtils.h"
-#include "ShadowGraphBuilder.h"
-#include "SkyboxGraphBuilder.h"
-#include "OpaqueGraphBuilder.h"
-#include "DebugSurfaceGraphBuilder.h"
-#include "UIGraphBuilder.h"
 #include "Inspector/InspectorGraphBuilder.h"
 #include "SwapChainPresenter.h"
 #include "Factory/DescriptorFactory.h"
@@ -28,6 +23,8 @@ ForwardRenderPipeline::ForwardRenderPipeline(
     m_hShadow{ RenderGraph::CreateRGResourceID() },
     //Builders
     m_fontUploadBuilder{ fontUploadBuilder },
+    m_clearBuilder{
+        m_swapChain, m_hBackBuffer },
     m_shadowBuilder{
         m_renderers.GetShadowRenderer(),
         m_descFactory, m_shadowRes, m_hShadow },
@@ -39,9 +36,11 @@ ForwardRenderPipeline::ForwardRenderPipeline(
         m_swapChain, m_shadowRes, m_hBackBuffer, m_hShadow },
     m_debugBuilder{
         m_renderers.GetDebugSurfRenderer(),
+        m_swapChain,
         m_hBackBuffer },
     m_uiBuilder{
         m_renderers.GetUIRenderer(),
+        m_swapChain,
         m_hBackBuffer },
     m_inspectorBuilder{
         m_inspectorRenderers.GetInspectorImageRenderer(),
@@ -54,29 +53,35 @@ bool ForwardRenderPipeline::Initialize(const Size& screenSize, const Size& shado
     ReturnIfFalse(m_renderers.Initialize(screenSize));
     ReturnIfFalse(m_inspectorRenderers.Initialize(screenSize));
 
-    BuildFrame(); // 첫 프레임 그래프를 미리 구성해둠
-
     return true;
 }
 
-std::vector<CompiledTask> ForwardRenderPipeline::BuildFrame()
+std::vector<CompiledTask> ForwardRenderPipeline::BuildFrame(const RenderPacket* packet)
 {
     m_graph.Reset(); // 이전 프레임의 패스/배리어 계산 결과만 비움 (컨테이너 capacity는 유지)
 
     m_graph.ImportResource(m_hBackBuffer, RGAccess::Present);
     m_graph.ImportResource(m_hShadow, RGAccess::DepthWrite);     
 
-    //동적 패스: 포함될때도 있고 아닐때도 있고.
     if (m_fontUploadBuilder.HasPendingUploads())
         m_fontUploadBuilder.Build(m_graph);
 
-    // 정적 패스: 매 프레임 항상 포함
-    m_shadowBuilder.Build(m_graph);
-    m_skyboxBuilder.Build(m_graph);
-    m_opaqueBuilder.Build(m_graph);
-    m_debugBuilder.Build(m_graph);
-    m_uiBuilder.Build(m_graph);
-    m_inspectorBuilder.Build(m_graph);
+    m_clearBuilder.Build(m_graph);
+
+    if(!packet->surface.empty())
+        m_shadowBuilder.Build(m_graph);
+
+    if (packet->environment)
+        m_skyboxBuilder.Build(m_graph);
+
+    if (!packet->surface.empty())
+        m_opaqueBuilder.Build(m_graph);
+
+    if (!packet->debugSurface.empty())
+        m_debugBuilder.Build(m_graph);
+
+    if (!packet->ui.empty())
+        m_uiBuilder.Build(m_graph);
 
     m_graph.ExportResource(m_hBackBuffer, RGAccess::Present);
     m_graph.ExportResource(m_hShadow, RGAccess::DepthWrite);        
@@ -84,9 +89,13 @@ std::vector<CompiledTask> ForwardRenderPipeline::BuildFrame()
     return m_graph.Compile();
 }
 
-void ForwardRenderPipeline::Render(CommandList& cmd, const DrawPacket& drawPacket, const FrameData& frame)
+void ForwardRenderPipeline::Render(
+    CommandList& cmd, 
+    std::vector<std::shared_ptr<RenderPacket>> packets, 
+    const FrameData& frame)
 {
-    auto compiledTasks = BuildFrame(); // 매 프레임 그래프 재구성
+    auto& packet = packets.front();
+    auto compiledTasks = BuildFrame(packet.get()); // 매 프레임 그래프 재구성
 
     TaskContext ctx;
     ctx.resources = std::make_shared<ResourceContext>();
@@ -96,7 +105,7 @@ void ForwardRenderPipeline::Render(CommandList& cmd, const DrawPacket& drawPacke
     ctx.SetResource(m_hShadow, m_shadowRes.GetResource());
 
     ctx.frame = frame;
-    ctx.drawPacket = drawPacket;
+    ctx.packet = packet;
 
     auto& bindlessAllocator = m_descFactory.GetBindlessAllocator();
     cmd.SetBindlessHeap(bindlessAllocator.GetHeap());

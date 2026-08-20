@@ -15,7 +15,7 @@ class TextureResource;
 class BrushResource;
 class EnvironmentResource;
 
-struct DrawItem
+struct RenderSurfaceItem
 {
     std::shared_ptr<IResource> mesh;
     std::shared_ptr<IResource> material;
@@ -26,7 +26,7 @@ struct DrawItem
     PipelineState pipelineState{};
 };
 
-struct DrawDebugItem
+struct RenderDebugSurfaceItem
 {
     std::shared_ptr<IResource> mesh;
     std::shared_ptr<IResource> material;
@@ -35,7 +35,7 @@ struct DrawDebugItem
     uint64_t sortKey{ 0 };
 };
 
-struct DrawUIItem
+struct RenderUIItem
 {
     std::shared_ptr<IResource> mesh;
     std::shared_ptr<IResource> brush;
@@ -45,7 +45,7 @@ struct DrawUIItem
     uint64_t sortKey{ 0 };
 };
 
-struct DrawTextItem
+struct RenderTextItem
 {
     std::shared_ptr<IResource> fontRes;
     TextRenderMode mode;
@@ -56,22 +56,22 @@ struct DrawTextItem
     std::vector<TextRun> runs;
 };
 
-struct DrawInspectItem
+struct RenderInspectItem
 {
     std::shared_ptr<TextureResource> texture;
 };
 
 struct DebugPacket
 {
-    std::span<DrawInspectItem> images;
+    std::vector<RenderInspectItem> images;
 };
 
-struct DrawPacket
+struct RenderPacket
 {
-    std::span<DrawItem> surface;
-    std::span<DrawDebugItem> debugSurface;
-    std::span<DrawUIItem> ui;
-    std::shared_ptr<EnvironmentResource> environment{ nullptr }; // nullptr 가능 - 환경 없는 씬
+    std::optional<Rect> viewport;
 
-    DebugPacket debug;
+    std::vector<RenderSurfaceItem> surface;
+    std::vector<RenderDebugSurfaceItem> debugSurface;
+    std::vector<RenderUIItem> ui;
+    std::shared_ptr<EnvironmentResource> environment{ nullptr }; // nullptr 가능 - 환경 없는 씬
 };

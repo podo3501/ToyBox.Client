@@ -5,16 +5,17 @@
 #include "Graph/RGTypes.h"
 #include "Inspector/InspectorRenderers.h"
 //Graph Builders
-#include "ShadowGraphBuilder.h"
-#include "SkyboxGraphBuilder.h"
-#include "OpaqueGraphBuilder.h"
-#include "DebugSurfaceGraphBuilder.h"
-#include "UIGraphBuilder.h"
+#include "GraphBuilder/ClearGraphBuilder.h"
+#include "GraphBuilder/ShadowGraphBuilder.h"
+#include "GraphBuilder/SkyboxGraphBuilder.h"
+#include "GraphBuilder/OpaqueGraphBuilder.h"
+#include "GraphBuilder/DebugSurfaceGraphBuilder.h"
+#include "GraphBuilder/UIGraphBuilder.h"
 #include "Inspector/InspectorGraphBuilder.h"
 #include "TextSystem/Builder/FontAtlasUploadGraphBuilder.h"
 
 struct FrameData;
-struct DrawPacket;
+struct RenderPacket;
 struct CompiledTask;
 class Device;
 class ShaderLibrary;
@@ -33,11 +34,14 @@ public:
         ShaderLibrary& shaderLibrary,
         FontAtlasUploadGraphBuilder& fontUploadBuilder);
     bool Initialize(const Size& screenSize, const Size& shadowMapSize);
-    void Render(CommandList& cmd, const DrawPacket& drawPacket, const FrameData& frame);
+    void Render(
+        CommandList& cmd, 
+        std::vector<std::shared_ptr<RenderPacket>> packets,
+        const FrameData& frame);
     void Resize(const Size& size);
 
 private:
-    std::vector<CompiledTask> BuildFrame();
+    std::vector<CompiledTask> BuildFrame(const RenderPacket* packet);
 
     Device& m_device;
     SwapChainPresenter& m_swapChain;
@@ -51,6 +55,7 @@ private:
     RGResourceID m_hShadow{ 0 };
 
     FontAtlasUploadGraphBuilder& m_fontUploadBuilder;
+    ClearGraphBuilder m_clearBuilder;
     ShadowGraphBuilder m_shadowBuilder;
     SkyboxGraphBuilder m_skyboxBuilder;
     OpaqueGraphBuilder m_opaqueBuilder;

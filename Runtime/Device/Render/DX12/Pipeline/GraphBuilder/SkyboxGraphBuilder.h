@@ -2,7 +2,7 @@
 #include "Graph/RGTypes.h"
 
 class RenderGraph;
-class SkyboxRenderer; // 새로 만들 전용 렌더러
+class SkyboxRenderer;
 class SwapChainPresenter;
 
 class SkyboxGraphBuilder

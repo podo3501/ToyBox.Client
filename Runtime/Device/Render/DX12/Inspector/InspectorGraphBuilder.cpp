@@ -22,10 +22,10 @@ void InspectorGraphBuilder::Build(RenderGraph& graph)
             imageInspector.PrepareFrame();
             imageInspector.BeginFrame(cmd);
 
-            for (auto& item : ctx.drawPacket.debug.images)
-            {
-                imageInspector.BindPipeline(cmd);
-                imageInspector.Draw(cmd, *item.texture);
-            }
+            //for (auto& item : ctx.packet->debug.images)
+            //{
+            //    imageInspector.BindPipeline(cmd);
+            //    imageInspector.Draw(cmd, *item.texture);
+            //}
         };
 }

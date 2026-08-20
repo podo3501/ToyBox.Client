@@ -7,18 +7,13 @@ void Inspector::ShowImage(std::shared_ptr<TextureResource> texture)
     if (!texture)
         return;
 
-    m_images.emplace_back(DrawInspectItem{ std::move(texture) });
+    m_images.emplace_back(RenderInspectItem{ std::move(texture) });
 }
 
-DebugPacket Inspector::BuildPacket() noexcept
+DebugPacket Inspector::TakePacket() noexcept
 {
     return
     {
-        .images = m_images
+        .images = std::move(m_images)
     };
-}
-
-void Inspector::Clear() noexcept
-{
-    m_images.clear();
 }

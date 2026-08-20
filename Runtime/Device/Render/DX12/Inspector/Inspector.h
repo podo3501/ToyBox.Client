@@ -5,9 +5,8 @@ class Inspector
 {
 public:
     void ShowImage(std::shared_ptr<TextureResource> texture);
-    DebugPacket BuildPacket() noexcept;
-    void Clear() noexcept;
+    DebugPacket TakePacket() noexcept;
 
 private:
-    std::vector<DrawInspectItem> m_images;
+    std::vector<RenderInspectItem> m_images;
 };

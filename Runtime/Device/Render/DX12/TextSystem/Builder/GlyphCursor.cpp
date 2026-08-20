@@ -7,7 +7,7 @@
 
 GlyphCursor::GlyphCursor(
     const ShapedText& shaped,
-    const DrawTextItem& item,
+    const RenderTextItem& item,
     std::span<const float> lineWidths) :
     m_item{ item },
     m_lineWidths{ lineWidths }

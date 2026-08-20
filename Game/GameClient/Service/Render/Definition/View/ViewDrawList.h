@@ -6,7 +6,7 @@
 #include "Core/Foundation/Geometry2D.h"
 #include <memory>
 
-struct SurfaceDrawItem
+struct DrawSurfaceItem
 {
     std::shared_ptr<IResource> mesh;
     std::shared_ptr<IResource> material;
@@ -14,14 +14,14 @@ struct SurfaceDrawItem
     Core::Matrix world;
 };
 
-struct DebugSurfaceDrawItem
+struct DrawDebugSurfaceItem
 {
     std::shared_ptr<IResource> mesh;
     std::shared_ptr<IResource> material;
     Core::Matrix world;
 };
 
-struct UIDrawItem
+struct DrawUIItem
 {
     std::shared_ptr<IResource> mesh;
     std::shared_ptr<IResource> brush;
@@ -29,7 +29,7 @@ struct UIDrawItem
     std::optional<Rect> source;
 };
 
-struct TextDrawItem
+struct DrawTextItem
 {
     std::shared_ptr<IResource> font;
     TextRenderMode mode;
@@ -42,10 +42,10 @@ struct TextDrawItem
 struct ViewDrawList
 {
     std::shared_ptr<IResource> environment;
-    std::vector<SurfaceDrawItem> surfaces;
-    std::vector<DebugSurfaceDrawItem> debugSurfaces;
-    std::vector<UIDrawItem> ui;
-    std::vector<TextDrawItem> texts;
+    std::vector<DrawSurfaceItem> surfaces;
+    std::vector<DrawDebugSurfaceItem> debugSurfaces;
+    std::vector<DrawUIItem> ui;
+    std::vector<DrawTextItem> texts;
 
     bool IsEmpty() const
     {

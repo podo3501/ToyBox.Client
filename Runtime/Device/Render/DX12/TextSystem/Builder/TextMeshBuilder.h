@@ -21,7 +21,7 @@ public:
 
     std::vector<PageMesh> Build(
         const FontAtlas& atlas,
-        std::span<const DrawTextItem> items,
+        std::span<const RenderTextItem> items,
         std::span<const ShapedText> shapedTexts);
 
 private:

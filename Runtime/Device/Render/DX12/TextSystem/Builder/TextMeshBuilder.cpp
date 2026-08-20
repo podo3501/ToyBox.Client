@@ -12,7 +12,7 @@
 static void ProcessShapedText(
     const FontAtlas& atlas,
     const ShapedText& shaped,
-    const DrawTextItem& item,
+    const RenderTextItem& item,
     TextBatchBufferMap& buffers)
 {
     Rect clipRect = ComputeClipRect(item);
@@ -114,7 +114,7 @@ TextMeshBuilder::TextMeshBuilder(TransientMeshProvider& meshProvider) :
 
 std::vector<PageMesh> TextMeshBuilder::Build(
     const FontAtlas& atlas,
-    std::span<const DrawTextItem> items,
+    std::span<const RenderTextItem> items,
     std::span<const ShapedText> shapedTexts)
 {
     bool hasAnyGlyph = std::ranges::any_of(shapedTexts,

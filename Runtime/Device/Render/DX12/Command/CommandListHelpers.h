@@ -48,11 +48,11 @@ namespace CommandUtils
     }
 
     template<CommandListLike T>
-    inline void SetViewport(T& cmd, float w, float h) noexcept
+    inline void SetViewport(T& cmd, float x, float y, float w, float h) noexcept
     {
         D3D12_VIEWPORT vp = {};
-        vp.TopLeftX = 0.0f;
-        vp.TopLeftY = 0.0f;
+        vp.TopLeftX = x;
+        vp.TopLeftY = y;
         vp.Width = w;
         vp.Height = h;
         vp.MinDepth = 0.0f;
@@ -62,15 +62,26 @@ namespace CommandUtils
     }
 
     template<CommandListLike T>
-    inline void SetScissor(T& cmd, int w, int h) noexcept
+    inline void SetScissor(T& cmd, int x, int y, int w, int h) noexcept
     {
         D3D12_RECT rect = {};
-        rect.left = 0;
-        rect.top = 0;
-        rect.right = w;
-        rect.bottom = h;
+        rect.left = x;
+        rect.top = y;
+        rect.right = x + w;
+        rect.bottom = y + h;
 
         cmd.Get()->RSSetScissorRects(1, &rect);
+    }
+
+    template<CommandListLike T>
+    inline void SetScissor(T& cmd, float x, float y, float w, float h) noexcept
+    {
+        SetScissor(
+            cmd,
+            static_cast<int>(x),
+            static_cast<int>(y),
+            static_cast<int>(w),
+            static_cast<int>(h));
     }
 
     template<CommandListLike T>

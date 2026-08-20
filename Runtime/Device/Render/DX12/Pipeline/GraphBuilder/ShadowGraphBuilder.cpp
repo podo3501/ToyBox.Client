@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "ShadowGraphBuilder.h"
 #include "Graph/RenderGraph.h"
-#include "Renderer/ShadowRenderer.h"
+#include "../Renderer/ShadowRenderer.h"
 #include "Command/CommandListHelpers.h"
 #include "Command/CommandList.h"
 #include "Resource/Mesh/MeshResource.h"
@@ -36,8 +36,8 @@ void ShadowGraphBuilder::Build(RenderGraph& graph)
         {
             auto dsv = descFactory.GetDSVHandle(shadowRes.GetDSVIndex());
 
-            CommandUtils::SetViewport(cmd, 2048.f, 2048.f);
-            CommandUtils::SetScissor(cmd, 2048, 2048);
+            CommandUtils::SetViewport(cmd, 0.f, 0.f, 2048.f, 2048.f);
+            CommandUtils::SetScissor(cmd, 0, 0, 2048, 2048);
 
             CommandUtils::ClearDSV(cmd, dsv);
             CommandUtils::SetDepthTarget(cmd, dsv);
@@ -45,7 +45,7 @@ void ShadowGraphBuilder::Build(RenderGraph& graph)
             shadowRenderer.PrepareFrame(ctx.frame.light);
             shadowRenderer.BeginFrame(cmd);
 
-            for (auto& item : ctx.drawPacket.surface)
+            for (auto& item : ctx.packet->surface)
             {
                 auto mesh = static_cast<MeshResource*>(item.mesh.get());
                 shadowRenderer.Draw(cmd, *mesh, item.world);
