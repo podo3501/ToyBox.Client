@@ -15,7 +15,7 @@
 #include "TextSystem/Builder/FontAtlasUploadGraphBuilder.h"
 
 struct FrameData;
-struct RenderPacket;
+struct FramePacket;
 struct CompiledTask;
 class Device;
 class ShaderLibrary;
@@ -36,12 +36,11 @@ public:
     bool Initialize(const Size& screenSize, const Size& shadowMapSize);
     void Render(
         CommandList& cmd, 
-        std::vector<std::shared_ptr<RenderPacket>> packets,
-        const FrameData& frame);
+        FramePacket framePacket);
     void Resize(const Size& size);
 
 private:
-    std::vector<CompiledTask> BuildFrame(const RenderPacket* packet);
+    std::vector<CompiledTask> BuildFrame(const FramePacket& framePacket);
 
     Device& m_device;
     SwapChainPresenter& m_swapChain;

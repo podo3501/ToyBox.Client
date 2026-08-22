@@ -16,24 +16,28 @@ DebugSurfaceGraphBuilder::DebugSurfaceGraphBuilder(
     m_backBufferResID{ backBufferResID }
 {}
 
-void DebugSurfaceGraphBuilder::Build(RenderGraph& graph)
+void DebugSurfaceGraphBuilder::Build(
+    RenderGraph& graph,
+    std::shared_ptr<ViewPacket> packet,
+    size_t viewIndex)
 {
-    auto& grid = graph.AddGraphicsPass("DebugSurface");
+    auto& grid = graph.AddGraphicsPass("DebugSurface_View" + std::to_string(viewIndex));
     grid.Write(m_backBufferResID, RGAccess::RTV);
     grid.gpuExecute =
         [
             &swapChain = m_swapChain,
-            &debugSurfRenderer = m_debugSurfRenderer
+            &debugSurfRenderer = m_debugSurfRenderer,
+            packet
         ]
         (CommandList& cmd, TaskContext& ctx)
         {
             swapChain.SetRenderTarget(cmd);
-            swapChain.SetViewport(cmd, ctx.packet->viewport);
+            swapChain.SetViewport(cmd, packet->viewport);
 
-            debugSurfRenderer.PrepareFrame(ctx.frame.camera);
+            debugSurfRenderer.PrepareFrame(packet->camera);
             debugSurfRenderer.BeginFrame(cmd);
 
-            for (auto& item : ctx.packet->debugSurface)
+            for (auto& item : packet->debugSurface)
             {
                 auto mesh = static_cast<MeshResource*>(item.mesh.get());
                 auto material = static_cast<DebugMaterialResource*>(item.material.get());

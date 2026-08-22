@@ -22,31 +22,37 @@ OpaqueGraphBuilder::OpaqueGraphBuilder(
     m_shadowResID{ shadowResID }
 {}
 
-void OpaqueGraphBuilder::Build(RenderGraph& graph)
+void OpaqueGraphBuilder::Build(
+    RenderGraph& graph,
+    const DirectionalLightData& light,
+    std::shared_ptr<ViewPacket> packet,
+    size_t viewIndex)
 {
-    auto& opaque = graph.AddGraphicsPass("Opaque");
+    auto& opaque = graph.AddGraphicsPass("Opaque_View" + std::to_string(viewIndex));
     opaque.Read(m_shadowResID, RGAccess::SRV);
     opaque.Write(m_backBufferResID, RGAccess::RTV);
     opaque.gpuExecute =
         [
             &swapChain = m_swapChain,
             &surfRenderer = m_surfRenderer,
-            &shadowRes = m_shadowRes
+            &shadowRes = m_shadowRes,
+            light,
+            packet
         ]
         (CommandList& cmd, TaskContext& ctx)
         {
             swapChain.SetRenderTarget(cmd);
-            swapChain.SetViewport(cmd, ctx.packet->viewport);
+            swapChain.SetViewport(cmd, packet->viewport);
 
             surfRenderer.PrepareFrame(
-                ctx.frame.light,
-                ctx.frame.camera,
+                light,
+                packet->camera,
                 shadowRes.GetSRVIndex(),
-                ctx.packet->environment.get()
+                packet->environment.get()
             );
             surfRenderer.BeginFrame(cmd);
 
-            for (auto& item : ctx.packet->surface)
+            for (auto& item : packet->surface)
             {
                 auto mesh = static_cast<MeshResource*>(item.mesh.get());
                 auto material = static_cast<MaterialResource*>(item.material.get());

@@ -1,9 +1,7 @@
 #include "pch.h"
 #include "RenderFrame.h"
-#include "TextSystem/TextSystem.h"
-#include "Inspector/Inspector.h"
-#include "Resource/Brush/BrushResource.h"
 #include "Core/RenderData.h"
+#include "Inspector/Inspector.h"
 #include "Pipeline/RenderPacketBuilder.h"
 
 RenderFrame::~RenderFrame() = default;
@@ -12,31 +10,32 @@ RenderFrame::RenderFrame(TextSystem& textSystem, Inspector& inspector) :
     m_inspector{ inspector }
 {}
 
-void RenderFrame::SetFrameData(const FrameData& frameData) noexcept
+void RenderFrame::SubmitFrame(SceneFrameData frame) noexcept
 {
-    m_frameData = frameData;
+    m_pendingFrame = std::move(frame);
 }
 
-void RenderFrame::SubmitViews(std::vector<SceneViewData> views)
+FramePacket RenderFrame::PrepareRenderData()
 {
-    m_pendingViews = std::move(views);
-}
+    FramePacket result;
+    result.views.reserve(std::max<size_t>(1, m_pendingFrame.views.size()));
 
-std::vector<std::shared_ptr<RenderPacket>> RenderFrame::PrepareRenderData()
-{
-    std::vector<std::shared_ptr<RenderPacket>> packets;
-    packets.reserve(std::max<size_t>(1, m_pendingViews.size()));
+    for (auto& view : m_pendingFrame.views)
+        result.views.push_back(BuildViewPacket(std::move(view), m_textSystem));
 
-    for (auto& view : m_pendingViews)
-        packets.push_back(BuildRenderPacket(std::move(view), m_textSystem));
+    if (result.views.empty())
+        result.views.push_back(std::make_shared<ViewPacket>());
 
-    if (packets.empty())
-        packets.push_back(std::make_shared<RenderPacket>()); //뷰가 없어도 아무것도 없는 기본뷰 제공.
+    result.light = m_pendingFrame.light;
+    result.shadowCasters.reserve(m_pendingFrame.shadowCasters.size());
+    for (auto& caster : m_pendingFrame.shadowCasters)
+    {
+        result.shadowCasters.push_back(RenderShadowCasterItem{
+            std::move(caster.mesh),
+            caster.world
+            });
+    }
 
-    return packets;
-}
-
-void RenderFrame::Clear()
-{
-    m_frameData = {};
+    m_pendingFrame.Clear();
+    return result;
 }

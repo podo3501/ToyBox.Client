@@ -21,7 +21,10 @@ ShadowGraphBuilder::ShadowGraphBuilder(
     m_shadowResID{ shadowResID }
 {}
 
-void ShadowGraphBuilder::Build(RenderGraph& graph)
+void ShadowGraphBuilder::Build(
+    RenderGraph& graph,
+    const DirectionalLightData& light,
+    std::vector<RenderShadowCasterItem> shadowCasters)
 {
     auto& shadow = graph.AddGraphicsPass("Shadow");
     shadow.Write(m_shadowResID, RGAccess::DepthWrite);
@@ -30,7 +33,9 @@ void ShadowGraphBuilder::Build(RenderGraph& graph)
         [
             &shadowRenderer = m_shadowRenderer,
             &descFactory = m_descFactory,
-            &shadowRes = m_shadowRes
+            &shadowRes = m_shadowRes,
+            shadowCasters = std::move(shadowCasters),
+            light
         ]
         (CommandList& cmd, TaskContext& ctx)
         {
@@ -42,10 +47,10 @@ void ShadowGraphBuilder::Build(RenderGraph& graph)
             CommandUtils::ClearDSV(cmd, dsv);
             CommandUtils::SetDepthTarget(cmd, dsv);
 
-            shadowRenderer.PrepareFrame(ctx.frame.light);
+            shadowRenderer.PrepareFrame(light);
             shadowRenderer.BeginFrame(cmd);
 
-            for (auto& item : ctx.packet->surface)
+            for (auto& item : shadowCasters)
             {
                 auto mesh = static_cast<MeshResource*>(item.mesh.get());
                 shadowRenderer.Draw(cmd, *mesh, item.world);

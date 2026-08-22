@@ -57,13 +57,15 @@ static RenderTextItem ToRenderTextItem(DrawTextItem& text)
     return item;
 }
 
-std::shared_ptr<RenderPacket> BuildRenderPacket(SceneViewData&& view, TextSystem& textSystem)
+std::shared_ptr<ViewPacket> BuildViewPacket(SceneViewData&& view, TextSystem& textSystem)
 {
-    auto packet = std::make_shared<RenderPacket>();
+    auto packet = std::make_shared<ViewPacket>();
 
     //ViewContext
-    auto rasterOverride = view.context.renderOverride.rasterPreset;
+    packet->camera = view.context.camera;
+    packet->uiCamera = view.context.uiCamera;
     packet->viewport = view.context.viewport;
+    auto rasterOverride = view.context.renderOverride.rasterPreset;
 
     //ViewDrawList
     if (view.draws.environment)

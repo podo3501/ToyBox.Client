@@ -1,6 +1,7 @@
 #pragma once
 #include "Graph/RGTypes.h"
 
+struct ViewPacket;
 class RenderGraph;
 class UIRenderer;
 class SwapChainPresenter;
@@ -15,7 +16,10 @@ public:
         SwapChainPresenter& swapChain, 
         RGResourceID backBufferResID);
 
-    void Build(RenderGraph& graph);
+    void Build(
+        RenderGraph& graph,
+        std::shared_ptr<ViewPacket> packet,
+        size_t viewIndex);
 
 private:
     UIRenderer& m_uiRenderer;

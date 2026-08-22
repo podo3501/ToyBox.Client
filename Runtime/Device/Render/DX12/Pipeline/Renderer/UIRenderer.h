@@ -18,7 +18,7 @@ class UIRenderer
 public:
     ~UIRenderer();
     UIRenderer(const UIRendererConfig& config, PipelineCache& pipelineCache);
-    bool Initialize(Device& device, const Size& screenSize);
+    bool Initialize(Device& device);
     void BeginFrame(CommandList& cmd);
 
     void Draw(
@@ -26,9 +26,8 @@ public:
         MeshResource& mesh, 
         BrushResource& brush,
         const Core::Matrix& world,
+        const Core::Matrix& projection,
         const std::optional<Rect>& source);
-
-    void SetScreenSize(const Size& size);
 
 private:
     enum class RootSlot : uint32_t
@@ -41,6 +40,7 @@ private:
     ID3D12PipelineState* CreatePSO();
     D3D12_GPU_VIRTUAL_ADDRESS UploadDrawCB(
         const Core::Matrix& world, 
+        const Core::Matrix& projection,
         const Core::Vector4& uvTransform);
 
     UIRendererConfig m_config;
@@ -49,5 +49,4 @@ private:
     ID3D12PipelineState* m_pso{ nullptr };
 
     FrameConstantAllocator m_uiDrawCBAllocator;
-    Core::Matrix m_projection;
 };

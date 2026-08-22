@@ -17,8 +17,7 @@ class Renderers
 public:
     ~Renderers();
     Renderers(Device& device, ShaderLibrary& shaderLibaray);
-    bool Initialize(const Size& screenSize);
-    void SetScreenSize(const Size& screenSize);
+    bool Initialize();
 
     ShadowRenderer& GetShadowRenderer() { return m_shadowRenderer; }
     SurfaceRenderer& GetSurfRenderer() { return m_surfRenderer; }

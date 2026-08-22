@@ -24,26 +24,7 @@ SceneRenderer::SceneRenderer(
 	m_defaultBrush = CreateBuiltinBrush(brushRepository);
 }
 
-void SceneRenderer::Flush()
-{
-	std::vector<SceneViewData> submitted;
-	submitted.reserve(m_activeViewCount);
-
-	for (size_t i = 0; i < m_activeViewCount; ++i)
-	{
-		auto& view = m_viewPool[i];
-		if (view.IsEmpty())
-			continue;
-
-		submitted.push_back(view.TakeData());
-	}
-
-	m_renderFrame->SubmitViews(std::move(submitted));
-
-	m_activeViewCount = 0; // pool 원소들은 삭제 안 하고 그대로 둠. 다음 CreateView가 다시 재사용
-}
-
-SceneView& SceneRenderer::CreateView(const ViewContext& context)
+SceneView& SceneRenderer::AcquireView(const ViewContext& context)
 {
 	SceneView* view;
 	if (m_activeViewCount < m_viewPool.size())
@@ -59,7 +40,40 @@ SceneView& SceneRenderer::CreateView(const ViewContext& context)
 	return *view;
 }
 
-void SceneRenderer::SetFrameData(const FrameData& frameData)
+void SceneRenderer::SetLight(const DirectionalLightData& light)
 {
-	m_renderFrame->SetFrameData(frameData);
+	m_pendingLight = light; // Flush에서 SceneFrameData::light로 옮김
+}
+
+void SceneRenderer::DrawShadowCaster(MeshHandle hM, const Core::Matrix& world)
+{
+	auto& meshRepository = m_repositories.Get<MeshRepository>();
+	auto meshRes = meshRepository.GetIfReady(hM);
+	if (!meshRes)
+		return;
+
+	m_shadowCasters.push_back(DrawShadowCasterItem{ meshRes, world });
+}
+
+void SceneRenderer::Flush()
+{
+	SceneFrameData frameData;
+
+	frameData.light = std::move(m_pendingLight);
+	frameData.shadowCasters = std::move(m_shadowCasters);
+
+	frameData.views.reserve(m_activeViewCount);
+	for (size_t i = 0; i < m_activeViewCount; ++i)
+	{
+		auto& view = m_viewPool[i];
+		if (view.IsEmpty())
+			continue;
+		frameData.views.push_back(view.TakeData());
+	}
+
+	m_renderFrame->SubmitFrame(std::move(frameData));
+
+	m_pendingLight = {};
+	m_shadowCasters.clear();
+	m_activeViewCount = 0; // pool 원소들은 삭제 안 하고 그대로 둠. 다음 CreateView가 다시 재사용
 }

@@ -820,6 +820,12 @@
     <ClInclude Include="Service\Render\SceneView.h">
       <Filter>Service\Render</Filter>
     </ClInclude>
+    <ClInclude Include="Service\Render\Definition\View\SceneFrameData.h">
+      <Filter>Service\Render\Definition\View</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Definition\View\DrawShadowCasterItem.h">
+      <Filter>Service\Render\Definition\View</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Locator">

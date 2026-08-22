@@ -41,8 +41,6 @@ struct ResourceContext
 
 struct TaskContext
 {
-    shared_ptr<RenderPacket> packet;
-    FrameData frame;
     shared_ptr<ResourceContext> resources; //중요한 리소스. 공유됨.
 
     void SetResource(RGResourceID id, const Resource& resource) const { resources->Set(id, resource); }

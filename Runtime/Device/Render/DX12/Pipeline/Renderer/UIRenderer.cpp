@@ -23,7 +23,7 @@ UIRenderer::UIRenderer(const UIRendererConfig& config, PipelineCache& pipelineCa
     m_pipelineCache{ pipelineCache }
 {}
 
-bool UIRenderer::Initialize(Device& device, const Size& screenSize)
+bool UIRenderer::Initialize(Device& device)
 {
     m_uiDrawCBAllocator.Initialize<UIDrawCB>(device, m_config.maxUI);
 
@@ -31,7 +31,6 @@ bool UIRenderer::Initialize(Device& device, const Size& screenSize)
     m_pso = CreatePSO();
     if (!m_pso) return false;
 
-    SetScreenSize(screenSize);
     return true;
 }
 
@@ -99,10 +98,11 @@ void UIRenderer::Draw(
     MeshResource& mesh,
     BrushResource& brush,
     const Core::Matrix& quadWorld,
+    const Core::Matrix& projection,
     const std::optional<Rect>& source)
 {
     const Core::Vector4 uvTransform = brush.CalcUVTransform(source);
-    auto drawCBAddress = UploadDrawCB( quadWorld, uvTransform);
+    auto drawCBAddress = UploadDrawCB( quadWorld, projection, uvTransform);
 
     uint32_t resIndices[3] = 
     { 
@@ -119,6 +119,7 @@ void UIRenderer::Draw(
 
 D3D12_GPU_VIRTUAL_ADDRESS UIRenderer::UploadDrawCB(
     const Core::Matrix& world,
+    const Core::Matrix& projection,
     const Core::Vector4& uvTransform)
 {
     UIDrawCB drawCB{};
@@ -126,21 +127,9 @@ D3D12_GPU_VIRTUAL_ADDRESS UIRenderer::UploadDrawCB(
     DirectX::XMMATRIX xmWorld = ToDXMatrix(world);
     XMStoreFloat4x4(&drawCB.world, DirectX::XMMatrixTranspose(xmWorld));
 
-    DirectX::XMMATRIX xmProj = ToDXMatrix(m_projection);
+    DirectX::XMMATRIX xmProj = ToDXMatrix(projection);
     XMStoreFloat4x4(&drawCB.projection, DirectX::XMMatrixTranspose(xmProj));
 
     drawCB.uvTransform = ToXMFLOAT4(uvTransform);
     return m_uiDrawCBAllocator.AllocateConstant(drawCB);
-}
-
-void UIRenderer::SetScreenSize(const Size& size)
-{
-    m_projection = Core::Matrix::OrthographicOffCenter(
-        0.0f,
-        static_cast<float>(size.width),
-        static_cast<float>(size.height),
-        0.0f,
-        0.0f,
-        1.0f
-    );
 }

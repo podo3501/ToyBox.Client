@@ -81,6 +81,21 @@ CameraData Camera::BuildCameraData() const
     return data;
 }
 
+CameraData Camera::BuildOrthographic(const Size& size, float nearZ, float farZ)
+{
+    CameraData data;
+    data.view = Core::Matrix::Identity();
+    data.proj = Core::Matrix::OrthographicOffCenter( 
+        0.0f, 
+        static_cast<float>(size.width),
+        static_cast<float>(size.height),
+        0.0f,  
+        nearZ, farZ); // bottom, top : 화면 좌표계는 y가 아래로 갈수록 증가하므로 top/bottom을 뒤집음
+    data.position = { 0.0f, 0.0f, 0.0f };
+
+    return data;
+}
+
 void Camera::UpdateIfNeeded() const
 {
     if (!m_dirty)

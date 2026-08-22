@@ -16,27 +16,31 @@ UIGraphBuilder::UIGraphBuilder(
     m_backBufferResID{ backBufferResID }
 {}
 
-void UIGraphBuilder::Build(RenderGraph& graph)
+void UIGraphBuilder::Build(
+    RenderGraph& graph,
+    std::shared_ptr<ViewPacket> packet,
+    size_t viewIndex)
 {
-    auto& ui = graph.AddGraphicsPass("UI");
+    auto& ui = graph.AddGraphicsPass("UI_View" + std::to_string(viewIndex));
     ui.Write(m_backBufferResID, RGAccess::RTV);
     ui.gpuExecute =
         [
             &swapChain = m_swapChain,
-            &uiRenderer = m_uiRenderer
+            &uiRenderer = m_uiRenderer,
+            packet
         ]
         (CommandList& cmd, TaskContext& ctx)
         {
             swapChain.SetRenderTarget(cmd);
-            swapChain.SetViewport(cmd, ctx.packet->viewport);
+            swapChain.SetViewport(cmd, packet->viewport);
             uiRenderer.BeginFrame(cmd);
 
-            for (auto& uiItem : ctx.packet->ui)
+            for (auto& uiItem : packet->ui)
             {
                 auto mesh = static_cast<MeshResource*>(uiItem.mesh.get());
                 auto brush = static_cast<BrushResource*>(uiItem.brush.get());
 
-                uiRenderer.Draw(cmd, *mesh, *brush, uiItem.world, uiItem.source);
+                uiRenderer.Draw(cmd, *mesh, *brush, uiItem.world, packet->uiCamera.proj, uiItem.source);
             }
         };
 }

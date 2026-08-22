@@ -1,4 +1,5 @@
 #pragma once
+#include "Core/Foundation/Geometry2D.h"
 #include "GameClient/Graphics/RenderData/CameraData.h"
 
 class Camera
@@ -30,6 +31,10 @@ public:
     const Core::Matrix& GetView() const;
     const Core::Matrix& GetProj() const;
     CameraData BuildCameraData() const;
+    static CameraData BuildOrthographic(
+        const Size& size,
+        float nearZ = 0.0f,
+        float farZ = 1.0f);
 
 private:
     void UpdateIfNeeded() const;

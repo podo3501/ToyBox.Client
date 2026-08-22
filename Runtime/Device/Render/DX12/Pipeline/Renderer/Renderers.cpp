@@ -12,18 +12,13 @@ Renderers::Renderers(Device& device, ShaderLibrary& shaderLibrary) :
     m_skyboxRenderer{ m_config.skybox, m_pipelineCache }
 {}
 
-bool Renderers::Initialize(const Size& screenSize)
+bool Renderers::Initialize()
 {
     ReturnIfFalse(m_shadowRenderer.Initialize(m_device));
     ReturnIfFalse(m_surfRenderer.Initialize(m_device));
     ReturnIfFalse(m_debugSurfRenderer.Initialize(m_device));
-    ReturnIfFalse(m_uiRenderer.Initialize(m_device, screenSize));
+    ReturnIfFalse(m_uiRenderer.Initialize(m_device));
     ReturnIfFalse(m_skyboxRenderer.Initialize(m_device));
 
     return true;
-}
-
-void Renderers::SetScreenSize(const Size& screenSize)
-{
-    m_uiRenderer.SetScreenSize(screenSize);
 }

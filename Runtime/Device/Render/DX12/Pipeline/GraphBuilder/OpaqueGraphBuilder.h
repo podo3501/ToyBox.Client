@@ -1,6 +1,8 @@
 #pragma once
 #include "Graph/RGTypes.h"
 
+struct DirectionalLightData;
+struct ViewPacket;
 class RenderGraph;
 class SurfaceRenderer;
 class SwapChainPresenter;
@@ -18,7 +20,11 @@ public:
         RGResourceID backBufferResID, 
         RGResourceID shadowResID);
 
-    void Build(RenderGraph& graph);
+    void Build(
+        RenderGraph& graph,
+        const DirectionalLightData& light,
+        std::shared_ptr<ViewPacket> packet,
+        size_t viewIndex);
     
 private:
     SurfaceRenderer& m_surfRenderer;

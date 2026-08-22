@@ -6,6 +6,8 @@
 #include "Core/Math/Vector4.h"
 #include "Core/Foundation/Color.h"
 #include "Core/Foundation/Geometry2D.h"
+#include "GameClient/Graphics/RenderData/DirectionalLightData.h"
+#include "GameClient/Graphics/RenderData/CameraData.h"
 #include "GameClient/Service/Render/Definition/View/RenderState.h"
 #include "GameClient/Service/Render/Definition/Text/TextStyle.h"
 
@@ -66,12 +68,27 @@ struct DebugPacket
     std::vector<RenderInspectItem> images;
 };
 
-struct RenderPacket
+struct ViewPacket
 {
+    CameraData camera;
+    CameraData uiCamera;
     std::optional<Rect> viewport;
 
     std::vector<RenderSurfaceItem> surface;
     std::vector<RenderDebugSurfaceItem> debugSurface;
     std::vector<RenderUIItem> ui;
     std::shared_ptr<EnvironmentResource> environment{ nullptr }; // nullptr 가능 - 환경 없는 씬
+};
+
+struct RenderShadowCasterItem
+{
+    std::shared_ptr<IResource> mesh;
+    Core::Matrix world;
+};
+
+struct FramePacket
+{
+    DirectionalLightData light;
+    std::vector<RenderShadowCasterItem> shadowCasters;
+    std::vector<std::shared_ptr<ViewPacket>> views;
 };

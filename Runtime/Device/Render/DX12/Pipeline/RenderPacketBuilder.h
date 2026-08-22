@@ -1,7 +1,7 @@
 #pragma once
 
 struct SceneViewData;
-struct RenderPacket;
+struct ViewPacket;
 class TextSystem;
 
-std::shared_ptr<RenderPacket> BuildRenderPacket(SceneViewData&& view, TextSystem& textSystem);
+std::shared_ptr<ViewPacket> BuildViewPacket(SceneViewData&& view, TextSystem& textSystem);

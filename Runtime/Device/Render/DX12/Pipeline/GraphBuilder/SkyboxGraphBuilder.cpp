@@ -15,25 +15,29 @@ SkyboxGraphBuilder::SkyboxGraphBuilder(
     m_backBufferResID{ backBufferResID }
 {}
 
-void SkyboxGraphBuilder::Build(RenderGraph& graph)
+void SkyboxGraphBuilder::Build(
+    RenderGraph& graph, 
+    std::shared_ptr<ViewPacket> packet, 
+    size_t viewIndex)
 {
-    auto& skybox = graph.AddGraphicsPass("Skybox");
+    auto& skybox = graph.AddGraphicsPass("Skybox_View" + std::to_string(viewIndex));
     skybox.Write(m_backBufferResID, RGAccess::RTV);
 
     skybox.gpuExecute =
         [
             &swapChain = m_swapChain,
-            &skyboxRenderer = m_skyboxRenderer
+            &skyboxRenderer = m_skyboxRenderer,
+            packet
         ]
         (CommandList& cmd, TaskContext& ctx)
         {
-            auto& envRes = ctx.packet->environment;
+            auto& envRes = packet->environment;
             if (!envRes || !envRes->IsReady())
                 return; // 환경 없는 씬 - 스카이박스 안 그림
 
             swapChain.SetRenderTarget(cmd);
-            swapChain.SetViewport(cmd, ctx.packet->viewport);
+            swapChain.SetViewport(cmd, packet->viewport);
 
-            skyboxRenderer.Draw(cmd, ctx.frame.camera, *envRes->GetSkybox());
+            skyboxRenderer.Draw(cmd, packet->camera, *envRes->GetSkybox());
         };
 }

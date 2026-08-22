@@ -50,13 +50,13 @@ ForwardRenderPipeline::ForwardRenderPipeline(
 bool ForwardRenderPipeline::Initialize(const Size& screenSize, const Size& shadowMapSize)
 {
     ReturnIfFalse(m_shadowRes.Initialize(m_device, m_descFactory, shadowMapSize));
-    ReturnIfFalse(m_renderers.Initialize(screenSize));
+    ReturnIfFalse(m_renderers.Initialize());
     ReturnIfFalse(m_inspectorRenderers.Initialize(screenSize));
 
     return true;
 }
 
-std::vector<CompiledTask> ForwardRenderPipeline::BuildFrame(const RenderPacket* packet)
+std::vector<CompiledTask> ForwardRenderPipeline::BuildFrame(const FramePacket& framePacket)
 {
     m_graph.Reset(); // 이전 프레임의 패스/배리어 계산 결과만 비움 (컨테이너 capacity는 유지)
 
@@ -68,20 +68,25 @@ std::vector<CompiledTask> ForwardRenderPipeline::BuildFrame(const RenderPacket* 
 
     m_clearBuilder.Build(m_graph);
 
-    if(!packet->surface.empty())
-        m_shadowBuilder.Build(m_graph);
+    if (!framePacket.shadowCasters.empty())
+        m_shadowBuilder.Build(m_graph, framePacket.light, framePacket.shadowCasters);
 
-    if (packet->environment)
-        m_skyboxBuilder.Build(m_graph);
+    for (size_t i = 0; i < framePacket.views.size(); ++i)
+    {
+        auto& view = framePacket.views[i];
 
-    if (!packet->surface.empty())
-        m_opaqueBuilder.Build(m_graph);
+        if (view->environment)
+            m_skyboxBuilder.Build(m_graph, view, i);
 
-    if (!packet->debugSurface.empty())
-        m_debugBuilder.Build(m_graph);
+        if (!view->surface.empty())
+            m_opaqueBuilder.Build(m_graph, framePacket.light, view, i);
 
-    if (!packet->ui.empty())
-        m_uiBuilder.Build(m_graph);
+        if (!view->debugSurface.empty())
+            m_debugBuilder.Build(m_graph, view, i);
+
+        if (!view->ui.empty())
+            m_uiBuilder.Build(m_graph, view, i);
+    }
 
     m_graph.ExportResource(m_hBackBuffer, RGAccess::Present);
     m_graph.ExportResource(m_hShadow, RGAccess::DepthWrite);        
@@ -91,11 +96,9 @@ std::vector<CompiledTask> ForwardRenderPipeline::BuildFrame(const RenderPacket* 
 
 void ForwardRenderPipeline::Render(
     CommandList& cmd, 
-    std::vector<std::shared_ptr<RenderPacket>> packets, 
-    const FrameData& frame)
+    FramePacket framePacket)
 {
-    auto& packet = packets.front();
-    auto compiledTasks = BuildFrame(packet.get()); // 매 프레임 그래프 재구성
+    auto compiledTasks = BuildFrame(framePacket); // 매 프레임 그래프 재구성
 
     TaskContext ctx;
     ctx.resources = std::make_shared<ResourceContext>();
@@ -103,9 +106,6 @@ void ForwardRenderPipeline::Render(
     m_fontUploadBuilder.ApplyResourceBindings(*ctx.resources);
     ctx.SetResource(m_hBackBuffer, m_swapChain.GetCurrentBackbuffer());
     ctx.SetResource(m_hShadow, m_shadowRes.GetResource());
-
-    ctx.frame = frame;
-    ctx.packet = packet;
 
     auto& bindlessAllocator = m_descFactory.GetBindlessAllocator();
     cmd.SetBindlessHeap(bindlessAllocator.GetHeap());
@@ -115,7 +115,6 @@ void ForwardRenderPipeline::Render(
 
 void ForwardRenderPipeline::Resize(const Size& size)
 {
-    m_renderers.SetScreenSize(size);
     m_inspectorRenderers.SetScreenSize(size);
 }
 

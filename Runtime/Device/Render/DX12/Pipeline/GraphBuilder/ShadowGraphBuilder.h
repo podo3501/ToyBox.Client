@@ -1,6 +1,8 @@
 #pragma once
 #include "Graph/RGTypes.h"
 
+struct DirectionalLightData;
+struct RenderShadowCasterItem;
 class RenderGraph;
 class ShadowRenderer;
 class DescriptorFactory;
@@ -15,7 +17,11 @@ public:
         DescriptorFactory& descFactory,
         ShadowResource& shadowRes,
         RGResourceID shadowResID);
-    void Build(RenderGraph& graph);
+
+    void Build(
+        RenderGraph& graph,
+        const DirectionalLightData& light,
+        std::vector<RenderShadowCasterItem> shadowCasters);
 
 private:
     ShadowRenderer& m_shadowRenderer;

@@ -64,7 +64,7 @@ void RenderBackend::Render()
     if (cmd)
     {
         m_profiler.BeginFrame(*cmd, m_frameIndex);
-        m_pipeline.Render(*cmd, m_renderFrame.PrepareRenderData(), m_renderFrame.GetFrameData());
+        m_pipeline.Render(*cmd, m_renderFrame.PrepareRenderData());
         m_profiler.EndFrame(*cmd);
 
         m_cmdScheduler.End();
@@ -72,8 +72,6 @@ void RenderBackend::Render()
 
         m_frameIndex++;
     }
-
-    m_renderFrame.Clear();
 }
 
 IResourceProvider* RenderBackend::GetProvider(ProviderType type)
