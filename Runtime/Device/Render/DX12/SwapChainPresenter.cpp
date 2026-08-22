@@ -1,16 +1,11 @@
 #include "pch.h"
 #include "SwapChainPresenter.h"
 #include "Core/Device.h"
+#include "Core/RenderFormat.h"
 #include "Command/CommandScheduler.h"
 #include "Command/CommandList.h"
 #include "Command/CommandListHelpers.h"
 #include <dxgi1_6.h>
-
-namespace RenderFormat
-{
-    constexpr DXGI_FORMAT BackBufferFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
-    constexpr DXGI_FORMAT BackBufferSRGBView = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-}
 
 using Microsoft::WRL::ComPtr;
 

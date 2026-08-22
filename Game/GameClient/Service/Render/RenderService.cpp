@@ -104,6 +104,7 @@ static const RegistryShaderInfo g_shaderRegistry[] =
 	{ RegistryShader::Grid, RID::MakePath("Test/Graphics/Shader/Grid.hlsl"), ShaderType::Graphics },
 	{ RegistryShader::UI, RID::MakePath("Test/Graphics/Shader/UI.hlsl"), ShaderType::Graphics },
 	{ RegistryShader::Skybox, RID::MakePath("Test/Graphics/Shader/Skybox.hlsl"), ShaderType::Graphics },
+	{ RegistryShader::Composite, RID::MakePath("Test/Graphics/Shader/Composite.hlsl"), ShaderType::Graphics },
 	{ RegistryShader::MipGenerator, RID::MakePath("Test/Graphics/Shader/MipGen.hlsl"), ShaderType::Compute },
 	{ RegistryShader::InspectorImage, RID::MakePath("Test/Graphics/Shader/InspectorImageRenderer.hlsl"), ShaderType::Graphics }
 };

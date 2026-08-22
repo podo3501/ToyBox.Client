@@ -223,6 +223,7 @@
     <ClInclude Include="Service\Render\Definition\View\RenderState.h" />
     <ClInclude Include="Service\Render\Definition\View\SceneViewData.h" />
     <ClInclude Include="Service\Render\Definition\View\ViewContext.h" />
+    <ClInclude Include="Service\Render\Definition\View\ViewIdentity.h" />
     <ClInclude Include="Service\Render\Handle\DebugMaterialHandle.h" />
     <ClInclude Include="Service\Render\Handle\DebugMeshHandle.h" />
     <ClInclude Include="Service\Render\Handle\EnvironmentHandle.h" />

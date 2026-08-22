@@ -6,7 +6,7 @@
 #include "Resource/Mesh/MeshResource.h"
 #include "Resource/Material/MaterialResource.h"
 #include "Resource/Environment/EnvironmentResource.h"
-#include "Resource/ShadowResource.h"
+#include "Resource/Internal/ShadowResource.h"
 
 OpaqueGraphBuilder::~OpaqueGraphBuilder() = default;
 OpaqueGraphBuilder::OpaqueGraphBuilder(

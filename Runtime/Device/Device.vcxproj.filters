@@ -133,6 +133,9 @@
     <Filter Include="Render\DX12\Pipeline\GraphBuilder">
       <UniqueIdentifier>{5973a1de-12d7-4136-b51a-be45a68af2db}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Render\DX12\Resource\Internal">
+      <UniqueIdentifier>{e21bc528-499f-48be-86fa-01609a951990}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Storage\JsonObjectIO.h">
@@ -233,9 +236,6 @@
       <Filter>Render\DX12\Command</Filter>
     </ClInclude>
     <ClInclude Include="Render\DX12\Resource\Resource.h">
-      <Filter>Render\DX12\Resource</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\DX12\Resource\ShadowResource.h">
       <Filter>Render\DX12\Resource</Filter>
     </ClInclude>
     <ClInclude Include="Render\DX12\Graph\RGTypes.h">
@@ -628,6 +628,24 @@
     <ClInclude Include="Render\DX12\Pipeline\GraphBuilder\ClearGraphBuilder.h">
       <Filter>Render\DX12\Pipeline\GraphBuilder</Filter>
     </ClInclude>
+    <ClInclude Include="Render\DX12\Pipeline\Renderer\CompositeRenderer.h">
+      <Filter>Render\DX12\Pipeline\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Core\RenderFormat.h">
+      <Filter>Render\DX12\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Pipeline\GraphBuilder\CompositeGraphBuilder.h">
+      <Filter>Render\DX12\Pipeline\GraphBuilder</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Resource\Internal\ShadowResource.h">
+      <Filter>Render\DX12\Resource\Internal</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Resource\Internal\ViewTargetResource.h">
+      <Filter>Render\DX12\Resource\Internal</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Pipeline\GraphBuilder\ViewTargetClearGraphBuilder.h">
+      <Filter>Render\DX12\Pipeline\GraphBuilder</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -719,9 +737,6 @@
       <Filter>Render\DX12\Command</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\Resource\Resource.cpp">
-      <Filter>Render\DX12\Resource</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\DX12\Resource\ShadowResource.cpp">
       <Filter>Render\DX12\Resource</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\Graph\TaskScheduler.cpp">
@@ -1031,6 +1046,21 @@
       <Filter>Render\DX12\Pipeline</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\Pipeline\GraphBuilder\ClearGraphBuilder.cpp">
+      <Filter>Render\DX12\Pipeline\GraphBuilder</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Pipeline\Renderer\CompositeRenderer.cpp">
+      <Filter>Render\DX12\Pipeline\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Pipeline\GraphBuilder\CompositeGraphBuilder.cpp">
+      <Filter>Render\DX12\Pipeline\GraphBuilder</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Resource\Internal\ShadowResource.cpp">
+      <Filter>Render\DX12\Resource\Internal</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Resource\Internal\ViewTargetResource.cpp">
+      <Filter>Render\DX12\Resource\Internal</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Pipeline\GraphBuilder\ViewTargetClearGraphBuilder.cpp">
       <Filter>Render\DX12\Pipeline\GraphBuilder</Filter>
     </ClCompile>
   </ItemGroup>

@@ -17,6 +17,7 @@ ForwardRenderPipeline::ForwardRenderPipeline(
     m_swapChain{ swapChain },
     m_descFactory{ descFactory },
     m_renderers{ device, shaderLibaray },
+    m_viewTargetRes{ device, descFactory },
     m_inspectorRenderers{ device, shaderLibaray },
     // RGResourceID: static 함수이므로 생성자 초기화 리스트에서 바로 생성 가능
     m_hBackBuffer{ RenderGraph::CreateRGResourceID() },
@@ -58,10 +59,9 @@ bool ForwardRenderPipeline::Initialize(const Size& screenSize, const Size& shado
 
 std::vector<CompiledTask> ForwardRenderPipeline::BuildFrame(const FramePacket& framePacket)
 {
-    m_graph.Reset(); // 이전 프레임의 패스/배리어 계산 결과만 비움 (컨테이너 capacity는 유지)
-
+    m_graph.Reset();
     m_graph.ImportResource(m_hBackBuffer, RGAccess::Present);
-    m_graph.ImportResource(m_hShadow, RGAccess::DepthWrite);     
+    m_graph.ImportResource(m_hShadow, RGAccess::DepthWrite);
 
     if (m_fontUploadBuilder.HasPendingUploads())
         m_fontUploadBuilder.Build(m_graph);
@@ -71,21 +71,26 @@ std::vector<CompiledTask> ForwardRenderPipeline::BuildFrame(const FramePacket& f
     if (!framePacket.shadowCasters.empty())
         m_shadowBuilder.Build(m_graph, framePacket.light, framePacket.shadowCasters);
 
+    std::vector<RenderViewInfo> renderViewInfos;
+    renderViewInfos.reserve(framePacket.views.size());
+
+    std::unordered_set<uint32_t> activeViews;
+
     for (size_t i = 0; i < framePacket.views.size(); ++i)
     {
         auto& view = framePacket.views[i];
+        auto id = view->id;
+        activeViews.insert(id);
 
-        if (view->environment)
-            m_skyboxBuilder.Build(m_graph, view, i);
+        auto size = ToSize(
+            static_cast<uint32_t>(view->viewport->width), 
+            static_cast<uint32_t>(view->viewport->height));
+        auto& target = m_viewTargetRes.Acquire(id, size);
 
-        if (!view->surface.empty())
-            m_opaqueBuilder.Build(m_graph, framePacket.light, view, i);
+        m_graph.ImportResource(target.colorID, RGAccess::RTV);
+        m_graph.ImportResource(target.depthID, RGAccess::DepthWrite);
 
-        if (!view->debugSurface.empty())
-            m_debugBuilder.Build(m_graph, view, i);
-
-        if (!view->ui.empty())
-            m_uiBuilder.Build(m_graph, view, i);
+        //m_clearBuilder.Build(m_graph, target.colorID, target.depthID);
     }
 
     m_graph.ExportResource(m_hBackBuffer, RGAccess::Present);
@@ -93,6 +98,44 @@ std::vector<CompiledTask> ForwardRenderPipeline::BuildFrame(const FramePacket& f
 
     return m_graph.Compile();
 }
+
+//std::vector<CompiledTask> ForwardRenderPipeline::BuildFrame(const FramePacket& framePacket)
+//{
+//    m_graph.Reset(); // 이전 프레임의 패스/배리어 계산 결과만 비움 (컨테이너 capacity는 유지)
+//
+//    m_graph.ImportResource(m_hBackBuffer, RGAccess::Present);
+//    m_graph.ImportResource(m_hShadow, RGAccess::DepthWrite);     
+//
+//    if (m_fontUploadBuilder.HasPendingUploads())
+//        m_fontUploadBuilder.Build(m_graph);
+//
+//    m_clearBuilder.Build(m_graph);
+//
+//    if (!framePacket.shadowCasters.empty())
+//        m_shadowBuilder.Build(m_graph, framePacket.light, framePacket.shadowCasters);
+//
+//    for (size_t i = 0; i < framePacket.views.size(); ++i)
+//    {
+//        auto& view = framePacket.views[i];
+//
+//        if (view->environment)
+//            m_skyboxBuilder.Build(m_graph, view, i);
+//
+//        if (!view->surface.empty())
+//            m_opaqueBuilder.Build(m_graph, framePacket.light, view, i);
+//
+//        if (!view->debugSurface.empty())
+//            m_debugBuilder.Build(m_graph, view, i);
+//
+//        if (!view->ui.empty())
+//            m_uiBuilder.Build(m_graph, view, i);
+//    }
+//
+//    m_graph.ExportResource(m_hBackBuffer, RGAccess::Present);
+//    m_graph.ExportResource(m_hShadow, RGAccess::DepthWrite);        
+//
+//    return m_graph.Compile();
+//}
 
 void ForwardRenderPipeline::Render(
     CommandList& cmd, 

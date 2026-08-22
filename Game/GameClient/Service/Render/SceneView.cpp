@@ -10,11 +10,11 @@ SceneView::SceneView(
     RepositoryContainer& repositories,
     MeshHandle uiQuad,
     MaterialHandle defaultMaterial,
-    BrushHandle defaultBrush)
-    : m_repositories(repositories)
-    , m_uiQuad(uiQuad)
-    , m_defaultMaterial(defaultMaterial)
-    , m_defaultBrush(defaultBrush)
+    BrushHandle defaultBrush) : 
+    m_repositories{ repositories },
+    m_uiQuad{ uiQuad },
+    m_defaultMaterial{ defaultMaterial },
+    m_defaultBrush{ defaultBrush }
 {}
 
 void SceneView::Reset(const ViewContext& context)

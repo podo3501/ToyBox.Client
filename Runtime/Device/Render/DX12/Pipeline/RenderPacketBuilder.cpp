@@ -62,9 +62,11 @@ std::shared_ptr<ViewPacket> BuildViewPacket(SceneViewData&& view, TextSystem& te
     auto packet = std::make_shared<ViewPacket>();
 
     //ViewContext
+    packet->id = view.context.identity.Value();
     packet->camera = view.context.camera;
     packet->uiCamera = view.context.uiCamera;
     packet->viewport = view.context.viewport;
+
     auto rasterOverride = view.context.renderOverride.rasterPreset;
 
     //ViewDrawList

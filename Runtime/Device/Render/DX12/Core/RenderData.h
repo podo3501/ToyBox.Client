@@ -6,6 +6,7 @@
 #include "Core/Math/Vector4.h"
 #include "Core/Foundation/Color.h"
 #include "Core/Foundation/Geometry2D.h"
+#include "Graph/RGTypes.h"
 #include "GameClient/Graphics/RenderData/DirectionalLightData.h"
 #include "GameClient/Graphics/RenderData/CameraData.h"
 #include "GameClient/Service/Render/Definition/View/RenderState.h"
@@ -70,6 +71,7 @@ struct DebugPacket
 
 struct ViewPacket
 {
+    uint32_t id;
     CameraData camera;
     CameraData uiCamera;
     std::optional<Rect> viewport;
@@ -91,4 +93,11 @@ struct FramePacket
     DirectionalLightData light;
     std::vector<RenderShadowCasterItem> shadowCasters;
     std::vector<std::shared_ptr<ViewPacket>> views;
+};
+
+struct RenderViewInfo
+{
+    Rect viewport;
+    UINT heapIndex;
+    RGResourceID colorID;
 };

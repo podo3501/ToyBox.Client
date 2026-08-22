@@ -5,7 +5,7 @@
 #include "Command/CommandListHelpers.h"
 #include "Command/CommandList.h"
 #include "Resource/Mesh/MeshResource.h"
-#include "Resource/ShadowResource.h"
+#include "Resource/Internal/ShadowResource.h"
 #include "Factory/DescriptorFactory.h"
 
 ShadowGraphBuilder::~ShadowGraphBuilder() = default;

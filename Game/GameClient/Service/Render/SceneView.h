@@ -1,5 +1,6 @@
 #pragma once
 #include "Handle/ResourceHandles.h"
+#include "Definition/View/ViewIdentity.h"
 #include "Definition/View/SceneViewData.h"
 #include "Definition/Text/TextStyle.h"
 #include "Core/Foundation/Geometry2D.h"

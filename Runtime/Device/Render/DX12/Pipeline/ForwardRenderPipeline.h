@@ -1,8 +1,9 @@
 #pragma once
-#include "Resource/ShadowResource.h"
 #include "Renderer/Renderers.h"
 #include "Graph/RenderGraph.h"
 #include "Graph/RGTypes.h"
+#include "Resource/Internal/ShadowResource.h"
+#include "Resource/Internal/ViewTargetResource.h"
 #include "Inspector/InspectorRenderers.h"
 //Graph Builders
 #include "GraphBuilder/ClearGraphBuilder.h"
@@ -47,6 +48,7 @@ private:
     DescriptorFactory& m_descFactory;
 
     ShadowResource m_shadowRes; //이 클래스는 framereseource 클래스중의 하나. 프레임당 render가 필요한 리소스들.
+    ViewTargetResource m_viewTargetRes;
     Renderers m_renderers;
     InspectorRenderers m_inspectorRenderers;
 

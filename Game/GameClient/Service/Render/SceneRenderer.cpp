@@ -26,18 +26,22 @@ SceneRenderer::SceneRenderer(
 
 SceneView& SceneRenderer::AcquireView(const ViewContext& context)
 {
-	SceneView* view;
-	if (m_activeViewCount < m_viewPool.size())
-		view = &m_viewPool[m_activeViewCount]; // 이미 만들어진 view 재사용
-	else
+	Assert(context.identity.IsValid());
+
+	SceneView*& slot = m_viewMap[context.identity]; // 없으면 nullptr로 기본 생성
+	if (!slot)
 	{
-		m_viewPool.emplace_back(m_repositories, m_uiQuad, m_defaultMaterial, m_defaultBrush); // 풀이 부족할 때만 새로 생성 (이후 프레임부턴 대부분 여기 안 옴)
-		view = &m_viewPool.back();
+		m_viewPool.emplace_back(
+			m_repositories, 
+			m_uiQuad, 
+			m_defaultMaterial,
+			m_defaultBrush);
+		slot = &m_viewPool.back();
 	}
 
-	view->Reset(context);
-	++m_activeViewCount;
-	return *view;
+	slot->Reset(context);
+	m_activeViews.push_back(slot);
+	return *slot;
 }
 
 void SceneRenderer::SetLight(const DirectionalLightData& light)
@@ -58,22 +62,20 @@ void SceneRenderer::DrawShadowCaster(MeshHandle hM, const Core::Matrix& world)
 void SceneRenderer::Flush()
 {
 	SceneFrameData frameData;
-
 	frameData.light = std::move(m_pendingLight);
 	frameData.shadowCasters = std::move(m_shadowCasters);
+	frameData.views.reserve(m_activeViews.size());
 
-	frameData.views.reserve(m_activeViewCount);
-	for (size_t i = 0; i < m_activeViewCount; ++i)
+	for (SceneView* view : m_activeViews)
 	{
-		auto& view = m_viewPool[i];
-		if (view.IsEmpty())
+		if (view->IsEmpty())
 			continue;
-		frameData.views.push_back(view.TakeData());
+		frameData.views.push_back(view->TakeData());
 	}
 
 	m_renderFrame->SubmitFrame(std::move(frameData));
 
 	m_pendingLight = {};
 	m_shadowCasters.clear();
-	m_activeViewCount = 0; // pool 원소들은 삭제 안 하고 그대로 둠. 다음 CreateView가 다시 재사용
+	m_activeViews.clear(); // 이번 프레임 기록만 비움.
 }

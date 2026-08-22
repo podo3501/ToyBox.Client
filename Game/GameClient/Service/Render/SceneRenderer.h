@@ -33,6 +33,8 @@ private:
 
 	DirectionalLightData m_pendingLight;
 	std::vector<DrawShadowCasterItem> m_shadowCasters;
-	std::deque<SceneView> m_viewPool;   // 한 번 만들어지면 삭제 안 함, 계속 재사용
-	size_t m_activeViewCount{ 0 };      // 이번 프레임에 CreateView로 사용된 개수
+
+	std::deque<SceneView> m_viewPool;                          // 한 번 만들어지면 삭제 안 함
+	std::unordered_map<ViewIdentity, SceneView*, ViewIdentityHash> m_viewMap;
+	std::vector<SceneView*> m_activeViews;                     // 이번 프레임에 사용된 view들
 };
