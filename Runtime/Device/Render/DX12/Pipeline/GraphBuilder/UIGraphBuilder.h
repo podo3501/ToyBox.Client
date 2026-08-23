@@ -1,10 +1,10 @@
 #pragma once
-#include "Graph/RGTypes.h"
 
 struct ViewPacket;
 class RenderGraph;
 class UIRenderer;
-class SwapChainPresenter;
+class DescriptorFactory;
+class ViewTargetResource;
 
 class UIGraphBuilder
 {
@@ -13,16 +13,15 @@ public:
     UIGraphBuilder() = delete;
     UIGraphBuilder(
         UIRenderer& uiRenderer, 
-        SwapChainPresenter& swapChain, 
-        RGResourceID backBufferResID);
+        DescriptorFactory& descFactory);
 
     void Build(
         RenderGraph& graph,
         std::shared_ptr<ViewPacket> packet,
-        size_t viewIndex);
+        size_t viewIndex,
+        const ViewTargetResource& target);
 
 private:
     UIRenderer& m_uiRenderer;
-    SwapChainPresenter& m_swapChain;
-    RGResourceID m_backBufferResID;
+    DescriptorFactory& m_descFactory;
 };

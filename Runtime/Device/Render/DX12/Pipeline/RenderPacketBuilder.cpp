@@ -57,7 +57,16 @@ static RenderTextItem ToRenderTextItem(DrawTextItem& text)
     return item;
 }
 
-std::shared_ptr<ViewPacket> BuildViewPacket(SceneViewData&& view, TextSystem& textSystem)
+static Rect ResolveViewport(const std::optional<Rect>& requestedViewport, const Size& screenSize)
+{
+    return requestedViewport.value_or(
+        Rect{ 0.f, 0.f, static_cast<float>(screenSize.width), static_cast<float>(screenSize.height) });
+}
+
+std::shared_ptr<ViewPacket> BuildViewPacket(
+    SceneViewData&& view,
+    TextSystem& textSystem,
+    const Size& screenSize)
 {
     auto packet = std::make_shared<ViewPacket>();
 
@@ -65,7 +74,7 @@ std::shared_ptr<ViewPacket> BuildViewPacket(SceneViewData&& view, TextSystem& te
     packet->id = view.context.identity.Value();
     packet->camera = view.context.camera;
     packet->uiCamera = view.context.uiCamera;
-    packet->viewport = view.context.viewport;
+    packet->viewport = ResolveViewport(view.context.viewport, screenSize);
 
     auto rasterOverride = view.context.renderOverride.rasterPreset;
 

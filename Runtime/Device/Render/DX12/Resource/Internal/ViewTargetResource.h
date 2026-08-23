@@ -1,38 +1,37 @@
 #pragma once
-#include "../Resource.h"
+#include "GameClient/Service/Render/Resource/IResource.h"
+#include "Resource/Resource.h"
 #include "Graph/RGTypes.h"
 #include "Core/Foundation/Geometry2D.h"
-#include <unordered_set>
 
 class Device;
 class DescriptorFactory;
 
-struct ViewTarget
-{
-    Resource color;
-    Resource depth;
-    RGResourceID colorID;
-    RGResourceID depthID;
-    UINT heapIndex{ UINT_MAX };
-    Size size;
-};
-
-class ViewTargetResource
+class ViewTargetResource : public IResource
 {
 public:
-    ~ViewTargetResource();
-    ViewTargetResource() = delete;
-    ViewTargetResource(Device& device, DescriptorFactory& descFactory);
+    virtual ~ViewTargetResource() override;
+    ViewTargetResource();
+    virtual bool IsReady() const noexcept override { return m_ready; }
+    bool Initialize(Device& device, DescriptorFactory& descFactory, const Size& size);
 
-    ViewTarget& Acquire(uint32_t id, const Size& requiredSize); // 뷰 슬롯 기준으로 캐싱된 타겟을 반환, 없거나 크기가 다르면 새로 생성
-    void PruneUnused(const std::unordered_set<uint32_t>& activeViews);
+    RGResourceID GetColorID() const noexcept { return m_colorID; }
+    RGResourceID GetDepthID() const noexcept { return m_depthID; }
+    UINT GetColorRTVIndex() const noexcept { return m_colorRTVIndex; }
+    UINT GetDepthDSVIndex() const noexcept { return m_depthDSVIndex; }
+    UINT GetHeapIndex() const noexcept { return m_heapIndex; }
+    const Size& GetSize() const noexcept { return m_size; }
 
 private:
-    Resource CreateColorTarget(const Size& size);
-    Resource CreateDepthTarget(const Size& size);
+    DescriptorFactory* m_descFactory{ nullptr };
+    bool m_ready{ false };
 
-    Device& m_device;
-    DescriptorFactory& m_descFactory;
-
-    std::unordered_map<uint32_t, ViewTarget> m_targets;
+    Resource m_color;
+    Resource m_depth;
+    RGResourceID m_colorID;
+    RGResourceID m_depthID;
+    UINT m_colorRTVIndex{ UINT_MAX };
+    UINT m_depthDSVIndex{ UINT_MAX };
+    UINT m_heapIndex{ UINT_MAX }; //bindless
+    Size m_size;
 };

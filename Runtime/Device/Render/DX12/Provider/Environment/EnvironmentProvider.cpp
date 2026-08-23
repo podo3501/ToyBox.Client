@@ -1,13 +1,19 @@
 #include "pch.h"
 #include "EnvironmentProvider.h"
-#include "Resource/Environment/EnvironmentResource.h"
+#include "../PendingLoadQueue.h"
+#include "../PendingReleaseQueue.h"
 #include "../Texture/TextureCubeProvider.h"
+#include "Resource/Environment/EnvironmentResource.h"
 #include "GameClient/Asset/EnvironmentAsset.h"
 #include "Core/Foundation/Cast.hpp"
 
 EnvironmentProvider::~EnvironmentProvider() = default;
-EnvironmentProvider::EnvironmentProvider(TaskScheduler& taskScheduler, TextureCubeProvider& cubeProvider) noexcept :
-    m_pendingRelease{ taskScheduler },
+EnvironmentProvider::EnvironmentProvider(
+    PendingLoadQueue& pendingLoad,
+    PendingReleaseQueue& pendingRelease, 
+    TextureCubeProvider& cubeProvider) noexcept :
+    m_pendingLoad{ pendingLoad },
+    m_pendingRelease{ pendingRelease },
     m_cubeProvider{ cubeProvider }
 {}
 
@@ -54,10 +60,4 @@ std::shared_ptr<TextureCubeResource> EnvironmentProvider::CreateCubeResource(
 void EnvironmentProvider::ReleaseResource(std::shared_ptr<IResource> res)
 {
     m_pendingRelease.Add(std::move(res));
-}
-
-void EnvironmentProvider::Update(float)
-{
-    m_pendingLoad.Flush();
-    m_pendingRelease.Flush();
 }

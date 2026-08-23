@@ -6,36 +6,7 @@
 #include "Factory/DescriptorFactory.h"
 #include "Helpers/TextureHelpers.h"
 
-ViewTargetResource::~ViewTargetResource() = default;
-ViewTargetResource::ViewTargetResource(Device& device, DescriptorFactory& descFactory) :
-	m_device{ device },
-	m_descFactory{ descFactory } 
-{}
-
-ViewTarget& ViewTargetResource::Acquire(uint32_t id, const Size& requiredSize)
-{
-    auto it = m_targets.find(id);
-    if (it != m_targets.end() && it->second.size == requiredSize)
-        return it->second;
-
-    ViewTarget target;
-    target.color = CreateColorTarget(requiredSize);
-    target.depth = CreateDepthTarget(requiredSize);
-    target.colorID = RenderGraph::CreateRGResourceID();
-    target.depthID = RenderGraph::CreateRGResourceID();
-    target.heapIndex = m_descFactory.CreateTextureSRV(target.color, RenderFormat::BackBufferFormat);
-    target.size = requiredSize;
-
-    auto [inserted, _] = m_targets.insert_or_assign(id, std::move(target));
-    return inserted->second;
-}
-
-void ViewTargetResource::PruneUnused(const std::unordered_set<uint32_t>& activeViews)
-{
-    std::erase_if(m_targets, [&](auto& kv) { return !activeViews.contains(kv.first); });
-}
-
-Resource ViewTargetResource::CreateColorTarget(const Size& size)
+static Resource CreateColorTarget(Device& device, const Size& size)
 {
     auto desc = CreateTextureDescriptor(size.width, size.height, RenderFormat::BackBufferFormat);
     desc.Flags |= D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;
@@ -44,14 +15,14 @@ Resource ViewTargetResource::CreateColorTarget(const Size& size)
     clearValue.Format = RenderFormat::BackBufferFormat;
     clearValue.Color[0] = clearValue.Color[1] = clearValue.Color[2] = clearValue.Color[3] = 0.0f; // PMA 컨벤션: 완전 투명 = RGBA 모두 0
 
-    return m_device.CreateResource(
+    return device.CreateResource(
         desc,
         D3D12_HEAP_TYPE_DEFAULT,
         D3D12_RESOURCE_STATE_RENDER_TARGET,
         &clearValue);
 }
 
-Resource ViewTargetResource::CreateDepthTarget(const Size& size)
+static Resource CreateDepthTarget(Device& device, const Size& size)
 {
     auto desc = CreateTextureDescriptor(size.width, size.height, DXGI_FORMAT_R32_TYPELESS);
     desc.Flags |= D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
@@ -61,9 +32,43 @@ Resource ViewTargetResource::CreateDepthTarget(const Size& size)
     clearValue.DepthStencil.Depth = 1.0f;
     clearValue.DepthStencil.Stencil = 0;
 
-    return m_device.CreateResource(
+    return device.CreateResource(
         desc,
         D3D12_HEAP_TYPE_DEFAULT,
         D3D12_RESOURCE_STATE_DEPTH_WRITE,
         &clearValue);
+}
+
+ViewTargetResource::~ViewTargetResource()
+{
+    if (m_descFactory) // pending 한 다음에 소멸자가 불려야 한다.
+    {
+        m_descFactory->FreeRTV(m_colorRTVIndex);
+        m_descFactory->FreeDSV(m_depthDSVIndex);
+    }
+}
+ViewTargetResource::ViewTargetResource() = default;
+
+bool ViewTargetResource::Initialize(Device& device, DescriptorFactory& descFactory, const Size& size)
+{
+    m_descFactory = &descFactory;
+    m_size = size;
+
+    m_color = CreateColorTarget(device, size);
+    m_depth = CreateDepthTarget(device, size);
+    if (!m_color || !m_depth) return false;
+
+    m_colorID = RenderGraph::CreateRGResourceID();
+    m_depthID = RenderGraph::CreateRGResourceID();
+
+    m_colorRTVIndex = descFactory.CreateTextureRTV(m_color, RenderFormat::BackBufferFormat);
+    m_depthDSVIndex = descFactory.CreateTextureDSV(m_depth, DXGI_FORMAT_D32_FLOAT);
+    m_heapIndex = descFactory.CreateTextureSRV(m_color, RenderFormat::BackBufferFormat);
+
+    bool result = m_colorRTVIndex != UINT_MAX && m_depthDSVIndex != UINT_MAX && m_heapIndex != UINT_MAX;
+   
+    if (result)
+        m_ready = true;
+
+    return result;
 }

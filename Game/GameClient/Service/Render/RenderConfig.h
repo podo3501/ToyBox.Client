@@ -17,6 +17,7 @@ struct BindlessDescriptorConfig
 struct DescriptorConfig
 {
 	BindlessDescriptorConfig bindless;	
+	uint32_t rtvCount{ 64 }; //할당 했다가 해제도 되기 때문에 64면 충분.
 	uint32_t dsvCount{ 64 }; //이걸 사용하는 것들은 대부분 내부 Frame Resource이기 때문에 64면 충분함.
 };
 

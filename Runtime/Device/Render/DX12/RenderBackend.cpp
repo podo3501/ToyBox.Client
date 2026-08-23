@@ -12,7 +12,7 @@ RenderBackend::RenderBackend(const RenderConfig& config) :
     m_resProviderSet{ m_device, m_taskScheduler, m_resFactory, m_descFactory },
     m_transientMeshProvider{ m_frameUploadPools, m_descFactory },
     m_textSystem{ m_device, m_descFactory, m_resFactory, m_transientMeshProvider },
-    m_pipeline{ m_device, m_swapChain, m_descFactory, m_shaderLibrary, m_textSystem.GetBuilder() },
+    m_pipeline{ m_device, m_swapChain, m_taskScheduler, m_descFactory, m_shaderLibrary, m_textSystem.GetBuilder() },
     m_renderFrame{ m_textSystem, m_inspector }
 {}
 
@@ -53,6 +53,7 @@ void RenderBackend::Update()
     float gpuMs = m_profiler.GetGpuFrameTimeMs();
 
     m_resProviderSet.Update(gpuMs);
+    m_pipeline.Update();
 }
 
 void RenderBackend::Render()
@@ -64,7 +65,7 @@ void RenderBackend::Render()
     if (cmd)
     {
         m_profiler.BeginFrame(*cmd, m_frameIndex);
-        m_pipeline.Render(*cmd, m_renderFrame.PrepareRenderData());
+        m_pipeline.Render(*cmd, m_renderFrame.PrepareRenderData(m_swapChain.GetSize()));
         m_profiler.EndFrame(*cmd);
 
         m_cmdScheduler.End();

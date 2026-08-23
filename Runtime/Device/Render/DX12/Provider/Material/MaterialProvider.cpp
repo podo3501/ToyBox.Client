@@ -1,15 +1,21 @@
 #include "pch.h"
 #include "MaterialProvider.h"
+#include "../PendingLoadQueue.h"
+#include "../PendingReleaseQueue.h"
+#include "../Texture/TextureProvider.h"
 #include "GameClient/Asset/PbrMaterialAsset.h"
 #include "GameClient/Asset/PhongMaterialAsset.h"
 #include "Resource/Material/PbrMaterialResource.h"
 #include "Resource/Material/PhongMaterialResource.h"
 #include "Core/Foundation/Cast.hpp"
-#include "../Texture/TextureProvider.h"
 
 MaterialProvider::~MaterialProvider() = default;
-MaterialProvider::MaterialProvider(TaskScheduler& taskScheduler, TextureProvider& texProvider) noexcept :
-    m_pendingRelease{ taskScheduler },
+MaterialProvider::MaterialProvider(
+    PendingLoadQueue& pendingLoad,
+    PendingReleaseQueue& pendingRelease, 
+    TextureProvider& texProvider) noexcept :
+    m_pendingLoad{ pendingLoad },
+    m_pendingRelease{ pendingRelease },
     m_texProvider{ texProvider }
 {}
 
@@ -109,10 +115,4 @@ std::shared_ptr<TextureResource> MaterialProvider::CreateTexResourceOrFallback(
 void MaterialProvider::ReleaseResource(std::shared_ptr<IResource> res)
 {
     m_pendingRelease.Add(std::move(res));
-}
-
-void MaterialProvider::Update(float)
-{
-    m_pendingLoad.Flush();
-    m_pendingRelease.Flush();
 }

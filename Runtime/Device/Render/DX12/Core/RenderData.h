@@ -74,7 +74,7 @@ struct ViewPacket
     uint32_t id;
     CameraData camera;
     CameraData uiCamera;
-    std::optional<Rect> viewport;
+    Rect viewport;
 
     std::vector<RenderSurfaceItem> surface;
     std::vector<RenderDebugSurfaceItem> debugSurface;

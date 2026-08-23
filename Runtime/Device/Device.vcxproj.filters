@@ -646,6 +646,9 @@
     <ClInclude Include="Render\DX12\Pipeline\GraphBuilder\ViewTargetClearGraphBuilder.h">
       <Filter>Render\DX12\Pipeline\GraphBuilder</Filter>
     </ClInclude>
+    <ClInclude Include="Render\DX12\Pipeline\ViewTargetPool.h">
+      <Filter>Render\DX12\Pipeline</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -1062,6 +1065,9 @@
     </ClCompile>
     <ClCompile Include="Render\DX12\Pipeline\GraphBuilder\ViewTargetClearGraphBuilder.cpp">
       <Filter>Render\DX12\Pipeline\GraphBuilder</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Pipeline\ViewTargetPool.cpp">
+      <Filter>Render\DX12\Pipeline</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -1,14 +1,17 @@
 #pragma once
-#include "Graph/RGTypes.h"
 
 class RenderGraph;
+class DescriptorFactory;
+class ViewTargetResource;
 
 class ViewTargetClearGraphBuilder
 {
 public:
-    void Build(
-        RenderGraph& graph, 
-        RGResourceID colorID, 
-        RGResourceID depthID, 
-        size_t viewIndex);
+    ~ViewTargetClearGraphBuilder();
+    ViewTargetClearGraphBuilder(DescriptorFactory& descFactory) noexcept;
+
+    void Build(RenderGraph& graph, const ViewTargetResource& target);
+
+private:
+    DescriptorFactory& m_descFactory;
 };

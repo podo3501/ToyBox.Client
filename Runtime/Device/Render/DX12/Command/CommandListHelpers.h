@@ -111,6 +111,14 @@ namespace CommandUtils
     }
 
     template<CommandListLike T>
+    inline void SetRenderTarget(
+        T& cmd, 
+        D3D12_CPU_DESCRIPTOR_HANDLE rtv) noexcept
+    {
+        cmd.Get()->OMSetRenderTargets(1, &rtv, FALSE, nullptr);
+    }
+
+    template<CommandListLike T>
     inline void SetDepthTarget(
         T& cmd,
         D3D12_CPU_DESCRIPTOR_HANDLE dsv) noexcept

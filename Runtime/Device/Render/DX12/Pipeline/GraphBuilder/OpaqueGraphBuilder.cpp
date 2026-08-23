@@ -1,24 +1,24 @@
 #include "pch.h"
 #include "OpaqueGraphBuilder.h"
-#include "SwapChainPresenter.h"
 #include "Graph/RenderGraph.h"
+#include "Command/CommandList.h"
+#include "Command/CommandListHelpers.h"
+#include "Factory/DescriptorFactory.h"
 #include "../Renderer/SurfaceRenderer.h"
 #include "Resource/Mesh/MeshResource.h"
 #include "Resource/Material/MaterialResource.h"
-#include "Resource/Environment/EnvironmentResource.h"
 #include "Resource/Internal/ShadowResource.h"
+#include "Resource/Internal/ViewTargetResource.h"
 
 OpaqueGraphBuilder::~OpaqueGraphBuilder() = default;
 OpaqueGraphBuilder::OpaqueGraphBuilder(
     SurfaceRenderer& surfRenderer, 
-    SwapChainPresenter& swapChain,
+    DescriptorFactory& descFactory,
     ShadowResource& shadowRes,
-    RGResourceID backBufferResID, 
     RGResourceID shadowResID) :
     m_surfRenderer{ surfRenderer },
-    m_swapChain{ swapChain },
+    m_descFactory{ descFactory },
     m_shadowRes{ shadowRes },
-    m_backBufferResID { backBufferResID },
     m_shadowResID{ shadowResID }
 {}
 
@@ -26,23 +26,35 @@ void OpaqueGraphBuilder::Build(
     RenderGraph& graph,
     const DirectionalLightData& light,
     std::shared_ptr<ViewPacket> packet,
-    size_t viewIndex)
+    size_t viewIndex,
+    const ViewTargetResource& target)
 {
     auto& opaque = graph.AddGraphicsPass("Opaque_View" + std::to_string(viewIndex));
     opaque.Read(m_shadowResID, RGAccess::SRV);
-    opaque.Write(m_backBufferResID, RGAccess::RTV);
+    opaque.Write(target.GetColorID(), RGAccess::RTV);
+    opaque.Write(target.GetDepthID(), RGAccess::DepthWrite);
     opaque.gpuExecute =
         [
-            &swapChain = m_swapChain,
+            &descFactory = m_descFactory,
             &surfRenderer = m_surfRenderer,
             &shadowRes = m_shadowRes,
             light,
-            packet
+            packet,
+            colorRTVIndex = target.GetColorRTVIndex(),
+            depthDSVIndex = target.GetDepthDSVIndex()
         ]
         (CommandList& cmd, TaskContext& ctx)
         {
-            swapChain.SetRenderTarget(cmd);
-            swapChain.SetViewport(cmd, packet->viewport);
+            auto rtv = descFactory.GetRTVHandle(colorRTVIndex);
+            auto dsv = descFactory.GetDSVHandle(depthDSVIndex);
+
+            CommandUtils::SetRenderTarget(cmd, rtv, dsv);
+            CommandUtils::SetViewport(
+                cmd,
+                packet->viewport.x,
+                packet->viewport.y,
+                packet->viewport.width,
+                packet->viewport.height);
 
             surfRenderer.PrepareFrame(
                 light,

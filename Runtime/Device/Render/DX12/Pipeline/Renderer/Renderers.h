@@ -5,6 +5,7 @@
 #include "SurfaceRenderer.h"
 #include "DebugSurfaceRenderer.h"
 #include "UIRenderer.h"
+#include "CompositeRenderer.h"
 #include "RendererConfig.h"
 #include <d3d12.h>
 
@@ -24,6 +25,7 @@ public:
     DebugSurfaceRenderer& GetDebugSurfRenderer() { return m_debugSurfRenderer; }
     UIRenderer& GetUIRenderer() { return m_uiRenderer; }
     SkyboxRenderer& GetSkyboxRenderer() { return m_skyboxRenderer; }
+    CompositeRenderer& GetCompositeRenderer() { return m_compositeRenderer; }
 
 private:
     Device& m_device;
@@ -35,4 +37,5 @@ private:
     DebugSurfaceRenderer m_debugSurfRenderer;
     UIRenderer m_uiRenderer;
     SkyboxRenderer m_skyboxRenderer;
+    CompositeRenderer m_compositeRenderer;
 };

@@ -1,23 +1,25 @@
 #pragma once
 #include "GameClient/Service/Render/Repository/IResourceProvider.h"
 #include "../IUpdatableProvider.h"
-#include "../PendingLoadQueue.h"
-#include "../PendingReleaseQueue.h"
 
 class TextureProvider;
+class PendingLoadQueue;
+class PendingReleaseQueue;
 
-class BrushProvider : public IResourceProvider, public IUpdatableProvider
+class BrushProvider : public IResourceProvider
 {
 public:
     ~BrushProvider();
     BrushProvider() = delete;
-    BrushProvider(TaskScheduler& taskScheduler, TextureProvider& texProvider) noexcept;
+    BrushProvider(
+        PendingLoadQueue& pendingLoad,
+        PendingReleaseQueue& pendingRelease, 
+        TextureProvider& texProvider) noexcept;
     virtual std::shared_ptr<IResource> CreateResource(std::shared_ptr<AssetData> asset) override;
     virtual void ReleaseResource(std::shared_ptr<IResource> res) override;
-    virtual void Update(float) override;
 
 private:
-    PendingLoadQueue m_pendingLoad;
-    PendingReleaseQueue m_pendingRelease;
+    PendingLoadQueue& m_pendingLoad;
+    PendingReleaseQueue& m_pendingRelease;
     TextureProvider& m_texProvider;
 };

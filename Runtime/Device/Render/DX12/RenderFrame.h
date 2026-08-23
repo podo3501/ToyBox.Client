@@ -13,7 +13,7 @@ public:
 
 	virtual void SubmitFrame(SceneFrameData frame) noexcept override;
 
-	FramePacket PrepareRenderData();
+	FramePacket PrepareRenderData(const Size& screenSize);
 
 private:
 	TextSystem& m_textSystem;

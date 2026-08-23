@@ -1,23 +1,26 @@
 #pragma once
 #include "GameClient/Service/Render/Repository/IResourceProvider.h"
 #include "../IUpdatableProvider.h"
-#include "../PendingLoadQueue.h"
-#include "../PendingReleaseQueue.h"
 
 struct PbrSurface;
 struct PhongSurface;
 struct TextureAsset;
+class PendingLoadQueue;
+class PendingReleaseQueue;
 class TextureProvider;
+class TextureResource;
 enum class BuiltinTextureType;
 
-class MaterialProvider : public IResourceProvider, public IUpdatableProvider
+class MaterialProvider : public IResourceProvider
 {
 public:
 	~MaterialProvider();
-	MaterialProvider(TaskScheduler& taskScheduler, TextureProvider& texProvider) noexcept;
+	MaterialProvider(
+		PendingLoadQueue& pendingLoad,
+		PendingReleaseQueue& pendingRelease, 
+		TextureProvider& texProvider) noexcept;
 	virtual std::shared_ptr<IResource> CreateResource(std::shared_ptr<AssetData> asset) override;
 	virtual void ReleaseResource(std::shared_ptr<IResource> res) override;
-	virtual void Update(float);
 
 private:
 	shared_ptr<IResource> BuildPbrResource(
@@ -36,7 +39,7 @@ private:
 		std::shared_ptr<TextureAsset> texAsset,
 		BuiltinTextureType fallbackType);
 
-	PendingLoadQueue m_pendingLoad;
-	PendingReleaseQueue m_pendingRelease;
+	PendingLoadQueue& m_pendingLoad;
+	PendingReleaseQueue& m_pendingRelease;
 	TextureProvider& m_texProvider;
 };

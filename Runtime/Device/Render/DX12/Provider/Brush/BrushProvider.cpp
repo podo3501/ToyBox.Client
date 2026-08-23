@@ -1,12 +1,18 @@
 #include "pch.h"
 #include "BrushProvider.h"
-#include "Resource/Brush/BrushResource.h"
+#include "../PendingLoadQueue.h"
+#include "../PendingReleaseQueue.h"
 #include "../Texture/TextureProvider.h"
+#include "Resource/Brush/BrushResource.h"
 #include "Core/Foundation/Cast.hpp"
 
 BrushProvider::~BrushProvider() = default;
-BrushProvider::BrushProvider(TaskScheduler& taskScheduler, TextureProvider& texProvider) noexcept :
-    m_pendingRelease{ taskScheduler },
+BrushProvider::BrushProvider(
+    PendingLoadQueue& pendingLoad,
+    PendingReleaseQueue& pendingRelease, 
+    TextureProvider& texProvider) noexcept :
+    m_pendingLoad{ pendingLoad },
+    m_pendingRelease{ pendingRelease },
     m_texProvider{ texProvider }
 {}
 
@@ -40,10 +46,4 @@ std::shared_ptr<IResource> BrushProvider::CreateResource(std::shared_ptr<AssetDa
 void BrushProvider::ReleaseResource(std::shared_ptr<IResource> res)
 {
     m_pendingRelease.Add(std::move(res));
-}
-
-void BrushProvider::Update(float)
-{
-    m_pendingLoad.Flush();
-    m_pendingRelease.Flush();
 }

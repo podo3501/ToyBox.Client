@@ -1,5 +1,7 @@
 #pragma once
 #include "GameClient/Service/Render/ProviderType.h"
+#include "Provider/PendingLoadQueue.h"
+#include "Provider/PendingReleaseQueue.h"
 #include "Provider/Font/FontProvider.h"
 #include "Provider/Mesh/MeshProvider.h"
 #include "Provider/Texture/TextureProvider.h"
@@ -38,6 +40,8 @@ public:
 private:
 	Device& m_device;
 
+	PendingLoadQueue m_pendingLoad;
+	PendingReleaseQueue m_pendingRelease;
 	FontProvider m_fontProvider;
 	MeshProvider m_meshProvider;
 	TextureProvider m_texProvider;

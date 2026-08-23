@@ -9,7 +9,8 @@ Renderers::Renderers(Device& device, ShaderLibrary& shaderLibrary) :
     m_surfRenderer{ m_config.surface, m_pipelineCache },
     m_debugSurfRenderer{ m_config.debug, m_pipelineCache },
     m_uiRenderer{ m_config.ui, m_pipelineCache },
-    m_skyboxRenderer{ m_config.skybox, m_pipelineCache }
+    m_skyboxRenderer{ m_config.skybox, m_pipelineCache },
+    m_compositeRenderer{ m_pipelineCache }
 {}
 
 bool Renderers::Initialize()
@@ -19,6 +20,7 @@ bool Renderers::Initialize()
     ReturnIfFalse(m_debugSurfRenderer.Initialize(m_device));
     ReturnIfFalse(m_uiRenderer.Initialize(m_device));
     ReturnIfFalse(m_skyboxRenderer.Initialize(m_device));
+    ReturnIfFalse(m_compositeRenderer.Initialize(m_device));
 
     return true;
 }

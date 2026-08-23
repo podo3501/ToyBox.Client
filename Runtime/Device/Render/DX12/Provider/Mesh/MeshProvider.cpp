@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "MeshProvider.h"
+#include "../PendingReleaseQueue.h"
 #include "../ProviderBudget.h"
 #include "Resource/Mesh/StaticMeshResource.h"
 #include "Core/Foundation/Align.h"
@@ -7,8 +8,8 @@
 #include "RenderConstants.h"
 
 MeshProvider::~MeshProvider() = default;
-MeshProvider::MeshProvider(TaskScheduler& taskScheduler, MeshCreateGraphBuilder create) noexcept :
-    m_pendingRelease{ taskScheduler },
+MeshProvider::MeshProvider(PendingReleaseQueue& pendingRelease, MeshCreateGraphBuilder create) noexcept :
+    m_pendingRelease{ pendingRelease },
     m_createBuilder{ std::move(create) }
 {}
 
@@ -46,9 +47,6 @@ std::shared_ptr<IResource> MeshProvider::CreateResource(std::shared_ptr<AssetDat
 
 void MeshProvider::ReleaseResource(std::shared_ptr<IResource> res)
 {
-    if (!res)
-        return;
-
     m_pendingRelease.Add(std::move(res));
 }
 
@@ -58,6 +56,4 @@ void MeshProvider::Update(float avgGpuMs)
     m_pendingLoads.Flush(uploadBudgetBytes, [this](std::vector<MeshLoadRequest>& batch) {
         m_createBuilder.LoadMeshes(batch);
         });
-
-    m_pendingRelease.Flush();
 }

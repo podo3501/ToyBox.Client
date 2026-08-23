@@ -1,33 +1,38 @@
 #include "pch.h"
 #include "SkyboxGraphBuilder.h"
-#include "SwapChainPresenter.h"
 #include "Graph/RenderGraph.h"
+#include "Command/CommandList.h"
+#include "Command/CommandListHelpers.h"
+#include "Factory/DescriptorFactory.h"
 #include "Resource/Environment/EnvironmentResource.h"
+#include "Resource/Internal/ViewTargetResource.h"
 #include "../Renderer/SkyboxRenderer.h"
 
 SkyboxGraphBuilder::~SkyboxGraphBuilder() = default;
 SkyboxGraphBuilder::SkyboxGraphBuilder(
     SkyboxRenderer& skyboxRenderer,
-    SwapChainPresenter& swapChain,
-    RGResourceID backBufferResID) :
+    DescriptorFactory& descFactory) :
     m_skyboxRenderer{ skyboxRenderer },
-    m_swapChain{ swapChain },
-    m_backBufferResID{ backBufferResID }
+    m_descFactory{ descFactory }
 {}
 
 void SkyboxGraphBuilder::Build(
     RenderGraph& graph, 
     std::shared_ptr<ViewPacket> packet, 
-    size_t viewIndex)
+    size_t viewIndex,
+    const ViewTargetResource& target)
 {
     auto& skybox = graph.AddGraphicsPass("Skybox_View" + std::to_string(viewIndex));
-    skybox.Write(m_backBufferResID, RGAccess::RTV);
+    skybox.Write(target.GetColorID(), RGAccess::RTV);
+    skybox.Write(target.GetDepthID(), RGAccess::DepthWrite);
 
     skybox.gpuExecute =
         [
-            &swapChain = m_swapChain,
+            &descFactory = m_descFactory,
             &skyboxRenderer = m_skyboxRenderer,
-            packet
+            packet,
+            colorRTVIndex = target.GetColorRTVIndex(),
+            depthDSVIndex = target.GetDepthDSVIndex()
         ]
         (CommandList& cmd, TaskContext& ctx)
         {
@@ -35,8 +40,16 @@ void SkyboxGraphBuilder::Build(
             if (!envRes || !envRes->IsReady())
                 return; // 환경 없는 씬 - 스카이박스 안 그림
 
-            swapChain.SetRenderTarget(cmd);
-            swapChain.SetViewport(cmd, packet->viewport);
+            auto rtv = descFactory.GetRTVHandle(colorRTVIndex);
+            auto dsv = descFactory.GetDSVHandle(depthDSVIndex);
+
+            CommandUtils::SetRenderTarget(cmd, rtv, dsv);
+            CommandUtils::SetViewport(
+                cmd, 
+                packet->viewport.x, 
+                packet->viewport.y, 
+                packet->viewport.width,
+                packet->viewport.height);
 
             skyboxRenderer.Draw(cmd, packet->camera, *envRes->GetSkybox());
         };

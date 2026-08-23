@@ -8,26 +8,30 @@ ResourceProviderSet::ResourceProviderSet(
     ResourceFactory& resFactory,
     DescriptorFactory& descFactory) :
     m_device{ device },
+    m_pendingRelease{ taskScheduler },
     m_meshProvider{ 
-        taskScheduler,
+        m_pendingRelease,
         MeshCreateGraphBuilder{ taskScheduler, resFactory, descFactory }
         },
     m_texProvider{
         TextureCreateGraphBuilder{ m_device, taskScheduler, resFactory, descFactory }
         },
     m_matProvider{ 
-        taskScheduler,
+        m_pendingLoad,
+        m_pendingRelease,
         m_texProvider 
         },
     m_brushProvider{
-        taskScheduler,
+        m_pendingLoad,
+        m_pendingRelease,
         m_texProvider
     },
     m_cubeProvider{
         TextureCubeCreateGraphBuilder{ taskScheduler, resFactory, descFactory }
         },
     m_envProvider{
-        taskScheduler,
+        m_pendingLoad,
+        m_pendingRelease,
         m_cubeProvider
         }
 {
@@ -42,10 +46,7 @@ ResourceProviderSet::ResourceProviderSet(
     {
         &m_meshProvider,
         &m_texProvider,
-        &m_matProvider,
-        &m_brushProvider,
-        &m_cubeProvider,
-        &m_envProvider,
+        &m_cubeProvider
     };
 }
 
@@ -65,5 +66,8 @@ void ResourceProviderSet::Update(float gpuMs)
 
     for (IUpdatableProvider* provider : m_updatables)
         provider->Update(m_avgGpuMs);
+
+    m_pendingLoad.Flush();
+    m_pendingRelease.Flush();
 }
 

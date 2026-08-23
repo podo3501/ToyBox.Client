@@ -1,38 +1,51 @@
 #include "pch.h"
 #include "DebugSurfaceGraphBuilder.h"
-#include "SwapChainPresenter.h"
 #include "Graph/RenderGraph.h"
+#include "Command/CommandList.h"
+#include "Command/CommandListHelpers.h"
+#include "Factory/DescriptorFactory.h"
 #include "../Renderer/DebugSurfaceRenderer.h"
 #include "Resource/Mesh/MeshResource.h"
 #include "Resource/Material/DebugMaterialResource.h"
+#include "Resource/Internal/ViewTargetResource.h"
 
 DebugSurfaceGraphBuilder::~DebugSurfaceGraphBuilder() = default;
 DebugSurfaceGraphBuilder::DebugSurfaceGraphBuilder(
     DebugSurfaceRenderer& debugSurfRenderer, 
-    SwapChainPresenter& swapChain,
-    RGResourceID backBufferResID) :
+    DescriptorFactory& descFactory) :
     m_debugSurfRenderer{ debugSurfRenderer },
-    m_swapChain{ swapChain },
-    m_backBufferResID{ backBufferResID }
+    m_descFactory{ descFactory }
 {}
 
 void DebugSurfaceGraphBuilder::Build(
     RenderGraph& graph,
     std::shared_ptr<ViewPacket> packet,
-    size_t viewIndex)
+    size_t viewIndex,
+    const ViewTargetResource& target)
 {
     auto& grid = graph.AddGraphicsPass("DebugSurface_View" + std::to_string(viewIndex));
-    grid.Write(m_backBufferResID, RGAccess::RTV);
+    grid.Write(target.GetColorID(), RGAccess::RTV);
+    grid.Read(target.GetDepthID(), RGAccess::DepthRead);
     grid.gpuExecute =
         [
-            &swapChain = m_swapChain,
+            &descFactory = m_descFactory,
             &debugSurfRenderer = m_debugSurfRenderer,
-            packet
+            packet,
+            colorRTVIndex = target.GetColorRTVIndex(),
+            depthDSVIndex = target.GetDepthDSVIndex()
         ]
         (CommandList& cmd, TaskContext& ctx)
         {
-            swapChain.SetRenderTarget(cmd);
-            swapChain.SetViewport(cmd, packet->viewport);
+            auto rtv = descFactory.GetRTVHandle(colorRTVIndex);
+            auto dsv = descFactory.GetDSVHandle(depthDSVIndex);
+
+            CommandUtils::SetRenderTarget(cmd, rtv, dsv);
+            CommandUtils::SetViewport(
+                cmd,
+                packet->viewport.x,
+                packet->viewport.y,
+                packet->viewport.width,
+                packet->viewport.height);
 
             debugSurfRenderer.PrepareFrame(packet->camera);
             debugSurfRenderer.BeginFrame(cmd);

@@ -14,6 +14,7 @@ DescriptorFactory::DescriptorFactory(Device& device) :
 bool DescriptorFactory::Initialize(const DescriptorConfig& config)
 {
     ReturnIfFalse(m_bindlessAllocator.Initialize(m_device, config.bindless));
+    ReturnIfFalse(m_rtvAllocator.Initialize(m_device, D3D12_DESCRIPTOR_HEAP_TYPE_RTV, config.rtvCount));
     ReturnIfFalse(m_dsvAllocator.Initialize(m_device, D3D12_DESCRIPTOR_HEAP_TYPE_DSV, config.dsvCount));
 
     return true;
@@ -57,6 +58,23 @@ UINT DescriptorFactory::CreateTextureSRV(const Resource& res, DXGI_FORMAT format
 
     m_device->CreateShaderResourceView(res.Get(), &srvDesc, GetBindlessCpuHandle(Index));
     return Index;
+}
+
+UINT DescriptorFactory::CreateTextureRTV(const Resource& res, DXGI_FORMAT format, UINT mipSlice)
+{
+    if (!res) return UINT_MAX;
+
+    D3D12_RENDER_TARGET_VIEW_DESC rtvDesc{};
+    rtvDesc.Format = format;
+    rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
+    rtvDesc.Texture2D.MipSlice = mipSlice;
+    rtvDesc.Texture2D.PlaneSlice = 0;
+
+    UINT index = m_rtvAllocator.Allocate();
+    if (index == UINT_MAX) return UINT_MAX;
+
+    m_device->CreateRenderTargetView(res.Get(), &rtvDesc, GetRTVHandle(index));
+    return index;
 }
 
 UINT DescriptorFactory::CreateTextureDSV(const Resource& res, DXGI_FORMAT format, UINT mipSlice)
@@ -201,6 +219,21 @@ UINT DescriptorFactory::CreateMipUAV(const Resource& res, DXGI_FORMAT format, UI
 
     m_device->CreateUnorderedAccessView(res.Get(), nullptr, &uavDesc, GetBindlessCpuHandle(index));
     return index;
+}
+
+void DescriptorFactory::FreeRTV(UINT rtvIndex)
+{
+    m_rtvAllocator.Free(rtvIndex);
+}
+
+void DescriptorFactory::FreeDSV(UINT dsvIndex)
+{
+    m_dsvAllocator.Free(dsvIndex);
+}
+
+D3D12_CPU_DESCRIPTOR_HANDLE DescriptorFactory::GetRTVHandle(UINT rtvIndex)
+{
+    return m_rtvAllocator.GetCpuHandle(rtvIndex);
 }
 
 D3D12_CPU_DESCRIPTOR_HANDLE DescriptorFactory::GetDSVHandle(UINT dsvIndex)

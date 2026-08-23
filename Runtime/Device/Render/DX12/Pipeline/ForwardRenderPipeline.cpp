@@ -5,11 +5,13 @@
 #include "SwapChainPresenter.h"
 #include "Factory/DescriptorFactory.h"
 #include "Command/CommandList.h"
+#include "Resource/Internal/ViewTargetResource.h"
 
 ForwardRenderPipeline::~ForwardRenderPipeline() = default;
 ForwardRenderPipeline::ForwardRenderPipeline(
     Device& device,
     SwapChainPresenter& swapChain,
+    TaskScheduler& taskScheduler,
     DescriptorFactory& descFactory,
     ShaderLibrary& shaderLibaray,
     FontAtlasUploadGraphBuilder& fontUploadBuilder) :
@@ -17,7 +19,7 @@ ForwardRenderPipeline::ForwardRenderPipeline(
     m_swapChain{ swapChain },
     m_descFactory{ descFactory },
     m_renderers{ device, shaderLibaray },
-    m_viewTargetRes{ device, descFactory },
+    m_viewTargetPool{ device, taskScheduler, descFactory },
     m_inspectorRenderers{ device, shaderLibaray },
     // RGResourceID: static 함수이므로 생성자 초기화 리스트에서 바로 생성 가능
     m_hBackBuffer{ RenderGraph::CreateRGResourceID() },
@@ -26,21 +28,24 @@ ForwardRenderPipeline::ForwardRenderPipeline(
     m_fontUploadBuilder{ fontUploadBuilder },
     m_clearBuilder{
         m_swapChain, m_hBackBuffer },
+        m_viewTargetClearBuilder{ m_descFactory },
     m_shadowBuilder{
         m_renderers.GetShadowRenderer(),
         m_descFactory, m_shadowRes, m_hShadow },
     m_skyboxBuilder{
         m_renderers.GetSkyboxRenderer(),
-        m_swapChain, m_hBackBuffer },
+        m_descFactory },
     m_opaqueBuilder{
         m_renderers.GetSurfRenderer(),
-        m_swapChain, m_shadowRes, m_hBackBuffer, m_hShadow },
+        m_descFactory, m_shadowRes, m_hShadow },
     m_debugBuilder{
         m_renderers.GetDebugSurfRenderer(),
-        m_swapChain,
-        m_hBackBuffer },
+        m_descFactory },
     m_uiBuilder{
         m_renderers.GetUIRenderer(),
+        m_descFactory },
+    m_compositeBuilder{
+        m_renderers.GetCompositeRenderer(),
         m_swapChain,
         m_hBackBuffer },
     m_inspectorBuilder{
@@ -56,6 +61,48 @@ bool ForwardRenderPipeline::Initialize(const Size& screenSize, const Size& shado
 
     return true;
 }
+
+//std::vector<CompiledTask> ForwardRenderPipeline::BuildFrame(const FramePacket& framePacket)
+//{
+//    m_graph.Reset();
+//    m_graph.ImportResource(m_hBackBuffer, RGAccess::Present);
+//    m_graph.ImportResource(m_hShadow, RGAccess::DepthWrite);
+//
+//    if (m_fontUploadBuilder.HasPendingUploads())
+//        m_fontUploadBuilder.Build(m_graph);
+//
+//    m_clearBuilder.Build(m_graph);
+//
+//    if (!framePacket.shadowCasters.empty())
+//        m_shadowBuilder.Build(m_graph, framePacket.light, framePacket.shadowCasters);
+//
+//    std::vector<RenderViewInfo> renderViewInfos;
+//    renderViewInfos.reserve(framePacket.views.size());
+//
+//    std::unordered_set<uint32_t> activeViews;
+//
+//    for (size_t i = 0; i < framePacket.views.size(); ++i)
+//    {
+//        auto& view = framePacket.views[i];
+//        auto id = view->id;
+//        activeViews.insert(id);
+//
+//        auto size = ToSize(
+//            static_cast<uint32_t>(view->viewport->width), 
+//            static_cast<uint32_t>(view->viewport->height));
+//        auto& target = m_viewTargetRes.Acquire(id, size);
+//
+//        m_graph.ImportResource(target.colorID, RGAccess::RTV);
+//        m_graph.ImportResource(target.depthID, RGAccess::DepthWrite);
+//
+//        //m_clearBuilder.Build(m_graph, target.colorID, target.depthID);
+//    }
+//
+//    m_graph.ExportResource(m_hBackBuffer, RGAccess::Present);
+//    m_graph.ExportResource(m_hShadow, RGAccess::DepthWrite);        
+//
+//    return m_graph.Compile();
+//}
 
 std::vector<CompiledTask> ForwardRenderPipeline::BuildFrame(const FramePacket& framePacket)
 {
@@ -75,6 +122,7 @@ std::vector<CompiledTask> ForwardRenderPipeline::BuildFrame(const FramePacket& f
     renderViewInfos.reserve(framePacket.views.size());
 
     std::unordered_set<uint32_t> activeViews;
+    activeViews.reserve(framePacket.views.size());
 
     for (size_t i = 0; i < framePacket.views.size(); ++i)
     {
@@ -83,21 +131,38 @@ std::vector<CompiledTask> ForwardRenderPipeline::BuildFrame(const FramePacket& f
         activeViews.insert(id);
 
         auto size = ToSize(
-            static_cast<uint32_t>(view->viewport->width), 
-            static_cast<uint32_t>(view->viewport->height));
-        auto& target = m_viewTargetRes.Acquire(id, size);
+            static_cast<uint32_t>(view->viewport.width),
+            static_cast<uint32_t>(view->viewport.height));
+        ViewTargetResource& target = m_viewTargetPool.Acquire(id, size);
 
-        m_graph.ImportResource(target.colorID, RGAccess::RTV);
-        m_graph.ImportResource(target.depthID, RGAccess::DepthWrite);
+        m_graph.ImportResource(target.GetColorID(), RGAccess::RTV);
+        m_graph.ImportResource(target.GetDepthID(), RGAccess::DepthWrite);
 
-        //m_clearBuilder.Build(m_graph, target.colorID, target.depthID);
+        m_viewTargetClearBuilder.Build(m_graph, target);
+
+        if (view->environment)
+            m_skyboxBuilder.Build(m_graph, view, i, target);
+        if (!view->surface.empty())
+            m_opaqueBuilder.Build(m_graph, framePacket.light, view, i, target);
+        if (!view->debugSurface.empty())
+            m_debugBuilder.Build(m_graph, view, i, target);
+        if (!view->ui.empty())
+            m_uiBuilder.Build(m_graph, view, i, target);
+
+        m_graph.ExportResource(target.GetColorID(), RGAccess::SRV); //composite가 읽을수 있도록 전환
+
+        renderViewInfos.push_back({ view->viewport, target.GetHeapIndex(), target.GetColorID() });
     }
+    m_viewTargetPool.PruneUnused(activeViews);
+
+    m_compositeBuilder.Build(m_graph, renderViewInfos);
 
     m_graph.ExportResource(m_hBackBuffer, RGAccess::Present);
-    m_graph.ExportResource(m_hShadow, RGAccess::DepthWrite);        
+    m_graph.ExportResource(m_hShadow, RGAccess::DepthWrite);
 
     return m_graph.Compile();
 }
+
 
 //std::vector<CompiledTask> ForwardRenderPipeline::BuildFrame(const FramePacket& framePacket)
 //{
@@ -136,6 +201,11 @@ std::vector<CompiledTask> ForwardRenderPipeline::BuildFrame(const FramePacket& f
 //
 //    return m_graph.Compile();
 //}
+
+void ForwardRenderPipeline::Update()
+{
+    m_viewTargetPool.Update();
+}
 
 void ForwardRenderPipeline::Render(
     CommandList& cmd, 

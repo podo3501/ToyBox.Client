@@ -5,8 +5,9 @@ struct DirectionalLightData;
 struct ViewPacket;
 class RenderGraph;
 class SurfaceRenderer;
-class SwapChainPresenter;
+class DescriptorFactory;
 class ShadowResource;
+class ViewTargetResource;
 
 class OpaqueGraphBuilder
 {
@@ -15,21 +16,20 @@ public:
     OpaqueGraphBuilder() = delete;
     OpaqueGraphBuilder(
         SurfaceRenderer& surfRenderer, 
-        SwapChainPresenter& swapChain,
+        DescriptorFactory& descFactory,
         ShadowResource& shadowRes,
-        RGResourceID backBufferResID, 
         RGResourceID shadowResID);
 
     void Build(
         RenderGraph& graph,
         const DirectionalLightData& light,
         std::shared_ptr<ViewPacket> packet,
-        size_t viewIndex);
+        size_t viewIndex,
+        const ViewTargetResource& target);
     
 private:
     SurfaceRenderer& m_surfRenderer;
-    SwapChainPresenter& m_swapChain;
+    DescriptorFactory& m_descFactory;
     ShadowResource&m_shadowRes;
-    RGResourceID m_backBufferResID;
     RGResourceID m_shadowResID;
 };

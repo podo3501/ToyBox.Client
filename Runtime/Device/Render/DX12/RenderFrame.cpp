@@ -15,16 +15,19 @@ void RenderFrame::SubmitFrame(SceneFrameData frame) noexcept
     m_pendingFrame = std::move(frame);
 }
 
-FramePacket RenderFrame::PrepareRenderData()
+FramePacket RenderFrame::PrepareRenderData(const Size& screenSize)
 {
     FramePacket result;
     result.views.reserve(std::max<size_t>(1, m_pendingFrame.views.size()));
 
     for (auto& view : m_pendingFrame.views)
-        result.views.push_back(BuildViewPacket(std::move(view), m_textSystem));
+        result.views.push_back(BuildViewPacket(std::move(view), m_textSystem, screenSize));
 
     if (result.views.empty())
-        result.views.push_back(std::make_shared<ViewPacket>());
+    {
+        SceneViewData defaultView{}; // viewport는 nullopt (미지정) -> 전체화면으로 해석됨
+        result.views.push_back(BuildViewPacket(std::move(defaultView), m_textSystem, screenSize));
+    }
 
     result.light = m_pendingFrame.light;
     result.shadowCasters.reserve(m_pendingFrame.shadowCasters.size());
