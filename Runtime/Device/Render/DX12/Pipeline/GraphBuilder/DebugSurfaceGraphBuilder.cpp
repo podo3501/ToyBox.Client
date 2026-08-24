@@ -40,12 +40,7 @@ void DebugSurfaceGraphBuilder::Build(
             auto dsv = descFactory.GetDSVHandle(depthDSVIndex);
 
             CommandUtils::SetRenderTarget(cmd, rtv, dsv);
-            CommandUtils::SetViewport(
-                cmd,
-                packet->viewport.x,
-                packet->viewport.y,
-                packet->viewport.width,
-                packet->viewport.height);
+            CommandUtils::SetViewRect(cmd, packet->localViewport);
 
             debugSurfRenderer.PrepareFrame(packet->camera);
             debugSurfRenderer.BeginFrame(cmd);

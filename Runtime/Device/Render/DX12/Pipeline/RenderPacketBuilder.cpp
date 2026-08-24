@@ -75,6 +75,7 @@ std::shared_ptr<ViewPacket> BuildViewPacket(
     packet->camera = view.context.camera;
     packet->uiCamera = view.context.uiCamera;
     packet->viewport = ResolveViewport(view.context.viewport, screenSize);
+    packet->localViewport = Rect{ 0.f, 0.f, packet->viewport.width, packet->viewport.height };
 
     auto rasterOverride = view.context.renderOverride.rasterPreset;
 

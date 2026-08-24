@@ -11,6 +11,7 @@
 #include "Resource/Environment/EnvironmentResource.h"
 #include "Resource/Texture/TextureCubeResource.h"
 #include "GameClient/Graphics/RenderData/FrameData.h"
+#include "Core/RenderFormat.h"
 #include "Core/D3D12Conversions.h"
 
 //xxxStrength: 0에서 1 사이.
@@ -92,7 +93,7 @@ ID3D12PipelineState* SurfaceRenderer::CreatePSO(const PipelineState& pipelineSta
             pso.DepthStencilState.DepthEnable = TRUE;
             pso.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
             pso.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS;
-            pso.DSVFormat = DXGI_FORMAT_D32_FLOAT;
+            pso.DSVFormat = RenderFormat::DepthFormat;;
         });
 }
 

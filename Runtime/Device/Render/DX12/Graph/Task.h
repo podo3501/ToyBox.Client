@@ -27,7 +27,7 @@ struct ResourceContext
     Resource& Get(RGResourceID id)
     {
         auto it = resources.find(id);
-        Assert(it != resources.end());
+        Assert(it != resources.end()); //리소스 등록하는 부분이 빠져 있을 가능성. taskContext에서 리소스 등록이 안돼 있을 수 있음.
         return it->second;
     }
 

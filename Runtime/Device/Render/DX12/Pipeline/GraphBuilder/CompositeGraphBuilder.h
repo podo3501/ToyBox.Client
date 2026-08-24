@@ -1,6 +1,7 @@
 #pragma once
 #include "Graph/RGTypes.h"
 
+struct Size;
 struct ViewTarget;
 struct ViewPacket;
 struct RenderViewInfo;
@@ -17,7 +18,7 @@ public:
         RGResourceID backBufferResID);
 
     void Build(
-        RenderGraph& graph,
+        RenderGraph& graph, 
         const std::vector<RenderViewInfo>& renderViewInfos);
 
 private:

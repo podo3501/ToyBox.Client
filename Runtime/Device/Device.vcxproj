@@ -79,9 +79,11 @@
     <ClInclude Include="Render\DX12\Pipeline\GraphBuilder\UIGraphBuilder.h" />
     <ClInclude Include="Render\DX12\Pipeline\GraphBuilder\ViewTargetClearGraphBuilder.h" />
     <ClInclude Include="Render\DX12\Pipeline\Renderer\CompositeRenderer.h" />
+    <ClInclude Include="Render\DX12\Pipeline\Renderer\PipelineStateUtils.h" />
     <ClInclude Include="Render\DX12\Pipeline\Renderer\SkyboxRenderer.h" />
     <ClInclude Include="Render\DX12\Pipeline\RenderPacketBuilder.h" />
     <ClInclude Include="Render\DX12\Pipeline\RenderSortKey.h" />
+    <ClInclude Include="Render\DX12\Pipeline\ViewGraphBuilder.h" />
     <ClInclude Include="Render\DX12\Pipeline\ViewTargetPool.h" />
     <ClInclude Include="Render\DX12\Provider\Brush\BrushProvider.h" />
     <ClInclude Include="Render\DX12\Provider\Environment\EnvironmentProvider.h" />
@@ -254,6 +256,7 @@
     <ClCompile Include="Render\DX12\Pipeline\Renderer\SkyboxRenderer.cpp" />
     <ClCompile Include="Render\DX12\Pipeline\RenderPacketBuilder.cpp" />
     <ClCompile Include="Render\DX12\Pipeline\RenderSortKey.cpp" />
+    <ClCompile Include="Render\DX12\Pipeline\ViewGraphBuilder.cpp" />
     <ClCompile Include="Render\DX12\Pipeline\ViewTargetPool.cpp" />
     <ClCompile Include="Render\DX12\Provider\Brush\BrushProvider.cpp" />
     <ClCompile Include="Render\DX12\Provider\Environment\EnvironmentProvider.cpp" />

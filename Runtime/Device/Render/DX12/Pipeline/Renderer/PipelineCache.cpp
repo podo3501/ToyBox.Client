@@ -2,6 +2,7 @@
 #include "PipelineCache.h"
 #include "Core/Device.h"
 #include "Core/D3D12Conversions.h"
+#include "Core/RenderFormat.h"
 #include "Shader/ShaderLibrary.h"
 #include "d3dx12.h"
 
@@ -42,7 +43,7 @@ ID3D12PipelineState* PipelineCache::GetOrCreate(
     pso.SampleMask = UINT_MAX;
     pso.PrimitiveTopologyType = ToD3D12_PSO(pipelineState.topologyType);
     pso.NumRenderTargets = 1;
-    pso.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+    pso.RTVFormats[0] = RenderFormat::BackBufferFormat;
     pso.SampleDesc.Count = 1;
 
     setup(pso);

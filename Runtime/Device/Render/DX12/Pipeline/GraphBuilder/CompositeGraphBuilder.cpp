@@ -23,6 +23,7 @@ void CompositeGraphBuilder::Build(
     for (auto& info : renderViewInfos)
         composite.Read(info.colorID, RGAccess::SRV);
     composite.Write(m_backBufferResID, RGAccess::RTV);
+
     composite.gpuExecute =
         [
             &swapChain = m_swapChain,
@@ -32,8 +33,8 @@ void CompositeGraphBuilder::Build(
         (CommandList& cmd, TaskContext& ctx)
         {
             swapChain.SetRenderTarget(cmd);
-            compositeRenderer.BeginFrame(cmd);
 
+            compositeRenderer.BeginFrame(cmd);
             for (auto& info : renderViewInfos)
             {
                 swapChain.SetViewport(cmd, info.viewport);

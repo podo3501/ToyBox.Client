@@ -37,12 +37,7 @@ void UIGraphBuilder::Build(
             auto rtv = descFactory.GetRTVHandle(colorRTVIndex);
 
             CommandUtils::SetRenderTarget(cmd, rtv);
-            CommandUtils::SetViewport(
-                cmd,
-                packet->viewport.x,
-                packet->viewport.y,
-                packet->viewport.width,
-                packet->viewport.height);
+            CommandUtils::SetViewRect(cmd, packet->localViewport);
 
             uiRenderer.BeginFrame(cmd);
 

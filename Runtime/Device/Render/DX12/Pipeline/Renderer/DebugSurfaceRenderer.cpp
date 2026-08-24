@@ -8,6 +8,7 @@
 #include "GameClient/Graphics/RenderData/CameraData.h"
 #include "Resource/Mesh/MeshResource.h"
 #include "Core/D3D12Conversions.h"
+#include "Core/RenderFormat.h"
 
 DebugSurfaceRenderer::~DebugSurfaceRenderer() = default;
 DebugSurfaceRenderer::DebugSurfaceRenderer(const DebugSurfaceRendererConfig& config, PipelineCache& pipelineCache) :
@@ -100,7 +101,7 @@ ID3D12PipelineState* DebugSurfaceRenderer::CreatePSO(const PipelineState& pipeli
         {
             pso.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
             pso.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
-            pso.DSVFormat = DXGI_FORMAT_D32_FLOAT;
+            pso.DSVFormat = RenderFormat::DepthFormat;
         });
 }
 

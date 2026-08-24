@@ -2,6 +2,7 @@
 #include "SkyboxRenderer.h"
 #include "PipelineCache.h"
 #include "RootSignatureBuilder.h"
+#include "Core/RenderFormat.h"
 #include "Command/CommandList.h"
 #include "Resource/Texture/TextureCubeResource.h"
 #include "GameClient/Service/Render/Definition/View/RenderState.h"
@@ -47,7 +48,7 @@ ID3D12PipelineState* SkyboxRenderer::CreatePSO()
             pso.DepthStencilState.DepthEnable = TRUE;
             pso.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO; // write 안 함 - 항상 배경이라 다른 오브젝트가 자유롭게 덮어써야 함
             pso.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL; // z=1로 그리므로 LESS_EQUAL 필요
-            pso.DSVFormat = DXGI_FORMAT_D32_FLOAT;
+            pso.DSVFormat = RenderFormat::DepthFormat;
 
             pso.InputLayout = { nullptr, 0 }; // 버텍스 입력 레이아웃 없음 - SV_VertexID만 사용
         });

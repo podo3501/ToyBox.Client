@@ -2,6 +2,7 @@
 #include "ViewTargetResource.h"
 #include "Core/RenderFormat.h"
 #include "Core/Device.h"
+#include "Core/RenderFormat.h"
 #include "Graph/RenderGraph.h"
 #include "Factory/DescriptorFactory.h"
 #include "Helpers/TextureHelpers.h"
@@ -18,7 +19,7 @@ static Resource CreateColorTarget(Device& device, const Size& size)
     return device.CreateResource(
         desc,
         D3D12_HEAP_TYPE_DEFAULT,
-        D3D12_RESOURCE_STATE_RENDER_TARGET,
+        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
         &clearValue);
 }
 
@@ -28,7 +29,7 @@ static Resource CreateDepthTarget(Device& device, const Size& size)
     desc.Flags |= D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
 
     D3D12_CLEAR_VALUE clearValue{};
-    clearValue.Format = DXGI_FORMAT_D32_FLOAT;
+    clearValue.Format = RenderFormat::DepthFormat;
     clearValue.DepthStencil.Depth = 1.0f;
     clearValue.DepthStencil.Stencil = 0;
 

@@ -29,7 +29,7 @@ public:
     void Clear(CommandList& cmd, float r, float g, float b, float a);
     void TransitionToRenderTarget(CommandList& cmd);
     void SetRenderTarget(CommandList& cmd);
-    void SetViewport(CommandList& cmd, const std::optional<Rect>& viewport);
+    void SetViewport(CommandList& cmd, const std::optional<Rect>& viewport = std::nullopt);
     void TransitionToPresent(CommandList& cmd);
     bool Present(bool vsync);
     bool Resize(Device& device, const Size& size);

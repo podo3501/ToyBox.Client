@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "ShadowRenderer.h"
 #include "PipelineCache.h"
+#include "Core/RenderFormat.h"
 #include "Resource/Mesh/MeshResource.h"
 #include "RootSignatureBuilder.h"
 #include "Command/CommandList.h"
@@ -64,7 +65,7 @@ ID3D12PipelineState* ShadowRenderer::CreatePSO(const PipelineState& pipelineStat
             pso.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
             pso.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
             pso.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
-            pso.DSVFormat = DXGI_FORMAT_D32_FLOAT;
+            pso.DSVFormat = RenderFormat::ShadowMapFormat;
 
             pso.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
             // 아티팩트 방지를 위한 하드웨어 뎁스 바이어스 설정 (수치는 상황에 따라 미세조정 필요)

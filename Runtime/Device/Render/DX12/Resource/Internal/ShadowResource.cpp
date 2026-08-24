@@ -2,6 +2,7 @@
 #include "ShadowResource.h"
 #include "Core/Foundation/Geometry2D.h"
 #include "Core/Device.h"
+#include "Core/RenderFormat.h"
 #include "Factory/ResourceFactory.h"
 #include "Factory/DescriptorFactory.h"
 #include "Helpers/TextureHelpers.h"
@@ -12,7 +13,7 @@ static Resource CreateShadowResource(Device& device, const Size& shadowMapSize)
     desc.Flags |= D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
 
     D3D12_CLEAR_VALUE clearValue{};
-    clearValue.Format = DXGI_FORMAT_D32_FLOAT;
+    clearValue.Format = RenderFormat::ShadowMapFormat;
     clearValue.DepthStencil.Depth = 1.0f;
     clearValue.DepthStencil.Stencil = 0;
 

@@ -74,7 +74,8 @@ struct ViewPacket
     uint32_t id;
     CameraData camera;
     CameraData uiCamera;
-    Rect viewport;
+    Rect viewport; // 화면(백버퍼) 상의 배치. Composite가 씀
+    Rect localViewport; // 뷰 타겟 텍스처 내부 좌표(0,0 시작)
 
     std::vector<RenderSurfaceItem> surface;
     std::vector<RenderDebugSurfaceItem> debugSurface;

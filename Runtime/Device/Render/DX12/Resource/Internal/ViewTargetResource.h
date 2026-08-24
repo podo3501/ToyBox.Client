@@ -21,6 +21,8 @@ public:
     UINT GetDepthDSVIndex() const noexcept { return m_depthDSVIndex; }
     UINT GetHeapIndex() const noexcept { return m_heapIndex; }
     const Size& GetSize() const noexcept { return m_size; }
+    const Resource& GetColorResource() const noexcept { return m_color; }
+    const Resource& GetDepthResource() const noexcept { return m_depth; }
 
 private:
     DescriptorFactory* m_descFactory{ nullptr };

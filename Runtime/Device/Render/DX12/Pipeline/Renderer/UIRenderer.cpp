@@ -2,6 +2,7 @@
 #include "UIRenderer.h"
 #include "PipelineCache.h"
 #include "RootSignatureBuilder.h"
+#include "PipelineStateUtils.h"
 #include "Command/CommandList.h"
 #include "Resource/Mesh/MeshResource.h"
 #include "Resource/Brush/BrushResource.h"
@@ -48,25 +49,9 @@ ID3D12PipelineState* UIRenderer::CreatePSO()
             pso.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
             pso.DepthStencilState.DepthEnable = FALSE;
             pso.DepthStencilState.StencilEnable = FALSE;
+            pso.DSVFormat = DXGI_FORMAT_UNKNOWN;
 
-            //  알파 블렌딩(Alpha Blending) 설정 추가
-            D3D12_RENDER_TARGET_BLEND_DESC& rtBlend = pso.BlendState.RenderTarget[0];
-            rtBlend.BlendEnable = TRUE;
-            rtBlend.LogicOpEnable = FALSE;
-
-            // PMA 컬러 블렌딩 공식: (셰이더가 낸 rgb, 이미 alpha가 곱해진 상태) + (배경 * (1 - alpha))
-            // Straight일 때는 SRC_ALPHA * rgb를 GPU가 곱해줬는데,
-            // PMA는 셰이더가 이미 rgb*alpha를 계산해서 내놓으므로 GPU가 또 곱하면 안 됨 -> ONE
-            rtBlend.SrcBlend = D3D12_BLEND_ONE;
-            rtBlend.DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
-            rtBlend.BlendOp = D3D12_BLEND_OP_ADD;
-
-            // 알파 채널 자체의 블렌딩 공식
-            rtBlend.SrcBlendAlpha = D3D12_BLEND_ONE;
-            rtBlend.DestBlendAlpha = D3D12_BLEND_ZERO;
-            rtBlend.BlendOpAlpha = D3D12_BLEND_OP_ADD;
-
-            rtBlend.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
+            SetPremultipliedAlphaBlend(pso.BlendState.RenderTarget[0]); //PMA로 설정.
         });
 }
 

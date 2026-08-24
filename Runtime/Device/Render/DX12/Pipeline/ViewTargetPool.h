@@ -3,6 +3,7 @@
 #include "../Provider/PendingReleaseQueue.h"
 #include <unordered_set>
 
+struct ResourceContext;
 class Device;
 class TaskScheduler;
 class DescriptorFactory;
@@ -16,6 +17,7 @@ public:
     ViewTargetPool(Device& device, TaskScheduler& taskScheduler, DescriptorFactory& descFactory) noexcept;
 
     ViewTargetResource& Acquire(uint32_t id, const Size& requiredSize);
+    void ApplyResourceBindings(ResourceContext& resources) const;
     void PruneUnused(const std::unordered_set<uint32_t>& activeViews);
     void Update();
 

@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "ViewTargetPool.h"
 #include "Resource/Internal/ViewTargetResource.h"
+#include "Graph/Task.h"
 
 ViewTargetPool::~ViewTargetPool() = default;
 ViewTargetPool::ViewTargetPool(
@@ -29,6 +30,15 @@ ViewTargetResource& ViewTargetPool::Acquire(uint32_t id, const Size& requiredSiz
 
     auto [inserted, _] = m_views.emplace(id, std::move(view));
     return *inserted->second;
+}
+
+void ViewTargetPool::ApplyResourceBindings(ResourceContext& resCtx) const
+{
+    for (auto& [id, view] : m_views)
+    {
+        resCtx.Set(view->GetColorID(), view->GetColorResource());
+        resCtx.Set(view->GetDepthID(), view->GetDepthResource());
+    }
 }
 
 void ViewTargetPool::PruneUnused(const std::unordered_set<uint32_t>& activeViews)

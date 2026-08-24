@@ -2,6 +2,7 @@
 #include "CompositeRenderer.h"
 #include "PipelineCache.h"
 #include "RootSignatureBuilder.h"
+#include "PipelineStateUtils.h"
 #include "Core/RenderFormat.h"
 #include "Command/CommandList.h"
 
@@ -39,7 +40,7 @@ ID3D12PipelineState* CompositeRenderer::CreatePSO(const PipelineState& pipelineS
         [&](D3D12_GRAPHICS_PIPELINE_STATE_DESC& pso)
         {
             pso.NumRenderTargets = 1;
-            pso.RTVFormats[0] = RenderFormat::BackBufferFormat;
+            pso.RTVFormats[0] = RenderFormat::BackBufferSRGBView;
 
             // 뷰 타겟을 백버퍼 위에 그대로 옮겨 그리는 것뿐이므로 깊이 테스트 불필요
             pso.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
@@ -50,24 +51,10 @@ ID3D12PipelineState* CompositeRenderer::CreatePSO(const PipelineState& pipelineS
             pso.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
             pso.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
 
-            // 뷰 타겟은 이미 UI 패스에서 PMA로 그려진 상태이므로, 합성도 동일한 PMA 공식을 써야
-            // 알파 곱셈이 중복되지 않음 (UIRenderer::CreatePSO와 동일한 공식)
-            D3D12_RENDER_TARGET_BLEND_DESC& rtBlend = pso.BlendState.RenderTarget[0];
-            rtBlend.BlendEnable = TRUE;
-            rtBlend.LogicOpEnable = FALSE;
-
-            rtBlend.SrcBlend = D3D12_BLEND_ONE;          // 이미 premultiplied 상태이므로 그대로 더함
-            rtBlend.DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
-            rtBlend.BlendOp = D3D12_BLEND_OP_ADD;
-
-            rtBlend.SrcBlendAlpha = D3D12_BLEND_ONE;
-            rtBlend.DestBlendAlpha = D3D12_BLEND_ZERO;
-            rtBlend.BlendOpAlpha = D3D12_BLEND_OP_ADD;
-
-            rtBlend.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
-
             pso.InputLayout = { nullptr, 0 }; // 버텍스 버퍼 없이 SV_VertexID로 생성
             pso.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+
+            SetPremultipliedAlphaBlend(pso.BlendState.RenderTarget[0]); //PMA로 설정.
         });
 }
 

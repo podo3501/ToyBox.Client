@@ -85,6 +85,13 @@ namespace CommandUtils
     }
 
     template<CommandListLike T>
+    void SetViewRect(T& cmd, const Rect& rect)
+    {
+        SetViewport(cmd, rect.x, rect.y, rect.width, rect.height);
+        SetScissor(cmd, rect.x, rect.y, rect.width, rect.height);
+    }
+
+    template<CommandListLike T>
     inline void ClearRTV(T& cmd, D3D12_CPU_DESCRIPTOR_HANDLE rtv, const float clearColor[4]) noexcept
     {
         cmd.Get()->ClearRenderTargetView(rtv, clearColor, 0, nullptr);
