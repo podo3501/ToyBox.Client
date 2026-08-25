@@ -20,10 +20,9 @@ UIGraphBuilder::UIGraphBuilder(
 void UIGraphBuilder::Build(
     RenderGraph& graph,
     std::shared_ptr<ViewPacket> packet,
-    size_t viewIndex,
     const ViewTargetResource& target)
 {
-    auto& ui = graph.AddGraphicsPass("UI_View" + std::to_string(viewIndex));
+    auto& ui = graph.AddGraphicsPass("UI_View" + std::to_string(packet->id));
     ui.Write(target.GetColorID(), RGAccess::RTV);
     ui.gpuExecute =
         [
@@ -46,7 +45,7 @@ void UIGraphBuilder::Build(
                 auto mesh = static_cast<MeshResource*>(uiItem.mesh.get());
                 auto brush = static_cast<BrushResource*>(uiItem.brush.get());
 
-                uiRenderer.Draw(cmd, *mesh, *brush, uiItem.world, packet->uiCamera.proj, uiItem.source);
+                uiRenderer.Draw(cmd, *mesh, *brush, uiItem.world, packet->uiProj, uiItem.source);
             }
         };
 }

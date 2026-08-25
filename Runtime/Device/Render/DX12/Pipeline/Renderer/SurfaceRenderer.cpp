@@ -62,7 +62,7 @@ bool SurfaceRenderer::Initialize(Device& device)
 {
     m_objectCBAllocator.Initialize<ObjectCB>(device, m_config.maxObjectCount);
     m_materialCBAllocator.Initialize<MaterialConstantBuffer>(device, m_config.maxObjectCount);
-    m_frameCBAllocator.Initialize<MeshFrameCB>(device, 1);
+    m_frameCBAllocator.Initialize<MeshFrameCB>(device, 2);
 
     ReturnIfFalse(CreateRootSignature(device));
     ReturnIfFalse(CreateDefaultPSOs());
@@ -124,16 +124,19 @@ bool SurfaceRenderer::CreateRootSignature(Device& device)
     return m_rootSignature != nullptr;
 }
 
-void SurfaceRenderer::PrepareFrame(
+void SurfaceRenderer::ResetFrameResources()
+{
+    m_objectCBAllocator.Reset();
+    m_materialCBAllocator.Reset();
+    m_frameCBAllocator.Reset();
+}
+
+D3D12_GPU_VIRTUAL_ADDRESS  SurfaceRenderer::PrepareFrame(
     const DirectionalLightData& light, 
     const CameraData& camera, 
     uint32_t shadowSRVIndex,
     const EnvironmentResource* envRes)
 {
-    m_objectCBAllocator.Reset();
-    m_materialCBAllocator.Reset();
-    m_frameCBAllocator.Reset();
-
     MeshFrameCB meshFrame{};
     DirectX::XMMATRIX view = ToDXMatrix(camera.view);
     DirectX::XMMATRIX proj = ToDXMatrix(camera.proj);
@@ -166,15 +169,15 @@ void SurfaceRenderer::PrepareFrame(
         // irradianceSH는 {} 초기화라 이미 0
     }
 
-    m_frameCBAddress = m_frameCBAllocator.AllocateConstant(meshFrame);
+    return m_frameCBAllocator.AllocateConstant(meshFrame);
 }
 
-void SurfaceRenderer::BeginFrame(CommandList& cmd)
+void SurfaceRenderer::BeginFrame(CommandList& cmd, D3D12_GPU_VIRTUAL_ADDRESS frameCBAddress)
 {
     m_currentPSO = nullptr;
 
     cmd->SetGraphicsRootSignature(m_rootSignature.Get());
-    cmd->SetGraphicsRootConstantBufferView(Core::ToIndex(RootSlot::FrameCB), m_frameCBAddress);
+    cmd->SetGraphicsRootConstantBufferView(Core::ToIndex(RootSlot::FrameCB), frameCBAddress);
 }
 
 void SurfaceRenderer::BindPipeline(CommandList& cmd, const PipelineState& pipelineState)

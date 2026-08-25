@@ -28,12 +28,13 @@ public:
     SurfaceRenderer(const SurfaceRendererConfig& config, PipelineCache& pipelineCache);
 
     bool Initialize(Device& device);
-    void PrepareFrame(
+    void ResetFrameResources();
+    D3D12_GPU_VIRTUAL_ADDRESS PrepareFrame(
         const DirectionalLightData& light, 
         const CameraData& camera, 
         uint32_t shadowSRVIndex,
         const EnvironmentResource* envRes);
-    void BeginFrame(CommandList& cmd);
+    void BeginFrame(CommandList& cmd, D3D12_GPU_VIRTUAL_ADDRESS frameCBAddress);
     void BindPipeline(CommandList& cmd, const PipelineState& pipelineState);
     void Draw(CommandList& cmd, MeshResource& mesh, MaterialResource& material, const Core::Matrix& world);
     

@@ -16,20 +16,17 @@ public:
     OpaqueGraphBuilder() = delete;
     OpaqueGraphBuilder(
         SurfaceRenderer& surfRenderer, 
-        DescriptorFactory& descFactory,
-        ShadowResource& shadowRes,
-        RGResourceID shadowResID);
+        DescriptorFactory& descFactory);
 
     void Build(
         RenderGraph& graph,
         const DirectionalLightData& light,
+        const ShadowResource& shadowRes,
+        RGResourceID shadowResID,
         std::shared_ptr<ViewPacket> packet,
-        size_t viewIndex,
         const ViewTargetResource& target);
     
 private:
     SurfaceRenderer& m_surfRenderer;
     DescriptorFactory& m_descFactory;
-    ShadowResource&m_shadowRes;
-    RGResourceID m_shadowResID;
 };

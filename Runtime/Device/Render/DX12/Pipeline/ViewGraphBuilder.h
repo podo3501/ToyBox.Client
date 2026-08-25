@@ -1,5 +1,4 @@
 #pragma once
-#include "ViewTargetPool.h"
 #include "GraphBuilder/ViewTargetClearGraphBuilder.h"
 #include "GraphBuilder/SkyboxGraphBuilder.h"
 #include "GraphBuilder/OpaqueGraphBuilder.h"
@@ -28,23 +27,19 @@ class ViewGraphBuilder
 public:
     ViewGraphBuilder(
         Device& device,
-        TaskScheduler& taskScheduler,
         DescriptorFactory& descFactory,
         Renderers& renderers);
 
     RenderViewInfo Build(
         RenderGraph& graph,
         const FramePassContext& frameCtx,
+        const ViewTargetResource& target,
         const std::shared_ptr<ViewPacket>& view);
 
-    void Update();
-    void PruneUnused(const std::unordered_set<uint32_t>& activeViews);
-
 private:
-    ViewTargetPool m_viewTargetPool;
     ViewTargetClearGraphBuilder m_clearBuilder;
     SkyboxGraphBuilder m_skyboxBuilder;
-    //OpaqueGraphBuilder m_opaqueBuilder;
+    OpaqueGraphBuilder m_opaqueBuilder;
     DebugSurfaceGraphBuilder m_debugBuilder;
     UIGraphBuilder m_uiBuilder;
 };

@@ -24,3 +24,8 @@ bool Renderers::Initialize()
 
     return true;
 }
+
+void Renderers::ResetFrameResources()
+{
+    m_surfRenderer.ResetFrameResources();
+}

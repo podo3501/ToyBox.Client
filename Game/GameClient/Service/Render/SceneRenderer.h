@@ -16,7 +16,10 @@ public:
 		IRenderFrame* renderFrame, 
 		RepositoryContainer& repositories);
 
-	SceneView& AcquireView(const ViewContext& context);
+	SceneView& AcquireView(
+		const ViewContext& context,
+		const Camera& camera,
+		const Size& screenSize);
 
 	void SetLight(const DirectionalLightData& light);
 	void DrawShadowCaster(MeshHandle hM, const Core::Matrix& world);

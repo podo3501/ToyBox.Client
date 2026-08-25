@@ -24,24 +24,27 @@ SceneRenderer::SceneRenderer(
 	m_defaultBrush = CreateBuiltinBrush(brushRepository);
 }
 
-SceneView& SceneRenderer::AcquireView(const ViewContext& context)
+SceneView& SceneRenderer::AcquireView(
+	const ViewContext& context,
+	const Camera& camera, 
+	const Size& screenSize)
 {
 	Assert(context.identity.IsValid());
 
-	SceneView*& slot = m_viewMap[context.identity]; // 없으면 nullptr로 기본 생성
-	if (!slot)
+	SceneView*& view = m_viewMap[context.identity]; // 없으면 nullptr로 기본 생성
+	if (!view)
 	{
 		m_viewPool.emplace_back(
 			m_repositories, 
 			m_uiQuad, 
 			m_defaultMaterial,
 			m_defaultBrush);
-		slot = &m_viewPool.back();
+		view = &m_viewPool.back();
 	}
 
-	slot->Reset(context);
-	m_activeViews.push_back(slot);
-	return *slot;
+	view->Reset(context, camera, screenSize);
+	m_activeViews.push_back(view);
+	return *view;
 }
 
 void SceneRenderer::SetLight(const DirectionalLightData& light)

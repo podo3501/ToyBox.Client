@@ -16,11 +16,24 @@ struct Size
 	uint32_t width{ 0 };
 	uint32_t height{ 0 };
 
+    constexpr Size() noexcept = default;
+    constexpr Size(uint32_t w, uint32_t h) noexcept : width{ w }, height{ h } {}
+
 	bool operator==(const Size&) const = default;
 	bool operator!=(const Size& rhs) const noexcept { return !(*this == rhs); }
 };
 
-inline Size ToSize(uint32_t w, uint32_t h) { return { w, h }; }
+constexpr Size ToSize(int width, int height)
+{
+    Assert(width >= 0 && height >= 0);
+    return Size{ static_cast<uint32_t>(width), static_cast<uint32_t>(height) };
+}
+
+constexpr Size ToSize(float width, float height)
+{
+    Assert(width >= 0.f && height >= 0.f);
+    return Size{ static_cast<uint32_t>(width), static_cast<uint32_t>(height) };
+}
 
 struct Rect
 {

@@ -20,10 +20,9 @@ DebugSurfaceGraphBuilder::DebugSurfaceGraphBuilder(
 void DebugSurfaceGraphBuilder::Build(
     RenderGraph& graph,
     std::shared_ptr<ViewPacket> packet,
-    size_t viewIndex,
     const ViewTargetResource& target)
 {
-    auto& grid = graph.AddGraphicsPass("DebugSurface_View" + std::to_string(viewIndex));
+    auto& grid = graph.AddGraphicsPass("DebugSurface_View" + std::to_string(packet->id));
     grid.Write(target.GetColorID(), RGAccess::RTV);
     grid.Read(target.GetDepthID(), RGAccess::DepthRead);
     grid.gpuExecute =

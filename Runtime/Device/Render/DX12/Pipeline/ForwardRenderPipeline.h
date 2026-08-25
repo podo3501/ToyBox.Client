@@ -1,6 +1,7 @@
 #pragma once
-#include "ViewTargetPool.h"
 #include "Renderer/Renderers.h"
+#include "ViewTargetPool.h"
+#include "ViewGraphBuilder.h"
 #include "Graph/RenderGraph.h"
 #include "Graph/RGTypes.h"
 #include "Resource/Internal/ShadowResource.h"
@@ -52,7 +53,8 @@ private:
     DescriptorFactory& m_descFactory;
 
     Renderers m_renderers;
-    ViewTargetPool m_viewTargetPool;
+    ViewTargetPool m_viewPool;
+    ViewGraphBuilder m_viewBuilder;
     ShadowResource m_shadowRes; //이 클래스는 framereseource 클래스중의 하나. 프레임당 render가 필요한 리소스들.
     InspectorRenderers m_inspectorRenderers;
 
@@ -61,12 +63,7 @@ private:
 
     FontAtlasUploadGraphBuilder& m_fontUploadBuilder;
     ClearGraphBuilder m_clearBuilder;
-    ViewTargetClearGraphBuilder m_viewTargetClearBuilder;
     ShadowGraphBuilder m_shadowBuilder;
-    SkyboxGraphBuilder m_skyboxBuilder;
-    OpaqueGraphBuilder m_opaqueBuilder;
-    DebugSurfaceGraphBuilder m_debugBuilder;
-    UIGraphBuilder m_uiBuilder;
     CompositeGraphBuilder m_compositeBuilder;
     InspectorGraphBuilder m_inspectorBuilder;
 

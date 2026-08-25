@@ -13,31 +13,28 @@
 OpaqueGraphBuilder::~OpaqueGraphBuilder() = default;
 OpaqueGraphBuilder::OpaqueGraphBuilder(
     SurfaceRenderer& surfRenderer, 
-    DescriptorFactory& descFactory,
-    ShadowResource& shadowRes,
-    RGResourceID shadowResID) :
+    DescriptorFactory& descFactory) :
     m_surfRenderer{ surfRenderer },
-    m_descFactory{ descFactory },
-    m_shadowRes{ shadowRes },
-    m_shadowResID{ shadowResID }
+    m_descFactory{ descFactory }
 {}
 
 void OpaqueGraphBuilder::Build(
     RenderGraph& graph,
     const DirectionalLightData& light,
+    const ShadowResource& shadowRes,
+    RGResourceID shadowResID,
     std::shared_ptr<ViewPacket> packet,
-    size_t viewIndex,
     const ViewTargetResource& target)
 {
-    auto& opaque = graph.AddGraphicsPass("Opaque_View" + std::to_string(viewIndex));
-    opaque.Read(m_shadowResID, RGAccess::SRV);
+    auto& opaque = graph.AddGraphicsPass("Opaque_View" + std::to_string(packet->id));
+    opaque.Read(shadowResID, RGAccess::SRV);
     opaque.Write(target.GetColorID(), RGAccess::RTV);
     opaque.Write(target.GetDepthID(), RGAccess::DepthWrite);
     opaque.gpuExecute =
         [
             &descFactory = m_descFactory,
             &surfRenderer = m_surfRenderer,
-            &shadowRes = m_shadowRes,
+            &shadowRes = shadowRes,
             light,
             packet,
             colorRTVIndex = target.GetColorRTVIndex(),
@@ -51,13 +48,13 @@ void OpaqueGraphBuilder::Build(
             CommandUtils::SetRenderTarget(cmd, rtv, dsv);
             CommandUtils::SetViewRect(cmd, packet->localViewport);
 
-            surfRenderer.PrepareFrame(
+            D3D12_GPU_VIRTUAL_ADDRESS frameCBAddr = surfRenderer.PrepareFrame(
                 light,
                 packet->camera,
                 shadowRes.GetSRVIndex(),
                 packet->environment.get()
             );
-            surfRenderer.BeginFrame(cmd);
+            surfRenderer.BeginFrame(cmd, frameCBAddr);
 
             for (auto& item : packet->surface)
             {

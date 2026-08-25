@@ -16,7 +16,7 @@ struct ViewContext
 
     ViewIdentity identity; //0은 invaild.
     CameraData camera;
-    CameraData uiCamera; //기본적으로 정사영. 캐릭터 위에 체력바 같은걸 띄울려면 여기에 camera 를 셋팅.
+    Core::Matrix uiProj; //기본적으로 정사영.
     std::optional<Rect> viewport{ std::nullopt };
     RenderOverride renderOverride;
     // 나중에: Camera, RenderTargetSet, PassType ...

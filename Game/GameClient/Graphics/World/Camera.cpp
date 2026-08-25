@@ -13,20 +13,14 @@ void Camera::SetRotation(float pitch, float yaw)
 void Camera::SetFov(float fovDeg)
 {
     m_fov = fovDeg;
-    m_dirty = true;
-}
-
-void Camera::SetAspect(float aspect)
-{
-    m_aspect = aspect;
-    m_dirty = true;
+    ++m_projVersion;
 }
 
 void Camera::SetNearFar(float nearZ, float farZ)
 {
     m_nearZ = nearZ;
     m_farZ = farZ;
-    m_dirty = true;
+    ++m_projVersion;
 }
 
 void Camera::Move(const Core::Vector3& delta)
@@ -61,39 +55,6 @@ const Core::Matrix& Camera::GetView() const
 {
     UpdateIfNeeded();
     return m_view;
-}
-
-const Core::Matrix& Camera::GetProj() const
-{
-    UpdateIfNeeded();
-    return m_proj;
-}
-
-CameraData Camera::BuildCameraData() const
-{
-    UpdateIfNeeded();
-
-    CameraData data;
-    data.view = m_view;
-    data.proj = m_proj;
-    data.position = m_position;
-
-    return data;
-}
-
-CameraData Camera::BuildOrthographic(const Size& size, float nearZ, float farZ)
-{
-    CameraData data;
-    data.view = Core::Matrix::Identity();
-    data.proj = Core::Matrix::OrthographicOffCenter( 
-        0.0f, 
-        static_cast<float>(size.width),
-        static_cast<float>(size.height),
-        0.0f,  
-        nearZ, farZ); // bottom, top : 화면 좌표계는 y가 아래로 갈수록 증가하므로 top/bottom을 뒤집음
-    data.position = { 0.0f, 0.0f, 0.0f };
-
-    return data;
 }
 
 void Camera::UpdateIfNeeded() const
@@ -132,5 +93,4 @@ void Camera::UpdateMatrices() const
 
     Core::Vector3 target = m_position + m_forward;
     m_view = Core::CreateLookAt(m_position, target, worldUp);
-    m_proj = Core::CreatePerspectiveFov(DegToRad(m_fov), m_aspect, m_nearZ, m_farZ);
 }

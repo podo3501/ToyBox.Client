@@ -18,7 +18,6 @@ public:
     void Build(
         RenderGraph& graph,
         std::shared_ptr<ViewPacket> packet,
-        size_t viewIndex,
         const ViewTargetResource& target);
 
 private:

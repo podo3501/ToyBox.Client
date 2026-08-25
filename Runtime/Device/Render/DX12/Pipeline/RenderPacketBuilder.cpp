@@ -73,7 +73,7 @@ std::shared_ptr<ViewPacket> BuildViewPacket(
     //ViewContext
     packet->id = view.context.identity.Value();
     packet->camera = view.context.camera;
-    packet->uiCamera = view.context.uiCamera;
+    packet->uiProj = view.context.uiProj;
     packet->viewport = ResolveViewport(view.context.viewport, screenSize);
     packet->localViewport = Rect{ 0.f, 0.f, packet->viewport.width, packet->viewport.height };
 
