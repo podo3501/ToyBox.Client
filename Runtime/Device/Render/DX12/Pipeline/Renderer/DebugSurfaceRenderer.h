@@ -20,8 +20,9 @@ public:
     DebugSurfaceRenderer(const DebugSurfaceRendererConfig& config, PipelineCache& pipelineCache);
 
     bool Initialize(Device& device);
-    void PrepareFrame(const CameraData& camera);
-    void BeginFrame(CommandList& cmd);
+    void ResetFrameResources();
+
+    void PrepareDraw(CommandList& cmd, const CameraData& camera);
     void BindPipeline(CommandList& cmd, const PipelineState& pipelineState);
     void Draw(CommandList& cmd, MeshResource& mesh, const Core::Matrix& world);
 
@@ -38,6 +39,7 @@ private:
     ID3D12PipelineState* CreatePSO(const PipelineState& pipelineState);
     ID3D12PipelineState* GetPipeline(const PipelineState& pipelineState);
 
+    D3D12_GPU_VIRTUAL_ADDRESS UploadFrameCB(const CameraData& camera);
     D3D12_GPU_VIRTUAL_ADDRESS UploadObjectCB(const Core::Matrix& world);
 
     DebugSurfaceRendererConfig m_config;
@@ -47,6 +49,4 @@ private:
 
     FrameConstantAllocator m_objectCBAllocator;
     FrameConstantAllocator m_frameCBAllocator;
-
-    D3D12_GPU_VIRTUAL_ADDRESS m_frameCBAddress{};
 };

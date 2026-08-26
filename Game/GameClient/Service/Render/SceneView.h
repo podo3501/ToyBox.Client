@@ -1,6 +1,5 @@
 #pragma once
 #include "Handle/ResourceHandles.h"
-#include "Definition/View/ViewIdentity.h"
 #include "Definition/View/SceneViewData.h"
 #include "Definition/Text/TextStyle.h"
 #include "Core/Foundation/Geometry2D.h"
@@ -57,8 +56,8 @@ public:
 		std::string_view text,
 		uint32_t size,
 		const Rect& bounds,
-		const TextLayout& layout,
-		const TextStyle& style);
+		const TextLayout& layout = {},
+		const TextStyle& style = {});
 
 	void DrawText(
 		FontHandle hF,

@@ -58,7 +58,7 @@ ID3D12PipelineState* CompositeRenderer::CreatePSO(const PipelineState& pipelineS
         });
 }
 
-void CompositeRenderer::BeginFrame(CommandList& cmd)
+void CompositeRenderer::PrepareDraw(CommandList& cmd)
 {
     cmd->SetGraphicsRootSignature(m_rootSignature.Get());
     cmd->SetPipelineState(m_compositePSO);

@@ -71,7 +71,7 @@ std::shared_ptr<ViewPacket> BuildViewPacket(
     auto packet = std::make_shared<ViewPacket>();
 
     //ViewContext
-    packet->id = view.context.identity.Value();
+    packet->id = view.context.id;
     packet->camera = view.context.camera;
     packet->uiProj = view.context.uiProj;
     packet->viewport = ResolveViewport(view.context.viewport, screenSize);

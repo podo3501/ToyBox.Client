@@ -13,45 +13,48 @@ ViewTargetPool::ViewTargetPool(
     m_pendingRelease{ taskScheduler }
 {}
 
-ViewTargetResource& ViewTargetPool::Acquire(uint32_t id, const Size& requiredSize)
+ViewTargetResource& ViewTargetPool::Acquire(ViewID id, const Size& requiredSize)
 {
-    auto it = m_views.find(id);
-    if (it != m_views.end())
+    auto& view = m_views[Core::ToIndex(id)];
+    if (view)
     {
-        if (it->second->GetSize() == requiredSize)
-            return *it->second;
+        if (view->GetSize() == requiredSize)
+            return *view;
 
-        m_pendingRelease.Add(it->second); // 크기가 바뀜 -> 즉시 파괴하지 않고 pending release로 넘김 (GPU가 아직 쓰고 있을 수 있으므로)
-        m_views.erase(it);
+        m_pendingRelease.Add(view);
+        view.reset();
     }
 
-    auto view = std::make_shared<ViewTargetResource>();
+    view = std::make_shared<ViewTargetResource>();
     view->Initialize(m_device, m_descFactory, requiredSize);
 
-    auto [inserted, _] = m_views.emplace(id, std::move(view));
-    return *inserted->second;
+    return *view;
 }
 
 void ViewTargetPool::ApplyResourceBindings(ResourceContext& resCtx) const
 {
-    for (auto& [id, view] : m_views)
+    for (const auto& view : m_views)
     {
+        if (!view) continue;
+        
         resCtx.Set(view->GetColorID(), view->GetColorResource());
         resCtx.Set(view->GetDepthID(), view->GetDepthResource());
     }
 }
 
-void ViewTargetPool::PruneUnused(const std::unordered_set<uint32_t>& activeViews)
+void ViewTargetPool::PruneUnused(const std::bitset<Core::EnumSize<ViewID>>& activeViews)
 {
-    for (auto it = m_views.begin(); it != m_views.end(); )
+    for (size_t i = 0; i < m_views.size(); ++i)
     {
-        if (!activeViews.contains(it->first))
-        {
-            m_pendingRelease.Add(it->second);
-            it = m_views.erase(it);
-        }
-        else
-            ++it;
+        auto& view = m_views[i];
+        if (!view)
+            continue;
+
+        if (activeViews.test(i))
+            continue;
+
+        m_pendingRelease.Add(view);
+        view.reset();
     }
 }
 

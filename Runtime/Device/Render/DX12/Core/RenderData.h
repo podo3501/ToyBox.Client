@@ -9,6 +9,7 @@
 #include "Graph/RGTypes.h"
 #include "GameClient/Graphics/RenderData/DirectionalLightData.h"
 #include "GameClient/Graphics/RenderData/CameraData.h"
+#include "GameClient/Service/Render/Definition/View/ViewID.h"
 #include "GameClient/Service/Render/Definition/View/RenderState.h"
 #include "GameClient/Service/Render/Definition/Text/TextStyle.h"
 
@@ -71,7 +72,7 @@ struct DebugPacket
 
 struct ViewPacket
 {
-    uint32_t id;
+    ViewID id;
     CameraData camera;
     Core::Matrix uiProj;
     Rect viewport; // 화면(백버퍼) 상의 배치. Composite가 씀

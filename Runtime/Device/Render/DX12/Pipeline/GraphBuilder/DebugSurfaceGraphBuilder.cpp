@@ -22,7 +22,7 @@ void DebugSurfaceGraphBuilder::Build(
     std::shared_ptr<ViewPacket> packet,
     const ViewTargetResource& target)
 {
-    auto& grid = graph.AddGraphicsPass("DebugSurface_View" + std::to_string(packet->id));
+    auto& grid = graph.AddGraphicsPass("DebugSurface_View" + std::string(ToString(packet->id)));
     grid.Write(target.GetColorID(), RGAccess::RTV);
     grid.Read(target.GetDepthID(), RGAccess::DepthRead);
     grid.gpuExecute =
@@ -41,8 +41,7 @@ void DebugSurfaceGraphBuilder::Build(
             CommandUtils::SetRenderTarget(cmd, rtv, dsv);
             CommandUtils::SetViewRect(cmd, packet->localViewport);
 
-            debugSurfRenderer.PrepareFrame(packet->camera);
-            debugSurfRenderer.BeginFrame(cmd);
+            debugSurfRenderer.PrepareDraw(cmd, packet->camera);
 
             for (auto& item : packet->debugSurface)
             {

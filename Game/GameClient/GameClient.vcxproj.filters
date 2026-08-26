@@ -826,7 +826,7 @@
     <ClInclude Include="Service\Render\Definition\View\DrawShadowCasterItem.h">
       <Filter>Service\Render\Definition\View</Filter>
     </ClInclude>
-    <ClInclude Include="Service\Render\Definition\View\ViewIdentity.h">
+    <ClInclude Include="Service\Render\Definition\View\ViewID.h">
       <Filter>Service\Render\Definition\View</Filter>
     </ClInclude>
   </ItemGroup>

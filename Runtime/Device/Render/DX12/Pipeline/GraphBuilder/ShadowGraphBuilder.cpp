@@ -47,8 +47,7 @@ void ShadowGraphBuilder::Build(
             CommandUtils::ClearDSV(cmd, dsv);
             CommandUtils::SetDepthTarget(cmd, dsv);
 
-            shadowRenderer.PrepareFrame(light);
-            shadowRenderer.BeginFrame(cmd);
+            shadowRenderer.PrepareDraw(cmd, light);
 
             for (auto& item : shadowCasters)
             {

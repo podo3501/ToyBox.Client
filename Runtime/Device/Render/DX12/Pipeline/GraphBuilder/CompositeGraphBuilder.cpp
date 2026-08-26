@@ -34,7 +34,7 @@ void CompositeGraphBuilder::Build(
         {
             swapChain.SetRenderTarget(cmd);
 
-            compositeRenderer.BeginFrame(cmd);
+            compositeRenderer.PrepareDraw(cmd);
             for (auto& info : renderViewInfos)
             {
                 swapChain.SetViewport(cmd, info.viewport);

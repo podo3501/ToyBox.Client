@@ -29,21 +29,17 @@ SceneView& SceneRenderer::AcquireView(
 	const Camera& camera, 
 	const Size& screenSize)
 {
-	Assert(context.identity.IsValid());
-
-	SceneView*& view = m_viewMap[context.identity]; // 없으면 nullptr로 기본 생성
+	auto& view = m_views[Core::ToIndex(context.id)]; // 없으면 nullptr로 기본 생성
 	if (!view)
 	{
-		m_viewPool.emplace_back(
-			m_repositories, 
-			m_uiQuad, 
+		view = std::make_unique<SceneView>(
+			m_repositories,
+			m_uiQuad,
 			m_defaultMaterial,
 			m_defaultBrush);
-		view = &m_viewPool.back();
 	}
 
 	view->Reset(context, camera, screenSize);
-	m_activeViews.push_back(view);
 	return *view;
 }
 
@@ -67,12 +63,12 @@ void SceneRenderer::Flush()
 	SceneFrameData frameData;
 	frameData.light = std::move(m_pendingLight);
 	frameData.shadowCasters = std::move(m_shadowCasters);
-	frameData.views.reserve(m_activeViews.size());
 
-	for (SceneView* view : m_activeViews)
+	for (auto& view : m_views)
 	{
-		if (view->IsEmpty())
+		if (!view || view->IsEmpty())
 			continue;
+
 		frameData.views.push_back(view->TakeData());
 	}
 
@@ -80,5 +76,4 @@ void SceneRenderer::Flush()
 
 	m_pendingLight = {};
 	m_shadowCasters.clear();
-	m_activeViews.clear(); // 이번 프레임 기록만 비움.
 }

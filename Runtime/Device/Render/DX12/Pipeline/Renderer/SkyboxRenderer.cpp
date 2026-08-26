@@ -25,7 +25,7 @@ SkyboxRenderer::SkyboxRenderer(const SkyboxRendererConfig& config, PipelineCache
 
 bool SkyboxRenderer::Initialize(Device& device)
 {
-    m_cbAllocator.Initialize<SkyboxCB>(device, 1); // 프레임당 1개만 필요
+    m_cbAllocator.Initialize<SkyboxCB>(device, m_config.maxViewCount);
     ReturnIfFalse(CreateRootSignature(device));
 
     m_pso = CreatePSO();
@@ -66,10 +66,13 @@ bool SkyboxRenderer::CreateRootSignature(Device& device)
     return m_rootSignature != nullptr;
 }
 
-void SkyboxRenderer::Draw(CommandList& cmd, const CameraData& camera, TextureCubeResource& skybox)
+void SkyboxRenderer::ResetFrameResources()
 {
     m_cbAllocator.Reset();
+}
 
+void SkyboxRenderer::Draw(CommandList& cmd, const CameraData& camera, TextureCubeResource& skybox)
+{
     // translation 제거 - 카메라 위치를 원점으로 고정해서 스카이박스가 "무한히 먼 배경"처럼 보이게 함
     DirectX::XMMATRIX view = ToDXMatrix(camera.view);
     view.r[3] = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f); // 4행(translation 성분) 제거

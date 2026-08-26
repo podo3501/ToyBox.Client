@@ -26,7 +26,7 @@ void OpaqueGraphBuilder::Build(
     std::shared_ptr<ViewPacket> packet,
     const ViewTargetResource& target)
 {
-    auto& opaque = graph.AddGraphicsPass("Opaque_View" + std::to_string(packet->id));
+    auto& opaque = graph.AddGraphicsPass("Opaque_View" + std::string(ToString(packet->id)));
     opaque.Read(shadowResID, RGAccess::SRV);
     opaque.Write(target.GetColorID(), RGAccess::RTV);
     opaque.Write(target.GetDepthID(), RGAccess::DepthWrite);
@@ -48,13 +48,12 @@ void OpaqueGraphBuilder::Build(
             CommandUtils::SetRenderTarget(cmd, rtv, dsv);
             CommandUtils::SetViewRect(cmd, packet->localViewport);
 
-            D3D12_GPU_VIRTUAL_ADDRESS frameCBAddr = surfRenderer.PrepareFrame(
+            surfRenderer.PrepareDraw(
+                cmd, 
                 light,
                 packet->camera,
                 shadowRes.GetSRVIndex(),
-                packet->environment.get()
-            );
-            surfRenderer.BeginFrame(cmd, frameCBAddr);
+                packet->environment.get());
 
             for (auto& item : packet->surface)
             {

@@ -1,14 +1,17 @@
 #pragma once
 #include <cstdint>
+#include "GameClient/Service/Render/Definition/View/ViewID.h"
 
 struct ShadowRendererConfig
 {
     uint32_t maxObjectCount = 1024;
+    uint32_t frameCBCount = 1; //shadow는 프레임당 뷰에 상관없이 한번만 돌기 때문에 1로 설정.
 };
 
 struct SurfaceRendererConfig
 {
     uint32_t maxObjectCount = 1024;
+    uint32_t maxViewCount{ static_cast<uint32_t>(ViewID::Count) };
 };
 
 struct DebugSurfaceRendererConfig
@@ -23,8 +26,7 @@ struct UIRendererConfig
 
 struct SkyboxRendererConfig
 {
-    // 지금은 특별한 설정값 없음 - SurfaceRendererConfig(maxObjectCount 등)와 달리
-    // 프레임당 1개만 그리므로 풀 확보가 필요 없음
+    uint32_t maxViewCount{ static_cast<uint32_t>(ViewID::Count) };
 };
 
 struct RendererConfig

@@ -69,10 +69,13 @@ bool UIRenderer::CreateRootSignature(Device& device)
     return m_rootSignature != nullptr;
 }
 
-void UIRenderer::BeginFrame(CommandList& cmd)
+void UIRenderer::ResetFrameResources()
 {
     m_uiDrawCBAllocator.Reset();
+}
 
+void UIRenderer::BeginFrame(CommandList& cmd)
+{
     cmd->SetGraphicsRootSignature(m_rootSignature.Get());
     cmd->SetPipelineState(m_pso);
     cmd->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);

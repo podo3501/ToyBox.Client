@@ -27,5 +27,9 @@ bool Renderers::Initialize()
 
 void Renderers::ResetFrameResources()
 {
+    m_shadowRenderer.ResetFrameResources();
     m_surfRenderer.ResetFrameResources();
+    m_debugSurfRenderer.ResetFrameResources();
+    m_uiRenderer.ResetFrameResources();
+    m_skyboxRenderer.ResetFrameResources();
 }

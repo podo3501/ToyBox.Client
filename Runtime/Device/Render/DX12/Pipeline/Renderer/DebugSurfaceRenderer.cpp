@@ -48,28 +48,22 @@ bool DebugSurfaceRenderer::CreateDefaultPSOs()
     return true;
 }
 
-void DebugSurfaceRenderer::PrepareFrame(const CameraData& camera)
+void DebugSurfaceRenderer::ResetFrameResources()
 {
     m_objectCBAllocator.Reset();
     m_frameCBAllocator.Reset();
-
-    FrameCB frame{};
-    DirectX::XMMATRIX view = ToDXMatrix(camera.view);
-    DirectX::XMMATRIX proj = ToDXMatrix(camera.proj);
-
-    // GPU용으로 transpose해서 저장
-    XMStoreFloat4x4(&frame.view, DirectX::XMMatrixTranspose(view));
-    XMStoreFloat4x4(&frame.proj, DirectX::XMMatrixTranspose(proj));
-
-    m_frameCBAddress = m_frameCBAllocator.AllocateConstant(frame);
 }
 
-void DebugSurfaceRenderer::BeginFrame(CommandList& cmd)
+void DebugSurfaceRenderer::PrepareDraw(
+    CommandList& cmd,
+    const CameraData& camera)
 {
     m_currentPSO = nullptr;
 
+    auto frameCBAddress = UploadFrameCB(camera);
+
     cmd->SetGraphicsRootSignature(m_rootSignature.Get());
-    cmd->SetGraphicsRootConstantBufferView(Core::ToIndex(RootSlot::FrameCB), m_frameCBAddress);
+    cmd->SetGraphicsRootConstantBufferView(Core::ToIndex(RootSlot::FrameCB), frameCBAddress);
 }
 
 void DebugSurfaceRenderer::BindPipeline(CommandList& cmd, const PipelineState& pipelineState)
@@ -114,6 +108,19 @@ void DebugSurfaceRenderer::Draw(CommandList& cmd, MeshResource& mesh, const Core
     cmd->SetGraphicsRootConstantBufferView(Core::ToIndex(RootSlot::ObjectCB), objectCBAddress);
 
     cmd->DrawInstanced(mesh.GetVertexCount(), 1, 0, 0);
+}
+
+D3D12_GPU_VIRTUAL_ADDRESS DebugSurfaceRenderer::UploadFrameCB(const CameraData& camera)
+{
+    FrameCB frame{};
+    DirectX::XMMATRIX view = ToDXMatrix(camera.view);
+    DirectX::XMMATRIX proj = ToDXMatrix(camera.proj);
+
+    // GPU용으로 transpose해서 저장
+    XMStoreFloat4x4(&frame.view, DirectX::XMMatrixTranspose(view));
+    XMStoreFloat4x4(&frame.proj, DirectX::XMMatrixTranspose(proj));
+
+    return m_frameCBAllocator.AllocateConstant(frame);
 }
 
 D3D12_GPU_VIRTUAL_ADDRESS DebugSurfaceRenderer::UploadObjectCB(const Core::Matrix& world)

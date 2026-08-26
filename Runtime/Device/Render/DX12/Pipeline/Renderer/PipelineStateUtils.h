@@ -15,7 +15,8 @@ inline void SetPremultipliedAlphaBlend(D3D12_RENDER_TARGET_BLEND_DESC& blend)
 
     // 알파 채널 자체의 블렌딩 공식
     blend.SrcBlendAlpha = D3D12_BLEND_ONE;
-    blend.DestBlendAlpha = D3D12_BLEND_ZERO;
+    //blend.DestBlendAlpha = D3D12_BLEND_ZERO;
+    blend.DestBlendAlpha = D3D12_BLEND_INV_SRC_ALPHA;
     blend.BlendOpAlpha = D3D12_BLEND_OP_ADD;
 
     blend.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;

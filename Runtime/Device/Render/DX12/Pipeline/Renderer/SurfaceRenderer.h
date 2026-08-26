@@ -29,12 +29,12 @@ public:
 
     bool Initialize(Device& device);
     void ResetFrameResources();
-    D3D12_GPU_VIRTUAL_ADDRESS PrepareFrame(
+    void PrepareDraw(
+        CommandList& cmd,
         const DirectionalLightData& light, 
         const CameraData& camera, 
         uint32_t shadowSRVIndex,
         const EnvironmentResource* envRes);
-    void BeginFrame(CommandList& cmd, D3D12_GPU_VIRTUAL_ADDRESS frameCBAddress);
     void BindPipeline(CommandList& cmd, const PipelineState& pipelineState);
     void Draw(CommandList& cmd, MeshResource& mesh, MaterialResource& material, const Core::Matrix& world);
     
@@ -52,6 +52,11 @@ private:
     ID3D12PipelineState* CreatePSO(const PipelineState& pipelineState);
     ID3D12PipelineState* GetPipeline(const PipelineState& pipelineState);
 
+    D3D12_GPU_VIRTUAL_ADDRESS UploadFrameCB(
+        const DirectionalLightData& light,
+        const CameraData& camera,
+        uint32_t shadowSRVIndex,
+        const EnvironmentResource* envRes);
     D3D12_GPU_VIRTUAL_ADDRESS UploadObjectCB(const Core::Matrix& world);
     D3D12_GPU_VIRTUAL_ADDRESS UploadMaterialCB(MaterialResource& material);
 

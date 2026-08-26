@@ -62,7 +62,7 @@ bool SurfaceRenderer::Initialize(Device& device)
 {
     m_objectCBAllocator.Initialize<ObjectCB>(device, m_config.maxObjectCount);
     m_materialCBAllocator.Initialize<MaterialConstantBuffer>(device, m_config.maxObjectCount);
-    m_frameCBAllocator.Initialize<MeshFrameCB>(device, 2);
+    m_frameCBAllocator.Initialize<MeshFrameCB>(device, m_config.maxViewCount);
 
     ReturnIfFalse(CreateRootSignature(device));
     ReturnIfFalse(CreateDefaultPSOs());
@@ -131,50 +131,20 @@ void SurfaceRenderer::ResetFrameResources()
     m_frameCBAllocator.Reset();
 }
 
-D3D12_GPU_VIRTUAL_ADDRESS  SurfaceRenderer::PrepareFrame(
+void SurfaceRenderer::PrepareDraw(
+    CommandList& cmd,
     const DirectionalLightData& light, 
     const CameraData& camera, 
     uint32_t shadowSRVIndex,
     const EnvironmentResource* envRes)
 {
-    MeshFrameCB meshFrame{};
-    DirectX::XMMATRIX view = ToDXMatrix(camera.view);
-    DirectX::XMMATRIX proj = ToDXMatrix(camera.proj);
-    DirectX::XMMATRIX lightVP = ToDXMatrix(light.viewProj);
-
-    // GPU용으로 transpose해서 저장
-    XMStoreFloat4x4(&meshFrame.view, DirectX::XMMatrixTranspose(view));
-    XMStoreFloat4x4(&meshFrame.proj, DirectX::XMMatrixTranspose(proj));
-    XMStoreFloat4x4(&meshFrame.lightViewProj, DirectX::XMMatrixTranspose(lightVP));
-
-    meshFrame.cameraPosition = ToXMFLOAT3(camera.position);
-    meshFrame.lightDirection = ToXMFLOAT3(light.direction);
-    meshFrame.lightIntensity = light.intensity;
-    meshFrame.lightColor = ToXMFLOAT3(light.color);
-    meshFrame.shadowTextureIndex = shadowSRVIndex;
-
-    if (envRes && envRes->IsReady())
-    {
-        meshFrame.reflectionTextureIndex = envRes->GetReflection()->GetHeapIndex();
-        meshFrame.reflectionMipCount = envRes->GetReflection()->GetMipCount();
-
-        const auto& sh = envRes->GetIrradianceSH();
-        for (int i = 0; i < 9; ++i)
-            meshFrame.irradianceSH[i] = { sh[i].x, sh[i].y, sh[i].z, 0.0f };
-    }
-    else
-    {
-        meshFrame.reflectionTextureIndex = UINT_MAX;
-        meshFrame.reflectionMipCount = 0;
-        // irradianceSH는 {} 초기화라 이미 0
-    }
-
-    return m_frameCBAllocator.AllocateConstant(meshFrame);
-}
-
-void SurfaceRenderer::BeginFrame(CommandList& cmd, D3D12_GPU_VIRTUAL_ADDRESS frameCBAddress)
-{
     m_currentPSO = nullptr;
+
+    auto frameCBAddress = UploadFrameCB(
+        light,
+        camera,
+        shadowSRVIndex,
+        envRes);
 
     cmd->SetGraphicsRootSignature(m_rootSignature.Get());
     cmd->SetGraphicsRootConstantBufferView(Core::ToIndex(RootSlot::FrameCB), frameCBAddress);
@@ -189,6 +159,59 @@ void SurfaceRenderer::BindPipeline(CommandList& cmd, const PipelineState& pipeli
     cmd->SetPipelineState(pso);
     cmd->IASetPrimitiveTopology(ToD3D12_Draw(pipelineState.topologyType));
     m_currentPSO = pso;
+}
+
+D3D12_GPU_VIRTUAL_ADDRESS SurfaceRenderer::UploadFrameCB(
+    const DirectionalLightData& light,
+    const CameraData& camera,
+    uint32_t shadowSRVIndex,
+    const EnvironmentResource* envRes)
+{
+    MeshFrameCB meshFrame{};
+
+    DirectX::XMMATRIX view = ToDXMatrix(camera.view);
+    DirectX::XMMATRIX proj = ToDXMatrix(camera.proj);
+    DirectX::XMMATRIX lightVP = ToDXMatrix(light.viewProj);
+
+    XMStoreFloat4x4(
+        &meshFrame.view,
+        DirectX::XMMatrixTranspose(view));
+
+    XMStoreFloat4x4(
+        &meshFrame.proj,
+        DirectX::XMMatrixTranspose(proj));
+
+    XMStoreFloat4x4(
+        &meshFrame.lightViewProj,
+        DirectX::XMMatrixTranspose(lightVP));
+
+    meshFrame.cameraPosition = ToXMFLOAT3(camera.position);
+    meshFrame.lightDirection = ToXMFLOAT3(light.direction);
+    meshFrame.lightIntensity = light.intensity;
+    meshFrame.lightColor = ToXMFLOAT3(light.color);
+    meshFrame.shadowTextureIndex = shadowSRVIndex;
+
+    if (envRes && envRes->IsReady())
+    {
+        meshFrame.reflectionTextureIndex =
+            envRes->GetReflection()->GetHeapIndex();
+
+        meshFrame.reflectionMipCount =
+            envRes->GetReflection()->GetMipCount();
+
+        const auto& sh = envRes->GetIrradianceSH();
+
+        for (int i = 0; i < 9; ++i)
+            meshFrame.irradianceSH[i] =
+        { sh[i].x, sh[i].y, sh[i].z, 0.0f };
+    }
+    else
+    {
+        meshFrame.reflectionTextureIndex = UINT_MAX;
+        meshFrame.reflectionMipCount = 0;
+    }
+
+    return m_frameCBAllocator.AllocateConstant(meshFrame);
 }
 
 D3D12_GPU_VIRTUAL_ADDRESS SurfaceRenderer::UploadObjectCB(const Core::Matrix& world)

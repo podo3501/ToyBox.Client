@@ -16,7 +16,7 @@ public:
     CompositeRenderer(PipelineCache& pipelineCache);
     bool Initialize(Device& device);
 
-    void BeginFrame(CommandList& cmd);
+    void PrepareDraw(CommandList& cmd);
     void Draw(CommandList& cmd, UINT colorSRVIndex);
 
 private:

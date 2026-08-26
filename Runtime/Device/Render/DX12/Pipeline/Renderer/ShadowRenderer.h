@@ -20,8 +20,9 @@ public:
     ShadowRenderer(const ShadowRendererConfig& config, PipelineCache& pipelineCache);
 
     bool Initialize(Device& device);
-    void PrepareFrame(const DirectionalLightData& light);
-    void BeginFrame(CommandList& cmd);
+    void ResetFrameResources();
+
+    void PrepareDraw(CommandList& cmd, const DirectionalLightData& light);
     void Draw(CommandList& cmd, MeshResource& mesh, const Core::Matrix& world);
 
 private:
@@ -33,9 +34,9 @@ private:
     };
 
     bool CreateRootSignature(Device& device);
-    void CreateConstantBuffers();
     ID3D12PipelineState* CreatePSO(const PipelineState& pipelineState);
 
+    D3D12_GPU_VIRTUAL_ADDRESS UploadFrameCB(const DirectionalLightData& light);
     D3D12_GPU_VIRTUAL_ADDRESS UploadObjectCB(const Core::Matrix& world);
 
     ShadowRendererConfig m_config;
@@ -45,6 +46,4 @@ private:
 
     FrameConstantAllocator m_objectCBAllocator;
     FrameConstantAllocator m_frameCBAllocator;
-
-    D3D12_GPU_VIRTUAL_ADDRESS m_frameCBAddress{};
 };

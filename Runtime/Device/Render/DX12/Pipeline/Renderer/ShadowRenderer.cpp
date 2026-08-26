@@ -29,7 +29,7 @@ ShadowRenderer::ShadowRenderer(const ShadowRendererConfig& config, PipelineCache
 bool ShadowRenderer::Initialize(Device& device)
 {
     m_objectCBAllocator.Initialize<ShadowObjectCB>(device, m_config.maxObjectCount);
-    m_frameCBAllocator.Initialize<ShadowFrameCB>(device, 1);
+    m_frameCBAllocator.Initialize<ShadowFrameCB>(device, m_config.frameCBCount);
 
     ReturnIfFalse(CreateRootSignature(device));
     m_shadowPSO = CreatePSO(PipelineLibrary::Get(RegistryShader::Shadow, RasterPreset::Default));
@@ -77,11 +77,25 @@ ID3D12PipelineState* ShadowRenderer::CreatePSO(const PipelineState& pipelineStat
         });
 }
 
-void ShadowRenderer::PrepareFrame(const DirectionalLightData& light)
+void ShadowRenderer::ResetFrameResources()
 {
     m_objectCBAllocator.Reset();
     m_frameCBAllocator.Reset();
+}
 
+void ShadowRenderer::PrepareDraw(
+    CommandList& cmd,
+    const DirectionalLightData& light)
+{
+    auto frameCBAddress = UploadFrameCB(light);
+
+    cmd->SetGraphicsRootSignature(m_rootSignature.Get());
+    cmd->SetPipelineState(m_shadowPSO);
+    cmd->SetGraphicsRootConstantBufferView(Core::ToIndex(RootSlot::FrameCB), frameCBAddress);
+}
+
+D3D12_GPU_VIRTUAL_ADDRESS ShadowRenderer::UploadFrameCB(const DirectionalLightData& light)
+{
     ShadowFrameCB shadowFrame{};
 
     // 조명 데이터(light) 내부에 계산되어 저장되어 있을 Light View-Projection 행렬을 가져옴
@@ -89,15 +103,7 @@ void ShadowRenderer::PrepareFrame(const DirectionalLightData& light)
     DirectX::XMMATRIX lightVP = ToDXMatrix(light.viewProj);
     XMStoreFloat4x4(&shadowFrame.lightViewProj, DirectX::XMMatrixTranspose(lightVP));
 
-    m_frameCBAddress = m_frameCBAllocator.AllocateConstant(shadowFrame);
-}
-
-void ShadowRenderer::BeginFrame(CommandList& cmd)
-{
-    cmd->SetGraphicsRootSignature(m_rootSignature.Get());
-    cmd->SetPipelineState(m_shadowPSO);
-
-    cmd->SetGraphicsRootConstantBufferView(Core::ToIndex(RootSlot::FrameCB), m_frameCBAddress);
+    return m_frameCBAllocator.AllocateConstant(shadowFrame);
 }
 
 D3D12_GPU_VIRTUAL_ADDRESS ShadowRenderer::UploadObjectCB(const Core::Matrix& world)

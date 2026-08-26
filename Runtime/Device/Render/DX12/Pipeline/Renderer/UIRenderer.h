@@ -19,8 +19,9 @@ public:
     ~UIRenderer();
     UIRenderer(const UIRendererConfig& config, PipelineCache& pipelineCache);
     bool Initialize(Device& device);
-    void BeginFrame(CommandList& cmd);
+    void ResetFrameResources();
 
+    void BeginFrame(CommandList& cmd);
     void Draw(
         CommandList& cmd, 
         MeshResource& mesh, 

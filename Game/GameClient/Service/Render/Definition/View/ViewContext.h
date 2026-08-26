@@ -1,5 +1,5 @@
 #pragma once
-#include "ViewIdentity.h"
+#include "ViewID.h"
 #include "Core/Foundation/Geometry2D.h"
 #include "RenderState.h"
 #include "GameClient/Graphics/RenderData/CameraData.h"
@@ -12,12 +12,12 @@ struct RenderOverride
 
 struct ViewContext
 {
-    explicit ViewContext(ViewIdentity identity) : identity{ identity } {}
+    explicit ViewContext(ViewID id) : id{ id } {}
 
-    ViewIdentity identity; //0은 invaild.
+    ViewID id;
     CameraData camera;
     Core::Matrix uiProj; //기본적으로 정사영.
     std::optional<Rect> viewport{ std::nullopt };
     RenderOverride renderOverride;
-    // 나중에: Camera, RenderTargetSet, PassType ...
+    // 나중에: RenderTargetSet, PassType ...
 };

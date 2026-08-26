@@ -20,12 +20,24 @@ FontAtlasUploadGraphBuilder::FontAtlasUploadGraphBuilder(ResourceFactory& resFac
 
 void FontAtlasUploadGraphBuilder::QueueGlyphUploads(std::vector<AtlasGlyphBatch>&& batches)
 {
-    Assert(m_pending.empty()); // 프레임에 한번씩만 들어오거나 안들어온다(새로운글자가 있을때만). Build에서 소비하는데 소비하지 못했다면 문제.
     for (auto& batch : batches)
     {
-        m_pending.emplace(
-            batch.atlasResource,
-            PendingAtlas{ RenderGraph::CreateRGResourceID(), std::move(batch.glyphs) });
+        auto it = m_pending.find(batch.atlasResource);
+        if (it == m_pending.end())
+        {
+            m_pending.emplace(
+                batch.atlasResource,
+                PendingAtlas{ RenderGraph::CreateRGResourceID(), std::move(batch.glyphs) });
+        }
+        else
+        {
+            // 같은 atlas에 대해 이미 pending 중이면 glyph 목록을 병합
+            auto& glyphs = it->second.glyphs;
+            glyphs.insert(
+                glyphs.end(),
+                std::make_move_iterator(batch.glyphs.begin()),
+                std::make_move_iterator(batch.glyphs.end()));
+        }
     }
 }
 
