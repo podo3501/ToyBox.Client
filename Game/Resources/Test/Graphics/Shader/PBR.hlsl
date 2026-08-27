@@ -247,7 +247,7 @@ float CalculateShadow(float4 shadowPos)
 
     return (currentDepth - bias <= shadowDepth)
         ? 1.0f
-        : 0.3f;
+        : 0.15f;
 }
 
 /*
@@ -380,7 +380,7 @@ float4 PSMain(PSInput input) : SV_TARGET
     else
     {
         // 환경이 없는 경우 - 기존의 단순 flat ambient로 폴백
-        iblDiffuse = albedo.rgb * 0.02f;
+        iblDiffuse = albedo.rgb * 0.15f;
         iblSpecular = float3(0.0f, 0.0f, 0.0f);
     }
  
@@ -391,8 +391,6 @@ float4 PSMain(PSInput input) : SV_TARGET
     // 12. 톤매핑 (HDR -> LDR) - 감마 보정 전에 반드시 먼저 적용
     finalColor *= 1.0f;
     finalColor = ACESFilm(finalColor);
-    // 13. 감마 보정 (선형 공간 연산을 모니터 공간으로 출력)
-    finalColor = pow(finalColor, float3(1.0f / 2.2f, 1.0f / 2.2f, 1.0f / 2.2f));
 
     // 최종 결과 출력!!
     return float4(finalColor, albedo.a);

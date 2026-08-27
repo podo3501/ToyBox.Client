@@ -130,10 +130,6 @@ float4 PSMain(PSInput input) : SV_TARGET
     // 최종 색상 합성
     float3 finalColor = ambient + finalLight;
 
-    // 7. 감마 보정 (PBR 결과물과 화면의 톤 밸런스를 맞추기 위해 선형->모니터 공간 변환)
-    finalColor = pow(finalColor, float3(1.0f / 2.2f, 1.0f / 2.2f, 1.0f / 2.2f));
-
-
     // =================================================================
     // 💥 [GPU STRESS TEST ZONE] 
     // 컴파일러가 지우지 못하도록 최종 색상(finalColor)을 루프 연산에 강제로 엮습니다.

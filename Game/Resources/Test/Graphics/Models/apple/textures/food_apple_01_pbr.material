@@ -2,8 +2,8 @@
   "type": "PBR",
   "surface": {
     "normalScale": 1.0,
-    "roughnessScale": 3.0,
-    "metallicScale": 0.0,
+    "roughnessScale": 1.0,
+    "metallicScale": 1.0,
     "aoStrength": 1.0
   },
   "textures": {

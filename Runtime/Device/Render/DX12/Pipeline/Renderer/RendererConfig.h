@@ -17,6 +17,7 @@ struct SurfaceRendererConfig
 struct DebugSurfaceRendererConfig
 {
     uint32_t maxObjectCount = 1024;
+    uint32_t maxViewCount{ static_cast<uint32_t>(ViewID::Count) };
 };
 
 struct UIRendererConfig

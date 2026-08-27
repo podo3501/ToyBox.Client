@@ -40,29 +40,13 @@ float3 ACESFilm(float3 x)
     return saturate((x * (a * x + b)) / (x * (c * x + d) + e));
 }
 
-//float4 PSMain(PSInput input) : SV_TARGET
-//{
-  //  TextureCube skyboxTex = ResourceDescriptorHeap[skyboxTextureIndex];
-//    float3 dir = normalize(input.viewDir);
-//    float3 color = skyboxTex.Sample(gSampler, dir).rgb;
-
-    // 필요하면 노출 조절: color *= exposure;
-//    color = ACESFilm(color);                 // 톤매핑: HDR -> 0~1
-//    color = pow(color, 1.0f / 2.2f);          // 감마: linear -> sRGB
-
-//    return float4(color, 1.0f);
-//}
-
 float4 PSMain(PSInput input) : SV_TARGET
 {
     TextureCube skyboxTex = ResourceDescriptorHeap[skyboxTextureIndex];
 
     float3 dir = normalize(input.viewDir);
     float3 color = skyboxTex.Sample(gSampler, dir).rgb;
-
-color = ACESFilm(color); 
-    // PBR 셰이더와 동일한 감마 보정 (선형 공간 -> 모니터 공간)
-    //color = pow(color, float3(1.0f / 2.2f, 1.0f / 2.2f, 1.0f / 2.2f));
+    color = ACESFilm(color); 
 
     return float4(color, 1.0f);
 }
