@@ -6,7 +6,7 @@
 #include "ProviderType.h"
 #include "IRenderFrame.h"
 #include "GameClient/Service/Render/Repository/IResourceProvider.h"
-#include "GameClient/Service/Render/Definition/View/RenderState.h"
+#include "GameClient/Service/Render/Definition/ShaderDesc.h"
 
 struct IMaterialResource;
 struct ShaderAsset;

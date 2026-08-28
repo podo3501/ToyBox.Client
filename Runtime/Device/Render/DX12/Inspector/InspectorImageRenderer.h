@@ -2,7 +2,7 @@
 #include "Allocator/FrameConstantAllocator.h"
 #include "Core/Math/Matrix.h"
 #include "Core/Foundation/Geometry2D.h"
-#include "GameClient/Service/Render/Definition/View/RenderState.h"
+#include "Definition/RenderState.h"
 
 class Device;
 class PipelineCache;

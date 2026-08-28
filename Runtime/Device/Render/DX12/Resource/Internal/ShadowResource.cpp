@@ -2,7 +2,7 @@
 #include "ShadowResource.h"
 #include "Core/Foundation/Geometry2D.h"
 #include "Core/Device.h"
-#include "Core/RenderFormat.h"
+#include "Definition/RenderFormat.h"
 #include "Factory/ResourceFactory.h"
 #include "Factory/DescriptorFactory.h"
 #include "Helpers/TextureHelpers.h"

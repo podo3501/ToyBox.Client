@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "RenderFrame.h"
-#include "Core/RenderData.h"
+#include "Definition/RenderData.h"
 #include "Inspector/Inspector.h"
 #include "Pipeline/RenderPacketBuilder.h"
 

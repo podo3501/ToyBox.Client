@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "TextLayoutHelper.h"
-#include "Core/RenderData.h"
+#include "Definition/RenderData.h"
 
 float ComputeHorizontalOffset(
     TextHorizontalAlign align,

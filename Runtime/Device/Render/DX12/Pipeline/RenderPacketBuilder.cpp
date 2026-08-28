@@ -4,7 +4,7 @@
 #include "Resource/Material/MaterialResource.h"
 #include "Resource/Material/DebugMaterialResource.h"
 #include "Resource/Environment/EnvironmentResource.h"
-#include "Core/RenderData.h"
+#include "Definition/RenderData.h"
 #include "TextSystem/TextSystem.h"
 #include "GameClient/Service/Render/Definition/View/SceneViewData.h"
 

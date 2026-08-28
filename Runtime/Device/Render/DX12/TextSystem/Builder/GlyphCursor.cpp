@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "GlyphCursor.h"
 #include "../TextTypes.h"
-#include "Core/RenderData.h"
+#include "Definition/RenderData.h"
 #include "TextLayoutHelper.h"
 #include "Resource/Font/FontResource.h"
 

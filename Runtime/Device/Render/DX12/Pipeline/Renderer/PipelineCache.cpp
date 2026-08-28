@@ -2,7 +2,7 @@
 #include "PipelineCache.h"
 #include "Core/Device.h"
 #include "Core/D3D12Conversions.h"
-#include "Core/RenderFormat.h"
+#include "Definition/RenderFormat.h"
 #include "Shader/ShaderLibrary.h"
 #include "d3dx12.h"
 

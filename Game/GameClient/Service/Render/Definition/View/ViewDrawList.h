@@ -1,5 +1,5 @@
 #pragma once
-#include "RenderState.h"
+#include "GameClient/Service/Render/Definition/Shader/ShaderTypes.h"
 #include "GameClient/Service/Render/Resource/IResource.h"
 #include "GameClient/Service/Render/Definition/Text/TextStyle.h"
 #include "Core/Math/Matrix.h"

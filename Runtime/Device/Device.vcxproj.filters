@@ -136,6 +136,9 @@
     <Filter Include="Render\DX12\Resource\Internal">
       <UniqueIdentifier>{e21bc528-499f-48be-86fa-01609a951990}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Render\DX12\Definition">
+      <UniqueIdentifier>{4d619e89-84e7-4e5e-a86f-b25d04e3f323}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Storage\JsonObjectIO.h">
@@ -279,9 +282,6 @@
     </ClInclude>
     <ClInclude Include="Render\DX12\Command\CommandListHelpers.h">
       <Filter>Render\DX12\Command</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\DX12\Core\RenderData.h">
-      <Filter>Render\DX12\Core</Filter>
     </ClInclude>
     <ClInclude Include="Render\DX12\Core\D3D12Conversions.h">
       <Filter>Render\DX12\Core</Filter>
@@ -631,9 +631,6 @@
     <ClInclude Include="Render\DX12\Pipeline\Renderer\CompositeRenderer.h">
       <Filter>Render\DX12\Pipeline\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\Core\RenderFormat.h">
-      <Filter>Render\DX12\Core</Filter>
-    </ClInclude>
     <ClInclude Include="Render\DX12\Pipeline\GraphBuilder\CompositeGraphBuilder.h">
       <Filter>Render\DX12\Pipeline\GraphBuilder</Filter>
     </ClInclude>
@@ -654,6 +651,15 @@
     </ClInclude>
     <ClInclude Include="Render\DX12\Pipeline\ViewGraphBuilder.h">
       <Filter>Render\DX12\Pipeline</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Definition\RenderData.h">
+      <Filter>Render\DX12\Definition</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Definition\RenderFormat.h">
+      <Filter>Render\DX12\Definition</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Definition\RenderState.h">
+      <Filter>Render\DX12\Definition</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

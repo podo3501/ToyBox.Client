@@ -2,11 +2,12 @@
 #include "SkyboxRenderer.h"
 #include "PipelineCache.h"
 #include "RootSignatureBuilder.h"
-#include "Core/RenderFormat.h"
+#include "Definition/RenderFormat.h"
 #include "Command/CommandList.h"
 #include "Resource/Texture/TextureCubeResource.h"
-#include "GameClient/Service/Render/Definition/View/RenderState.h"
+#include "Definition/RenderState.h"
 #include "GameClient/Graphics/RenderData/FrameData.h"
+#include "GameClient/Service/Render/Definition/Shader/RegistryShader.h"
 #include "Helpers/MathHelpers.h"
 
 struct SkyboxCB

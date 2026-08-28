@@ -6,6 +6,7 @@
 #include "Command/CommandList.h"
 #include "Resource/Texture/TextureResource.h"
 #include "Pipeline/Renderer/RootSignatureBuilder.h"
+#include "GameClient/Service/Render/Definition/Shader/RegistryShader.h"
 
 struct MipShaderDesc
 {

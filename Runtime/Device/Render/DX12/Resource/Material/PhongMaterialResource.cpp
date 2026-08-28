@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "PhongMaterialResource.h"
 #include "../Texture/TextureResource.h"
+#include "GameClient/Service/Render/Definition/Shader/RegistryShader.h"
 
 PhongMaterialResource::~PhongMaterialResource() = default;
 PhongMaterialResource::PhongMaterialResource() :

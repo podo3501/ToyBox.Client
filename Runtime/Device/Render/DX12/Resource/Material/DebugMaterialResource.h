@@ -1,6 +1,6 @@
 #pragma once
 #include "GameClient/Service/Render/Resource/IResource.h"
-#include "GameClient/Service/Render/Definition/View/RenderState.h"
+#include "Definition/RenderState.h"
 
 class DebugMaterialResource : public IResource
 {

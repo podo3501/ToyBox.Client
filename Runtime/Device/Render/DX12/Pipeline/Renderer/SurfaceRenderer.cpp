@@ -11,7 +11,8 @@
 #include "Resource/Environment/EnvironmentResource.h"
 #include "Resource/Texture/TextureCubeResource.h"
 #include "GameClient/Graphics/RenderData/FrameData.h"
-#include "Core/RenderFormat.h"
+#include "GameClient/Service/Render/Definition/Shader/RegistryShader.h"
+#include "Definition/RenderFormat.h"
 #include "Core/D3D12Conversions.h"
 
 //xxxStrength: 0에서 1 사이.

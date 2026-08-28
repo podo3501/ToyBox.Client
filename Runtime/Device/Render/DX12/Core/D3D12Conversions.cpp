@@ -2,7 +2,7 @@
 #include "D3D12Conversions.h"
 #include "Command/CommandType.h"
 #include "Graph/RGTypes.h"
-#include "GameClient/Service/Render/Definition/View/RenderState.h"
+#include "Definition/RenderState.h"
 #include "GameClient/Asset/TextureAsset.h"
 
 // ToD3D12

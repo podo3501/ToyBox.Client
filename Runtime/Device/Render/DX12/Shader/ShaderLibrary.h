@@ -1,5 +1,6 @@
 #pragma once
-#include "GameClient/Service/Render/Definition/View/RenderState.h"
+#include "Definition/RenderState.h"
+#include "GameClient/Service/Render/Definition/ShaderDesc.h"
 #include <d3dcompiler.h>
 #include <wrl.h>
 #include <dxcapi.h>

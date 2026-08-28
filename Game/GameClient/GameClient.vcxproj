@@ -62,6 +62,7 @@
     <ClCompile Include="Service\Render\SceneRenderer.cpp" />
     <ClCompile Include="Service\Render\RenderService.cpp" />
     <ClCompile Include="Service\Render\RenderRepository.cpp" />
+    <ClCompile Include="Service\Render\SceneRenderHelper.cpp" />
     <ClCompile Include="Service\Render\SceneView.cpp" />
     <ClCompile Include="UserInterface\CommandHistory\TextureResource\TexResCommandHistory.cpp" />
     <ClCompile Include="UserInterface\CommandHistory\TextureResource\TexResCommandRegistry.cpp" />
@@ -214,13 +215,15 @@
     <ClInclude Include="Service\Render\Definition\PhongMaterialDesc.h" />
     <ClInclude Include="Service\Render\Definition\ResourceDesc.h" />
     <ClInclude Include="Service\Render\Definition\ResourceDescs.h" />
+    <ClInclude Include="Service\Render\Definition\ShaderDesc.h" />
     <ClInclude Include="Service\Render\Definition\ShaderStageBuilder.h" />
+    <ClInclude Include="Service\Render\Definition\Shader\RegistryShader.h" />
+    <ClInclude Include="Service\Render\Definition\Shader\ShaderTypes.h" />
     <ClInclude Include="Service\Render\Definition\Text\TextStyle.h" />
     <ClInclude Include="Service\Render\Definition\BrushDesc.h" />
     <ClInclude Include="Service\Render\Definition\View\SceneFrameData.h" />
     <ClInclude Include="Service\Render\Definition\View\DrawShadowCasterItem.h" />
     <ClInclude Include="Service\Render\Definition\View\ViewDrawList.h" />
-    <ClInclude Include="Service\Render\Definition\View\RenderState.h" />
     <ClInclude Include="Service\Render\Definition\View\SceneViewData.h" />
     <ClInclude Include="Service\Render\Definition\View\ViewContext.h" />
     <ClInclude Include="Service\Render\Definition\View\ViewID.h" />
@@ -252,6 +255,7 @@
     <ClInclude Include="Service\Render\SceneRenderer.h" />
     <ClInclude Include="Service\Render\RenderService.h" />
     <ClInclude Include="Service\Render\RenderRepository.h" />
+    <ClInclude Include="Service\Render\SceneRenderHelper.h" />
     <ClInclude Include="Service\Render\SceneView.h" />
     <ClInclude Include="UserInterface\CommandHistory\Command.h" />
     <ClInclude Include="UserInterface\CommandHistory\CommandHistory.h" />

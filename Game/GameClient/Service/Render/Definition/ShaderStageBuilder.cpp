@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "ShaderStageBuilder.h"
+#include "ShaderDesc.h"
 
 static ShaderStageDesc VS(std::string entry = "VSMain")
 {

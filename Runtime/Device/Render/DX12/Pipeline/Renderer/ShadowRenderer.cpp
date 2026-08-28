@@ -1,12 +1,13 @@
 #include "pch.h"
 #include "ShadowRenderer.h"
 #include "PipelineCache.h"
-#include "Core/RenderFormat.h"
+#include "Definition/RenderFormat.h"
 #include "Resource/Mesh/MeshResource.h"
 #include "RootSignatureBuilder.h"
 #include "Command/CommandList.h"
 #include "Helpers/MathHelpers.h"
 #include "GameClient/Graphics/RenderData/DirectionalLightData.h"
+#include "GameClient/Service/Render/Definition/Shader/RegistryShader.h"
 
 struct ShadowFrameCB
 {

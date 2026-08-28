@@ -1,5 +1,5 @@
 #pragma once
-#include "Core/RenderData.h"
+#include "Definition/RenderData.h"
 
 class Inspector
 {

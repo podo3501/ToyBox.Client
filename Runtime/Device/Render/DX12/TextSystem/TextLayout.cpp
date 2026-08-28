@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "TextLayout.h"
-#include "Core/RenderData.h"
+#include "Definition/RenderData.h"
 #include "Resource/Font/FontResource.h"
 
 static bool IsCJK(char32_t cp)

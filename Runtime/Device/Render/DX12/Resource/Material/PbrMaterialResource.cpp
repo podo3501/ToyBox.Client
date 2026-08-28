@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "PbrMaterialResource.h"
 #include "../Texture/TextureResource.h"
+#include "GameClient/Service/Render/Definition/Shader/RegistryShader.h"
 
 PbrMaterialResource::~PbrMaterialResource() = default;
 PbrMaterialResource::PbrMaterialResource() :

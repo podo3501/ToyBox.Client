@@ -2,7 +2,7 @@
 #include "RendererConfig.h"
 #include "Allocator/FrameConstantAllocator.h"
 #include "Core/Math/Matrix.h"
-#include "GameClient/Service/Render/Definition/View/RenderState.h"
+#include "Definition/RenderState.h"
 
 struct DirectionalLightData;
 class Device;

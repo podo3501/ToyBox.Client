@@ -8,7 +8,8 @@
 #include "GameClient/Graphics/RenderData/CameraData.h"
 #include "Resource/Mesh/MeshResource.h"
 #include "Core/D3D12Conversions.h"
-#include "Core/RenderFormat.h"
+#include "Definition/RenderFormat.h"
+#include "GameClient/Service/Render/Definition/Shader/RegistryShader.h"
 
 DebugSurfaceRenderer::~DebugSurfaceRenderer() = default;
 DebugSurfaceRenderer::DebugSurfaceRenderer(const DebugSurfaceRendererConfig& config, PipelineCache& pipelineCache) :

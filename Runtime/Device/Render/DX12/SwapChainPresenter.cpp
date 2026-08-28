@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "SwapChainPresenter.h"
 #include "Core/Device.h"
-#include "Core/RenderFormat.h"
+#include "Definition/RenderFormat.h"
 #include "Command/CommandScheduler.h"
 #include "Command/CommandList.h"
 #include "Command/CommandListHelpers.h"

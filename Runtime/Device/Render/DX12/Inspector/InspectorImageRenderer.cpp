@@ -6,6 +6,7 @@
 #include "Resource/Texture/TextureResource.h"
 #include "Helpers/MathHelpers.h"
 #include "Core/D3D12Conversions.h"
+#include "GameClient/Service/Render/Definition/Shader/RegistryShader.h"
 
 struct InspectorTextureCB
 {

@@ -59,7 +59,9 @@
     <ClInclude Include="Render\DX12\Allocator\FrameUploadPools.h" />
     <ClInclude Include="Render\DX12\Allocator\UploadAllocation.h" />
     <ClInclude Include="Render\DX12\Core\FreeTypeLibrary.h" />
-    <ClInclude Include="Render\DX12\Core\RenderFormat.h" />
+    <ClInclude Include="Render\DX12\Definition\RenderData.h" />
+    <ClInclude Include="Render\DX12\Definition\RenderFormat.h" />
+    <ClInclude Include="Render\DX12\Definition\RenderState.h" />
     <ClInclude Include="Render\DX12\Graph\BarrierBuilder.h" />
     <ClInclude Include="Render\DX12\Graph\RenderGraphDefinitions.h" />
     <ClInclude Include="Render\DX12\Graph\RenderGraphUtils.h" />
@@ -117,7 +119,6 @@
     <ClInclude Include="Render\DX12\Core\DebugOptions.h" />
     <ClInclude Include="Render\DX12\Core\Device.h" />
     <ClInclude Include="Render\DX12\Core\FrameProfiler.h" />
-    <ClInclude Include="Render\DX12\Core\RenderData.h" />
     <ClInclude Include="Render\DX12\Factory\DescriptorFactory.h" />
     <ClInclude Include="Render\DX12\Factory\ResourceFactory.h" />
     <ClInclude Include="Render\DX12\Graph\RGTypes.h" />

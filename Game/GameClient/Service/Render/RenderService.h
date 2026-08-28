@@ -3,7 +3,7 @@
 #include "RenderMetrics.h"
 #include "RenderRepository.h"
 #include "SceneRenderer.h"
-#include "Definition/ShaderStageBuilder.h"
+#include "Definition/ShaderDesc.h"
 #include "Repository/Container/RepositoryContainer.h"
 
 struct IRenderBackend;
@@ -29,8 +29,8 @@ public:
 	void Render();
 	void Resize(const Size& size);
 
-	RenderRepository* GetRepository() { return m_repository.get(); }
-	SceneRenderer* GetRenderer() { return m_renderer.get(); }
+	RenderRepository& GetRepository() { return *m_repository; }
+	SceneRenderer& GetRenderer() { return *m_renderer; }
 	RenderMetrics GetRenderMetrics();
 
 private:

@@ -10,7 +10,7 @@
 #include "GameClient/Graphics/RenderData/DirectionalLightData.h"
 #include "GameClient/Graphics/RenderData/CameraData.h"
 #include "GameClient/Service/Render/Definition/View/ViewID.h"
-#include "GameClient/Service/Render/Definition/View/RenderState.h"
+#include "Definition/RenderState.h"
 #include "GameClient/Service/Render/Definition/Text/TextStyle.h"
 
 struct IMaterialResource;

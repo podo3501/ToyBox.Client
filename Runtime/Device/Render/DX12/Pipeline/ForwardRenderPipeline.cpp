@@ -61,9 +61,7 @@ std::vector<CompiledTask> ForwardRenderPipeline::BuildFrame(const FramePacket& f
         m_fontUploadBuilder.Build(m_graph);
 
     m_clearBuilder.Build(m_graph);
-
-    if (!framePacket.shadowCasters.empty())
-        m_shadowBuilder.Build(m_graph, framePacket.light, framePacket.shadowCasters);
+    m_shadowBuilder.Build(m_graph, framePacket.light, framePacket.shadowCasters);
 
     std::vector<RenderViewInfo> renderViewInfos;
     renderViewInfos.reserve(framePacket.views.size());

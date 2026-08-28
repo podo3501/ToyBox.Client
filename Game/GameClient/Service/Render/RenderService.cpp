@@ -3,7 +3,8 @@
 #include "IRenderBackend.h"
 #include "Service/AssetAsyncHelper.h"
 #include "Asset/ShaderAsset.h"
-
+#include "Definition/Shader/RegistryShader.h"
+#include "Definition/ShaderStageBuilder.h"
 #include "Repository/ResourceRepositories.h"
 #include "Repository/Container/RepositoryTypeTraits.h" 
 

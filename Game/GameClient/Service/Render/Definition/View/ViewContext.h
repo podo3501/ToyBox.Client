@@ -1,7 +1,7 @@
 #pragma once
 #include "ViewID.h"
 #include "Core/Foundation/Geometry2D.h"
-#include "RenderState.h"
+#include "GameClient/Service/Render/Definition/Shader/ShaderTypes.h"
 #include "GameClient/Graphics/RenderData/CameraData.h"
 #include <optional>
 

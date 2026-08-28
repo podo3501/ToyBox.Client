@@ -1,5 +1,5 @@
 #pragma once
-#include "GameClient/Service/Render/Definition/View/RenderState.h"
+#include "Definition/RenderState.h"
 #include <d3d12.h>
 #include <wrl.h>
 

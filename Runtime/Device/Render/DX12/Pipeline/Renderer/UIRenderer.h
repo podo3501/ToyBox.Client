@@ -4,7 +4,7 @@
 #include "Core/Foundation/Geometry2D.h"
 #include "Core/Math/Vector4.h"
 #include "Core/Math/Matrix.h"
-#include "GameClient/Service/Render/Definition/View/RenderState.h"
+#include "Definition/RenderState.h"
 
 class Device;
 class PipelineCache;

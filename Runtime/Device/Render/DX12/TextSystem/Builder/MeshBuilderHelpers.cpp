@@ -2,7 +2,7 @@
 #include "MeshBuilderHelpers.h"
 #include "Core/Utils/BitUtils.h"
 #include "GameClient/Asset/MeshAsset.h"
-#include "Core/RenderData.h"
+#include "Definition/RenderData.h"
 #include "TextBatch.h"
 
 std::vector<PackedTextParams> PackRunParams(const std::vector<TextRun>& runs)

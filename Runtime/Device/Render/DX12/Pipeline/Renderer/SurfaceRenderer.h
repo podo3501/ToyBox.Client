@@ -3,7 +3,7 @@
 #include "Allocator/FrameConstantAllocator.h"
 #include "Core/Foundation/Geometry2D.h"
 #include "Core/Math/Matrix.h"
-#include "GameClient/Service/Render/Definition/View/RenderState.h"
+#include "Definition/RenderState.h"
 #include <d3d12.h>
 #include <wrl.h>
 

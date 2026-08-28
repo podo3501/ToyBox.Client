@@ -6,7 +6,7 @@
 #include <utility>
 #include <memory>
 #include "d3dx12.h"
-#include "Core/RenderData.h"
+#include "Definition/RenderData.h"
 #include "Command/CommandType.h"
 #include "Resource/Resource.h"
 #include "TaskHandle.h"

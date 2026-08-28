@@ -265,6 +265,9 @@
     <ClCompile Include="Service\Render\SceneView.cpp">
       <Filter>Service\Render</Filter>
     </ClCompile>
+    <ClCompile Include="Service\Render\SceneRenderHelper.cpp">
+      <Filter>Service\Render</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameLoop.h" />
@@ -805,9 +808,6 @@
     <ClInclude Include="Service\Render\ProviderType.h">
       <Filter>Service\Render</Filter>
     </ClInclude>
-    <ClInclude Include="Service\Render\Definition\View\RenderState.h">
-      <Filter>Service\Render\Definition\View</Filter>
-    </ClInclude>
     <ClInclude Include="Service\Render\Definition\View\ViewContext.h">
       <Filter>Service\Render\Definition\View</Filter>
     </ClInclude>
@@ -828,6 +828,18 @@
     </ClInclude>
     <ClInclude Include="Service\Render\Definition\View\ViewID.h">
       <Filter>Service\Render\Definition\View</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Definition\ShaderDesc.h">
+      <Filter>Service\Render\Definition</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Definition\Shader\ShaderTypes.h">
+      <Filter>Service\Render\Definition\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Definition\Shader\RegistryShader.h">
+      <Filter>Service\Render\Definition\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\SceneRenderHelper.h">
+      <Filter>Service\Render</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -941,6 +953,9 @@
     </Filter>
     <Filter Include="Service\Render\Definition\View">
       <UniqueIdentifier>{f3fb49e4-1d66-4954-956d-ca9c3167c5af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Service\Render\Definition\Shader">
+      <UniqueIdentifier>{730b3950-f338-4db4-aba7-5e736d4da6b7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

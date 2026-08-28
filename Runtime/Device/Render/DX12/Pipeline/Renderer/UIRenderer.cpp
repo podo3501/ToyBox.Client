@@ -8,6 +8,7 @@
 #include "Resource/Brush/BrushResource.h"
 #include "Helpers/MathHelpers.h"
 #include "Core/D3D12Conversions.h"
+#include "GameClient/Service/Render/Definition/Shader/RegistryShader.h"
 
 struct UIDrawCB
 {

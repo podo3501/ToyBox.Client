@@ -3,8 +3,9 @@
 #include "PipelineCache.h"
 #include "RootSignatureBuilder.h"
 #include "PipelineStateUtils.h"
-#include "Core/RenderFormat.h"
+#include "Definition/RenderFormat.h"
 #include "Command/CommandList.h"
+#include "GameClient/Service/Render/Definition/Shader/RegistryShader.h"
 
 CompositeRenderer::~CompositeRenderer() = default;
 CompositeRenderer::CompositeRenderer(PipelineCache& pipelineCache) :
