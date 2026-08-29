@@ -81,6 +81,9 @@ std::vector<CompiledTask> ForwardRenderPipeline::BuildFrame(const FramePacket& f
     m_viewPool.PruneUnused(activeViews);
     m_compositeBuilder.Build(m_graph, renderViewInfos);
 
+    if (m_debugTargetID)
+        m_inspectorBuilder.Build(m_graph, *m_debugTargetID);
+
     m_graph.ExportResource(m_hBackBuffer, RGAccess::Present);
     m_graph.ExportResource(m_hShadow, RGAccess::DepthWrite);
 
@@ -110,6 +113,8 @@ void ForwardRenderPipeline::Render(
     cmd.SetBindlessHeap(bindlessAllocator.GetHeap());
 
     ExecuteRenderPipeline(cmd, compiledTasks, ctx);
+
+    m_debugTargetID = m_hShadow;
 }
 
 void ForwardRenderPipeline::Resize(const Size& size)

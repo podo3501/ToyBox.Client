@@ -53,11 +53,11 @@ UINT DescriptorFactory::CreateTextureSRV(const Resource& res, DXGI_FORMAT format
     srvDesc.Texture2D.MostDetailedMip = 0;
     srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
 
-    UINT Index = m_bindlessAllocator.Allocate();
-    if (Index == UINT_MAX) return UINT_MAX;
+    UINT index = m_bindlessAllocator.Allocate();
+    if (index == UINT_MAX) return UINT_MAX;
 
-    m_device->CreateShaderResourceView(res.Get(), &srvDesc, GetBindlessCpuHandle(Index));
-    return Index;
+    m_device->CreateShaderResourceView(res.Get(), &srvDesc, GetBindlessCpuHandle(index));
+    return index;
 }
 
 UINT DescriptorFactory::CreateTextureRTV(const Resource& res, DXGI_FORMAT format, UINT mipSlice)

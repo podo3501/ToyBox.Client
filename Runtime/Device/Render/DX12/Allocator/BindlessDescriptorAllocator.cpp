@@ -9,11 +9,9 @@ bool BindlessDescriptorAllocator::Initialize(Device& device, const BindlessDescr
 {
     Assert(config.bindlessCount > config.asyncTransientCount);
 
-    m_allocFront = 0;
-    m_frameAllocBack = 0;
     m_asyncTransientStart = config.bindlessCount - config.asyncTransientCount;
-    m_asyncTransientAlloc = m_asyncTransientStart;
-    m_asyncTransientCount = config.asyncTransientCount;
+    m_persistentRegion.Initialize(m_asyncTransientStart);
+    m_asyncRegion.Initialize(config.asyncTransientCount);
 
     m_heap = device.CreateDescriptorHeap(
         D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV,
@@ -25,69 +23,48 @@ bool BindlessDescriptorAllocator::Initialize(Device& device, const BindlessDescr
     m_descriptorSize = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
     m_cpuStart = m_heap->GetCPUDescriptorHandleForHeapStart();
     m_gpuStart = m_heap->GetGPUDescriptorHandleForHeapStart();
-
     return true;
 }
 
 UINT BindlessDescriptorAllocator::Allocate() noexcept
 {
-    if (m_allocFront + m_frameAllocBack >= m_asyncTransientStart)
-    {
-        Assert(false); //디스크립터 힙이 가득 참. 지워서 새로 만들던지, 힙을 늘리던지.
-        return UINT_MAX;
-    }
-
-    return m_allocFront++;
+    return m_persistentRegion.AllocateFront();
 }
 
 UINT BindlessDescriptorAllocator::AllocateFrameTransient(UINT count) noexcept
 {
-    UINT used = m_frameAllocBack + count;
-    if (used > m_asyncTransientStart - m_allocFront)
-    {
-        Assert(false);
-        return UINT_MAX;
-    }
-
-    UINT start = m_asyncTransientStart - used;
-    m_frameAllocBack += count; //count만큼 방을 확보
-    return start;
+    return m_persistentRegion.AllocateBack(count);
 }
 
-UINT BindlessDescriptorAllocator::AllocateAsyncTransient(UINT count) noexcept
+UINT BindlessDescriptorAllocator::AllocateAsyncTransient() noexcept
 {
-    std::lock_guard<std::mutex> lock(m_asyncMutex);
-
-    UINT end = m_asyncTransientStart + m_asyncTransientCount;
-    if (m_asyncTransientAlloc + count > end)
-    {
-        Assert(false); // 할당한 공간이 다 찼다.
+    UINT local = m_asyncRegion.Allocate();
+    if (local == Core::InvalidIndex)
         return UINT_MAX;
-    }
 
-    UINT index = m_asyncTransientAlloc;
-    m_asyncTransientAlloc += count;
-    return index;
+    return m_asyncTransientStart + local; // 로컬 인덱스를 전역 heap 인덱스로 변환(그냥 앞에 공간 더함)
+}
+
+void BindlessDescriptorAllocator::FreeAsyncTransient(UINT index) noexcept
+{
+    if (index == UINT_MAX) return;
+    m_asyncRegion.Free(index - m_asyncTransientStart); // 전역 인덱스를 로컬 인덱스로 변환(그냥 앞에 공간 뺌)
 }
 
 void BindlessDescriptorAllocator::ResetAll() noexcept
 {
-    m_allocFront = 0;
-    ResetFrameTransient();
+    m_persistentRegion.ResetAll();
     ResetAsyncTransient();
 }
 
 void BindlessDescriptorAllocator::ResetFrameTransient() noexcept
 {
-    m_frameAllocBack = 0;
+    m_persistentRegion.ResetBack();
 }
 
 void BindlessDescriptorAllocator::ResetAsyncTransient() noexcept
 {
-    //할당한 부분들을 지우게끔 수정해야 하지만, 일단은 지금 mipmap 한군데 밖에 쓰지 않기 때문에 이렇게
-    //처리하지만, 추후에 이걸 쓰게 되면 이 함수는 보강해야 한다.
-    std::lock_guard<std::mutex> lock(m_asyncMutex);
-    m_asyncTransientAlloc = m_asyncTransientStart;
+    m_asyncRegion.Reset();
 }
 
 D3D12_CPU_DESCRIPTOR_HANDLE BindlessDescriptorAllocator::GetCpuHandle(UINT index) const noexcept

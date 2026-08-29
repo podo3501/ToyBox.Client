@@ -19,6 +19,9 @@
     <Filter Include="Logging">
       <UniqueIdentifier>{845a224d-49c0-41f9-8bfa-4da3e8923ecf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Utils\Allocator">
+      <UniqueIdentifier>{ed39e6a6-5566-4c6e-9a36-2c928bcd3359}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Foundation\NoCopyNoMove.h">
@@ -127,6 +130,15 @@
     <ClInclude Include="Foundation\Cast.hpp">
       <Filter>Foundation</Filter>
     </ClInclude>
+    <ClInclude Include="Utils\Allocator\IndexAllocator.h">
+      <Filter>Utils\Allocator</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\Allocator\IndexType.h">
+      <Filter>Utils\Allocator</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\Allocator\DualIndexAllocator.h">
+      <Filter>Utils\Allocator</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Utils\EnumHelpers.cpp">
@@ -174,6 +186,12 @@
     </ClCompile>
     <ClCompile Include="Utils\BitUtils.cpp">
       <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\Allocator\IndexAllocator.cpp">
+      <Filter>Utils\Allocator</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\Allocator\DualIndexAllocator.cpp">
+      <Filter>Utils\Allocator</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

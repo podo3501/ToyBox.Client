@@ -10,7 +10,7 @@ public:
     ~InspectorGraphBuilder();
     InspectorGraphBuilder() = delete;
     InspectorGraphBuilder(InspectorImageRenderer& imageRenderer, RGResourceID backBufferResID);
-    void Build(RenderGraph& graph);
+    void Build(RenderGraph& graph, RGResourceID resID);
 
 private:
     InspectorImageRenderer& m_imageRenderer;

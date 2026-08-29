@@ -68,4 +68,6 @@ private:
     InspectorGraphBuilder m_inspectorBuilder;
 
     RenderGraph m_graph;
+
+    std::optional<RGResourceID> m_debugTargetID;
 };

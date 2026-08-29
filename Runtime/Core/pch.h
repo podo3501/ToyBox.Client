@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <cmath>
 #include <filesystem>
+#include <mutex>
 #include <optional>
 #include <ranges>
 #include <string>

@@ -9,10 +9,11 @@ InspectorGraphBuilder::InspectorGraphBuilder(InspectorImageRenderer& imageRender
     m_backBufferResID{ backBufferResID }
 {}
 
-void InspectorGraphBuilder::Build(RenderGraph& graph)
+void InspectorGraphBuilder::Build(RenderGraph& graph, RGResourceID resID)
 {
     auto& inspector = graph.AddGraphicsPass("Inspector");
     inspector.Write(m_backBufferResID, RGAccess::RTV);
+    inspector.Read(resID, RGAccess::SRV);
     inspector.gpuExecute =
         [
             &imageInspector = m_imageRenderer
@@ -21,6 +22,9 @@ void InspectorGraphBuilder::Build(RenderGraph& graph)
         {
             imageInspector.PrepareFrame();
             imageInspector.BeginFrame(cmd);
+
+            imageInspector.BindPipeline(cmd);
+            //imageInspector.Draw(cmd, ctx.GetResource(id));
 
             //for (auto& item : ctx.packet->debug.images)
             //{

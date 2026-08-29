@@ -11,6 +11,7 @@
 #include <algorithm>
 #include <cmath>
 #include <filesystem>
+#include <mutex>
 #include <optional>
 #include <queue>
 #include <ranges>
