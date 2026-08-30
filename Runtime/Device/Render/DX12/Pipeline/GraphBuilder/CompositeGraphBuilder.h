@@ -14,11 +14,11 @@ class CompositeGraphBuilder
 public:
     CompositeGraphBuilder(
         CompositeRenderer& compositeRenderer,
-        SwapChainPresenter& swapChain,
-        RGResourceID backBufferResID);
+        SwapChainPresenter& swapChain) noexcept;
 
     void Build(
         RenderGraph& graph, 
+        RGResourceID backBufferResID,
         const std::vector<RenderViewInfo>& renderViewInfos);
 
 private:

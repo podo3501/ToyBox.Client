@@ -13,21 +13,20 @@ ShadowGraphBuilder::~ShadowGraphBuilder() = default;
 ShadowGraphBuilder::ShadowGraphBuilder(
     ShadowRenderer& shadowRenderer, 
     DescriptorFactory& descFactory,
-    ShadowResource& shadowRes,
-    RGResourceID shadowResID) :
+    ShadowResource& shadowRes ) noexcept :
     m_shadowRenderer{ shadowRenderer },
     m_descFactory{ descFactory },
-    m_shadowRes{ shadowRes },
-    m_shadowResID{ shadowResID }
+    m_shadowRes{ shadowRes }
 {}
 
 void ShadowGraphBuilder::Build(
     RenderGraph& graph,
+    RGResourceID shadowResID,
     const DirectionalLightData& light,
     std::vector<RenderShadowCasterItem> shadowCasters)
 {
     auto& shadow = graph.AddGraphicsPass("Shadow");
-    shadow.Write(m_shadowResID, RGAccess::DepthWrite);
+    shadow.Write(shadowResID, RGAccess::DepthWrite);
 
     shadow.gpuExecute =
         [

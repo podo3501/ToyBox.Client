@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "MeshCreateGraphBuilder.h"
-#include "Graph/RenderGraph.h"
 #include "Graph/TaskScheduler.h"
 #include "Factory/DescriptorFactory.h"
 #include "Factory/ResourceFactory.h"
@@ -11,7 +10,7 @@
 
 struct MeshUploadEntry
 {
-    RGResourceID resID{ 0 };
+    RGResourceID resID{ InvalidRGID };
     Resource resource{};
     UploadRegion region{};
 };
@@ -20,9 +19,9 @@ struct MeshFinalizeEntry
 {
     std::shared_ptr<MeshAsset> asset{ nullptr };
 
-    RGResourceID meshResID{ 0 };
-    RGResourceID vbResID{ 0 };
-    RGResourceID ibResID{ 0 };
+    RGResourceID meshResID{ InvalidRGID };
+    RGResourceID vbResID{ InvalidRGID };
+    RGResourceID ibResID{ InvalidRGID };
 };
 
 MeshCreateGraphBuilder::~MeshCreateGraphBuilder() = default;
@@ -36,6 +35,8 @@ MeshCreateGraphBuilder::MeshCreateGraphBuilder(TaskScheduler& taskScheduler, Res
 void MeshCreateGraphBuilder::LoadMeshes(
     const std::vector<MeshLoadRequest>& requests)
 {
+    m_graph.Reset();
+
     std::vector<MeshUploadEntry> uploads;
     std::vector<MeshFinalizeEntry> finalizes;
 
@@ -43,9 +44,9 @@ void MeshCreateGraphBuilder::LoadMeshes(
 
     for (const auto& req : requests)
     {
-        RGResourceID vbResID = RenderGraph::CreateRGResourceID();
-        RGResourceID ibResID = RenderGraph::CreateRGResourceID();
-        RGResourceID meshResID = RenderGraph::CreateRGResourceID();
+        RGResourceID vbResID = m_idGenerator.Generate();
+        RGResourceID ibResID = m_idGenerator.Generate();
+        RGResourceID meshResID = m_idGenerator.Generate();
 
         m_registry.Register(meshResID, req.resource);
 
@@ -75,13 +76,12 @@ void MeshCreateGraphBuilder::LoadMeshes(
 
         offset += req.vbBytes + req.ibBytes;
     }
-    RGResourceID uploadResID = RenderGraph::CreateRGResourceID();
+    RGResourceID uploadResID = m_idGenerator.Generate();
 
-    RenderGraph graph;
-    BuildUploadPass(graph, uploads, uploadResID);
-    BuildFinalizePass(graph, finalizes);
+    BuildUploadPass(uploads, uploadResID);
+    BuildFinalizePass(finalizes);
 
-    auto compiledTasks = graph.Compile();
+    auto compiledTasks = m_graph.Compile();
 
     size_t totalUploadSize = Core::AlignUp(offset, AlignVertexBuffer);
     auto resCtx = std::make_shared<ResourceContext>();
@@ -90,9 +90,9 @@ void MeshCreateGraphBuilder::LoadMeshes(
     m_taskScheduler.SubmitTask(compiledTasks, resCtx);
 }
 
-void MeshCreateGraphBuilder::BuildUploadPass(RenderGraph& graph, std::vector<MeshUploadEntry>& meshUploads, RGResourceID uploadResID)
+void MeshCreateGraphBuilder::BuildUploadPass(std::vector<MeshUploadEntry>& meshUploads, RGResourceID uploadResID)
 {
-    auto& upload = graph.AddCopyPass("MeshUpload");
+    auto& upload = m_graph.AddCopyPass("MeshUpload");
 
     for (auto& mesh : meshUploads)
         upload.Write(mesh.resID, RGAccess::CopyDest);
@@ -113,9 +113,9 @@ void MeshCreateGraphBuilder::BuildUploadPass(RenderGraph& graph, std::vector<Mes
         };
 }
 
-void MeshCreateGraphBuilder::BuildFinalizePass(RenderGraph& graph, std::vector<MeshFinalizeEntry>& finalizes)
+void MeshCreateGraphBuilder::BuildFinalizePass(std::vector<MeshFinalizeEntry>& finalizes)
 {
-    auto& finalize = graph.AddCpuPass("FinalizeMeshes");
+    auto& finalize = m_graph.AddCpuPass("FinalizeMeshes");
 
     for (auto& mesh : finalizes)
     {

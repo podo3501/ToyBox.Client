@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "TextureCreateGraphBuilder.h"
 #include "MipGenerator.h"
-#include "Graph/RenderGraph.h"
 #include "Graph/TaskScheduler.h"
 #include "Factory/DescriptorFactory.h"
 #include "Factory/ResourceFactory.h"
@@ -40,12 +39,13 @@ TextureCreateGraphBuilder::TextureCreateGraphBuilder(
 
 bool TextureCreateGraphBuilder::Initialize(ShaderLibrary& shaderLibrary)
 {
+    m_idAllocator.Initialize(10000); //최대 동시에 10000개의 텍스쳐가 한프레임에 로딩이 안될것이라 가정.
     return m_mipGenerator.Initialize(shaderLibrary);
 }
 
 void TextureCreateGraphBuilder::LoadTextures(const std::vector<TextureLoadRequest>& requests)
 {
-    RenderGraph graph;
+    m_graph.Reset();
 
     std::vector<TextureUploadEntry> textureUploads;
     std::vector<TextureFinalizeEntry> finalizeEntries;
@@ -54,7 +54,7 @@ void TextureCreateGraphBuilder::LoadTextures(const std::vector<TextureLoadReques
     bool hasMipTask = false; //로딩하는 텍스쳐들중에 하나라도 mip생성이 있는지 확인
     for (const auto& req : requests)
     {
-        RGResourceID texResID = RenderGraph::CreateRGResourceID();
+        RGResourceID texResID = m_idAllocator.Allocate();
         m_registry.Register(texResID, req.resource);
 
         auto& texDesc = req.resource->GetDesc();
@@ -76,13 +76,13 @@ void TextureCreateGraphBuilder::LoadTextures(const std::vector<TextureLoadReques
         auto requiredSize = m_resFactory.GetRequiredIntermediateSize(resDesc, 0, 1, offset);
         offset += requiredSize;
     }
-    RGResourceID uploadResID = RenderGraph::CreateRGResourceID();
+    RGResourceID uploadResID = m_idAllocator.Allocate();
 
-    BuildUploadPass(graph, textureUploads, uploadResID);
-    if (hasMipTask) BuildMipPass(graph, textureUploads); //하나라도 있으면 mip pass 생성을 함.
-    BuildFinalizePass(graph, finalizeEntries);
+    BuildUploadPass(textureUploads, uploadResID);
+    if (hasMipTask) BuildMipPass(textureUploads); //하나라도 있으면 mip pass 생성을 함.
+    BuildFinalizePass(finalizeEntries, uploadResID);
 
-    auto compiledTasks = graph.Compile();
+    auto compiledTasks = m_graph.Compile();
 
     size_t totalUploadSize = Core::AlignUp(offset, AlignTexturePlacement);
     auto resCtx = std::make_shared<ResourceContext>();
@@ -91,9 +91,11 @@ void TextureCreateGraphBuilder::LoadTextures(const std::vector<TextureLoadReques
     m_taskScheduler.SubmitTask(compiledTasks, resCtx);
 }
 
-void TextureCreateGraphBuilder::BuildUploadPass(RenderGraph& graph, std::vector<TextureUploadEntry>& textureUploads, RGResourceID uploadResID)
+void TextureCreateGraphBuilder::BuildUploadPass(
+    std::vector<TextureUploadEntry>& textureUploads, 
+    RGResourceID uploadResID)
 {
-    auto& upload = graph.AddCopyPass("TextureUpload");
+    auto& upload = m_graph.AddCopyPass("TextureUpload");
 
     for (auto& tex : textureUploads)
         upload.Write(tex.resID, RGAccess::CopyDest);
@@ -108,9 +110,9 @@ void TextureCreateGraphBuilder::BuildUploadPass(RenderGraph& graph, std::vector<
         };
 }
 
-void TextureCreateGraphBuilder::BuildMipPass(RenderGraph& graph, std::vector<TextureUploadEntry>& textureUploads)
+void TextureCreateGraphBuilder::BuildMipPass(std::vector<TextureUploadEntry>& textureUploads)
 {
-    auto& mip = graph.AddComputePass("GenerateMips");
+    auto& mip = m_graph.AddComputePass("GenerateMips");
 
     for (auto& tex : textureUploads)
     {
@@ -130,17 +132,23 @@ void TextureCreateGraphBuilder::BuildMipPass(RenderGraph& graph, std::vector<Tex
         };
 }
 
-void TextureCreateGraphBuilder::BuildFinalizePass(RenderGraph& graph, std::vector<TextureFinalizeEntry>& finalizeEntries)
+void TextureCreateGraphBuilder::BuildFinalizePass(
+    std::vector<TextureFinalizeEntry>& finalizeEntries,
+    RGResourceID uploadResID)
 {
-    auto& finalize = graph.AddCpuPass("FinalizeTexture");
+    auto& finalize = m_graph.AddCpuPass("FinalizeTexture");
 
     for (auto& tex : finalizeEntries)
         finalize.Read(tex.resID, RGAccess::SRV);
 
-    finalize.cpuExecute = [this, finalizeEntries](TaskContext& ctx) {
+    finalize.cpuExecute = [this, finalizeEntries, uploadResID](TaskContext& ctx) {
         for (auto& tex : finalizeEntries)
+        {
             m_registry.FinalizeTexture(tex.resID);
+            m_idAllocator.Free(tex.resID);
+        }
 
+        m_idAllocator.Free(uploadResID);
         m_descFactory.GetBindlessAllocator().ResetAsyncTransient(); //mipmap때 임시로 만든 srv/uav 정리.
         };
 }

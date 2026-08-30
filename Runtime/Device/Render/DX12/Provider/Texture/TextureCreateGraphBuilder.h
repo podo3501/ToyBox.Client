@@ -1,4 +1,6 @@
 #pragma once
+#include "Graph/RGUploadIDAllocator.h"
+#include "Graph/RenderGraph.h"
 #include "TextureRegistry.h"
 #include "MipGenerator.h"
 
@@ -9,7 +11,6 @@ class Device;
 class TaskScheduler;
 class ResourceFactory;
 class DescriptorFactory;
-class RenderGraph;
 class ShaderLibrary;
 
 using Microsoft::WRL::ComPtr;
@@ -29,13 +30,16 @@ public:
     void LoadTextures(const std::vector<TextureLoadRequest>& requests);
 
 private:
-    void BuildUploadPass(RenderGraph& graph, std::vector<TextureUploadEntry>& textureUploads, RGResourceID uploadResID);
-    void BuildMipPass(RenderGraph& graph, std::vector<TextureUploadEntry>& textureUploads);
-    void BuildFinalizePass(RenderGraph& graph, std::vector<TextureFinalizeEntry>& finalizeEntries);
+    void BuildUploadPass(std::vector<TextureUploadEntry>& textureUploads, RGResourceID uploadResID);
+    void BuildMipPass(std::vector<TextureUploadEntry>& textureUploads);
+    void BuildFinalizePass(std::vector<TextureFinalizeEntry>& finalizeEntries, RGResourceID uploadResID);
 
     TaskScheduler& m_taskScheduler;
     MipGenerator m_mipGenerator;
     DescriptorFactory& m_descFactory;
     ResourceFactory& m_resFactory;
+    RGUploadIDAllocator m_idAllocator;
+
+    RenderGraph m_graph;
     TextureRegistry m_registry;
 };

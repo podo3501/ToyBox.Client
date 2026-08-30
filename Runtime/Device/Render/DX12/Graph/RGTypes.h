@@ -4,6 +4,7 @@
 
 using PassIndex = int;
 using RGResourceID = uint32_t;
+static constexpr RGResourceID InvalidRGID = std::numeric_limits<RGResourceID>::max();
 
 enum class RGAccess
 {

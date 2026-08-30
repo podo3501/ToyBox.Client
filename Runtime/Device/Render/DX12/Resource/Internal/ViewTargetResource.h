@@ -6,6 +6,7 @@
 
 class Device;
 class DescriptorFactory;
+class RGRenderIDAllocator;
 
 class ViewTargetResource : public IResource
 {
@@ -13,7 +14,11 @@ public:
     virtual ~ViewTargetResource() override;
     ViewTargetResource();
     virtual bool IsReady() const noexcept override { return m_ready; }
-    bool Initialize(Device& device, DescriptorFactory& descFactory, const Size& size);
+    bool Initialize(
+        Device& device, 
+        DescriptorFactory& descFactory, 
+        RGRenderIDAllocator& idAllocator,
+        const Size& size);
 
     RGResourceID GetColorID() const noexcept { return m_colorID; }
     RGResourceID GetDepthID() const noexcept { return m_depthID; }
@@ -26,6 +31,7 @@ public:
 
 private:
     DescriptorFactory* m_descFactory{ nullptr };
+    RGRenderIDAllocator* m_idAllocator{ nullptr };
     bool m_ready{ false };
 
     Resource m_color;

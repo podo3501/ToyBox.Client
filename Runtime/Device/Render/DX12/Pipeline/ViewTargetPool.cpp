@@ -13,7 +13,10 @@ ViewTargetPool::ViewTargetPool(
     m_pendingRelease{ taskScheduler }
 {}
 
-ViewTargetResource& ViewTargetPool::Acquire(ViewID id, const Size& requiredSize)
+ViewTargetResource& ViewTargetPool::Acquire(
+    ViewID id, 
+    RGRenderIDAllocator& idAllocator,
+    const Size& requiredSize)
 {
     auto& view = m_views[Core::ToIndex(id)];
     if (view)
@@ -26,7 +29,7 @@ ViewTargetResource& ViewTargetPool::Acquire(ViewID id, const Size& requiredSize)
     }
 
     view = std::make_shared<ViewTargetResource>();
-    view->Initialize(m_device, m_descFactory, requiredSize);
+    view->Initialize(m_device, m_descFactory, idAllocator, requiredSize);
 
     return *view;
 }

@@ -4,17 +4,14 @@
 #include "Graph/RenderGraph.h"
 
 ClearGraphBuilder::~ClearGraphBuilder() = default;
-ClearGraphBuilder::ClearGraphBuilder(
-    SwapChainPresenter& swapChain,
-    RGResourceID backBufferResID) :
-    m_swapChain{ swapChain },
-    m_backBufferResID{ backBufferResID }
+ClearGraphBuilder::ClearGraphBuilder(SwapChainPresenter& swapChain) noexcept :
+    m_swapChain{ swapChain }
 {}
 
-void ClearGraphBuilder::Build(RenderGraph& graph)
+void ClearGraphBuilder::Build(RenderGraph& graph, RGResourceID backBufferResID)
 {
     auto& clear = graph.AddGraphicsPass("ClearBackBuffer");
-    clear.Write(m_backBufferResID, RGAccess::RTV);
+    clear.Write(backBufferResID, RGAccess::RTV);
     clear.gpuExecute =
         [
             &swapChain = m_swapChain

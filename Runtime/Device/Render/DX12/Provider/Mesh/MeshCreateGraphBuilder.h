@@ -1,10 +1,11 @@
 #pragma once
+#include "Graph/RenderGraph.h"
+#include "Graph/RGResourceIDGenerator.h"
 #include "MeshRegistry.h"
 
 struct MeshLoadRequest;
 struct MeshUploadEntry;
 struct MeshFinalizeEntry;
-class RenderGraph;
 class TaskScheduler;
 class ResourceFactory;
 class DescriptorFactory;
@@ -20,11 +21,14 @@ public:
     void LoadMeshes(const std::vector<MeshLoadRequest>& requests);
 
 private:
-    void BuildUploadPass(RenderGraph& graph, std::vector<MeshUploadEntry>& meshUploads, RGResourceID uploadResID);
-    void BuildFinalizePass(RenderGraph& graph, std::vector<MeshFinalizeEntry>& finalizes);
+    void BuildUploadPass(std::vector<MeshUploadEntry>& meshUploads, RGResourceID uploadResID);
+    void BuildFinalizePass(std::vector<MeshFinalizeEntry>& finalizes);
 
     TaskScheduler& m_taskScheduler;
     ResourceFactory& m_resFactory;
     DescriptorFactory& m_descFactory;
+
+    RenderGraph m_graph;
+    RGResourceIDGenerator m_idGenerator;
     MeshRegistry m_registry;
 };

@@ -6,8 +6,12 @@
 #include "Core/Foundation/Color.h"
 
 TextureProvider::~TextureProvider() = default;
-TextureProvider::TextureProvider(TextureCreateGraphBuilder create) noexcept :
-    m_createBuilder{ std::move(create) }
+TextureProvider::TextureProvider(
+    Device& device,
+    TaskScheduler& taskScheduler,
+    ResourceFactory& resFactory,
+    DescriptorFactory& descFactory) noexcept :
+    m_createBuilder{ device, taskScheduler, resFactory, descFactory }
 {}
 
 bool TextureProvider::Initialize(ShaderLibrary& shaderLibrary)

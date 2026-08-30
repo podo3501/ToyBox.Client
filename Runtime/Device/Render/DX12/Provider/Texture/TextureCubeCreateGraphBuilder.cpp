@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "TextureCubeCreateGraphBuilder.h"
-#include "Graph/RenderGraph.h"
 #include "Graph/TaskScheduler.h"
 #include "Factory/DescriptorFactory.h"
 #include "Factory/ResourceFactory.h"
@@ -34,7 +33,7 @@ TextureCubeCreateGraphBuilder::TextureCubeCreateGraphBuilder(
 
 void TextureCubeCreateGraphBuilder::LoadTextureCubes(const std::vector<TextureCubeLoadRequest>& requests)
 {
-    RenderGraph graph;
+    m_graph.Reset();
 
     std::vector<TextureCubeUploadEntry> uploads;
     std::vector<TextureCubeFinalizeEntry> finalizeEntries;
@@ -42,7 +41,7 @@ void TextureCubeCreateGraphBuilder::LoadTextureCubes(const std::vector<TextureCu
     size_t offset = 0;
     for (const auto& req : requests)
     {
-        RGResourceID texResID = RenderGraph::CreateRGResourceID();
+        RGResourceID texResID = m_idGenerator.Generate();
         m_registry.Register(texResID, req.resource);
 
         auto resDesc = CreateTextureCubeDesc(*req.asset);
@@ -61,12 +60,12 @@ void TextureCubeCreateGraphBuilder::LoadTextureCubes(const std::vector<TextureCu
             resDesc, 0, req.asset->mipCount * req.asset->faceCount, offset);
         offset += requiredSize;
     }
-    RGResourceID uploadResID = RenderGraph::CreateRGResourceID();
+    RGResourceID uploadResID = m_idGenerator.Generate();
 
-    BuildUploadPass(graph, uploads, uploadResID);
-    BuildFinalizePass(graph, finalizeEntries);
+    BuildUploadPass(uploads, uploadResID);
+    BuildFinalizePass(finalizeEntries);
 
-    auto compiledTasks = graph.Compile();
+    auto compiledTasks = m_graph.Compile();
 
     size_t totalUploadSize = Core::AlignUp(offset, AlignTexturePlacement);
     auto resCtx = std::make_shared<ResourceContext>();
@@ -75,9 +74,9 @@ void TextureCubeCreateGraphBuilder::LoadTextureCubes(const std::vector<TextureCu
     m_taskScheduler.SubmitTask(compiledTasks, resCtx);
 }
 
-void TextureCubeCreateGraphBuilder::BuildUploadPass(RenderGraph& graph, std::vector<TextureCubeUploadEntry>& uploads, RGResourceID uploadResID)
+void TextureCubeCreateGraphBuilder::BuildUploadPass(std::vector<TextureCubeUploadEntry>& uploads, RGResourceID uploadResID)
 {
-    auto& upload = graph.AddCopyPass("TextureCubeUpload");
+    auto& upload = m_graph.AddCopyPass("TextureCubeUpload");
 
     for (auto& tex : uploads)
         upload.Write(tex.resID, RGAccess::CopyDest);
@@ -93,9 +92,9 @@ void TextureCubeCreateGraphBuilder::BuildUploadPass(RenderGraph& graph, std::vec
         };
 }
 
-void TextureCubeCreateGraphBuilder::BuildFinalizePass(RenderGraph& graph, std::vector<TextureCubeFinalizeEntry>& finalizeEntries)
+void TextureCubeCreateGraphBuilder::BuildFinalizePass(std::vector<TextureCubeFinalizeEntry>& finalizeEntries)
 {
-    auto& finalize = graph.AddCpuPass("FinalizeTextureCube");
+    auto& finalize = m_graph.AddCpuPass("FinalizeTextureCube");
 
     for (auto& tex : finalizeEntries)
         finalize.Read(tex.resID, RGAccess::SRV);

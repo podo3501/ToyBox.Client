@@ -7,9 +7,9 @@ class RenderGraph
 {
 public:
     ~RenderGraph();
-    static RGResourceID CreateRGResourceID() noexcept;
-    void ImportResource(RGResourceID resID, RGAccess access); //초기상태는 이렇다고 가정함.
-    void ExportResource(RGResourceID resID, RGAccess access); //끝날때는 이럴꺼라고 가정함.
+    RenderGraph();
+    void ImportResource(RGResourceID resID, RGAccess access); //초기상태는 이래야 함.
+    void ExportResource(RGResourceID resID, RGAccess access); //끝날때는 이렇게 끝나게끔. (다른 상태면 상태변환 함)
 
     RenderPass& AddGraphicsPass(std::string name);
     RenderPass& AddCopyPass(std::string name);
@@ -52,10 +52,8 @@ private:
 
     LocalTaskID CreateLocalTaskID();
 
-    static std::atomic<RGResourceID> s_resourceID; //리소스 id를 발급해 주는 변수
-
     std::vector<RenderPass> m_passes;
     std::unordered_map<RGResourceID, ResourceStateTracker> m_statesTracker;
     std::vector<ExportResourceState> m_exportResources;
-    LocalTaskID m_localTaskID{ 1 }; //그래프에서 발급하는 임시 테스크 ID
+    LocalTaskID m_localTaskID{ 0 }; //그래프에서 발급하는 임시 테스크 ID
 };

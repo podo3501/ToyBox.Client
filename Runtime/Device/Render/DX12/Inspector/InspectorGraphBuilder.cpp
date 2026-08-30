@@ -4,15 +4,17 @@
 #include "Inspector/InspectorImageRenderer.h"
 
 InspectorGraphBuilder::~InspectorGraphBuilder() = default;
-InspectorGraphBuilder::InspectorGraphBuilder(InspectorImageRenderer& imageRenderer, RGResourceID backBufferResID) :
-    m_imageRenderer{ imageRenderer },
-    m_backBufferResID{ backBufferResID }
+InspectorGraphBuilder::InspectorGraphBuilder(InspectorImageRenderer& imageRenderer) noexcept :
+    m_imageRenderer{ imageRenderer }
 {}
 
-void InspectorGraphBuilder::Build(RenderGraph& graph, RGResourceID resID)
+void InspectorGraphBuilder::Build(
+    RenderGraph& graph, 
+    RGResourceID backBufferResID, 
+    RGResourceID resID)
 {
     auto& inspector = graph.AddGraphicsPass("Inspector");
-    inspector.Write(m_backBufferResID, RGAccess::RTV);
+    inspector.Write(backBufferResID, RGAccess::RTV);
     inspector.Read(resID, RGAccess::SRV);
     inspector.gpuExecute =
         [

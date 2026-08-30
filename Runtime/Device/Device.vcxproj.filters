@@ -661,6 +661,15 @@
     <ClInclude Include="Render\DX12\Definition\RenderState.h">
       <Filter>Render\DX12\Definition</Filter>
     </ClInclude>
+    <ClInclude Include="Render\DX12\Graph\RGRenderIDAllocator.h">
+      <Filter>Render\DX12\Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Graph\RGResourceIDGenerator.h">
+      <Filter>Render\DX12\Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Graph\RGUploadIDAllocator.h">
+      <Filter>Render\DX12\Graph</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -1083,6 +1092,12 @@
     </ClCompile>
     <ClCompile Include="Render\DX12\Pipeline\ViewGraphBuilder.cpp">
       <Filter>Render\DX12\Pipeline</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Graph\RGRenderIDAllocator.cpp">
+      <Filter>Render\DX12\Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Graph\RGUploadIDAllocator.cpp">
+      <Filter>Render\DX12\Graph</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

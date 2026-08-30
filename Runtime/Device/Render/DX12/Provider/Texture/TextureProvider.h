@@ -19,7 +19,11 @@ class TextureProvider : public IUpdatableProvider
 public:
     ~TextureProvider();
     TextureProvider() = delete;
-    explicit TextureProvider(TextureCreateGraphBuilder create) noexcept;
+    TextureProvider(
+        Device& device,
+        TaskScheduler& taskScheduler,
+        ResourceFactory& resFactory,
+        DescriptorFactory& descFactory) noexcept;
     virtual void Update(float avgGpuMs) override;
 
     shared_ptr<TextureResource> CreateResource();

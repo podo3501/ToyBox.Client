@@ -9,13 +9,10 @@ class ClearGraphBuilder
 public:
     ~ClearGraphBuilder();
     ClearGraphBuilder() = delete;
-    ClearGraphBuilder(
-        SwapChainPresenter& swapChain,
-        RGResourceID backBufferResID);
+    explicit ClearGraphBuilder(SwapChainPresenter& swapChain) noexcept;
 
-    void Build(RenderGraph& graph);
+    void Build(RenderGraph& graph, RGResourceID backBufferResID);
 
 private:
     SwapChainPresenter& m_swapChain;
-    RGResourceID m_backBufferResID;
 };

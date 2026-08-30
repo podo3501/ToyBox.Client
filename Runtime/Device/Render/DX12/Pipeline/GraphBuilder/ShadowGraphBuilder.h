@@ -15,11 +15,11 @@ public:
     ShadowGraphBuilder(
         ShadowRenderer& shadowRenderer, 
         DescriptorFactory& descFactory,
-        ShadowResource& shadowRes,
-        RGResourceID shadowResID);
+        ShadowResource& shadowRes) noexcept;
 
     void Build(
         RenderGraph& graph,
+        RGResourceID shadowResID,
         const DirectionalLightData& light,
         std::vector<RenderShadowCasterItem> shadowCasters);
 
@@ -27,5 +27,4 @@ private:
     ShadowRenderer& m_shadowRenderer;
     DescriptorFactory& m_descFactory;
     ShadowResource& m_shadowRes;
-    RGResourceID m_shadowResID;
 };

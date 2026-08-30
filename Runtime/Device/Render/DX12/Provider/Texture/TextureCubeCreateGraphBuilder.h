@@ -1,4 +1,6 @@
 #pragma once
+#include "Graph/RenderGraph.h"
+#include "Graph/RGResourceIDGenerator.h"
 #include "TextureCubeRegistry.h"
 
 struct TextureCubeLoadRequest;
@@ -7,7 +9,6 @@ struct TextureCubeFinalizeEntry;
 class TaskScheduler;
 class ResourceFactory;
 class DescriptorFactory;
-class RenderGraph;
 
 class TextureCubeCreateGraphBuilder
 {
@@ -22,11 +23,14 @@ public:
     void LoadTextureCubes(const std::vector<TextureCubeLoadRequest>& requests);
 
 private:
-    void BuildUploadPass(RenderGraph& graph, std::vector<TextureCubeUploadEntry>& uploads, RGResourceID uploadResID);
-    void BuildFinalizePass(RenderGraph& graph, std::vector<TextureCubeFinalizeEntry>& finalizeEntries);
+    void BuildUploadPass(std::vector<TextureCubeUploadEntry>& uploads, RGResourceID uploadResID);
+    void BuildFinalizePass(std::vector<TextureCubeFinalizeEntry>& finalizeEntries);
 
     TaskScheduler& m_taskScheduler;
     DescriptorFactory& m_descFactory;
     ResourceFactory& m_resFactory;
+
+    RenderGraph m_graph;
+    RGResourceIDGenerator m_idGenerator;
     TextureCubeRegistry m_registry; // TextureRegistry와 유사하되 TextureCubeResource 대상
 };

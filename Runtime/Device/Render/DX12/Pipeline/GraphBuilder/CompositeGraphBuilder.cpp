@@ -7,22 +7,21 @@
 
 CompositeGraphBuilder::CompositeGraphBuilder(
     CompositeRenderer& compositeRenderer,
-    SwapChainPresenter& swapChain,
-    RGResourceID backBufferResID) :
+    SwapChainPresenter& swapChain) noexcept :
     m_compositeRenderer{ compositeRenderer },
-    m_swapChain{ swapChain },
-    m_backBufferResID{ backBufferResID }
+    m_swapChain{ swapChain }
 {}
 
 void CompositeGraphBuilder::Build(
     RenderGraph& graph,
+    RGResourceID backBufferResID,
     const std::vector<RenderViewInfo>& renderViewInfos)
 {
     auto& composite = graph.AddGraphicsPass("Composite");
 
     for (auto& info : renderViewInfos)
         composite.Read(info.colorID, RGAccess::SRV);
-    composite.Write(m_backBufferResID, RGAccess::RTV);
+    composite.Write(backBufferResID, RGAccess::RTV);
 
     composite.gpuExecute =
         [

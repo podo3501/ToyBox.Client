@@ -2,7 +2,7 @@
 #include "ViewTargetResource.h"
 #include "Core/Device.h"
 #include "Definition/RenderFormat.h"
-#include "Graph/RenderGraph.h"
+#include "Graph/RGRenderIDAllocator.h"
 #include "Factory/DescriptorFactory.h"
 #include "Helpers/TextureHelpers.h"
 
@@ -46,20 +46,31 @@ ViewTargetResource::~ViewTargetResource()
         m_descFactory->FreeRTV(m_colorRTVIndex);
         m_descFactory->FreeDSV(m_depthDSVIndex);
     }
+
+    if (m_idAllocator)
+    {
+        m_idAllocator->FreeDynamic(m_colorID);
+        m_idAllocator->FreeDynamic(m_depthID);
+    }
 }
 ViewTargetResource::ViewTargetResource() = default;
 
-bool ViewTargetResource::Initialize(Device& device, DescriptorFactory& descFactory, const Size& size)
+bool ViewTargetResource::Initialize(
+    Device& device, 
+    DescriptorFactory& descFactory, 
+    RGRenderIDAllocator& idAllocator,
+    const Size& size)
 {
     m_descFactory = &descFactory;
+    m_idAllocator = &idAllocator;
     m_size = size;
 
     m_color = CreateColorTarget(device, size);
     m_depth = CreateDepthTarget(device, size);
     if (!m_color || !m_depth) return false;
 
-    m_colorID = RenderGraph::CreateRGResourceID();
-    m_depthID = RenderGraph::CreateRGResourceID();
+    m_colorID = idAllocator.AllocateDynamic();
+    m_depthID = idAllocator.AllocateDynamic();
 
     m_colorRTVIndex = descFactory.CreateTextureRTV(m_color, RenderFormat::BackBufferFormat);
     m_depthDSVIndex = descFactory.CreateTextureDSV(m_depth, DXGI_FORMAT_D32_FLOAT);

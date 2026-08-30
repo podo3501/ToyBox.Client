@@ -3,7 +3,7 @@
 #include "ViewTargetPool.h"
 #include "ViewGraphBuilder.h"
 #include "Graph/RenderGraph.h"
-#include "Graph/RGTypes.h"
+#include "Graph/RGRenderIDAllocator.h"
 #include "Resource/Internal/ShadowResource.h"
 #include "Inspector/InspectorRenderers.h"
 //Graph Builders
@@ -52,22 +52,23 @@ private:
     SwapChainPresenter& m_swapChain;
     DescriptorFactory& m_descFactory;
 
+    RenderGraph m_graph;
+    RGRenderIDAllocator m_idAllocator;
+
     Renderers m_renderers;
     ViewTargetPool m_viewPool;
     ViewGraphBuilder m_viewBuilder;
     ShadowResource m_shadowRes; //이 클래스는 framereseource 클래스중의 하나. 프레임당 render가 필요한 리소스들.
     InspectorRenderers m_inspectorRenderers;
 
-    RGResourceID m_hBackBuffer{ 0 };
-    RGResourceID m_hShadow{ 0 };
+    RGResourceID m_hBackBuffer{ InvalidRGID };
+    RGResourceID m_hShadow{ InvalidRGID };
 
     FontAtlasUploadGraphBuilder& m_fontUploadBuilder;
     ClearGraphBuilder m_clearBuilder;
     ShadowGraphBuilder m_shadowBuilder;
     CompositeGraphBuilder m_compositeBuilder;
     InspectorGraphBuilder m_inspectorBuilder;
-
-    RenderGraph m_graph;
 
     std::optional<RGResourceID> m_debugTargetID;
 };

@@ -5,13 +5,8 @@
 #include "RenderGraphUtils.h"
 #include <unordered_set>
 
-std::atomic<RGResourceID> RenderGraph::s_resourceID{ 1 };
-
 RenderGraph::~RenderGraph() = default;
-RGResourceID RenderGraph::CreateRGResourceID() noexcept
-{
-    return s_resourceID.fetch_add(1);
-}
+RenderGraph::RenderGraph() = default;
 
 void RenderGraph::ImportResource(RGResourceID resID, RGAccess access)
 {

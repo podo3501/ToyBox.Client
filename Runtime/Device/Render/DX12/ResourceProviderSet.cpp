@@ -14,7 +14,10 @@ ResourceProviderSet::ResourceProviderSet(
         MeshCreateGraphBuilder{ taskScheduler, resFactory, descFactory }
         },
     m_texProvider{
-        TextureCreateGraphBuilder{ m_device, taskScheduler, resFactory, descFactory }
+        m_device, 
+        taskScheduler, 
+        resFactory, 
+        descFactory
         },
     m_matProvider{ 
         m_pendingLoad,

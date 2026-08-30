@@ -9,8 +9,11 @@ class InspectorGraphBuilder
 public:
     ~InspectorGraphBuilder();
     InspectorGraphBuilder() = delete;
-    InspectorGraphBuilder(InspectorImageRenderer& imageRenderer, RGResourceID backBufferResID);
-    void Build(RenderGraph& graph, RGResourceID resID);
+    explicit InspectorGraphBuilder(InspectorImageRenderer& imageRenderer) noexcept;
+    void Build(
+        RenderGraph& graph, 
+        RGResourceID backBufferResID, 
+        RGResourceID resID);
 
 private:
     InspectorImageRenderer& m_imageRenderer;

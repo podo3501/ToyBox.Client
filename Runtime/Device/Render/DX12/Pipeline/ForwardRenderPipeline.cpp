@@ -22,29 +22,27 @@ ForwardRenderPipeline::ForwardRenderPipeline(
     m_viewPool{ device, taskScheduler, descFactory },
     m_viewBuilder{ device, descFactory, m_renderers },
     m_inspectorRenderers{ device, shaderLibaray },
-    // RGResourceID: static 함수이므로 생성자 초기화 리스트에서 바로 생성 가능
-    m_hBackBuffer{ RenderGraph::CreateRGResourceID() },
-    m_hShadow{ RenderGraph::CreateRGResourceID() },
     //Builders
     m_fontUploadBuilder{ fontUploadBuilder },
-    m_clearBuilder{ m_swapChain, m_hBackBuffer },
+    m_clearBuilder{ m_swapChain },
     m_shadowBuilder{
         m_renderers.GetShadowRenderer(),
-        m_descFactory, m_shadowRes, m_hShadow },
+        m_descFactory, m_shadowRes },
     m_compositeBuilder{
         m_renderers.GetCompositeRenderer(),
-        m_swapChain,
-        m_hBackBuffer },
-    m_inspectorBuilder{
-        m_inspectorRenderers.GetInspectorImageRenderer(),
-        m_hBackBuffer }
+        m_swapChain },
+    m_inspectorBuilder{ m_inspectorRenderers.GetInspectorImageRenderer() }
 {}
 
 bool ForwardRenderPipeline::Initialize(const Size& screenSize, const Size& shadowMapSize)
 {
     ReturnIfFalse(m_shadowRes.Initialize(m_device, m_descFactory, shadowMapSize));
     ReturnIfFalse(m_renderers.Initialize());
+    ReturnIfFalse(m_idAllocator.Initialize(TotalResourceIDCapacity, DynamicResourceIDCapacity));
     ReturnIfFalse(m_inspectorRenderers.Initialize(screenSize));
+
+    m_hBackBuffer = m_idAllocator.AllocatePersistent();
+    m_hShadow = m_idAllocator.AllocatePersistent();
 
     return true;
 }
@@ -52,16 +50,17 @@ bool ForwardRenderPipeline::Initialize(const Size& screenSize, const Size& shado
 std::vector<CompiledTask> ForwardRenderPipeline::BuildFrame(const FramePacket& framePacket)
 {
     m_renderers.ResetFrameResources(); // 이전 프레임에 썻던 데이터들을 초기화.
-
     m_graph.Reset();
+    m_idAllocator.ResetTransient();
+
     m_graph.ImportResource(m_hBackBuffer, RGAccess::Present);
     m_graph.ImportResource(m_hShadow, RGAccess::DepthWrite);
 
     if (m_fontUploadBuilder.HasPendingUploads())
-        m_fontUploadBuilder.Build(m_graph);
+        m_fontUploadBuilder.Build(m_graph, m_idAllocator);
 
-    m_clearBuilder.Build(m_graph);
-    m_shadowBuilder.Build(m_graph, framePacket.light, framePacket.shadowCasters);
+    m_clearBuilder.Build(m_graph, m_hBackBuffer);
+    m_shadowBuilder.Build(m_graph, m_hShadow, framePacket.light, framePacket.shadowCasters);
 
     std::vector<RenderViewInfo> renderViewInfos;
     renderViewInfos.reserve(framePacket.views.size());
@@ -74,15 +73,15 @@ std::vector<CompiledTask> ForwardRenderPipeline::BuildFrame(const FramePacket& f
         activeViews.set(Core::ToIndex(view->id));
 
         auto size = ToSize(view->viewport.width, view->viewport.height);
-        ViewTargetResource& target = m_viewPool.Acquire(view->id, size);
+        ViewTargetResource& target = m_viewPool.Acquire(view->id, m_idAllocator, size);
 
         renderViewInfos.push_back(m_viewBuilder.Build(m_graph, frameCtx, target, view));
     }
     m_viewPool.PruneUnused(activeViews);
-    m_compositeBuilder.Build(m_graph, renderViewInfos);
+    m_compositeBuilder.Build(m_graph, m_hBackBuffer, renderViewInfos);
 
     if (m_debugTargetID)
-        m_inspectorBuilder.Build(m_graph, *m_debugTargetID);
+        m_inspectorBuilder.Build(m_graph, m_hBackBuffer, *m_debugTargetID);
 
     m_graph.ExportResource(m_hBackBuffer, RGAccess::Present);
     m_graph.ExportResource(m_hShadow, RGAccess::DepthWrite);
