@@ -9,9 +9,9 @@ bool BindlessDescriptorAllocator::Initialize(Device& device, const BindlessDescr
 {
     Assert(config.bindlessCount > config.asyncTransientCount);
 
-    m_asyncTransientStart = config.bindlessCount - config.asyncTransientCount;
-    m_persistentRegion.Initialize(m_asyncTransientStart);
-    m_asyncRegion.Initialize(config.asyncTransientCount);
+    m_dynamicStart = config.bindlessCount - config.asyncTransientCount;
+    m_persistentRegion.Initialize(m_dynamicStart);
+    m_dynamicRegion.Initialize(config.asyncTransientCount);
 
     m_heap = device.CreateDescriptorHeap(
         D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV,
@@ -26,45 +26,40 @@ bool BindlessDescriptorAllocator::Initialize(Device& device, const BindlessDescr
     return true;
 }
 
-UINT BindlessDescriptorAllocator::Allocate() noexcept
+UINT BindlessDescriptorAllocator::AllocatePersistent() noexcept
 {
     return m_persistentRegion.AllocateFront();
 }
 
-UINT BindlessDescriptorAllocator::AllocateFrameTransient(UINT count) noexcept
+UINT BindlessDescriptorAllocator::AllocateTransient(UINT count) noexcept
 {
     return m_persistentRegion.AllocateBack(count);
 }
 
-UINT BindlessDescriptorAllocator::AllocateAsyncTransient() noexcept
+UINT BindlessDescriptorAllocator::AllocateDynamic() noexcept
 {
-    UINT local = m_asyncRegion.Allocate();
+    UINT local = m_dynamicRegion.Allocate();
     if (local == Core::InvalidIndex)
         return UINT_MAX;
 
-    return m_asyncTransientStart + local; // 로컬 인덱스를 전역 heap 인덱스로 변환(그냥 앞에 공간 더함)
+    return m_dynamicStart + local; // 로컬 인덱스를 전역 heap 인덱스로 변환(그냥 앞에 공간 더함)
 }
 
-void BindlessDescriptorAllocator::FreeAsyncTransient(UINT index) noexcept
+void BindlessDescriptorAllocator::FreeDynamic(UINT index) noexcept
 {
     if (index == UINT_MAX) return;
-    m_asyncRegion.Free(index - m_asyncTransientStart); // 전역 인덱스를 로컬 인덱스로 변환(그냥 앞에 공간 뺌)
+    m_dynamicRegion.Free(index - m_dynamicStart); // 전역 인덱스를 로컬 인덱스로 변환(그냥 앞에 공간 뺌)
 }
 
-void BindlessDescriptorAllocator::ResetAll() noexcept
-{
-    m_persistentRegion.ResetAll();
-    ResetAsyncTransient();
-}
-
-void BindlessDescriptorAllocator::ResetFrameTransient() noexcept
+void BindlessDescriptorAllocator::ResetTransient() noexcept
 {
     m_persistentRegion.ResetBack();
 }
 
-void BindlessDescriptorAllocator::ResetAsyncTransient() noexcept
+void BindlessDescriptorAllocator::ResetAll() noexcept
 {
-    m_asyncRegion.Reset();
+    m_persistentRegion.ResetAll(); //transient 부분도 reset 됨.
+    m_dynamicRegion.Reset();
 }
 
 D3D12_CPU_DESCRIPTOR_HANDLE BindlessDescriptorAllocator::GetCpuHandle(UINT index) const noexcept

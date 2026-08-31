@@ -27,7 +27,11 @@ public:
     UINT CreateTextureSRV(const Resource& res, DXGI_FORMAT format, UINT mipLevels = 1);
     UINT CreateTextureRTV(const Resource& res, DXGI_FORMAT format, UINT mipSlice = 0);
     UINT CreateTextureDSV(const Resource& res, DXGI_FORMAT format, UINT mipSlice = 0);
-    bool CreateTextureViews(TextureResource* texRes, bool generateMips);
+    bool CreateTextureViews(
+        TextureResource* texRes,
+        bool generateMips,
+        std::vector<UINT>* outMipSrvIndices = nullptr,
+        std::vector<UINT>* outMipUavIndices = nullptr);
     bool CreateTextureCubeViews(TextureCubeResource* texRes);
 
     void FreeRTV(UINT rtvIndex);

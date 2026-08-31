@@ -30,9 +30,9 @@ UINT DescriptorFactory::CreateBufferSRV(
     UINT index = UINT_MAX;
     switch (type)
     {
-    case DescriptorAllocationType::Persistent: index = m_bindlessAllocator.Allocate(); break;
-    case DescriptorAllocationType::FrameTransient: index = m_bindlessAllocator.AllocateFrameTransient(); break;
-    case DescriptorAllocationType::AsyncTransient: Assert(false); break; //지원안함.
+    case DescriptorAllocationType::Persistent: index = m_bindlessAllocator.AllocatePersistent(); break;
+    case DescriptorAllocationType::Transient: index = m_bindlessAllocator.AllocateTransient(); break;
+    case DescriptorAllocationType::Dynamic: Assert(false); break; //지원안함.
     }
     if (index == UINT_MAX)
         return UINT_MAX;
@@ -53,7 +53,7 @@ UINT DescriptorFactory::CreateTextureSRV(const Resource& res, DXGI_FORMAT format
     srvDesc.Texture2D.MostDetailedMip = 0;
     srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
 
-    UINT index = m_bindlessAllocator.Allocate();
+    UINT index = m_bindlessAllocator.AllocatePersistent();
     if (index == UINT_MAX) return UINT_MAX;
 
     m_device->CreateShaderResourceView(res.Get(), &srvDesc, GetBindlessCpuHandle(index));
@@ -95,7 +95,11 @@ UINT DescriptorFactory::CreateTextureDSV(const Resource& res, DXGI_FORMAT format
     return index;
 }
 
-bool DescriptorFactory::CreateTextureViews(TextureResource* texRes, bool generateMips)
+bool DescriptorFactory::CreateTextureViews(
+    TextureResource* texRes,
+    bool generateMips,
+    std::vector<UINT>* outMipSrvIndices,
+    std::vector<UINT>* outMipUavIndices)
 {
     if (!texRes) return false;
 
@@ -111,28 +115,23 @@ bool DescriptorFactory::CreateTextureViews(TextureResource* texRes, bool generat
     UINT mainIndex = CreateTextureSRV(res, srvFormat, mainMipLevels);
     if (mainIndex == UINT_MAX) return false;
 
-    texRes->SetHeapIndex(mainIndex); //bindless라서 자신이 몇번 인덱스인지 저장한다. 
+    texRes->SetHeapIndex(mainIndex);
 
     if (generateMips && mipCount > 1)
     {
-        std::vector<UINT> mipSrvIndices;
-        std::vector<UINT> mipUavIndices;
-        mipSrvIndices.reserve(mipCount);
-        mipUavIndices.reserve(mipCount);
+        if (outMipSrvIndices) outMipSrvIndices->reserve(mipCount);
+        if (outMipUavIndices) outMipUavIndices->reserve(mipCount);
 
         for (UINT i = 0; i < mipCount; ++i)
         {
             UINT mipSrvIndex = CreateMipSRV(res, srvFormat, i);
             if (mipSrvIndex == UINT_MAX) return false;
-            mipSrvIndices.push_back(mipSrvIndex);
+            if (outMipSrvIndices) outMipSrvIndices->push_back(mipSrvIndex);
 
-            UINT mipUavIndex = CreateMipUAV(res, resDesc.Format, i); //UAV는 sRGB 포맷을 쓸 수 없으므로 원본 포맷 리스 사용
+            UINT mipUavIndex = CreateMipUAV(res, resDesc.Format, i);
             if (mipUavIndex == UINT_MAX) return false;
-            mipUavIndices.push_back(mipUavIndex);
+            if (outMipUavIndices) outMipUavIndices->push_back(mipUavIndex);
         }
-
-        texRes->SetMipSRVIndices(std::move(mipSrvIndices));
-        texRes->SetMipUAVIndices(std::move(mipUavIndices));
     }
 
     return true;
@@ -164,7 +163,7 @@ UINT DescriptorFactory::CreateTextureCubeSRV(const Resource& res, DXGI_FORMAT fo
     srvDesc.TextureCube.MostDetailedMip = 0;
     srvDesc.TextureCube.ResourceMinLODClamp = 0.0f;
 
-    UINT index = m_bindlessAllocator.Allocate();
+    UINT index = m_bindlessAllocator.AllocatePersistent();
     if (index == UINT_MAX) return UINT_MAX;
 
     m_device->CreateShaderResourceView(res.Get(), &srvDesc, GetBindlessCpuHandle(index));
@@ -200,7 +199,7 @@ UINT DescriptorFactory::CreateMipSRV(const Resource& res, DXGI_FORMAT format, UI
     srvDesc.Texture2D.MipLevels = 1;  // 무조건 1개 밉 레벨 영역만 타겟팅
     //srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
 
-    UINT index = m_bindlessAllocator.AllocateAsyncTransient();
+    UINT index = m_bindlessAllocator.AllocateDynamic();
     if (index == UINT_MAX) return UINT_MAX;
 
     m_device->CreateShaderResourceView(res.Get(), &srvDesc, GetBindlessCpuHandle(index));
@@ -214,7 +213,7 @@ UINT DescriptorFactory::CreateMipUAV(const Resource& res, DXGI_FORMAT format, UI
     uavDesc.ViewDimension = D3D12_UAV_DIMENSION_TEXTURE2D;
     uavDesc.Texture2D.MipSlice = mipLevel;
 
-    UINT index = m_bindlessAllocator.AllocateAsyncTransient();
+    UINT index = m_bindlessAllocator.AllocateDynamic();
     if (index == UINT_MAX) return UINT_MAX;
 
     m_device->CreateUnorderedAccessView(res.Get(), nullptr, &uavDesc, GetBindlessCpuHandle(index));

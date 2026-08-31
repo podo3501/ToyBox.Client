@@ -334,9 +334,6 @@
     <ClInclude Include="Render\DX12\Provider\Mesh\MeshProvider.h">
       <Filter>Render\DX12\Provider\Mesh</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\Provider\Mesh\MeshRegistry.h">
-      <Filter>Render\DX12\Provider\Mesh</Filter>
-    </ClInclude>
     <ClInclude Include="Render\DX12\Provider\Mesh\MeshUtils.h">
       <Filter>Render\DX12\Provider\Mesh</Filter>
     </ClInclude>
@@ -347,9 +344,6 @@
       <Filter>Render\DX12\Provider\Texture</Filter>
     </ClInclude>
     <ClInclude Include="Render\DX12\Provider\Texture\TextureProvider.h">
-      <Filter>Render\DX12\Provider\Texture</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\DX12\Provider\Texture\TextureRegistry.h">
       <Filter>Render\DX12\Provider\Texture</Filter>
     </ClInclude>
     <ClInclude Include="Render\DX12\Helpers\TextureHelpers.h">
@@ -527,9 +521,6 @@
       <Filter>Render\DX12\Provider\Texture</Filter>
     </ClInclude>
     <ClInclude Include="Render\DX12\Provider\Texture\TextureCubeCreateGraphBuilder.h">
-      <Filter>Render\DX12\Provider\Texture</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\DX12\Provider\Texture\TextureCubeRegistry.h">
       <Filter>Render\DX12\Provider\Texture</Filter>
     </ClInclude>
     <ClInclude Include="Render\DX12\Resource\Texture\TextureCubeResource.h">
@@ -826,9 +817,6 @@
     <ClCompile Include="Render\DX12\Provider\Mesh\MeshProvider.cpp">
       <Filter>Render\DX12\Provider\Mesh</Filter>
     </ClCompile>
-    <ClCompile Include="Render\DX12\Provider\Mesh\MeshRegistry.cpp">
-      <Filter>Render\DX12\Provider\Mesh</Filter>
-    </ClCompile>
     <ClCompile Include="Render\DX12\Provider\Mesh\MeshUtils.cpp">
       <Filter>Render\DX12\Provider\Mesh</Filter>
     </ClCompile>
@@ -839,9 +827,6 @@
       <Filter>Render\DX12\Provider\Texture</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\Provider\Texture\TextureProvider.cpp">
-      <Filter>Render\DX12\Provider\Texture</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\DX12\Provider\Texture\TextureRegistry.cpp">
       <Filter>Render\DX12\Provider\Texture</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\Helpers\TextureHelpers.cpp">
@@ -989,9 +974,6 @@
       <Filter>Render\DX12\Resource\Environment</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\Provider\Texture\TextureCubeCreateGraphBuilder.cpp">
-      <Filter>Render\DX12\Provider\Texture</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\DX12\Provider\Texture\TextureCubeRegistry.cpp">
       <Filter>Render\DX12\Provider\Texture</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\Resource\Texture\TextureCubeResource.cpp">

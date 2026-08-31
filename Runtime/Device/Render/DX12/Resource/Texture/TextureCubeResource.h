@@ -19,10 +19,14 @@ public:
 
     void SetDesc(const TextureCubeDesc& desc) { m_desc = desc; }
     const TextureCubeDesc& GetDesc() const noexcept { return m_desc; }
-    const Resource& Get() { return m_texture; }
+
+    const Resource& Get() const { return m_texture; }
+    Resource& Get() { return m_texture; }
     void Set(Resource resource) { m_texture = std::move(resource); }
+
     void SetSize(const Size& size) { m_size = size; }
     const Size& GetSize() const noexcept { return m_size; }
+
     void SetHeapIndex(UINT index) noexcept { m_heapIndex = index; }
     UINT GetHeapIndex() const noexcept { return m_heapIndex; }
 

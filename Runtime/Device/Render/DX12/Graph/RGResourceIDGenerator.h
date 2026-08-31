@@ -4,9 +4,9 @@
 class RGResourceIDGenerator
 {
 public:
-    void SetStartIndex(RGResourceID startIndex) noexcept
+    void Reset() noexcept
     {
-        m_next = startIndex;
+        m_next = 0;
     }
 
     RGResourceID Generate() noexcept 
@@ -18,6 +18,11 @@ public:
         }
 
         return m_next++; 
+    }
+
+    uint32_t GetGeneratedCount() const noexcept
+    {
+        return m_next;
     }
 
 private:

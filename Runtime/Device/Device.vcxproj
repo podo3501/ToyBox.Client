@@ -107,7 +107,6 @@
     <ClInclude Include="Render\DX12\Provider\Texture\TextureCubeCreateGraphBuilder.h" />
     <ClInclude Include="Render\DX12\Provider\Texture\TextureCubeLoadRequest.h" />
     <ClInclude Include="Render\DX12\Provider\Texture\TextureCubeProvider.h" />
-    <ClInclude Include="Render\DX12\Provider\Texture\TextureCubeRegistry.h" />
     <ClInclude Include="Render\DX12\RenderConstants.h" />
     <ClInclude Include="Render\DX12\RenderFrame.h" />
     <ClInclude Include="Render\DX12\Command\CommandList.h" />
@@ -143,12 +142,10 @@
     <ClInclude Include="Render\DX12\Provider\Mesh\MeshCreateGraphBuilder.h" />
     <ClInclude Include="Render\DX12\Provider\Mesh\MeshLoadRequest.h" />
     <ClInclude Include="Render\DX12\Provider\Mesh\MeshProvider.h" />
-    <ClInclude Include="Render\DX12\Provider\Mesh\MeshRegistry.h" />
     <ClInclude Include="Render\DX12\Provider\Mesh\MeshUtils.h" />
     <ClInclude Include="Render\DX12\Provider\Texture\MipGenerator.h" />
     <ClInclude Include="Render\DX12\Provider\Texture\TextureLoadRequest.h" />
     <ClInclude Include="Render\DX12\Provider\Texture\TextureProvider.h" />
-    <ClInclude Include="Render\DX12\Provider\Texture\TextureRegistry.h" />
     <ClInclude Include="Render\DX12\Provider\Texture\TextureUtils.h" />
     <ClInclude Include="Render\DX12\ResourceProviderSet.h" />
     <ClInclude Include="Render\DX12\Resource\Brush\BrushResource.h" />
@@ -277,7 +274,6 @@
     <ClCompile Include="Render\DX12\Provider\ResourceReleaseBuilder.cpp" />
     <ClCompile Include="Render\DX12\Provider\Texture\TextureCubeCreateGraphBuilder.cpp" />
     <ClCompile Include="Render\DX12\Provider\Texture\TextureCubeProvider.cpp" />
-    <ClCompile Include="Render\DX12\Provider\Texture\TextureCubeRegistry.cpp" />
     <ClCompile Include="Render\DX12\RenderFrame.cpp" />
     <ClCompile Include="Render\DX12\Command\CommandList.cpp" />
     <ClCompile Include="Render\DX12\Command\CommandQueue.cpp" />
@@ -302,12 +298,10 @@
     <ClCompile Include="Render\DX12\Pipeline\Renderer\UIRenderer.cpp" />
     <ClCompile Include="Render\DX12\Provider\Mesh\MeshCreateGraphBuilder.cpp" />
     <ClCompile Include="Render\DX12\Provider\Mesh\MeshProvider.cpp" />
-    <ClCompile Include="Render\DX12\Provider\Mesh\MeshRegistry.cpp" />
     <ClCompile Include="Render\DX12\Provider\Mesh\MeshUtils.cpp" />
     <ClCompile Include="Render\DX12\Provider\Texture\MipGenerator.cpp" />
     <ClCompile Include="Render\DX12\Provider\Texture\TextureCreateGraphBuilder.cpp" />
     <ClCompile Include="Render\DX12\Provider\Texture\TextureProvider.cpp" />
-    <ClCompile Include="Render\DX12\Provider\Texture\TextureRegistry.cpp" />
     <ClCompile Include="Render\DX12\Provider\Texture\TextureUtils.cpp" />
     <ClCompile Include="Render\DX12\ResourceProviderSet.cpp" />
     <ClCompile Include="Render\DX12\Resource\Brush\BrushResource.cpp" />

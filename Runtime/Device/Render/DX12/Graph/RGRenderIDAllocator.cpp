@@ -43,6 +43,6 @@ void RGRenderIDAllocator::ResetTransient() noexcept
 
 void RGRenderIDAllocator::ResetAll() noexcept
 {
-    m_persistentRegion.ResetAll();
+    m_persistentRegion.ResetAll(); //transient 부분도 reset 됨.
     m_dynamicRegion.Reset();
 }

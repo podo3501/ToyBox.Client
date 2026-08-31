@@ -3,6 +3,6 @@
 enum class DescriptorAllocationType 
 { 
 	Persistent, 
-	FrameTransient, 
-	AsyncTransient 
+	Transient, 
+	Dynamic
 };

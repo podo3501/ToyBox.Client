@@ -99,7 +99,12 @@ ID3D12PipelineState* MipGenerator::GetPSO(MipType type) const
     return m_psoMap[Core::ToIndex(type)].Get();
 }
 
-void MipGenerator::GenerateMips(CommandList& cmd, BindlessDescriptorAllocator& srvAllocator, TextureResource* texResource)
+void MipGenerator::GenerateMips(
+    CommandList& cmd, 
+    BindlessDescriptorAllocator& srvAllocator, 
+    TextureResource* texResource,
+    const std::vector<UINT>& mipSrvIndices,
+    const std::vector<UINT>& mipUavIndices)
 {
     if (!texResource)
         return;
@@ -125,8 +130,8 @@ void MipGenerator::GenerateMips(CommandList& cmd, BindlessDescriptorAllocator& s
     {
         UINT dstMip = srcMip + 1;
 
-        UINT srcMipSrvIndex = texResource->GetMipSRVIndex(srcMip);
-        UINT dstMipUavIndex = texResource->GetMipUAVIndex(dstMip);
+        UINT srcMipSrvIndex = mipSrvIndices[srcMip];
+        UINT dstMipUavIndex = mipUavIndices[dstMip];
 
         UINT width = std::max(1u, (UINT)(desc.Width >> dstMip));
         UINT height = std::max(1u, (UINT)(desc.Height >> dstMip));

@@ -1,11 +1,9 @@
 #pragma once
 #include "Graph/RenderGraph.h"
 #include "Graph/RGResourceIDGenerator.h"
-#include "TextureCubeRegistry.h"
 
 struct TextureCubeLoadRequest;
 struct TextureCubeUploadEntry;
-struct TextureCubeFinalizeEntry;
 class TaskScheduler;
 class ResourceFactory;
 class DescriptorFactory;
@@ -23,8 +21,20 @@ public:
     void LoadTextureCubes(const std::vector<TextureCubeLoadRequest>& requests);
 
 private:
-    void BuildUploadPass(std::vector<TextureCubeUploadEntry>& uploads, RGResourceID uploadResID);
-    void BuildFinalizePass(std::vector<TextureCubeFinalizeEntry>& finalizeEntries);
+    std::vector<TextureCubeUploadEntry> BuildTextureCubeUploads(
+        const std::vector<TextureCubeLoadRequest>& requests,
+        size_t& outTotalUploadSize);
+
+    std::shared_ptr<ResourceContext> CreateResourceContext(
+        std::shared_ptr<std::vector<TextureCubeUploadEntry>> textureUploads,
+        RGResourceID uploadResID,
+        size_t totalUploadSize);
+
+    void BuildUploadPass(
+        std::shared_ptr<std::vector<TextureCubeUploadEntry>> textureUploads, 
+        RGResourceID uploadResID);
+
+    void FinalizeTextureCubes(std::vector<TextureCubeUploadEntry>& textureUploads);
 
     TaskScheduler& m_taskScheduler;
     DescriptorFactory& m_descFactory;
@@ -32,5 +42,4 @@ private:
 
     RenderGraph m_graph;
     RGResourceIDGenerator m_idGenerator;
-    TextureCubeRegistry m_registry; // TextureRegistry와 유사하되 TextureCubeResource 대상
 };

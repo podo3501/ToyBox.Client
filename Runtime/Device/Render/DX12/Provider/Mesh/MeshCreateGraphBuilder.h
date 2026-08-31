@@ -1,11 +1,9 @@
 #pragma once
 #include "Graph/RenderGraph.h"
 #include "Graph/RGResourceIDGenerator.h"
-#include "MeshRegistry.h"
 
 struct MeshLoadRequest;
 struct MeshUploadEntry;
-struct MeshFinalizeEntry;
 class TaskScheduler;
 class ResourceFactory;
 class DescriptorFactory;
@@ -17,12 +15,28 @@ class MeshCreateGraphBuilder
 public:
     ~MeshCreateGraphBuilder();
     MeshCreateGraphBuilder() = delete;
-    MeshCreateGraphBuilder(TaskScheduler& taskScheduler, ResourceFactory& resFactory, DescriptorFactory& descFactory);
+    MeshCreateGraphBuilder(
+        TaskScheduler& taskScheduler, 
+        ResourceFactory& resFactory, 
+        DescriptorFactory& descFactory);
+
     void LoadMeshes(const std::vector<MeshLoadRequest>& requests);
 
 private:
-    void BuildUploadPass(std::vector<MeshUploadEntry>& meshUploads, RGResourceID uploadResID);
-    void BuildFinalizePass(std::vector<MeshFinalizeEntry>& finalizes);
+    std::vector<MeshUploadEntry> BuildMeshUploads(
+        const std::vector<MeshLoadRequest>& requests,
+        size_t& outTotalUploadSize);
+
+    std::shared_ptr<ResourceContext> CreateResourceContext(
+        std::shared_ptr<std::vector<MeshUploadEntry>> meshUploads,
+        RGResourceID uploadResID,
+        size_t totalUploadSize);
+
+    void BuildUploadPass(
+        std::shared_ptr<std::vector<MeshUploadEntry>> meshUploads,
+        RGResourceID uploadResID);
+
+    void FinalizeMeshes(std::vector<MeshUploadEntry>& meshUploads);
 
     TaskScheduler& m_taskScheduler;
     ResourceFactory& m_resFactory;
@@ -30,5 +44,4 @@ private:
 
     RenderGraph m_graph;
     RGResourceIDGenerator m_idGenerator;
-    MeshRegistry m_registry;
 };

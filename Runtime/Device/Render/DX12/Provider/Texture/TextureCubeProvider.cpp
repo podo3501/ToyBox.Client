@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "TextureCubeProvider.h"
 #include "../ProviderBudget.h"
+#include "Resource/Texture/TextureCubeResource.h"
 
 TextureCubeProvider::~TextureCubeProvider() = default;
 TextureCubeProvider::TextureCubeProvider(TextureCubeCreateGraphBuilder create) noexcept :

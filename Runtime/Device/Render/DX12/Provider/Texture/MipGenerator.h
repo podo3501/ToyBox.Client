@@ -24,7 +24,12 @@ public:
     ~MipGenerator();
     MipGenerator(Device& device);
     bool Initialize(ShaderLibrary& shaderLibrary);
-    void GenerateMips(CommandList& cmd, BindlessDescriptorAllocator& srvAllocator, TextureResource* texResource);
+    void GenerateMips(
+        CommandList& cmd,
+        BindlessDescriptorAllocator& srvAllocator,
+        TextureResource* texResource,
+        const std::vector<UINT>& mipSrvIndices,
+        const std::vector<UINT>& mipUavIndices);
 
 private:
     enum class RootSlot : uint32_t
