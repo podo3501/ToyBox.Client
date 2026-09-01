@@ -11,6 +11,7 @@ namespace Core
         void Free(Index  index) noexcept;
         void Reset() noexcept;
 
+        bool HasOutstanding() noexcept;
         Index Capacity() const noexcept { return m_capacity; }
 
     private:

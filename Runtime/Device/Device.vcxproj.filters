@@ -373,9 +373,6 @@
     <ClInclude Include="Render\DX12\Graph\TaskUtils.h">
       <Filter>Render\DX12\Graph</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\Provider\ResourceReleaseBuilder.h">
-      <Filter>Render\DX12\Provider</Filter>
-    </ClInclude>
     <ClInclude Include="Render\DX12\Provider\Font\FontProvider.h">
       <Filter>Render\DX12\Provider\Font</Filter>
     </ClInclude>
@@ -546,9 +543,6 @@
     </ClInclude>
     <ClInclude Include="Render\DX12\Resource\Brush\BrushResource.h">
       <Filter>Render\DX12\Resource\Brush</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\DX12\Provider\ResourceProvider.h">
-      <Filter>Render\DX12\Provider</Filter>
     </ClInclude>
     <ClInclude Include="Render\DX12\Resource\IPendingResource.h">
       <Filter>Render\DX12\Resource</Filter>
@@ -850,9 +844,6 @@
     <ClCompile Include="Render\DX12\Graph\TaskUtils.cpp">
       <Filter>Render\DX12\Graph</Filter>
     </ClCompile>
-    <ClCompile Include="Render\DX12\Provider\ResourceReleaseBuilder.cpp">
-      <Filter>Render\DX12\Provider</Filter>
-    </ClCompile>
     <ClCompile Include="Render\DX12\Provider\Font\FontProvider.cpp">
       <Filter>Render\DX12\Provider\Font</Filter>
     </ClCompile>
@@ -996,9 +987,6 @@
     </ClCompile>
     <ClCompile Include="Render\DX12\Resource\Brush\BrushResource.cpp">
       <Filter>Render\DX12\Resource\Brush</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\DX12\Provider\ResourceProvider.cpp">
-      <Filter>Render\DX12\Provider</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\Provider\PendingLoadQueue.cpp">
       <Filter>Render\DX12\Provider</Filter>

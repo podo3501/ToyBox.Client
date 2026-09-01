@@ -22,7 +22,7 @@ struct IRenderBackend
 	virtual void Resize(const Size& size) = 0;
 	virtual void Update() = 0;
 	virtual void Render() = 0;
-	virtual void WaitIdle() = 0;
+	virtual void Shutdown() = 0;
 
 	virtual IResourceProvider* GetProvider(ProviderType type) = 0; //리소스쪽. 로딩같은것들.
 	virtual IRenderFrame* GetRenderFrame() = 0; //Render쪽. 

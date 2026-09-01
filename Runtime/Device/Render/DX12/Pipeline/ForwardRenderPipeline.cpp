@@ -121,3 +121,8 @@ void ForwardRenderPipeline::Resize(const Size& size)
     m_inspectorRenderers.SetScreenSize(size);
 }
 
+//    ctx.resources = std::make_shared<ResourceContext>(); 
+// 이걸 unordered_map에서 vector나 array로 바꿔야 한다.
+// ctx에 srv, dsv index 같은걸 저장할 수 있을지 생각해 보자.
+// 이 index로 inspector에 넘겨줘서 화면에 나오게끔 수정.
+// gpuExcute를 이름 바꾸자.  cpuExcute가 없어졌기 때문에 다른 이름이 필요.

@@ -11,7 +11,10 @@ class TextureCubeProvider : public IUpdatableProvider
 {
 public:
     ~TextureCubeProvider();
-    TextureCubeProvider(TextureCubeCreateGraphBuilder create) noexcept;
+    TextureCubeProvider(
+        TaskScheduler& taskScheduler,
+        ResourceFactory& resFactory,
+        DescriptorFactory& descFactory) noexcept;
     virtual void Update(float avgGpuMs) override;
 
     std::shared_ptr<TextureCubeResource> CreateResource();

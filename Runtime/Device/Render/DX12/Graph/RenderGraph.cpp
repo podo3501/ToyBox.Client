@@ -56,7 +56,7 @@ void RenderGraph::Reset()
     m_passes.clear();
     m_statesTracker.clear();
     m_exportResources.clear();
-    m_localTaskID = 1;
+    m_localTaskID = 0;
 }
 
 void RenderGraph::BuildExportPass()
@@ -96,13 +96,12 @@ std::vector<CompiledTask> RenderGraph::BuildCompiledTasks(
         std::vector<LocalTaskID> currentPassDependencies =
             BuildBarrierTasks(passIndex, baseDependencies, passToBarriersMap, tasks);
 
-        if (!pass.cpuExecute && !pass.gpuExecute)
+        if (!pass.gpuExecute)
             continue;
 
         Task task{};
         task.passName = pass.name;
         task.type = pass.type;
-        task.cpuExecute = pass.cpuExecute;
         task.gpuExecute = pass.gpuExecute;
 
         LocalTaskID taskId = CreateLocalTaskID();
@@ -129,7 +128,7 @@ std::vector<LocalTaskID> RenderGraph::BuildBarrierTasks(
 
     for (auto& planned : barrierIt->second)
     {
-        if (planned->generatedTaskId == 0) // 아직 배리어 태스크가 생성되지 않은 경우에만 새로 생성 (캐싱 로직 유지)
+        if (planned->generatedTaskId == InvalidLocalTaskID) // 아직 배리어 태스크가 생성되지 않은 경우에만 새로 생성 (캐싱 로직 유지)
         {
             std::vector<LocalTaskID> barrierDependencies = baseDependencies;
             for (auto& [type, barriers] : planned->groups)
@@ -296,6 +295,7 @@ RenderGraph::BarrierMap RenderGraph::PlanBarriers(const std::vector<PassIndex>& 
 
 LocalTaskID RenderGraph::CreateLocalTaskID()
 {
+    Assert(m_localTaskID != InvalidLocalTaskID); // wraparound 감지
     return m_localTaskID++;
 }
 

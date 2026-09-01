@@ -4,8 +4,11 @@
 #include "Resource/Texture/TextureCubeResource.h"
 
 TextureCubeProvider::~TextureCubeProvider() = default;
-TextureCubeProvider::TextureCubeProvider(TextureCubeCreateGraphBuilder create) noexcept :
-    m_createBuilder{ std::move(create) }
+TextureCubeProvider::TextureCubeProvider(
+    TaskScheduler& taskScheduler,
+    ResourceFactory& resFactory,
+    DescriptorFactory& descFactory) noexcept :
+    m_createBuilder{ taskScheduler, resFactory, descFactory }
 {}
 
 std::shared_ptr<TextureCubeResource> TextureCubeProvider::CreateResource()

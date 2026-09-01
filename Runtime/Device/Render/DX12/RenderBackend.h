@@ -26,7 +26,7 @@ public:
 	virtual void Resize(const Size& size) override;
 	virtual void Update() override;
 	virtual void Render() override;
-	virtual void WaitIdle() override;
+	virtual void Shutdown() override;
 
 	virtual IResourceProvider* GetProvider(ProviderType type) override;
 	virtual IRenderFrame* GetRenderFrame() override { return &m_renderFrame; }

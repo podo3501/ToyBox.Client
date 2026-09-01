@@ -11,13 +11,11 @@ ResourceProviderSet::ResourceProviderSet(
     m_pendingRelease{ taskScheduler },
     m_meshProvider{ 
         m_pendingRelease,
-        MeshCreateGraphBuilder{ taskScheduler, resFactory, descFactory }
+        taskScheduler, resFactory, descFactory //MeshCreateGraphBuilder
         },
     m_texProvider{
         m_device, 
-        taskScheduler, 
-        resFactory, 
-        descFactory
+        taskScheduler, resFactory, descFactory //TextureCreateGraphBuilder
         },
     m_matProvider{ 
         m_pendingLoad,
@@ -30,7 +28,7 @@ ResourceProviderSet::ResourceProviderSet(
         m_texProvider
     },
     m_cubeProvider{
-        TextureCubeCreateGraphBuilder{ taskScheduler, resFactory, descFactory }
+        taskScheduler, resFactory, descFactory //TextureCubeCreateGraphBuilder
         },
     m_envProvider{
         m_pendingLoad,

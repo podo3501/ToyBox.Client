@@ -2,6 +2,7 @@
 #include "Task.h"
 #include "Core/Utils/Handle/HandlePool.h"
 
+struct PendingResourceRelease;
 class CommandScheduler;
 
 struct TaskEntry
@@ -61,9 +62,10 @@ public:
 
     TaskHandle AllocateHandle();
     void SubmitTask(const std::vector<CompiledTask>& compiledTasks, std::shared_ptr<ResourceContext> resources);
-    void SubmitReleaseTask(const Task& task);
     void Execute();
     void Cancel(TaskHandle handle);
+    void DeferRelease(std::vector<std::shared_ptr<IResource>> resources);
+    void Shutdown();
 
 private:
     bool AreDependenciesDone(const TaskEntry& task);
@@ -72,8 +74,14 @@ private:
     void ExecuteTask(TaskEntry& task);
     bool CanDeleteTask(const TaskEntry& task);
     void RemoveTask(TaskHandle handle, TaskEntry& task);
+    void ProcessPendingReleases();
 
-private:
+    bool IsIdle() const noexcept;
+    void Drain();
+
     CommandScheduler& m_cmdScheduler;
     HandlePool<TaskEntry, struct TaskTag> m_tasks;
+    std::vector<PendingResourceRelease> m_pendingReleases;
+
+    std::atomic<bool> m_draining{ false }; // 신규 일감 제출 차단용. 끝내기전 남은 일을 처리하기 위해.
 };

@@ -14,7 +14,7 @@ struct RegistryShaderEntry
 	RegistryShaderDesc desc;
 };
 
-RenderService::~RenderService() { m_backend->WaitIdle(); } //리소스를 RenderService가 들고 있기 때문에 gpu의 활동을 중지 시키고 리소스 삭제->backend 순으로 된다.
+RenderService::~RenderService() { m_backend->Shutdown(); } //리소스를 RenderService가 들고 있기 때문에 gpu의 활동을 중지 시키고 리소스 삭제->backend 순으로 된다.
 RenderService::RenderService(unique_ptr<IRenderBackend> backend, IAssetAsyncLoader* asyncLoader) :
 	m_backend{ move(backend) },
 	m_asyncLoader{ asyncLoader }

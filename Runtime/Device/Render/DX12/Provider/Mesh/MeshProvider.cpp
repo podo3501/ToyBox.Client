@@ -8,9 +8,13 @@
 #include "RenderConstants.h"
 
 MeshProvider::~MeshProvider() = default;
-MeshProvider::MeshProvider(PendingReleaseQueue& pendingRelease, MeshCreateGraphBuilder create) noexcept :
+MeshProvider::MeshProvider(
+    PendingReleaseQueue& pendingRelease, 
+    TaskScheduler& taskScheduler,
+    ResourceFactory& resFactory,
+    DescriptorFactory& descFactory) noexcept :
     m_pendingRelease{ pendingRelease },
-    m_createBuilder{ std::move(create) }
+    m_createBuilder{ taskScheduler, resFactory, descFactory }
 {}
 
 static std::pair<size_t, size_t> EstimateBytes(MeshAsset* mesh)

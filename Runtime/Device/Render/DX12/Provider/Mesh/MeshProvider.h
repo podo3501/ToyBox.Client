@@ -14,7 +14,11 @@ class MeshProvider : public IResourceProvider, public IUpdatableProvider
 public:
     ~MeshProvider();
     MeshProvider() = delete;
-    MeshProvider(PendingReleaseQueue& pendingRelease, MeshCreateGraphBuilder create) noexcept;
+    MeshProvider(
+        PendingReleaseQueue& pendingRelease, 
+        TaskScheduler& taskScheduler,
+        ResourceFactory& resFactory,
+        DescriptorFactory& descFactory) noexcept;
     virtual std::shared_ptr<IResource> CreateResource(std::shared_ptr<AssetData> asset) override;
     virtual void ReleaseResource(std::shared_ptr<IResource> res) override;
     virtual void Update(float avgGpuMs) override;

@@ -23,7 +23,7 @@ private:
     struct PlannedBarrier 
     {
         BarrierGroups groups;
-        LocalTaskID generatedTaskId{ 0 }; // 실제 테스크가 생성되면 여기에 기록됨
+        LocalTaskID generatedTaskId{ InvalidLocalTaskID }; // 실제 테스크가 생성되면 여기에 기록됨
     };
     using BarrierMap = std::unordered_map<PassIndex, std::vector<std::shared_ptr<PlannedBarrier>>>;
 

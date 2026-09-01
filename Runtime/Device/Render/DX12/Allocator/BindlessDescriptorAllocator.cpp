@@ -2,7 +2,10 @@
 #include "BindlessDescriptorAllocator.h"
 #include "Core/Device.h"
 
-BindlessDescriptorAllocator::~BindlessDescriptorAllocator() = default;
+BindlessDescriptorAllocator::~BindlessDescriptorAllocator()
+{
+    Assert(!m_dynamicRegion.HasOutstanding()); //작업중인 것이 없어야 한다.
+}
 BindlessDescriptorAllocator::BindlessDescriptorAllocator() = default;
 
 bool BindlessDescriptorAllocator::Initialize(Device& device, const BindlessDescriptorConfig& config) noexcept

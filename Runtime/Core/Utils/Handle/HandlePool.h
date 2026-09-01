@@ -35,6 +35,7 @@ public:
         slot.data.emplace(std::forward<Args>(args)...);
         slot.alive = true;
 
+        ++m_aliveCount;
         return slot.handle; // generation은 1 이상 보장됨
     }
 
@@ -51,6 +52,8 @@ public:
         if (slot.generation == 0) slot.generation = 1; // generation 증가 (0 방지)
 
         m_freeList.push_back(h.index);
+        --m_aliveCount;
+
         return true;
     }
 
@@ -72,14 +75,9 @@ public:
 
         m_freeList.clear();
         for (uint32_t i = 1; i < m_slots.size(); ++i)
-        {
             m_freeList.push_back(i);
-        }
-    }
 
-    size_t Size() const
-    {
-        return m_slots.size();
+        m_aliveCount = 0;
     }
 
     T* Find(Handle h)
@@ -113,6 +111,10 @@ public:
         return slot.alive && slot.generation == h.generation;
     }
 
+    size_t Size() const { return m_slots.size(); }
+    size_t AliveCount() const { return m_aliveCount; }
+    bool Empty() const { return m_aliveCount == 0; }
+
     template<typename Func>
     void Visit(Func&& f)
     {
@@ -145,4 +147,5 @@ private:
 
     std::vector<HandleSlot<T>> m_slots;
     std::vector<uint32_t> m_freeList;
+    size_t m_aliveCount{ 0 };
 };

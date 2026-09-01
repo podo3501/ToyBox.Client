@@ -1,6 +1,5 @@
 #pragma once
 #include "GameClient/Service/Render/Resource/IResource.h"
-#include "ResourceReleaseBuilder.h"
 
 class TaskScheduler;
 

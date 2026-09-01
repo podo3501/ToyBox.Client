@@ -12,7 +12,7 @@ namespace Core
 
     Index IndexAllocator::Allocate() noexcept
     {
-        std::lock_guard<std::mutex> lock(m_mutex);
+        std::lock_guard lock(m_mutex);
         if (!m_freeList.empty())
         {
             uint32_t index = m_freeList.back();
@@ -31,16 +31,22 @@ namespace Core
     {
         if (index == InvalidIndex) return;
 
-        std::lock_guard<std::mutex> lock(m_mutex);
+        std::lock_guard lock(m_mutex);
         Assert(index < m_allocated); // 중복 해제 방지용 최소 안전장치
         m_freeList.push_back(index);
     }
 
     void IndexAllocator::Reset() noexcept
     {
-        std::lock_guard<std::mutex> lock(m_mutex);
+        std::lock_guard lock(m_mutex);
 
         m_allocated = 0;
         m_freeList.clear();
+    }
+
+    bool IndexAllocator::HasOutstanding() noexcept
+    {
+        std::lock_guard lock(m_mutex);
+        return m_allocated - static_cast<Index>(m_freeList.size()) > 0;
     }
 }

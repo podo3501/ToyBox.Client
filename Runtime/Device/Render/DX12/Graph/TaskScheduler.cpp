@@ -3,6 +3,12 @@
 #include "TaskUtils.h"
 #include "Command/CommandScheduler.h"
 
+struct PendingResourceRelease
+{
+    FenceID waitFenceID{ InvalidFenceID };
+    std::vector<std::shared_ptr<IResource>> resources;
+};
+
 TaskScheduler::~TaskScheduler() = default;
 TaskScheduler::TaskScheduler(CommandScheduler& cmdScheduler) : 
     m_cmdScheduler{ cmdScheduler }
@@ -15,6 +21,8 @@ TaskHandle TaskScheduler::AllocateHandle()
 
 void TaskScheduler::SubmitTask(const std::vector<CompiledTask>& compiledTasks, std::shared_ptr<ResourceContext> resources)
 {
+    Assert(!m_draining.load(std::memory_order_relaxed)); //Drain() 도중 SubmitTask 호출
+
     std::unordered_map<LocalTaskID, TaskHandle> remap; //RenderGraph에서 만든 일시적인 handle을 실제 사용가능한 task handle로 바꾼다.
     for (auto& compiled : compiledTasks)
         remap[compiled.localId] = AllocateHandle();
@@ -45,31 +53,24 @@ void TaskScheduler::SubmitTask(const std::vector<CompiledTask>& compiledTasks, s
     }
 }
 
-void TaskScheduler::SubmitReleaseTask(const Task& task)
+void TaskScheduler::DeferRelease(std::vector<std::shared_ptr<IResource>> resources)
 {
-    Assert(task.type == CommandType::None);
-
-    TaskHandle handle = AllocateHandle();
-    TaskEntry* entry = m_tasks.Find(handle);
-    Assert(entry);
-    Assert(!entry->submitted);
-
-    entry->task = task;
-
-    // Release는 dependency가 없음 (명시적으로 제거)
-    entry->task.dependencies.clear();
-    entry->dependents.clear();
+    Assert(!m_draining.load(std::memory_order_relaxed)); //Drain() 도중 SubmitTask 호출
 
     auto queue = m_cmdScheduler.GetQueue(CommandType::Direct);
-    entry->waitFenceID = queue->GetCurrentFence();
-    entry->context.resources = nullptr; // resource context 불필요
-    entry->submitted = true;
+
+    PendingResourceRelease entry;
+    entry.waitFenceID = queue->GetCurrentFence();
+    entry.resources = std::move(resources);
+
+    m_pendingReleases.push_back(std::move(entry));
 }
 
 void TaskScheduler::Execute()
 {
-    std::vector<TaskHandle> toRemove;
+    ProcessPendingReleases();
 
+    std::vector<TaskHandle> toRemove;
     m_tasks.Visit([this, &toRemove](TaskHandle handle, TaskEntry& entry) {
         if (!entry.started)
         {
@@ -163,6 +164,23 @@ void TaskScheduler::RemoveTask(TaskHandle handle, TaskEntry& entry)
     m_tasks.Remove(handle);
 }
 
+void TaskScheduler::ProcessPendingReleases()
+{
+    auto queue = m_cmdScheduler.GetQueue(CommandType::Direct);
+    FenceID completed = queue->GetCompletedFence();
+
+    std::erase_if(m_pendingReleases, [completed](const PendingResourceRelease& entry) {
+        return completed >= entry.waitFenceID; // 소멸 시 shared_ptr<IResource> 자동 해제
+        });
+}
+
+void TaskScheduler::Shutdown()
+{
+    m_draining.store(true, std::memory_order_relaxed); // 신규 제출 차단
+    Drain(); // 모든 task가 정상적으로 실행되고 끝날 때까지 그냥 기다림
+    m_draining.store(false, std::memory_order_relaxed);
+}
+
 void TaskScheduler::Cancel(TaskHandle handle)
 {
     TaskEntry* entry = m_tasks.Find(handle);
@@ -182,4 +200,18 @@ void TaskScheduler::Cancel(TaskHandle handle)
     }
 
     m_tasks.Remove(handle);
+}
+
+bool TaskScheduler::IsIdle() const noexcept
+{
+    return m_tasks.Empty() && m_pendingReleases.empty();
+}
+
+void TaskScheduler::Drain()
+{
+    while (!IsIdle())
+    {
+        Execute(); // 완료된 task 제거 + pending release 처리
+        std::this_thread::yield();
+    }
 }

@@ -16,9 +16,10 @@ RenderBackend::RenderBackend(const RenderConfig& config) :
     m_renderFrame{ m_textSystem, m_inspector }
 {}
 
-void RenderBackend::WaitIdle()
+void RenderBackend::Shutdown()
 {
-    m_cmdScheduler.WaitIdle();
+    m_taskScheduler.Shutdown(); //일감을 다 끝내놓는다.
+    m_cmdScheduler.WaitIdle(); //초기화 같은 것들은 task에 안 들어가기 때문에 cmd가 끝나기를 기다린다.
 }
 
 bool RenderBackend::Initialize(HWND hwnd, const Size& screenSize, std::span<const RegistryShaderDesc> registryShaders)
