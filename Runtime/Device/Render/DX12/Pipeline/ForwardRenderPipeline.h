@@ -3,7 +3,7 @@
 #include "ViewTargetPool.h"
 #include "ViewGraphBuilder.h"
 #include "Graph/RenderGraph.h"
-#include "Graph/RGRenderIDAllocator.h"
+#include "Graph/RGResourceIDAllocator.h"
 #include "Resource/Internal/ShadowResource.h"
 #include "Inspector/InspectorRenderers.h"
 //Graph Builders
@@ -53,7 +53,7 @@ private:
     DescriptorFactory& m_descFactory;
 
     RenderGraph m_graph;
-    RGRenderIDAllocator m_idAllocator;
+    RGResourceIDAllocator m_idAllocator;
 
     Renderers m_renderers;
     ViewTargetPool m_viewPool;
@@ -69,6 +69,4 @@ private:
     ShadowGraphBuilder m_shadowBuilder;
     CompositeGraphBuilder m_compositeBuilder;
     InspectorGraphBuilder m_inspectorBuilder;
-
-    std::optional<RGResourceID> m_debugTargetID;
 };

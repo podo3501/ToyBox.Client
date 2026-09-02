@@ -12,7 +12,7 @@ void ClearGraphBuilder::Build(RenderGraph& graph, RGResourceID backBufferResID)
 {
     auto& clear = graph.AddGraphicsPass("ClearBackBuffer");
     clear.Write(backBufferResID, RGAccess::RTV);
-    clear.gpuExecute =
+    clear.execute =
         [
             &swapChain = m_swapChain
         ]

@@ -23,10 +23,10 @@ void CompositeGraphBuilder::Build(
         composite.Read(info.colorID, RGAccess::SRV);
     composite.Write(backBufferResID, RGAccess::RTV);
 
-    composite.gpuExecute =
+    composite.execute =
         [
-            &swapChain = m_swapChain,
             &compositeRenderer = m_compositeRenderer,
+            & swapChain = m_swapChain,
             renderViewInfos
         ]
         (CommandList& cmd, TaskContext& ctx)

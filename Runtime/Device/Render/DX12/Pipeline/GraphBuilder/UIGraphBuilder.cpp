@@ -24,7 +24,7 @@ void UIGraphBuilder::Build(
 {
     auto& ui = graph.AddGraphicsPass("UI_View" + std::string(ToString(packet->id)));
     ui.Write(target.GetColorID(), RGAccess::RTV);
-    ui.gpuExecute =
+    ui.execute =
         [
             &descFactory = m_descFactory,
             &uiRenderer = m_uiRenderer,

@@ -25,7 +25,7 @@ void SkyboxGraphBuilder::Build(
     skybox.Write(target.GetColorID(), RGAccess::RTV);
     skybox.Write(target.GetDepthID(), RGAccess::DepthWrite);
 
-    skybox.gpuExecute =
+    skybox.execute =
         [
             &descFactory = m_descFactory,
             &skyboxRenderer = m_skyboxRenderer,

@@ -25,7 +25,7 @@ void DebugSurfaceGraphBuilder::Build(
     auto& grid = graph.AddGraphicsPass("DebugSurface_View" + std::string(ToString(packet->id)));
     grid.Write(target.GetColorID(), RGAccess::RTV);
     grid.Read(target.GetDepthID(), RGAccess::DepthRead);
-    grid.gpuExecute =
+    grid.execute =
         [
             &descFactory = m_descFactory,
             &debugSurfRenderer = m_debugSurfRenderer,

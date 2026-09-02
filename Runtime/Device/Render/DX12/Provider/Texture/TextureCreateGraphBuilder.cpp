@@ -116,7 +116,7 @@ std::shared_ptr<ResourceContext> TextureCreateGraphBuilder::CreateResourceContex
     RGResourceID uploadResID,
     size_t totalUploadSize)
 {
-    auto* rawContext = new ResourceContext();
+    auto* rawContext = new ResourceContext(m_idGenerator.Count());
     
     for (const auto& upload : *textureUploads)
         rawContext->Set(upload.resID, upload.resource->Get());
@@ -141,7 +141,7 @@ void TextureCreateGraphBuilder::BuildUploadPass(
     for (auto& tex : *textureUploads)
         upload.Write(tex.resID, RGAccess::CopyDest);
 
-    upload.gpuExecute = [this, textureUploads, uploadResID](CommandList& cmd, TaskContext& ctx) mutable {
+    upload.execute = [this, textureUploads, uploadResID](CommandList& cmd, TaskContext& ctx) mutable {
         auto& uploadRes = ctx.GetResource(uploadResID);
         for (auto& upload : *textureUploads)
             UploadTexture(cmd, *upload.asset, upload.resource->Get(), uploadRes, upload.offset);
@@ -159,7 +159,7 @@ void TextureCreateGraphBuilder::BuildMipPass(
         mip.Write(tex.resID, RGAccess::UAV);
     }
 
-    mip.gpuExecute = [this, textureUploads](CommandList& cmd, TaskContext& ctx) {
+    mip.execute = [this, textureUploads](CommandList& cmd, TaskContext& ctx) {
         for (auto& tex : *textureUploads)
         {
             if (!tex.generateMips) continue; //개별적으로 mip을 할지 말지 여기서 결정

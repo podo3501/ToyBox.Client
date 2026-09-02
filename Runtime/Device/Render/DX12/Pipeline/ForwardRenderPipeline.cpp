@@ -31,7 +31,8 @@ ForwardRenderPipeline::ForwardRenderPipeline(
     m_compositeBuilder{
         m_renderers.GetCompositeRenderer(),
         m_swapChain },
-    m_inspectorBuilder{ m_inspectorRenderers.GetInspectorImageRenderer() }
+    m_inspectorBuilder{ m_inspectorRenderers.GetInspectorImageRenderer(),
+        m_swapChain }
 {}
 
 bool ForwardRenderPipeline::Initialize(const Size& screenSize, const Size& shadowMapSize)
@@ -79,9 +80,8 @@ std::vector<CompiledTask> ForwardRenderPipeline::BuildFrame(const FramePacket& f
     }
     m_viewPool.PruneUnused(activeViews);
     m_compositeBuilder.Build(m_graph, m_hBackBuffer, renderViewInfos);
-
-    if (m_debugTargetID)
-        m_inspectorBuilder.Build(m_graph, m_hBackBuffer, *m_debugTargetID);
+    //shadow map은 텍스쳐가 크기 때문에 작은 물체를 띄우면 안보인다. 
+    m_inspectorBuilder.Build(m_graph, m_hBackBuffer, 10);
 
     m_graph.ExportResource(m_hBackBuffer, RGAccess::Present);
     m_graph.ExportResource(m_hShadow, RGAccess::DepthWrite);
@@ -101,7 +101,7 @@ void ForwardRenderPipeline::Render(
     auto compiledTasks = BuildFrame(framePacket); // 매 프레임 그래프 재구성
 
     TaskContext ctx;
-    ctx.resources = std::make_shared<ResourceContext>();
+    ctx.resources = std::make_shared<ResourceContext>(TotalResourceIDCapacity);
 
     m_fontUploadBuilder.ApplyResourceBindings(*ctx.resources);
     m_viewPool.ApplyResourceBindings(*ctx.resources);
@@ -112,17 +112,9 @@ void ForwardRenderPipeline::Render(
     cmd.SetBindlessHeap(bindlessAllocator.GetHeap());
 
     ExecuteRenderPipeline(cmd, compiledTasks, ctx);
-
-    m_debugTargetID = m_hShadow;
 }
 
 void ForwardRenderPipeline::Resize(const Size& size)
 {
     m_inspectorRenderers.SetScreenSize(size);
 }
-
-//    ctx.resources = std::make_shared<ResourceContext>(); 
-// 이걸 unordered_map에서 vector나 array로 바꿔야 한다.
-// ctx에 srv, dsv index 같은걸 저장할 수 있을지 생각해 보자.
-// 이 index로 inspector에 넘겨줘서 화면에 나오게끔 수정.
-// gpuExcute를 이름 바꾸자.  cpuExcute가 없어졌기 때문에 다른 이름이 필요.

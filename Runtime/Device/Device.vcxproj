@@ -67,9 +67,8 @@
     <ClInclude Include="Render\DX12\Graph\RenderGraphUtils.h" />
     <ClInclude Include="Render\DX12\Graph\RenderGraph.h" />
     <ClInclude Include="Render\DX12\Graph\RenderPass.h" />
-    <ClInclude Include="Render\DX12\Graph\RGRenderIDAllocator.h" />
+    <ClInclude Include="Render\DX12\Graph\RGResourceIDAllocator.h" />
     <ClInclude Include="Render\DX12\Graph\RGResourceIDGenerator.h" />
-    <ClInclude Include="Render\DX12\Graph\RGUploadIDAllocator.h" />
     <ClInclude Include="Render\DX12\Graph\TaskUtils.h" />
     <ClInclude Include="Render\DX12\Inspector\InspectorImageRenderer.h" />
     <ClInclude Include="Render\DX12\Inspector\Inspector.h" />
@@ -238,8 +237,7 @@
     <ClCompile Include="Render\DX12\Graph\BarrierBuilder.cpp" />
     <ClCompile Include="Render\DX12\Graph\RenderGraphUtils.cpp" />
     <ClCompile Include="Render\DX12\Graph\RenderGraph.cpp" />
-    <ClCompile Include="Render\DX12\Graph\RGRenderIDAllocator.cpp" />
-    <ClCompile Include="Render\DX12\Graph\RGUploadIDAllocator.cpp" />
+    <ClCompile Include="Render\DX12\Graph\RGResourceIDAllocator.cpp" />
     <ClCompile Include="Render\DX12\Graph\TaskUtils.cpp" />
     <ClCompile Include="Render\DX12\Inspector\InspectorImageRenderer.cpp" />
     <ClCompile Include="Render\DX12\Inspector\Inspector.cpp" />

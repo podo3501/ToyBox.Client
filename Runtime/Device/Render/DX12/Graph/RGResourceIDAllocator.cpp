@@ -1,7 +1,7 @@
 #include "pch.h"
-#include "RGRenderIDAllocator.h"
+#include "RGResourceIDAllocator.h"
 
-bool RGRenderIDAllocator::Initialize(uint32_t totalCapacity, uint32_t dynamicCapacity) noexcept
+bool RGResourceIDAllocator::Initialize(uint32_t totalCapacity, uint32_t dynamicCapacity) noexcept
 {
     if (totalCapacity <= dynamicCapacity) return false;
 
@@ -12,17 +12,17 @@ bool RGRenderIDAllocator::Initialize(uint32_t totalCapacity, uint32_t dynamicCap
     return true;
 }
 
-RGResourceID RGRenderIDAllocator::AllocatePersistent() noexcept
+RGResourceID RGResourceIDAllocator::AllocatePersistent() noexcept
 {
     return m_persistentRegion.AllocateFront();
 }
 
-RGResourceID RGRenderIDAllocator::AllocateTransient(uint32_t count) noexcept
+RGResourceID RGResourceIDAllocator::AllocateTransient(uint32_t count) noexcept
 {
     return m_persistentRegion.AllocateBack(count);
 }
 
-RGResourceID RGRenderIDAllocator::AllocateDynamic() noexcept
+RGResourceID RGResourceIDAllocator::AllocateDynamic() noexcept
 {
     Core::Index local = m_dynamicRegion.Allocate();
     if (local == Core::InvalidIndex)
@@ -31,17 +31,17 @@ RGResourceID RGRenderIDAllocator::AllocateDynamic() noexcept
     return m_dynamicStart + local; // 전역 인덱스로 변환
 }
 
-void RGRenderIDAllocator::FreeDynamic(RGResourceID id) noexcept
+void RGResourceIDAllocator::FreeDynamic(RGResourceID id) noexcept
 {
     m_dynamicRegion.Free(id - m_dynamicStart); // 전역 -> 로컬
 }
 
-void RGRenderIDAllocator::ResetTransient() noexcept
+void RGResourceIDAllocator::ResetTransient() noexcept
 { 
     m_persistentRegion.ResetBack(); 
 }
 
-void RGRenderIDAllocator::ResetAll() noexcept
+void RGResourceIDAllocator::ResetAll() noexcept
 {
     m_persistentRegion.ResetAll(); //transient 부분도 reset 됨.
     m_dynamicRegion.Reset();

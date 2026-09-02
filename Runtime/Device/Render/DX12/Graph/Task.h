@@ -19,25 +19,59 @@ using Microsoft::WRL::ComPtr;
 
 struct ResourceContext
 {
-    std::unordered_map<uint32_t, Resource> resources;
+    ~ResourceContext() = default;
+    ResourceContext() = delete;
+    explicit ResourceContext(size_t capacity) : resources(capacity) {}
 
-    void Set(RGResourceID id, const Resource& resource) { resources[id] = resource; }
-    void Set(RGResourceID id, Resource&& resource) { resources[id] = std::move(resource); }
+    void Set(RGResourceID id, const Resource& resource) { resources[ToIndex(id)] = resource; }
+    void Set(RGResourceID id, Resource&& resource) { resources[ToIndex(id)] = std::move(resource); }
 
     Resource& Get(RGResourceID id)
     {
-        auto it = resources.find(id);
-        Assert(it != resources.end()); //리소스 등록하는 부분이 빠져 있을 가능성. taskContext에서 리소스 등록이 안돼 있을 수 있음.
-        return it->second;
+        auto& slot = resources[ToIndex(id)];
+        Assert(slot.has_value()); // 리소스 등록하는 부분이 빠져 있을 가능성.
+        return *slot;
     }
 
     const Resource& Get(RGResourceID id) const
     {
-        auto it = resources.find(id);
-        Assert(it != resources.end());
-        return it->second;
+        auto& slot = resources[ToIndex(id)];
+        Assert(slot.has_value());
+        return *slot;
     }
+
+private:
+    size_t ToIndex(RGResourceID id) const
+    {
+        size_t idx = static_cast<size_t>(id);
+        Assert(idx < resources.size()); // capacity를 잘못 넘겼을 가능성
+        return idx;
+    }
+
+    std::vector<std::optional<Resource>> resources;
 };
+
+//struct ResourceContext
+//{
+//    std::unordered_map<uint32_t, Resource> resources;
+//
+//    void Set(RGResourceID id, const Resource& resource) { resources[id] = resource; }
+//    void Set(RGResourceID id, Resource&& resource) { resources[id] = std::move(resource); }
+//
+//    Resource& Get(RGResourceID id)
+//    {
+//        auto it = resources.find(id);
+//        Assert(it != resources.end()); //리소스 등록하는 부분이 빠져 있을 가능성. taskContext에서 리소스 등록이 안돼 있을 수 있음.
+//        return it->second;
+//    }
+//
+//    const Resource& Get(RGResourceID id) const
+//    {
+//        auto it = resources.find(id);
+//        Assert(it != resources.end());
+//        return it->second;
+//    }
+//};
 
 struct TaskContext
 {
@@ -54,7 +88,7 @@ struct Task
     CommandType type{ CommandType::None };
 
     std::vector<TaskHandle> dependencies; //앞에 Task에 의존하는지. Task의 시작지점을 알게 해 준다.
-    std::function<void(CommandList&, TaskContext&)> gpuExecute{ nullptr };
+    std::function<void(CommandList&, TaskContext&)> execute{ nullptr };
 };
 
 using LocalTaskID = uint32_t;

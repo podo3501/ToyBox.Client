@@ -17,7 +17,7 @@ void ViewTargetClearGraphBuilder::Build(RenderGraph& graph, const ViewTargetReso
     clear.Write(target.GetColorID(), RGAccess::RTV);
     clear.Write(target.GetDepthID(), RGAccess::DepthWrite);
 
-    clear.gpuExecute =
+    clear.execute =
         [
             &descFactory = m_descFactory,
             colorRTVIndex = target.GetColorRTVIndex(),

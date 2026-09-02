@@ -33,7 +33,7 @@ struct RenderPass
     std::string name;
     CommandType type;
     std::vector<RGUsage> usages;
-    std::function<void(CommandList&, TaskContext&)> gpuExecute;
+    std::function<void(CommandList&, TaskContext&)> execute;
 
     void Read(RGResourceID resID, RGAccess s) 
     { 

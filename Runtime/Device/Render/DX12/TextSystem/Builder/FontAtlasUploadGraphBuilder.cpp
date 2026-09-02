@@ -2,7 +2,7 @@
 #include "FontAtlasUploadGraphBuilder.h"
 #include "Factory/ResourceFactory.h"
 #include "Graph/RenderGraph.h"
-#include "Graph/RGRenderIDAllocator.h"
+#include "Graph/RGResourceIDAllocator.h"
 #include "Core/Foundation/Align.h"
 #include "RenderConstants.h"
 #include "Command/CommandList.h"
@@ -38,7 +38,7 @@ void FontAtlasUploadGraphBuilder::QueueGlyphUploads(std::vector<AtlasGlyphBatch>
     }
 }
 
-void FontAtlasUploadGraphBuilder::Build(RenderGraph& graph, RGRenderIDAllocator& idAllocator)
+void FontAtlasUploadGraphBuilder::Build(RenderGraph& graph, RGResourceIDAllocator& idAllocator)
 {
     m_frameBindings.clear();
 
@@ -140,7 +140,7 @@ void FontAtlasUploadGraphBuilder::BuildUploadPass(
     auto& upload = graph.AddGraphicsPass("FontAtlasUpload");
     upload.Write(atlasResID, RGAccess::CopyDest);
 
-    upload.gpuExecute =
+    upload.execute =
         [
             atlasResID,
             uploadResID,

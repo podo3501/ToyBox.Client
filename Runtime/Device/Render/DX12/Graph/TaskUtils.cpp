@@ -5,9 +5,9 @@
 void ExecuteTaskImmediate(CommandList* cmd, const Task& task, TaskContext& ctx)
 {
     Assert(cmd);
-    Assert(task.gpuExecute != nullptr);
+    Assert(task.execute != nullptr);
 
-    task.gpuExecute(*cmd, ctx);
+    task.execute(*cmd, ctx);
 }
 
 void ExecuteRenderPipeline(CommandList& cmd, const vector<CompiledTask>& compiledTasks, TaskContext& ctx)

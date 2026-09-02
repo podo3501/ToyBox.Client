@@ -15,7 +15,7 @@ ViewTargetPool::ViewTargetPool(
 
 ViewTargetResource& ViewTargetPool::Acquire(
     ViewID id, 
-    RGRenderIDAllocator& idAllocator,
+    RGResourceIDAllocator& idAllocator,
     const Size& requiredSize)
 {
     auto& view = m_views[Core::ToIndex(id)];

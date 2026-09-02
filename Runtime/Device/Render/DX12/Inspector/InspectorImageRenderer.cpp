@@ -1,16 +1,16 @@
 #include "pch.h"
 #include "InspectorImageRenderer.h"
+#include "Definition/RenderFormat.h"
 #include "Pipeline/Renderer/PipelineCache.h"
 #include "Pipeline/Renderer/RootSignatureBuilder.h"
 #include "Command/CommandList.h"
-#include "Resource/Texture/TextureResource.h"
 #include "Helpers/MathHelpers.h"
 #include "Core/D3D12Conversions.h"
 #include "GameClient/Service/Render/Definition/Shader/RegistryShader.h"
 
 struct InspectorTextureCB
 {
-    uint32_t textureIndex;
+    uint32_t srvIndex;
 };
 
 struct InspectorDrawCB
@@ -54,6 +54,9 @@ ID3D12PipelineState* InspectorImageRenderer::CreatePSO(const PipelineState& pipe
         m_rootSignature.Get(),
         [&](D3D12_GRAPHICS_PIPELINE_STATE_DESC& pso)
         {
+            pso.NumRenderTargets = 1;
+            pso.RTVFormats[0] = RenderFormat::BackBufferSRGBView;
+
             pso.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
             pso.DepthStencilState.DepthEnable = FALSE;
             pso.DepthStencilState.StencilEnable = FALSE;
@@ -110,10 +113,10 @@ void InspectorImageRenderer::BindPipeline(CommandList& cmd)
     m_currentPSO = pso;
 }
 
-void InspectorImageRenderer::Draw(CommandList& cmd, TextureResource& texture)
+void InspectorImageRenderer::Draw(CommandList& cmd, UINT srvIndex)
 {
     InspectorTextureCB indices{};
-    indices.textureIndex = texture.GetHeapIndex();
+    indices.srvIndex = srvIndex;
     auto cb = UploadDrawCB();
 
     cmd->SetGraphicsRoot32BitConstants(Core::ToIndex(RootSlot::ResourceIndices), 1, &indices, 0);

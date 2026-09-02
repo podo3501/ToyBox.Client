@@ -90,7 +90,7 @@ std::shared_ptr<ResourceContext> TextureCubeCreateGraphBuilder::CreateResourceCo
     RGResourceID uploadResID,
     size_t totalUploadSize)
 {
-    auto* rawContext = new ResourceContext();
+    auto* rawContext = new ResourceContext(m_idGenerator.Count());
 
     for (const auto& upload : *textureUploads)
         rawContext->Set(upload.resID, upload.resource->Get());
@@ -115,7 +115,7 @@ void TextureCubeCreateGraphBuilder::BuildUploadPass(
     for (auto& tex : *textureUploads)
         upload.Write(tex.resID, RGAccess::CopyDest);
 
-    upload.gpuExecute = [this, textureUploads, uploadResID](CommandList& cmd, TaskContext& ctx) mutable {
+    upload.execute = [this, textureUploads, uploadResID](CommandList& cmd, TaskContext& ctx) mutable {
         auto& uploadRes = ctx.GetResource(uploadResID);
         for (auto& tex : *textureUploads)
             UploadTextureCube(cmd, *tex.asset, tex.resource->Get(), uploadRes, tex.offset); // subImages[mip + face * mipCount] 순서로 6면*N밉 전부 CopyTextureRegion

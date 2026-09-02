@@ -2,7 +2,7 @@
 #include "ViewTargetResource.h"
 #include "Core/Device.h"
 #include "Definition/RenderFormat.h"
-#include "Graph/RGRenderIDAllocator.h"
+#include "Graph/RGResourceIDAllocator.h"
 #include "Factory/DescriptorFactory.h"
 #include "Helpers/TextureHelpers.h"
 
@@ -58,7 +58,7 @@ ViewTargetResource::ViewTargetResource() = default;
 bool ViewTargetResource::Initialize(
     Device& device, 
     DescriptorFactory& descFactory, 
-    RGRenderIDAllocator& idAllocator,
+    RGResourceIDAllocator& idAllocator,
     const Size& size)
 {
     m_descFactory = &descFactory;

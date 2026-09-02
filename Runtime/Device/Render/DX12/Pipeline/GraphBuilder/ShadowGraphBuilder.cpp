@@ -28,7 +28,7 @@ void ShadowGraphBuilder::Build(
     auto& shadow = graph.AddGraphicsPass("Shadow");
     shadow.Write(shadowResID, RGAccess::DepthWrite);
 
-    shadow.gpuExecute =
+    shadow.execute =
         [
             &shadowRenderer = m_shadowRenderer,
             &descFactory = m_descFactory,

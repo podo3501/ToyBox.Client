@@ -6,7 +6,7 @@
 
 class Device;
 class DescriptorFactory;
-class RGRenderIDAllocator;
+class RGResourceIDAllocator;
 
 class ViewTargetResource : public IResource
 {
@@ -17,7 +17,7 @@ public:
     bool Initialize(
         Device& device, 
         DescriptorFactory& descFactory, 
-        RGRenderIDAllocator& idAllocator,
+        RGResourceIDAllocator& idAllocator,
         const Size& size);
 
     RGResourceID GetColorID() const noexcept { return m_colorID; }
@@ -31,7 +31,7 @@ public:
 
 private:
     DescriptorFactory* m_descFactory{ nullptr };
-    RGRenderIDAllocator* m_idAllocator{ nullptr };
+    RGResourceIDAllocator* m_idAllocator{ nullptr };
     bool m_ready{ false };
 
     Resource m_color;

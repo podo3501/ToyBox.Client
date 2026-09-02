@@ -96,13 +96,13 @@ std::vector<CompiledTask> RenderGraph::BuildCompiledTasks(
         std::vector<LocalTaskID> currentPassDependencies =
             BuildBarrierTasks(passIndex, baseDependencies, passToBarriersMap, tasks);
 
-        if (!pass.gpuExecute)
+        if (!pass.execute)
             continue;
 
         Task task{};
         task.passName = pass.name;
         task.type = pass.type;
-        task.gpuExecute = pass.gpuExecute;
+        task.execute = pass.execute;
 
         LocalTaskID taskId = CreateLocalTaskID();
         tasks.push_back({ taskId, std::move(task), currentPassDependencies });

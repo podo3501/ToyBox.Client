@@ -113,7 +113,7 @@ std::shared_ptr<ResourceContext> MeshCreateGraphBuilder::CreateResourceContext(
     RGResourceID uploadResID,
     size_t totalUploadSize)
 {
-    auto* rawContext = new ResourceContext();
+    auto* rawContext = new ResourceContext(m_idGenerator.Count());
 
     for (const auto& mesh : *meshUploads)
     {
@@ -143,7 +143,7 @@ void MeshCreateGraphBuilder::BuildUploadPass(
         upload.Write(mesh.ibResID, RGAccess::CopyDest);
     }
 
-    upload.gpuExecute = [this, meshUploads, uploadResID](CommandList& cmd, TaskContext& ctx) mutable {
+    upload.execute = [this, meshUploads, uploadResID](CommandList& cmd, TaskContext& ctx) mutable {
         auto& uploadRes = ctx.GetResource(uploadResID);
         for (auto& mesh : *meshUploads)
         {

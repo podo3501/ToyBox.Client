@@ -30,7 +30,7 @@ void OpaqueGraphBuilder::Build(
     opaque.Read(shadowResID, RGAccess::SRV);
     opaque.Write(target.GetColorID(), RGAccess::RTV);
     opaque.Write(target.GetDepthID(), RGAccess::DepthWrite);
-    opaque.gpuExecute =
+    opaque.execute =
         [
             &descFactory = m_descFactory,
             &surfRenderer = m_surfRenderer,

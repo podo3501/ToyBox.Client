@@ -8,7 +8,7 @@ struct ResourceContext;
 class Device;
 class TaskScheduler;
 class DescriptorFactory;
-class RGRenderIDAllocator;
+class RGResourceIDAllocator;
 class ViewTargetResource;
 
 class ViewTargetPool
@@ -20,7 +20,7 @@ public:
 
     ViewTargetResource& Acquire(
         ViewID id, 
-        RGRenderIDAllocator& idAllocator,
+        RGResourceIDAllocator& idAllocator,
         const Size& requiredSize);
     void ApplyResourceBindings(ResourceContext& resources) const;
     void PruneUnused(const std::bitset<Core::EnumSize<ViewID>>& activeViews);

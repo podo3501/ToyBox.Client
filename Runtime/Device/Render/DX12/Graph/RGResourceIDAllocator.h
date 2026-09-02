@@ -6,7 +6,7 @@
 static constexpr uint32_t TotalResourceIDCapacity = 250;
 static constexpr uint32_t DynamicResourceIDCapacity = 50;
 
-class RGRenderIDAllocator
+class RGResourceIDAllocator
 {
 public:
     bool Initialize(uint32_t totalCapacity, uint32_t dynamicCapacity) noexcept;

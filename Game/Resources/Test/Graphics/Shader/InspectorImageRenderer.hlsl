@@ -22,7 +22,7 @@ static const float2 UV[6] =
 
 cbuffer InspectorTextureCB : register(b0)
 {
-    uint g_textureIndex;
+    uint g_srvIndex;
 };
 
 cbuffer InspectorDrawCB : register(b1)
@@ -58,7 +58,7 @@ PSInput VSMain(uint vID : SV_VertexID)
 
 float4 PSMain(PSInput input) : SV_TARGET
 {
-    Texture2D tex = ResourceDescriptorHeap[g_textureIndex];
+    Texture2D tex = ResourceDescriptorHeap[g_srvIndex];
 
     // 화면 기준 1픽셀
     float2 border = 1.0 / imageSize;

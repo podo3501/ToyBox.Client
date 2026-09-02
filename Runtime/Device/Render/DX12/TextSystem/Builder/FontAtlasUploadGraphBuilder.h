@@ -7,7 +7,7 @@ struct GlyphUploadLayout;
 struct ResourceContext;
 class ResourceFactory;
 class RenderGraph;
-class RGRenderIDAllocator;
+class RGResourceIDAllocator;
 
 class FontAtlasUploadGraphBuilder
 {
@@ -17,7 +17,7 @@ public:
     explicit FontAtlasUploadGraphBuilder(ResourceFactory& resourceFactory);
 
     void QueueGlyphUploads(std::vector<AtlasGlyphBatch>&& batches);
-    void Build(RenderGraph& graph, RGRenderIDAllocator& idAllocator);
+    void Build(RenderGraph& graph, RGResourceIDAllocator& idAllocator);
     void ApplyResourceBindings(ResourceContext& resCtx) const;
     bool HasPendingUploads() const { return !m_pending.empty(); }
 

@@ -75,7 +75,7 @@ Task CreateBarrierTask(CommandType type, const std::vector<BarrierPlan>& barrier
     Task task{};
     task.passName = "Barrier";
     task.type = type;
-    task.gpuExecute = 
+    task.execute = 
         [
             barriers = std::move(barriers)
         ]

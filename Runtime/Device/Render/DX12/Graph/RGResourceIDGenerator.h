@@ -20,7 +20,7 @@ public:
         return m_next++; 
     }
 
-    uint32_t GetGeneratedCount() const noexcept
+    uint32_t Count() const noexcept
     {
         return m_next;
     }

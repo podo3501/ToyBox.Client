@@ -1,37 +1,39 @@
 #include "pch.h"
 #include "InspectorGraphBuilder.h"
+#include "SwapChainPresenter.h"
 #include "Graph/RenderGraph.h"
 #include "Inspector/InspectorImageRenderer.h"
 
 InspectorGraphBuilder::~InspectorGraphBuilder() = default;
-InspectorGraphBuilder::InspectorGraphBuilder(InspectorImageRenderer& imageRenderer) noexcept :
-    m_imageRenderer{ imageRenderer }
+InspectorGraphBuilder::InspectorGraphBuilder(
+    InspectorImageRenderer& imageRenderer,
+    SwapChainPresenter& swapChain) noexcept :
+    m_imageRenderer{ imageRenderer },
+    m_swapChain{ swapChain }
 {}
 
 void InspectorGraphBuilder::Build(
     RenderGraph& graph, 
     RGResourceID backBufferResID, 
-    RGResourceID resID)
+    UINT srvIndex)
 {
     auto& inspector = graph.AddGraphicsPass("Inspector");
     inspector.Write(backBufferResID, RGAccess::RTV);
-    inspector.Read(resID, RGAccess::SRV);
-    inspector.gpuExecute =
+    inspector.execute =
         [
-            &imageInspector = m_imageRenderer
+            &imageInspector = m_imageRenderer,
+            & swapChain = m_swapChain,
+            srvIndex
         ]
         (CommandList& cmd, TaskContext& ctx)
         {
+            swapChain.SetRenderTarget(cmd);
+            swapChain.SetViewport(cmd);
+
             imageInspector.PrepareFrame();
             imageInspector.BeginFrame(cmd);
 
             imageInspector.BindPipeline(cmd);
-            //imageInspector.Draw(cmd, ctx.GetResource(id));
-
-            //for (auto& item : ctx.packet->debug.images)
-            //{
-            //    imageInspector.BindPipeline(cmd);
-            //    imageInspector.Draw(cmd, *item.texture);
-            //}
+            imageInspector.Draw(cmd, srvIndex);
         };
 }
