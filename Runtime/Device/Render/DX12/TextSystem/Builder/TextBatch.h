@@ -4,8 +4,6 @@
 #include "GameClient/Asset/MeshAsset.h"
 
 struct UIVertex;
-struct GlyphInfo;
-class FontAtlas;
 class BrushResource;
 
 struct PageMeshBuffer
@@ -36,19 +34,3 @@ struct TextBatchKeyHash
 };
 
 using TextBatchBufferMap = std::unordered_map<TextBatchKey, PageMeshBuffer, TextBatchKeyHash>;
-
-struct BatchTarget
-{
-    PageMeshBuffer& buffer;
-    UINT texIndex;
-};
-
-BatchTarget GetGlyphBatchTarget(
-    TextBatchBufferMap& buffers,
-    const GlyphInfo* glyph,
-    const FontAtlas& atlas);
-
-BatchTarget GetSolidBatchTarget(
-    TextBatchBufferMap& buffers,
-    FontBucketID bucketID,
-    const FontAtlas& atlas);

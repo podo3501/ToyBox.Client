@@ -4,7 +4,7 @@
 #include "../TextTypes.h"
 #include "Resource/Font/FontResource.h"
 #include "MeshBuilderHelpers.h"
-#include "TextBatch.h"
+#include "TextBatchInfo.h"
 
 UnderlineBatcher::UnderlineBatcher(
     const FontAtlas& atlas, 
@@ -60,7 +60,7 @@ void UnderlineBatcher::Flush(float endX, float baselineY)
         underlineRect = underlineRect.Intersect(m_clipRect);
     }
 
-    auto target = GetSolidBatchTarget(m_buffers, SolidQuadBucket, m_atlas);
+    auto target = GetSolidBatchInfo(m_buffers, SolidQuadBucket, m_atlas);
     AppendSolidQuad(
         target,
         underlineRect,

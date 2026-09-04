@@ -1,15 +1,14 @@
 #include "pch.h"
-#include "TextMeshBuilder.h"
+#include "TextGeometry.h"
+#include "Definition/RenderData.h"
 #include "../Atlas/FontAtlas.h"
 #include "MeshBuilderHelpers.h"
-#include "Provider/Mesh/TransientMeshProvider.h"
-#include "Resource/Font/FontResource.h"
-#include "TextBatch.h"
+#include "TextBatchInfo.h"
 #include "UnderlineBatcher.h"
 #include "GlyphCursor.h"
 #include "TextLayoutHelper.h"
 
-static void ProcessShapedText(
+void AppendShapedText(
     const FontAtlas& atlas,
     const ShapedText& shaped,
     const RenderTextItem& item,
@@ -65,11 +64,11 @@ static void ProcessShapedText(
             }
         }
 
-        auto target = GetGlyphBatchTarget(buffers, glyph, atlas);
+        auto info = GetGlyphBatchInfo(buffers, glyph, atlas);
         const auto& params = runParams[shapedGlyph.runIndex];
 
         AppendGlyphQuad(
-            target,
+            info,
             *glyph,
             x,
             y,
@@ -81,53 +80,4 @@ static void ProcessShapedText(
     }
 
     underline.Flush(cursor.CursorX(), cursor.BaselineY());
-}
-
-static std::vector<PageMesh> CreatePageMeshes(
-    TransientMeshProvider& meshProvider,
-    TextBatchBufferMap& buffers)
-{
-    std::vector<PageMesh> result;
-    result.reserve(buffers.size());
-
-    for (auto& [key, buffer] : buffers)
-    {
-        if (buffer.vertices.empty())
-            continue;
-
-        auto mesh = meshProvider.Create(buffer.vertices, buffer.indices);
-        if (!mesh)
-            continue;
-
-        result.push_back({
-            std::move(mesh),
-            std::move(buffer.brush)
-            });
-    }
-
-    return result;
-}
-
-TextMeshBuilder::TextMeshBuilder(TransientMeshProvider& meshProvider) :
-    m_meshProvider{ meshProvider }
-{}
-
-std::vector<PageMesh> TextMeshBuilder::Build(
-    const FontAtlas& atlas,
-    std::span<const RenderTextItem> items,
-    std::span<const ShapedText> shapedTexts)
-{
-    bool hasAnyGlyph = std::ranges::any_of(shapedTexts,
-        [](const ShapedText& shaped) { return !shaped.glyphs.empty(); });
-    if (!hasAnyGlyph)
-        return {};
-
-    TextBatchBufferMap buffers;
-    for(const auto& shaped : shapedTexts)
-    {
-        const auto& item = items[shaped.index];
-        ProcessShapedText(atlas, shaped, item, buffers);
-    }
-
-    return CreatePageMeshes(m_meshProvider, buffers);
 }

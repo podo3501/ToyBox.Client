@@ -4,7 +4,7 @@
 #include "Definition/View/ViewID.h"
 #include "Definition/View/DrawShadowCasterItem.h"
 
-struct IRenderFrame;
+struct SceneFrameData;
 class RepositoryContainer;
 
 class SceneRenderer
@@ -12,9 +12,7 @@ class SceneRenderer
 public:
 	~SceneRenderer();
 	SceneRenderer() = delete;
-	SceneRenderer(
-		IRenderFrame* renderFrame, 
-		RepositoryContainer& repositories);
+	explicit SceneRenderer(RepositoryContainer& repositories);
 
 	SceneView& AcquireView(
 		const ViewContext& context,
@@ -23,10 +21,9 @@ public:
 
 	void SetLight(const DirectionalLightData& light);
 	void DrawShadowCaster(MeshHandle hM, const Core::Matrix& world);
-	void Flush();
+	SceneFrameData Flush();
 
 private:
-	IRenderFrame* m_renderFrame{ nullptr };
 	RepositoryContainer& m_repositories;
 
 	//default(built in)

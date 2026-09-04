@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "RenderBackend.h"
+#include "Packet/PacketBuilder.h"
 
 RenderBackend::~RenderBackend() = default;
 RenderBackend::RenderBackend(const RenderConfig& config) :
@@ -11,9 +12,8 @@ RenderBackend::RenderBackend(const RenderConfig& config) :
     m_resFactory{ m_device },
     m_resProviderSet{ m_device, m_taskScheduler, m_resFactory, m_descFactory },
     m_transientMeshProvider{ m_frameUploadPools, m_descFactory },
-    m_textSystem{ m_device, m_descFactory, m_resFactory, m_transientMeshProvider },
-    m_pipeline{ m_device, m_swapChain, m_taskScheduler, m_descFactory, m_shaderLibrary, m_textSystem.GetBuilder() },
-    m_renderFrame{ m_textSystem, m_inspector }
+    m_textSystem{ m_device, m_descFactory, m_resFactory },
+    m_pipeline{ m_device, m_swapChain, m_taskScheduler, m_descFactory, m_shaderLibrary, m_textSystem.GetBuilder() }
 {}
 
 void RenderBackend::Shutdown()
@@ -34,7 +34,7 @@ bool RenderBackend::Initialize(HWND hwnd, const Size& screenSize, std::span<cons
     ReturnIfFalse(m_profiler.Initialize(m_device, m_cmdScheduler, m_resFactory));
     ReturnIfFalse(m_resProviderSet.Initialize(m_shaderLibrary));
     ReturnIfFalse(m_frameUploadPools.Initialize(m_device));
-    ReturnIfFalse(m_textSystem.Initialize(m_config.text, &m_inspector));
+    ReturnIfFalse(m_textSystem.Initialize(m_config.text));
     ReturnIfFalse(m_pipeline.Initialize(screenSize, shadowMapSize));
 
     return true;
@@ -57,7 +57,7 @@ void RenderBackend::Update()
     m_pipeline.Update();
 }
 
-void RenderBackend::Render()
+void RenderBackend::Render(SceneFrameData frame)
 {
     m_frameUploadPools.Reset();
     m_descFactory.GetBindlessAllocator().ResetTransient();
@@ -66,7 +66,14 @@ void RenderBackend::Render()
     if (cmd)
     {
         m_profiler.BeginFrame(*cmd, m_frameIndex);
-        m_pipeline.Render(*cmd, m_renderFrame.PrepareRenderData(m_swapChain.GetSize()));
+
+        m_pipeline.Render(*cmd, 
+            BuildPacket(
+                frame, 
+                m_textSystem, 
+                m_transientMeshProvider,
+                m_swapChain.GetSize()));
+
         m_profiler.EndFrame(*cmd);
 
         m_cmdScheduler.End();

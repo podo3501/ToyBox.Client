@@ -1,17 +1,14 @@
 #include "pch.h"
 #include "SceneRenderer.h"
-#include "IRenderFrame.h"
 #include "Repository/Container/RepositoryContainer.h"
 #include "Repository/Container/RepositoryTypeTraits.h"
 #include "Builtin/BuiltinMeshes.h"
 #include "Builtin/BuiltinMaterials.h"
 #include "Builtin/BuiltinBrush.h"
+#include "Definition/View/SceneFrameData.h"
 
 SceneRenderer::~SceneRenderer() = default;
-SceneRenderer::SceneRenderer(
-	IRenderFrame* renderFrame,
-	RepositoryContainer& repositories) :
-	m_renderFrame{ renderFrame },
+SceneRenderer::SceneRenderer(RepositoryContainer& repositories) :
 	m_repositories{ repositories }
 {
 	auto& meshRepository = m_repositories.Get<MeshRepository>();
@@ -58,7 +55,7 @@ void SceneRenderer::DrawShadowCaster(MeshHandle hM, const Core::Matrix& world)
 	m_shadowCasters.push_back(DrawShadowCasterItem{ meshRes, world });
 }
 
-void SceneRenderer::Flush()
+SceneFrameData SceneRenderer::Flush()
 {
 	SceneFrameData frameData;
 	frameData.light = std::move(m_pendingLight);
@@ -72,8 +69,8 @@ void SceneRenderer::Flush()
 		frameData.views.push_back(view->TakeData());
 	}
 
-	m_renderFrame->SubmitFrame(std::move(frameData));
-
 	m_pendingLight = {};
 	m_shadowCasters.clear();
+
+	return frameData;
 }

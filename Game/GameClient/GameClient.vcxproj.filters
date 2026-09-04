@@ -584,9 +584,6 @@
     <ClInclude Include="Graphics\RenderData\DirectionalLightData.h">
       <Filter>Graphics\RenderData</Filter>
     </ClInclude>
-    <ClInclude Include="Service\Render\IRenderFrame.h">
-      <Filter>Service\Render</Filter>
-    </ClInclude>
     <ClInclude Include="Service\Render\RenderRepository.h">
       <Filter>Service\Render</Filter>
     </ClInclude>

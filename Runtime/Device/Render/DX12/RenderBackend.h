@@ -14,7 +14,6 @@
 #include "Provider/Mesh/TransientMeshProvider.h"
 #include "Pipeline/ForwardRenderPipeline.h"
 #include "TextSystem/TextSystem.h"
-#include "RenderFrame.h"
 
 class RenderBackend : public IRenderBackend
 {
@@ -25,11 +24,10 @@ public:
 	virtual ShaderID RegisterShader(const ShaderDesc& desc) override { return m_shaderLibrary.RegisterShader(desc); }
 	virtual void Resize(const Size& size) override;
 	virtual void Update() override;
-	virtual void Render() override;
+	virtual void Render(SceneFrameData frame) override;
 	virtual void Shutdown() override;
 
 	virtual IResourceProvider* GetProvider(ProviderType type) override;
-	virtual IRenderFrame* GetRenderFrame() override { return &m_renderFrame; }
 	virtual RenderMetrics GetRenderMetrics() override;
 
 private:
@@ -49,7 +47,6 @@ private:
 	TransientMeshProvider m_transientMeshProvider;
 	TextSystem m_textSystem;
 	ForwardRenderPipeline m_pipeline;
-	RenderFrame m_renderFrame;
 
 	uint64_t m_frameIndex{ 0 };
 };

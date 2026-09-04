@@ -42,7 +42,7 @@ bool RenderService::Initialize(HWND hwnd, const Size& screenSize)
 	ReturnIfFalse(m_backend->Initialize(hwnd, screenSize, shaderDescs));
 
 	m_repository = make_unique<RenderRepository>(m_repositories);
-	m_renderer = make_unique<SceneRenderer>(m_backend->GetRenderFrame(), m_repositories);
+	m_renderer = make_unique<SceneRenderer>(m_repositories);
 
 	return true;
 }
@@ -72,8 +72,7 @@ void RenderService::Update()
 
 void RenderService::Render()
 {
-	m_renderer->Flush(); //한 프레임에 그려질 데이터를 backend에 셋팅한다.
-	m_backend->Render();
+	m_backend->Render(m_renderer->Flush());
 }
 
 void RenderService::Resize(const Size& size)

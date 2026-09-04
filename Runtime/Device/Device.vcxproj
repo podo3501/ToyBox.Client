@@ -74,6 +74,11 @@
     <ClInclude Include="Render\DX12\Inspector\Inspector.h" />
     <ClInclude Include="Render\DX12\Inspector\InspectorGraphBuilder.h" />
     <ClInclude Include="Render\DX12\Inspector\InspectorRenderers.h" />
+    <ClInclude Include="Render\DX12\Packet\DebugSurfaceItemBuilder.h" />
+    <ClInclude Include="Render\DX12\Packet\PacketBuilder.h" />
+    <ClInclude Include="Render\DX12\Packet\RenderSortKey.h" />
+    <ClInclude Include="Render\DX12\Packet\SurfaceItemBuilder.h" />
+    <ClInclude Include="Render\DX12\Packet\UIItemBuilder.h" />
     <ClInclude Include="Render\DX12\Pipeline\GraphBuilder\ClearGraphBuilder.h" />
     <ClInclude Include="Render\DX12\Pipeline\GraphBuilder\CompositeGraphBuilder.h" />
     <ClInclude Include="Render\DX12\Pipeline\GraphBuilder\DebugSurfaceGraphBuilder.h" />
@@ -85,8 +90,6 @@
     <ClInclude Include="Render\DX12\Pipeline\Renderer\CompositeRenderer.h" />
     <ClInclude Include="Render\DX12\Pipeline\Renderer\PipelineStateUtils.h" />
     <ClInclude Include="Render\DX12\Pipeline\Renderer\SkyboxRenderer.h" />
-    <ClInclude Include="Render\DX12\Pipeline\RenderPacketBuilder.h" />
-    <ClInclude Include="Render\DX12\Pipeline\RenderSortKey.h" />
     <ClInclude Include="Render\DX12\Pipeline\ViewGraphBuilder.h" />
     <ClInclude Include="Render\DX12\Pipeline\ViewTargetPool.h" />
     <ClInclude Include="Render\DX12\Provider\Brush\BrushProvider.h" />
@@ -105,7 +108,6 @@
     <ClInclude Include="Render\DX12\Provider\Texture\TextureCubeLoadRequest.h" />
     <ClInclude Include="Render\DX12\Provider\Texture\TextureCubeProvider.h" />
     <ClInclude Include="Render\DX12\RenderConstants.h" />
-    <ClInclude Include="Render\DX12\RenderFrame.h" />
     <ClInclude Include="Render\DX12\Command\CommandList.h" />
     <ClInclude Include="Render\DX12\Command\CommandListHelpers.h" />
     <ClInclude Include="Render\DX12\Command\CommandQueue.h" />
@@ -183,8 +185,9 @@
     <ClInclude Include="Render\DX12\TextSystem\Builder\GlyphCursor.h" />
     <ClInclude Include="Render\DX12\TextSystem\Builder\MeshBuilderHelpers.h" />
     <ClInclude Include="Render\DX12\TextSystem\Builder\TextBatch.h" />
+    <ClInclude Include="Render\DX12\TextSystem\Builder\TextBatchInfo.h" />
     <ClInclude Include="Render\DX12\TextSystem\Builder\TextLayoutHelper.h" />
-    <ClInclude Include="Render\DX12\TextSystem\Builder\TextMeshBuilder.h" />
+    <ClInclude Include="Render\DX12\TextSystem\Builder\TextGeometry.h" />
     <ClInclude Include="Render\DX12\TextSystem\Builder\UnderlineBatcher.h" />
     <ClInclude Include="Render\DX12\TextSystem\TextLayout.h" />
     <ClInclude Include="Render\DX12\TextSystem\TextSystem.h" />
@@ -243,6 +246,11 @@
     <ClCompile Include="Render\DX12\Inspector\Inspector.cpp" />
     <ClCompile Include="Render\DX12\Inspector\InspectorGraphBuilder.cpp" />
     <ClCompile Include="Render\DX12\Inspector\InspectorRenderers.cpp" />
+    <ClCompile Include="Render\DX12\Packet\DebugSurfaceItemBuilder.cpp" />
+    <ClCompile Include="Render\DX12\Packet\PacketBuilder.cpp" />
+    <ClCompile Include="Render\DX12\Packet\RenderSortKey.cpp" />
+    <ClCompile Include="Render\DX12\Packet\SurfaceItemBuilder.cpp" />
+    <ClCompile Include="Render\DX12\Packet\UIItemBuilder.cpp" />
     <ClCompile Include="Render\DX12\Pipeline\GraphBuilder\ClearGraphBuilder.cpp" />
     <ClCompile Include="Render\DX12\Pipeline\GraphBuilder\CompositeGraphBuilder.cpp" />
     <ClCompile Include="Render\DX12\Pipeline\GraphBuilder\DebugSurfaceGraphBuilder.cpp" />
@@ -253,8 +261,6 @@
     <ClCompile Include="Render\DX12\Pipeline\GraphBuilder\ViewTargetClearGraphBuilder.cpp" />
     <ClCompile Include="Render\DX12\Pipeline\Renderer\CompositeRenderer.cpp" />
     <ClCompile Include="Render\DX12\Pipeline\Renderer\SkyboxRenderer.cpp" />
-    <ClCompile Include="Render\DX12\Pipeline\RenderPacketBuilder.cpp" />
-    <ClCompile Include="Render\DX12\Pipeline\RenderSortKey.cpp" />
     <ClCompile Include="Render\DX12\Pipeline\ViewGraphBuilder.cpp" />
     <ClCompile Include="Render\DX12\Pipeline\ViewTargetPool.cpp" />
     <ClCompile Include="Render\DX12\Provider\Brush\BrushProvider.cpp" />
@@ -268,7 +274,6 @@
     <ClCompile Include="Render\DX12\Provider\ProviderBudget.cpp" />
     <ClCompile Include="Render\DX12\Provider\Texture\TextureCubeCreateGraphBuilder.cpp" />
     <ClCompile Include="Render\DX12\Provider\Texture\TextureCubeProvider.cpp" />
-    <ClCompile Include="Render\DX12\RenderFrame.cpp" />
     <ClCompile Include="Render\DX12\Command\CommandList.cpp" />
     <ClCompile Include="Render\DX12\Command\CommandQueue.cpp" />
     <ClCompile Include="Render\DX12\Command\CommandScheduler.cpp" />
@@ -328,9 +333,9 @@
     <ClCompile Include="Render\DX12\TextSystem\Builder\FontAtlasUploadGraphBuilder.cpp" />
     <ClCompile Include="Render\DX12\TextSystem\Builder\GlyphCursor.cpp" />
     <ClCompile Include="Render\DX12\TextSystem\Builder\MeshBuilderHelpers.cpp" />
-    <ClCompile Include="Render\DX12\TextSystem\Builder\TextBatch.cpp" />
+    <ClCompile Include="Render\DX12\TextSystem\Builder\TextBatchInfo.cpp" />
     <ClCompile Include="Render\DX12\TextSystem\Builder\TextLayoutHelper.cpp" />
-    <ClCompile Include="Render\DX12\TextSystem\Builder\TextMeshBuilder.cpp" />
+    <ClCompile Include="Render\DX12\TextSystem\Builder\TextGeometry.cpp" />
     <ClCompile Include="Render\DX12\TextSystem\Builder\UnderlineBatcher.cpp" />
     <ClCompile Include="Render\DX12\TextSystem\TextLayout.cpp" />
     <ClCompile Include="Render\DX12\TextSystem\TextSystem.cpp" />

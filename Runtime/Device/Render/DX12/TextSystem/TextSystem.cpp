@@ -1,60 +1,44 @@
 #include "pch.h"
 #include "TextSystem.h"
-#include "Resource/Font/FontResource.h"
-#include "Resource/Mesh/TransientMeshResource.h"
-#include "Resource/Brush/BrushResource.h"
-#include "Inspector/Inspector.h"
-#include "GameClient/Service/Render/RenderConfig.h"
 #include "TextLayout.h"
+#include "Definition/RenderData.h"
+#include "Builder/TextGeometry.h"
+#include "Resource/Font/FontResource.h"
 
 TextSystem::~TextSystem() = default;
 TextSystem::TextSystem(
     Device& device,
     DescriptorFactory& factory,
-    ResourceFactory& resFactory,
-    TransientMeshProvider& transientMeshProvider) :
+    ResourceFactory& resFactory) :
     m_atlasBuilder{ resFactory },
-    m_meshBuilder{ transientMeshProvider },
     m_fontAtlas{ device, factory, m_atlasBuilder }
 {}
 
-bool TextSystem::Initialize(const TextConfig& texConfig, Inspector* inspector)
+bool TextSystem::Initialize(const TextConfig& texConfig)
 {
-    ReturnIfFalse(m_fontAtlas.Initialize(texConfig));
-    m_inspector = inspector;
-
-    return true;
+    return m_fontAtlas.Initialize(texConfig);
 }
 
-std::vector<RenderUIItem> TextSystem::BuildDrawItems(std::span<const RenderTextItem> items)
+void TextSystem::AppendDrawItems(
+    std::span<const RenderTextItem> items,
+    TextBatchBufferMap& buffers)
 {
     if (items.empty())
-        return {};
+        return;
 
     auto shapedTexts = ShapeTexts(items);
     for (size_t i = 0; i < shapedTexts.size(); ++i)
         ApplyWordWrap(shapedTexts[i].glyphs, items[i].size.x, items[i].layout.wordWrap);
     m_fontAtlas.EnsureGlyphs(shapedTexts);
 
-    std::vector<PageMesh> pageMeshes = m_meshBuilder.Build(m_fontAtlas, items, shapedTexts);
-    return CreateDrawItems(pageMeshes);
-}
-
-std::vector<RenderUIItem> TextSystem::CreateDrawItems(std::span<const PageMesh> pageMeshes)
-{
-    std::vector<RenderUIItem> result;
-    result.reserve(pageMeshes.size());
-
-    for (const auto& pageMesh : pageMeshes)
+    for (const auto& shaped : shapedTexts)
     {
-        RenderUIItem item;
-        item.mesh = pageMesh.mesh;
-        item.brush = pageMesh.brush;
+        if (shaped.glyphs.empty())
+            continue;
 
-        result.push_back(std::move(item));
+        const auto& item = items[shaped.index];
+        AppendShapedText(m_fontAtlas, shaped, item, buffers);
     }
-
-    return result;
 }
 
 std::vector<ShapedText> TextSystem::ShapeTexts(std::span<const RenderTextItem> items)

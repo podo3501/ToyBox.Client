@@ -2,8 +2,7 @@
 #include "../TextTypes.h"
 #include "Core/Foundation/Geometry2D.h"
 
-struct UIVertex;
-struct BatchTarget;
+struct TextBatchInfo;
 
 struct PackedTextParams
 {
@@ -14,7 +13,7 @@ struct PackedTextParams
 std::vector<PackedTextParams> PackRunParams(const std::vector<TextRun>& runs);
 
 void AppendGlyphQuad(
-    BatchTarget& target,
+    TextBatchInfo& info,
     const GlyphInfo& glyph,
     float x, float y,
     const Core::Color& color,
@@ -22,7 +21,7 @@ void AppendGlyphQuad(
     const Rect& clipRect);
 
 void AppendSolidQuad(
-    BatchTarget& target,
+    TextBatchInfo& info,
     const Rect& rect,
     const Core::Color& color,
     const Rect& clipRect);

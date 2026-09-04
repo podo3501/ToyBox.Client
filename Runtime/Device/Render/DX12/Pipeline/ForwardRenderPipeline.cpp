@@ -81,7 +81,7 @@ std::vector<CompiledTask> ForwardRenderPipeline::BuildFrame(const FramePacket& f
     m_viewPool.PruneUnused(activeViews);
     m_compositeBuilder.Build(m_graph, m_hBackBuffer, renderViewInfos);
     //shadow map은 텍스쳐가 크기 때문에 작은 물체를 띄우면 안보인다. 
-    m_inspectorBuilder.Build(m_graph, m_hBackBuffer, 10);
+    //m_inspectorBuilder.Build(m_graph, m_hBackBuffer, 10); //인자는 보고싶은 srv Index(Heap Index)를 넣으면 된다. 
 
     m_graph.ExportResource(m_hBackBuffer, RGAccess::Present);
     m_graph.ExportResource(m_hShadow, RGAccess::DepthWrite);

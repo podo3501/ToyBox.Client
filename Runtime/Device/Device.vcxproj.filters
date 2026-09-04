@@ -139,6 +139,9 @@
     <Filter Include="Render\DX12\Definition">
       <UniqueIdentifier>{4d619e89-84e7-4e5e-a86f-b25d04e3f323}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Render\DX12\Packet">
+      <UniqueIdentifier>{2b89dbd5-96aa-49d6-8136-ec4f4ffbb709}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Storage\JsonObjectIO.h">
@@ -322,9 +325,6 @@
     <ClInclude Include="Render\DX12\Shader\ShaderLibrary.h">
       <Filter>Render\DX12\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\RenderFrame.h">
-      <Filter>Render\DX12</Filter>
-    </ClInclude>
     <ClInclude Include="Render\DX12\Provider\Mesh\MeshCreateGraphBuilder.h">
       <Filter>Render\DX12\Provider\Mesh</Filter>
     </ClInclude>
@@ -436,7 +436,7 @@
     <ClInclude Include="Render\DX12\TextSystem\Builder\FontAtlasUploadGraphBuilder.h">
       <Filter>Render\DX12\TextSystem\Builder</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\TextSystem\Builder\TextMeshBuilder.h">
+    <ClInclude Include="Render\DX12\TextSystem\Builder\TextGeometry.h">
       <Filter>Render\DX12\TextSystem\Builder</Filter>
     </ClInclude>
     <ClInclude Include="Render\DX12\TextSystem\Atlas\AtlasPacker.h">
@@ -604,12 +604,6 @@
     <ClInclude Include="Render\DX12\Pipeline\GraphBuilder\UIGraphBuilder.h">
       <Filter>Render\DX12\Pipeline\GraphBuilder</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\Pipeline\RenderPacketBuilder.h">
-      <Filter>Render\DX12\Pipeline</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\DX12\Pipeline\RenderSortKey.h">
-      <Filter>Render\DX12\Pipeline</Filter>
-    </ClInclude>
     <ClInclude Include="Render\DX12\Pipeline\GraphBuilder\ClearGraphBuilder.h">
       <Filter>Render\DX12\Pipeline\GraphBuilder</Filter>
     </ClInclude>
@@ -651,6 +645,24 @@
     </ClInclude>
     <ClInclude Include="Render\DX12\Graph\RGResourceIDGenerator.h">
       <Filter>Render\DX12\Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Packet\PacketBuilder.h">
+      <Filter>Render\DX12\Packet</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Packet\RenderSortKey.h">
+      <Filter>Render\DX12\Packet</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Packet\SurfaceItemBuilder.h">
+      <Filter>Render\DX12\Packet</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Packet\DebugSurfaceItemBuilder.h">
+      <Filter>Render\DX12\Packet</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Packet\UIItemBuilder.h">
+      <Filter>Render\DX12\Packet</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\TextSystem\Builder\TextBatchInfo.h">
+      <Filter>Render\DX12\TextSystem\Builder</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -799,9 +811,6 @@
     <ClCompile Include="Render\DX12\Shader\ShaderLibrary.cpp">
       <Filter>Render\DX12\Shader</Filter>
     </ClCompile>
-    <ClCompile Include="Render\DX12\RenderFrame.cpp">
-      <Filter>Render\DX12</Filter>
-    </ClCompile>
     <ClCompile Include="Render\DX12\Provider\Mesh\MeshCreateGraphBuilder.cpp">
       <Filter>Render\DX12\Provider\Mesh</Filter>
     </ClCompile>
@@ -892,7 +901,7 @@
     <ClCompile Include="Render\DX12\TextSystem\Builder\FontAtlasUploadGraphBuilder.cpp">
       <Filter>Render\DX12\TextSystem\Builder</Filter>
     </ClCompile>
-    <ClCompile Include="Render\DX12\TextSystem\Builder\TextMeshBuilder.cpp">
+    <ClCompile Include="Render\DX12\TextSystem\Builder\TextGeometry.cpp">
       <Filter>Render\DX12\TextSystem\Builder</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\TextSystem\Atlas\AtlasPacker.cpp">
@@ -938,9 +947,6 @@
       <Filter>Render\DX12\TextSystem\Atlas</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\TextSystem\Builder\MeshBuilderHelpers.cpp">
-      <Filter>Render\DX12\TextSystem\Builder</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\DX12\TextSystem\Builder\TextBatch.cpp">
       <Filter>Render\DX12\TextSystem\Builder</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\TextSystem\Atlas\FontAtlasBucket.cpp">
@@ -1030,12 +1036,6 @@
     <ClCompile Include="Render\DX12\Pipeline\GraphBuilder\UIGraphBuilder.cpp">
       <Filter>Render\DX12\Pipeline\GraphBuilder</Filter>
     </ClCompile>
-    <ClCompile Include="Render\DX12\Pipeline\RenderPacketBuilder.cpp">
-      <Filter>Render\DX12\Pipeline</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\DX12\Pipeline\RenderSortKey.cpp">
-      <Filter>Render\DX12\Pipeline</Filter>
-    </ClCompile>
     <ClCompile Include="Render\DX12\Pipeline\GraphBuilder\ClearGraphBuilder.cpp">
       <Filter>Render\DX12\Pipeline\GraphBuilder</Filter>
     </ClCompile>
@@ -1062,6 +1062,24 @@
     </ClCompile>
     <ClCompile Include="Render\DX12\Graph\RGResourceIDAllocator.cpp">
       <Filter>Render\DX12\Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Packet\PacketBuilder.cpp">
+      <Filter>Render\DX12\Packet</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Packet\RenderSortKey.cpp">
+      <Filter>Render\DX12\Packet</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Packet\SurfaceItemBuilder.cpp">
+      <Filter>Render\DX12\Packet</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Packet\DebugSurfaceItemBuilder.cpp">
+      <Filter>Render\DX12\Packet</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Packet\UIItemBuilder.cpp">
+      <Filter>Render\DX12\Packet</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\TextSystem\Builder\TextBatchInfo.cpp">
+      <Filter>Render\DX12\TextSystem\Builder</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

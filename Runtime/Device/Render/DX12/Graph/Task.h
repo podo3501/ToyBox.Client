@@ -51,28 +51,6 @@ private:
     std::vector<std::optional<Resource>> resources;
 };
 
-//struct ResourceContext
-//{
-//    std::unordered_map<uint32_t, Resource> resources;
-//
-//    void Set(RGResourceID id, const Resource& resource) { resources[id] = resource; }
-//    void Set(RGResourceID id, Resource&& resource) { resources[id] = std::move(resource); }
-//
-//    Resource& Get(RGResourceID id)
-//    {
-//        auto it = resources.find(id);
-//        Assert(it != resources.end()); //리소스 등록하는 부분이 빠져 있을 가능성. taskContext에서 리소스 등록이 안돼 있을 수 있음.
-//        return it->second;
-//    }
-//
-//    const Resource& Get(RGResourceID id) const
-//    {
-//        auto it = resources.find(id);
-//        Assert(it != resources.end());
-//        return it->second;
-//    }
-//};
-
 struct TaskContext
 {
     shared_ptr<ResourceContext> resources; //중요한 리소스. 공유됨.

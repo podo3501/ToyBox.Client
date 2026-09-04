@@ -1,16 +1,15 @@
 #include "pch.h"
-#include "TextBatch.h"
-#include "Resource/Brush/BrushResource.h"
-#include "../TextTypes.h"
+#include "TextBatchInfo.h"
 #include "../Atlas/FontAtlas.h"
+#include "Resource/Brush/BrushResource.h"
 
-static BatchTarget MakeBatchTarget(PageMeshBuffer& buffer)
+static TextBatchInfo MakeBatchTarget(PageMeshBuffer& buffer)
 {
     BrushResource* brush = static_cast<BrushResource*>(buffer.brush.get());
     return { buffer, brush->GetTextureIndex() };
 }
 
-BatchTarget GetGlyphBatchTarget(
+TextBatchInfo GetGlyphBatchInfo(
     TextBatchBufferMap& buffers,
     const GlyphInfo* glyph,
     const FontAtlas& atlas)
@@ -23,7 +22,7 @@ BatchTarget GetGlyphBatchTarget(
     return MakeBatchTarget(it->second);
 }
 
-BatchTarget GetSolidBatchTarget(
+TextBatchInfo GetSolidBatchInfo(
     TextBatchBufferMap& buffers,
     FontBucketID bucketID,
     const FontAtlas& atlas)
