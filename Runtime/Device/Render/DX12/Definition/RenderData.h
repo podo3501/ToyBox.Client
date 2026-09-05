@@ -42,11 +42,6 @@ struct RenderDebugSurfaceItem
 struct RenderUIItem
 {
     std::shared_ptr<IResource> mesh;
-    std::shared_ptr<IResource> brush;
-    Core::Matrix world{};
-    std::optional<Rect> source{ nullopt };
-    
-    uint64_t sortKey{ 0 };
 };
 
 struct RenderTextItem
@@ -80,7 +75,7 @@ struct ViewPacket
 
     std::vector<RenderSurfaceItem> surface;
     std::vector<RenderDebugSurfaceItem> debugSurface;
-    std::vector<RenderUIItem> ui;
+    std::optional<RenderUIItem> ui;
     std::shared_ptr<EnvironmentResource> environment{ nullptr }; // nullptr 가능 - 환경 없는 씬
 };
 

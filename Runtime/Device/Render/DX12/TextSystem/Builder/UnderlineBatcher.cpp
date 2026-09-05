@@ -2,16 +2,17 @@
 #include "UnderlineBatcher.h"
 #include "../Atlas/FontAtlas.h"
 #include "../TextTypes.h"
+#include "Packet/UIBatchBuffer.h"
 #include "Resource/Font/FontResource.h"
+#include "Resource/Brush/BrushResource.h"
 #include "MeshBuilderHelpers.h"
-#include "TextBatchInfo.h"
 
 UnderlineBatcher::UnderlineBatcher(
     const FontAtlas& atlas, 
     const ShapedText& shaped, 
-    TextBatchBufferMap& buffers,
+    UIBatchBuffer& buffer,
     const Rect& clipRect) :
-    m_atlas{ atlas }, m_shaped{ shaped }, m_buffers{ buffers }, m_clipRect{ clipRect }
+    m_atlas{ atlas }, m_shaped{ shaped }, m_buffer{ buffer }, m_clipRect{ clipRect }
 {}
 
 void UnderlineBatcher::Update(const TextStyle& style, float cursorX, float baselineY)
@@ -60,9 +61,11 @@ void UnderlineBatcher::Flush(float endX, float baselineY)
         underlineRect = underlineRect.Intersect(m_clipRect);
     }
 
-    auto target = GetSolidBatchInfo(m_buffers, SolidQuadBucket, m_atlas);
+    const auto& brush = m_atlas.GetSolidBrush();
+    const auto textureIndex = brush->GetTextureIndex();
     AppendSolidQuad(
-        target,
+        m_buffer,
+        textureIndex,
         underlineRect,
         m_color,
         m_clipRect); // clipRect가 유효할 때는 이미 이 안에 완전히 들어가는 quad이므로 셰이더 discard는 안전망 역할만.

@@ -78,7 +78,9 @@
     <ClInclude Include="Render\DX12\Packet\PacketBuilder.h" />
     <ClInclude Include="Render\DX12\Packet\RenderSortKey.h" />
     <ClInclude Include="Render\DX12\Packet\SurfaceItemBuilder.h" />
+    <ClInclude Include="Render\DX12\Packet\UIBatchBuffer.h" />
     <ClInclude Include="Render\DX12\Packet\UIItemBuilder.h" />
+    <ClInclude Include="Render\DX12\Packet\UIMeshAppend.h" />
     <ClInclude Include="Render\DX12\Pipeline\GraphBuilder\ClearGraphBuilder.h" />
     <ClInclude Include="Render\DX12\Pipeline\GraphBuilder\CompositeGraphBuilder.h" />
     <ClInclude Include="Render\DX12\Pipeline\GraphBuilder\DebugSurfaceGraphBuilder.h" />
@@ -184,8 +186,6 @@
     <ClInclude Include="Render\DX12\TextSystem\Builder\FontAtlasUploadGraphBuilder.h" />
     <ClInclude Include="Render\DX12\TextSystem\Builder\GlyphCursor.h" />
     <ClInclude Include="Render\DX12\TextSystem\Builder\MeshBuilderHelpers.h" />
-    <ClInclude Include="Render\DX12\TextSystem\Builder\TextBatch.h" />
-    <ClInclude Include="Render\DX12\TextSystem\Builder\TextBatchInfo.h" />
     <ClInclude Include="Render\DX12\TextSystem\Builder\TextLayoutHelper.h" />
     <ClInclude Include="Render\DX12\TextSystem\Builder\TextGeometry.h" />
     <ClInclude Include="Render\DX12\TextSystem\Builder\UnderlineBatcher.h" />
@@ -251,6 +251,7 @@
     <ClCompile Include="Render\DX12\Packet\RenderSortKey.cpp" />
     <ClCompile Include="Render\DX12\Packet\SurfaceItemBuilder.cpp" />
     <ClCompile Include="Render\DX12\Packet\UIItemBuilder.cpp" />
+    <ClCompile Include="Render\DX12\Packet\UIMeshAppend.cpp" />
     <ClCompile Include="Render\DX12\Pipeline\GraphBuilder\ClearGraphBuilder.cpp" />
     <ClCompile Include="Render\DX12\Pipeline\GraphBuilder\CompositeGraphBuilder.cpp" />
     <ClCompile Include="Render\DX12\Pipeline\GraphBuilder\DebugSurfaceGraphBuilder.cpp" />
@@ -333,7 +334,6 @@
     <ClCompile Include="Render\DX12\TextSystem\Builder\FontAtlasUploadGraphBuilder.cpp" />
     <ClCompile Include="Render\DX12\TextSystem\Builder\GlyphCursor.cpp" />
     <ClCompile Include="Render\DX12\TextSystem\Builder\MeshBuilderHelpers.cpp" />
-    <ClCompile Include="Render\DX12\TextSystem\Builder\TextBatchInfo.cpp" />
     <ClCompile Include="Render\DX12\TextSystem\Builder\TextLayoutHelper.cpp" />
     <ClCompile Include="Render\DX12\TextSystem\Builder\TextGeometry.cpp" />
     <ClCompile Include="Render\DX12\TextSystem\Builder\UnderlineBatcher.cpp" />

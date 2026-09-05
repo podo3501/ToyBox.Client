@@ -162,10 +162,12 @@ void MeshCreateGraphBuilder::FinalizeMeshes(std::vector<MeshUploadEntry>& meshUp
         auto vertexCount = static_cast<UINT>(mesh.asset->vertices.size());
         auto indexCount = static_cast<UINT>(mesh.asset->indices.size());
 
-        meshRes->SetVertexFormat(mesh.asset->format);
         meshRes->SetResource(std::move(mesh.vbRegion.dstBuffer), std::move(mesh.ibRegion.dstBuffer), vertexCount, indexCount);
         meshRes->SetVertexHeapIndex(mesh.vbHeapIndex);
         meshRes->SetIndexHeapIndex(mesh.ibHeapIndex);
+        if (mesh.asset->format == VertexFormat::UI)
+            meshRes->SetCPUTemplate(mesh.asset); // UI 배칭할때 CPU에서 world를 곱해 재조립할 수 있도록(gpu에서 world를 곱하면 draw call을 나눠야 함) 원본 유지
+
         meshRes->MarkReady();
     }
 }

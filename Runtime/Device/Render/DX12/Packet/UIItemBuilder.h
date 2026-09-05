@@ -5,7 +5,7 @@ struct RenderUIItem;
 class TextSystem;
 class TransientMeshProvider;
 
-std::vector<RenderUIItem> BuildUIItems(
+std::optional<RenderUIItem> BuildUIItems(
     ViewDrawList& draws,
     TextSystem& textSystem,
     TransientMeshProvider& meshProvider);

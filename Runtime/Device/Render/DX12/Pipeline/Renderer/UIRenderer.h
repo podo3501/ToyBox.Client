@@ -23,12 +23,9 @@ public:
 
     void BeginFrame(CommandList& cmd);
     void Draw(
-        CommandList& cmd, 
-        MeshResource& mesh, 
-        BrushResource& brush,
-        const Core::Matrix& world,
-        const Core::Matrix& projection,
-        const std::optional<Rect>& source);
+        CommandList& cmd,
+        MeshResource& mesh,
+        const Core::Matrix& projection);
 
 private:
     enum class RootSlot : uint32_t
@@ -39,10 +36,7 @@ private:
 
     bool CreateRootSignature(Device& device);
     ID3D12PipelineState* CreatePSO();
-    D3D12_GPU_VIRTUAL_ADDRESS UploadDrawCB(
-        const Core::Matrix& world, 
-        const Core::Matrix& projection,
-        const Core::Vector4& uvTransform);
+    D3D12_GPU_VIRTUAL_ADDRESS UploadDrawCB(const Core::Matrix& projection);
 
     UIRendererConfig m_config;
     PipelineCache& m_pipelineCache;

@@ -1,10 +1,11 @@
 #include "pch.h"
 #include "UIItemBuilder.h"
+#include "UIBatchBuffer.h"
+#include "UIMeshAppend.h"
 #include "TextSystem/TextSystem.h"
 #include "Provider/Mesh/TransientMeshProvider.h"
 #include "Definition/RenderData.h"
 #include "Resource/Mesh/TransientMeshResource.h"
-#include "Resource/Brush/BrushResource.h"
 #include "GameClient/Service/Render/Definition/View/SceneFrameData.h"
 
 static RenderTextItem ToRenderTextItem(DrawTextItem& text)
@@ -25,72 +26,48 @@ static RenderTextItem ToRenderTextItem(DrawTextItem& text)
     return item;
 }
 
-static std::vector<RenderUIItem> BuildTextItems(
-    TransientMeshProvider& meshProvider,
-    TextBatchBufferMap& buffers)
+static std::vector<RenderTextItem> CollectTextItems(std::vector<DrawTextItem>& texts)
 {
-    std::vector<RenderUIItem> result;
-    result.reserve(buffers.size());
-    for (auto& [key, buffer] : buffers)
+    std::vector<RenderTextItem> result;
+    result.reserve(texts.size());
+    for (auto& text : texts)
     {
-        if (buffer.vertices.empty())
+        if (text.runs.empty())
             continue;
-
-        auto mesh = meshProvider.Create(buffer.vertices, buffer.indices);
-        if (!mesh)
-            continue;
-
-        result.push_back(RenderUIItem{
-            std::move(mesh),
-            std::move(buffer.brush),
-            Core::Matrix::Identity(),
-            std::nullopt });
+        result.push_back(ToRenderTextItem(text));
     }
-
     return result;
 }
 
-std::vector<RenderUIItem> BuildUIItems(
+static std::optional<RenderUIItem> BakeBuffer(
+    TransientMeshProvider& meshProvider,
+    UIBatchBuffer& buffer)
+{
+    if (buffer.vertices.empty())
+        return std::nullopt;
+
+    auto mesh = meshProvider.Create(buffer.vertices, buffer.indices);
+    if (!mesh)
+        return std::nullopt;
+
+    return RenderUIItem{ std::static_pointer_cast<IResource>(std::move(mesh)) };
+}
+
+std::optional<RenderUIItem> BuildUIItems(
     ViewDrawList& draws,
     TextSystem& textSystem,
     TransientMeshProvider& meshProvider)
 {
-    std::vector<RenderUIItem> result;
-    result.reserve(draws.ui.size() + draws.texts.size());
+    UIBatchBuffer buffer;
 
-    for (auto& ui : draws.ui)
-        result.push_back(RenderUIItem{ ui.mesh, ui.brush, ui.world, ui.source });
+    if (!draws.ui.empty())
+        AppendUIItems(draws.ui, buffer);
 
     if (!draws.texts.empty())
     {
-        std::vector<RenderTextItem> textItems;
-        textItems.reserve(draws.texts.size());
-
-        for (auto& text : draws.texts)
-        {
-            if (text.runs.empty())
-                continue;
-
-            textItems.push_back(ToRenderTextItem(text));
-        }
-
-        TextBatchBufferMap buffers;
-        textSystem.AppendDrawItems(textItems, buffers);
-        auto textUIItems = BuildTextItems(meshProvider, buffers);
-
-        result.insert(
-            result.end(),
-            std::make_move_iterator(textUIItems.begin()),
-            std::make_move_iterator(textUIItems.end()));
+        auto textItems = CollectTextItems(draws.texts);
+        textSystem.AppendDrawItems(textItems, buffer);
     }
 
-    std::sort(
-        result.begin(),
-        result.end(),
-        [](auto& a, auto& b)
-        {
-            return a.sortKey < b.sortKey;
-        });
-
-    return result;
+    return BakeBuffer(meshProvider, buffer);
 }

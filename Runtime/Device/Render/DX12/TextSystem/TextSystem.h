@@ -1,11 +1,11 @@
 #pragma once
 #include "Builder/FontAtlasUploadGraphBuilder.h"
 #include "Atlas/FontAtlas.h"
-#include "Builder/TextBatch.h"
 
 struct TextConfig;
 struct ShapedText;
 struct RenderTextItem;
+struct UIBatchBuffer;
 class Device;
 class ResourceFactory;
 class DescriptorFactory;
@@ -21,7 +21,7 @@ public:
     bool Initialize(const TextConfig& texConfig);
     void AppendDrawItems(
         std::span<const RenderTextItem> items,
-        TextBatchBufferMap& buffers);
+        UIBatchBuffer& buffer);
 
     FontAtlasUploadGraphBuilder& GetBuilder() { return m_atlasBuilder; }
 

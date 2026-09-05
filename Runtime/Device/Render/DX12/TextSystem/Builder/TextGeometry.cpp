@@ -1,24 +1,24 @@
 #include "pch.h"
 #include "TextGeometry.h"
-#include "Definition/RenderData.h"
 #include "../Atlas/FontAtlas.h"
 #include "MeshBuilderHelpers.h"
-#include "TextBatchInfo.h"
 #include "UnderlineBatcher.h"
 #include "GlyphCursor.h"
 #include "TextLayoutHelper.h"
+#include "Definition/RenderData.h"
+#include "Resource/Brush/BrushResource.h"
 
 void AppendShapedText(
     const FontAtlas& atlas,
     const ShapedText& shaped,
     const RenderTextItem& item,
-    TextBatchBufferMap& buffers)
+    UIBatchBuffer& buffer)
 {
     Rect clipRect = ComputeClipRect(item);
 
     std::vector<float> lineWidths = ComputeLineWidths(shaped.glyphs);
     GlyphCursor cursor{ shaped, item, lineWidths };
-    UnderlineBatcher underline{ atlas, shaped, buffers, clipRect };
+    UnderlineBatcher underline{ atlas, shaped, buffer, clipRect };
     const std::vector<PackedTextParams> runParams = PackRunParams(item.runs); // 런당 1회
 
     uint32_t currentLine = UINT32_MAX;
@@ -64,11 +64,13 @@ void AppendShapedText(
             }
         }
 
-        auto info = GetGlyphBatchInfo(buffers, glyph, atlas);
+        const auto& brush = atlas.GetBrush(glyph);
+        const auto textureIndex = brush->GetTextureIndex();
         const auto& params = runParams[shapedGlyph.runIndex];
 
         AppendGlyphQuad(
-            info,
+            buffer,
+            textureIndex,
             *glyph,
             x,
             y,

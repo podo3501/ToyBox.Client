@@ -22,14 +22,11 @@ cbuffer UIIndicesCB : register(b0)
 {
     uint g_vbIndex;
     uint g_ibIndex;
-    uint g_textureIndex;
 };
 
 cbuffer UIDrawCB : register(b1)
 {
-    float4x4 world;
     float4x4 projection;
-    float4 uvTransform; // x=u0, y=v0, z=u1, w=v1
 };
 
 struct PSInput
@@ -63,16 +60,13 @@ PSInput VSMain(uint vID : SV_VertexID)
     StructuredBuffer<UIVertex> vb = ResourceDescriptorHeap[g_vbIndex];
     UIVertex input = vb[vertexIndex];
 
-    float4 localPos = float4(input.pos, 1.0f);
-    float4 worldPos = mul(localPos, world);
-    float4 clipPos = mul(worldPos, projection);
+    float4 worldPos = float4(input.pos, 1.0f);
 
-    output.pos = clipPos;
+    output.pos = mul(worldPos, projection);
     output.color = input.color;
     output.localUV = kQuadCornerUV[vertexIndex % 4];
-    output.localPos = input.pos.xy; // clipRect와 같은 좌표계로 넘김
-    output.uv.x = lerp(uvTransform.x, uvTransform.z, input.uv.x);
-    output.uv.y = lerp(uvTransform.y, uvTransform.w, input.uv.y);
+    output.localPos = input.pos.xy;
+    output.uv = input.uv; // uvTransform도 CPU에서 이미 적용.
     output.mode = input.mode;
     output.textureIndex = input.textureIndex;
     output.textProps = input.textProps;
@@ -264,7 +258,7 @@ float4 PSMain(PSInput input) : SV_TARGET
 	    discard;
     }
 
-    Texture2D uiTex = ResourceDescriptorHeap[g_textureIndex];
+    Texture2D uiTex = ResourceDescriptorHeap[input.textureIndex];
     float4 texColor = uiTex.Sample(samp, input.uv);
     float4 finalColor = float4(0, 0, 0, 0);
 

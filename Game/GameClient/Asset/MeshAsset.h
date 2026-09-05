@@ -61,7 +61,7 @@ struct MeshAsset : public AssetData
     uint32_t vertexStride{ 0 }; //generic하게 byte로 바뀌었기 때문에 보폭을 저장해야 한다.
     uint32_t vertexCount{ 0 };
 
-    std::vector<std::byte> vertices;
+    std::vector<std::byte> vertices; //ui vertex, mesh vertex 같이 struct 가 달라도 다 들어가게끔 generic 하게.
     std::vector<uint32_t> indices;
 
     template<typename T>

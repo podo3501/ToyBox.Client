@@ -32,7 +32,7 @@ RenderViewInfo ViewGraphBuilder::Build(
         m_opaqueBuilder.Build(graph, frameCtx.light, frameCtx.shadowRes, frameCtx.hShadow, view, target);
     if (!view->debugSurface.empty())
         m_debugBuilder.Build(graph, view, target);
-    if (!view->ui.empty())
+    if (view->ui)
         m_uiBuilder.Build(graph, view, target);
 
     graph.ExportResource(target.GetColorID(), RGAccess::SRV);

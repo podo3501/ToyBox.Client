@@ -484,9 +484,6 @@
     <ClInclude Include="Render\DX12\TextSystem\Builder\UnderlineBatcher.h">
       <Filter>Render\DX12\TextSystem\Builder</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\TextSystem\Builder\TextBatch.h">
-      <Filter>Render\DX12\TextSystem\Builder</Filter>
-    </ClInclude>
     <ClInclude Include="Render\DX12\TextSystem\Builder\GlyphCursor.h">
       <Filter>Render\DX12\TextSystem\Builder</Filter>
     </ClInclude>
@@ -661,8 +658,11 @@
     <ClInclude Include="Render\DX12\Packet\UIItemBuilder.h">
       <Filter>Render\DX12\Packet</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\TextSystem\Builder\TextBatchInfo.h">
-      <Filter>Render\DX12\TextSystem\Builder</Filter>
+    <ClInclude Include="Render\DX12\Packet\UIBatchBuffer.h">
+      <Filter>Render\DX12\Packet</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Packet\UIMeshAppend.h">
+      <Filter>Render\DX12\Packet</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1078,8 +1078,8 @@
     <ClCompile Include="Render\DX12\Packet\UIItemBuilder.cpp">
       <Filter>Render\DX12\Packet</Filter>
     </ClCompile>
-    <ClCompile Include="Render\DX12\TextSystem\Builder\TextBatchInfo.cpp">
-      <Filter>Render\DX12\TextSystem\Builder</Filter>
+    <ClCompile Include="Render\DX12\Packet\UIMeshAppend.cpp">
+      <Filter>Render\DX12\Packet</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

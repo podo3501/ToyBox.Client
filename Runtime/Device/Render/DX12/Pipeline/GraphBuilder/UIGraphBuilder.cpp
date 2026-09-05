@@ -33,6 +33,8 @@ void UIGraphBuilder::Build(
         ]
         (CommandList& cmd, TaskContext& ctx)
         {
+            Assert(packet->ui);
+
             auto rtv = descFactory.GetRTVHandle(colorRTVIndex);
 
             CommandUtils::SetRenderTarget(cmd, rtv);
@@ -40,12 +42,7 @@ void UIGraphBuilder::Build(
 
             uiRenderer.BeginFrame(cmd);
 
-            for (auto& uiItem : packet->ui)
-            {
-                auto mesh = static_cast<MeshResource*>(uiItem.mesh.get());
-                auto brush = static_cast<BrushResource*>(uiItem.brush.get());
-
-                uiRenderer.Draw(cmd, *mesh, *brush, uiItem.world, packet->uiProj, uiItem.source);
-            }
+            auto mesh = static_cast<MeshResource*>(packet->ui->mesh.get());
+            uiRenderer.Draw(cmd, *mesh, packet->uiProj);
         };
 }

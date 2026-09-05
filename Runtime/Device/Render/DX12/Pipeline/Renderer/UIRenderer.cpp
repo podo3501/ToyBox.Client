@@ -5,16 +5,12 @@
 #include "PipelineStateUtils.h"
 #include "Command/CommandList.h"
 #include "Resource/Mesh/MeshResource.h"
-#include "Resource/Brush/BrushResource.h"
 #include "Helpers/MathHelpers.h"
-#include "Core/D3D12Conversions.h"
 #include "GameClient/Service/Render/Definition/Shader/RegistryShader.h"
 
 struct UIDrawCB
 {
-    DirectX::XMFLOAT4X4 world;
     DirectX::XMFLOAT4X4 projection;
-    DirectX::XMFLOAT4 uvTransform; //x=u0, y=v0, z=u1, w=v1
 };
 
 using Microsoft::WRL::ComPtr;
@@ -60,7 +56,7 @@ bool UIRenderer::CreateRootSignature(Device& device)
 {
     RootSignatureBuilder builder;
 
-    builder.Add32BitConstants(Core::ToIndex(RootSlot::ResourceIndices), 3);
+    builder.Add32BitConstants(Core::ToIndex(RootSlot::ResourceIndices), 2);
     builder.AddCBV(Core::ToIndex(RootSlot::DrawCB));
     builder.AddLinearSampler(0);
 
@@ -85,40 +81,25 @@ void UIRenderer::BeginFrame(CommandList& cmd)
 void UIRenderer::Draw(
     CommandList& cmd,
     MeshResource& mesh,
-    BrushResource& brush,
-    const Core::Matrix& quadWorld,
-    const Core::Matrix& projection,
-    const std::optional<Rect>& source)
+    const Core::Matrix& projection)
 {
-    const Core::Vector4 uvTransform = brush.CalcUVTransform(source);
-    auto drawCBAddress = UploadDrawCB( quadWorld, projection, uvTransform);
-
-    uint32_t resIndices[3] = 
+    uint32_t resIndices[2] = 
     { 
         mesh.GetVertexHeapIndex(), 
-        mesh.GetIndexHeapIndex(), 
-        brush.GetTextureIndex() 
+        mesh.GetIndexHeapIndex() 
     };
+    auto drawCBAddress = UploadDrawCB(projection);
 
-    cmd->SetGraphicsRoot32BitConstants(Core::ToIndex(RootSlot::ResourceIndices), 3, resIndices, 0);
+    cmd->SetGraphicsRoot32BitConstants(Core::ToIndex(RootSlot::ResourceIndices), 2, resIndices, 0);
     cmd->SetGraphicsRootConstantBufferView(Core::ToIndex(RootSlot::DrawCB), drawCBAddress);
 
     cmd->DrawInstanced(mesh.GetIndexCount(), 1, 0, 0);
 }
 
-D3D12_GPU_VIRTUAL_ADDRESS UIRenderer::UploadDrawCB(
-    const Core::Matrix& world,
-    const Core::Matrix& projection,
-    const Core::Vector4& uvTransform)
+D3D12_GPU_VIRTUAL_ADDRESS UIRenderer::UploadDrawCB(const Core::Matrix& projection)
 {
     UIDrawCB drawCB{};
-
-    DirectX::XMMATRIX xmWorld = ToDXMatrix(world);
-    XMStoreFloat4x4(&drawCB.world, DirectX::XMMatrixTranspose(xmWorld));
-
     DirectX::XMMATRIX xmProj = ToDXMatrix(projection);
     XMStoreFloat4x4(&drawCB.projection, DirectX::XMMatrixTranspose(xmProj));
-
-    drawCB.uvTransform = ToXMFLOAT4(uvTransform);
     return m_uiDrawCBAllocator.AllocateConstant(drawCB);
 }

@@ -1,12 +1,12 @@
 #pragma once
-#include "TextBatch.h"
 
 struct ShapedText;
 struct RenderTextItem;
+struct UIBatchBuffer;
 class FontAtlas;
 
 void AppendShapedText(
     const FontAtlas& atlas,
     const ShapedText& shaped,
     const RenderTextItem& item,
-    TextBatchBufferMap& buffers);
+    UIBatchBuffer& buffer);

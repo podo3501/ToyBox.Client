@@ -1,9 +1,9 @@
 #include "pch.h"
 #include "MeshBuilderHelpers.h"
 #include "Core/Utils/BitUtils.h"
-#include "GameClient/Asset/MeshAsset.h"
 #include "Definition/RenderData.h"
-#include "TextBatchInfo.h"
+#include "Packet/UIBatchBuffer.h"
+#include "GameClient/Asset/MeshAsset.h"
 
 std::vector<PackedTextParams> PackRunParams(const std::vector<TextRun>& runs)
 {
@@ -45,7 +45,8 @@ static void AppendQuadIndices(std::vector<uint32_t>& indices, uint32_t vertexOff
 }
 
 void AppendGlyphQuad(
-    TextBatchInfo& info,
+    UIBatchBuffer& buffer,
+    UINT textureIndex,
     const GlyphInfo& glyph,
     float x,
     float y,
@@ -57,9 +58,10 @@ void AppendGlyphQuad(
     float y1 = y + glyph.height;
 
     auto mode = ToUIRenderMode(glyph.mode);
-    auto& vertices = info.buffer.vertices;
-    auto& indices = info.buffer.indices;
-    auto textureIndex = info.texIndex;
+    auto& vertices = buffer.vertices;
+    auto& indices = buffer.indices;
+
+    uint32_t vertexOffset = static_cast<uint32_t>(vertices.size());
 
     UITextProps textProps
     {
@@ -109,13 +111,12 @@ void AppendGlyphQuad(
             textProps
         });
 
-    auto& vertexOffset = info.buffer.vertexOffset;
     AppendQuadIndices(indices, vertexOffset);
-    vertexOffset += 4;
 }
 
 void AppendSolidQuad(
-    TextBatchInfo& info,
+    UIBatchBuffer& buffer,
+    UINT textureIndex,
     const Rect& rect,
     const Core::Color& color,
     const Rect& clipRect)
@@ -125,9 +126,10 @@ void AppendSolidQuad(
     float x1 = x + rect.width;
     float y1 = y + rect.height;
 
-    auto& vertices = info.buffer.vertices;
-    auto& indices = info.buffer.indices;
-    auto textureIndex = info.texIndex;
+    auto& vertices = buffer.vertices;
+    auto& indices = buffer.indices;
+
+    uint32_t vertexOffset = static_cast<uint32_t>(vertices.size());
 
     UITextProps textProps{ .sdfPxRange = 0.f, .clipRect = clipRect, .params1 = 0, .params2 = 0 };
 
@@ -136,7 +138,5 @@ void AppendSolidQuad(
     vertices.push_back({ { x1, y1, 0.f }, color, { 1.f, 1.f }, textureIndex, UIRenderMode::UI, textProps });
     vertices.push_back({ { x,  y1, 0.f }, color, { 0.f, 1.f }, textureIndex, UIRenderMode::UI, textProps });
 
-    auto& vertexOffset = info.buffer.vertexOffset;
     AppendQuadIndices(indices, vertexOffset);
-    vertexOffset += 4;
 }

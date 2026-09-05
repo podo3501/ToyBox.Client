@@ -21,7 +21,7 @@ bool TextSystem::Initialize(const TextConfig& texConfig)
 
 void TextSystem::AppendDrawItems(
     std::span<const RenderTextItem> items,
-    TextBatchBufferMap& buffers)
+    UIBatchBuffer& buffer)
 {
     if (items.empty())
         return;
@@ -37,7 +37,7 @@ void TextSystem::AppendDrawItems(
             continue;
 
         const auto& item = items[shaped.index];
-        AppendShapedText(m_fontAtlas, shaped, item, buffers);
+        AppendShapedText(m_fontAtlas, shaped, item, buffer);
     }
 }
 
