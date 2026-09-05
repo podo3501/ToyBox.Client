@@ -1,561 +1,125 @@
-# ToyBox
+# DirectX12 기반 UI & 렌더링 엔진 프로젝트
 
-**DirectX 12 기반 Rendering & UI Engine**
+DirectX12 기반 UI & 렌더링 엔진 프로젝트입니다.
+UI 컴포넌트 모듈화, JSON 직렬화 시스템, ImGui를 이용한 UI툴 지원, Tracy Profiler 기반 성능 최적화 테스트 등 다양한 기능을 제공합니다.
 
-ToyBox는 DirectX 12를 기반으로 렌더링 파이프라인과 리소스 관리, 비동기 로딩, UI 및 에디터 기능을 직접 설계하고 구현한 개인 엔진 프로젝트입니다.
+## 주요 기능
 
-단순한 렌더링 기능 구현에 그치지 않고, 프로젝트가 커질수록 발생하는 **렌더링 의존성, GPU 동기화, 리소스 수명, 멀티 뷰, 비동기 로딩 등의 문제를 구조적으로 해결하는 것**을 주요 목표로 개발하고 있습니다.
+- **UI 컴포넌트 모듈화**
+  - 버튼 포함 UI 컴포넌트의 데이터와 렌더링 분리
+  - 이미지 그리드(1, 3, 9 분할)를 사용해서 확대 기능 구현
+  - 해상도별 UI처리
+  - UI 컴포넌트 이름 생성 및 관리 로직 개선으로 이름 중복 문제 해소 및 성능 향상
+ 
+- **UI 노드 구조 및 생명주기 관리**
+  - UI를 노드 기반 구조로 설계하여 다른 UI에 계층적으로 부착 가능
+  - 씬 전환 시에도 특정 UI(예: 메신저 UI)를 메모리에서 해제하지 않고 유지, 새로운 씬에 즉시 연결해 재사용 가능
+  - 독립적인 생명주기 관리로 대규모 UI 시스템에서 효율성과 확장성 제공
 
-현재는 단일 뷰 기반 렌더러에서 발전하여 **RenderGraph와 GPU TaskScheduler를 중심으로 한 렌더링 아키텍처**를 구축하고 있으며, 여러 View를 독립적으로 렌더링하고 Composite하는 구조까지 확장했습니다.
+- **UI 이벤트 시스템**
+  - 이벤트 버블링 구조로, 자식 컴포넌트에서 발생한 입력 이벤트가 부모 컴포넌트로 순차적으로 전파
+  - Locator 기반 이벤트 디스패치를 사용하여 전역 의존성 없이 이벤트를 중앙에서 처리
+  - 각 컴포넌트가 자체적으로 입력 로직을 처리하게 하여 컴포넌트간 의존성을 최소화
+ 
+- **UI 컴포넌트 이름 관리**
+  - 새로운 UI 생성 시 자동으로 고유 이름을 부여하여 중복 문제를 방지
+  - 대규모 UI 트리 구조에서도 효율적인 탐색 및 관리 가능
+  - 네임스페이스 단위로 이름을 관리하여, 다른 네임스페이스 간에는 동일 이름 사용 가능
+  - 네임스페이스된 새로운 컨테이너 생성시 네임스페이스 기능으로 내부적인 이름이 동일하기 때문에 클라이언트 코드가 간결해짐
 
----
+- **직렬화 시스템**
+  - JSON 기반 TMP 프로그램을 통한 UI 데이터 저장/불러오기 기능
+  - traits 패턴을 통해 효율적인 타입 관리 및 코드 유연성 확보
+  - Write/Read를 통합한 Serialize 함수로 최적화
 
-## Rendering
-
-ToyBox의 핵심 영역입니다.
-
-DirectX 12의 Command Queue, Resource Barrier, Descriptor, Fence 등의 저수준 개념을 직접 관리하면서 렌더링 시스템을 구성하고 있습니다.
-
-### RenderGraph
-
-렌더링 Pass 사이의 리소스 의존성을 기반으로 실행 순서와 Resource Barrier를 구성하는 RenderGraph를 구현했습니다.
-
-* Pass 기반 렌더링
-* Resource Import / Export
-* Resource Access 기반 Dependency 추적
-* Resource State 추적
-* 자동 Barrier 생성
-* Pass 간 Dependency 처리
-* Graph Fork 지원
-* Transient Resource 관리
-* RenderGraph 실행 시 Descriptor Heap 구성
-* RenderGraph Resource를 빠르게 조회하기 위한 ID 기반 접근
-
-렌더링 코드의 실행 순서에 의존하지 않고, **각 Pass가 어떤 Resource를 어떻게 사용하는지를 기반으로 Graph를 구성**하는 방향으로 발전시켰습니다.
-
----
-
-### GPU Task Scheduler
-
-초기에는 CPU/GPU 작업을 함께 처리하는 Task 구조에서 시작했지만, 현재는 렌더링에 필요한 GPU 작업의 실행과 동기화를 RenderGraph와 결합하는 방향으로 발전시켰습니다.
-
-* GPU Queue 기반 Task 실행
-* Direct / Compute / Copy Queue 지원
-* Task 간 Dependency
-* Fence 기반 GPU Synchronization
-* Task 및 GPU 작업이 남아있는 상태에서의 안전한 Shutdown
-* RenderGraph와 TaskScheduler를 이용한 GPU 작업 관리
-
-최근 구조에서는 CPU 작업과 GPU 작업의 책임을 분리하고 **GPU 작업의 lifetime을 Context와 Graph execution을 중심으로 관리**하도록 정리했습니다.
-
----
-
-### Multi-View Rendering
-
-기존 Single View 구조를 Multi-View 구조로 확장했습니다.
-
-각 View가 독립적인 Camera와 Viewport, Render Data를 가지도록 구성하고, 하나의 Frame에서 여러 View를 렌더링할 수 있도록 변경했습니다.
-
-* View 단위 Camera
-* View 단위 UI Camera
-* Viewport
-* View별 Render Override
-* View별 Draw Data
-* 공통 Scene Data
-* Shadow Resource 공유
-* Multi-View Text Rendering
-* View별 Constant Buffer 관리
-* View Target Resource
-
-현재 View는 최대 10개까지 관리할 수 있도록 구성되어 있으며, View ID를 명시적으로 관리합니다.
-
-예를 들어 하나의 Frame에서 다음과 같은 View 구성이 가능합니다.
-
-```text
-Main View
- ├─ Camera
- ├─ Scene
- └─ UI
-
-Additional View
- ├─ Camera
- ├─ Scene
- ├─ Character UI
- └─ ...
-```
-
-UI Camera 역시 단순한 Screen Space Orthographic Camera뿐만 아니라 외부에서 지정할 수 있도록 구성하여 캐릭터 머리 위의 HP Bar와 같은 View-dependent UI도 표현할 수 있도록 했습니다.
+- **툴 및 편집 기능**
+  - ImGui를 이용한 툴UI 개발
+  - UI 편집, Undo/Redo 기능 구현, 컴포넌트 연결 시각화
+  - 툴 내에서 여러 UI 창을 동시에 띄울 수 있어, 작업 중 필요한 창을 즉시 열고 조작 가능
+  - 복잡한 UI 트리 구조도 실시간으로 확인하고 관리할 수 있어 효율적인 개발 환경 제공
+ 
+- **Texture 관리 및 편집**
+  - 큰 이미지에 작은 이미지를 넣어 텍스쳐 교체가 자주 이루어 지지 않도록 함
+  - TextureResourceBinder를 통한 Atlas Texture 좌표 관리 및 실시간 편집
+  - 자동 이미지 영역 감지 기능으로 텍스처 분할과 매핑 과정을 간소화
+  
+- **게임 루프 및 성능 최적화**
+  - 템플릿 메소드 패턴으로 게임 루프와 툴 루프 분리
+  - Tracy Profiler 연동 및 성능 최적화 작업 수행
 
 ---
 
-### Composite Rendering
+## 사용 기술 및 라이브러리
 
-각 View를 독립적인 View Target에 렌더링한 뒤 최종적으로 Backbuffer에 Composite하는 구조를 구현했습니다.
+- **DirectXTK12 (DirectX Tool Kit for DirectX 12)**  
+  DirectX12 기반 UI 및 렌더링, 텍스처·스프라이트·폰트 관리
 
-```text
-                ┌─ Main View ────────┐
-                │                    │
-Scene ──────────┼─ Shadow / Surface ─┼──> View Target
-                │                    │
-                └─ UI / Debug ───────┘
-                         │
-                         ▼
-                  CompositeRenderer
-                         │
-                         ▼
-                    Backbuffer
-```
+- **C++20 표준 라이브러리**  
+  스마트 포인터, 람다 뿐만 아니라 함수 템플릿 시그니쳐 같은 C++20 기능까지 사용
 
-이를 통해 View와 최종 화면 출력을 분리하고, View별 Rendering Target을 독립적으로 관리할 수 있도록 구성했습니다.
+- **Nlohmann JSON**  
+  Nlohmann JSON을 활용한 TMP 기반 UI 데이터 직렬화를 사용한 파일 입출력
 
----
+- **ImGui (Immediate Mode GUI)**  
+  ImgGui 라이브러리 사용 UI툴 개발
 
-## Rendering Pipeline
+- **Tracy Profiler**  
+  실시간 성능 분석을 통한 프로그램 최적화 확인
 
-렌더링 시스템은 Service / Pipeline / Renderer / Resource 영역을 분리하는 방향으로 계속 리팩토링하고 있습니다.
-
-```text
-RenderService
-     │
-     ▼
-RenderPipeline
-     │
-     ├── RenderGraph
-     ├── SceneRenderer
-     ├── CompositeRenderer
-     └── Renderers
-             ├── Surface
-             ├── Shadow
-             ├── UI
-             ├── Debug
-             └── MipGenerator
-```
-
-Renderer 내부에서 사용하는 동적 Frame Data와 Backend Data를 분리하고, `DrawPacket`을 통해 Scene과 실제 Rendering Pipeline 사이의 의존성을 줄였습니다.
+- **SDL3**  
+  IME 및 사운드
 
 ---
 
-## Resource System
+## 사용된 주된 디자인 패턴
 
-렌더링 리소스와 Asset을 분리하고 Provider / Repository 구조를 사용합니다.
+- **템플릿 메소드 패턴 (Template Method Pattern)**  
+  게임 루프와 툴 루프를 분리, 공통 로직은 상위 클래스, 세부 동작은 하위 클래스에서 구현
 
-```text
-Asset
-  │
-  ▼
-Asset Loader
-  │
-  ▼
-Resource
-  │
-  ├── Texture
-  ├── Mesh
-  ├── Material
-  ├── Environment
-  └── Font
-       │
-       ▼
-    Provider
-       │
-       ▼
-   Repository
-```
+- **옵저버 패턴 (Observer Pattern)**  
+  WndProcListener 등 이벤트 전달 시 컴포넌트 간 느슨한 결합과 확장성 확보
 
-주요 기능:
+- **컴포지트 패턴 (Composite Pattern)**  
+  UI 컴포넌트를 트리 구조로 구성, 단일/복합 객체 동일 처리
 
-* Resource ID 기반 관리
-* Strongly Typed Handle
-* Resource Provider
-* Repository
-* Resource Lifetime 관리
-* GPU Fence 기반 Release
-* Pending Release Queue
-* Resource Cache
+- **어댑터 패턴 (Adapter Pattern)**  
+  컴포지트 패턴으로 구성된 UI 컴포넌트와 다른 클래스 간 인터페이스 연결
 
-최근에는 `unordered_map` 중심의 구조에서 고정된 범위의 데이터에 대해 Array/ID 기반 접근을 사용하도록 변경하고 있으며, RenderGraph에서도 Resource 접근 비용을 줄이기 위한 전용 ID Allocator를 사용하고 있습니다.
+- **커맨드 패턴 (Command Pattern)**  
+  Undo/Redo 기능 구현, 사용자의 작업을 명령 객체로 캡슐화
+
+- **전략 패턴 (Strategy Pattern)**  
+  마우스 입력 처리 및 렌더링 알고리즘 교체 시 유연성 제공
+
+- **CRTP (Curiously Recurring Template Pattern)**  
+  노드 관리 클래스 작성, 컴파일 타임 다형성과 효율적 코드 재사용 지원
+
+- **트레잇 패턴 (Traits Pattern)**  
+  JSON 직렬화 시 TMP와 결합, 타입별 특성을 분리하고 일관된 직렬화 구현 지원
+
+> 참고: 프로젝트 내에서는 이 외에도 다양한 디자인 패턴이 활용되었으나, 여기서는 주된 패턴들만 정리하였습니다.
 
 ---
 
-## Asset Pipeline
-
-Asset loading은 CPU Loading과 GPU Upload를 분리하여 비동기적으로 처리합니다.
-
-```text
-Asset
-  │
-  ▼
-AssetAsyncLoader
-  │
-  ├── File Loading
-  ├── Decode
-  └── Resource Creation
-           │
-           ▼
-      GPU Upload
-           │
-           ▼
-       Resource
-```
-
-* 비동기 Asset Loading
-* Texture / Mesh / Sound Loading
-* GPU Upload Budget
-* GPU 작업량에 따른 Loading 조절
-* Runtime Resource ID
-* Shader Cache
-* Built-in Asset
-* Resource별 Loading / Update
-
-Texture와 Mesh는 GPU가 수행해야 하는 작업량을 고려하여 로딩량을 조절하는 방식으로 개선했습니다.
-
----
-
-## Bindless Rendering
-
-Shader Model 6.6 기반 Bindless Resource 접근을 사용합니다.
-
-* Bindless Descriptor
-* Descriptor Allocator
-* Runtime Resource Binding
-* Explicit Texture Slot
-* Descriptor 재사용
-
-Texture를 암묵적인 배열 위치로 접근하는 방식에서 벗어나 명시적인 Texture Slot과 Resource ID를 사용하는 방향으로 구조를 정리했습니다.
-
----
-
-## Materials & Shaders
-
-현재 렌더링은 여러 Material과 Shader를 조합할 수 있는 구조로 구성하고 있습니다.
-
-### Material
-
-* PBR
-* Phong
-* Debug Material
-* Default Material
-* Runtime Material
-
-### Shader
-
-* Runtime Shader Registration
-* Shader Key
-* Shader Cache
-* Pipeline State Cache
-* Root Signature Builder
-
-PBR 및 Phong Material을 공통 Surface Rendering 구조에서 처리할 수 있도록 구성하고 있습니다.
-
----
-
-## Shadow & Environment
-
-### Shadow
-
-* Shadow Map
-* Shadow Renderer
-* Shadow Graph Builder
-* Light View
-* DSV / SRV
-* Multi-View Shadow Resource 공유
-
-Shadow Map은 여러 View에서 공통으로 사용할 수 있도록 Scene-level Resource로 관리되고 있습니다.
-
-### Environment
-
-HDR/EXR 환경 데이터를 기반으로 Cubemap을 구성하고 이를 Rendering에 사용합니다.
-
-```text
-EXR
- │
- ▼
-Cubemap
- │
- ├── Skybox
- ├── Reflection
- └── Irradiance
-```
-
-KTX2 및 Filament `cmgen`을 이용한 Environment Asset Pipeline도 구성했습니다.
-
----
-
-## Texture & Mipmap
-
-Texture는 GPU 작업을 고려하여 Upload와 Mipmap Generation을 비동기로 처리합니다.
-
-* Texture Upload
-* Mipmap Generation
-* sRGB / Linear Texture
-* Data Texture
-* Compute Queue 기반 Mipmap Generation
-* Texture Resource Lifetime
-
-Mipmap Generator 역시 특정 Texture 처리에 종속되지 않고 확장 가능한 구조로 정리했습니다.
-
----
-
-## Text Rendering
-
-UI와 별도로 텍스트 렌더링 시스템도 구축했습니다.
-
-### Font
-
-* FreeType
-* HarfBuzz
-* Dynamic Font Atlas
-* Glyph Cache
-* Font Size Bucket
-* Skyline Packing
-
-### Rendering Mode
-
-* Bitmap
-* MTSDF
-
-### Text Layout
-
-* Outline
-* Shadow
-* Gradient
-* Glow
-* Underline
-* Horizontal / Vertical Alignment
-* Word Wrap
-* Overflow
-* Line Spacing
-* CJK Line Break
-* Newline / Whitespace 처리
-
-동적 Glyph Atlas를 구성하고 필요한 Glyph만 Runtime에 생성하여 Atlas에 추가하는 구조를 구현했습니다.
-
----
-
-# Audio
-
-Rendering과 함께 Engine Runtime에서 사용하는 Audio 시스템도 직접 구성했습니다.
-
-```text
-Sound Asset
-     │
-     ▼
-Asset Pipeline
-     │
-     ├── WAV
-     └── OGG
-          │
-          ▼
-        PCM
-          │
-          ▼
-        Mixer
-          │
-          ▼
-      Audio Output
-```
-
-주요 기능:
-
-* Static Sound
-* Streaming Sound
-* 비동기 Sound Loading
-* WAV / OGG 지원
-* PCM 기반 내부 포맷
-* Audio Handle
-* Sound Resource 관리
-* Pending Sound
-* Streaming Playback
-
-WAV는 로딩시 `dr_wav`, OGG는 `libVorbis`를 사용하고, Mixer에서 처리하기 쉬운 PCM 형태로 통일했습니다. 또한 Sound 역시 Asset Pipeline을 통해 비동기적으로 로딩하도록 구성했습니다.
-
-# Input
-
-게임 클라이언트에서 사용하는 Input 시스템도 Engine 영역에서 분리하여 구성하고 있습니다.
-
-* Keyboard
-* Mouse
-* Input State
-* Event 기반 입력 처리
-* UI Input 처리
-* Runtime Input 전달
-
-렌더링과 UI 시스템이 직접 플랫폼 입력에 의존하지 않도록 계층을 분리하는 것을 목표로 하고 있습니다.
-
----
-
-# UI System
-
-UI는 Composite Pattern 기반의 계층 구조를 사용합니다.
-
-```text
-UIRoot
- ├── Panel
- │    ├── Image
- │    ├── Text
- │    └── Button
- │
- └── Window
-      ├── Header
-      └── Content
-```
-
-주요 기능:
-
-* UI Component
-* Composite UI Tree
-* Image
-* Text
-* Button
-* Panel
-* Layout
-* Texture Atlas
-* Source Rect
-* 1 / 3 / 9 Grid
-
-UI Component의 데이터와 Rendering을 분리하여 UI가 렌더링 시스템의 구체적인 구현에 직접 의존하지 않도록 구성했습니다.
-
----
-
-# UI Event System
-
-UI 입력은 Component Tree를 기반으로 처리합니다.
-
-```text
-Input
-  │
-  ▼
-UI Locator
-  │
-  ▼
-Target Component
-  │
-  ▼
-Parent
-  │
-  ▼
-Parent ...
-```
-
-* Event Bubbling
-* Parent / Child Event Propagation
-* UI Component Event Handling
-
-이를 통해 Button과 같은 개별 UI Component가 입력 시스템 전체를 알 필요 없이 자신의 이벤트를 처리할 수 있도록 구성했습니다.
-
----
-
-# UI Editor
-
-Dear ImGui를 이용하여 Runtime UI를 편집할 수 있는 Editor 기능을 구현했습니다.
-
-주요 기능:
-
-* UI Tree Inspector
-* Property Inspector
-* UI Component 생성 / 삭제
-* Component 연결 관계 시각화
-* Undo / Redo
-* Runtime UI Debugging
-
-게임 실행 중 UI 구조와 속성을 확인하고 수정할 수 있도록 구성하여 **UI Runtime과 Editor를 함께 개발할 수 있는 환경**을 만들고 있습니다.
-
----
-
-# Debugging & Profiling
-
-렌더링 엔진 개발 과정에서 GPU/CPU 문제를 추적하기 위한 도구를 적극적으로 사용합니다.
-
-* Tracy Profiler
-* DirectX 12 Debug Layer
-* RenderDoc
-* Runtime Inspector
-
-특히 Resource Lifetime, Command Queue Synchronization, Resource State, sRGB/Gamma와 같은 DirectX 12 특유의 문제를 추적하고 수정하는 것을 중요하게 다루고 있습니다.
-
----
-
-# Architecture
-
-현재 프로젝트는 다음과 같은 계층을 목표로 구성하고 있습니다.
-
-```text
-┌─────────────────────────────┐
-│         Game Client         │
-├─────────────────────────────┤
-│       Engine Services       │
-│    Render / Audio / Input   │
-├─────────────────────────────┤
-│    Backend System(Device)   │
-│    Render / Audio / Input   │
-├─────────────────────────────┤
-│          Platform           │
-│      DirectX 12 / SDL3      │
-├─────────────────────────────┤
-│            Core             │
-│ Handle / Allocator / Memory │
-│ Container / Utility         │
-└─────────────────────────────┘
-```
-
-프로젝트가 커질수록 하나의 클래스에 기능을 추가하는 방식보다는 **역할과 lifetime, 데이터 흐름을 명확하게 분리하는 방향**으로 지속적으로 리팩토링하고 있습니다.
-
----
-
-# Design Patterns
-
-프로젝트 전반에서 다음과 같은 패턴과 설계 기법을 사용하고 있습니다.
-
-* Handle-based Resource Management
-* Template Method
-* Composite
-* Command
-* Strategy
-* Adapter
-* Observer
-* Repository
-* Traits
-* RAII
-* CRTP
-* 기타 등등
-
-단순히 패턴을 적용하는 것보다 **실제 엔진에서 발생하는 의존성 및 lifetime 문제를 해결하기 위한 수단**으로 사용하는 것을 목표로 합니다.
-
----
-
-# Technologies
-
-| Category       | Technology                |
-| -------------- | ------------------------- |
-| Language       | C++20                     |
-| Graphics       | DirectX 12                |
-| Window / Input | SDL3                      |
-| UI Tool        | Dear ImGui                |
-| Profiling      | Tracy                     |
-| Text           | FreeType / HarfBuzz       |
-| SDF            | msdfgen                   |
-| Image          | stb                       |
-| Audio          | libVorbis / dr_wav        |
-| Environment    | KTX-Software              |
-| Serialization  | nlohmann/json             |
-
----
-
-# Development Direction
-
-단순한 기능 구현에 머무르지 않고 **실제 엔진 개발 과정에서 발생하는 성능, 동기화, 리소스 수명, 확장성 등의 문제를 해결하면서 지속적으로 사용할 수 있는 엔진 구조와 개발 환경을 만드는 것**을 목표로 합니다.
-
-특히 현재는 다음 영역을 중심으로 개발하고 있습니다.
-
-* RenderGraph 고도화
-* GPU Task Scheduling
-* Multi-View Rendering
-* Resource Lifetime 관리
-* Async Asset Pipeline
-* Bindless Rendering
-* PBR / Shadow / Environment
-* Text Rendering
-* UI / UI Editor
-* Audio
-* Input
-
-새로운 기능을 추가하는 것뿐 아니라 기존 구조에서 발생하는 문제를 발견하고, 이를 해결하기 위해 **데이터 구조와 시스템 경계를 다시 설계하는 과정 자체**를 중요하게 생각합니다.
+## 프로젝트 구성  
+- **App**
+  실행 파일 프로젝트 (exe)  
+  게임/메인 애플리케이션 실행용
+
+- **Tool**
+  실행 파일 프로젝트 (exe)  
+  개발 툴/에디터 실행용
+
+- **Runtime**
+  클라이언트에 필요한 lib 프로젝트들이 들어있는 폴더
+  엔진 장치들의 라이브러리 및 공용 유틸리티
+
+- **Toy**
+  라이브러리 프로젝트 (lib)  
+  게임/메인 애플리케이션
+  
+
+## 🚀 실행 방법
+- 일반 실행 시:  
+  `App`을 **시작 프로젝트(StartUp Project)** 로 설정 → 메인 애플리케이션 실행  
+  `Tool`을 **시작 프로젝트(StartUp Project)** 로 설정 → 개발 툴 실행
