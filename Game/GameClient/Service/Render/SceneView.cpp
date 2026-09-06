@@ -19,26 +19,10 @@ SceneView::SceneView(
     m_defaultBrush{ defaultBrush }
 {}
 
-Core::Matrix SceneView::BuildUIProjection(const Size& screenSize) const
-{
-    if (m_data.context.viewport.has_value())
-    {
-        const Rect& vp = *m_data.context.viewport;
-        return Core::Matrix::OrthographicOffCenter(0.f, vp.width, vp.height, 0.f, 0.f, 1.f );
-    }
-    // viewport가 없으면 이 뷰는 전체 화면을 쓰는 뷰라는 뜻 -> screenSize 그대로 사용
-    return Core::Matrix::OrthographicOffCenter(
-        0.f,
-        static_cast<float>(screenSize.width),
-        static_cast<float>(screenSize.height),
-        0.f, 0.f, 1.f);
-}
-
 void SceneView::Reset(const ViewContext& context, const Camera& camera, const Size& screenSize)
 {
     m_data.context = context;
     m_data.context.camera = BuildCameraData(camera, screenSize);
-    m_data.context.uiProj = BuildUIProjection(screenSize);
     m_data.draws.Clear();
 }
 
@@ -57,29 +41,13 @@ static float DegToRad(float deg)
     return deg * std::numbers::pi_v<float> / 180.0f;
 }
 
-CameraData SceneView::BuildCameraData(const Camera& camera, const Size& screenSize)
+CameraData SceneView::BuildCameraData(const Camera& camera, const Size& screenSize) const
 {
-    float aspect = 1.0f;
-    if (m_data.context.viewport.has_value())
-    {
-        const Rect& vp = *m_data.context.viewport;
-        aspect = vp.width / vp.height;
-    }
-    else
-        aspect = static_cast<float>(screenSize.width) / static_cast<float>(screenSize.height);
-
-    if (aspect != m_lastAspect || camera.GetProjVersion() != m_lastCameraProjVersion)
-    {
-        m_proj = Core::CreatePerspectiveFov(
-            DegToRad(camera.GetFov()), aspect, camera.GetNearZ(), camera.GetFarZ());
-        m_lastAspect = aspect;
-        m_lastCameraProjVersion = camera.GetProjVersion();
-    }
-
     CameraData data;
     data.view = camera.GetView();
-    data.proj = m_proj;
     data.position = camera.GetPosition();
+    data.proj = camera.BuildProjection(screenSize, m_data.context.viewport);
+    
     return data;
 }
 

@@ -26,7 +26,9 @@ SceneView& SceneRenderer::AcquireView(
 	const Camera& camera, 
 	const Size& screenSize)
 {
-	auto& view = m_views[Core::ToIndex(context.id)]; // 없으면 nullptr로 기본 생성
+	Assert(context.id < MaxViewCount);
+
+	auto& view = m_views[context.id]; // 없으면 nullptr로 기본 생성
 	if (!view)
 	{
 		view = std::make_unique<SceneView>(

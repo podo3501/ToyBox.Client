@@ -22,7 +22,7 @@ void UIGraphBuilder::Build(
     std::shared_ptr<ViewPacket> packet,
     const ViewTargetResource& target)
 {
-    auto& ui = graph.AddGraphicsPass("UI_View" + std::string(ToString(packet->id)));
+    auto& ui = graph.AddGraphicsPass("UI_View" + std::to_string(packet->id));
     ui.Write(target.GetColorID(), RGAccess::RTV);
     ui.execute =
         [
@@ -43,6 +43,7 @@ void UIGraphBuilder::Build(
             uiRenderer.BeginFrame(cmd);
 
             auto mesh = static_cast<MeshResource*>(packet->ui->mesh.get());
-            uiRenderer.Draw(cmd, *mesh, packet->uiProj);
+            Core::Matrix viewProj = packet->camera.view * packet->camera.proj;
+            uiRenderer.Draw(cmd, *mesh, viewProj);
         };
 }

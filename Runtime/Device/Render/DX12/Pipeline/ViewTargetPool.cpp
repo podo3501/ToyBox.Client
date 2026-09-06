@@ -18,7 +18,7 @@ ViewTargetResource& ViewTargetPool::Acquire(
     RGResourceIDAllocator& idAllocator,
     const Size& requiredSize)
 {
-    auto& view = m_views[Core::ToIndex(id)];
+    auto& view = m_views[id];
     if (view)
     {
         if (view->GetSize() == requiredSize)
@@ -45,7 +45,7 @@ void ViewTargetPool::ApplyResourceBindings(ResourceContext& resCtx) const
     }
 }
 
-void ViewTargetPool::PruneUnused(const std::bitset<Core::EnumSize<ViewID>>& activeViews)
+void ViewTargetPool::PruneUnused(const std::bitset<MaxViewCount>& activeViews)
 {
     for (size_t i = 0; i < m_views.size(); ++i)
     {

@@ -20,7 +20,7 @@ DebugSurfaceRenderer::DebugSurfaceRenderer(const DebugSurfaceRendererConfig& con
 bool DebugSurfaceRenderer::Initialize(Device& device)
 {
     m_objectCBAllocator.Initialize<ObjectCB>(device, m_config.maxObjectCount);
-    m_frameCBAllocator.Initialize<FrameCB>(device, m_config.maxViewCount);
+    m_frameCBAllocator.Initialize<FrameCB>(device, MaxViewCount);
 
     ReturnIfFalse(CreateRootSignature(device));
     ReturnIfFalse(CreateDefaultPSOs());

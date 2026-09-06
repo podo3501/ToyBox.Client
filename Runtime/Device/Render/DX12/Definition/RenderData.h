@@ -69,7 +69,6 @@ struct ViewPacket
 {
     ViewID id;
     CameraData camera;
-    Core::Matrix uiProj;
     Rect viewport; // 화면(백버퍼) 상의 배치. Composite가 씀
     Rect localViewport; // 뷰 타겟 텍스처 내부 좌표(0,0 시작)
 

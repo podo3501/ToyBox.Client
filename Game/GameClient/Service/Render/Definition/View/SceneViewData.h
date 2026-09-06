@@ -4,6 +4,6 @@
 
 struct SceneViewData
 {
-    ViewContext context{ ViewID::Main };
+    ViewContext context{ InvalidViewID };
     ViewDrawList draws;
 };

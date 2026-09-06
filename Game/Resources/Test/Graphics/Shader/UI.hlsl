@@ -26,7 +26,7 @@ cbuffer UIIndicesCB : register(b0)
 
 cbuffer UIDrawCB : register(b1)
 {
-    float4x4 projection;
+    float4x4 viewProj;
 };
 
 struct PSInput
@@ -62,7 +62,7 @@ PSInput VSMain(uint vID : SV_VertexID)
 
     float4 worldPos = float4(input.pos, 1.0f);
 
-    output.pos = mul(worldPos, projection);
+    output.pos = mul(worldPos, viewProj);
     output.color = input.color;
     output.localUV = kQuadCornerUV[vertexIndex % 4];
     output.localPos = input.pos.xy;

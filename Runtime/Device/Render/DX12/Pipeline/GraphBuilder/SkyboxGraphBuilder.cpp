@@ -21,7 +21,7 @@ void SkyboxGraphBuilder::Build(
     std::shared_ptr<ViewPacket> packet, 
     const ViewTargetResource& target)
 {
-    auto& skybox = graph.AddGraphicsPass("Skybox_View" + std::string(ToString(packet->id)));
+    auto& skybox = graph.AddGraphicsPass("Skybox_View" + std::to_string(packet->id));
     skybox.Write(target.GetColorID(), RGAccess::RTV);
     skybox.Write(target.GetDepthID(), RGAccess::DepthWrite);
 

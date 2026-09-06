@@ -66,12 +66,12 @@ std::vector<CompiledTask> ForwardRenderPipeline::BuildFrame(const FramePacket& f
     std::vector<RenderViewInfo> renderViewInfos;
     renderViewInfos.reserve(framePacket.views.size());
 
-    std::bitset<Core::EnumSize<ViewID>> activeViews;
+    std::bitset<MaxViewCount> activeViews;
 
     FramePassContext frameCtx{ framePacket.light, m_shadowRes, m_hShadow };
     for (auto& view : framePacket.views)
     {
-        activeViews.set(Core::ToIndex(view->id));
+        activeViews.set(view->id);
 
         auto size = ToSize(view->viewport.width, view->viewport.height);
         ViewTargetResource& target = m_viewPool.Acquire(view->id, m_idAllocator, size);

@@ -25,7 +25,7 @@ public:
 	bool IsEmpty() const;
 	SceneViewData TakeData();
 
-	CameraData BuildCameraData(const Camera& camera, const Size& screenSize);
+	CameraData BuildCameraData(const Camera& camera, const Size& screenSize) const;
 
 	void DrawEnvironment(EnvironmentHandle hEnv);
 
@@ -68,8 +68,6 @@ public:
 		const TextLayout& layout);
 
 private:
-	Core::Matrix BuildUIProjection(const Size& screenSize) const;
-
 	void DrawSurfaceInternal(
 		MeshHandle hM,
 		MaterialHandle hMtl,
@@ -82,8 +80,4 @@ private:
 	BrushHandle m_defaultBrush;
 
 	SceneViewData m_data;
-
-	uint32_t m_lastCameraProjVersion{ 0 };
-	float m_lastAspect{ -1.0f }; // 최초 1회는 무조건 계산되도록 말이 안 되는 값으로 초기화
-	Core::Matrix m_proj;
 };

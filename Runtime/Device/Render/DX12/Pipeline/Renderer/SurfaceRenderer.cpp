@@ -63,7 +63,7 @@ bool SurfaceRenderer::Initialize(Device& device)
 {
     m_objectCBAllocator.Initialize<ObjectCB>(device, m_config.maxObjectCount);
     m_materialCBAllocator.Initialize<MaterialConstantBuffer>(device, m_config.maxObjectCount);
-    m_frameCBAllocator.Initialize<MeshFrameCB>(device, m_config.maxViewCount);
+    m_frameCBAllocator.Initialize<MeshFrameCB>(device, MaxViewCount);
 
     ReturnIfFalse(CreateRootSignature(device));
     ReturnIfFalse(CreateDefaultPSOs());

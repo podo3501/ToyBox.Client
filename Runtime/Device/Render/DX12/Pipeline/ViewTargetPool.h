@@ -23,7 +23,7 @@ public:
         RGResourceIDAllocator& idAllocator,
         const Size& requiredSize);
     void ApplyResourceBindings(ResourceContext& resources) const;
-    void PruneUnused(const std::bitset<Core::EnumSize<ViewID>>& activeViews);
+    void PruneUnused(const std::bitset<MaxViewCount>& activeViews);
     void Update();
 
 private:
@@ -31,5 +31,5 @@ private:
     DescriptorFactory& m_descFactory;
     PendingReleaseQueue m_pendingRelease;
 
-    std::array<std::shared_ptr<ViewTargetResource>, Core::EnumSize<ViewID>> m_views{};
+    std::array<std::shared_ptr<ViewTargetResource>, MaxViewCount> m_views{};
 };

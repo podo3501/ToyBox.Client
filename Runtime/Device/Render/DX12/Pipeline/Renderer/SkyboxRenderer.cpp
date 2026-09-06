@@ -26,7 +26,7 @@ SkyboxRenderer::SkyboxRenderer(const SkyboxRendererConfig& config, PipelineCache
 
 bool SkyboxRenderer::Initialize(Device& device)
 {
-    m_cbAllocator.Initialize<SkyboxCB>(device, m_config.maxViewCount);
+    m_cbAllocator.Initialize<SkyboxCB>(device, MaxViewCount);
     ReturnIfFalse(CreateRootSignature(device));
 
     m_pso = CreatePSO();

@@ -39,6 +39,10 @@ Resource Device::CreateResource(
 {
     CD3DX12_HEAP_PROPERTIES heap(heapType);
 
+    Assert(desc.Width > 0);
+    Assert(desc.Height > 0);
+    Assert(desc.DepthOrArraySize > 0);
+
     Resource res;
     auto hr = m_device->CreateCommittedResource(
         &heap,

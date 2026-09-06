@@ -33,5 +33,5 @@ private:
 
 	DirectionalLightData m_pendingLight;
 	std::vector<DrawShadowCasterItem> m_shadowCasters;
-	std::array<std::unique_ptr<SceneView>, Core::EnumSize<ViewID>> m_views;
+	std::array<std::unique_ptr<SceneView>, MaxViewCount> m_views;
 };

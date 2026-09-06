@@ -28,6 +28,8 @@
     <ClCompile Include="Graphics\World\CameraInputMapper.cpp" />
     <ClCompile Include="Graphics\World\DirectionalLight.cpp" />
     <ClCompile Include="Graphics\World\Transform.cpp" />
+    <ClCompile Include="Graphics\World\UICamera.cpp" />
+    <ClCompile Include="Graphics\World\WorldCamera.cpp" />
     <ClCompile Include="Locator\UIComponentLocator.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -160,6 +162,8 @@
     <ClInclude Include="Graphics\World\CameraInputState.h" />
     <ClInclude Include="Graphics\World\DirectionalLight.h" />
     <ClInclude Include="Graphics\World\Transform.h" />
+    <ClInclude Include="Graphics\World\UICamera.h" />
+    <ClInclude Include="Graphics\World\WorldCamera.h" />
     <ClInclude Include="IAssetMetaRegistry.h" />
     <ClInclude Include="Locator\InputLocator.h" />
     <ClInclude Include="Locator\UIComponentLocator.h" />

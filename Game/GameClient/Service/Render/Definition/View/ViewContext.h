@@ -14,9 +14,8 @@ struct ViewContext
 {
     explicit ViewContext(ViewID id) : id{ id } {}
 
-    ViewID id;
+    ViewID id{ InvalidViewID };
     CameraData camera;
-    Core::Matrix uiProj; //기본적으로 정사영.
     std::optional<Rect> viewport{ std::nullopt };
     RenderOverride renderOverride;
     // 나중에: RenderTargetSet, PassType ...

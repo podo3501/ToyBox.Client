@@ -10,7 +10,7 @@
 
 struct UIDrawCB
 {
-    DirectX::XMFLOAT4X4 projection;
+    DirectX::XMFLOAT4X4 viewProj;
 };
 
 using Microsoft::WRL::ComPtr;
@@ -81,14 +81,14 @@ void UIRenderer::BeginFrame(CommandList& cmd)
 void UIRenderer::Draw(
     CommandList& cmd,
     MeshResource& mesh,
-    const Core::Matrix& projection)
+    const Core::Matrix& viewProj)
 {
     uint32_t resIndices[2] = 
     { 
         mesh.GetVertexHeapIndex(), 
         mesh.GetIndexHeapIndex() 
     };
-    auto drawCBAddress = UploadDrawCB(projection);
+    auto drawCBAddress = UploadDrawCB(viewProj);
 
     cmd->SetGraphicsRoot32BitConstants(Core::ToIndex(RootSlot::ResourceIndices), 2, resIndices, 0);
     cmd->SetGraphicsRootConstantBufferView(Core::ToIndex(RootSlot::DrawCB), drawCBAddress);
@@ -96,10 +96,10 @@ void UIRenderer::Draw(
     cmd->DrawInstanced(mesh.GetIndexCount(), 1, 0, 0);
 }
 
-D3D12_GPU_VIRTUAL_ADDRESS UIRenderer::UploadDrawCB(const Core::Matrix& projection)
+D3D12_GPU_VIRTUAL_ADDRESS UIRenderer::UploadDrawCB(const Core::Matrix& viewProj)
 {
     UIDrawCB drawCB{};
-    DirectX::XMMATRIX xmProj = ToDXMatrix(projection);
-    XMStoreFloat4x4(&drawCB.projection, DirectX::XMMatrixTranspose(xmProj));
+    DirectX::XMMATRIX xmViewProj = ToDXMatrix(viewProj);
+    XMStoreFloat4x4(&drawCB.viewProj, DirectX::XMMatrixTranspose(xmViewProj));
     return m_uiDrawCBAllocator.AllocateConstant(drawCB);
 }

@@ -1,8 +1,8 @@
 #include "pch.h"
 #include "CameraController.h"
-#include "Camera.h"
+#include "WorldCamera.h"
 
-void CameraController::Update(const CameraInputState& input, Camera& camera, float deltaTime) const noexcept
+void CameraController::Update(const CameraInputState& input, WorldCamera& camera, float deltaTime) const noexcept
 {
     float speed = input.fastMove ? m_boostSpeed : m_moveSpeed;
     float moveAmount = speed * deltaTime;

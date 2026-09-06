@@ -11,13 +11,11 @@ struct ShadowRendererConfig
 struct SurfaceRendererConfig
 {
     uint32_t maxObjectCount = 1024;
-    uint32_t maxViewCount{ static_cast<uint32_t>(ViewID::Count) };
 };
 
 struct DebugSurfaceRendererConfig
 {
     uint32_t maxObjectCount = 1024;
-    uint32_t maxViewCount{ static_cast<uint32_t>(ViewID::Count) };
 };
 
 struct UIRendererConfig
@@ -27,7 +25,6 @@ struct UIRendererConfig
 
 struct SkyboxRendererConfig
 {
-    uint32_t maxViewCount{ static_cast<uint32_t>(ViewID::Count) };
 };
 
 struct RendererConfig

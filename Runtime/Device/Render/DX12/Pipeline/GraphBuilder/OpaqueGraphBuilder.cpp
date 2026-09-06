@@ -26,7 +26,7 @@ void OpaqueGraphBuilder::Build(
     std::shared_ptr<ViewPacket> packet,
     const ViewTargetResource& target)
 {
-    auto& opaque = graph.AddGraphicsPass("Opaque_View" + std::string(ToString(packet->id)));
+    auto& opaque = graph.AddGraphicsPass("Opaque_View" + std::to_string(packet->id));
     opaque.Read(shadowResID, RGAccess::SRV);
     opaque.Write(target.GetColorID(), RGAccess::RTV);
     opaque.Write(target.GetDepthID(), RGAccess::DepthWrite);
