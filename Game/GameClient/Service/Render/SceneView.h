@@ -1,4 +1,5 @@
 #pragma once
+#include "RenderView.h"
 #include "Handle/ResourceHandles.h"
 #include "Definition/View/SceneViewData.h"
 #include "Definition/Text/TextStyle.h"
@@ -7,25 +8,20 @@
 class Camera;
 class RepositoryContainer;
 
-class SceneView
+class SceneView : public RenderView
 {
 public:
 	~SceneView();
 	SceneView(
 		RepositoryContainer& repositories,
-		MeshHandle uiQuad,
-		MaterialHandle defaultMaterial,
-		BrushHandle defaultBrush);
-	SceneView(const SceneView&) = delete;
-	SceneView& operator=(const SceneView&) = delete;
-	SceneView(SceneView&&) = delete;
-	SceneView& operator=(SceneView&&) = delete;
+		MaterialHandle defaultMaterial);
+	virtual bool IsEmpty() const override;
 
-	void Reset(const ViewContext& context, const Camera& camera, const Size& screenSize);
-	bool IsEmpty() const;
+	void Reset(
+		const SceneViewContext& context, 
+		const Camera& camera, 
+		const Size& screenSize);
 	SceneViewData TakeData();
-
-	CameraData BuildCameraData(const Camera& camera, const Size& screenSize) const;
 
 	void DrawEnvironment(EnvironmentHandle hEnv);
 
@@ -45,28 +41,6 @@ public:
 		DebugMaterialHandle hDMtl,
 		const Core::Matrix& world);
 
-	void DrawUI(
-		BrushHandle bh,
-		const Rect& dest,
-		const Rect* source = nullptr);
-
-	void DrawText(
-		FontHandle hF,
-		TextRenderMode mode,
-		std::string_view text,
-		uint32_t size,
-		const Rect& bounds,
-		const TextLayout& layout = {},
-		const TextStyle& style = {});
-
-	void DrawText(
-		FontHandle hF,
-		TextRenderMode mode,
-		std::span<const TextSpan> spans,
-		uint32_t size,
-		const Rect& bounds,
-		const TextLayout& layout);
-
 private:
 	void DrawSurfaceInternal(
 		MeshHandle hM,
@@ -74,10 +48,6 @@ private:
 		std::optional<ShaderID> shaderOverride,
 		const Core::Matrix& world);
 
-	RepositoryContainer& m_repositories;
-	MeshHandle m_uiQuad;
 	MaterialHandle m_defaultMaterial;
-	BrushHandle m_defaultBrush;
-
 	SceneViewData m_data;
 };

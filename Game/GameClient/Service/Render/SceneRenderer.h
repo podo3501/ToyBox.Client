@@ -1,5 +1,6 @@
 #pragma once
 #include "SceneView.h"
+#include "OverlayView.h"
 #include "GameClient/Graphics/RenderData/DirectionalLightData.h"
 #include "Definition/View/ViewID.h"
 #include "Definition/View/DrawShadowCasterItem.h"
@@ -15,7 +16,12 @@ public:
 	explicit SceneRenderer(RepositoryContainer& repositories);
 
 	SceneView& AcquireView(
-		const ViewContext& context,
+		const SceneViewContext& context,
+		const Camera& camera,
+		const Size& screenSize);
+
+	OverlayView& AcquireView(
+		const OverlayViewContext& context,
 		const Camera& camera,
 		const Size& screenSize);
 
@@ -33,5 +39,5 @@ private:
 
 	DirectionalLightData m_pendingLight;
 	std::vector<DrawShadowCasterItem> m_shadowCasters;
-	std::array<std::unique_ptr<SceneView>, MaxViewCount> m_views;
+	std::array<std::unique_ptr<RenderView>, MaxViewCount> m_views;
 };

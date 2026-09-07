@@ -1,11 +1,11 @@
 #pragma once
 
-struct ViewDrawList;
+struct OverlayDrawList;
 struct RenderUIItem;
 class TextSystem;
 class TransientMeshProvider;
 
 std::optional<RenderUIItem> BuildUIItems(
-    ViewDrawList& draws,
+    OverlayDrawList& draws,
     TextSystem& textSystem,
     TransientMeshProvider& meshProvider);

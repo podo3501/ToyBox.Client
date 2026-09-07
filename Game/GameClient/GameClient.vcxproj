@@ -59,6 +59,8 @@
     <ClCompile Include="Service\Render\Builtin\BuiltinMaterials.cpp" />
     <ClCompile Include="Service\Render\Builtin\BuiltinMeshes.cpp" />
     <ClCompile Include="Service\Render\Definition\ShaderStageBuilder.cpp" />
+    <ClCompile Include="Service\Render\OverlayView.cpp" />
+    <ClCompile Include="Service\Render\RenderView.cpp" />
     <ClCompile Include="Service\Render\Repository\Base\ResourceRepositoryImpl.cpp" />
     <ClCompile Include="Service\Render\Repository\Container\RepositoryContainer.cpp" />
     <ClCompile Include="Service\Render\SceneRenderer.cpp" />
@@ -242,9 +244,11 @@
     <ClInclude Include="Service\Render\Handle\BrushHandle.h" />
     <ClInclude Include="Service\Render\IRenderFrame.h" />
     <ClInclude Include="Service\Render\IRenderBackend.h" />
+    <ClInclude Include="Service\Render\OverlayView.h" />
     <ClInclude Include="Service\Render\ProviderType.h" />
     <ClInclude Include="Service\Render\RenderConfig.h" />
     <ClInclude Include="Service\Render\RenderMetrics.h" />
+    <ClInclude Include="Service\Render\RenderView.h" />
     <ClInclude Include="Service\Render\Repository\Base\ResourceRepository.h" />
     <ClInclude Include="Service\Render\Repository\Base\ResourceRepositoryImpl.h" />
     <ClInclude Include="Service\Render\Repository\Base\ResourceTypes.h" />

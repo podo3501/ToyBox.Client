@@ -23,10 +23,10 @@ void OpaqueGraphBuilder::Build(
     const DirectionalLightData& light,
     const ShadowResource& shadowRes,
     RGResourceID shadowResID,
-    std::shared_ptr<ViewPacket> packet,
+    std::shared_ptr<SceneViewPacket> packet,
     const ViewTargetResource& target)
 {
-    auto& opaque = graph.AddGraphicsPass("Opaque_View" + std::to_string(packet->id));
+    auto& opaque = graph.AddGraphicsPass("Opaque_View" + std::to_string(packet->target.id));
     opaque.Read(shadowResID, RGAccess::SRV);
     opaque.Write(target.GetColorID(), RGAccess::RTV);
     opaque.Write(target.GetDepthID(), RGAccess::DepthWrite);
@@ -46,12 +46,12 @@ void OpaqueGraphBuilder::Build(
             auto dsv = descFactory.GetDSVHandle(depthDSVIndex);
 
             CommandUtils::SetRenderTarget(cmd, rtv, dsv);
-            CommandUtils::SetViewRect(cmd, packet->localViewport);
+            CommandUtils::SetViewRect(cmd, packet->target.localViewport);
 
             surfRenderer.PrepareDraw(
                 cmd, 
                 light,
-                packet->camera,
+                packet->target.camera,
                 shadowRes.GetSRVIndex(),
                 packet->environment.get());
 

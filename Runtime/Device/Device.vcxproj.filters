@@ -625,9 +625,6 @@
     <ClInclude Include="Render\DX12\Pipeline\Renderer\PipelineStateUtils.h">
       <Filter>Render\DX12\Pipeline\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\Pipeline\ViewGraphBuilder.h">
-      <Filter>Render\DX12\Pipeline</Filter>
-    </ClInclude>
     <ClInclude Include="Render\DX12\Definition\RenderData.h">
       <Filter>Render\DX12\Definition</Filter>
     </ClInclude>
@@ -663,6 +660,12 @@
     </ClInclude>
     <ClInclude Include="Render\DX12\Packet\UIMeshAppend.h">
       <Filter>Render\DX12\Packet</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Pipeline\SceneViewGraphBuilder.h">
+      <Filter>Render\DX12\Pipeline</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Pipeline\OverlayViewGraphBuilder.h">
+      <Filter>Render\DX12\Pipeline</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1057,9 +1060,6 @@
     <ClCompile Include="Render\DX12\Pipeline\ViewTargetPool.cpp">
       <Filter>Render\DX12\Pipeline</Filter>
     </ClCompile>
-    <ClCompile Include="Render\DX12\Pipeline\ViewGraphBuilder.cpp">
-      <Filter>Render\DX12\Pipeline</Filter>
-    </ClCompile>
     <ClCompile Include="Render\DX12\Graph\RGResourceIDAllocator.cpp">
       <Filter>Render\DX12\Graph</Filter>
     </ClCompile>
@@ -1080,6 +1080,12 @@
     </ClCompile>
     <ClCompile Include="Render\DX12\Packet\UIMeshAppend.cpp">
       <Filter>Render\DX12\Packet</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Pipeline\SceneViewGraphBuilder.cpp">
+      <Filter>Render\DX12\Pipeline</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Pipeline\OverlayViewGraphBuilder.cpp">
+      <Filter>Render\DX12\Pipeline</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

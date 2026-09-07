@@ -4,7 +4,7 @@
 struct Size;
 struct ViewTarget;
 struct ViewPacket;
-struct RenderViewInfo;
+struct ViewRenderOutput;
 class RenderGraph;
 class CompositeRenderer;
 class SwapChainPresenter;
@@ -19,10 +19,9 @@ public:
     void Build(
         RenderGraph& graph, 
         RGResourceID backBufferResID,
-        const std::vector<RenderViewInfo>& renderViewInfos);
+        const std::vector<ViewRenderOutput>& viewOutputs);
 
 private:
     CompositeRenderer& m_compositeRenderer;
     SwapChainPresenter& m_swapChain;
-    RGResourceID m_backBufferResID;
 };

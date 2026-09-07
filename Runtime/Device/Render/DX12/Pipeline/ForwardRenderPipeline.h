@@ -1,7 +1,8 @@
 #pragma once
 #include "Renderer/Renderers.h"
 #include "ViewTargetPool.h"
-#include "ViewGraphBuilder.h"
+#include "SceneViewGraphBuilder.h"
+#include "OverlayViewGraphBuilder.h"
 #include "Graph/RenderGraph.h"
 #include "Graph/RGResourceIDAllocator.h"
 #include "Resource/Internal/ShadowResource.h"
@@ -57,7 +58,9 @@ private:
 
     Renderers m_renderers;
     ViewTargetPool m_viewPool;
-    ViewGraphBuilder m_viewBuilder;
+    SceneViewGraphBuilder m_sceneViewBuilder;
+    OverlayViewGraphBuilder m_overlayViewBuilder;
+
     ShadowResource m_shadowRes; //이 클래스는 framereseource 클래스중의 하나. 프레임당 render가 필요한 리소스들.
     InspectorRenderers m_inspectorRenderers;
 

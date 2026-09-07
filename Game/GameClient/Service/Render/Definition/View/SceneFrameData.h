@@ -7,12 +7,14 @@ struct SceneFrameData
 {
 	DirectionalLightData light;
 	std::vector<DrawShadowCasterItem> shadowCasters;
-	std::vector<SceneViewData> views;
+	std::vector<SceneViewData> sceneViews;
+	std::vector<OverlayViewData> overlayViews;
 
 	void Clear()
 	{
 		light = {};
 		shadowCasters.clear();
-		views.clear();
+		sceneViews.clear();
+		overlayViews.clear();
 	}
 };

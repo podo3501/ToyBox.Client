@@ -54,7 +54,7 @@ static std::optional<RenderUIItem> BakeBuffer(
 }
 
 std::optional<RenderUIItem> BuildUIItems(
-    ViewDrawList& draws,
+    OverlayDrawList& draws,
     TextSystem& textSystem,
     TransientMeshProvider& meshProvider)
 {

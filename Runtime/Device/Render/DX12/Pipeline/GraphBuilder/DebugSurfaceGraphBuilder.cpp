@@ -19,10 +19,10 @@ DebugSurfaceGraphBuilder::DebugSurfaceGraphBuilder(
 
 void DebugSurfaceGraphBuilder::Build(
     RenderGraph& graph,
-    std::shared_ptr<ViewPacket> packet,
+    std::shared_ptr<SceneViewPacket> packet,
     const ViewTargetResource& target)
 {
-    auto& grid = graph.AddGraphicsPass("DebugSurface_View" + std::to_string(packet->id));
+    auto& grid = graph.AddGraphicsPass("DebugSurface_View" + std::to_string(packet->target.id));
     grid.Write(target.GetColorID(), RGAccess::RTV);
     grid.Read(target.GetDepthID(), RGAccess::DepthRead);
     grid.execute =
@@ -39,9 +39,9 @@ void DebugSurfaceGraphBuilder::Build(
             auto dsv = descFactory.GetDSVHandle(depthDSVIndex);
 
             CommandUtils::SetRenderTarget(cmd, rtv, dsv);
-            CommandUtils::SetViewRect(cmd, packet->localViewport);
+            CommandUtils::SetViewRect(cmd, packet->target.localViewport);
 
-            debugSurfRenderer.PrepareDraw(cmd, packet->camera);
+            debugSurfRenderer.PrepareDraw(cmd, packet->target.camera);
 
             for (auto& item : packet->debugSurface)
             {

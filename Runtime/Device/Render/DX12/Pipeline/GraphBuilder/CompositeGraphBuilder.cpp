@@ -15,11 +15,11 @@ CompositeGraphBuilder::CompositeGraphBuilder(
 void CompositeGraphBuilder::Build(
     RenderGraph& graph,
     RGResourceID backBufferResID,
-    const std::vector<RenderViewInfo>& renderViewInfos)
+    const std::vector<ViewRenderOutput>& viewOutputs)
 {
     auto& composite = graph.AddGraphicsPass("Composite");
 
-    for (auto& info : renderViewInfos)
+    for (auto& info : viewOutputs)
         composite.Read(info.colorID, RGAccess::SRV);
     composite.Write(backBufferResID, RGAccess::RTV);
 
@@ -27,14 +27,14 @@ void CompositeGraphBuilder::Build(
         [
             &compositeRenderer = m_compositeRenderer,
             & swapChain = m_swapChain,
-            renderViewInfos
+            viewOutputs
         ]
         (CommandList& cmd, TaskContext& ctx)
         {
             swapChain.SetRenderTarget(cmd);
 
             compositeRenderer.PrepareDraw(cmd);
-            for (auto& info : renderViewInfos)
+            for (auto& info : viewOutputs)
             {
                 swapChain.SetViewport(cmd, info.viewport);
                 compositeRenderer.Draw(cmd, info.heapIndex);

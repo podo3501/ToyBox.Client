@@ -1,6 +1,6 @@
 #pragma once
 
-struct ViewPacket;
+struct SceneViewPacket;
 class RenderGraph;
 class DebugSurfaceRenderer;
 class DescriptorFactory;
@@ -17,7 +17,7 @@ public:
 
     void Build(
         RenderGraph& graph,
-        std::shared_ptr<ViewPacket> packet,
+        std::shared_ptr<SceneViewPacket> packet,
         const ViewTargetResource& target);
 
 private:

@@ -18,10 +18,10 @@ SkyboxGraphBuilder::SkyboxGraphBuilder(
 
 void SkyboxGraphBuilder::Build(
     RenderGraph& graph, 
-    std::shared_ptr<ViewPacket> packet, 
+    std::shared_ptr<SceneViewPacket> packet, 
     const ViewTargetResource& target)
 {
-    auto& skybox = graph.AddGraphicsPass("Skybox_View" + std::to_string(packet->id));
+    auto& skybox = graph.AddGraphicsPass("Skybox_View" + std::to_string(packet->target.id));
     skybox.Write(target.GetColorID(), RGAccess::RTV);
     skybox.Write(target.GetDepthID(), RGAccess::DepthWrite);
 
@@ -43,8 +43,8 @@ void SkyboxGraphBuilder::Build(
             auto dsv = descFactory.GetDSVHandle(depthDSVIndex);
 
             CommandUtils::SetRenderTarget(cmd, rtv, dsv);
-            CommandUtils::SetViewRect(cmd, packet->localViewport);
+            CommandUtils::SetViewRect(cmd, packet->target.localViewport);
 
-            skyboxRenderer.Draw(cmd, packet->camera, *envRes->GetSkybox());
+            skyboxRenderer.Draw(cmd, packet->target.camera, *envRes->GetSkybox());
         };
 }

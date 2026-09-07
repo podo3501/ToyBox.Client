@@ -13,48 +13,69 @@ static Rect ResolveViewport(const std::optional<Rect>& requestedViewport, const 
         Rect{ 0.f, 0.f, static_cast<float>(screenSize.width), static_cast<float>(screenSize.height) });
 }
 
-static std::shared_ptr<ViewPacket> BuildViewPacket(
-    SceneViewData&& view,
-    TextSystem& textSystem,
-    TransientMeshProvider& meshProvider,
+static void FillTarget(
+    ViewTargetPacket& target,
+    const ViewTargetInfo& targetInfo,
     const Size& screenSize)
 {
-    auto packet = std::make_shared<ViewPacket>();
+    target.id = targetInfo.id;
+    target.camera = targetInfo.camera;
+    target.viewport = ResolveViewport(targetInfo.viewport, screenSize);
+    target.localViewport = Rect{ 0.f, 0.f, target.viewport.width, target.viewport.height };
+}
 
-    //ViewContext
-    packet->id = view.context.id;
-    packet->camera = view.context.camera;
-    packet->viewport = ResolveViewport(view.context.viewport, screenSize);
-    packet->localViewport = Rect{ 0.f, 0.f, packet->viewport.width, packet->viewport.height };
+static std::shared_ptr<SceneViewPacket> BuildSceneViewPacket(
+    SceneViewData&& view,
+    const Size& screenSize)
+{
+    auto packet = std::make_shared<SceneViewPacket>();
+    FillTarget(packet->target, view.context.target, screenSize);
 
     if (view.draws.environment)
         packet->environment = std::static_pointer_cast<EnvironmentResource>(view.draws.environment);
-
     packet->surface = BuildSurfaceItems(view.draws.surfaces, view.context.renderOverride.rasterPreset);
     packet->debugSurface = BuildDebugSurfaceItems(view.draws.debugSurfaces);
-    packet->ui = BuildUIItems(view.draws, textSystem, meshProvider);
 
     return packet;
 }
 
-static std::vector<std::shared_ptr<ViewPacket>> BuildViews(
-    std::vector<SceneViewData>& views,
+static std::shared_ptr<OverlayViewPacket> BuildOverlayViewPacket(
+    OverlayViewData&& view,
     TextSystem& textSystem,
     TransientMeshProvider& meshProvider,
     const Size& screenSize)
 {
-    std::vector<std::shared_ptr<ViewPacket>> result;
-    result.reserve(std::max<size_t>(1, views.size()));
+    auto packet = std::make_shared<OverlayViewPacket>();
+    FillTarget(packet->target, view.context.target, screenSize);
+
+    packet->ui = BuildUIItems(view.draws, textSystem, meshProvider);
+    return packet;
+}
+
+static std::vector<std::shared_ptr<SceneViewPacket>> BuildSceneViews(
+    std::vector<SceneViewData>& views,
+    const Size& screenSize)
+{
+    std::vector<std::shared_ptr<SceneViewPacket>> result;
+    result.reserve(views.size());
 
     for (auto& view : views)
-    {
-        result.push_back(
-            BuildViewPacket(
-                std::move(view),
-                textSystem,
-                meshProvider,
-                screenSize));
-    }
+        result.push_back(BuildSceneViewPacket(std::move(view), screenSize));
+
+    return result;
+}
+
+static std::vector<std::shared_ptr<OverlayViewPacket>> BuildOverlayViews(
+    std::vector<OverlayViewData>& views,
+    TextSystem& textSystem,
+    TransientMeshProvider& meshProvider,
+    const Size& screenSize)
+{
+    std::vector<std::shared_ptr<OverlayViewPacket>> result;
+    result.reserve(views.size());
+
+    for (auto& view : views)
+        result.push_back(BuildOverlayViewPacket(std::move(view), textSystem, meshProvider, screenSize));
 
     return result;
 }
@@ -85,8 +106,9 @@ FramePacket BuildPacket(
 {
     FramePacket packet;
     packet.light = std::move(frame.light);
-    packet.views = BuildViews(frame.views, textSystem, meshProvider, screenSize);
     packet.shadowCasters = BuildShadowCasters(frame.shadowCasters);
+    packet.sceneViews = BuildSceneViews(frame.sceneViews, screenSize);
+    packet.overlayViews = BuildOverlayViews(frame.overlayViews, textSystem, meshProvider, screenSize);
 
     return packet;
 }

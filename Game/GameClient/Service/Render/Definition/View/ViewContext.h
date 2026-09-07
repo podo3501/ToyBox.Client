@@ -5,18 +5,27 @@
 #include "GameClient/Graphics/RenderData/CameraData.h"
 #include <optional>
 
+struct ViewTargetInfo
+{
+    ViewID id{ InvalidViewID };
+    CameraData camera;
+    std::optional<Rect> viewport{ std::nullopt };
+};
+
 struct RenderOverride
 {
     std::optional<RasterPreset> rasterPreset;
 };
 
-struct ViewContext
+struct SceneViewContext
 {
-    explicit ViewContext(ViewID id) : id{ id } {}
-
-    ViewID id{ InvalidViewID };
-    CameraData camera;
-    std::optional<Rect> viewport{ std::nullopt };
+    explicit SceneViewContext(ViewID id) : target{ id } {}
+    ViewTargetInfo target;
     RenderOverride renderOverride;
-    // 나중에: RenderTargetSet, PassType ...
+};
+
+struct OverlayViewContext
+{
+    explicit OverlayViewContext(ViewID id) : target{ id } {}
+    ViewTargetInfo target;
 };

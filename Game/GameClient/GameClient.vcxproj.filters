@@ -274,6 +274,12 @@
     <ClCompile Include="Graphics\World\UICamera.cpp">
       <Filter>Graphics\World</Filter>
     </ClCompile>
+    <ClCompile Include="Service\Render\OverlayView.cpp">
+      <Filter>Service\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Service\Render\RenderView.cpp">
+      <Filter>Service\Render</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameLoop.h" />
@@ -852,6 +858,12 @@
     </ClInclude>
     <ClInclude Include="Graphics\World\UICamera.h">
       <Filter>Graphics\World</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\OverlayView.h">
+      <Filter>Service\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\RenderView.h">
+      <Filter>Service\Render</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

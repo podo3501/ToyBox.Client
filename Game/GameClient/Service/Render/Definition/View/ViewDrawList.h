@@ -39,21 +39,15 @@ struct DrawTextItem
     std::vector<TextRun> runs;
 };
 
-struct ViewDrawList
+struct SceneDrawList
 {
     std::shared_ptr<IResource> environment;
     std::vector<DrawSurfaceItem> surfaces;
     std::vector<DrawDebugSurfaceItem> debugSurfaces;
-    std::vector<DrawUIItem> ui;
-    std::vector<DrawTextItem> texts;
 
     bool IsEmpty() const
     {
-        return !environment &&
-            surfaces.empty() &&
-            debugSurfaces.empty() &&
-            ui.empty() &&
-            texts.empty();
+        return !environment && surfaces.empty() && debugSurfaces.empty();
     }
 
     void Clear()
@@ -61,6 +55,21 @@ struct ViewDrawList
         environment.reset();
         surfaces.clear();
         debugSurfaces.clear();
+    }
+};
+
+struct OverlayDrawList
+{
+    std::vector<DrawUIItem> ui;
+    std::vector<DrawTextItem> texts;
+
+    bool IsEmpty() const
+    {
+        return ui.empty() && texts.empty();
+    }
+
+    void Clear()
+    {
         ui.clear();
         texts.clear();
     }

@@ -2,7 +2,7 @@
 #include "Graph/RGTypes.h"
 
 struct DirectionalLightData;
-struct ViewPacket;
+struct SceneViewPacket;
 class RenderGraph;
 class SurfaceRenderer;
 class DescriptorFactory;
@@ -23,7 +23,7 @@ public:
         const DirectionalLightData& light,
         const ShadowResource& shadowRes,
         RGResourceID shadowResID,
-        std::shared_ptr<ViewPacket> packet,
+        std::shared_ptr<SceneViewPacket> packet,
         const ViewTargetResource& target);
     
 private:

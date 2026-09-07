@@ -4,6 +4,12 @@
 
 struct SceneViewData
 {
-    ViewContext context{ InvalidViewID };
-    ViewDrawList draws;
+    SceneViewContext context{ InvalidViewID };
+    SceneDrawList draws;
+};
+
+struct OverlayViewData
+{
+    OverlayViewContext context{ InvalidViewID };
+    OverlayDrawList draws;
 };

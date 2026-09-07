@@ -65,17 +65,28 @@ struct DebugPacket
     std::vector<RenderInspectItem> images;
 };
 
-struct ViewPacket
+struct ViewTargetPacket
 {
     ViewID id;
     CameraData camera;
     Rect viewport; // 화면(백버퍼) 상의 배치. Composite가 씀
     Rect localViewport; // 뷰 타겟 텍스처 내부 좌표(0,0 시작)
+};
+
+struct SceneViewPacket
+{
+    ViewTargetPacket target;
 
     std::vector<RenderSurfaceItem> surface;
     std::vector<RenderDebugSurfaceItem> debugSurface;
-    std::optional<RenderUIItem> ui;
     std::shared_ptr<EnvironmentResource> environment{ nullptr }; // nullptr 가능 - 환경 없는 씬
+};
+
+struct OverlayViewPacket
+{
+    ViewTargetPacket target;
+
+    std::optional<RenderUIItem> ui;
 };
 
 struct RenderShadowCasterItem
@@ -88,11 +99,14 @@ struct FramePacket
 {
     DirectionalLightData light;
     std::vector<RenderShadowCasterItem> shadowCasters;
-    std::vector<std::shared_ptr<ViewPacket>> views;
+    std::vector<std::shared_ptr<SceneViewPacket>> sceneViews;
+    std::vector<std::shared_ptr<OverlayViewPacket>> overlayViews;
 };
 
-struct RenderViewInfo
+struct ViewRenderOutput
 {
+    ViewID id;
+    bool isOverlay;       // false=Scene, true=Overlay
     Rect viewport;
     UINT heapIndex;
     RGResourceID colorID;

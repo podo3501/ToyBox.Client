@@ -19,10 +19,10 @@ UIGraphBuilder::UIGraphBuilder(
 
 void UIGraphBuilder::Build(
     RenderGraph& graph,
-    std::shared_ptr<ViewPacket> packet,
+    std::shared_ptr<OverlayViewPacket> packet,
     const ViewTargetResource& target)
 {
-    auto& ui = graph.AddGraphicsPass("UI_View" + std::to_string(packet->id));
+    auto& ui = graph.AddGraphicsPass("UI_View" + std::to_string(packet->target.id));
     ui.Write(target.GetColorID(), RGAccess::RTV);
     ui.execute =
         [
@@ -38,12 +38,12 @@ void UIGraphBuilder::Build(
             auto rtv = descFactory.GetRTVHandle(colorRTVIndex);
 
             CommandUtils::SetRenderTarget(cmd, rtv);
-            CommandUtils::SetViewRect(cmd, packet->localViewport);
+            CommandUtils::SetViewRect(cmd, packet->target.localViewport);
 
             uiRenderer.BeginFrame(cmd);
 
             auto mesh = static_cast<MeshResource*>(packet->ui->mesh.get());
-            Core::Matrix viewProj = packet->camera.view * packet->camera.proj;
+            Core::Matrix viewProj = packet->target.camera.view * packet->target.camera.proj;
             uiRenderer.Draw(cmd, *mesh, viewProj);
         };
 }

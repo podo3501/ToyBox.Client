@@ -22,23 +22,40 @@ SceneRenderer::SceneRenderer(RepositoryContainer& repositories) :
 }
 
 SceneView& SceneRenderer::AcquireView(
-	const ViewContext& context,
-	const Camera& camera, 
+	const SceneViewContext& context,
+	const Camera& camera,
 	const Size& screenSize)
 {
-	Assert(context.id < MaxViewCount);
+	Assert(context.target.id < MaxViewCount);
+	auto& slot = m_views[context.target.id];
 
-	auto& view = m_views[context.id]; // 없으면 nullptr로 기본 생성
-	if (!view)
-	{
-		view = std::make_unique<SceneView>(
-			m_repositories,
-			m_uiQuad,
-			m_defaultMaterial,
-			m_defaultBrush);
-	}
+	if (!slot)
+		slot = std::make_unique<SceneView>(m_repositories, m_defaultMaterial);
+	
+	Assert(slot->Type() == ViewType::Scene); // 같은 ID를 OverlayView가 이미 점유했다면 문제.
 
+	auto* view = static_cast<SceneView*>(slot.get());
 	view->Reset(context, camera, screenSize);
+
+	return *view;
+}
+
+OverlayView& SceneRenderer::AcquireView(
+	const OverlayViewContext& context,
+	const Camera& camera,
+	const Size& screenSize)
+{
+	Assert(context.target.id < MaxViewCount);
+	auto& slot = m_views[context.target.id];
+
+	if (!slot)
+		slot = std::make_unique<OverlayView>(m_repositories, m_uiQuad, m_defaultBrush);
+
+	Assert(slot->Type() == ViewType::Overlay);
+
+	auto* view = static_cast<OverlayView*>(slot.get());
+	view->Reset(context, camera, screenSize);
+
 	return *view;
 }
 
@@ -68,7 +85,18 @@ SceneFrameData SceneRenderer::Flush()
 		if (!view || view->IsEmpty())
 			continue;
 
-		frameData.views.push_back(view->TakeData());
+		switch (view->Type())
+		{
+		case ViewType::Scene:
+			frameData.sceneViews.push_back(static_cast<SceneView*>(view.get())->TakeData());
+			break;
+		case ViewType::Overlay:
+			frameData.overlayViews.push_back(static_cast<OverlayView*>(view.get())->TakeData());
+			break;
+		default:
+			Assert(false); // None 상태의 슬롯이 배열에 남아있으면 안 됨
+			break;
+		}
 	}
 
 	m_pendingLight = {};
