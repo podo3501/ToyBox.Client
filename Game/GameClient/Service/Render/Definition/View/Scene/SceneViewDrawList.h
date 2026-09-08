@@ -1,10 +1,10 @@
 #pragma once
-#include "GameClient/Service/Render/Definition/Shader/ShaderTypes.h"
 #include "GameClient/Service/Render/Resource/IResource.h"
-#include "GameClient/Service/Render/Definition/Text/TextStyle.h"
+#include "GameClient/Service/Render/Definition/Shader/ShaderTypes.h"
 #include "Core/Math/Matrix.h"
-#include "Core/Foundation/Geometry2D.h"
 #include <memory>
+#include <vector>
+#include <optional>
 
 struct DrawSurfaceItem
 {
@@ -21,25 +21,7 @@ struct DrawDebugSurfaceItem
     Core::Matrix world;
 };
 
-struct DrawUIItem
-{
-    std::shared_ptr<IResource> mesh;
-    std::shared_ptr<IResource> brush;
-    Core::Matrix world;
-    std::optional<Rect> source;
-};
-
-struct DrawTextItem
-{
-    std::shared_ptr<IResource> font;
-    TextRenderMode mode;
-    uint32_t size;
-    Rect bounds;
-    TextLayout layout;
-    std::vector<TextRun> runs;
-};
-
-struct SceneDrawList
+struct SceneViewDrawList
 {
     std::shared_ptr<IResource> environment;
     std::vector<DrawSurfaceItem> surfaces;
@@ -55,22 +37,5 @@ struct SceneDrawList
         environment.reset();
         surfaces.clear();
         debugSurfaces.clear();
-    }
-};
-
-struct OverlayDrawList
-{
-    std::vector<DrawUIItem> ui;
-    std::vector<DrawTextItem> texts;
-
-    bool IsEmpty() const
-    {
-        return ui.empty() && texts.empty();
-    }
-
-    void Clear()
-    {
-        ui.clear();
-        texts.clear();
     }
 };

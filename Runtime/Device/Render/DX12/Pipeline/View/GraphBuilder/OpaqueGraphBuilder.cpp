@@ -4,7 +4,7 @@
 #include "Command/CommandList.h"
 #include "Command/CommandListHelpers.h"
 #include "Factory/DescriptorFactory.h"
-#include "../Renderer/SurfaceRenderer.h"
+#include "Pipeline/Renderer/SurfaceRenderer.h"
 #include "Resource/Mesh/MeshResource.h"
 #include "Resource/Material/MaterialResource.h"
 #include "Resource/Internal/ShadowResource.h"

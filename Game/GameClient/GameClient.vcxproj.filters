@@ -820,15 +820,6 @@
     <ClInclude Include="Service\Render\ProviderType.h">
       <Filter>Service\Render</Filter>
     </ClInclude>
-    <ClInclude Include="Service\Render\Definition\View\ViewContext.h">
-      <Filter>Service\Render\Definition\View</Filter>
-    </ClInclude>
-    <ClInclude Include="Service\Render\Definition\View\ViewDrawList.h">
-      <Filter>Service\Render\Definition\View</Filter>
-    </ClInclude>
-    <ClInclude Include="Service\Render\Definition\View\SceneViewData.h">
-      <Filter>Service\Render\Definition\View</Filter>
-    </ClInclude>
     <ClInclude Include="Service\Render\SceneView.h">
       <Filter>Service\Render</Filter>
     </ClInclude>
@@ -864,6 +855,27 @@
     </ClInclude>
     <ClInclude Include="Service\Render\RenderView.h">
       <Filter>Service\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Definition\View\ViewTargetInfo.h">
+      <Filter>Service\Render\Definition\View</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Definition\View\Overlay\OverlayViewContext.h">
+      <Filter>Service\Render\Definition\View\Overlay</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Definition\View\Overlay\OverlayViewData.h">
+      <Filter>Service\Render\Definition\View\Overlay</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Definition\View\Overlay\OverlayViewDrawList.h">
+      <Filter>Service\Render\Definition\View\Overlay</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Definition\View\Scene\SceneViewContext.h">
+      <Filter>Service\Render\Definition\View\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Definition\View\Scene\SceneViewData.h">
+      <Filter>Service\Render\Definition\View\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\Render\Definition\View\Scene\SceneViewDrawList.h">
+      <Filter>Service\Render\Definition\View\Scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -980,6 +992,12 @@
     </Filter>
     <Filter Include="Service\Render\Definition\Shader">
       <UniqueIdentifier>{730b3950-f338-4db4-aba7-5e736d4da6b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Service\Render\Definition\View\Overlay">
+      <UniqueIdentifier>{1e4f470d-7c94-4273-aea5-0a4d2bd072b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Service\Render\Definition\View\Scene">
+      <UniqueIdentifier>{41d11ed2-eea7-42c1-96d3-3b4859b2ee86}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

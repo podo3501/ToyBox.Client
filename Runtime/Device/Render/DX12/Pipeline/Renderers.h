@@ -1,12 +1,12 @@
 #pragma once
-#include "PipelineCache.h"
-#include "ShadowRenderer.h"
-#include "SkyboxRenderer.h"
-#include "SurfaceRenderer.h"
-#include "DebugSurfaceRenderer.h"
-#include "UIRenderer.h"
-#include "CompositeRenderer.h"
-#include "RendererConfig.h"
+#include "Renderer/PipelineCache.h"
+#include "Renderer/ShadowRenderer.h"
+#include "Renderer/SkyboxRenderer.h"
+#include "Renderer/SurfaceRenderer.h"
+#include "Renderer/DebugSurfaceRenderer.h"
+#include "Renderer/UIRenderer.h"
+#include "Renderer/CompositeRenderer.h"
+#include "Renderer/RendererConfig.h"
 #include <d3d12.h>
 
 struct Size;

@@ -3,7 +3,7 @@
 #include "RenderSortKey.h"
 #include "Resource/Material/DebugMaterialResource.h"
 #include "Definition/RenderData.h"
-#include "GameClient/Service/Render/Definition/View/SceneFrameData.h"
+#include "GameClient/Service/Render/Definition/View/Scene/SceneViewDrawList.h"
 
 static RenderDebugSurfaceItem BuildDebugSurfaceItem(const DrawDebugSurfaceItem& drawItem)
 {

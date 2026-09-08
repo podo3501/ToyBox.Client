@@ -106,7 +106,6 @@ struct FramePacket
 struct ViewRenderOutput
 {
     ViewID id;
-    bool isOverlay;       // false=Scene, true=Overlay
     Rect viewport;
     UINT heapIndex;
     RGResourceID colorID;

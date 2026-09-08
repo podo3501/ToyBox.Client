@@ -1,7 +1,7 @@
 #pragma once
 #include "RenderView.h"
 #include "Handle/ResourceHandles.h"
-#include "Definition/View/SceneViewData.h"
+#include "Definition/View/Scene/SceneViewData.h"
 #include "Definition/Text/TextStyle.h"
 #include "Core/Foundation/Geometry2D.h"
 

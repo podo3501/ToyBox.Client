@@ -142,6 +142,12 @@
     <Filter Include="Render\DX12\Packet">
       <UniqueIdentifier>{2b89dbd5-96aa-49d6-8136-ec4f4ffbb709}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Render\DX12\Pipeline\View">
+      <UniqueIdentifier>{403910f8-fd0d-4cdd-ada1-0b564c9e8104}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Render\DX12\Pipeline\View\GraphBuilder">
+      <UniqueIdentifier>{7e988977-a879-42ba-b92b-351b15f6b214}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Storage\JsonObjectIO.h">
@@ -305,9 +311,6 @@
       <Filter>Render\DX12\Pipeline\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="Render\DX12\Pipeline\Renderer\RendererConfig.h">
-      <Filter>Render\DX12\Pipeline\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\DX12\Pipeline\Renderer\Renderers.h">
       <Filter>Render\DX12\Pipeline\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="Render\DX12\Pipeline\Renderer\RootSignatureBuilder.h">
@@ -586,19 +589,7 @@
     <ClInclude Include="Render\DX12\Provider\PendingUploadQueue.h">
       <Filter>Render\DX12\Provider</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\Pipeline\GraphBuilder\DebugSurfaceGraphBuilder.h">
-      <Filter>Render\DX12\Pipeline\GraphBuilder</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\DX12\Pipeline\GraphBuilder\OpaqueGraphBuilder.h">
-      <Filter>Render\DX12\Pipeline\GraphBuilder</Filter>
-    </ClInclude>
     <ClInclude Include="Render\DX12\Pipeline\GraphBuilder\ShadowGraphBuilder.h">
-      <Filter>Render\DX12\Pipeline\GraphBuilder</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\DX12\Pipeline\GraphBuilder\SkyboxGraphBuilder.h">
-      <Filter>Render\DX12\Pipeline\GraphBuilder</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\DX12\Pipeline\GraphBuilder\UIGraphBuilder.h">
       <Filter>Render\DX12\Pipeline\GraphBuilder</Filter>
     </ClInclude>
     <ClInclude Include="Render\DX12\Pipeline\GraphBuilder\ClearGraphBuilder.h">
@@ -607,20 +598,11 @@
     <ClInclude Include="Render\DX12\Pipeline\Renderer\CompositeRenderer.h">
       <Filter>Render\DX12\Pipeline\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\Pipeline\GraphBuilder\CompositeGraphBuilder.h">
-      <Filter>Render\DX12\Pipeline\GraphBuilder</Filter>
-    </ClInclude>
     <ClInclude Include="Render\DX12\Resource\Internal\ShadowResource.h">
       <Filter>Render\DX12\Resource\Internal</Filter>
     </ClInclude>
     <ClInclude Include="Render\DX12\Resource\Internal\ViewTargetResource.h">
       <Filter>Render\DX12\Resource\Internal</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\DX12\Pipeline\GraphBuilder\ViewTargetClearGraphBuilder.h">
-      <Filter>Render\DX12\Pipeline\GraphBuilder</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\DX12\Pipeline\ViewTargetPool.h">
-      <Filter>Render\DX12\Pipeline</Filter>
     </ClInclude>
     <ClInclude Include="Render\DX12\Pipeline\Renderer\PipelineStateUtils.h">
       <Filter>Render\DX12\Pipeline\Renderer</Filter>
@@ -661,10 +643,37 @@
     <ClInclude Include="Render\DX12\Packet\UIMeshAppend.h">
       <Filter>Render\DX12\Packet</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\Pipeline\SceneViewGraphBuilder.h">
-      <Filter>Render\DX12\Pipeline</Filter>
+    <ClInclude Include="Render\DX12\Pipeline\View\OverlayViewGraphBuilder.h">
+      <Filter>Render\DX12\Pipeline\View</Filter>
     </ClInclude>
-    <ClInclude Include="Render\DX12\Pipeline\OverlayViewGraphBuilder.h">
+    <ClInclude Include="Render\DX12\Pipeline\View\SceneViewGraphBuilder.h">
+      <Filter>Render\DX12\Pipeline\View</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Pipeline\View\ViewCompositionBuilder.h">
+      <Filter>Render\DX12\Pipeline\View</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Pipeline\View\ViewTargetPool.h">
+      <Filter>Render\DX12\Pipeline\View</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Pipeline\View\GraphBuilder\UIGraphBuilder.h">
+      <Filter>Render\DX12\Pipeline\View\GraphBuilder</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Pipeline\View\GraphBuilder\ViewTargetClearGraphBuilder.h">
+      <Filter>Render\DX12\Pipeline\View\GraphBuilder</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Pipeline\View\GraphBuilder\DebugSurfaceGraphBuilder.h">
+      <Filter>Render\DX12\Pipeline\View\GraphBuilder</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Pipeline\View\GraphBuilder\OpaqueGraphBuilder.h">
+      <Filter>Render\DX12\Pipeline\View\GraphBuilder</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Pipeline\View\GraphBuilder\SkyboxGraphBuilder.h">
+      <Filter>Render\DX12\Pipeline\View\GraphBuilder</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Pipeline\View\CompositeGraphBuilder.h">
+      <Filter>Render\DX12\Pipeline\View</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Pipeline\Renderers.h">
       <Filter>Render\DX12\Pipeline</Filter>
     </ClInclude>
   </ItemGroup>
@@ -794,9 +803,6 @@
       <Filter>Render\DX12\Pipeline\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\Pipeline\Renderer\PipelineCache.cpp">
-      <Filter>Render\DX12\Pipeline\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\DX12\Pipeline\Renderer\Renderers.cpp">
       <Filter>Render\DX12\Pipeline\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\Pipeline\Renderer\RootSignatureBuilder.cpp">
@@ -1024,19 +1030,7 @@
     <ClCompile Include="Render\DX12\Resource\Material\MaterialResource.cpp">
       <Filter>Render\DX12\Resource\Material</Filter>
     </ClCompile>
-    <ClCompile Include="Render\DX12\Pipeline\GraphBuilder\DebugSurfaceGraphBuilder.cpp">
-      <Filter>Render\DX12\Pipeline\GraphBuilder</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\DX12\Pipeline\GraphBuilder\OpaqueGraphBuilder.cpp">
-      <Filter>Render\DX12\Pipeline\GraphBuilder</Filter>
-    </ClCompile>
     <ClCompile Include="Render\DX12\Pipeline\GraphBuilder\ShadowGraphBuilder.cpp">
-      <Filter>Render\DX12\Pipeline\GraphBuilder</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\DX12\Pipeline\GraphBuilder\SkyboxGraphBuilder.cpp">
-      <Filter>Render\DX12\Pipeline\GraphBuilder</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\DX12\Pipeline\GraphBuilder\UIGraphBuilder.cpp">
       <Filter>Render\DX12\Pipeline\GraphBuilder</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\Pipeline\GraphBuilder\ClearGraphBuilder.cpp">
@@ -1045,20 +1039,11 @@
     <ClCompile Include="Render\DX12\Pipeline\Renderer\CompositeRenderer.cpp">
       <Filter>Render\DX12\Pipeline\Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="Render\DX12\Pipeline\GraphBuilder\CompositeGraphBuilder.cpp">
-      <Filter>Render\DX12\Pipeline\GraphBuilder</Filter>
-    </ClCompile>
     <ClCompile Include="Render\DX12\Resource\Internal\ShadowResource.cpp">
       <Filter>Render\DX12\Resource\Internal</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\Resource\Internal\ViewTargetResource.cpp">
       <Filter>Render\DX12\Resource\Internal</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\DX12\Pipeline\GraphBuilder\ViewTargetClearGraphBuilder.cpp">
-      <Filter>Render\DX12\Pipeline\GraphBuilder</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\DX12\Pipeline\ViewTargetPool.cpp">
-      <Filter>Render\DX12\Pipeline</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\Graph\RGResourceIDAllocator.cpp">
       <Filter>Render\DX12\Graph</Filter>
@@ -1081,10 +1066,37 @@
     <ClCompile Include="Render\DX12\Packet\UIMeshAppend.cpp">
       <Filter>Render\DX12\Packet</Filter>
     </ClCompile>
-    <ClCompile Include="Render\DX12\Pipeline\SceneViewGraphBuilder.cpp">
-      <Filter>Render\DX12\Pipeline</Filter>
+    <ClCompile Include="Render\DX12\Pipeline\View\OverlayViewGraphBuilder.cpp">
+      <Filter>Render\DX12\Pipeline\View</Filter>
     </ClCompile>
-    <ClCompile Include="Render\DX12\Pipeline\OverlayViewGraphBuilder.cpp">
+    <ClCompile Include="Render\DX12\Pipeline\View\SceneViewGraphBuilder.cpp">
+      <Filter>Render\DX12\Pipeline\View</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Pipeline\View\ViewCompositionBuilder.cpp">
+      <Filter>Render\DX12\Pipeline\View</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Pipeline\View\ViewTargetPool.cpp">
+      <Filter>Render\DX12\Pipeline\View</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Pipeline\View\GraphBuilder\UIGraphBuilder.cpp">
+      <Filter>Render\DX12\Pipeline\View\GraphBuilder</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Pipeline\View\GraphBuilder\ViewTargetClearGraphBuilder.cpp">
+      <Filter>Render\DX12\Pipeline\View\GraphBuilder</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Pipeline\View\GraphBuilder\DebugSurfaceGraphBuilder.cpp">
+      <Filter>Render\DX12\Pipeline\View\GraphBuilder</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Pipeline\View\GraphBuilder\OpaqueGraphBuilder.cpp">
+      <Filter>Render\DX12\Pipeline\View\GraphBuilder</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Pipeline\View\GraphBuilder\SkyboxGraphBuilder.cpp">
+      <Filter>Render\DX12\Pipeline\View\GraphBuilder</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Pipeline\View\CompositeGraphBuilder.cpp">
+      <Filter>Render\DX12\Pipeline\View</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Pipeline\Renderers.cpp">
       <Filter>Render\DX12\Pipeline</Filter>
     </ClCompile>
   </ItemGroup>

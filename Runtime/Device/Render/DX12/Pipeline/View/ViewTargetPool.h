@@ -1,6 +1,6 @@
 #pragma once
 #include "Core/Foundation/Geometry2D.h"
-#include "../Provider/PendingReleaseQueue.h"
+#include "Provider/PendingReleaseQueue.h"
 #include "GameClient/Service/Render/Definition/View/ViewID.h"
 #include <bitset>
 

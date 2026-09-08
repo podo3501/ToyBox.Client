@@ -4,7 +4,7 @@
 #include "Resource/Mesh/StaticMeshResource.h"
 #include "Resource/Brush/BrushResource.h"
 #include "Helpers/MathHelpers.h"
-#include "GameClient/Service/Render/Definition/View/SceneFrameData.h"
+#include "GameClient/Service/Render/Definition/View/Overlay/OverlayViewDrawList.h"
 
 static std::span<const UIVertex> AsUIVertices(const MeshAsset& asset)
 {

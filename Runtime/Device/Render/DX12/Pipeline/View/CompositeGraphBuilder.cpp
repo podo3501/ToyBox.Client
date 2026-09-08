@@ -3,7 +3,7 @@
 #include "SwapChainPresenter.h"
 #include "Graph/RenderGraph.h"
 #include "Resource/Internal/ViewTargetResource.h"
-#include "../Renderer/CompositeRenderer.h"
+#include "Pipeline/Renderer/CompositeRenderer.h"
 
 CompositeGraphBuilder::CompositeGraphBuilder(
     CompositeRenderer& compositeRenderer,
@@ -26,7 +26,7 @@ void CompositeGraphBuilder::Build(
     composite.execute =
         [
             &compositeRenderer = m_compositeRenderer,
-            & swapChain = m_swapChain,
+            &swapChain = m_swapChain,
             viewOutputs
         ]
         (CommandList& cmd, TaskContext& ctx)

@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "OverlayViewGraphBuilder.h"
+#include "Pipeline/Renderers.h"
 #include "Graph/RenderGraph.h"
-#include "Renderer/Renderers.h"
 #include "Resource/Internal/ViewTargetResource.h"
 
 OverlayViewGraphBuilder::OverlayViewGraphBuilder(
@@ -27,5 +27,5 @@ ViewRenderOutput OverlayViewGraphBuilder::Build(
     graph.ExportResource(target.GetColorID(), RGAccess::SRV);
     graph.ExportResource(target.GetDepthID(), RGAccess::DepthWrite);
 
-    return { view->target.id, true, view->target.viewport, target.GetHeapIndex(), target.GetColorID() };
+    return { view->target.id, view->target.viewport, target.GetHeapIndex(), target.GetColorID() };
 }

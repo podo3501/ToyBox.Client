@@ -1,7 +1,8 @@
 #pragma once
 #include "GameClient/Graphics/RenderData/DirectionalLightData.h"
-#include "SceneViewData.h"
 #include "DrawShadowCasterItem.h"
+#include "Scene/SceneViewData.h"
+#include "Overlay/OverlayViewData.h"
 
 struct SceneFrameData
 {

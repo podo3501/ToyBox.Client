@@ -1,21 +1,13 @@
 #pragma once
-#include "Renderer/Renderers.h"
-#include "ViewTargetPool.h"
-#include "SceneViewGraphBuilder.h"
-#include "OverlayViewGraphBuilder.h"
+#include "Renderers.h"
 #include "Graph/RenderGraph.h"
 #include "Graph/RGResourceIDAllocator.h"
 #include "Resource/Internal/ShadowResource.h"
 #include "Inspector/InspectorRenderers.h"
 //Graph Builders
+#include "View/ViewCompositionBuilder.h"
 #include "GraphBuilder/ClearGraphBuilder.h"
-#include "GraphBuilder/ViewTargetClearGraphBuilder.h"
 #include "GraphBuilder/ShadowGraphBuilder.h"
-#include "GraphBuilder/SkyboxGraphBuilder.h"
-#include "GraphBuilder/OpaqueGraphBuilder.h"
-#include "GraphBuilder/DebugSurfaceGraphBuilder.h"
-#include "GraphBuilder/UIGraphBuilder.h"
-#include "GraphBuilder/CompositeGraphBuilder.h"
 #include "Inspector/InspectorGraphBuilder.h"
 #include "TextSystem/Builder/FontAtlasUploadGraphBuilder.h"
 
@@ -57,9 +49,6 @@ private:
     RGResourceIDAllocator m_idAllocator;
 
     Renderers m_renderers;
-    ViewTargetPool m_viewPool;
-    SceneViewGraphBuilder m_sceneViewBuilder;
-    OverlayViewGraphBuilder m_overlayViewBuilder;
 
     ShadowResource m_shadowRes; //이 클래스는 framereseource 클래스중의 하나. 프레임당 render가 필요한 리소스들.
     InspectorRenderers m_inspectorRenderers;
@@ -70,6 +59,6 @@ private:
     FontAtlasUploadGraphBuilder& m_fontUploadBuilder;
     ClearGraphBuilder m_clearBuilder;
     ShadowGraphBuilder m_shadowBuilder;
-    CompositeGraphBuilder m_compositeBuilder;
+    ViewCompositionBuilder m_viewComposition;
     InspectorGraphBuilder m_inspectorBuilder;
 };

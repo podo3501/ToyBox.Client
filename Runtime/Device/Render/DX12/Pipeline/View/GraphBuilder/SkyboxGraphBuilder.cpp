@@ -6,7 +6,7 @@
 #include "Factory/DescriptorFactory.h"
 #include "Resource/Environment/EnvironmentResource.h"
 #include "Resource/Internal/ViewTargetResource.h"
-#include "../Renderer/SkyboxRenderer.h"
+#include "Pipeline/Renderer/SkyboxRenderer.h"
 
 SkyboxGraphBuilder::~SkyboxGraphBuilder() = default;
 SkyboxGraphBuilder::SkyboxGraphBuilder(

@@ -4,7 +4,7 @@
 #include "Command/CommandList.h"
 #include "Command/CommandListHelpers.h"
 #include "Factory/DescriptorFactory.h"
-#include "../Renderer/DebugSurfaceRenderer.h"
+#include "Pipeline/Renderer/DebugSurfaceRenderer.h"
 #include "Resource/Mesh/MeshResource.h"
 #include "Resource/Material/DebugMaterialResource.h"
 #include "Resource/Internal/ViewTargetResource.h"

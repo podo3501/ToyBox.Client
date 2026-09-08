@@ -27,12 +27,10 @@ SceneView& SceneRenderer::AcquireView(
 	const Size& screenSize)
 {
 	Assert(context.target.id < MaxViewCount);
-	auto& slot = m_views[context.target.id];
 
-	if (!slot)
+	auto& slot = m_views[context.target.id];
+	if (!slot || slot->Type() != ViewType::Scene) // 비어있거나, 다른 타입이 자리잡고 있었다면 새로 생성해서 교체
 		slot = std::make_unique<SceneView>(m_repositories, m_defaultMaterial);
-	
-	Assert(slot->Type() == ViewType::Scene); // 같은 ID를 OverlayView가 이미 점유했다면 문제.
 
 	auto* view = static_cast<SceneView*>(slot.get());
 	view->Reset(context, camera, screenSize);
@@ -46,12 +44,10 @@ OverlayView& SceneRenderer::AcquireView(
 	const Size& screenSize)
 {
 	Assert(context.target.id < MaxViewCount);
+
 	auto& slot = m_views[context.target.id];
-
-	if (!slot)
+	if (!slot || slot->Type() != ViewType::Overlay)
 		slot = std::make_unique<OverlayView>(m_repositories, m_uiQuad, m_defaultBrush);
-
-	Assert(slot->Type() == ViewType::Overlay);
 
 	auto* view = static_cast<OverlayView*>(slot.get());
 	view->Reset(context, camera, screenSize);

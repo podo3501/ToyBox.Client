@@ -6,7 +6,7 @@
 #include "Provider/Mesh/TransientMeshProvider.h"
 #include "Definition/RenderData.h"
 #include "Resource/Mesh/TransientMeshResource.h"
-#include "GameClient/Service/Render/Definition/View/SceneFrameData.h"
+#include "GameClient/Service/Render/Definition/View/Overlay/OverlayViewDrawList.h"
 
 static RenderTextItem ToRenderTextItem(DrawTextItem& text)
 {
@@ -54,7 +54,7 @@ static std::optional<RenderUIItem> BakeBuffer(
 }
 
 std::optional<RenderUIItem> BuildUIItems(
-    OverlayDrawList& draws,
+    OverlayViewDrawList& draws,
     TextSystem& textSystem,
     TransientMeshProvider& meshProvider)
 {

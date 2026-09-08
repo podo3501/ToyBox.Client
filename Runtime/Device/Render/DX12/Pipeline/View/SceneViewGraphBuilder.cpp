@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "SceneViewGraphBuilder.h"
 #include "Graph/RenderGraph.h"
-#include "Renderer/Renderers.h"
+#include "Pipeline/Renderers.h"
 #include "Resource/Internal/ViewTargetResource.h"
 
 SceneViewGraphBuilder::SceneViewGraphBuilder(
@@ -35,5 +35,5 @@ ViewRenderOutput SceneViewGraphBuilder::Build(
     graph.ExportResource(target.GetColorID(), RGAccess::SRV);
     graph.ExportResource(target.GetDepthID(), RGAccess::DepthWrite);
 
-    return { view->target.id, false, view->target.viewport, target.GetHeapIndex(), target.GetColorID() };
+    return { view->target.id, view->target.viewport, target.GetHeapIndex(), target.GetColorID() };
 }

@@ -19,9 +19,7 @@ ForwardRenderPipeline::ForwardRenderPipeline(
     m_swapChain{ swapChain },
     m_descFactory{ descFactory },
     m_renderers{ device, shaderLibaray },
-    m_viewPool{ device, taskScheduler, descFactory },
-    m_sceneViewBuilder{ device, descFactory, m_renderers },
-    m_overlayViewBuilder{ descFactory, m_renderers },
+    m_viewComposition{ device, taskScheduler, descFactory, m_renderers, swapChain, m_graph, m_idAllocator },
     m_inspectorRenderers{ device, shaderLibaray },
     //Builders
     m_fontUploadBuilder{ fontUploadBuilder },
@@ -29,9 +27,6 @@ ForwardRenderPipeline::ForwardRenderPipeline(
     m_shadowBuilder{
         m_renderers.GetShadowRenderer(),
         m_descFactory, m_shadowRes },
-    m_compositeBuilder{
-        m_renderers.GetCompositeRenderer(),
-        m_swapChain },
     m_inspectorBuilder{ m_inspectorRenderers.GetInspectorImageRenderer(),
         m_swapChain }
 {}
@@ -64,39 +59,9 @@ std::vector<CompiledTask> ForwardRenderPipeline::BuildFrame(const FramePacket& f
     m_clearBuilder.Build(m_graph, m_hBackBuffer);
     m_shadowBuilder.Build(m_graph, m_hShadow, framePacket.light, framePacket.shadowCasters);
 
-    std::vector<ViewRenderOutput> viewOutputs;
-    viewOutputs.reserve(framePacket.sceneViews.size() + framePacket.overlayViews.size());
-
-    std::bitset<MaxViewCount> activeViews;
     FramePassContext frameCtx{ framePacket.light, m_shadowRes, m_hShadow };
+    m_viewComposition.Build(m_hBackBuffer, framePacket, frameCtx);
 
-    for (auto& view : framePacket.sceneViews)
-    {
-        activeViews.set(view->target.id);
-        auto size = ToSize(view->target.viewport.width, view->target.viewport.height);
-        ViewTargetResource& target = m_viewPool.Acquire(view->target.id, m_idAllocator, size);
-
-        viewOutputs.push_back(m_sceneViewBuilder.Build(m_graph, frameCtx, target, view));
-    }
-
-    for (auto& view : framePacket.overlayViews)
-    {
-        activeViews.set(view->target.id);
-        auto size = ToSize(view->target.viewport.width, view->target.viewport.height);
-        ViewTargetResource& target = m_viewPool.Acquire(view->target.id, m_idAllocator, size);
-
-        viewOutputs.push_back(m_overlayViewBuilder.Build(m_graph, target, view));
-    }
-
-    m_viewPool.PruneUnused(activeViews);
-    std::stable_sort(viewOutputs.begin(), viewOutputs.end(),
-        [](const ViewRenderOutput& lhs, const ViewRenderOutput& rhs)
-        {
-            if (lhs.id != rhs.id)
-                return lhs.id < rhs.id;
-            return !lhs.isOverlay && rhs.isOverlay;
-        });
-    m_compositeBuilder.Build(m_graph, m_hBackBuffer, viewOutputs);
     //shadow map은 텍스쳐가 크기 때문에 작은 물체를 띄우면 안보인다. 
     //m_inspectorBuilder.Build(m_graph, m_hBackBuffer, 10); //인자는 보고싶은 srv Index(Heap Index)를 넣으면 된다. 
 
@@ -108,7 +73,7 @@ std::vector<CompiledTask> ForwardRenderPipeline::BuildFrame(const FramePacket& f
 
 void ForwardRenderPipeline::Update()
 {
-    m_viewPool.Update();
+    m_viewComposition.Update();
 }
 
 void ForwardRenderPipeline::Render(
@@ -121,7 +86,7 @@ void ForwardRenderPipeline::Render(
     ctx.resources = std::make_shared<ResourceContext>(TotalResourceIDCapacity);
 
     m_fontUploadBuilder.ApplyResourceBindings(*ctx.resources);
-    m_viewPool.ApplyResourceBindings(*ctx.resources);
+    m_viewComposition.ApplyResourceBindings(*ctx.resources);
     ctx.SetResource(m_hBackBuffer, m_swapChain.GetCurrentBackbuffer());
     ctx.SetResource(m_hShadow, m_shadowRes.GetResource());
 
