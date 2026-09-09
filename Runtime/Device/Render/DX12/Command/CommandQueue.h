@@ -17,6 +17,9 @@ public:
     CommandList* Begin();
     FenceID End();
 
+    std::vector<CommandList*> BeginParallel(size_t count);
+    FenceID EndParallel(const std::vector<CommandList*>& cmdLists);
+
     FenceID Signal();
     void WaitIdle();
 

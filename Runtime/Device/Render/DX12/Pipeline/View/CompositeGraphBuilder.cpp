@@ -29,8 +29,9 @@ void CompositeGraphBuilder::Build(
             &swapChain = m_swapChain,
             viewOutputs
         ]
-        (CommandList& cmd, TaskContext& ctx)
+        (std::span<CommandList*> cmds, TaskContext& ctx)
         {
+            CommandList& cmd = GetSingleCommandList(cmds);
             swapChain.SetRenderTarget(cmd);
 
             compositeRenderer.PrepareDraw(cmd);

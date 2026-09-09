@@ -23,8 +23,10 @@ void ViewTargetClearGraphBuilder::Build(RenderGraph& graph, const ViewTargetReso
             colorRTVIndex = target.GetColorRTVIndex(),
             depthDSVIndex = target.GetDepthDSVIndex()
         ]
-        (CommandList& cmd, TaskContext& ctx)
+        (std::span<CommandList*> cmds, TaskContext& ctx)
         {
+            CommandList& cmd = GetSingleCommandList(cmds);
+
             auto rtv = descFactory.GetRTVHandle(colorRTVIndex);
             auto dsv = descFactory.GetDSVHandle(depthDSVIndex);
 

@@ -25,8 +25,10 @@ void InspectorGraphBuilder::Build(
             & swapChain = m_swapChain,
             srvIndex
         ]
-        (CommandList& cmd, TaskContext& ctx)
+        (std::span<CommandList*> cmds, TaskContext& ctx)
         {
+            CommandList& cmd = GetSingleCommandList(cmds);
+
             swapChain.SetRenderTarget(cmd);
             swapChain.SetViewport(cmd);
 

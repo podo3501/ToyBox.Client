@@ -16,8 +16,10 @@ void ClearGraphBuilder::Build(RenderGraph& graph, RGResourceID backBufferResID)
         [
             &swapChain = m_swapChain
         ]
-        (CommandList& cmd, TaskContext& ctx)
+        (std::span<CommandList*> cmds, TaskContext& ctx)
         {
+            CommandList& cmd = GetSingleCommandList(cmds);
+
             swapChain.SetRenderTarget(cmd);
             swapChain.Clear(cmd, 0.13f, 0.13f, 0.16f, 1.0f);
         };

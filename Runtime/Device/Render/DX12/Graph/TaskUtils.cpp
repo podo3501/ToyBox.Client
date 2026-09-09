@@ -2,16 +2,17 @@
 #include "TaskUtils.h"
 #include "Task.h"
 
-void ExecuteTaskImmediate(CommandList* cmd, const Task& task, TaskContext& ctx)
+void ExecuteTaskImmediate(std::span<CommandList*> cmds, const Task& task, TaskContext& ctx)
 {
-    Assert(cmd);
+    Assert(!cmds.empty());
     Assert(task.execute != nullptr);
-
-    task.execute(*cmd, ctx);
+    task.execute(cmds, ctx);
 }
 
 void ExecuteRenderPipeline(CommandList& cmd, const vector<CompiledTask>& compiledTasks, TaskContext& ctx)
 {
+    CommandList* cmds[] = { &cmd };
+
     for (auto& compiled : compiledTasks)
-        ExecuteTaskImmediate(&cmd, compiled.task, ctx); // 렌더링 루프에서는 항상 유효한 CommandList가 있으므로 주소(&cmd)를 넘겨줌.
+        ExecuteTaskImmediate(cmds, compiled.task, ctx); // 렌더링 루프에서는 항상 유효한 CommandList가 있으므로 주소(&cmd)를 넘겨줌.
 }

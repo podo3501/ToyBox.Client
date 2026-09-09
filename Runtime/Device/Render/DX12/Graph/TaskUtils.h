@@ -5,7 +5,9 @@ struct TaskContext;
 struct CompiledTask;
 class CommandList;
 
-void ExecuteTaskImmediate(CommandList* cmd, const Task& task, TaskContext& ctx);
+void ExecuteTaskImmediate(
+	std::span<CommandList*> cmds, 
+	const Task& task, TaskContext& ctx);
 
 void ExecuteRenderPipeline(
 	CommandList& cmd, 

@@ -143,13 +143,22 @@ void MeshCreateGraphBuilder::BuildUploadPass(
         upload.Write(mesh.ibResID, RGAccess::CopyDest);
     }
 
-    upload.execute = [this, meshUploads, uploadResID](CommandList& cmd, TaskContext& ctx) mutable {
-        auto& uploadRes = ctx.GetResource(uploadResID);
-        for (auto& mesh : *meshUploads)
+    upload.execute = 
+        [
+            this, 
+            meshUploads, 
+            uploadResID
+        ]
+        (std::span<CommandList*> cmds, TaskContext& ctx) mutable
         {
-            UploadBufferRegion(cmd, uploadRes, mesh.vbRegion);
-            UploadBufferRegion(cmd, uploadRes, mesh.ibRegion);
-        }
+            CommandList& cmd = GetSingleCommandList(cmds);
+
+            auto& uploadRes = ctx.GetResource(uploadResID);
+            for (auto& mesh : *meshUploads)
+            {
+                UploadBufferRegion(cmd, uploadRes, mesh.vbRegion);
+                UploadBufferRegion(cmd, uploadRes, mesh.ibRegion);
+            }
         };
 }
 

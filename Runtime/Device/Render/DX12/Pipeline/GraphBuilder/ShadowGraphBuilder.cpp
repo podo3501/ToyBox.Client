@@ -36,8 +36,9 @@ void ShadowGraphBuilder::Build(
             shadowCasters = std::move(shadowCasters),
             light
         ]
-        (CommandList& cmd, TaskContext& ctx)
+        (std::span<CommandList*> cmds, TaskContext& ctx)
         {
+            CommandList& cmd = GetSingleCommandList(cmds);
             auto dsv = descFactory.GetDSVHandle(shadowRes.GetDSVIndex());
 
             CommandUtils::SetViewport(cmd, 0.f, 0.f, 2048.f, 2048.f);

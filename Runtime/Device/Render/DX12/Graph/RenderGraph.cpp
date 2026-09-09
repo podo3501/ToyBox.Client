@@ -22,7 +22,6 @@ void RenderGraph::ExportResource(RGResourceID resID, RGAccess access)
 RenderPass& RenderGraph::AddGraphicsPass(std::string n) { return AddPass(std::move(n), CommandType::Direct);}
 RenderPass& RenderGraph::AddCopyPass(std::string n) { return AddPass(std::move(n), CommandType::Copy); }
 RenderPass& RenderGraph::AddComputePass(std::string n) { return AddPass(std::move(n), CommandType::Compute); }
-RenderPass& RenderGraph::AddCpuPass(std::string n) { return AddPass(std::move(n), CommandType::None); }
 
 RenderPass& RenderGraph::AddPass(std::string name, CommandType type)
 {
@@ -64,7 +63,7 @@ void RenderGraph::BuildExportPass()
     if (m_exportResources.empty())
         return;
 
-    auto& pass = AddCpuPass("__Export_Internal");
+    auto& pass = AddGraphicsPass("__Export_Internal");
     for (auto& [resID, access] : m_exportResources)
         pass.Write(resID, access);
 }
@@ -102,6 +101,7 @@ std::vector<CompiledTask> RenderGraph::BuildCompiledTasks(
         Task task{};
         task.passName = pass.name;
         task.type = pass.type;
+        task.numParallel = pass.numParallel;
         task.execute = pass.execute;
 
         LocalTaskID taskId = CreateLocalTaskID();

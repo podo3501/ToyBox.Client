@@ -115,10 +115,19 @@ void TextureCubeCreateGraphBuilder::BuildUploadPass(
     for (auto& tex : *textureUploads)
         upload.Write(tex.resID, RGAccess::CopyDest);
 
-    upload.execute = [this, textureUploads, uploadResID](CommandList& cmd, TaskContext& ctx) mutable {
-        auto& uploadRes = ctx.GetResource(uploadResID);
-        for (auto& tex : *textureUploads)
-            UploadTextureCube(cmd, *tex.asset, tex.resource->Get(), uploadRes, tex.offset); // subImages[mip + face * mipCount] 순서로 6면*N밉 전부 CopyTextureRegion
+    upload.execute = 
+        [
+            this, 
+            textureUploads, 
+            uploadResID
+        ]
+        (std::span<CommandList*> cmds, TaskContext& ctx) mutable
+        {
+            CommandList& cmd = GetSingleCommandList(cmds);
+
+            auto& uploadRes = ctx.GetResource(uploadResID);
+            for (auto& tex : *textureUploads)
+                UploadTextureCube(cmd, *tex.asset, tex.resource->Get(), uploadRes, tex.offset); // subImages[mip + face * mipCount] 순서로 6면*N밉 전부 CopyTextureRegion
         };
 }
 

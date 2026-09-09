@@ -59,6 +59,47 @@ FenceID CommandQueue::End()
     return fenceID;
 }
 
+std::vector<CommandList*> CommandQueue::BeginParallel(size_t count)
+{
+    // 중요: 이 함수는 반드시 메인 스레드에서만 호출되어야 함.
+    Assert(!m_currentCmdEntry); // 기존 단일 Begin()과 동시 사용 금지
+
+    std::vector<CommandList*> result;
+    result.reserve(count);
+    for (size_t i = 0; i < count; ++i)
+    {
+        CommandList* entry = GetAvailableCommandList();
+        if (!entry) break; // pool 부족하면 확보된 만큼만 반환 (Begin()의 nullptr 리턴과 동일한 의도)
+
+        entry->Reset();
+        result.push_back(entry);
+    }
+
+    return result;
+}
+
+FenceID CommandQueue::EndParallel(const std::vector<CommandList*>& cmdLists)
+{
+    std::vector<ID3D12CommandList*> raw;
+    raw.reserve(cmdLists.size());
+    for (auto* entry : cmdLists)
+    {
+        entry->Close(); // 여기서 통일해서 처리
+        raw.push_back(entry->Get());
+    }
+
+    if (!raw.empty())
+        m_queue->ExecuteCommandLists(static_cast<UINT>(raw.size()), raw.data());
+
+    FenceID fenceID = Signal();
+    m_lastSubmittedFence = fenceID;
+
+    for (auto* entry : cmdLists)
+        entry->MarkSubmitted(m_fence.Get(), fenceID);
+
+    return fenceID;
+}
+
 FenceID CommandQueue::Signal()
 {
     FenceID id = ++m_fenceID;

@@ -14,7 +14,6 @@ public:
     RenderPass& AddGraphicsPass(std::string name);
     RenderPass& AddCopyPass(std::string name);
     RenderPass& AddComputePass(std::string name);
-    RenderPass& AddCpuPass(std::string name);
 
     std::vector<CompiledTask> Compile();
     void Reset();

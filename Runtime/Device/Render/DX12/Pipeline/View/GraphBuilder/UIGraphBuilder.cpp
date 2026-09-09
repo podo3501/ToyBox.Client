@@ -31,10 +31,11 @@ void UIGraphBuilder::Build(
             packet,
             colorRTVIndex = target.GetColorRTVIndex()
         ]
-        (CommandList& cmd, TaskContext& ctx)
+        (std::span<CommandList*> cmds, TaskContext& ctx)
         {
             Assert(packet->ui);
 
+            CommandList& cmd = GetSingleCommandList(cmds);
             auto rtv = descFactory.GetRTVHandle(colorRTVIndex);
 
             CommandUtils::SetRenderTarget(cmd, rtv);

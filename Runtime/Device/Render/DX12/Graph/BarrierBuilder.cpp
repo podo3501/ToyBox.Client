@@ -21,8 +21,7 @@ static D3D12_RESOURCE_STATES AccessToState(CommandType cmdType, RGAccess access)
 static CommandType ResolveCommandType(CommandType type,
     D3D12_RESOURCE_STATES before, D3D12_RESOURCE_STATES after)
 {
-    if (type == CommandType::None)
-        return CommandType::Direct;
+    Assert(type != CommandType::None);
 
     auto isDirectOnly = [](D3D12_RESOURCE_STATES s) {
         return
@@ -79,8 +78,10 @@ Task CreateBarrierTask(CommandType type, const std::vector<BarrierPlan>& barrier
         [
             barriers = std::move(barriers)
         ]
-        (CommandList& cmd, TaskContext& ctx) 
+        (std::span<CommandList*> cmds, TaskContext& ctx)
         {
+            CommandList& cmd = GetSingleCommandList(cmds);
+
             std::vector<D3D12_RESOURCE_BARRIER> barrierBatch;
             barrierBatch.reserve(barriers.size());
 

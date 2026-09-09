@@ -147,8 +147,10 @@ void FontAtlasUploadGraphBuilder::BuildUploadPass(
             uploads = std::move(uploads),
             layouts = std::move(layouts)
         ]
-        (CommandList& cmd, TaskContext& ctx)
+        (std::span<CommandList*> cmds, TaskContext& ctx)
         {
+            CommandList& cmd = GetSingleCommandList(cmds);
+
             auto& uploadBuffer = ctx.GetResource(uploadResID);
             auto& atlasResource = ctx.GetResource(atlasResID);
 

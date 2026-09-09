@@ -33,8 +33,10 @@ void SkyboxGraphBuilder::Build(
             colorRTVIndex = target.GetColorRTVIndex(),
             depthDSVIndex = target.GetDepthDSVIndex()
         ]
-        (CommandList& cmd, TaskContext& ctx)
+        (std::span<CommandList*> cmds, TaskContext& ctx)
         {
+            CommandList& cmd = GetSingleCommandList(cmds);
+
             auto& envRes = packet->environment;
             if (!envRes || !envRes->IsReady())
                 return; // 환경 없는 씬 - 스카이박스 안 그림

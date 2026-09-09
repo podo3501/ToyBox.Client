@@ -30,6 +30,8 @@ void OpaqueGraphBuilder::Build(
     opaque.Read(shadowResID, RGAccess::SRV);
     opaque.Write(target.GetColorID(), RGAccess::RTV);
     opaque.Write(target.GetDepthID(), RGAccess::DepthWrite);
+    opaque.numParallel = 8;
+
     opaque.execute =
         [
             &descFactory = m_descFactory,
@@ -40,28 +42,62 @@ void OpaqueGraphBuilder::Build(
             colorRTVIndex = target.GetColorRTVIndex(),
             depthDSVIndex = target.GetDepthDSVIndex()
         ]
-        (CommandList& cmd, TaskContext& ctx)
+        (std::span<CommandList*> cmds, TaskContext& ctx)
         {
             auto rtv = descFactory.GetRTVHandle(colorRTVIndex);
             auto dsv = descFactory.GetDSVHandle(depthDSVIndex);
 
-            CommandUtils::SetRenderTarget(cmd, rtv, dsv);
-            CommandUtils::SetViewRect(cmd, packet->target.localViewport);
+            const size_t actual = cmds.size();
+            const size_t total = packet->surface.size();
+            const size_t chunkSize = (total + actual - 1) / actual;
 
-            surfRenderer.PrepareDraw(
-                cmd, 
-                light,
-                packet->target.camera,
-                shadowRes.GetSRVIndex(),
-                packet->environment.get());
-
-            for (auto& item : packet->surface)
+            for (size_t t = 0; t < actual; ++t)
             {
-                auto mesh = static_cast<MeshResource*>(item.mesh.get());
-                auto material = static_cast<MaterialResource*>(item.material.get());
-                
-                surfRenderer.BindPipeline(cmd, item.pipelineState);
-                surfRenderer.Draw(cmd, *mesh, *material, item.world);
+                CommandList& cmd = *cmds[t];
+                CommandUtils::SetRenderTarget(cmd, rtv, dsv);
+                CommandUtils::SetViewRect(cmd, packet->target.localViewport);
+                surfRenderer.PrepareDraw(
+                    cmd, light, packet->target.camera,
+                    shadowRes.GetSRVIndex(), packet->environment.get());
+
+                const size_t begin = t * chunkSize;
+                const size_t end = std::min(begin + chunkSize, total);
+                for (size_t i = begin; i < end; ++i)
+                {
+                    auto& item = packet->surface[i];
+                    auto mesh = static_cast<MeshResource*>(item.mesh.get());
+                    auto material = static_cast<MaterialResource*>(item.material.get());
+                    surfRenderer.BindPipeline(cmd, item.pipelineState);
+                    surfRenderer.Draw(cmd, *mesh, *material, item.world);
+                }
             }
+
+
+
+
+
+
+
+            //auto rtv = descFactory.GetRTVHandle(colorRTVIndex);
+            //auto dsv = descFactory.GetDSVHandle(depthDSVIndex);
+
+            //CommandUtils::SetRenderTarget(cmd, rtv, dsv);
+            //CommandUtils::SetViewRect(cmd, packet->target.localViewport);
+
+            //surfRenderer.PrepareDraw(
+            //    cmd, 
+            //    light,
+            //    packet->target.camera,
+            //    shadowRes.GetSRVIndex(),
+            //    packet->environment.get());
+
+            //for (auto& item : packet->surface)
+            //{
+            //    auto mesh = static_cast<MeshResource*>(item.mesh.get());
+            //    auto material = static_cast<MaterialResource*>(item.material.get());
+            //    
+            //    surfRenderer.BindPipeline(cmd, item.pipelineState);
+            //    surfRenderer.Draw(cmd, *mesh, *material, item.world);
+            //}
         };
 }

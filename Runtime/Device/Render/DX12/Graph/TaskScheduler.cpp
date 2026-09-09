@@ -29,6 +29,8 @@ void TaskScheduler::SubmitTask(const std::vector<CompiledTask>& compiledTasks, s
 
     for (const auto& compiled : compiledTasks)
     {
+        Assert(compiled.task.type != CommandType::None);
+
         TaskHandle handle = remap[compiled.localId];
         TaskEntry* entry = m_tasks.Find(handle);
         Assert(entry);
@@ -99,19 +101,16 @@ void TaskScheduler::Execute()
 
 void TaskScheduler::ExecuteTask(TaskEntry& entry)
 {
-    CommandList* cmd = nullptr;
-    const bool isGpuTask = (entry.task.type != CommandType::None);
+    Assert(entry.task.type != CommandType::None);
+    Assert(entry.task.numParallel > 0);
 
-    if (isGpuTask)
-    {
-        cmd = m_cmdScheduler.Begin(entry.task.type);
-        if (!cmd) 
-            return;
-    }
+    auto* queue = m_cmdScheduler.GetQueue(entry.task.type);
+    auto cmdLists = queue->BeginParallel(entry.task.numParallel);
+    if (cmdLists.empty())
+        return;
 
-    ExecuteTaskImmediate(cmd, entry.task, entry.context);
-
-    entry.fenceID = isGpuTask ? m_cmdScheduler.End() : 0;
+    ExecuteTaskImmediate(cmdLists, entry.task, entry.context);
+    entry.fenceID = queue->EndParallel(cmdLists);
     entry.started = true;
 }
 
@@ -140,9 +139,6 @@ bool TaskScheduler::IsDirectFenceReady(const TaskEntry& entry) const
 bool TaskScheduler::IsTaskFinished(const TaskEntry& entry)
 {
     if (!entry.started) return false;
-    if (entry.task.type == CommandType::None) //cpu task라면 fence 값을 비교해 볼 필요가 없다.
-        return true;
-
     return m_cmdScheduler.IsFenceComplete(entry.task.type, entry.fenceID);
 }
 

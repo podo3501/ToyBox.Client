@@ -3,7 +3,7 @@
 
 struct CommandPoolConfig
 {
-	uint32_t direct{ 4 };
+	uint32_t direct{ 30 };
 	uint32_t copy{ 4 };
 	uint32_t compute{ 4 };
 };

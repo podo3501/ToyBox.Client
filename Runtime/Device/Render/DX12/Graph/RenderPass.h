@@ -32,8 +32,9 @@ struct RenderPass
 {
     std::string name;
     CommandType type;
+    uint32_t numParallel{ 1 };
     std::vector<RGUsage> usages;
-    std::function<void(CommandList&, TaskContext&)> execute;
+    std::function<void(std::span<CommandList*>, TaskContext&)> execute;
 
     void Read(RGResourceID resID, RGAccess s) 
     { 

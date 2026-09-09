@@ -64,9 +64,10 @@ struct Task
 {
     std::string passName{};
     CommandType type{ CommandType::None };
+    uint32_t numParallel{ 1 };
 
     std::vector<TaskHandle> dependencies; //앞에 Task에 의존하는지. Task의 시작지점을 알게 해 준다.
-    std::function<void(CommandList&, TaskContext&)> execute{ nullptr };
+    std::function<void(std::span<CommandList*>, TaskContext&)> execute{ nullptr };
 };
 
 using LocalTaskID = uint32_t;
@@ -79,3 +80,9 @@ struct CompiledTask //RenderGraph에서 pass를 가지고 계산해서 tasks로 
     std::vector<uint32_t> dependencies;
     std::vector<uint32_t> dependents;
 };
+
+inline CommandList& GetSingleCommandList(std::span<CommandList*> cmds)
+{
+    Assert(cmds.size() == 1);
+    return *cmds[0];
+}

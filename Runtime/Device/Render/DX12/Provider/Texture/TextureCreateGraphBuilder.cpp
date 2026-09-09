@@ -141,10 +141,19 @@ void TextureCreateGraphBuilder::BuildUploadPass(
     for (auto& tex : *textureUploads)
         upload.Write(tex.resID, RGAccess::CopyDest);
 
-    upload.execute = [this, textureUploads, uploadResID](CommandList& cmd, TaskContext& ctx) mutable {
-        auto& uploadRes = ctx.GetResource(uploadResID);
-        for (auto& upload : *textureUploads)
-            UploadTexture(cmd, *upload.asset, upload.resource->Get(), uploadRes, upload.offset);
+    upload.execute = 
+        [
+            this, 
+            textureUploads, 
+            uploadResID
+        ]
+        (std::span<CommandList*> cmds, TaskContext& ctx) mutable
+        {
+            CommandList& cmd = GetSingleCommandList(cmds);
+
+            auto& uploadRes = ctx.GetResource(uploadResID);
+            for (auto& upload : *textureUploads)
+                UploadTexture(cmd, *upload.asset, upload.resource->Get(), uploadRes, upload.offset);
         };
 }
 
@@ -159,18 +168,26 @@ void TextureCreateGraphBuilder::BuildMipPass(
         mip.Write(tex.resID, RGAccess::UAV);
     }
 
-    mip.execute = [this, textureUploads](CommandList& cmd, TaskContext& ctx) {
-        for (auto& tex : *textureUploads)
+    mip.execute = 
+        [
+            this, 
+            textureUploads
+        ]
+        (std::span<CommandList*> cmds, TaskContext& ctx)
         {
-            if (!tex.generateMips) continue; //개별적으로 mip을 할지 말지 여기서 결정
+            CommandList& cmd = GetSingleCommandList(cmds);
 
-            m_mipGenerator.GenerateMips(
-                cmd, 
-                m_descFactory.GetBindlessAllocator(), 
-                tex.resource.get(),
-                tex.mipSrvIndices,
-                tex.mipUavIndices);
-        }
+            for (auto& tex : *textureUploads)
+            {
+                if (!tex.generateMips) continue; //개별적으로 mip을 할지 말지 여기서 결정
+
+                m_mipGenerator.GenerateMips(
+                    cmd, 
+                    m_descFactory.GetBindlessAllocator(), 
+                    tex.resource.get(),
+                    tex.mipSrvIndices,
+                    tex.mipUavIndices);
+            }
         };
 }
 
