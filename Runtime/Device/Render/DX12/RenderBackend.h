@@ -34,11 +34,11 @@ private:
 	Device m_device;
 	RenderConfig m_config;
 
+	DescriptorFactory m_descFactory;
+	ResourceFactory m_resFactory;
 	CommandScheduler m_cmdScheduler;
 	TaskScheduler m_taskScheduler;
 	SwapChainPresenter m_swapChain;
-	DescriptorFactory m_descFactory;
-	ResourceFactory m_resFactory;
 	ShaderLibrary m_shaderLibrary;
 	Inspector m_inspector; //코드가 이상할때 조사할수 있게 도와주는 클래스
 	FrameProfiler m_profiler;

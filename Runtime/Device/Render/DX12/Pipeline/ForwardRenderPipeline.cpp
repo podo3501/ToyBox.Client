@@ -76,8 +76,9 @@ void ForwardRenderPipeline::Update()
     m_viewComposition.Update();
 }
 
-void ForwardRenderPipeline::Render(
-    CommandList& cmd, 
+CommandList* ForwardRenderPipeline::Render(
+    CommandList* cmd, 
+    CommandScheduler& cmdScheduler,
     FramePacket framePacket)
 {
     auto compiledTasks = BuildFrame(framePacket); // 매 프레임 그래프 재구성
@@ -90,10 +91,7 @@ void ForwardRenderPipeline::Render(
     ctx.SetResource(m_hBackBuffer, m_swapChain.GetCurrentBackbuffer());
     ctx.SetResource(m_hShadow, m_shadowRes.GetResource());
 
-    auto& bindlessAllocator = m_descFactory.GetBindlessAllocator();
-    cmd.SetBindlessHeap(bindlessAllocator.GetHeap());
-
-    ExecuteRenderPipeline(cmd, compiledTasks, ctx);
+    return ExecuteRenderPipeline(cmd, cmdScheduler, compiledTasks, ctx);
 }
 
 void ForwardRenderPipeline::Resize(const Size& size)

@@ -14,12 +14,18 @@ CommandQueue::~CommandQueue()
 }
 CommandQueue::CommandQueue() = default;
 
-bool CommandQueue::Initialize(Device& device, CommandType type, uint32_t cmdPoolSize)
+bool CommandQueue::Initialize(
+    Device& device, 
+    ID3D12DescriptorHeap* bindlessHeap,
+    CommandType type, 
+    uint32_t cmdPoolSize)
 {
     if (cmdPoolSize <= 0) return false;
 
     ReturnIfFalse(CreateQueue(device, type));
     ReturnIfFalse(CreateFence(device));
+
+    m_bindlessHeap = bindlessHeap;
 
     m_pool.resize(cmdPoolSize);
     for (auto& cmd : m_pool)
@@ -35,7 +41,7 @@ CommandList* CommandQueue::Begin()
     auto entry = GetAvailableCommandList();
     if (!entry) return nullptr;
 
-    entry->Reset();
+    PrepareCommandList(*entry);
     m_currentCmdEntry = entry;
 
     return entry;
@@ -46,58 +52,72 @@ FenceID CommandQueue::End()
     Assert(m_currentCmdEntry);
 
     m_currentCmdEntry->Close();
+    m_pendingSubmission.push_back(m_currentCmdEntry);
+    m_currentCmdEntry = nullptr;
 
-    ID3D12CommandList* lists[] = { m_currentCmdEntry->Get() };
-    m_queue->ExecuteCommandLists(1, lists);
+    std::vector<ID3D12CommandList*> raw;
+    raw.reserve(m_pendingSubmission.size());
+    for (auto* cmdList : m_pendingSubmission)
+        raw.push_back(cmdList->Get());
+
+    m_queue->ExecuteCommandLists(static_cast<UINT>(raw.size()), raw.data());
 
     FenceID fenceID = Signal();
     m_lastSubmittedFence = fenceID;
 
-    m_currentCmdEntry->MarkSubmitted(m_fence.Get(), fenceID); // 재사용하기 위해서 fence 기록
+    for (auto* cmdList : m_pendingSubmission)
+        cmdList->MarkSubmitted(m_fence.Get(), fenceID);
 
-    m_currentCmdEntry = nullptr;
+    m_pendingSubmission.clear();
     return fenceID;
 }
 
 std::vector<CommandList*> CommandQueue::BeginParallel(size_t count)
 {
-    // 중요: 이 함수는 반드시 메인 스레드에서만 호출되어야 함.
-    Assert(!m_currentCmdEntry); // 기존 단일 Begin()과 동시 사용 금지
+    Assert(m_currentCmdEntry); // Begin()으로 연 상태에서만 호출 가능
+
+    m_currentCmdEntry->Close();
+    m_pendingSubmission.push_back(m_currentCmdEntry);
+    m_currentCmdEntry = nullptr;
 
     std::vector<CommandList*> result;
     result.reserve(count);
     for (size_t i = 0; i < count; ++i)
     {
         CommandList* entry = GetAvailableCommandList();
-        if (!entry) break; // pool 부족하면 확보된 만큼만 반환 (Begin()의 nullptr 리턴과 동일한 의도)
+        if (!entry) break;
 
-        entry->Reset();
+        PrepareCommandList(*entry);
         result.push_back(entry);
     }
-
     return result;
 }
 
-FenceID CommandQueue::EndParallel(const std::vector<CommandList*>& cmdLists)
+CommandList* CommandQueue::EndParallel(std::span<CommandList*> cmdLists)
 {
-    std::vector<ID3D12CommandList*> raw;
-    raw.reserve(cmdLists.size());
+    Assert(!cmdLists.empty());
+
     for (auto* entry : cmdLists)
     {
-        entry->Close(); // 여기서 통일해서 처리
-        raw.push_back(entry->Get());
+        entry->Close();
+        m_pendingSubmission.push_back(entry);
     }
 
-    if (!raw.empty())
-        m_queue->ExecuteCommandLists(static_cast<UINT>(raw.size()), raw.data());
+    auto entry = GetAvailableCommandList();
+    if (!entry) return nullptr; // pool 고갈 - 이전에 짚은 이슈 여전히 남음
 
-    FenceID fenceID = Signal();
-    m_lastSubmittedFence = fenceID;
+    PrepareCommandList(*entry);
+    m_currentCmdEntry = entry;
 
-    for (auto* entry : cmdLists)
-        entry->MarkSubmitted(m_fence.Get(), fenceID);
+    return entry;
+}
 
-    return fenceID;
+void CommandQueue::PrepareCommandList(CommandList& cmd)
+{
+    cmd.Reset();
+
+    if (m_bindlessHeap)
+        cmd.SetBindlessHeap(m_bindlessHeap);
 }
 
 FenceID CommandQueue::Signal()

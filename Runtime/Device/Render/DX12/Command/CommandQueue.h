@@ -4,6 +4,7 @@
 
 using Microsoft::WRL::ComPtr;
 
+struct ID3D12DescriptorHeap;
 class Device;
 class CommandList;
 
@@ -13,12 +14,18 @@ public:
     ~CommandQueue();
     CommandQueue();
 
-    bool Initialize(Device& device, CommandType type, uint32_t cmdPoolSize);
+    bool Initialize(
+        Device& device, 
+        ID3D12DescriptorHeap* bindlessHeap,
+        CommandType type, 
+        uint32_t cmdPoolSize);
+
     CommandList* Begin();
     FenceID End();
 
+    // Render 전용: Begin()~End() 사이에서만 유효
     std::vector<CommandList*> BeginParallel(size_t count);
-    FenceID EndParallel(const std::vector<CommandList*>& cmdLists);
+    CommandList* EndParallel(std::span<CommandList*> cmdLists);
 
     FenceID Signal();
     void WaitIdle();
@@ -30,9 +37,11 @@ public:
 private:
     bool CreateQueue(Device& device, CommandType type);
     bool CreateFence(Device& device);
+    void PrepareCommandList(CommandList& cmd);
     CommandList* GetAvailableCommandList();
     void WaitFence(FenceID fenceID);
 
+    ID3D12DescriptorHeap* m_bindlessHeap{ nullptr };
     ComPtr<ID3D12CommandQueue> m_queue;
     ComPtr<ID3D12Fence> m_fence;
 
@@ -44,5 +53,6 @@ private:
     FenceID m_lastSubmittedFence{ InvalidFenceID }; //여기까지 명령어가 들어가 있는 펜스값. GetCompletedValue() 값은 실제로 다 끝난 펜스값.
 
     CommandList* m_currentCmdEntry{ nullptr };
+    std::vector<CommandList*> m_pendingSubmission;
 };
 

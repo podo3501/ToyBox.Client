@@ -15,7 +15,8 @@ OpaqueGraphBuilder::OpaqueGraphBuilder(
     SurfaceRenderer& surfRenderer, 
     DescriptorFactory& descFactory) :
     m_surfRenderer{ surfRenderer },
-    m_descFactory{ descFactory }
+    m_descFactory{ descFactory },
+    m_recordPool{ 10 }
 {}
 
 void OpaqueGraphBuilder::Build(
@@ -30,13 +31,14 @@ void OpaqueGraphBuilder::Build(
     opaque.Read(shadowResID, RGAccess::SRV);
     opaque.Write(target.GetColorID(), RGAccess::RTV);
     opaque.Write(target.GetDepthID(), RGAccess::DepthWrite);
-    opaque.numParallel = 8;
+    opaque.numParallel = 2;
 
     opaque.execute =
         [
             &descFactory = m_descFactory,
             &surfRenderer = m_surfRenderer,
             &shadowRes = shadowRes,
+            &recordPool = m_recordPool,
             light,
             packet,
             colorRTVIndex = target.GetColorRTVIndex(),
@@ -51,7 +53,7 @@ void OpaqueGraphBuilder::Build(
             const size_t total = packet->surface.size();
             const size_t chunkSize = (total + actual - 1) / actual;
 
-            for (size_t t = 0; t < actual; ++t)
+            recordPool.ExecuteParallel(actual, [&](size_t t) 
             {
                 CommandList& cmd = *cmds[t];
                 CommandUtils::SetRenderTarget(cmd, rtv, dsv);
@@ -70,34 +72,6 @@ void OpaqueGraphBuilder::Build(
                     surfRenderer.BindPipeline(cmd, item.pipelineState);
                     surfRenderer.Draw(cmd, *mesh, *material, item.world);
                 }
-            }
-
-
-
-
-
-
-
-            //auto rtv = descFactory.GetRTVHandle(colorRTVIndex);
-            //auto dsv = descFactory.GetDSVHandle(depthDSVIndex);
-
-            //CommandUtils::SetRenderTarget(cmd, rtv, dsv);
-            //CommandUtils::SetViewRect(cmd, packet->target.localViewport);
-
-            //surfRenderer.PrepareDraw(
-            //    cmd, 
-            //    light,
-            //    packet->target.camera,
-            //    shadowRes.GetSRVIndex(),
-            //    packet->environment.get());
-
-            //for (auto& item : packet->surface)
-            //{
-            //    auto mesh = static_cast<MeshResource*>(item.mesh.get());
-            //    auto material = static_cast<MaterialResource*>(item.material.get());
-            //    
-            //    surfRenderer.BindPipeline(cmd, item.pipelineState);
-            //    surfRenderer.Draw(cmd, *mesh, *material, item.world);
-            //}
+            });
         };
 }

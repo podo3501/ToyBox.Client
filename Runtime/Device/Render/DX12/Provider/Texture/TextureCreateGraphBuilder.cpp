@@ -183,7 +183,6 @@ void TextureCreateGraphBuilder::BuildMipPass(
 
                 m_mipGenerator.GenerateMips(
                     cmd, 
-                    m_descFactory.GetBindlessAllocator(), 
                     tex.resource.get(),
                     tex.mipSrvIndices,
                     tex.mipUavIndices);

@@ -102,15 +102,15 @@ void TaskScheduler::Execute()
 void TaskScheduler::ExecuteTask(TaskEntry& entry)
 {
     Assert(entry.task.type != CommandType::None);
-    Assert(entry.task.numParallel > 0);
+    Assert(entry.task.numParallel <= 1); // 방어: Render용 pass가 실수로 TaskScheduler 경로로 흘러들어오는 걸 여기서 걸러냄
 
     auto* queue = m_cmdScheduler.GetQueue(entry.task.type);
-    auto cmdLists = queue->BeginParallel(entry.task.numParallel);
-    if (cmdLists.empty())
-        return;
+    CommandList* cmd = queue->Begin();
+    if (!cmd) return;
 
-    ExecuteTaskImmediate(cmdLists, entry.task, entry.context);
-    entry.fenceID = queue->EndParallel(cmdLists);
+    CommandList* cmds[] = { cmd };
+    ExecuteTaskImmediate(cmds, entry.task, entry.context);
+    entry.fenceID = queue->End();
     entry.started = true;
 }
 

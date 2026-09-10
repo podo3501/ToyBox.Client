@@ -15,6 +15,7 @@ struct FrameData;
 struct FramePacket;
 struct CompiledTask;
 class Device;
+class CommandScheduler;
 class ShaderLibrary;
 class ResourceFactory;
 class DescriptorFactory;
@@ -33,8 +34,9 @@ public:
         FontAtlasUploadGraphBuilder& fontUploadBuilder);
     bool Initialize(const Size& screenSize, const Size& shadowMapSize);
     void Update();
-    void Render(
-        CommandList& cmd, 
+    CommandList* Render(
+        CommandList* cmd, 
+        CommandScheduler& cmdScheduler,
         FramePacket framePacket);
     void Resize(const Size& size);
 

@@ -7,11 +7,14 @@ using Microsoft::WRL::ComPtr;
 CommandScheduler::~CommandScheduler() { WaitIdle(); }
 CommandScheduler::CommandScheduler() = default;
 
-bool CommandScheduler::Initialize(Device& device, const CommandPoolConfig& config)
+bool CommandScheduler::Initialize(
+    Device& device, 
+    ID3D12DescriptorHeap* bindlessHeap, 
+    const CommandPoolConfig& config)
 {
-    ReturnIfFalse(m_directQueue.Initialize(device, CommandType::Direct, config.direct));
-    ReturnIfFalse(m_copyQueue.Initialize(device, CommandType::Copy, config.copy));
-    ReturnIfFalse(m_computeQueue.Initialize(device, CommandType::Compute, config.compute));
+    ReturnIfFalse(m_directQueue.Initialize(device, bindlessHeap, CommandType::Direct, config.direct));
+    ReturnIfFalse(m_copyQueue.Initialize(device, nullptr, CommandType::Copy, config.copy));
+    ReturnIfFalse(m_computeQueue.Initialize(device, bindlessHeap, CommandType::Compute, config.compute));
     
     return true;
 }
@@ -36,6 +39,18 @@ FenceID CommandScheduler::End()
     auto fenceID = m_currentQueue->End();
     m_currentQueue = nullptr;
     return fenceID;
+}
+
+std::vector<CommandList*> CommandScheduler::BeginParallel(size_t count)
+{
+    Assert(m_currentQueue); // Begin()으로 연 프레임 도중이어야 함
+    return m_currentQueue->BeginParallel(count);
+}
+
+CommandList* CommandScheduler::EndParallel(std::span<CommandList*> cmds)
+{
+    Assert(m_currentQueue);
+    return m_currentQueue->EndParallel(cmds);
 }
 
 FenceID CommandScheduler::SignalQueue(CommandType type)

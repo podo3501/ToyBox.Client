@@ -676,6 +676,9 @@
     <ClInclude Include="Render\DX12\Pipeline\Renderers.h">
       <Filter>Render\DX12\Pipeline</Filter>
     </ClInclude>
+    <ClInclude Include="Render\DX12\Pipeline\View\GraphBuilder\RenderRecordPool.h">
+      <Filter>Render\DX12\Pipeline\View\GraphBuilder</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -1098,6 +1101,9 @@
     </ClCompile>
     <ClCompile Include="Render\DX12\Pipeline\Renderers.cpp">
       <Filter>Render\DX12\Pipeline</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Pipeline\View\GraphBuilder\RenderRecordPool.cpp">
+      <Filter>Render\DX12\Pipeline\View\GraphBuilder</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

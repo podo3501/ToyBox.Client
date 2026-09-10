@@ -1,5 +1,6 @@
 #pragma once
 #include "Graph/RGTypes.h"
+#include "RenderRecordPool.h"
 
 struct DirectionalLightData;
 struct SceneViewPacket;
@@ -29,4 +30,5 @@ public:
 private:
     SurfaceRenderer& m_surfRenderer;
     DescriptorFactory& m_descFactory;
+    RenderRecordPool m_recordPool;
 };

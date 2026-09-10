@@ -6,10 +6,10 @@ RenderBackend::~RenderBackend() = default;
 RenderBackend::RenderBackend(const RenderConfig& config) :
     m_device{ config.enableDebugLayer },
     m_config{ config },
-    m_taskScheduler{ m_cmdScheduler },
-    m_swapChain{ m_cmdScheduler },
     m_descFactory{ m_device },
     m_resFactory{ m_device },
+    m_taskScheduler{ m_cmdScheduler },
+    m_swapChain{ m_cmdScheduler },
     m_resProviderSet{ m_device, m_taskScheduler, m_resFactory, m_descFactory },
     m_transientMeshProvider{ m_frameUploadPools, m_descFactory },
     m_textSystem{ m_device, m_descFactory, m_resFactory },
@@ -26,10 +26,10 @@ bool RenderBackend::Initialize(HWND hwnd, const Size& screenSize, std::span<cons
 {
     Size shadowMapSize = { 2048, 2048 };
 
-    ReturnIfFalse(m_cmdScheduler.Initialize(m_device, m_config.commandPools));
+    ReturnIfFalse(m_descFactory.Initialize(m_config.descriptors));
+    ReturnIfFalse(m_cmdScheduler.Initialize(m_device, m_descFactory.GetBindlessAllocator().GetHeap(), m_config.commandPools));
     SwapChainDesc desc{ hwnd, screenSize, m_config.allowTearing };
     ReturnIfFalse(m_swapChain.Initialize(m_device, desc));
-    ReturnIfFalse(m_descFactory.Initialize(m_config.descriptors));
     ReturnIfFalse(m_shaderLibrary.Initialize(registryShaders));
     ReturnIfFalse(m_profiler.Initialize(m_device, m_cmdScheduler, m_resFactory));
     ReturnIfFalse(m_resProviderSet.Initialize(m_shaderLibrary));
@@ -67,7 +67,8 @@ void RenderBackend::Render(SceneFrameData frame)
     {
         m_profiler.BeginFrame(*cmd, m_frameIndex);
 
-        m_pipeline.Render(*cmd, 
+        cmd = m_pipeline.Render(cmd,
+            m_cmdScheduler,
             BuildPacket(
                 frame, 
                 m_textSystem, 

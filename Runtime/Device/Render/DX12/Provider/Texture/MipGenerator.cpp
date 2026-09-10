@@ -2,7 +2,6 @@
 #include "MipGenerator.h"
 #include "Core/Device.h"
 #include "Shader/ShaderLibrary.h"
-#include "Allocator/BindlessDescriptorAllocator.h"
 #include "Command/CommandList.h"
 #include "Resource/Texture/TextureResource.h"
 #include "Pipeline/Renderer/RootSignatureBuilder.h"
@@ -101,7 +100,6 @@ ID3D12PipelineState* MipGenerator::GetPSO(MipType type) const
 
 void MipGenerator::GenerateMips(
     CommandList& cmd, 
-    BindlessDescriptorAllocator& srvAllocator, 
     TextureResource* texResource,
     const std::vector<UINT>& mipSrvIndices,
     const std::vector<UINT>& mipUavIndices)
@@ -116,9 +114,6 @@ void MipGenerator::GenerateMips(
     if (mipCount <= 1)
         return;
 
-    ID3D12DescriptorHeap* heaps[] = { srvAllocator.GetHeap() };
-
-    cmd->SetDescriptorHeaps(1, heaps);
     cmd->SetComputeRootSignature(m_rootSignature.Get());
 
     const MipType mipType = GetMipType(texResource->GetDesc().colorSpace);

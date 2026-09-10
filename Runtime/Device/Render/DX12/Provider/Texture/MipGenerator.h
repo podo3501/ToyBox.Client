@@ -6,7 +6,6 @@
 class Device;
 class ShaderLibrary;
 class CommandList;
-class BindlessDescriptorAllocator;
 class TextureResource;
 
 using Microsoft::WRL::ComPtr;
@@ -26,7 +25,6 @@ public:
     bool Initialize(ShaderLibrary& shaderLibrary);
     void GenerateMips(
         CommandList& cmd,
-        BindlessDescriptorAllocator& srvAllocator,
         TextureResource* texResource,
         const std::vector<UINT>& mipSrvIndices,
         const std::vector<UINT>& mipUavIndices);

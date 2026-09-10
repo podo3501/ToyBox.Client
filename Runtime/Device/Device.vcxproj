@@ -90,6 +90,7 @@
     <ClInclude Include="Render\DX12\Pipeline\View\CompositeGraphBuilder.h" />
     <ClInclude Include="Render\DX12\Pipeline\View\GraphBuilder\DebugSurfaceGraphBuilder.h" />
     <ClInclude Include="Render\DX12\Pipeline\View\GraphBuilder\OpaqueGraphBuilder.h" />
+    <ClInclude Include="Render\DX12\Pipeline\View\GraphBuilder\RenderRecordPool.h" />
     <ClInclude Include="Render\DX12\Pipeline\View\GraphBuilder\SkyboxGraphBuilder.h" />
     <ClInclude Include="Render\DX12\Pipeline\View\GraphBuilder\UIGraphBuilder.h" />
     <ClInclude Include="Render\DX12\Pipeline\View\GraphBuilder\ViewTargetClearGraphBuilder.h" />
@@ -262,6 +263,7 @@
     <ClCompile Include="Render\DX12\Pipeline\View\CompositeGraphBuilder.cpp" />
     <ClCompile Include="Render\DX12\Pipeline\View\GraphBuilder\DebugSurfaceGraphBuilder.cpp" />
     <ClCompile Include="Render\DX12\Pipeline\View\GraphBuilder\OpaqueGraphBuilder.cpp" />
+    <ClCompile Include="Render\DX12\Pipeline\View\GraphBuilder\RenderRecordPool.cpp" />
     <ClCompile Include="Render\DX12\Pipeline\View\GraphBuilder\SkyboxGraphBuilder.cpp" />
     <ClCompile Include="Render\DX12\Pipeline\View\GraphBuilder\UIGraphBuilder.cpp" />
     <ClCompile Include="Render\DX12\Pipeline\View\GraphBuilder\ViewTargetClearGraphBuilder.cpp" />
