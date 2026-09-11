@@ -119,7 +119,7 @@ void MipGenerator::GenerateMips(
     const MipType mipType = GetMipType(texResource->GetDesc().colorSpace);
     auto* pso = GetPSO(mipType);
     if (!pso) return;
-    cmd->SetPipelineState(pso);
+    cmd.SetPipelineState(pso);
 
     for (UINT srcMip = 0; srcMip < mipCount - 1; ++srcMip)
     {

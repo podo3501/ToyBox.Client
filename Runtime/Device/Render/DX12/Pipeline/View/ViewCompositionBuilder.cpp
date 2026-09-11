@@ -2,6 +2,7 @@
 #include "ViewCompositionBuilder.h"
 #include "Graph/RenderGraph.h"
 #include "Pipeline/Renderers.h"
+#include "Definition/RenderData.h"
 
 ViewCompositionBuilder::ViewCompositionBuilder(
     Device& device,

@@ -139,27 +139,20 @@ void SurfaceRenderer::PrepareDraw(
     uint32_t shadowSRVIndex,
     const EnvironmentResource* envRes)
 {
-    m_currentPSO = nullptr;
-
     auto frameCBAddress = UploadFrameCB(
         light,
         camera,
         shadowSRVIndex,
         envRes);
 
-    cmd->SetGraphicsRootSignature(m_rootSignature.Get());
+    cmd.SetGraphicsRootSignature(m_rootSignature.Get());
     cmd->SetGraphicsRootConstantBufferView(Core::ToIndex(RootSlot::FrameCB), frameCBAddress);
 }
 
 void SurfaceRenderer::BindPipeline(CommandList& cmd, const PipelineState& pipelineState)
 {
     auto* pso = GetPipeline(pipelineState);
-    if (m_currentPSO == pso)
-        return;
-
-    cmd->SetPipelineState(pso);
-    cmd->IASetPrimitiveTopology(ToD3D12_Draw(pipelineState.topologyType));
-    m_currentPSO = pso;
+    cmd.SetPipelineState(pso, pipelineState.topologyType);
 }
 
 D3D12_GPU_VIRTUAL_ADDRESS SurfaceRenderer::UploadFrameCB(

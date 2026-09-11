@@ -4,6 +4,8 @@
 #include "Graph/RenderGraph.h"
 #include "Resource/Internal/ViewTargetResource.h"
 #include "Pipeline/Renderer/CompositeRenderer.h"
+#include "Definition/RenderData.h"
+#include "Task/Types/TaskCommandLists.h"
 
 CompositeGraphBuilder::CompositeGraphBuilder(
     CompositeRenderer& compositeRenderer,
@@ -29,9 +31,9 @@ void CompositeGraphBuilder::Build(
             &swapChain = m_swapChain,
             viewOutputs
         ]
-        (std::span<CommandList*> cmds, TaskContext& ctx)
+        (TaskCommandLists cmds, TaskContext& ctx)
         {
-            CommandList& cmd = GetSingleCommandList(cmds);
+            CommandList& cmd = cmds.Single();
             swapChain.SetRenderTarget(cmd);
 
             compositeRenderer.PrepareDraw(cmd);

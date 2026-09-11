@@ -4,7 +4,7 @@
 #include "TextureUtils.h"
 #include "Resource/Texture/TextureCubeResource.h"
 #include "Core/Foundation/Align.h"
-#include "Graph/TaskScheduler.h"
+#include "Task/TaskScheduler.h"
 #include "Factory/DescriptorFactory.h"
 #include "Factory/ResourceFactory.h"
 #include "RenderConstants.h"
@@ -121,9 +121,9 @@ void TextureCubeCreateGraphBuilder::BuildUploadPass(
             textureUploads, 
             uploadResID
         ]
-        (std::span<CommandList*> cmds, TaskContext& ctx) mutable
+        (TaskCommandLists cmds, TaskContext& ctx) mutable
         {
-            CommandList& cmd = GetSingleCommandList(cmds);
+            CommandList& cmd = cmds.Single();
 
             auto& uploadRes = ctx.GetResource(uploadResID);
             for (auto& tex : *textureUploads)

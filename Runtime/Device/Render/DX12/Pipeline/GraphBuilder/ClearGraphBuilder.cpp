@@ -2,6 +2,7 @@
 #include "ClearGraphBuilder.h"
 #include "SwapChainPresenter.h"
 #include "Graph/RenderGraph.h"
+#include "Task/Types/TaskCommandLists.h"
 
 ClearGraphBuilder::~ClearGraphBuilder() = default;
 ClearGraphBuilder::ClearGraphBuilder(SwapChainPresenter& swapChain) noexcept :
@@ -16,9 +17,9 @@ void ClearGraphBuilder::Build(RenderGraph& graph, RGResourceID backBufferResID)
         [
             &swapChain = m_swapChain
         ]
-        (std::span<CommandList*> cmds, TaskContext& ctx)
+        (TaskCommandLists cmds, TaskContext& ctx)
         {
-            CommandList& cmd = GetSingleCommandList(cmds);
+            CommandList& cmd = cmds.Single();
 
             swapChain.SetRenderTarget(cmd);
             swapChain.Clear(cmd, 0.13f, 0.13f, 0.16f, 1.0f);

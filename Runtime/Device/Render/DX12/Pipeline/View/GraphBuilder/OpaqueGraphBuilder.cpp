@@ -9,6 +9,8 @@
 #include "Resource/Material/MaterialResource.h"
 #include "Resource/Internal/ShadowResource.h"
 #include "Resource/Internal/ViewTargetResource.h"
+#include "Definition/RenderData.h"
+#include "Task/Types/TaskCommandLists.h"
 
 OpaqueGraphBuilder::~OpaqueGraphBuilder() = default;
 OpaqueGraphBuilder::OpaqueGraphBuilder(
@@ -27,11 +29,14 @@ void OpaqueGraphBuilder::Build(
     std::shared_ptr<SceneViewPacket> packet,
     const ViewTargetResource& target)
 {
+    Assert(!packet->surface.empty());
+
     auto& opaque = graph.AddGraphicsPass("Opaque_View" + std::to_string(packet->target.id));
     opaque.Read(shadowResID, RGAccess::SRV);
     opaque.Write(target.GetColorID(), RGAccess::RTV);
     opaque.Write(target.GetDepthID(), RGAccess::DepthWrite);
-    opaque.numParallel = 2;
+    opaque.numParallel = static_cast<uint32_t>(
+        std::min<size_t>(3, std::max<size_t>(1, packet->surface.size())));
 
     opaque.execute =
         [
@@ -44,18 +49,18 @@ void OpaqueGraphBuilder::Build(
             colorRTVIndex = target.GetColorRTVIndex(),
             depthDSVIndex = target.GetDepthDSVIndex()
         ]
-        (std::span<CommandList*> cmds, TaskContext& ctx)
+        (TaskCommandLists cmds, TaskContext& ctx)
         {
             auto rtv = descFactory.GetRTVHandle(colorRTVIndex);
             auto dsv = descFactory.GetDSVHandle(depthDSVIndex);
 
-            const size_t actual = cmds.size();
             const size_t total = packet->surface.size();
+            const size_t actual = std::min(cmds.Size(), total);
             const size_t chunkSize = (total + actual - 1) / actual;
 
             recordPool.ExecuteParallel(actual, [&](size_t t) 
             {
-                CommandList& cmd = *cmds[t];
+                CommandList& cmd = cmds[t];
                 CommandUtils::SetRenderTarget(cmd, rtv, dsv);
                 CommandUtils::SetViewRect(cmd, packet->target.localViewport);
                 surfRenderer.PrepareDraw(

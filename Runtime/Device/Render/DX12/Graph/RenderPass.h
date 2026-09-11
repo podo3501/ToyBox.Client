@@ -2,6 +2,7 @@
 #include "RGTypes.h"
 #include "Command/CommandType.h"
 
+struct TaskCommandLists;
 struct TaskContext;
 class CommandList;
 
@@ -34,7 +35,7 @@ struct RenderPass
     CommandType type;
     uint32_t numParallel{ 1 };
     std::vector<RGUsage> usages;
-    std::function<void(std::span<CommandList*>, TaskContext&)> execute;
+    std::function<void(TaskCommandLists, TaskContext&)> execute;
 
     void Read(RGResourceID resID, RGAccess s) 
     { 

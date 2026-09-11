@@ -8,6 +8,8 @@
 #include "Resource/Mesh/MeshResource.h"
 #include "Resource/Brush/BrushResource.h"
 #include "Resource/Internal/ViewTargetResource.h"
+#include "Definition/RenderData.h"
+#include "Task/Types/TaskCommandLists.h"
 
 UIGraphBuilder::~UIGraphBuilder() = default;
 UIGraphBuilder::UIGraphBuilder(
@@ -31,11 +33,11 @@ void UIGraphBuilder::Build(
             packet,
             colorRTVIndex = target.GetColorRTVIndex()
         ]
-        (std::span<CommandList*> cmds, TaskContext& ctx)
+        (TaskCommandLists cmds, TaskContext& ctx)
         {
             Assert(packet->ui);
 
-            CommandList& cmd = GetSingleCommandList(cmds);
+            CommandList& cmd = cmds.Single();
             auto rtv = descFactory.GetRTVHandle(colorRTVIndex);
 
             CommandUtils::SetRenderTarget(cmd, rtv);

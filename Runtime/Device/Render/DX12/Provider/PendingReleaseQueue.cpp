@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "PendingReleaseQueue.h"
-#include "Graph/TaskScheduler.h"
+#include "Task/TaskScheduler.h"
 
 PendingReleaseQueue::~PendingReleaseQueue() = default;
 PendingReleaseQueue::PendingReleaseQueue(TaskScheduler& taskScheduler) noexcept :

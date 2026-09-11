@@ -1,7 +1,9 @@
 #pragma once
 #include "RenderPass.h"
 #include "RenderGraphDefinitions.h"
-#include "Task.h"
+#include "Task/Types/LocalTaskID.h"
+
+struct CompiledTask;
 
 class RenderGraph
 {

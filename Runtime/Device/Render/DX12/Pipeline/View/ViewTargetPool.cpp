@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "ViewTargetPool.h"
 #include "Resource/Internal/ViewTargetResource.h"
-#include "Graph/Task.h"
+#include "Task/Types/ResourceContext.h"
 
 ViewTargetPool::~ViewTargetPool() = default;
 ViewTargetPool::ViewTargetPool(

@@ -7,6 +7,8 @@
 #include "Resource/Mesh/MeshResource.h"
 #include "Resource/Internal/ShadowResource.h"
 #include "Factory/DescriptorFactory.h"
+#include "Definition/RenderData.h"
+#include "Task/Types/TaskCommandLists.h"
 
 ShadowGraphBuilder::~ShadowGraphBuilder() = default;
 
@@ -36,9 +38,9 @@ void ShadowGraphBuilder::Build(
             shadowCasters = std::move(shadowCasters),
             light
         ]
-        (std::span<CommandList*> cmds, TaskContext& ctx)
+        (TaskCommandLists cmds, TaskContext& ctx)
         {
-            CommandList& cmd = GetSingleCommandList(cmds);
+            CommandList& cmd = cmds.Single();
             auto dsv = descFactory.GetDSVHandle(shadowRes.GetDSVIndex());
 
             CommandUtils::SetViewport(cmd, 0.f, 0.f, 2048.f, 2048.f);

@@ -5,7 +5,7 @@
 #include "TextureUtils.h"
 #include "Resource/Texture/TextureResource.h"
 #include "Core/Foundation/Align.h"
-#include "Graph/TaskScheduler.h"
+#include "Task/TaskScheduler.h"
 #include "Factory/DescriptorFactory.h"
 #include "Factory/ResourceFactory.h"
 #include "RenderConstants.h"
@@ -147,9 +147,9 @@ void TextureCreateGraphBuilder::BuildUploadPass(
             textureUploads, 
             uploadResID
         ]
-        (std::span<CommandList*> cmds, TaskContext& ctx) mutable
+        (TaskCommandLists cmds, TaskContext& ctx) mutable
         {
-            CommandList& cmd = GetSingleCommandList(cmds);
+            CommandList& cmd = cmds.Single();
 
             auto& uploadRes = ctx.GetResource(uploadResID);
             for (auto& upload : *textureUploads)
@@ -173,9 +173,9 @@ void TextureCreateGraphBuilder::BuildMipPass(
             this, 
             textureUploads
         ]
-        (std::span<CommandList*> cmds, TaskContext& ctx)
+        (TaskCommandLists cmds, TaskContext& ctx)
         {
-            CommandList& cmd = GetSingleCommandList(cmds);
+            CommandList& cmd = cmds.Single();
 
             for (auto& tex : *textureUploads)
             {

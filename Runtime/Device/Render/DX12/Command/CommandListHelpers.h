@@ -1,4 +1,5 @@
 #pragma once
+#include "Core/Foundation/Geometry2D.h"
 #include "../d3dx12.h"
 #include <concepts>
 #include "../Resource/Resource.h"

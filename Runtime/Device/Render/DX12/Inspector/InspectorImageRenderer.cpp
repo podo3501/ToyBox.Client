@@ -98,19 +98,12 @@ void InspectorImageRenderer::PrepareFrame()
 
 void InspectorImageRenderer::BeginFrame(CommandList& cmd)
 {
-    m_currentPSO = nullptr;
-    cmd->SetGraphicsRootSignature(m_rootSignature.Get());
+    cmd.SetGraphicsRootSignature(m_rootSignature.Get());
 }
 
 void InspectorImageRenderer::BindPipeline(CommandList& cmd)
 {
-    auto* pso = GetPipeline(m_pipelineState);
-    if (m_currentPSO == pso)
-        return;
-
-    cmd->SetPipelineState(pso);
-    cmd->IASetPrimitiveTopology(ToD3D12_Draw(m_pipelineState.topologyType));
-    m_currentPSO = pso;
+    cmd.SetPipelineState(GetPipeline(m_pipelineState), m_pipelineState.topologyType);
 }
 
 void InspectorImageRenderer::Draw(CommandList& cmd, UINT srvIndex)

@@ -2,13 +2,12 @@
 #include "Graph/RenderGraph.h"
 #include "Graph/RGResourceIDGenerator.h"
 
+struct ResourceContext;
 struct MeshLoadRequest;
 struct MeshUploadEntry;
 class TaskScheduler;
 class ResourceFactory;
 class DescriptorFactory;
-
-using Microsoft::WRL::ComPtr;
 
 class MeshCreateGraphBuilder
 {

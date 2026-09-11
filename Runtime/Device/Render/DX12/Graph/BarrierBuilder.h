@@ -1,7 +1,7 @@
 #pragma once
 #include "RenderPass.h"
-#include "Task.h"
 
+struct Task;
 struct ResourceStateTracker;
 
 BarrierGroups BuildBarriers(

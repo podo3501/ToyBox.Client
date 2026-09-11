@@ -33,6 +33,9 @@ void FrameProfiler::BeginFrame(CommandList& cmd, uint64_t frameIndex)
         m_currentSlot * QueriesPerFrame);
 
     m_cpuStart = std::chrono::high_resolution_clock::now();
+
+    // 주의: frameIndex는 프레임이 성공적으로 끝났을 때만(EndFrame까지 도달했을 때만)
+    // 증가해야 함. 실패/abort 시 같은 frameIndex로 재시도되어야 이 슬롯이 안전하게 재사용됨.
 }
 
 void FrameProfiler::EndFrame(CommandList& cmd)

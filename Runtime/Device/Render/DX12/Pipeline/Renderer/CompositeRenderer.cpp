@@ -61,9 +61,8 @@ ID3D12PipelineState* CompositeRenderer::CreatePSO(const PipelineState& pipelineS
 
 void CompositeRenderer::PrepareDraw(CommandList& cmd)
 {
-    cmd->SetGraphicsRootSignature(m_rootSignature.Get());
-    cmd->SetPipelineState(m_compositePSO);
-    cmd->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    cmd.SetGraphicsRootSignature(m_rootSignature.Get());
+    cmd.SetPipelineState(m_compositePSO, PrimitiveTopologyType::Triangle);
 }
 
 void CompositeRenderer::Draw(CommandList& cmd, UINT colorSRVIndex)

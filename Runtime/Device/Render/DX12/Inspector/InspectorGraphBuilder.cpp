@@ -3,6 +3,7 @@
 #include "SwapChainPresenter.h"
 #include "Graph/RenderGraph.h"
 #include "Inspector/InspectorImageRenderer.h"
+#include "Task/Types/TaskCommandLists.h"
 
 InspectorGraphBuilder::~InspectorGraphBuilder() = default;
 InspectorGraphBuilder::InspectorGraphBuilder(
@@ -25,9 +26,9 @@ void InspectorGraphBuilder::Build(
             & swapChain = m_swapChain,
             srvIndex
         ]
-        (std::span<CommandList*> cmds, TaskContext& ctx)
+        (TaskCommandLists cmds, TaskContext& ctx)
         {
-            CommandList& cmd = GetSingleCommandList(cmds);
+            CommandList& cmd = cmds.Single();
 
             swapChain.SetRenderTarget(cmd);
             swapChain.SetViewport(cmd);

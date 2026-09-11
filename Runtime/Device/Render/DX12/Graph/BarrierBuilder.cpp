@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "BarrierBuilder.h"
+#include "Task/Task.h"
 #include "RenderGraphDefinitions.h"
 #include "Command/CommandList.h"
 #include "Command/CommandListHelpers.h"
@@ -78,9 +79,9 @@ Task CreateBarrierTask(CommandType type, const std::vector<BarrierPlan>& barrier
         [
             barriers = std::move(barriers)
         ]
-        (std::span<CommandList*> cmds, TaskContext& ctx)
+        (TaskCommandLists cmds, TaskContext& ctx)
         {
-            CommandList& cmd = GetSingleCommandList(cmds);
+            CommandList& cmd = cmds.Single();
 
             std::vector<D3D12_RESOURCE_BARRIER> barrierBatch;
             barrierBatch.reserve(barriers.size());

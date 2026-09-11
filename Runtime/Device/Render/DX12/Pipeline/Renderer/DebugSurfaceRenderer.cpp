@@ -59,23 +59,15 @@ void DebugSurfaceRenderer::PrepareDraw(
     CommandList& cmd,
     const CameraData& camera)
 {
-    m_currentPSO = nullptr;
-
     auto frameCBAddress = UploadFrameCB(camera);
 
-    cmd->SetGraphicsRootSignature(m_rootSignature.Get());
+    cmd.SetGraphicsRootSignature(m_rootSignature.Get());
     cmd->SetGraphicsRootConstantBufferView(Core::ToIndex(RootSlot::FrameCB), frameCBAddress);
 }
 
 void DebugSurfaceRenderer::BindPipeline(CommandList& cmd, const PipelineState& pipelineState)
 {
-    auto* pso = GetPipeline(pipelineState);
-    if (m_currentPSO == pso)
-        return;
-
-    cmd->SetPipelineState(pso);
-    cmd->IASetPrimitiveTopology(ToD3D12_Draw(pipelineState.topologyType));
-    m_currentPSO = pso;
+    cmd.SetPipelineState(GetPipeline(pipelineState), pipelineState.topologyType);
 }
 
 ID3D12PipelineState* DebugSurfaceRenderer::GetPipeline(const PipelineState& pipelineState)

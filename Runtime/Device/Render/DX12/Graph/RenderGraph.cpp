@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "RenderGraph.h"
 #include "BarrierBuilder.h"
+#include "Task/CompiledTask.h"
 #include "Core/D3D12Conversions.h"
 #include "RenderGraphUtils.h"
 #include <unordered_set>

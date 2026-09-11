@@ -16,9 +16,44 @@ bool CommandList::Initialize(Device& device, CommandType type)
     return true;
 }
 
+void CommandList::SetBindlessHeap(ID3D12DescriptorHeap* heap)
+{
+    Assert(heap);
+
+    ID3D12DescriptorHeap* heaps[] = { heap };
+    m_command->SetDescriptorHeaps(1, heaps);
+}
+
+void CommandList::SetGraphicsRootSignature(ID3D12RootSignature* rootSignature)
+{
+    Assert(rootSignature);
+
+    if (m_currentRootSignature == rootSignature)
+        return;
+
+    m_command->SetGraphicsRootSignature(rootSignature);
+    m_currentRootSignature = rootSignature;
+}
+
+void CommandList::SetPipelineState(
+    ID3D12PipelineState* pso,
+    std::optional<PrimitiveTopologyType> topology)
+{
+    Assert(pso);
+
+    if (m_currentPSO != pso)
+    {
+        m_command->SetPipelineState(pso);
+        m_currentPSO = pso;
+    }
+
+    if (topology)
+        m_command->IASetPrimitiveTopology(ToD3D12_Draw(*topology));
+}
+
 void CommandList::Reset()
 {
-    Assert(!m_recording);
+    Assert(m_state == CmdState::Ready);
 
     if (m_lastFenceID != 0)
     {
@@ -28,46 +63,57 @@ void CommandList::Reset()
 
     DxCheck(m_allocator->Reset());
     DxCheck(m_command->Reset(m_allocator.Get(), nullptr));
+    m_currentRootSignature = nullptr;
+    m_currentPSO = nullptr;
 
-    m_recording = true;
+    m_state = CmdState::Recording;
 }
 
 void CommandList::Close()
 {
-    Assert(m_recording);
+    Assert(m_state == CmdState::Recording);
     DxCheck(m_command->Close());
 
-    m_recording = false;
+    m_state = CmdState::PendingSubmit;
 }
 
-void CommandList::SetBindlessHeap(ID3D12DescriptorHeap* heap)
+bool CommandList::IsAvailable() const
 {
-    Assert(heap);
+    switch (m_state)
+    {
+    case CmdState::Ready:
+        return true;
 
-    ID3D12DescriptorHeap* heaps[] = { heap };
-    m_command->SetDescriptorHeaps(1, heaps);
+    case CmdState::InFlight:
+        Assert(m_fence);
+        if (m_fence->GetCompletedValue() >= m_lastFenceID) //시킨 일이 끝나 있는지
+        {
+            m_state = CmdState::Ready; // fence 완료 확인되면 여기서 상태를 확정적으로 되돌림
+            return true;
+        }
+        return false;
+
+    case CmdState::Recording:
+    case CmdState::PendingSubmit:
+    default:
+        return false;
+    }
 }
 
 void CommandList::MarkSubmitted(ID3D12Fence* fence, FenceID fenceID)
 {
-    Assert(!m_recording);
+    Assert(m_state == CmdState::PendingSubmit); // Close 없이 호출되는 실수 경로 차단
     Assert(fence);
     Assert(fenceID != 0);
 
     m_fence = fence;
     m_lastFenceID = fenceID;
+    m_state = CmdState::InFlight;
 }
 
-bool CommandList::IsAvailable() const
+void CommandList::Discard()
 {
-    if (m_recording)
-        return false;
+    Assert(m_state == CmdState::Recording || m_state == CmdState::PendingSubmit);
 
-    if (m_lastFenceID == 0) //한번도 쓴적이 없다면
-        return true;
-
-    Assert(m_fence);
-
-    bool completed = m_fence->GetCompletedValue() >= m_lastFenceID; //시킨 일이 끝나 있는지
-    return completed;
+    m_state = CmdState::Ready;
 }

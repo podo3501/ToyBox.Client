@@ -7,6 +7,8 @@
 #include "Resource/Environment/EnvironmentResource.h"
 #include "Resource/Internal/ViewTargetResource.h"
 #include "Pipeline/Renderer/SkyboxRenderer.h"
+#include "Definition/RenderData.h"
+#include "Task/Types/TaskCommandLists.h"
 
 SkyboxGraphBuilder::~SkyboxGraphBuilder() = default;
 SkyboxGraphBuilder::SkyboxGraphBuilder(
@@ -33,9 +35,9 @@ void SkyboxGraphBuilder::Build(
             colorRTVIndex = target.GetColorRTVIndex(),
             depthDSVIndex = target.GetDepthDSVIndex()
         ]
-        (std::span<CommandList*> cmds, TaskContext& ctx)
+        (TaskCommandLists cmds, TaskContext& ctx)
         {
-            CommandList& cmd = GetSingleCommandList(cmds);
+            CommandList& cmd = cmds.Single();
 
             auto& envRes = packet->environment;
             if (!envRes || !envRes->IsReady())

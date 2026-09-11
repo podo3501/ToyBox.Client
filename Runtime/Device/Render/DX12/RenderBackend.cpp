@@ -67,13 +67,18 @@ void RenderBackend::Render(SceneFrameData frame)
     {
         m_profiler.BeginFrame(*cmd, m_frameIndex);
 
-        cmd = m_pipeline.Render(cmd,
-            m_cmdScheduler,
+        cmd = m_pipeline.Render(cmd, m_cmdScheduler,
             BuildPacket(
                 frame, 
                 m_textSystem, 
                 m_transientMeshProvider,
                 m_swapChain.GetSize()));
+
+        if (!cmd)
+        {
+            m_cmdScheduler.AbortFrame();
+            return;
+        }
 
         m_profiler.EndFrame(*cmd);
 

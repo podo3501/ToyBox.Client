@@ -27,6 +27,7 @@ public:
     std::vector<CommandList*> BeginParallel(size_t count);
     CommandList* EndParallel(std::span<CommandList*> cmdLists);
 
+    void AbortFrame();
     FenceID Signal();
     void WaitIdle();
 

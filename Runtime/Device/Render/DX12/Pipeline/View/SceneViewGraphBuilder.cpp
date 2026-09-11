@@ -3,6 +3,7 @@
 #include "Graph/RenderGraph.h"
 #include "Pipeline/Renderers.h"
 #include "Resource/Internal/ViewTargetResource.h"
+#include "Definition/RenderData.h"
 
 SceneViewGraphBuilder::SceneViewGraphBuilder(
     Device& device,

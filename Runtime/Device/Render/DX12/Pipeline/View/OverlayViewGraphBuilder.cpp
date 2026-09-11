@@ -3,6 +3,7 @@
 #include "Pipeline/Renderers.h"
 #include "Graph/RenderGraph.h"
 #include "Resource/Internal/ViewTargetResource.h"
+#include "Definition/RenderData.h"
 
 OverlayViewGraphBuilder::OverlayViewGraphBuilder(
     DescriptorFactory& descFactory,

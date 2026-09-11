@@ -90,8 +90,8 @@ void ShadowRenderer::PrepareDraw(
 {
     auto frameCBAddress = UploadFrameCB(light);
 
-    cmd->SetGraphicsRootSignature(m_rootSignature.Get());
-    cmd->SetPipelineState(m_shadowPSO);
+    cmd.SetGraphicsRootSignature(m_rootSignature.Get());
+    cmd.SetPipelineState(m_shadowPSO, PrimitiveTopologyType::Triangle); // 섀도우 맵은 항상 삼각형 리스트로 빌드업
     cmd->SetGraphicsRootConstantBufferView(Core::ToIndex(RootSlot::FrameCB), frameCBAddress);
 }
 
@@ -126,8 +126,5 @@ void ShadowRenderer::Draw(
 
     cmd->SetGraphicsRoot32BitConstants(Core::ToIndex(RootSlot::MeshData), 2, meshData, 0);
     cmd->SetGraphicsRootConstantBufferView(Core::ToIndex(RootSlot::ObjectCB), objectCBAddress);
-
-    // 섀도우 맵은 항상 삼각형 리스트로 빌드업
-    cmd->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     cmd->DrawInstanced(mesh.GetIndexCount(), 1, 0, 0);
 }

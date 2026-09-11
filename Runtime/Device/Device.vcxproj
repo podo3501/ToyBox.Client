@@ -62,6 +62,7 @@
     <ClInclude Include="Render\DX12\Definition\RenderData.h" />
     <ClInclude Include="Render\DX12\Definition\RenderFormat.h" />
     <ClInclude Include="Render\DX12\Definition\RenderState.h" />
+    <ClInclude Include="Render\DX12\Definition\RenderStateTypes.h" />
     <ClInclude Include="Render\DX12\Graph\BarrierBuilder.h" />
     <ClInclude Include="Render\DX12\Graph\RenderGraphDefinitions.h" />
     <ClInclude Include="Render\DX12\Graph\RenderGraphUtils.h" />
@@ -69,7 +70,6 @@
     <ClInclude Include="Render\DX12\Graph\RenderPass.h" />
     <ClInclude Include="Render\DX12\Graph\RGResourceIDAllocator.h" />
     <ClInclude Include="Render\DX12\Graph\RGResourceIDGenerator.h" />
-    <ClInclude Include="Render\DX12\Graph\TaskUtils.h" />
     <ClInclude Include="Render\DX12\Inspector\InspectorImageRenderer.h" />
     <ClInclude Include="Render\DX12\Inspector\Inspector.h" />
     <ClInclude Include="Render\DX12\Inspector\InspectorGraphBuilder.h" />
@@ -129,9 +129,6 @@
     <ClInclude Include="Render\DX12\Factory\DescriptorFactory.h" />
     <ClInclude Include="Render\DX12\Factory\ResourceFactory.h" />
     <ClInclude Include="Render\DX12\Graph\RGTypes.h" />
-    <ClInclude Include="Render\DX12\Graph\Task.h" />
-    <ClInclude Include="Render\DX12\Graph\TaskHandle.h" />
-    <ClInclude Include="Render\DX12\Graph\TaskScheduler.h" />
     <ClInclude Include="Render\DX12\Helpers\MathHelpers.h" />
     <ClInclude Include="Render\DX12\Helpers\TextureHelpers.h" />
     <ClInclude Include="Render\DX12\Pipeline\ForwardRenderPipeline.h" />
@@ -173,6 +170,15 @@
     <ClInclude Include="Render\DX12\Shader\ShaderLibrary.h" />
     <ClInclude Include="Render\DX12\SwapChainPresenter.h" />
     <ClInclude Include="Render\DX12\RenderBackend.h" />
+    <ClInclude Include="Render\DX12\Task\CompiledTask.h" />
+    <ClInclude Include="Render\DX12\Task\Task.h" />
+    <ClInclude Include="Render\DX12\Task\TaskHandle.h" />
+    <ClInclude Include="Render\DX12\Task\TaskScheduler.h" />
+    <ClInclude Include="Render\DX12\Task\TaskUtils.h" />
+    <ClInclude Include="Render\DX12\Task\Types\LocalTaskID.h" />
+    <ClInclude Include="Render\DX12\Task\Types\ResourceContext.h" />
+    <ClInclude Include="Render\DX12\Task\Types\TaskCommandLists.h" />
+    <ClInclude Include="Render\DX12\Task\Types\TaskContext.h" />
     <ClInclude Include="Render\DX12\TextSystem\Atlas\AtlasHelper.h" />
     <ClInclude Include="Render\DX12\TextSystem\Atlas\AtlasPacker.h" />
     <ClInclude Include="Render\DX12\TextSystem\Atlas\AtlasPage.h" />
@@ -244,7 +250,6 @@
     <ClCompile Include="Render\DX12\Graph\RenderGraphUtils.cpp" />
     <ClCompile Include="Render\DX12\Graph\RenderGraph.cpp" />
     <ClCompile Include="Render\DX12\Graph\RGResourceIDAllocator.cpp" />
-    <ClCompile Include="Render\DX12\Graph\TaskUtils.cpp" />
     <ClCompile Include="Render\DX12\Inspector\InspectorImageRenderer.cpp" />
     <ClCompile Include="Render\DX12\Inspector\Inspector.cpp" />
     <ClCompile Include="Render\DX12\Inspector\InspectorGraphBuilder.cpp" />
@@ -292,7 +297,6 @@
     <ClCompile Include="Render\DX12\Core\FrameProfiler.cpp" />
     <ClCompile Include="Render\DX12\Factory\DescriptorFactory.cpp" />
     <ClCompile Include="Render\DX12\Factory\ResourceFactory.cpp" />
-    <ClCompile Include="Render\DX12\Graph\TaskScheduler.cpp" />
     <ClCompile Include="Render\DX12\Helpers\MathHelpers.cpp" />
     <ClCompile Include="Render\DX12\Helpers\TextureHelpers.cpp" />
     <ClCompile Include="Render\DX12\Pipeline\ForwardRenderPipeline.cpp" />
@@ -327,6 +331,8 @@
     <ClCompile Include="Render\DX12\Shader\ShaderLibrary.cpp" />
     <ClCompile Include="Render\DX12\SwapChainPresenter.cpp" />
     <ClCompile Include="Render\DX12\RenderBackend.cpp" />
+    <ClCompile Include="Render\DX12\Task\TaskScheduler.cpp" />
+    <ClCompile Include="Render\DX12\Task\TaskUtils.cpp" />
     <ClCompile Include="Render\DX12\TextSystem\Atlas\AtlasHelper.cpp" />
     <ClCompile Include="Render\DX12\TextSystem\Atlas\AtlasPacker.cpp" />
     <ClCompile Include="Render\DX12\TextSystem\Atlas\AtlasPage.cpp" />

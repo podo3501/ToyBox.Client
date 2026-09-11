@@ -5,6 +5,7 @@
 #include "Command/CommandListHelpers.h"
 #include "Factory/DescriptorFactory.h"
 #include "Resource/Internal/ViewTargetResource.h"
+#include "Task/Types/TaskCommandLists.h"
 
 ViewTargetClearGraphBuilder::~ViewTargetClearGraphBuilder() = default;
 ViewTargetClearGraphBuilder::ViewTargetClearGraphBuilder(DescriptorFactory& descFactory) noexcept :
@@ -23,9 +24,9 @@ void ViewTargetClearGraphBuilder::Build(RenderGraph& graph, const ViewTargetReso
             colorRTVIndex = target.GetColorRTVIndex(),
             depthDSVIndex = target.GetDepthDSVIndex()
         ]
-        (std::span<CommandList*> cmds, TaskContext& ctx)
+        (TaskCommandLists cmds, TaskContext& ctx)
         {
-            CommandList& cmd = GetSingleCommandList(cmds);
+            CommandList& cmd = cmds.Single();
 
             auto rtv = descFactory.GetRTVHandle(colorRTVIndex);
             auto dsv = descFactory.GetDSVHandle(depthDSVIndex);

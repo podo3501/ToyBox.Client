@@ -120,6 +120,21 @@ void CommandQueue::PrepareCommandList(CommandList& cmd)
         cmd.SetBindlessHeap(m_bindlessHeap);
 }
 
+void CommandQueue::AbortFrame()
+{
+    // 기록 중이던 primary Discard
+    if (m_currentCmdEntry)
+    {
+        m_currentCmdEntry->Discard();
+        m_currentCmdEntry = nullptr;
+    }
+
+    for (auto* entry : m_pendingSubmission)
+        entry->Discard(); // Close는 됐지만 아직 ExecuteCommandLists를 안 탄 것들 전부 폐기
+
+    m_pendingSubmission.clear();
+}
+
 FenceID CommandQueue::Signal()
 {
     FenceID id = ++m_fenceID;

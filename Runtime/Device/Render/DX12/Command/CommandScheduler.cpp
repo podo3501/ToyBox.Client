@@ -53,6 +53,14 @@ CommandList* CommandScheduler::EndParallel(std::span<CommandList*> cmds)
     return m_currentQueue->EndParallel(cmds);
 }
 
+void CommandScheduler::AbortFrame()
+{
+    Assert(m_currentQueue); // Begin()으로 연 프레임 도중이어야 함
+
+    m_currentQueue->AbortFrame();
+    m_currentQueue = nullptr; // End()와 동일하게 "프레임 종료" 상태로 되돌림
+}
+
 FenceID CommandScheduler::SignalQueue(CommandType type)
 {
     return GetQueue(type)->Signal();

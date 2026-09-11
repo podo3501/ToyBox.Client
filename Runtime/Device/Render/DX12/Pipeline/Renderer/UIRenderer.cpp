@@ -73,9 +73,8 @@ void UIRenderer::ResetFrameResources()
 
 void UIRenderer::BeginFrame(CommandList& cmd)
 {
-    cmd->SetGraphicsRootSignature(m_rootSignature.Get());
-    cmd->SetPipelineState(m_pso);
-    cmd->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    cmd.SetGraphicsRootSignature(m_rootSignature.Get());
+    cmd.SetPipelineState(m_pso, PrimitiveTopologyType::Triangle);
 }
 
 void UIRenderer::Draw(

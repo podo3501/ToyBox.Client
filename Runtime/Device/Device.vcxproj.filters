@@ -148,6 +148,12 @@
     <Filter Include="Render\DX12\Pipeline\View\GraphBuilder">
       <UniqueIdentifier>{7e988977-a879-42ba-b92b-351b15f6b214}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Render\DX12\Task">
+      <UniqueIdentifier>{8c4e8e2b-1f4d-4fdb-9ef7-b8afbd8ae128}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Render\DX12\Task\Types">
+      <UniqueIdentifier>{25bd62a5-5509-4cbe-b676-449dc4d8e212}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Storage\JsonObjectIO.h">
@@ -251,15 +257,6 @@
       <Filter>Render\DX12\Resource</Filter>
     </ClInclude>
     <ClInclude Include="Render\DX12\Graph\RGTypes.h">
-      <Filter>Render\DX12\Graph</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\DX12\Graph\Task.h">
-      <Filter>Render\DX12\Graph</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\DX12\Graph\TaskHandle.h">
-      <Filter>Render\DX12\Graph</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\DX12\Graph\TaskScheduler.h">
       <Filter>Render\DX12\Graph</Filter>
     </ClInclude>
     <ClInclude Include="Render\DX12\Pipeline\ForwardRenderPipeline.h">
@@ -371,9 +368,6 @@
       <Filter>Render\DX12\Graph</Filter>
     </ClInclude>
     <ClInclude Include="Render\DX12\Graph\RenderGraphDefinitions.h">
-      <Filter>Render\DX12\Graph</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\DX12\Graph\TaskUtils.h">
       <Filter>Render\DX12\Graph</Filter>
     </ClInclude>
     <ClInclude Include="Render\DX12\Provider\Font\FontProvider.h">
@@ -679,6 +673,36 @@
     <ClInclude Include="Render\DX12\Pipeline\View\GraphBuilder\RenderRecordPool.h">
       <Filter>Render\DX12\Pipeline\View\GraphBuilder</Filter>
     </ClInclude>
+    <ClInclude Include="Render\DX12\Definition\RenderStateTypes.h">
+      <Filter>Render\DX12\Definition</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Task\Task.h">
+      <Filter>Render\DX12\Task</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Task\TaskHandle.h">
+      <Filter>Render\DX12\Task</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Task\TaskScheduler.h">
+      <Filter>Render\DX12\Task</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Task\TaskUtils.h">
+      <Filter>Render\DX12\Task</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Task\Types\ResourceContext.h">
+      <Filter>Render\DX12\Task\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Task\Types\TaskContext.h">
+      <Filter>Render\DX12\Task\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Task\CompiledTask.h">
+      <Filter>Render\DX12\Task</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Task\Types\LocalTaskID.h">
+      <Filter>Render\DX12\Task\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Task\Types\TaskCommandLists.h">
+      <Filter>Render\DX12\Task\Types</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -772,9 +796,6 @@
     <ClCompile Include="Render\DX12\Resource\Resource.cpp">
       <Filter>Render\DX12\Resource</Filter>
     </ClCompile>
-    <ClCompile Include="Render\DX12\Graph\TaskScheduler.cpp">
-      <Filter>Render\DX12\Graph</Filter>
-    </ClCompile>
     <ClCompile Include="Render\DX12\Pipeline\ForwardRenderPipeline.cpp">
       <Filter>Render\DX12\Pipeline</Filter>
     </ClCompile>
@@ -857,9 +878,6 @@
       <Filter>Render\DX12\Graph</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\Graph\RenderGraphUtils.cpp">
-      <Filter>Render\DX12\Graph</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\DX12\Graph\TaskUtils.cpp">
       <Filter>Render\DX12\Graph</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\Provider\Font\FontProvider.cpp">
@@ -1104,6 +1122,12 @@
     </ClCompile>
     <ClCompile Include="Render\DX12\Pipeline\View\GraphBuilder\RenderRecordPool.cpp">
       <Filter>Render\DX12\Pipeline\View\GraphBuilder</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Task\TaskScheduler.cpp">
+      <Filter>Render\DX12\Task</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Task\TaskUtils.cpp">
+      <Filter>Render\DX12\Task</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

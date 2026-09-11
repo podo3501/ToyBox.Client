@@ -43,7 +43,6 @@ private:
     PipelineState m_pipelineState;
     PipelineCache& m_pipelineCache;
     Microsoft::WRL::ComPtr<ID3D12RootSignature> m_rootSignature;
-    ID3D12PipelineState* m_currentPSO{ nullptr };
 
     Size m_screenSize{};
     FrameConstantAllocator m_drawCBAllocator;

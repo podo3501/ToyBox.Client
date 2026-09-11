@@ -63,7 +63,6 @@ private:
     SurfaceRendererConfig m_config;
     PipelineCache& m_pipelineCache;
     ComPtr<ID3D12RootSignature> m_rootSignature;
-    ID3D12PipelineState* m_currentPSO{ nullptr };
 
     FrameConstantAllocator m_objectCBAllocator;
     FrameConstantAllocator m_materialCBAllocator;

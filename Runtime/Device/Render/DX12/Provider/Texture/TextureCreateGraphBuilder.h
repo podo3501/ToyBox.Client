@@ -5,6 +5,7 @@
 
 struct TextureLoadRequest;
 struct TextureUploadEntry;
+struct ResourceContext;
 class Device;
 class TaskScheduler;
 class ResourceFactory;

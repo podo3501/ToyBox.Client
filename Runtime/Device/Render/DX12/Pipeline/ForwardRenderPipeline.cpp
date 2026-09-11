@@ -1,11 +1,13 @@
 #include "pch.h"
 #include "ForwardRenderPipeline.h"
-#include "Graph/TaskUtils.h"
+#include "Task/TaskUtils.h"
+#include "Task/CompiledTask.h"
 #include "Inspector/InspectorGraphBuilder.h"
 #include "SwapChainPresenter.h"
 #include "Factory/DescriptorFactory.h"
 #include "Command/CommandList.h"
 #include "Resource/Internal/ViewTargetResource.h"
+#include "Definition/RenderData.h"
 
 ForwardRenderPipeline::~ForwardRenderPipeline() = default;
 ForwardRenderPipeline::ForwardRenderPipeline(

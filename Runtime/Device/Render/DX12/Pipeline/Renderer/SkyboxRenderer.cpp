@@ -88,9 +88,8 @@ void SkyboxRenderer::Draw(CommandList& cmd, const CameraData& camera, TextureCub
 
     auto cbAddress = m_cbAllocator.AllocateConstant(cb);
 
-    cmd->SetGraphicsRootSignature(m_rootSignature.Get());
-    cmd->SetPipelineState(m_pso);
-    cmd->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    cmd.SetGraphicsRootSignature(m_rootSignature.Get());
+    cmd.SetPipelineState(m_pso, PrimitiveTopologyType::Triangle);
     cmd->SetGraphicsRootConstantBufferView(Core::ToIndex(RootSlot::FrameCB), cbAddress);
 
     cmd->DrawInstanced(3, 1, 0, 0); // 풀스크린 트라이앵글 - 버텍스/인덱스 버퍼 없음

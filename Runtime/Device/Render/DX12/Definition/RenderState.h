@@ -1,19 +1,7 @@
 #pragma once
+#include "RenderStateTypes.h"
 #include "Core/Utils/Hash.h"
 #include "GameClient/Service/Render/Definition/Shader/ShaderTypes.h"
-
-enum class FillMode
-{
-    Solid,
-    Wireframe
-};
-
-enum class CullMode
-{
-    None,
-    Front,
-    Back
-};
 
 struct RasterState
 {
@@ -94,12 +82,6 @@ struct ShaderVariantHasher
     {
         return variant.GetHash();
     }
-};
-
-enum class PrimitiveTopologyType
-{
-    Triangle,
-    Line
 };
 
 struct PipelineState

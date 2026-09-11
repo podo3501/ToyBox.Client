@@ -17,13 +17,13 @@ public:
         ID3D12DescriptorHeap* bindlessHeap, 
         const CommandPoolConfig& config);
     CommandList* Begin(CommandType type);
-    FenceID End();
+    FenceID End(); // End -> Close + Signal, PendingRelease 등록
 
     // Render 전용: Begin()~End() 사이에서만 유효
     std::vector<CommandList*> BeginParallel(size_t count);
-    CommandList* EndParallel(std::span<CommandList*> cmds);
+    CommandList* EndParallel(std::span<CommandList*> cmds); 
     
-    // End -> Close + Signal, PendingRelease 등록
+    void AbortFrame();
     FenceID SignalQueue(CommandType type);
     void WaitIdle(CommandType type);
     void WaitIdle();

@@ -6,6 +6,8 @@
 #include "Core/Foundation/Align.h"
 #include "RenderConstants.h"
 #include "Command/CommandList.h"
+#include "Task/Types/TaskCommandLists.h"
+#include "Task/Types/TaskContext.h"
 
 struct GlyphUploadLayout
 {
@@ -147,9 +149,9 @@ void FontAtlasUploadGraphBuilder::BuildUploadPass(
             uploads = std::move(uploads),
             layouts = std::move(layouts)
         ]
-        (std::span<CommandList*> cmds, TaskContext& ctx)
+        (TaskCommandLists cmds, TaskContext& ctx)
         {
-            CommandList& cmd = GetSingleCommandList(cmds);
+            CommandList& cmd = cmds.Single();
 
             auto& uploadBuffer = ctx.GetResource(uploadResID);
             auto& atlasResource = ctx.GetResource(atlasResID);

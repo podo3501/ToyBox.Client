@@ -1,13 +1,13 @@
 #include "pch.h"
 #include "TaskUtils.h"
-#include "Task.h"
+#include "CompiledTask.h"
 #include "Command/CommandScheduler.h"
 
 void ExecuteTaskImmediate(std::span<CommandList*> cmds, const Task& task, TaskContext& ctx)
 {
     Assert(!cmds.empty());
     Assert(task.execute != nullptr);
-    task.execute(cmds, ctx);
+    task.execute(TaskCommandLists{ cmds }, ctx);
 }
 
 CommandList* ExecuteRenderPipeline(
@@ -30,9 +30,13 @@ CommandList* ExecuteRenderPipeline(
         else
         {
             auto parallelCmds = cmdScheduler.BeginParallel(task.numParallel);
+            if (parallelCmds.empty())
+                return nullptr;
+
             ExecuteTaskImmediate(parallelCmds, task, ctx);
             current = cmdScheduler.EndParallel(parallelCmds);
-            Assert(current); // pool 고갈 시 여기서 즉시 드러남 - 이전에 짚었던 이슈
+            if (!current) // 후속 primary cmd를 못 구함
+                return nullptr;
         }
     }
 

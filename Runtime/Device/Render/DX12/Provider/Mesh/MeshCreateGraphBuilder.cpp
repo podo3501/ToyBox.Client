@@ -4,7 +4,7 @@
 #include "MeshUtils.h"
 #include "Resource/Mesh/StaticMeshResource.h"
 #include "Core/Foundation/Align.h"
-#include "Graph/TaskScheduler.h"
+#include "Task/TaskScheduler.h"
 #include "Factory/DescriptorFactory.h"
 #include "Factory/ResourceFactory.h"
 #include "RenderConstants.h"
@@ -149,9 +149,9 @@ void MeshCreateGraphBuilder::BuildUploadPass(
             meshUploads, 
             uploadResID
         ]
-        (std::span<CommandList*> cmds, TaskContext& ctx) mutable
+        (TaskCommandLists cmds, TaskContext& ctx) mutable
         {
-            CommandList& cmd = GetSingleCommandList(cmds);
+            CommandList& cmd = cmds.Single();
 
             auto& uploadRes = ctx.GetResource(uploadResID);
             for (auto& mesh : *meshUploads)

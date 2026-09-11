@@ -1,7 +1,8 @@
 #pragma once
-#include "Task.h"
+#include "CompiledTask.h"
 #include "Core/Utils/Handle/HandlePool.h"
 
+struct IResource;
 struct PendingResourceRelease;
 class CommandScheduler;
 

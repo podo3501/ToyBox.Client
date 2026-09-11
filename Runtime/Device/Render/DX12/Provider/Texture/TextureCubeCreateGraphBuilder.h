@@ -2,6 +2,7 @@
 #include "Graph/RenderGraph.h"
 #include "Graph/RGResourceIDGenerator.h"
 
+struct ResourceContext;
 struct TextureCubeLoadRequest;
 struct TextureCubeUploadEntry;
 class TaskScheduler;
