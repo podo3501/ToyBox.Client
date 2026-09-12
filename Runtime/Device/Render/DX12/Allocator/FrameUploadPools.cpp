@@ -10,10 +10,10 @@ bool FrameUploadPools::Initialize(Device& device)
     return true;
 }
 
-void FrameUploadPools::Reset() noexcept
+void FrameUploadPools::Reset(uint32_t slot) noexcept
 {
-    m_vertexBuffer.Reset();
-    m_indexBuffer.Reset();
+    m_vertexBuffer.Reset(slot);
+    m_indexBuffer.Reset(slot);
 }
 
 FrameUploadAllocator& FrameUploadPools::VertexBuffer() noexcept { return m_vertexBuffer; }

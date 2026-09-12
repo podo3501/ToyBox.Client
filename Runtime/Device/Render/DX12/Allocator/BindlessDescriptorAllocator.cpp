@@ -10,11 +10,22 @@ BindlessDescriptorAllocator::BindlessDescriptorAllocator() = default;
 
 bool BindlessDescriptorAllocator::Initialize(Device& device, const BindlessDescriptorConfig& config) noexcept
 {
-    Assert(config.bindlessCount > config.asyncTransientCount);
+    UINT transientTotal = config.transientCount * FrameBufferCount;
+    UINT requiredTotal = config.persistentCount + config.dynamicCount + transientTotal;
 
-    m_dynamicStart = config.bindlessCount - config.asyncTransientCount;
-    m_persistentRegion.Initialize(m_dynamicStart);
-    m_dynamicRegion.Initialize(config.asyncTransientCount);
+    if (config.bindlessCount < requiredTotal)
+    {
+        Assert(false); // config 값들의 합이 bindlessCount를 초과함
+        return false;
+    }
+
+    m_persistentRegion.Initialize(config.persistentCount); // persistent: [0, persistentCount)
+    
+    m_dynamicOffset = config.persistentCount;
+    m_dynamicRegion.Initialize(config.dynamicCount); // dynamic: [persistentCount, persistentCount + dynamicCount)
+    
+    m_transientBase = m_dynamicOffset + config.dynamicCount;
+    m_transientSlotCapacity = config.transientCount; // transient: [dynamicStart + dynamicCount, bindlessCount), 슬롯당 config.transientCount
 
     m_heap = device.CreateDescriptorHeap(
         D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV,
@@ -31,12 +42,22 @@ bool BindlessDescriptorAllocator::Initialize(Device& device, const BindlessDescr
 
 UINT BindlessDescriptorAllocator::AllocatePersistent() noexcept
 {
-    return m_persistentRegion.AllocateFront();
+    return m_persistentRegion.Allocate();
 }
 
-UINT BindlessDescriptorAllocator::AllocateTransient(UINT count) noexcept
+UINT BindlessDescriptorAllocator::AllocateTransient(uint32_t slot, UINT count) noexcept
 {
-    return m_persistentRegion.AllocateBack(count);
+    Assert(slot < FrameBufferCount);
+
+    UINT local = m_transientOffset[slot].fetch_add(count, std::memory_order_relaxed);
+    if (local + count > m_transientSlotCapacity)
+    {
+        Assert(false); // 슬롯 용량 초과 - config.transientCount를 늘려야 함
+        return UINT_MAX;
+    }
+
+    UINT slotBase = m_transientBase + m_transientSlotCapacity * slot;
+    return slotBase + local;
 }
 
 UINT BindlessDescriptorAllocator::AllocateDynamic() noexcept
@@ -45,24 +66,27 @@ UINT BindlessDescriptorAllocator::AllocateDynamic() noexcept
     if (local == Core::InvalidIndex)
         return UINT_MAX;
 
-    return m_dynamicStart + local; // 로컬 인덱스를 전역 heap 인덱스로 변환(그냥 앞에 공간 더함)
+    return m_dynamicOffset + local; // 로컬 인덱스를 전역 heap 인덱스로 변환(그냥 앞에 공간 더함)
 }
 
 void BindlessDescriptorAllocator::FreeDynamic(UINT index) noexcept
 {
     if (index == UINT_MAX) return;
-    m_dynamicRegion.Free(index - m_dynamicStart); // 전역 인덱스를 로컬 인덱스로 변환(그냥 앞에 공간 뺌)
+    m_dynamicRegion.Free(index - m_dynamicOffset); // 전역 인덱스를 로컬 인덱스로 변환(그냥 앞에 공간 뺌)
 }
 
-void BindlessDescriptorAllocator::ResetTransient() noexcept
+void BindlessDescriptorAllocator::ResetTransient(uint32_t slot) noexcept
 {
-    m_persistentRegion.ResetBack();
+    Assert(slot < FrameBufferCount);
+    m_transientOffset[slot] = 0;
 }
 
 void BindlessDescriptorAllocator::ResetAll() noexcept
 {
-    m_persistentRegion.ResetAll(); //transient 부분도 reset 됨.
+    m_persistentRegion.Reset();
     m_dynamicRegion.Reset();
+    for (auto& offset : m_transientOffset)
+        offset = 0;
 }
 
 D3D12_CPU_DESCRIPTOR_HANDLE BindlessDescriptorAllocator::GetCpuHandle(UINT index) const noexcept

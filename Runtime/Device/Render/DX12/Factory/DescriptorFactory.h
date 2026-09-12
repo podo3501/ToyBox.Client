@@ -18,6 +18,8 @@ public:
     DescriptorFactory() = delete;
     explicit DescriptorFactory(Device& device);
     bool Initialize(const DescriptorConfig& config);
+    void BeginFrame(UINT slot);
+
     UINT CreateBufferSRV(
         DescriptorAllocationType type,
         const Resource& resBuffer, 
@@ -37,6 +39,7 @@ public:
     void FreeRTV(UINT rtvIndex);
     void FreeDSV(UINT dsvIndex);
 
+    UINT GetCurrentSlot() const { return m_currentSlot; }
     BindlessDescriptorAllocator& GetBindlessAllocator() noexcept { return m_bindlessAllocator; }
     DescriptorAllocator& GetDSVAllocator() noexcept { return m_dsvAllocator; }
 
@@ -55,6 +58,7 @@ private:
     UINT CreateTextureCubeSRV(const Resource& res, DXGI_FORMAT format, UINT mipLevels);
 
     Device& m_device;
+    uint32_t m_currentSlot{ UINT_MAX };
     BindlessDescriptorAllocator m_bindlessAllocator; // srv/uav/cbv 셋다 하나의 큰 힙에 들어감. cbv는 거의 안씀.
     DescriptorAllocator m_rtvAllocator;
     DescriptorAllocator m_dsvAllocator;

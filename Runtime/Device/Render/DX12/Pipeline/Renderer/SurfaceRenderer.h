@@ -28,7 +28,7 @@ public:
     SurfaceRenderer(const SurfaceRendererConfig& config, PipelineCache& pipelineCache);
 
     bool Initialize(Device& device);
-    void ResetFrameResources();
+    void ResetFrameResources(uint32_t slot);
     void PrepareDraw(
         CommandList& cmd,
         const DirectionalLightData& light, 

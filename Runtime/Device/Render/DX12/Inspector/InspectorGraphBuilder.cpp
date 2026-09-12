@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "InspectorGraphBuilder.h"
 #include "SwapChainPresenter.h"
+#include "Factory/DescriptorFactory.h"
 #include "Graph/RenderGraph.h"
 #include "Inspector/InspectorImageRenderer.h"
 #include "Task/Types/TaskCommandLists.h"
@@ -8,8 +9,10 @@
 InspectorGraphBuilder::~InspectorGraphBuilder() = default;
 InspectorGraphBuilder::InspectorGraphBuilder(
     InspectorImageRenderer& imageRenderer,
+    DescriptorFactory& descFactory,
     SwapChainPresenter& swapChain) noexcept :
     m_imageRenderer{ imageRenderer },
+    m_descFactory{ descFactory },
     m_swapChain{ swapChain }
 {}
 
@@ -23,7 +26,8 @@ void InspectorGraphBuilder::Build(
     inspector.execute =
         [
             &imageInspector = m_imageRenderer,
-            & swapChain = m_swapChain,
+            &descFactory = m_descFactory,
+            &swapChain = m_swapChain,
             srvIndex
         ]
         (TaskCommandLists cmds, TaskContext& ctx)
@@ -33,7 +37,7 @@ void InspectorGraphBuilder::Build(
             swapChain.SetRenderTarget(cmd);
             swapChain.SetViewport(cmd);
 
-            imageInspector.PrepareFrame();
+            imageInspector.PrepareFrame(descFactory.GetCurrentSlot());
             imageInspector.BeginFrame(cmd);
 
             imageInspector.BindPipeline(cmd);

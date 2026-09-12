@@ -49,10 +49,10 @@ bool DebugSurfaceRenderer::CreateDefaultPSOs()
     return true;
 }
 
-void DebugSurfaceRenderer::ResetFrameResources()
+void DebugSurfaceRenderer::ResetFrameResources(uint32_t slot)
 {
-    m_objectCBAllocator.Reset();
-    m_frameCBAllocator.Reset();
+    m_objectCBAllocator.Reset(slot);
+    m_frameCBAllocator.Reset(slot);
 }
 
 void DebugSurfaceRenderer::PrepareDraw(

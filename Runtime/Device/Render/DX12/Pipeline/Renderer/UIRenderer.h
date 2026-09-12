@@ -19,7 +19,7 @@ public:
     ~UIRenderer();
     UIRenderer(const UIRendererConfig& config, PipelineCache& pipelineCache);
     bool Initialize(Device& device);
-    void ResetFrameResources();
+    void ResetFrameResources(uint32_t slot);
 
     void BeginFrame(CommandList& cmd);
     void Draw(

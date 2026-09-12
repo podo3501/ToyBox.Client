@@ -1,6 +1,7 @@
 #pragma once
-#include <wrl/client.h>
+#include "RenderConstants.h"
 #include "CommandType.h"
+#include <wrl/client.h>
 
 using Microsoft::WRL::ComPtr;
 
@@ -20,6 +21,7 @@ public:
         CommandType type, 
         uint32_t cmdPoolSize);
 
+    CommandList* Begin(uint32_t slot);
     CommandList* Begin();
     FenceID End();
 
@@ -41,6 +43,7 @@ private:
     void PrepareCommandList(CommandList& cmd);
     CommandList* GetAvailableCommandList();
     void WaitFence(FenceID fenceID);
+    void InjectArtificialGpuDelay(uint32_t delayMs); //테스트용 임시함수
 
     ID3D12DescriptorHeap* m_bindlessHeap{ nullptr };
     ComPtr<ID3D12CommandQueue> m_queue;
@@ -55,5 +58,13 @@ private:
 
     CommandList* m_currentCmdEntry{ nullptr };
     std::vector<CommandList*> m_pendingSubmission;
+
+    FenceID m_frameFences[FrameBufferCount]{}; // 0 = 아직 이 슬롯을 쓴 적 없음
+    UINT m_pendingFrameSlot{ UINT_MAX };
+
+    //테스트용 임시 변수
+    ComPtr<ID3D12Fence> m_delayFence;
+    UINT64 m_delayFenceValue{ 0 };
+    uint32_t m_artificialDelayMs{ 0 };
 };
 

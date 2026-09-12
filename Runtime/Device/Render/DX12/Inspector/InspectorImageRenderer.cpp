@@ -91,9 +91,9 @@ bool InspectorImageRenderer::CreateRootSignature(Device& device)
     return m_rootSignature != nullptr;
 }
 
-void InspectorImageRenderer::PrepareFrame()
+void InspectorImageRenderer::PrepareFrame(uint32_t slot)
 {
-    m_drawCBAllocator.Reset();
+    m_drawCBAllocator.Reset(slot);
 }
 
 void InspectorImageRenderer::BeginFrame(CommandList& cmd)

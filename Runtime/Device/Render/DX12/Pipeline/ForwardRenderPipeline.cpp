@@ -28,9 +28,9 @@ ForwardRenderPipeline::ForwardRenderPipeline(
     m_clearBuilder{ m_swapChain },
     m_shadowBuilder{
         m_renderers.GetShadowRenderer(),
-        m_descFactory, m_shadowRes },
+        descFactory, m_shadowRes },
     m_inspectorBuilder{ m_inspectorRenderers.GetInspectorImageRenderer(),
-        m_swapChain }
+        descFactory, m_swapChain }
 {}
 
 bool ForwardRenderPipeline::Initialize(const Size& screenSize, const Size& shadowMapSize)
@@ -48,7 +48,7 @@ bool ForwardRenderPipeline::Initialize(const Size& screenSize, const Size& shado
 
 std::vector<CompiledTask> ForwardRenderPipeline::BuildFrame(const FramePacket& framePacket)
 {
-    m_renderers.ResetFrameResources(); // 이전 프레임에 썻던 데이터들을 초기화.
+    m_renderers.ResetFrameResources(m_descFactory.GetCurrentSlot()); // 이전 프레임에 썻던 데이터들을 초기화.
     m_graph.Reset();
     m_idAllocator.ResetTransient();
 

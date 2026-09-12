@@ -78,10 +78,10 @@ ID3D12PipelineState* ShadowRenderer::CreatePSO(const PipelineState& pipelineStat
         });
 }
 
-void ShadowRenderer::ResetFrameResources()
+void ShadowRenderer::ResetFrameResources(uint32_t slot)
 {
-    m_objectCBAllocator.Reset();
-    m_frameCBAllocator.Reset();
+    m_objectCBAllocator.Reset(slot);
+    m_frameCBAllocator.Reset(slot);
 }
 
 void ShadowRenderer::PrepareDraw(

@@ -3,15 +3,17 @@
 
 struct CommandPoolConfig
 {
-	uint32_t direct{ 30 };
+	uint32_t direct{ 3000 };
 	uint32_t copy{ 4 };
 	uint32_t compute{ 4 };
 };
 
 struct BindlessDescriptorConfig
 {
-	uint32_t bindlessCount{ 524288 }; //1,000,000개 (최대치) bindless 이기 때문에 많이 잡아야 한다.
-	uint32_t asyncTransientCount{ 32768 }; //bindless의 뒷부분을 떼서 사용. bindlessCount를 넘으면 안된다. 10000정도 써도 별 문제 없을꺼 같은데 일단 크게 잡아놓음.
+	uint32_t bindlessCount{ 524288 }; //1,000,000개가 최대치. 이 값을 넘지 않게 설정.
+	uint32_t persistentCount{ 262144 }; // [0, persistentCount) - 해제 없는 영구 할당 (텍스처/머티리얼 등)
+	uint32_t dynamicCount{ 32768 }; // [persistentCount, persistentCount + dynamicCount) - 개별 free 가능, fence 기반 (mipmap 계산용 등)
+	uint32_t transientCount{ 32768 }; // [persistentCount + dynamicCount, 마지막) 슬롯 하나가 쓸 수 있는 크기. 실제로는 FrameBufferCount 만큼. 뒤쪽 전체를 차지.
 };
 
 struct DescriptorConfig

@@ -20,7 +20,7 @@ public:
     ShadowRenderer(const ShadowRendererConfig& config, PipelineCache& pipelineCache);
 
     bool Initialize(Device& device);
-    void ResetFrameResources();
+    void ResetFrameResources(uint32_t slot);
 
     void PrepareDraw(CommandList& cmd, const DirectionalLightData& light);
     void Draw(CommandList& cmd, MeshResource& mesh, const Core::Matrix& world);

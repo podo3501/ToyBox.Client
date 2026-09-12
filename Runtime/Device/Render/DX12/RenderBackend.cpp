@@ -59,12 +59,13 @@ void RenderBackend::Update()
 
 void RenderBackend::Render(SceneFrameData frame)
 {
-    m_frameUploadPools.Reset();
-    m_descFactory.GetBindlessAllocator().ResetTransient();
-
-    auto* cmd = m_cmdScheduler.Begin(CommandType::Direct);
+    uint32_t slot = m_frameIndex % FrameBufferCount;
+    auto* cmd = m_cmdScheduler.Begin(slot);
     if (cmd)
     {
+        m_frameUploadPools.Reset(slot);
+        m_descFactory.BeginFrame(slot);
+
         m_profiler.BeginFrame(*cmd, m_frameIndex);
 
         cmd = m_pipeline.Render(cmd, m_cmdScheduler,

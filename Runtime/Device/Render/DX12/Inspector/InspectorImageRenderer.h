@@ -17,7 +17,7 @@ public:
     explicit InspectorImageRenderer(PipelineCache& pipelineCache) noexcept;
 
     bool Initialize(Device& device, const Size& screenSize);
-    void PrepareFrame();
+    void PrepareFrame(uint32_t slot);
     void BeginFrame(CommandList& cmd);
     void BindPipeline(CommandList& cmd);
     void Draw(CommandList& cmd, UINT srvIndex);

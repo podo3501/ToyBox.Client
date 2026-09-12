@@ -25,11 +25,11 @@ bool Renderers::Initialize()
     return true;
 }
 
-void Renderers::ResetFrameResources()
+void Renderers::ResetFrameResources(uint32_t slot)
 {
-    m_shadowRenderer.ResetFrameResources();
-    m_surfRenderer.ResetFrameResources();
-    m_debugSurfRenderer.ResetFrameResources();
-    m_uiRenderer.ResetFrameResources();
-    m_skyboxRenderer.ResetFrameResources();
+    m_shadowRenderer.ResetFrameResources(slot);
+    m_surfRenderer.ResetFrameResources(slot);
+    m_debugSurfRenderer.ResetFrameResources(slot);
+    m_uiRenderer.ResetFrameResources(slot);
+    m_skyboxRenderer.ResetFrameResources(slot);
 }

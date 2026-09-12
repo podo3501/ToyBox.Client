@@ -1,5 +1,6 @@
 #pragma once
-#include "Core/Utils/Allocator/DualIndexAllocator.h"
+#include "RenderConstants.h"
+#include "Core/Utils/Allocator/LinearIndexAllocator.h"
 #include "Core/Utils/Allocator/IndexAllocator.h"
 #include "GameClient/Service/Render/RenderConfig.h"
 #include <d3d12.h>
@@ -16,12 +17,12 @@ public:
     BindlessDescriptorAllocator();
     bool Initialize(Device& device, const BindlessDescriptorConfig& config) noexcept;
 
-    UINT AllocatePersistent() noexcept; //persistent 앞에서부터 채워나간다. FrameTransient와 공유함.
-    UINT AllocateTransient(UINT count = 1) noexcept; // 뒤에서부터 채우는 프레임당(프레임 끝나면 Free) 임시 할당
+    UINT AllocatePersistent() noexcept; //persistent
     UINT AllocateDynamic() noexcept; // 임시 할당. 프레임 단위가 아니라 fence에 따라 다름. 예약된 고정 크기가 있다.( ex. mipmap 같이 잠시 계산때 쓰고 버리는 거)
+    UINT AllocateTransient(uint32_t slot, UINT count = 1) noexcept; // 프레임 끝나면 Free. 임시 할당
 
     void FreeDynamic(UINT index) noexcept;
-    void ResetTransient() noexcept;
+    void ResetTransient(uint32_t slot) noexcept;
     void ResetAll() noexcept;
 
     D3D12_CPU_DESCRIPTOR_HANDLE GetCpuHandle(UINT index) const noexcept;
@@ -34,9 +35,14 @@ private:
     ComPtr<ID3D12DescriptorHeap> m_heap;
     UINT m_descriptorSize{ 0 };
 
-    Core::DualIndexAllocator m_persistentRegion;   // [0, asyncTransientStart), front=persistent, back=frameTransient
-    Core::IndexAllocator m_dynamicRegion;      // [asyncTransientStart, +asyncTransientCount), 로컬 인덱스, free 가능
-    UINT m_dynamicStart{ 0 };         // 로컬 -> 전역 heap 인덱스 변환용 오프셋
+    Core::LinearIndexAllocator m_persistentRegion; // [0, persistentCapacity), 해제 없음
+    Core::IndexAllocator m_dynamicRegion;              // [dynamicOffset, dynamicOffset + dynamicCount), 해제 가능
+    UINT m_dynamicOffset{ 0 };
+
+    // transient 영역 : [transientBase, transientBase + transientSlotCapacity * FrameBufferCount)
+    UINT m_transientBase{ 0 };
+    UINT m_transientSlotCapacity{ 0 };
+    std::atomic<UINT> m_transientOffset[FrameBufferCount]{};
 
     D3D12_CPU_DESCRIPTOR_HANDLE m_cpuStart{};
     D3D12_GPU_DESCRIPTOR_HANDLE m_gpuStart{};

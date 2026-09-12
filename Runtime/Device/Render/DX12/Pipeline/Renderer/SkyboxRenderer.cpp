@@ -67,9 +67,9 @@ bool SkyboxRenderer::CreateRootSignature(Device& device)
     return m_rootSignature != nullptr;
 }
 
-void SkyboxRenderer::ResetFrameResources()
+void SkyboxRenderer::ResetFrameResources(uint32_t slot)
 {
-    m_cbAllocator.Reset();
+    m_cbAllocator.Reset(slot);
 }
 
 void SkyboxRenderer::Draw(CommandList& cmd, const CameraData& camera, TextureCubeResource& skybox)

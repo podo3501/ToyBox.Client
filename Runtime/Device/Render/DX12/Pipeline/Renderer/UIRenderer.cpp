@@ -66,9 +66,9 @@ bool UIRenderer::CreateRootSignature(Device& device)
     return m_rootSignature != nullptr;
 }
 
-void UIRenderer::ResetFrameResources()
+void UIRenderer::ResetFrameResources(uint32_t slot)
 {
-    m_uiDrawCBAllocator.Reset();
+    m_uiDrawCBAllocator.Reset(slot);
 }
 
 void UIRenderer::BeginFrame(CommandList& cmd)

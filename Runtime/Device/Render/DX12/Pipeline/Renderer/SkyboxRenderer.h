@@ -19,7 +19,7 @@ public:
     SkyboxRenderer(const SkyboxRendererConfig& config, PipelineCache& pipelineCache);
 
     bool Initialize(Device& device);
-    void ResetFrameResources();
+    void ResetFrameResources(uint32_t slot);
 
     void Draw(CommandList& cmd, const CameraData& camera, TextureCubeResource& skybox);
 

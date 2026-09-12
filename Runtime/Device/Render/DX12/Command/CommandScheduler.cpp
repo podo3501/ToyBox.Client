@@ -19,14 +19,12 @@ bool CommandScheduler::Initialize(
     return true;
 }
 
-CommandList* CommandScheduler::Begin(CommandType type)
+CommandList* CommandScheduler::Begin(uint32_t slot)
 {
-    if (type == CommandType::None) return nullptr;
-
     Assert(!m_currentQueue);
 
-    m_currentQueue = GetQueue(type);
-    auto cmd = m_currentQueue->Begin();
+    m_currentQueue = GetQueue(CommandType::Direct);
+    auto cmd = m_currentQueue->Begin(slot);
     if (!cmd) m_currentQueue = nullptr;
 
     return cmd;

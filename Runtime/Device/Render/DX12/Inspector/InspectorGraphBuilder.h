@@ -3,6 +3,7 @@
 
 class RenderGraph;
 class InspectorImageRenderer;
+class DescriptorFactory;
 class SwapChainPresenter;
 
 class InspectorGraphBuilder
@@ -10,8 +11,9 @@ class InspectorGraphBuilder
 public:
     ~InspectorGraphBuilder();
     InspectorGraphBuilder() = delete;
-    explicit InspectorGraphBuilder(
+    InspectorGraphBuilder(
         InspectorImageRenderer& imageRenderer,
+        DescriptorFactory& descFactory,
         SwapChainPresenter& swapChain) noexcept;
 
     void Build(
@@ -21,6 +23,8 @@ public:
 
 private:
     InspectorImageRenderer& m_imageRenderer;
+    DescriptorFactory& m_descFactory;
     SwapChainPresenter& m_swapChain;
-    RGResourceID m_backBufferResID;
+
+    RGResourceID m_backBufferResID{ InvalidRGID };
 };

@@ -13,7 +13,7 @@ public:
     FrameUploadPools& operator=(const FrameUploadPools&) = delete;
 
     bool Initialize(Device& device);
-    void Reset() noexcept;
+    void Reset(uint32_t slot) noexcept;
 
     FrameUploadAllocator& VertexBuffer() noexcept;
     FrameUploadAllocator& IndexBuffer() noexcept;

@@ -25,6 +25,11 @@ bool CommandQueue::Initialize(
     ReturnIfFalse(CreateQueue(device, type));
     ReturnIfFalse(CreateFence(device));
 
+    //---- 테스트용 인위적 GPU 지연 fence ----
+    m_delayFence = device.CreateFence(0, D3D12_FENCE_FLAG_NONE);
+    ReturnIfFalse(m_delayFence != nullptr);
+    //-------------------------------------------
+
     m_bindlessHeap = bindlessHeap;
 
     m_pool.resize(cmdPoolSize);
@@ -32,6 +37,22 @@ bool CommandQueue::Initialize(
         ReturnIfFalse(cmd.Initialize(device, type));
 
     return true;
+}
+
+CommandList* CommandQueue::Begin(UINT slot)
+{
+    Assert(slot < FrameBufferCount);
+
+    // 0이면 아직 이 슬롯에 제출한 적이 없다는 뜻이므로 대기 없이 통과.
+    // (Signal()이 ++m_fenceID로 1부터 시작하므로 0은 "미사용"을 의미)
+    if (m_frameFences[slot] != 0)
+        WaitFence(m_frameFences[slot]);
+
+    CommandList* cmd = Begin();
+    if (cmd)
+        m_pendingFrameSlot = slot;
+
+    return cmd;
 }
 
 CommandList* CommandQueue::Begin()
@@ -60,10 +81,19 @@ FenceID CommandQueue::End()
     for (auto* cmdList : m_pendingSubmission)
         raw.push_back(cmdList->Get());
 
+    if (m_artificialDelayMs > 0)
+        InjectArtificialGpuDelay(m_artificialDelayMs);
+
     m_queue->ExecuteCommandLists(static_cast<UINT>(raw.size()), raw.data());
 
     FenceID fenceID = Signal();
     m_lastSubmittedFence = fenceID;
+
+    if (m_pendingFrameSlot != UINT_MAX)
+    {
+        m_frameFences[m_pendingFrameSlot] = fenceID;
+        m_pendingFrameSlot = UINT_MAX;
+    }
 
     for (auto* cmdList : m_pendingSubmission)
         cmdList->MarkSubmitted(m_fence.Get(), fenceID);
@@ -133,6 +163,7 @@ void CommandQueue::AbortFrame()
         entry->Discard(); // Close는 됐지만 아직 ExecuteCommandLists를 안 탄 것들 전부 폐기
 
     m_pendingSubmission.clear();
+    m_pendingFrameSlot = UINT_MAX;
 }
 
 FenceID CommandQueue::Signal()
@@ -188,4 +219,22 @@ void CommandQueue::WaitFence(FenceID fenceID)
         m_fence->SetEventOnCompletion(fenceID, m_event);
         WaitForSingleObject(m_event, INFINITE);
     }
+}
+
+void CommandQueue::InjectArtificialGpuDelay(uint32_t delayMs)
+{
+    ++m_delayFenceValue;
+    UINT64 targetValue = m_delayFenceValue;
+
+    // GPU 타임라인에 "이 값이 signal 될 때까지 대기"를 꽂는다.
+    // 이후 ExecuteCommandLists로 제출되는 커맨드는 이 대기가 풀려야 실행됨.
+    DxCheck(m_queue->Wait(m_delayFence.Get(), targetValue));
+
+    // CPU 스레드에서 delayMs 만큼 자다가 signal.
+    // 테스트 전용이므로 detach thread로 단순하게 처리.
+    ComPtr<ID3D12Fence> fence = m_delayFence; // 수명 보장을 위해 캡처
+    std::thread([fence, targetValue, delayMs]() {
+        std::this_thread::sleep_for(std::chrono::milliseconds(delayMs));
+        fence->Signal(targetValue);
+        }).detach();
 }

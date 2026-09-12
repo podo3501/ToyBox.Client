@@ -44,6 +44,7 @@
     <ClInclude Include="Utils\Allocator\DualIndexAllocator.h" />
     <ClInclude Include="Utils\Allocator\IndexAllocator.h" />
     <ClInclude Include="Utils\Allocator\IndexType.h" />
+    <ClInclude Include="Utils\Allocator\LinearIndexAllocator.h" />
     <ClInclude Include="Utils\BitUtils.h" />
     <ClInclude Include="Utils\CommonUtils.h" />
     <ClInclude Include="Utils\CycleIterator.h" />
@@ -77,6 +78,7 @@
     </ClCompile>
     <ClCompile Include="Utils\Allocator\DualIndexAllocator.cpp" />
     <ClCompile Include="Utils\Allocator\IndexAllocator.cpp" />
+    <ClCompile Include="Utils\Allocator\LinearIndexAllocator.cpp" />
     <ClCompile Include="Utils\BitUtils.cpp" />
     <ClCompile Include="Utils\CommonUtils.cpp" />
     <ClCompile Include="Utils\CycleIterator.cpp" />

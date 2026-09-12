@@ -9,7 +9,6 @@ FrameConstantAllocator::FrameConstantAllocator() = default;
 void FrameConstantAllocator::CreateBuffer(Device& device, UINT bufferSize)
 {
     Assert(bufferSize > 0);
-    m_bufferSize = bufferSize;
 
     m_resource = device.CreateResource(
         CD3DX12_RESOURCE_DESC::Buffer(bufferSize),
@@ -20,7 +19,10 @@ void FrameConstantAllocator::CreateBuffer(Device& device, UINT bufferSize)
     Assert(SUCCEEDED(hr));
 }
 
-void FrameConstantAllocator::Reset()
+void FrameConstantAllocator::Reset(uint32_t slot)
 {
+    Assert(slot < FrameBufferCount);
+
+    m_slotBaseOffset = m_perSlotSize * slot;
     m_offset = 0;
 }

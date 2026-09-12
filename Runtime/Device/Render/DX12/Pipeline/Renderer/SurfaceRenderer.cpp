@@ -125,11 +125,11 @@ bool SurfaceRenderer::CreateRootSignature(Device& device)
     return m_rootSignature != nullptr;
 }
 
-void SurfaceRenderer::ResetFrameResources()
+void SurfaceRenderer::ResetFrameResources(uint32_t slot)
 {
-    m_objectCBAllocator.Reset();
-    m_materialCBAllocator.Reset();
-    m_frameCBAllocator.Reset();
+    m_objectCBAllocator.Reset(slot);
+    m_materialCBAllocator.Reset(slot);
+    m_frameCBAllocator.Reset(slot);
 }
 
 void SurfaceRenderer::PrepareDraw(

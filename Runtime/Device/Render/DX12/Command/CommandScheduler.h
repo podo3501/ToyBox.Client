@@ -16,7 +16,7 @@ public:
         Device& device, 
         ID3D12DescriptorHeap* bindlessHeap, 
         const CommandPoolConfig& config);
-    CommandList* Begin(CommandType type);
+    CommandList* Begin(uint32_t slot); //Render 전용
     FenceID End(); // End -> Close + Signal, PendingRelease 등록
 
     // Render 전용: Begin()~End() 사이에서만 유효

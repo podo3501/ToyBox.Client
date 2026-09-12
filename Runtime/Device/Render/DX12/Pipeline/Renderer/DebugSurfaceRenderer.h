@@ -20,7 +20,7 @@ public:
     DebugSurfaceRenderer(const DebugSurfaceRendererConfig& config, PipelineCache& pipelineCache);
 
     bool Initialize(Device& device);
-    void ResetFrameResources();
+    void ResetFrameResources(uint32_t slot);
 
     void PrepareDraw(CommandList& cmd, const CameraData& camera);
     void BindPipeline(CommandList& cmd, const PipelineState& pipelineState);

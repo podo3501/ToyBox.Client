@@ -19,7 +19,7 @@ public:
     ~Renderers();
     Renderers(Device& device, ShaderLibrary& shaderLibaray);
     bool Initialize();
-    void ResetFrameResources();
+    void ResetFrameResources(uint32_t slot);
 
     ShadowRenderer& GetShadowRenderer() { return m_shadowRenderer; }
     SurfaceRenderer& GetSurfRenderer() { return m_surfRenderer; }

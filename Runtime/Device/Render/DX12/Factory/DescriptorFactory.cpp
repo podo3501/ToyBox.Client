@@ -20,6 +20,12 @@ bool DescriptorFactory::Initialize(const DescriptorConfig& config)
     return true;
 }
 
+void DescriptorFactory::BeginFrame(UINT slot) 
+{ 
+    m_currentSlot = slot;
+    m_bindlessAllocator.ResetTransient(slot);
+}
+
 UINT DescriptorFactory::CreateBufferSRV(
     DescriptorAllocationType type,
     const Resource& resBuffer,
@@ -31,7 +37,7 @@ UINT DescriptorFactory::CreateBufferSRV(
     switch (type)
     {
     case DescriptorAllocationType::Persistent: index = m_bindlessAllocator.AllocatePersistent(); break;
-    case DescriptorAllocationType::Transient: index = m_bindlessAllocator.AllocateTransient(); break;
+    case DescriptorAllocationType::Transient: index = m_bindlessAllocator.AllocateTransient(m_currentSlot); break;
     case DescriptorAllocationType::Dynamic: Assert(false); break; //지원안함.
     }
     if (index == UINT_MAX)

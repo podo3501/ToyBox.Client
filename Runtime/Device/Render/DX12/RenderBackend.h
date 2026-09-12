@@ -1,5 +1,6 @@
 #pragma once
 #include "GameClient/Service/Render/IRenderBackend.h"
+#include "RenderConstants.h"
 #include "Core/Device.h"
 #include "Command/CommandScheduler.h"
 #include "Task/TaskScheduler.h"
