@@ -3,7 +3,7 @@
 #include "UIBatchBuffer.h"
 #include "UIMeshAppend.h"
 #include "TextSystem/TextSystem.h"
-#include "Provider/Mesh/TransientMeshProvider.h"
+#include "Provider/TransientMesh/TransientMeshProvider.h"
 #include "Definition/RenderData.h"
 #include "Resource/Mesh/TransientMeshResource.h"
 #include "GameClient/Service/Render/Definition/View/Overlay/OverlayViewDrawList.h"

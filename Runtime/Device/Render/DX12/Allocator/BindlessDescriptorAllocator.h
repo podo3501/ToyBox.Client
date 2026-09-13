@@ -15,7 +15,7 @@ class BindlessDescriptorAllocator
 public:
     ~BindlessDescriptorAllocator();
     BindlessDescriptorAllocator();
-    bool Initialize(Device& device, const BindlessDescriptorConfig& config) noexcept;
+    bool Initialize(Device& device) noexcept;
 
     UINT AllocatePersistent() noexcept; //persistent
     UINT AllocateDynamic() noexcept; // 임시 할당. 프레임 단위가 아니라 fence에 따라 다름. 예약된 고정 크기가 있다.( ex. mipmap 같이 잠시 계산때 쓰고 버리는 거)

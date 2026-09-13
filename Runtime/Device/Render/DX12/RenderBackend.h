@@ -11,8 +11,7 @@
 #include "Inspector/Inspector.h"
 #include "Core/FrameProfiler.h"
 #include "ResourceProviderSet.h"
-#include "Allocator/FrameUploadPools.h"
-#include "Provider/Mesh/TransientMeshProvider.h"
+#include "Provider/TransientMesh/TransientMeshProvider.h"
 #include "Pipeline/ForwardRenderPipeline.h"
 #include "TextSystem/TextSystem.h"
 
@@ -44,7 +43,6 @@ private:
 	Inspector m_inspector; //코드가 이상할때 조사할수 있게 도와주는 클래스
 	FrameProfiler m_profiler;
 	ResourceProviderSet m_resProviderSet;
-	FrameUploadPools m_frameUploadPools;
 	TransientMeshProvider m_transientMeshProvider;
 	TextSystem m_textSystem;
 	ForwardRenderPipeline m_pipeline;

@@ -56,8 +56,8 @@
     <ClInclude Include="Render\DX12\Allocator\BindlessDescriptorAllocator.h" />
     <ClInclude Include="Render\DX12\Allocator\FrameConstantAllocator.h" />
     <ClInclude Include="Render\DX12\Allocator\FrameUploadAllocator.h" />
-    <ClInclude Include="Render\DX12\Allocator\FrameUploadPools.h" />
     <ClInclude Include="Render\DX12\Allocator\UploadAllocation.h" />
+    <ClInclude Include="Render\DX12\BackendConfig.h" />
     <ClInclude Include="Render\DX12\Core\FreeTypeLibrary.h" />
     <ClInclude Include="Render\DX12\Definition\RenderData.h" />
     <ClInclude Include="Render\DX12\Definition\RenderFormat.h" />
@@ -104,7 +104,6 @@
     <ClInclude Include="Render\DX12\Provider\IUpdatableProvider.h" />
     <ClInclude Include="Render\DX12\Provider\Material\DebugMaterialProvider.h" />
     <ClInclude Include="Render\DX12\Provider\Material\MaterialProvider.h" />
-    <ClInclude Include="Render\DX12\Provider\Mesh\TransientMeshProvider.h" />
     <ClInclude Include="Render\DX12\Provider\PendingLoadQueue.h" />
     <ClInclude Include="Render\DX12\Provider\PendingReleaseQueue.h" />
     <ClInclude Include="Render\DX12\Provider\PendingUploadQueue.h" />
@@ -113,6 +112,9 @@
     <ClInclude Include="Render\DX12\Provider\Texture\TextureCubeCreateGraphBuilder.h" />
     <ClInclude Include="Render\DX12\Provider\Texture\TextureCubeLoadRequest.h" />
     <ClInclude Include="Render\DX12\Provider\Texture\TextureCubeProvider.h" />
+    <ClInclude Include="Render\DX12\Provider\TransientMesh\FrameUploadPools.h" />
+    <ClInclude Include="Render\DX12\Provider\TransientMesh\FrameUploadPoolType.h" />
+    <ClInclude Include="Render\DX12\Provider\TransientMesh\TransientMeshProvider.h" />
     <ClInclude Include="Render\DX12\RenderConstants.h" />
     <ClInclude Include="Render\DX12\Command\CommandList.h" />
     <ClInclude Include="Render\DX12\Command\CommandListHelpers.h" />
@@ -244,7 +246,6 @@
     <ClCompile Include="Render\DX12\Allocator\BindlessDescriptorAllocator.cpp" />
     <ClCompile Include="Render\DX12\Allocator\FrameConstantAllocator.cpp" />
     <ClCompile Include="Render\DX12\Allocator\FrameUploadAllocator.cpp" />
-    <ClCompile Include="Render\DX12\Allocator\FrameUploadPools.cpp" />
     <ClCompile Include="Render\DX12\Core\FreeTypeLibrary.cpp" />
     <ClCompile Include="Render\DX12\Graph\BarrierBuilder.cpp" />
     <ClCompile Include="Render\DX12\Graph\RenderGraphUtils.cpp" />
@@ -281,7 +282,6 @@
     <ClCompile Include="Render\DX12\Provider\Font\FontProvider.cpp" />
     <ClCompile Include="Render\DX12\Provider\Material\DebugMaterialProvider.cpp" />
     <ClCompile Include="Render\DX12\Provider\Material\MaterialProvider.cpp" />
-    <ClCompile Include="Render\DX12\Provider\Mesh\TransientMeshProvider.cpp" />
     <ClCompile Include="Render\DX12\Provider\PendingLoadQueue.cpp" />
     <ClCompile Include="Render\DX12\Provider\PendingReleaseQueue.cpp" />
     <ClCompile Include="Render\DX12\Provider\ProviderBudget.cpp" />
@@ -313,6 +313,8 @@
     <ClCompile Include="Render\DX12\Provider\Texture\TextureCreateGraphBuilder.cpp" />
     <ClCompile Include="Render\DX12\Provider\Texture\TextureProvider.cpp" />
     <ClCompile Include="Render\DX12\Provider\Texture\TextureUtils.cpp" />
+    <ClCompile Include="Render\DX12\Provider\TransientMesh\FrameUploadPools.cpp" />
+    <ClCompile Include="Render\DX12\Provider\TransientMesh\TransientMeshProvider.cpp" />
     <ClCompile Include="Render\DX12\ResourceProviderSet.cpp" />
     <ClCompile Include="Render\DX12\Resource\Brush\BrushResource.cpp" />
     <ClCompile Include="Render\DX12\Resource\Environment\EnvironmentResource.cpp" />

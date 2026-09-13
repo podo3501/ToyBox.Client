@@ -37,7 +37,6 @@ bool ForwardRenderPipeline::Initialize(const Size& screenSize, const Size& shado
 {
     ReturnIfFalse(m_shadowRes.Initialize(m_device, m_descFactory, shadowMapSize));
     ReturnIfFalse(m_renderers.Initialize());
-    ReturnIfFalse(m_idAllocator.Initialize(TotalResourceIDCapacity, DynamicResourceIDCapacity));
     ReturnIfFalse(m_inspectorRenderers.Initialize(screenSize));
 
     m_hBackBuffer = m_idAllocator.AllocatePersistent();

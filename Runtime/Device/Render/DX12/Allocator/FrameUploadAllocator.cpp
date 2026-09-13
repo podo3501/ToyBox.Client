@@ -6,13 +6,18 @@
 FrameUploadAllocator::FrameUploadAllocator() = default;
 FrameUploadAllocator::~FrameUploadAllocator() = default;
 
-bool FrameUploadAllocator::Initialize(Device& device, UINT bufferSizeInBytes)
+bool FrameUploadAllocator::Initialize(
+    Device& device, 
+    UINT bufferSizeInBytes, 
+    UINT elementStride)
 {
     Assert(bufferSizeInBytes > 0);
-    m_perSlotSize = bufferSizeInBytes;
+    Assert(elementStride > 0);
 
+    m_elementStride = elementStride;
+    m_perSlotSize = Core::AlignUpGeneric(bufferSizeInBytes, elementStride);
     m_resource = device.CreateResource(
-        CD3DX12_RESOURCE_DESC::Buffer(bufferSizeInBytes * FrameBufferCount), // 슬롯 수만큼 버퍼를 늘려서, 슬롯마다 겹치지 않는 영역을 갖게 한다.
+        CD3DX12_RESOURCE_DESC::Buffer(m_perSlotSize * FrameBufferCount), // 슬롯 수만큼 버퍼를 늘려서, 슬롯마다 겹치지 않는 영역을 갖게 한다.
         D3D12_HEAP_TYPE_UPLOAD,
         D3D12_RESOURCE_STATE_GENERIC_READ);
 
@@ -22,9 +27,12 @@ bool FrameUploadAllocator::Initialize(Device& device, UINT bufferSizeInBytes)
     return true;
 }
 
-UploadAllocation FrameUploadAllocator::Allocate(UINT sizeInBytes, UINT alignment)
+UploadAllocation FrameUploadAllocator::Allocate(UINT elementCount) noexcept
 {
-    UINT alignedOffset = Core::AlignUp(m_offset, alignment);
+    Assert(m_elementStride > 0); // 등록 없이 Allocate 호출 금지
+
+    UINT sizeInBytes = elementCount * m_elementStride;
+    UINT alignedOffset = Core::AlignUpGeneric(m_offset, m_elementStride);
     Assert(alignedOffset + sizeInBytes <= m_perSlotSize);
 
     m_offset = alignedOffset + sizeInBytes;
@@ -36,6 +44,7 @@ UploadAllocation FrameUploadAllocator::Allocate(UINT sizeInBytes, UINT alignment
     alloc.cpuAddress = m_mapped + globalOffset;
     alloc.gpuAddress = m_resource->GetGPUVirtualAddress() + globalOffset;
     alloc.offset = globalOffset;
+    alloc.sizeInBytes = sizeInBytes;
 
     return alloc;
 }

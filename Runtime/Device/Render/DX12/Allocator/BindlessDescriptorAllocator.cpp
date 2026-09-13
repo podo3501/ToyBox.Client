@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "BindlessDescriptorAllocator.h"
+#include "BackendConfig.h"
 #include "Core/Device.h"
 
 BindlessDescriptorAllocator::~BindlessDescriptorAllocator()
@@ -8,28 +9,19 @@ BindlessDescriptorAllocator::~BindlessDescriptorAllocator()
 }
 BindlessDescriptorAllocator::BindlessDescriptorAllocator() = default;
 
-bool BindlessDescriptorAllocator::Initialize(Device& device, const BindlessDescriptorConfig& config) noexcept
+bool BindlessDescriptorAllocator::Initialize(Device& device) noexcept
 {
-    UINT transientTotal = config.transientCount * FrameBufferCount;
-    UINT requiredTotal = config.persistentCount + config.dynamicCount + transientTotal;
+    m_persistentRegion.Initialize(BindlessDescriptors::PersistentCount); // persistent: [0, persistentCount)
 
-    if (config.bindlessCount < requiredTotal)
-    {
-        Assert(false); // config 값들의 합이 bindlessCount를 초과함
-        return false;
-    }
+    m_dynamicOffset = BindlessDescriptors::PersistentCount;
+    m_dynamicRegion.Initialize(BindlessDescriptors::DynamicCount); // dynamic: [persistentCount, persistentCount + dynamicCount)
 
-    m_persistentRegion.Initialize(config.persistentCount); // persistent: [0, persistentCount)
-    
-    m_dynamicOffset = config.persistentCount;
-    m_dynamicRegion.Initialize(config.dynamicCount); // dynamic: [persistentCount, persistentCount + dynamicCount)
-    
-    m_transientBase = m_dynamicOffset + config.dynamicCount;
-    m_transientSlotCapacity = config.transientCount; // transient: [dynamicStart + dynamicCount, bindlessCount), 슬롯당 config.transientCount
+    m_transientBase = m_dynamicOffset + BindlessDescriptors::DynamicCount;
+    m_transientSlotCapacity = BindlessDescriptors::TransientCount; // transient: [transientBase, transientBase + transientSlotCapacity), 슬롯당 config.transientCount
 
     m_heap = device.CreateDescriptorHeap(
         D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV,
-        config.bindlessCount,
+        BindlessDescriptors::Count,
         D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE);
     if (!m_heap)
         return false;

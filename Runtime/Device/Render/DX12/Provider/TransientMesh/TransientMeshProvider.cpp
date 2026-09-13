@@ -3,14 +3,23 @@
 #include "Factory/DescriptorFactory.h"
 #include "Resource/Mesh/TransientMeshResource.h"
 #include "RenderConstants.h"
-#include "Allocator/FrameUploadPools.h"
 
+TransientMeshProvider::~TransientMeshProvider() = default;
 TransientMeshProvider::TransientMeshProvider(
-    FrameUploadPools& frameUploadPools,
     DescriptorFactory& descriptorFactory) noexcept :
-    m_frameUploadPools{ frameUploadPools },
     m_descriptorFactory{ descriptorFactory }
 {}
+
+bool TransientMeshProvider::Initialize(Device& device)
+{
+    FrameUploadPoolDesc poolDescs[] =
+    {
+        { FrameUploadPoolType::UIVertex, 16 * 1024 * 1024, sizeof(UIVertex) },
+        { FrameUploadPoolType::UIIndex,  16 * 1024 * 1024, sizeof(uint32_t) },
+    };
+
+    return m_frameUploadPools.Initialize(device, poolDescs);
+}
 
 std::shared_ptr<TransientMeshResource> TransientMeshProvider::Create(
     std::span<const UIVertex> vertices,
@@ -21,16 +30,20 @@ std::shared_ptr<TransientMeshResource> TransientMeshProvider::Create(
 
     auto resource = std::make_shared<TransientMeshResource>();
 
-    size_t vertexBytes = vertices.size() * sizeof(UIVertex);
-    size_t indexBytes = indices.size() * sizeof(uint32_t);
+    UploadAllocation vertex = m_frameUploadPools.Allocate(
+        FrameUploadPoolType::UIVertex, 
+        static_cast<UINT>(vertices.size()));
 
-    UploadAllocation vertex = m_frameUploadPools.VertexBuffer().Allocate(
-        static_cast<UINT>(vertexBytes), AlignVertexBuffer);
-    UploadAllocation index = m_frameUploadPools.IndexBuffer().Allocate(
-        static_cast<UINT>(indexBytes), AlignIndexBuffer);
+    UploadAllocation index = m_frameUploadPools.Allocate(
+        FrameUploadPoolType::UIIndex, 
+        static_cast<UINT>(indices.size()));
 
-    memcpy(vertex.cpuAddress, vertices.data(), vertexBytes);
-    memcpy(index.cpuAddress, indices.data(), indexBytes);
+    // 검증: offset이 각 원소 크기의 배수가 아니면 FirstElement 계산이 틀어짐
+    Assert(vertex.offset % sizeof(UIVertex) == 0);
+    Assert(index.offset % sizeof(uint32_t) == 0);
+
+    memcpy(vertex.cpuAddress, vertices.data(), vertex.sizeInBytes);
+    memcpy(index.cpuAddress, indices.data(), index.sizeInBytes);
 
     UINT vertexHeapIndex =
         m_descriptorFactory.CreateBufferSRV(

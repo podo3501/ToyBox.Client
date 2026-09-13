@@ -47,4 +47,20 @@ namespace Core
         else
             return static_cast<T>(aligned);
     }
+
+    // AlignUp과 달리 alignment가 2의 거듭제곱이 아니어도 동작하는 범용 버전.
+    // (예: sizeof(UIVertex)=72처럼 임의의 stride로 정렬해야 하는 경우)
+    // 2의 거듭제곱일 때는 비트 연산으로, 아닐 때는 나눗셈으로 처리한다.
+    // 정수 전용 (포인터는 stride 정렬 대상이 아니므로 지원하지 않음).
+    template <typename T>
+        requires std::integral<T> && (!std::same_as<T, bool>)
+    [[nodiscard]] constexpr T AlignUpGeneric(T value, T alignment) noexcept
+    {
+        Assert(alignment > 0);
+
+        if (std::has_single_bit(static_cast<size_t>(alignment)))
+            return AlignUp(value, static_cast<size_t>(alignment));
+
+        return ((value + alignment - 1) / alignment) * alignment;
+    }
 }

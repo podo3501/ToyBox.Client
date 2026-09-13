@@ -13,7 +13,7 @@ DescriptorFactory::DescriptorFactory(Device& device) :
 
 bool DescriptorFactory::Initialize(const DescriptorConfig& config)
 {
-    ReturnIfFalse(m_bindlessAllocator.Initialize(m_device, config.bindless));
+    ReturnIfFalse(m_bindlessAllocator.Initialize(m_device));
     ReturnIfFalse(m_rtvAllocator.Initialize(m_device, D3D12_DESCRIPTOR_HEAP_TYPE_RTV, config.rtvCount));
     ReturnIfFalse(m_dsvAllocator.Initialize(m_device, D3D12_DESCRIPTOR_HEAP_TYPE_DSV, config.dsvCount));
 

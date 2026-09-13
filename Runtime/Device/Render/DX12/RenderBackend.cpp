@@ -11,7 +11,7 @@ RenderBackend::RenderBackend(const RenderConfig& config) :
     m_taskScheduler{ m_cmdScheduler },
     m_swapChain{ m_cmdScheduler },
     m_resProviderSet{ m_device, m_taskScheduler, m_resFactory, m_descFactory },
-    m_transientMeshProvider{ m_frameUploadPools, m_descFactory },
+    m_transientMeshProvider{ m_descFactory },
     m_textSystem{ m_device, m_descFactory, m_resFactory },
     m_pipeline{ m_device, m_swapChain, m_taskScheduler, m_descFactory, m_shaderLibrary, m_textSystem.GetBuilder() }
 {}
@@ -33,7 +33,7 @@ bool RenderBackend::Initialize(HWND hwnd, const Size& screenSize, std::span<cons
     ReturnIfFalse(m_shaderLibrary.Initialize(registryShaders));
     ReturnIfFalse(m_profiler.Initialize(m_device, m_cmdScheduler, m_resFactory));
     ReturnIfFalse(m_resProviderSet.Initialize(m_shaderLibrary));
-    ReturnIfFalse(m_frameUploadPools.Initialize(m_device));
+    ReturnIfFalse(m_transientMeshProvider.Initialize(m_device));
     ReturnIfFalse(m_textSystem.Initialize(m_config.text));
     ReturnIfFalse(m_pipeline.Initialize(screenSize, shadowMapSize));
 
@@ -63,7 +63,7 @@ void RenderBackend::Render(SceneFrameData frame)
     auto* cmd = m_cmdScheduler.Begin(slot);
     if (cmd)
     {
-        m_frameUploadPools.Reset(slot);
+        m_transientMeshProvider.ResetFrame(slot);
         m_descFactory.BeginFrame(slot);
 
         m_profiler.BeginFrame(*cmd, m_frameIndex);

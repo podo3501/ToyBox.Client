@@ -154,6 +154,9 @@
     <Filter Include="Render\DX12\Task\Types">
       <UniqueIdentifier>{25bd62a5-5509-4cbe-b676-449dc4d8e212}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Render\DX12\Provider\TransientMesh">
+      <UniqueIdentifier>{c9a5deae-2135-4b16-8abe-7ccd7a33a9c1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Storage\JsonObjectIO.h">
@@ -404,12 +407,6 @@
       <Filter>Render\DX12\Resource\Mesh</Filter>
     </ClInclude>
     <ClInclude Include="Render\DX12\Allocator\UploadAllocation.h">
-      <Filter>Render\DX12\Allocator</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\DX12\Provider\Mesh\TransientMeshProvider.h">
-      <Filter>Render\DX12\Provider\Mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\DX12\Allocator\FrameUploadPools.h">
       <Filter>Render\DX12\Allocator</Filter>
     </ClInclude>
     <ClInclude Include="Render\DX12\Inspector\Inspector.h">
@@ -703,6 +700,18 @@
     <ClInclude Include="Render\DX12\Task\Types\TaskCommandLists.h">
       <Filter>Render\DX12\Task\Types</Filter>
     </ClInclude>
+    <ClInclude Include="Render\DX12\Provider\TransientMesh\TransientMeshProvider.h">
+      <Filter>Render\DX12\Provider\TransientMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Provider\TransientMesh\FrameUploadPools.h">
+      <Filter>Render\DX12\Provider\TransientMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\Provider\TransientMesh\FrameUploadPoolType.h">
+      <Filter>Render\DX12\Provider\TransientMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\DX12\BackendConfig.h">
+      <Filter>Render\DX12</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -906,12 +915,6 @@
     </ClCompile>
     <ClCompile Include="Render\DX12\Resource\Mesh\TransientMeshResource.cpp">
       <Filter>Render\DX12\Resource\Mesh</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\DX12\Provider\Mesh\TransientMeshProvider.cpp">
-      <Filter>Render\DX12\Provider\Mesh</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\DX12\Allocator\FrameUploadPools.cpp">
-      <Filter>Render\DX12\Allocator</Filter>
     </ClCompile>
     <ClCompile Include="Render\DX12\Inspector\Inspector.cpp">
       <Filter>Render\DX12\Inspector</Filter>
@@ -1128,6 +1131,12 @@
     </ClCompile>
     <ClCompile Include="Render\DX12\Task\TaskUtils.cpp">
       <Filter>Render\DX12\Task</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Provider\TransientMesh\TransientMeshProvider.cpp">
+      <Filter>Render\DX12\Provider\TransientMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\DX12\Provider\TransientMesh\FrameUploadPools.cpp">
+      <Filter>Render\DX12\Provider\TransientMesh</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

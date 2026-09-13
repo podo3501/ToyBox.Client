@@ -1,25 +1,30 @@
 #include "pch.h"
 #include "RGResourceIDAllocator.h"
 
-bool RGResourceIDAllocator::Initialize(uint32_t totalCapacity, uint32_t dynamicCapacity) noexcept
+RGResourceIDAllocator::~RGResourceIDAllocator() = default;
+RGResourceIDAllocator::RGResourceIDAllocator() noexcept
 {
-    if (totalCapacity <= dynamicCapacity) return false;
+    m_persistentRegion.Initialize(PersistentResourceIDCapacity); // persistent: [0, PersistentResourceIDCapacity)
 
-    m_dynamicStart = totalCapacity - dynamicCapacity; // 로컬 -> 전역 인덱스 변환용 오프셋
-    m_persistentRegion.Initialize(m_dynamicStart);    // [0, dynamicStart), front=persistent, back=transient
-    m_dynamicRegion.Initialize(dynamicCapacity);      // 로컬 인덱스, free 가능
+    m_dynamicOffset = PersistentResourceIDCapacity;
+    m_dynamicRegion.Initialize(DynamicResourceIDCapacity); // dynamic: [dynamicOffset, dynamicOffset + DynamicResourceIDCapacity)
 
-    return true;
+    m_transientOffset = m_dynamicOffset + DynamicResourceIDCapacity;
+    m_transientRegion.Initialize(TransientResourceIDCapacity); // transient: [transientOffset, transientOffset + TransientResourceIDCapacity)
 }
 
 RGResourceID RGResourceIDAllocator::AllocatePersistent() noexcept
 {
-    return m_persistentRegion.AllocateFront();
+    return m_persistentRegion.Allocate();
 }
 
-RGResourceID RGResourceIDAllocator::AllocateTransient(uint32_t count) noexcept
+RGResourceID RGResourceIDAllocator::AllocateTransient() noexcept
 {
-    return m_persistentRegion.AllocateBack(count);
+    RGResourceID local = m_transientRegion.Allocate();
+    if (local == Core::InvalidIndex)
+        return InvalidRGID;
+
+    return m_transientOffset + local;
 }
 
 RGResourceID RGResourceIDAllocator::AllocateDynamic() noexcept
@@ -28,21 +33,23 @@ RGResourceID RGResourceIDAllocator::AllocateDynamic() noexcept
     if (local == Core::InvalidIndex)
         return InvalidRGID;
 
-    return m_dynamicStart + local; // 전역 인덱스로 변환
+    return m_dynamicOffset + local; // 전역 인덱스로 변환
 }
 
 void RGResourceIDAllocator::FreeDynamic(RGResourceID id) noexcept
 {
-    m_dynamicRegion.Free(id - m_dynamicStart); // 전역 -> 로컬
+    if (id == InvalidRGID) return;
+    m_dynamicRegion.Free(id - m_dynamicOffset); // 전역 -> 로컬
 }
 
 void RGResourceIDAllocator::ResetTransient() noexcept
 { 
-    m_persistentRegion.ResetBack(); 
+    m_transientRegion.Reset();
 }
 
 void RGResourceIDAllocator::ResetAll() noexcept
 {
-    m_persistentRegion.ResetAll(); //transient 부분도 reset 됨.
+    m_persistentRegion.Reset();
     m_dynamicRegion.Reset();
+    m_transientRegion.Reset();
 }
