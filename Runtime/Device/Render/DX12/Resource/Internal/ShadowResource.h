@@ -1,7 +1,6 @@
 #pragma once
 #include "../Resource.h"
 
-struct Size;
 class Device;
 class ResourceFactory;
 class DescriptorFactory;
@@ -11,7 +10,7 @@ class ShadowResource
 public:
     ~ShadowResource();
     ShadowResource();
-    bool Initialize(Device& device, DescriptorFactory& factory, const Size& shadowMapSize);
+    bool Initialize(Device& device, DescriptorFactory& factory);
 
     const Resource& GetResource() const { return m_resource; }
     Resource& GetResource() { return m_resource; }

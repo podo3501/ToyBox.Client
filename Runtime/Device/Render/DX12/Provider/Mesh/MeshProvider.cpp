@@ -22,8 +22,8 @@ static std::pair<size_t, size_t> EstimateBytes(MeshAsset* mesh)
     size_t vb = mesh->vertices.size();
     size_t ib = mesh->indices.size() * sizeof(uint32_t);
 
-    vb = Core::AlignUp(vb, AlignVertexBuffer);
-    ib = Core::AlignUp(ib, AlignIndexBuffer);
+    vb = Core::AlignUp(vb, BufferAlignment::VertexBuffer);
+    ib = Core::AlignUp(ib, BufferAlignment::IndexBuffer);
 
     return { vb, ib };
 }

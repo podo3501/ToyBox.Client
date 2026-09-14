@@ -7,9 +7,11 @@
 #include "Factory/DescriptorFactory.h"
 #include "Helpers/TextureHelpers.h"
 
-static Resource CreateShadowResource(Device& device, const Size& shadowMapSize)
+constexpr Size ShadowMapSize = { 2048, 2048 };
+
+static Resource CreateShadowResource(Device& device)
 {
-    auto desc = CreateTextureDescriptor(shadowMapSize.width, shadowMapSize.height, DXGI_FORMAT_R32_TYPELESS);
+    auto desc = CreateTextureDescriptor(ShadowMapSize.width, ShadowMapSize.height, DXGI_FORMAT_R32_TYPELESS);
     desc.Flags |= D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
 
     D3D12_CLEAR_VALUE clearValue{};
@@ -27,9 +29,9 @@ static Resource CreateShadowResource(Device& device, const Size& shadowMapSize)
 ShadowResource::~ShadowResource() = default;
 ShadowResource::ShadowResource() = default;
 
-bool ShadowResource::Initialize(Device& device, DescriptorFactory& factory, const Size& shadowMapSize)
+bool ShadowResource::Initialize(Device& device, DescriptorFactory& factory)
 {
-	m_resource = CreateShadowResource(device, shadowMapSize);
+	m_resource = CreateShadowResource(device);
 	if (!m_resource) return false;
 
 	m_dsvIndex = factory.CreateTextureDSV(m_resource, DXGI_FORMAT_D32_FLOAT);

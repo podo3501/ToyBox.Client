@@ -33,9 +33,9 @@ ForwardRenderPipeline::ForwardRenderPipeline(
         descFactory, m_swapChain }
 {}
 
-bool ForwardRenderPipeline::Initialize(const Size& screenSize, const Size& shadowMapSize)
+bool ForwardRenderPipeline::Initialize(const Size& screenSize)
 {
-    ReturnIfFalse(m_shadowRes.Initialize(m_device, m_descFactory, shadowMapSize));
+    ReturnIfFalse(m_shadowRes.Initialize(m_device, m_descFactory));
     ReturnIfFalse(m_renderers.Initialize());
     ReturnIfFalse(m_inspectorRenderers.Initialize(screenSize));
 

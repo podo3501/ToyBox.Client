@@ -57,10 +57,10 @@ void FontAtlasUploadGraphBuilder::Build(RenderGraph& graph, RGResourceIDAllocato
         {
             uint32_t bytesPerPixel = GetBytesPerPixel(glyph.pixels.format);
             size_t bytesPerRow = static_cast<size_t>(glyph.pixels.width) * bytesPerPixel;
-            size_t rowPitch = Core::AlignUp(bytesPerRow, AlignTextureRow);
+            size_t rowPitch = Core::AlignUp(bytesPerRow, TextureAlignment::Row);
             size_t glyphSize = rowPitch * glyph.pixels.height;
 
-            uploadOffset = Core::AlignUp(uploadOffset, AlignTexturePlacement);
+            uploadOffset = Core::AlignUp(uploadOffset, TextureAlignment::Placement);
             layouts.push_back({ uploadOffset, rowPitch, bytesPerRow });
             uploadOffset += glyphSize;
         }

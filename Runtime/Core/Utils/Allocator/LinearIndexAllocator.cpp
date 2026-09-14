@@ -9,10 +9,10 @@ namespace Core
         m_allocated = 0;
     }
 
-    Index LinearIndexAllocator::Allocate() noexcept
+    Index LinearIndexAllocator::Allocate(Index count) noexcept
     {
-        Index index = m_allocated.fetch_add(1, std::memory_order_relaxed);
-        if (index >= m_capacity)
+        Index index = m_allocated.fetch_add(count, std::memory_order_relaxed);
+        if (index + count > m_capacity)
         {
             Assert(false); // 공간이 가득 참. capacity를 늘려야 함.
             return InvalidIndex;

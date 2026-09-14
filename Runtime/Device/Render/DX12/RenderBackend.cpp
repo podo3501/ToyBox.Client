@@ -24,8 +24,6 @@ void RenderBackend::Shutdown()
 
 bool RenderBackend::Initialize(HWND hwnd, const Size& screenSize, std::span<const RegistryShaderDesc> registryShaders)
 {
-    Size shadowMapSize = { 2048, 2048 };
-
     ReturnIfFalse(m_descFactory.Initialize(m_config.descriptors));
     ReturnIfFalse(m_cmdScheduler.Initialize(m_device, m_descFactory.GetBindlessAllocator().GetHeap(), m_config.commandPools));
     SwapChainDesc desc{ hwnd, screenSize, m_config.allowTearing };
@@ -35,7 +33,7 @@ bool RenderBackend::Initialize(HWND hwnd, const Size& screenSize, std::span<cons
     ReturnIfFalse(m_resProviderSet.Initialize(m_shaderLibrary));
     ReturnIfFalse(m_transientMeshProvider.Initialize(m_device));
     ReturnIfFalse(m_textSystem.Initialize(m_config.text));
-    ReturnIfFalse(m_pipeline.Initialize(screenSize, shadowMapSize));
+    ReturnIfFalse(m_pipeline.Initialize(screenSize));
 
     return true;
 }

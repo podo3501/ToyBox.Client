@@ -73,7 +73,7 @@ std::vector<TextureCubeUploadEntry> TextureCubeCreateGraphBuilder::BuildTextureC
         textureCubeResource->SetSize(Size{ req.asset->width, req.asset->height });
         m_descFactory.CreateTextureCubeViews(textureCubeResource.get());
 
-        offset = Core::AlignUp(offset, AlignTexturePlacement);
+        offset = Core::AlignUp(offset, TextureAlignment::Placement);
         uploads.push_back({ texResID, textureCubeResource, req.asset, offset });
 
         // 6면 * mipCount 개의 subresource 크기 합산
@@ -81,7 +81,7 @@ std::vector<TextureCubeUploadEntry> TextureCubeCreateGraphBuilder::BuildTextureC
             resDesc, 0, req.asset->mipCount * req.asset->faceCount, offset);
     }
 
-    outTotalUploadSize = Core::AlignUp(offset, AlignTexturePlacement);
+    outTotalUploadSize = Core::AlignUp(offset, TextureAlignment::Placement);
     return uploads;
 }
 

@@ -32,7 +32,7 @@ public:
         DescriptorFactory& descFactory,
         ShaderLibrary& shaderLibrary,
         FontAtlasUploadGraphBuilder& fontUploadBuilder);
-    bool Initialize(const Size& screenSize, const Size& shadowMapSize);
+    bool Initialize(const Size& screenSize);
     void Update();
     CommandList* Render(
         CommandList* cmd, 

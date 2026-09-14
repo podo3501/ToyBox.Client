@@ -39,10 +39,9 @@ private:
     Core::IndexAllocator m_dynamicRegion;              // [dynamicOffset, dynamicOffset + dynamicCount), 해제 가능
     UINT m_dynamicOffset{ 0 };
 
-    // transient 영역 : [transientBase, transientBase + transientSlotCapacity * FrameBufferCount)
-    UINT m_transientBase{ 0 };
-    UINT m_transientSlotCapacity{ 0 };
-    std::atomic<UINT> m_transientOffset[FrameBufferCount]{};
+    // transient 영역 : [transientOffset, transientOffset + capacity * FrameBufferCount), 프레임당 전체 해제
+    std::array<Core::LinearIndexAllocator, FrameBufferCount> m_transientRegion; // 슬롯별 카운터, capacity는 각자 보유
+    UINT m_transientOffset{ 0 };
 
     D3D12_CPU_DESCRIPTOR_HANDLE m_cpuStart{};
     D3D12_GPU_DESCRIPTOR_HANDLE m_gpuStart{};

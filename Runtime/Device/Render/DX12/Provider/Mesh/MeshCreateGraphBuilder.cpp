@@ -104,7 +104,7 @@ std::vector<MeshUploadEntry> MeshCreateGraphBuilder::BuildMeshUploads(
         offset += req.vbBytes + req.ibBytes;
     }
 
-    outTotalUploadSize = Core::AlignUp(offset, AlignVertexBuffer);
+    outTotalUploadSize = Core::AlignUp(offset, BufferAlignment::VertexBuffer);
     return uploads;
 }
 

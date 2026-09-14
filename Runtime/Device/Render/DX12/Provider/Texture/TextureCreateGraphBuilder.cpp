@@ -99,7 +99,7 @@ std::vector<TextureUploadEntry> TextureCreateGraphBuilder::BuildTextureUploads(
             &mipSrv, &mipUav);
 
         outHasMipTask |= mips;
-        offset = Core::AlignUp(offset, AlignTexturePlacement);
+        offset = Core::AlignUp(offset, TextureAlignment::Placement);
         uploads.push_back({
             texResID, textureResource, req.asset, offset, mips, 
             std::move(mipSrv), std::move(mipUav) });
@@ -107,7 +107,7 @@ std::vector<TextureUploadEntry> TextureCreateGraphBuilder::BuildTextureUploads(
         offset += m_resFactory.GetRequiredIntermediateSize(resDesc, 0, 1, offset);
     }
 
-    outTotalUploadSize = Core::AlignUp(offset, AlignTexturePlacement);
+    outTotalUploadSize = Core::AlignUp(offset, TextureAlignment::Placement);
     return uploads;
 }
 

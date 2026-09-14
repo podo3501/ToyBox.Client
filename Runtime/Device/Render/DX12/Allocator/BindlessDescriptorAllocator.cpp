@@ -1,7 +1,18 @@
 #include "pch.h"
 #include "BindlessDescriptorAllocator.h"
-#include "BackendConfig.h"
 #include "Core/Device.h"
+
+namespace BindlessDescriptors
+{
+    static constexpr uint32_t MaxCount = 524288; // 1,000,000개가 최대치. 이 값을 넘지 않게 설정.
+    static constexpr uint32_t PersistentCount = 393216;  // [0, persistentCount) - 해제 없는 영구 할당 (텍스처/머티리얼 등)
+    static constexpr uint32_t DynamicCount = 32768;      // [persistentCount, persistentCount + dynamicCount) - 개별 free 가능, fence 기반
+    static constexpr uint32_t TransientCount = 32768;    // 슬롯 하나 크기. 실제 사용량은 TransientCount * FrameBufferCount
+
+    static constexpr uint32_t Count = PersistentCount + DynamicCount + TransientCount * FrameBufferCount;
+
+    static_assert(Count <= MaxCount); //BindlessDescriptorConfig: persistent + dynamic + transient*FrameBufferCount가 최대치를 초과
+};
 
 BindlessDescriptorAllocator::~BindlessDescriptorAllocator()
 {
@@ -11,13 +22,14 @@ BindlessDescriptorAllocator::BindlessDescriptorAllocator() = default;
 
 bool BindlessDescriptorAllocator::Initialize(Device& device) noexcept
 {
-    m_persistentRegion.Initialize(BindlessDescriptors::PersistentCount); // persistent: [0, persistentCount)
+    m_persistentRegion.Initialize(BindlessDescriptors::PersistentCount);
 
     m_dynamicOffset = BindlessDescriptors::PersistentCount;
-    m_dynamicRegion.Initialize(BindlessDescriptors::DynamicCount); // dynamic: [persistentCount, persistentCount + dynamicCount)
+    m_dynamicRegion.Initialize(BindlessDescriptors::DynamicCount);
 
-    m_transientBase = m_dynamicOffset + BindlessDescriptors::DynamicCount;
-    m_transientSlotCapacity = BindlessDescriptors::TransientCount; // transient: [transientBase, transientBase + transientSlotCapacity), 슬롯당 config.transientCount
+    m_transientOffset = m_dynamicOffset + BindlessDescriptors::DynamicCount;
+    for (auto& region : m_transientRegion)
+        region.Initialize(BindlessDescriptors::TransientCount); // 슬롯당 capacity는 여기서만 넘겨줌
 
     m_heap = device.CreateDescriptorHeap(
         D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV,
@@ -41,14 +53,11 @@ UINT BindlessDescriptorAllocator::AllocateTransient(uint32_t slot, UINT count) n
 {
     Assert(slot < FrameBufferCount);
 
-    UINT local = m_transientOffset[slot].fetch_add(count, std::memory_order_relaxed);
-    if (local + count > m_transientSlotCapacity)
-    {
-        Assert(false); // 슬롯 용량 초과 - config.transientCount를 늘려야 함
+    UINT local = m_transientRegion[slot].Allocate(count);
+    if (local == Core::InvalidIndex)
         return UINT_MAX;
-    }
 
-    UINT slotBase = m_transientBase + m_transientSlotCapacity * slot;
+    UINT slotBase = m_transientOffset + m_transientRegion[slot].Capacity() * slot;
     return slotBase + local;
 }
 
@@ -70,15 +79,15 @@ void BindlessDescriptorAllocator::FreeDynamic(UINT index) noexcept
 void BindlessDescriptorAllocator::ResetTransient(uint32_t slot) noexcept
 {
     Assert(slot < FrameBufferCount);
-    m_transientOffset[slot] = 0;
+    m_transientRegion[slot].Reset();
 }
 
 void BindlessDescriptorAllocator::ResetAll() noexcept
 {
     m_persistentRegion.Reset();
     m_dynamicRegion.Reset();
-    for (auto& offset : m_transientOffset)
-        offset = 0;
+    for (auto& region : m_transientRegion)
+        region.Reset();
 }
 
 D3D12_CPU_DESCRIPTOR_HANDLE BindlessDescriptorAllocator::GetCpuHandle(UINT index) const noexcept
